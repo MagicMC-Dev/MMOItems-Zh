@@ -56,8 +56,8 @@ public class UpgradeTemplate {
 		return stats.keySet();
 	}
 
-	public UpgradeInfo getUpgradeInfo() {
-		return stats.get(stats);
+	public UpgradeInfo getUpgradeInfo(ItemStat stat) {
+		return stats.get(stat);
 	}
 
 	public void upgrade(MMOItem mmoitem, UpgradeData upgrade) {

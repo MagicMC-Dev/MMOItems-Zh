@@ -1,0 +1,70 @@
+# Name placeholders can be used in the item display name
+# A placeholder will return a random element of each list.
+# To use a placeholder, simply add <placeholder> inside the name of your item.
+#
+# e.g:
+# TEST_ITEM:
+#   material: IRON_SWORD
+#   display-name: '<lms-sword> Iron Sword'
+#
+# You can put multiple of the same placeholder in each
+# list to give some placeholder less chance to be chosen.
+# These placeholders will be harder to obtain.
+
+lms:
+- 'Large'
+- 'Medium'
+- 'Small'
+lms-sword:
+- 'Long'
+- 'Normal'
+- 'Normal'
+- 'Normal'
+- 'Short'
+- 'Short'
+- 'Short'
+cs:
+- 'Factory New'
+- 'Minimal Wear'
+- 'Field Tested'
+- 'Well Worn'
+- 'Battle Scarred'
+mythical:
+- 'Epic'
+- 'Mythical'
+- 'Mystic'
+- 'Legendary'
+- 'Unreal'
+- 'Godly'
+greekGod:
+- 'Poseidon'
+- 'Zeus'
+- 'Hephaistos'
+- 'Hares'
+- 'Athena'
+- 'Hermes'
+wood:
+- 'Oak'
+- 'Birch'
+- 'Jungle'
+- 'Spruce'
+- 'Dark Oak'
+- 'Acacia'
+gem-stone:
+- 'Lapis'
+- 'Topaz'
+- 'Ruby'
+- 'Emerald'
+- 'Diamond'
+- 'Amethyst'
+- 'Sapphire'
+- 'Amber'
+ore:
+- 'Gold'
+- 'Iron'
+- 'Silver'
+- 'Platinum'
+- 'Palladium'
+- 'Adamantite'
+- 'Orichalcum'
+- 'Cobalt'

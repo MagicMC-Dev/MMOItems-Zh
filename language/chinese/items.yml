@@ -1,0 +1,20 @@
+UNIDENTIFIED_ITEM:
+  name: '&kUnidentified'
+  lore:
+  - '&e&oThis item is &c&o&nunidentified&e&o.'
+  - '&e&oI''ll have to find a way to identify this.'
+BACK:
+  name: Back
+  lore: []
+NEXT_PAGE:
+  name: Next Page
+  lore: []
+PREVIOUS_PAGE:
+  name: Previous Page
+  lore: []
+NO_ITEM:
+  name: '- No Item -'
+  lore: []
+NO_GEM_STONE:
+  name: '- Empty Gem Socket -'
+  lore: []

@@ -1,0 +1,48 @@
+received-item: Вы получили &6#item#&e#amount#.
+hands-too-charged: Вы не можете ничего сделать, ваши руки слишком напряжены.
+spell-on-cooldown: '#progress# &eВы должны подождать #left# сек.#s#, преждем чем использовать это
+  заклинание.'
+item-on-cooldown: Этот предмет перезарежается!
+not-enough-perms-command: У вас недостаточно прав.
+attack-blocked: 'Вы заблокировали #percent#% от урона!'
+attack-dodged: Вы уклонились от атаки!
+attack-parried: Вы парировали атаку!
+not-enough-levels: У вас недостаточно уровня, чтобы использовать этот предмет!
+soulbound-restriction: Этот предмет привязан к другому игроку, вы не можете использовать его!
+not-enough-perms: У вас недостаточно прав, чтобы использовать это.
+wrong-class: У вас нет правильного класса, чтобы использовать этот предмет!
+not-enough-mana: У вас недостаточно маны!
+not-enough-stamina: У вас недостаточно стамины!
+item-broke: 'Ваш #item#&c сломался.'
+zero-durability: Этот предмет сломан, вам сначала нужно его починить.
+successfully-identified: Вы успешно идентифицировали &6#item#&e.
+successfully-deconstructed: Вы успешно деконструировали &6#item#&e.
+gem-stone-applied: Вы успешно вставили самоцвет &6#gem#&e в ваш &6#item#&e.
+gem-stone-broke: Ваш самоцвет &6#gem#&c сломался пока Вы пытались вставить его в &6#item#&c.
+repaired-item: Вы успешно почнили &6#item#&e на &6#amount# ед. &eпрочности.
+advanced-workbench: Улучшенный Верстак
+empty-workbench-first: Пожалуйста, сначала очистите верстак.
+not-enough-perms-craft: У вас недостаточно прав, чтобы создать этот предмет.
+advanced-recipes: Улучшенные Рецепты
+click-advanced-recipe: '#d Нажмите, чтобы увидеть этот рецепт.'
+cant-bind-item: 'Этот предмет связан с #player# #level# уровнем персонализации.
+  Сначала Вы должны сломать эту свзяь.'
+no-soulbound: Этот предмет не привязан ни к кому.
+cant-bind-stacked: Вы не можете связать предметы в стаке.
+unsuccessful-soulbound: Ваша персонализация не удалась.
+unsuccessful-soulbound-break: Вы не смогли сломать связь.
+low-soulbound-level: 'Этот предмет имеет #level# уровень персонализации. Вам понадобится более высокий уровень персонализации
+  на вашем расходнике, чтобы сломать эту свзять.'
+successfully-bind-item: Вы успешно наложили &6#level# уровень &eперсонализации на ваш
+  &6#item#&e.
+successfully-break-bind: Вы успешно сломали &6#level# уровень &eперсонализации!
+soulbound-item-lore: '&4Связано с #player#//&4#level# уровнем Персонализации'
+max-upgrades-hit: Этот предмет не может быть больше улучшен.
+upgrade-fail: Ваше улучшение не удалось, и Вы потеряли расходник.
+wrong-upgrade-reference: Вы не можете улучшить этот предмет с этим расходником.
+upgrade-success: Вы успешно улучшили ваш &6#item#&e!
+not-have-item-upgrade: У вас нет предмета для улучшения!
+not-enough-materials: У вас недостаточно материалов, чтобы создать это.
+conditions-not-met: Вы не можете создать этот предмет.
+crafting-canceled: Вы отменили рецепт создания.
+crafting-queue-full: В настоящее время очередь создания заполнена.

@@ -1,0 +1,72 @@
+
+# Name which will be displayed
+# when opening the station
+name: 'Arcane Forge (#page#/#max#)'
+
+# The maximum amount of items in the crafting queue ie. the
+# max number of items players are able to craft simultaneously.
+max-queue-size: 10
+
+# Configure GUI items here
+items:
+    fill:
+        material: AIR
+    no-recipe:
+        material: GRAY_STAINED_GLASS_PANE
+        name: '&aNo Recipe'
+    no-queue-item:
+        material: GRAY_STAINED_GLASS_PANE
+        name: '&aNo Item in Queue'
+
+# Station recipes
+recipes:
+    magic-essence:
+        output:
+            type: MATERIAL
+            id: MAGIC_ESSENCE
+            amount: 1
+        crafting-time: 5
+        conditions:
+        - 'level 5'
+        ingredients:
+        - 'mmoitem MATERIAL MAGIC_FRAGMENT 3 Magic_Fragment'
+    arcane-helmet:
+        output:
+            type: ARMOR
+            id: ARCANE_HELM
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 4'
+        ingredients:
+        - 'mmoitem MATERIAL MAGIC_ESSENCE 6 Magic_Essence'
+    steel-chestplate:
+        output:
+            type: ARMOR
+            id: ARCANE_CHESTPLATE
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 4'
+        ingredients:
+        - 'mmoitem MATERIAL MAGIC_ESSENCE 9 Magic_Essence'
+    steel-leggings:
+        output:
+            type: ARMOR
+            id: ARCANE_LEGGINGS
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 4'
+        ingredients:
+        - 'mmoitem MATERIAL MAGIC_ESSENCE 8 Magic_Essence'
+    steel-boots:
+        output:
+            type: ARMOR
+            id: ARCANE_BOOTS
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 4'
+        ingredients:
+        - 'mmoitem MATERIAL MAGIC_ESSENCE 5 Magic_Essence'

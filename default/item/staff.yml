@@ -1,0 +1,76 @@
+EARTH_STAFF:
+  material: JUNGLE_SAPLING
+  name: '&fEarth Staff'
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  movement-speed: 0.005
+  attack-damage: 16.0=18.0
+  attack-speed: 0.4
+  critical-strike-chance: 18.0
+  critical-strike-power: 49.0
+  range: 15.0
+  two-handed: true
+  perm-effects:
+    JUMP: 2
+  craft-enabled: true
+  craft:
+  - JUNGLE_SAPLING EMERALD JUNGLE_SAPLING
+  - EMERALD STICK EMERALD
+  - JUNGLE_SAPLING EMERALD JUNGLE_SAPLING
+  element:
+    earth:
+      damage: 23.0
+  gem-sockets:
+  - Blue
+  - Blue
+  ability:
+    right-click:
+      type: EARTHQUAKE
+      mode: SHIFT_LEFT_CLICK
+      cooldown: 28.0
+      damage: 5.0
+      amplifier: 2.0
+      duration: 2.0
+    on-hit:
+      type: SLOW
+      mode: ON_HIT
+      cooldown: 39.0
+      amplifier: 4.0
+      duration: 2.0
+  lore:
+  - '&7An extremely powerful weapon.'
+  - '&7Use it &f&nwisely&7.'
+  tier: '&eVery Rare'
+  disable-crafting: true
+  disable-smelting: true
+  disable-interaction: true
+  required-level: 30.0
+LIGHTNING_STAFF:
+  material: STICK
+  name: '&f&lLightning Staff'
+  required-level: 3.0
+  attack-damage: 8.0=12.0
+  attack-speed: 0.3=0.5
+  staff-spirit: LIGHTNING_SPIRIT
+  gem-sockets:
+  - Blue
+  - Blue
+  range: 45.0
+  ability:
+    on-hit:
+      type: STARFALL
+      mode: ON_HIT
+      damage: 5.0
+      cooldown: 30.0
+BONE_STAFF:
+  material: BONE
+  disable-interaction: false
+  disable-crafting: true
+  required-level: 3.0
+  attack-damage: 4.0=6.0
+  attack-speed: 0.4
+  tier: TRASH
+  magic-damage: 5.0=9.0
+  lore: []
+  name: '&fBone Staff'

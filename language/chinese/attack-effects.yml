@@ -1,0 +1,15 @@
+staff-spirit:
+  nether-spirit: '&7■ Nether Spirit'
+  void-spirit: '&7■ Void Spirit'
+  mana-spirit: '&7■ Mana Spirit'
+  lightning-spirit: '&7■ Lightning Spirit'
+  xray-spirit: '&7■ X-Ray Spirit'
+  thunder-spirit: '&7■ Thunder Spirit'
+  sunfire-spirit: '&7■ Sunfire Spirit'
+lute-attack:
+  wave: '&7■ Wave Melody'
+  circular: '&7■ Circular Melody'
+  slash: '&7■ Slashing Melody'
+  simple: '&7■ Simple Melody'
+  brute: '&7■ Brute Melody'
+  heavy: '&7■ Heavy Melody'

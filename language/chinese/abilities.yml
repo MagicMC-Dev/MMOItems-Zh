@@ -1,0 +1,97 @@
+# Translated by TUCAOEVER
+# Data: 10-13-2018
+
+ability:
+  shulker-missile: 武装导弹
+  overload: 强制过载
+  magical-shield: 法力护盾
+  heal: 细胞再生
+  fire-meteor: 火球术
+  leap: 撤离
+  light-dash: 急袭
+  burn: 点燃
+  starfall: 流星陨落
+  wither: 凋零
+  vampirism: 吸血
+  shockwave: 震荡
+  sparkle: 神明之力
+  smite: 重击
+  corrupt: 腐蚀
+  tnt-throw: TNT 投掷
+  arcane-hail: 绝对领域
+  grand-heal: 生命之树
+  firebolt: 烈焰光束
+  magical-path: 法术之翼
+  earthquake: 地震
+  stun: 昏迷
+  swiftness: 迅捷
+  holy-missile: 上帝审判
+  black-hole: 黑洞
+  slow: 减速
+  circular-slash: 死亡之眼
+  cursed-beam: 诅咒光束
+  thrust: 穿透
+  heavy-charge: 无畏冲锋
+  item-throw: 物品投掷
+  corrupted-fangs: 腐蚀之牙
+  ice-crystal: 冰霜结晶
+  blind: 失明
+  shock: 震撼
+  shadow-veil: 铁幕
+  poison: 中毒
+  lightning-beam: 祝福光束
+  blink: 闪现
+  sky-smash: 击飞
+  bloodbath: 血祭
+  confuse: 眩晕
+  bouncy-fireball: 弹射火球
+  burning-hands: 烈焰护符
+  throw-up: 投掷
+  frog-mode: 青蛙模式
+  death-mark: 死亡标记
+  life-ender: 生命伴侣
+  freezing-curse: 寒冰诅咒
+  firefly: 萤火
+  bunny-mode: 兔子模式
+  item-bomb: 物品爆炸
+  freeze: Freeze
+  blizzard: Blizzard
+  tactical-grenade: Tactical Grenade
+  ignite: Ignite
+  rain-of-arrows: Rain of Arrows
+  eggpocalypse: Eggpocalypse
+  minor-explosion: Minor Explosion
+  regen-ally: Regen Ally
+  contamination: Contamination
+  corrosion: Corrosion
+  weaken-target: Weaken Target
+  chicken-wraith: Chicken Wraith
+  targeted-fireball: Targeted Fireball
+  magma-fissure: Magma Fissure
+modifier:
+  duration: 持续时间
+  damage: 伤害
+  mana: 法力消耗
+  stamina: 体力消耗
+  cooldown: 冷却时间
+  effect-duration: 效果持续时间
+  radius: 半径
+  power: 伤害加成
+  heal: 生命
+  knockback: 击退
+  force: 影响
+  length: 距离
+  amplifier: 增益
+  drain: 磨损
+  knock-up: 唤醒
+  limit: 限制
+  ignite: 点燃
+  range: 范围
+  amount: 数量
+  speed: 速度
+  jump-force: 强制跳跃
+  slow-amplifier: 减速等级
+  slow-duration: 减速持续时间
+  inaccuracy: Inaccuracy
+  max-ignite: Max Ignite
+  extra-damage: Extra Damage

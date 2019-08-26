@@ -1,0 +1,34 @@
+NO_ITEM:
+  name: '&c- Aucun objet -'
+  lore: []
+NO_TYPE:
+  name: '&c- Aucun type -'
+  lore: []
+TYPE_DISPLAY:
+  name: '&a#type# &8(Cliquer pour explorer)'
+  lore:
+  - '&7Cette catégorie regroupe &6#recipes#&7 recettes.'
+PREVIOUS_PAGE:
+  name: '&aPage précédente'
+  lore: []
+NEXT_PAGE:
+  name: '&aPage suivante'
+  lore: []
+BACK:
+  name: '&aPrécedent'
+  lore: []
+RECIPE_LIST:
+  name: '&aRecettes avancées'
+  lore: []
+RECIPE_DISPLAY:
+  name: '&a&lFabriquer&f #name#'
+  lore:
+  - '{conditions}'
+  - '#condition_level#'
+  - '{crafting_time}'
+  - '{crafting_time}&7Temps de réalisation: &c#crafting-time#&7s'
+  - ''
+  - '&8Ingrédients:'
+  - '#ingredients#'
+  - ''
+  - '&eCliquez pour fabriquer cet objet!'

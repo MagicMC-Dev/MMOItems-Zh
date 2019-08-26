@@ -1,0 +1,105 @@
+ability:
+  overload: Przeladowanie
+  freeze: Zamrozenie
+  magical-shield: Magiczna Tarcza
+  bouncy-fireball: Skoczna Kula Ognia
+  burning-hands: Plomienne Rece
+  fire-meteor: Ognisty Meteor
+  light-dash: Blyskawiczny Ped
+  tactical-grenade: Granat Taktyczny
+  ignite: Podpalenie
+  sparkle: Iskra
+  tnt-throw: Rzut TNT
+  rain-of-arrows: Deszcz Strzal
+  earthquake: Trzesienie Ziemi
+  stun: Ogluszenie
+  holy-missile: Swiety Pocisk
+  black-hole: Czarna Dziura
+  throw-up: Podrzut
+  circular-slash: Okrezne Ciecie
+  cursed-beam: Przeklety Promien
+  slow: Spowolnienie
+  thrust: Pchniecie
+  heavy-charge: Ciezka Szarza
+  item-throw: Rzut Przedmiotem
+  shock: Szok
+  minor-explosion: Mniejsza Eksplozja
+  shadow-veil: Zaslona Cieni
+  frog-mode: Tryb Zaby
+  regen-ally: Ulecz Sojusznika
+  lightning-beam: Piorun
+  death-mark: Znak Smierci
+  confuse: Dezorientacja
+  shulker-missile: Pocisk Shulkera
+  contamination: Skazenie
+  heal: Uzdrowienie
+  corrosion: Korozja
+  leap: Skok
+  explosive-turkey: Wybuchowy Indyk
+  hoearthquake: Moc Farmera
+  burn: Spalenie
+  starfall: Upadek Gwiazdy
+  wither: Uschniecie
+  shockwave: Fala Uderzeniowa
+  vampirism: Wampiryzm
+  smite: Cios
+  snowman-turret: Wiezyczka Balwanow
+  corrupt: Skazenie
+  arcane-hail: Tajemne Pozdrowienie
+  firebolt: Ognisty Pocisk
+  grand-heal: Wielkie Uleczenie
+  magical-path: Magiczna Sciezka
+  life-ender: Kres Zycia
+  swiftness: Szybkosc
+  present-throw: Rzut Prezentem
+  weaken-target: Oslabienie Celu
+  chicken-wraith: Widmo Kurczaka
+  freezing-curse: Mrozna Klatwa
+  arcane-rift: Tajemne Rozszczepienie
+  targeted-fireball: Wycelowana Kula Ognia
+  corrupted-fangs: Skazone Kly
+  ice-crystal: Krysztal Lodu
+  blind: Oslepienie
+  firefly: Swietlik
+  poison: Otruj
+  blink: Mrugniecie
+  sky-smash: Podniebne Zderzenie
+  frozen-aura: Mrozna Aura
+  bunny-mode: Tryb Krolika
+  magma-fissure: Magmowa Rozpadlina
+  bloodbath: Masakra
+  item-bomb: Bomba
+modifier:
+  damage: Obrazenia
+  mana: Mana
+  stamina: Wytrzymalosc
+  cooldown: Czas Oczekiwania
+  radius: Zasieg
+  duration: Czas Trwania
+  amplifier: Wzmacniacz
+  inaccuracy: Niecelnosc
+  force: Sila
+  power: Moc
+  ignite: Podpalenie
+  speed: Szybkosc
+  knockback: Odrzucenie
+  length: Dlugosc
+  knock-up: Rozgrzewka
+  max-ignite: Maksymalne Rozpalenie
+  limit: Limit
+  jump-force: Sila Skoku
+  heal: Uleczenie
+  effect-duration: Dlugosc Trwania Efektu
+  drain: Wyczerpanie
+  extra-damage: Dodatkowe Obrazenia
+  range: Zasieg
+  amount: Ilosc
+  slow-duration: Dlugosc Spowolnienia
+  slow-amplifier: Wzmocnienie Spowolnienia
+cast-mode:
+  on-hit: Po uderzeniu
+  when-hit: Kiedy Uderzony
+  left-click: LPM
+  right-click: PPM
+  shift-left-click: Shift + LPM
+  shift-right-click: Shift + PPM

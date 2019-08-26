@@ -1,0 +1,23 @@
+SANTAMMER:
+  material: IRON_AXE
+  item-particles:
+    particle: REDSTONE
+    type: HELIX
+    color:
+      red: 50
+      green: 255
+      blue: 50
+  name: '&7S&fa&7n&ft&fa&7m&fm&7e&fr'
+  attack-damage: 9.7
+  attack-speed: 0.6
+  enchants:
+    unbreaking: 3
+  required-level: 15.0
+  critical-strike-power: 10.0
+  ability:
+    on-hit:
+      type: STUN
+      mode: ON_HIT
+      cooldown: 15.0
+  lore:
+  - '&eEarned during X-Mas 2018!'

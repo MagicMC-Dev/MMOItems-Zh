@@ -1,0 +1,21 @@
+GOLD_COIN:
+  material: GOLD_NUGGET
+  name: '&fGold Coin'
+  lore:
+  - '&7A very shiny gold coin.'
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  disable-crafting: true
+HUMAN_SOUL:
+  material: PHANTOM_MEMBRANE
+  disable-repairing: false
+  disable-enchanting: false
+  hide-enchants: true
+  enchants:
+    unbreaking: 1
+  name: '&6Human Soul'
+  disable-crafting: true
+  lore:
+  - '&7&oYou hear the screams of'
+  - '&7&oyour enemies... or friends.'

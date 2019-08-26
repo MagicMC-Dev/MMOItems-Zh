@@ -1,0 +1,104 @@
+# Weapon Stats
+attack-damage: '&4➸ Уровень Атаки: #'
+attack-speed: '&c➸ Скорость Атаки: #'
+critical-strike-chance: '&7■ Шанс Критической Атаки: &f<plus>#%'
+critical-strike-power: '&7■ Сила Критической Атаки: &f<plus>#%'
+range: '&7■ Радиус: &f#'
+mana-cost: '&9■ Маны за Использование: #'
+stamina-cost: '&9■ Стамины за Использование: #'
+arrow-velocity: '&7■ Arrow Velocity: &f#%'
+blunt-power: '&7■ Сила Блока: &f#'
+blunt-rating: '&7■ Шанс Блока: &f#%'
+two-handed: '&7■ &cДвуручное'
+knockback: '&7■ Отталкивание: &f#'
+recoil: '&7■ Отдача: &f#%'
+note-weight: '&7■ Примечание Вес: &f#'
+
+# Extra Damage
+pve-damage: '&7■ PvE Урон: &f<plus>#%'
+pvp-damage: '&7■ PvP Урон: &f<plus>#%'
+magic-damage: '&7■ Магический Урон: &f<plus>#%'
+weapon-damage: '&7■ Урон от Оружия: &f<plus>#%'
+undead-damage: '&7■ Урон по Нежити: &f<plus>#%'
+
+# Abilities
+ability-format: '&2#c: #a'
+ability-modifier: '&2#m: #v'
+ability-splitter: '&2'
+
+# Armor Stats
+block-power: '&7■ Сила Блокирования: &f<plus>#%'
+block-rating: '&7■ Шанс Блокирования: &f<plus>#%'
+block-cooldown-reduction: '&7■ Уменьшение Перезарядки Блокирования: &f<plus>#%'
+dodge-rating: '&7■ Шанс Уклонения: &f<plus>#%'
+dodge-cooldown-reduction: '&7■ Уменьшение Перезарядки Уклонения: &f<plus>#%'
+parry-rating: '&7■ Шанс Парирования: &f<plus>#%'
+parry-cooldown-reduction: '&7■ Уменьшение Перезарядки Парирования: &f<plus>#%'
+armor: '&7✠ Защита: &f<plus>#'
+armor-toughness: '&7✠ Прочность Брони: &f<plus>#'
+knockback-resistance: '&7✠ Сопротивление Отталкиванию: &f<plus>#%'
+max-health: '&c❤ Здоровье: <plus>#'
+movement-speed: '&7■ Скорость Передвижения: &f<plus>#'
+regeneration: '&7■ Регенерация Здоровья: &f<plus>#%'
+
+# Damage Reduction
+damage-reduction: '&7■ Снижение Урона: &f<plus>#%'
+fall-damage-reduction: '&7■ Снижение Урона от Падения: &f<plus>#%'
+fire-damage-reduction: '&7■ Снижение Урона от Огня: &f<plus>#%'
+magic-damage-reduction: '&7■ Снижение Урона от Магии: &f<plus>#%'
+physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
+
+# Extra Options
+max-mana: '&9■ Максимальная Мана: <plus>#'
+perm-effect: '&7■ Бесконечный &f#'
+command: '&7■ Команда: &f#c &7(&f#d&7s)'
+item-cooldown: '&7■ &f#&7 сек перезарядка'
+
+# Consumables
+restore-health: '&7■ Восстанавливает &f# &7Здоровья'
+restore-food: '&7■ Восстанавливает &f# &7Еды'
+restore-saturation: '&7■ Восстанавливает &f# &7Насыщения'
+restore-mana: '&7■ Восстанавливает &f# &7Маны'
+restore-stamina: '&7■ Восстанавливает &f# &7Стамины'
+effect: '&7■ Даёт &f#e &7на &f#d&7сек'
+repair: '&7■ Ремонт: &f#'
+can-identify: '&7■ Может идентифицировать предметы.'
+can-deconstruct: '&7■ Может разобрать тировые предметы.'
+success-rate: '&7■ Шанс Успеха: &a&l#%'
+
+# Gem Stones
+empty-gem-socket: '&a◆ Пустой # слотя для Самоцвета'
+filled-gem-socket: '&a◆ #'
+when-applied: '&aКогда Применён:'
+gem-stone-lore: '&8&l[&2&l*&8&l] &aПеретащите на предмет, чтобы &7применить!'
+
+# Soulbound
+soulbinding-chance: '&7■ Имеет &a#%&7 шанс связать предмет.'
+soulbound-break-chance: '&7■ имеет &a#%&7 шанс убрать персонализацию.'
+soulbound-level: '&7■ Уровень &e# &7Персонализации'
+
+# Tool Enchants
+autosmelt: '&7■ &fАвтоплавлка'
+bouncing-crack: '&7■ &fТрещина'
+
+# General
+item-type: '&c■ #'
+tier: '# Предмет'
+required-class: '&7Требуется Класс: &7#'
+required-level: '&eНеобходимый Уровень: #'
+
+# Elemental Damage
+fire-damage: '&c❖ #% Урон Огнём'
+ice-damage: '&b❖ #% Урон Льдом'
+earth-damage: '&2❖ #% Урон Землёй'
+wind-damage: '&7❖ #% Урон Ветром'
+thunder-damage: '&e❖ #% Урон Молнией'
+water-damage: '&3❖ #% Урон Водой'
+
+# Elemental Defense
+fire-defense: '&c❖ #% Защита от Огня'
+ice-defense: '&b❖ #% Защита от Льда'
+earth-defense: '&2❖ #% Защита от Земли'
+wind-defense: '&7❖ #% Защита от Ветра'
+thunder-defense: '&e❖ #% Защита от Молнии'
+water-defense: '&3❖ #% Защита от Воды'

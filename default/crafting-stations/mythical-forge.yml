@@ -1,0 +1,151 @@
+
+# Name which will be displayed
+# when opening the station
+name: 'Mythical Forge (#page#/#max#)'
+
+# The maximum amount of items in the crafting queue ie. the
+# max number of items players are able to craft simultaneously.
+max-queue-size: 10
+
+# Configure GUI items here
+items:
+    fill:
+        material: AIR
+    no-recipe:
+        material: GRAY_STAINED_GLASS_PANE
+        name: '&aNo Recipe'
+    no-queue-item:
+        material: GRAY_STAINED_GLASS_PANE
+        name: '&aNo Item in Queue'
+
+# Station recipes
+recipes:
+    soulstealer:
+        output:
+            type: SWORD
+            id: SOULSTEALER
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 24'
+        ingredients:
+        - 'mmoitem MISCELLANEOUS HUMAN_SOUL 8 Human_Soul'
+        - 'mmoitem SWORD STEEL_SWORD 1 Steel_Sword'
+    fire-essence:
+        output:
+            type: MATERIAL
+            id: FIRE_ESSENCE
+            amount: 1
+        crafting-time: 5
+        conditions:
+        - 'level 15'
+        ingredients:
+        - 'vanilla BLAZE_POWDER . 4 Blaze_Powder'
+    fire-totem:
+        output:
+            type: CATALYST
+            id: FIRE_TOTEM
+            amount: 1
+        crafting-time: 30
+        conditions:
+        - 'level 10'
+        ingredients:
+        - 'mmoitem MATERIAL FIRE_ESSENCE 8 Fire_Essence'
+        - 'vanilla BLAZE_ROD . 1 Blaze_Rod'
+        - 'vanilla BLAZE_POWDER . 4 Blaze_Powder'
+    blaze-soul:
+        output:
+            type: GEM_STONE
+            id: BLAZE_SOUL
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 12'
+        ingredients:
+        - 'mmoitem MATERIAL FIRE_ESSENCE 5 Fire_Essence'
+    hell-bow:
+        output:
+            type: BOW
+            id: HELL_BOW
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 24'
+        ingredients:
+        - 'mmoitem MATERIAL FIRE_ESSENCE 2 Fire_Essence'
+        - 'vanilla BOW . 1 Bow'
+    fire-greatlance:
+        output:
+            type: LANCE
+            id: FIRE_GREATLANCE
+            amount: 1
+        crafting-time: 35
+        conditions:
+        - 'level 30'
+        ingredients:
+        - 'mmoitem MATERIAL FIRE_ESSENCE 4 Fire_Essence'
+    molten-blade:
+        output:
+            type: GREATSWORD
+            id: MOLTEN_BLADE
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 20'
+        ingredients:
+        - 'mmoitem MATERIAL FIRE_ESSENCE 13 Fire_Essence'
+        - 'mmoitem SWORD STEEL_SWORD 1 Steel_Sword'
+    wither-essence:
+        output:
+            type: MATERIAL
+            id: WITHER_ESSENCE
+            amount: 1
+        crafting-time: 5
+        conditions:
+        - 'level 20'
+        ingredients:
+        - 'vanilla WITHER_SKELETON_SKULL'
+    marking-bow:
+        output:
+            type: BOW
+            id: MARKING_BOW
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 20'
+        ingredients:
+        - 'vanilla BOW . 1 Bow'
+        - 'mmoitem MATERIAL WITHER_ESSENCE 1 Wither_Essence'
+    cursed-wither-skull:
+        output:
+            type: ARMOR
+            id: CURSED_WITHER_SKULL
+            amount: 1
+        crafting-time: 10
+        conditions:
+        - 'level 15'
+        ingredients:
+        - 'vanilla IRON_HELMET'
+        - 'mmoitem MATERIAL WITHER_ESSENCE 1 Wither_Essence'
+    dead-pharaoh-helmet:
+        output:
+            type: ARMOR
+            id: DEAD_PHARAOH_HELMET
+            amount: 1
+        crafting-time: 10
+        conditions:
+        - 'level 10'
+        ingredients:
+        - 'vanilla DIAMOND'
+        - 'vanilla SKELETON_SKULL'
+    mossy-skeleton-skull:
+        output:
+            type: ARMOR
+            id: MOSSY_SKELETON_SKULL
+            amount: 1
+        crafting-time: 10
+        conditions:
+        - 'level 17'
+        ingredients:
+        - 'vanilla MOSSY_COBBLESTONE'
+        - 'vanilla SKELETON_SKULL'

@@ -1,0 +1,147 @@
+HARDENED_STEEL_CLAYMORE:
+  material: IRON_SWORD
+  name: '&fHardened Steel Claymore'
+  required-level: 13.0
+  tier: RARE
+  required-class:
+  - Warrior
+  - Paladin
+  attack-damage: 5.0=6.0
+  attack-speed: 1.2=1.4
+  critical-strike-chance: 12.0
+  critical-strike-power: 24.0
+  two-handed: true
+  unbreakable: true
+  enchants:
+    sharpness: 4
+    knockback: 2
+  gem-sockets:
+  - Red
+  - Blue
+  perm-effects:
+    FAST_DIGGING: 3
+  ability:
+    right-click:
+      type: CIRCULAR_SLASH
+      mode: RIGHT_CLICK
+      damage: 7.2
+      cooldown: 19.0
+    on-hit:
+      type: SHOCK
+      mode: ON_HIT
+      duration: 1.3
+      cooldown: 25.0
+  max-durability: 1000.0
+CANDY_CANE_SWORD:
+  material: WOODEN_SWORD
+  name: '&fC&ca&fn&cd&fy &cC&fa&cn&fe &cS&fw&co&fr&cd'
+  attack-damage: 8.0
+  unbreakable: true
+  attack-speed: 1.6=1.8
+  lore:
+  - '&7This sword embodies the christmas spirit.'
+  - '&7Hit a monster to release it!'
+  - ''
+  - '&eEarned during X-Mas 2018!'
+  regeneration: 30.0=40.0
+  critical-strike-chance: 20.0
+  critical-strike-power: 60.0
+  ability:
+    on-hit:
+      type: DEATH_MARK
+      mode: ON_HIT
+      cooldown: 10.0
+MOLTEN_BLADE:
+  material: GOLDEN_SWORD
+  enchants:
+    knockback: 2
+  name: '&cMolten Blade'
+  attack-speed: 1.3
+  attack-damage: 11.0
+  advanced-craft:
+    '0':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '2':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '6':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '8':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '7':
+      material: BLAZE_ROD
+      amount: 1
+      durability: 0
+      name: ''
+    '4':
+      type: MATERIAL
+      id: FIRE_ESSENCE
+      amount: 1
+    '3':
+      type: MATERIAL
+      id: FIRE_ESSENCE
+      amount: 1
+    '1':
+      type: MATERIAL
+      id: FIRE_ESSENCE
+      amount: 1
+    '5':
+      type: MATERIAL
+      id: FIRE_ESSENCE
+      amount: 1
+  ability:
+    ability1:
+      type: MAGMA_FISSURE
+      mode: ON_HIT
+      cooldown: 13.0
+  lore:
+  - '&7Every 13s, your next melee'
+  - '&7attack summons a devastating'
+  - '&cmagma fissure&7 that dashes to'
+  - '&7your target, &cigniting &7it and'
+  - '&7dealing &cdamage&7 upon landing.'
+  magic-damage: 30.0
+  unbreakable: true
+  two-handed: true
+TWO_HANDED_STEEL_SWORD:
+  material: IRON_SWORD
+  name: '&fTwo Handed Steel Sword'
+  enchants:
+    sharpness: 4
+    knockback: 1
+    unbreaking: 6
+  two-handed: true
+  unbreakable: true
+  attack-damage: 7.0=10.0
+  attack-speed: 0.8=1.0
+  critical-strike-chance: 7.0=10.0
+  critical-strike-power: 170.0=210.0
+  required-level: 2.0
+  element:
+    ice:
+      damage: 7.0
+  gem-sockets:
+  - Blue
+  - Blue
+  tier: UNCOMMON
+  ability:
+    right-click:
+      type: CIRCULAR_SLASH
+      mode: RIGHT_CLICK
+      cooldown: 8.0
+      damage: 4.0
+  lore:
+  - '&7Right click to &c&nsmash&7 nearby'
+  - '&7enemies for &c4&7 damage.'
+  hide-enchants: true

@@ -1,0 +1,45 @@
+OAK_WAND:
+  material: STICK
+  name: '&f<wood> Wand'
+  required-level: 1.0
+  range: 20.0
+  attack-damage: 2.0=5.0
+  attack-speed: 1.0=1.3
+  critical-strike-chance: 8.0=10.0
+  ability:
+    right-click:
+      type: SPARKLE
+      mode: RIGHT_CLICK
+      damage: 3.0
+      cooldown: 15.0
+BLAZE_WAND:
+  material: BLAZE_ROD
+  hide-enchants: true
+  enchants:
+    unbreaking: 1
+  required-level: 45.0
+  attack-damage: 10.0=20.0
+  attack-speed: 1.0=1.4
+  critical-strike-chance: 20.0
+  range: 20.0=25.0
+  tier: VERY_RARE
+  perm-effects:
+    FIRE_RESISTANCE: 1
+  ability:
+    on-hit:
+      type: BURN
+      mode: ON_HIT
+      cooldown: 40.0
+      duration: 5.0
+    right-click:
+      type: FIREBOLT
+      mode: RIGHT_CLICK
+      damage: 5.0
+      ignite: 3.0
+      cooldown: 20.0
+  gem-sockets:
+  - Red
+  - Red
+  - Blue
+  name: '&c&lBlaze Wand'
+  disable-crafting: true

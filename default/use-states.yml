@@ -1,0 +1,54 @@
+# For every durability state, please specify the minimum durability in
+# percents the item needs to have in order to be on that state, and
+# the tag that will be displayed on the item when it is in that state.
+
+10:
+    use-ratio:
+        max: 100
+        min: 90
+    lore-tag: '&7Durability: &a■■■■■■■■■■'
+9:
+    use-ratio:
+        max: 90
+        min: 80
+    lore-tag: '&7Durability: &a■■■■■■■■■&f■'
+8:
+    use-ratio:
+        max: 80
+        min: 70
+    lore-tag: '&7Durability: &a■■■■■■■■&f■■'
+7:
+    use-ratio:
+        max: 70
+        min: 60
+    lore-tag: '&7Durability: &a■■■■■■■&f■■■'
+6:
+    use-ratio:
+        max: 60
+        min: 50
+    lore-tag: '&7Durability: &a■■■■■■&f■■■■'
+5:
+    use-ratio:
+        max: 50
+        min: 40
+    lore-tag: '&7Durability: &e■■■■■&f■■■■■'
+4:
+    use-ratio:
+        max: 40
+        min: 30
+    lore-tag: '&7Durability: &e■■■&f■■■■■■■'
+3:
+    use-ratio:
+        max: 30
+        min: 20
+    lore-tag: '&7Durability: &c■■&f■■■■■■■■'
+2:
+    use-ratio:
+        max: 20
+        min: 10
+    lore-tag: '&7Durability: &c■&f■■■■■■■■■'
+1:
+    use-ratio:
+        max: 10
+        min: 0
+    lore-tag: '&7Durability: &f■■■■■■■■■■'

@@ -1,0 +1,42 @@
+hands-too-charged: 请将需要改变属性的物品置于手中
+spell-on-cooldown: '#progress#'
+item-on-cooldown: '#progress#'
+not-enough-perms-command: 你没有权限执行该命令
+attack-blocked: '阻挡 #percent#% 伤害'
+attack-dodged: 格挡攻击
+attack-parried: 闪避攻击
+not-enough-levels: '&f[&c&l等级受限&f]'
+soulbound-restriction: '&f[&5&l灵魂绑定&f]'
+not-enough-perms: '&f[&6&l权限受限&f]'
+broken-item: 物品已损坏 请先修复该物品
+item-broke: '#item# 已损坏'
+zero-durability: 物品已无耐久值 请先修复该物品
+not-enough-mana: '&f[&b&l法力值受限&f]'
+not-enough-stamina: '&f[&d&l体力值受限&f]'
+wrong-class: '&f[&9&l职业受限&f]'
+successfully-identified: '&2成功识别 #item#'
+successfully-deconstructed: '&c成功拆解 #item#'
+gem-stone-applied: '&f[&b&l+&f] #gem# 镶嵌至 #item# 成功 ✔'
+gem-stone-broke: '&f[&c&l-&f] #gem# 镶嵌至 #item# 失败 x'
+repaired-item: '修复 #amount# x #item#'
+gave-item: '&f给予 #amount# x #item# 至 #player#'
+received-item: '&f获得 #amount# x #item#'
+cant-update-item: 无法更新物品
+update-item: 更新完成
+empty-workbench-first: '&c请先清空合成台'
+not-enough-perms-craft: '&c你没有权限制作该物品'
+cant-bind-item: '该物品绑定至 #player# 绑定等级 #level# 若需重新绑定请破坏原绑定'
+no-soulbound: 无绑定
+cant-bind-stacked: 无法绑定堆叠物品
+unsuccessful-soulbound: 绑定失败
+unsuccessful-soulbound-break: 无法破坏绑定
+low-soulbound-level: '绑定等级 #level# 若需重新绑定 绑定等级需高于该绑定等级'
+successfully-bind-item: '成功绑定 绑定等级 #level# 绑定物品 #item#'
+successfully-break-bind: '绑定破坏 绑定等级 #level#'
+soulbound-item-lore: '&f绑定至 #player# &8| &n绑定等级 &7&l#level#'
+soulbound-command-no: 无绑定
+soulbound-command-info: '物品绑定至 #player# 绑定等级 #level#'
+advanced-workbench: 高级合成台
+advanced-recipes: 高级合成
+gem-stats: 宝石数据
+click-advanced-recipe: '#d &7点击以查看高级合成'

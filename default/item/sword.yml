@@ -1,0 +1,203 @@
+CUTLASS:
+  material: IRON_SWORD
+  attack-damage: 6.0=8.0
+  attack-speed: 1.6=1.8
+  lore:
+  - '&7Slightly better than an iron sword.'
+  required-level: 3.0
+  tier: COMMON
+  name: '&fSharp Cutlass'
+  max-durability: 300.0
+FALCON_BLADE:
+  material: GOLDEN_SWORD
+  name: '&e&nFalcon Blade'
+  required-level: 10.0
+  attack-damage: 7.0=9.0
+  attack-speed: 1.6=2.0
+  critical-strike-chance: 50.0=70.0
+  gem-sockets:
+  - Blue
+  - Green
+  ability:
+    on-hit:
+      type: STUN
+      mode: ON_HIT
+      duration: 1.0
+      cooldown: 9.0
+  unbreakable: true
+  perm-effects:
+    SPEED: 1
+  hide-enchants: true
+  enchants:
+    unbreaking: 1
+  disable-enchanting: true
+  disable-crafting: true
+  disable-repairing: true
+  disable-smelting: true
+  tier: EPIC
+  advanced-craft:
+    '0':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '2':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '6':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '8':
+      material: AIR
+      durability: 0
+      amount: 1
+      name: ''
+    '4':
+      material: GOLDEN_SWORD
+      amount: 1
+      durability: 0
+      name: ''
+    '5':
+      type: MATERIAL
+      id: EPIC_WEAPON_ESSENCE
+      amount: 1
+    '7':
+      type: MATERIAL
+      id: EPIC_WEAPON_ESSENCE
+      amount: 1
+    '3':
+      type: MATERIAL
+      id: EPIC_WEAPON_ESSENCE
+      amount: 1
+    '1':
+      type: MATERIAL
+      id: EPIC_WEAPON_ESSENCE
+      amount: 1
+KATANA:
+  material: IRON_SWORD
+  attack-damage: 7.0
+  lore:
+  - '&7&oA very sharp & light sword'
+  - '&7&oforged by a hundred years'
+  - '&7&oof smithing mastery.'
+  attack-speed: 2.0
+  tier: RARE
+  movement-speed: 0.02
+  critical-strike-chance: 10.0
+  name: '&fKatana'
+  max-durability: 800.0
+SOULSTEALER:
+  material: IRON_SWORD
+  enchants:
+    unbreaking: 9
+  name: '&cThe Soulstealer'
+  attack-damage: 7.0=7.5
+  attack-speed: 1.6=1.7
+  mana-cost: 2.0
+  critical-strike-chance: 30.0
+  max-health: 2.0
+  required-level: 10.0
+  ability:
+    ability1:
+      type: VAMPIRISM
+      mode: ON_HIT
+      cooldown: 7.0
+  advanced-craft:
+    '7':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '6':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '3':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '8':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '5':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '2':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '0':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '1':
+      type: MISCELLANEOUS
+      id: HUMAN_SOUL
+      amount: 1
+    '4':
+      type: SWORD
+      id: SILVER_SWORD
+      amount: 1
+  lore:
+  - '&7Drains &c10%&7 of the damage'
+  - '&7dealt as health points.'
+STEEL_SWORD:
+  material: IRON_SWORD
+  name: '&fSteel Sword'
+  attack-damage: 6=7
+  attack-speed: 1.6=1.65
+  lore:
+  - '&7May be upgraded.'
+  required-level: 6.0
+  upgrade:
+    template: weapon-default
+SILVER_SWORD:
+  material: IRON_SWORD
+  name: '&fSilver Sword'
+  attack-damage: 6.0
+  attack-speed: 1.6
+  lore:
+  - '&7May be upgraded.'
+  required-level: 4.0
+  advanced-craft:
+    '0':
+      material: AIR
+      amount: 1
+      name: ''
+    '2':
+      material: AIR
+      amount: 1
+      name: ''
+    '3':
+      material: AIR
+      amount: 1
+      name: ''
+    '5':
+      material: AIR
+      amount: 1
+      name: ''
+    '6':
+      material: AIR
+      amount: 1
+      name: ''
+    '8':
+      material: AIR
+      amount: 1
+      name: ''
+    '4':
+      type: MATERIAL
+      id: SILVER_INGOT
+      amount: 1
+    '1':
+      type: MATERIAL
+      id: SILVER_INGOT
+      amount: 1
+    '7':
+      material: STICK
+      amount: 1
+      name: ''

@@ -1,0 +1,104 @@
+# Weapon Stats
+attack-damage: '&7➸ Dégats d''attaque: &f#'
+attack-speed: '&7➸ Vitesse d''attaque: &f#'
+critical-strike-chance: '&7■ Chance de coup critique: &f<plus>#%'
+critical-strike-power: '&7■ Puissance de coup critique: &f<plus>#%'
+range: '&7■ Portée: &f#'
+mana-cost: '&9■ Consomme # Mana'
+stamina-cost: '&9■ Consomme # Stamina'
+arrow-velocity: '&7■ Vitesse de projectile: &f#%'
+blunt-power: '&7■ Puissance de contendance: &f#'
+blunt-rating: '&7■ Ratio de contendance: &f#%'
+two-handed: '&7■ A deux mains'
+knockback: '&7■ Recul: &f#'
+recoil: '&7■ Recul visuel: &f#%'
+note-weight: '&7■ Poids des notes: &f#'
+
+# Extra Damage
+pve-damage: '&7■ Dégats PvE: &f<plus>#%'
+pvp-damage: '&7■ Dégats PvP: &f<plus>#%'
+magic-damage: '&7■ Dégats magiques: &f<plus>#%'
+weapon-damage: '&7■ Dégats physiques: &f<plus>#%'
+undead-damage: '&7■ Dégats contre les morts-vivants: &f<plus>#%'
+
+# Abilities
+ability-format: '&2#c: #a'
+ability-modifier: '&2#m: #v'
+ability-splitter: '&2'
+
+# Armor Stats
+block-power: '&7■ Puissance de blocage: &f<plus>#%'
+block-rating: '&7■ Chance de blocage: &f<plus>#%'
+block-cooldown-reduction: '&7■ Réduction du délai de blocage: &f<plus>#%'
+dodge-rating: '&7■ Chance d''esquive: &f<plus>#%'
+dodge-cooldown-reduction: '&7■ Réduction du délai d''esquive: &f<plus>#%'
+parry-rating: '&7■ Chance de parrade: &f<plus>#%'
+parry-cooldown-reduction: '&7■ Réduction du délai de parrade: &f<plus>#%'
+armor: '&7✠ Armure: &f<plus>#'
+armor-toughness: '&7✠ Robustesse: &f<plus>#'
+knockback-resistance: '&7✠ Résistance au recul: &f<plus>#%'
+max-health: '&c❤ Points de vie: <plus>#'
+movement-speed: '&7■ Vitesse de déplacement: &f<plus>#'
+regeneration: '&7■ Régénération de PV: &f<plus>#%'
+
+# Damage Reduction
+damage-reduction: '&7■ Réduction de dégats: &f<plus>#%'
+fall-damage-reduction: '&7■ Réduction de dégats de chute: &f<plus>#%'
+fire-damage-reduction: '&7■ Réduction de dégats de feu: &f<plus>#%'
+magic-damage-reduction: '&7■ Réduction de dégats magiques: &f<plus>#%'
+physical-damage-reduction: '&7■ Réduction de dégats physiques: &f<plus>#%'
+
+# Extra Options
+max-mana: '&7■ Mana Max: &f<plus>#'
+perm-effect: '&7■ &f# &7 permanent'
+command: '&7■ Commande: &f#c &7(&f#d&7s)'
+item-cooldown: '&7■ &f#&7s de récupération'
+
+# Consumables
+restore-health: '&7■ Restaure &f# &7Health'
+restore-food: '&7■ Restaure &f# &7Food'
+restore-saturation: '&7■ Restaure &f# &7Saturation'
+restore-mana: '&7■ Restaure &f# &7Mana'
+restore-stamina: '&7■ Restaure &f# &7Stamina'
+effect: '&7■ Octroit &f#e &7for &f#d&7s'
+repair: '&7■ Répare &f# &7utilisations'
+can-identify: '&7■ Peut identifier des objets.'
+can-deconstruct: '&7■ Peut décomposer des objets.'
+success-rate: '&7■ Chance de réussite: &a&l#%'
+
+# Gem Stones
+empty-gem-socket: '&a◆ Emplacement de gemme # vide'
+filled-gem-socket: '&a◆ #'
+when-applied: '&aQuand appliqué:'
+gem-stone-lore: '&8&l[&2&l*&8&l] &aDéposez la &7sur un objet pour l''appliquer!'
+
+# Soulbound
+soulbinding-chance: '&7■ Chance de créer un soulbound: &a#%'
+soulbound-break-chance: '&7■ Chance de détruire un soulbound: &a#%'
+soulbound-level: '&7■ &7Soulbound de niv. &e#'
+
+# Tool Enchants
+autosmelt: '&7■ &fAutosmelt'
+bouncing-crack: '&7■ &fBouncing Crack'
+
+# General
+item-type: '&c#'
+tier: '#'
+required-class: '&7Classe requise: #'
+required-level: '&eRequiert niv. #'
+
+# Elemental Damage
+fire-damage: '&c❖ #% Dégats de feu'
+ice-damage: '&b❖ #% Dégats de glace'
+earth-damage: '&2❖ #% Dégats de terre'
+wind-damage: '&7❖ #% Dégats de vent'
+thunder-damage: '&e❖ #% Dégats électriques'
+water-damage: '&3❖ #% Dégats d''eau'
+
+# Elemental Defense
+fire-defense: '&c❖ #% Défense de feu'
+ice-defense: '&b❖ #% Défense de glace'
+earth-defense: '&2❖ #% Défense de terre'
+wind-defense: '&7❖ #% Défense de vent'
+thunder-defense: '&e❖ #% Défense électrique'
+water-defense: '&3❖ #% Défense d''eau'

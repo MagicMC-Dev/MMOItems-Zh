@@ -1,0 +1,14 @@
+staff-spirit:
+  nether-spirit: '&7■ Dusza Netheru'
+  void-spirit: '&7■ Dusza Pustki'
+  mana-spirit: '&7■ Dusza Many'
+  lightning-spirit: '&7■ Dusza Blyskawic'
+  xray-spirit: '&7■ Dusza X-Raya'
+  thunder-spirit: '&7■ Dusza Burzy'
+  sunfire-spirit: '&7■ Dusza Ognia Slonecznego'
+lute-attack:
+  wave: '&7■ Ataki fali'
+  circular: '&7■ Ataki okrezne'
+  simple: '&7■ Ataki proste'
+  brute: '&7■ Ataki brutalne'
+  slash: '&7■ Ataki ciecia'

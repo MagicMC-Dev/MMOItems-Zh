@@ -1,0 +1,180 @@
+
+# Name which will be displayed
+# when opening the station
+name: 'Steel Crafting Station (#page#/#max#)'
+
+# The maximum amount of items in the crafting queue ie. the
+# max number of items players are able to craft simultaneously.
+max-queue-size: 10
+
+# Configure GUI items here
+items:
+    fill:
+        material: AIR
+    no-recipe:
+        material: GRAY_STAINED_GLASS_PANE
+        name: '&aNo Recipe'
+    no-queue-item:
+        material: GRAY_STAINED_GLASS_PANE
+        name: '&aNo Item in Queue'
+
+# Station recipes
+recipes:
+    steel-sword:
+    
+        # The item which the recipe gives
+        output:
+            type: SWORD
+            id: STEEL_SWORD
+            amount: 1
+        
+        # Time it takes to craft the item
+        crafting-time: 3
+        
+        # Recipe options
+        options:
+            hide-when-locked: false
+        
+        # Conditions to unlock the recipe
+        conditions:
+        - 'level 5'
+        - 'perms mmoitems.recipe.steel-sword mmoitems.recipe.station.steel'
+        
+        # Ingredients needed for the recipe
+        # Format 1: 'mmoitem <ITEM_TYPE> <ITEM_ID> <amount> <gui_display_name>'
+        # Format 2: 'vanilla <MATERIAL> <display_name> <amount> <gui_display_name>'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 4 Steel_Ingot'
+        - 'vanilla STICK . 2 Wooden_Stick'
+    steel-sword-upgrade:
+        item:
+            type: SWORD
+            id: STEEL_SWORD
+        conditions:
+        - 'level 5'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 4 Steel_Ingot'
+    two-handed-steel-sword:
+        output:
+            type: GREATSWORD
+            id: TWO_HANDED_STEEL_SWORD
+            amount: 1
+        crafting-time: 10
+        conditions:
+        - 'level 8'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 8 Steel_Ingot'
+        - 'vanilla STICK . 4 Wooden_Stick'
+    katana:
+        output:
+            type: SWORD
+            id: KATANA
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 15'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 6 Steel_Ingot'
+        - 'vanilla IRON_INGOT . 2 Iron_Ingot'
+        - 'vanilla STICK . 3 Wooden_Stick'
+    steel-helmet:
+        output:
+            type: ARMOR
+            id: STEEL_HELMET
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 8'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 6 Steel_Ingot'
+    steel-chestplate:
+        output:
+            type: ARMOR
+            id: STEEL_CHESTPLATE
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 8'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 9 Steel_Ingot'
+    steel-leggings:
+        output:
+            type: ARMOR
+            id: STEEL_LEGGINGS
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 8'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 8 Steel_Ingot'
+    steel-boots:
+        output:
+            type: ARMOR
+            id: STEEL_BOOTS
+            amount: 1
+        crafting-time: 7
+        conditions:
+        - 'level 8'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 5 Steel_Ingot'
+    steel-ingot:
+        output:
+            type: MATERIAL
+            id: STEEL_INGOT
+            amount: 3
+        conditions:
+        - 'level 6'
+        ingredients:
+        - 'vanilla IRON_INGOT . 4 Iron_Ingot'
+    steel-dagger:
+        output:
+            type: DAGGER
+            id: STEEL_DAGGER
+            amount: 1
+        crafting-time: 6
+        conditions:
+        - 'level 20'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 4 Steel_Ingot'
+        - 'vanilla STICK . 2 Wooden_Stick'
+    hardened-steel-claymore:
+        output:
+            type: GREATSWORD
+            id: HARDENED_STEEL_CLAYMORE
+            amount: 1
+        crafting-time: 20
+        conditions:
+        - 'level 13'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 15 Steel_Ingot'
+        - 'vanilla STICK . 4 Wooden_Stick'
+    stiff-greatstaff:
+        output:
+            type: GREATSTAFF
+            id: STIFF_GREATSTAFF
+            amount: 1
+        conditions:
+        - 'level 6'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 4 Steel_Ingot'
+        - 'vanilla STICK . 10 Wooden_Stick'
+    steel-pickaxe:
+        output:
+            type: TOOL
+            id: STEEL_PICKAXE
+            amount: 1
+        conditions:
+        - 'level 6'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 4 Steel_Ingot'
+        - 'vanilla STICK . 3 Wooden_Stick'
+    steel-shovel:
+        output:
+            type: TOOL
+            id: STEEL_SHOVEL
+            amount: 1
+        conditions:
+        - 'level 6'
+        ingredients:
+        - 'mmoitem MATERIAL STEEL_INGOT 2 Steel_Ingot'
+        - 'vanilla STICK . 3 Wooden_Stick'

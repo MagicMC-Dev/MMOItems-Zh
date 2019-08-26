@@ -1,0 +1,28 @@
+DOUBLE_OR_NOTHING:
+  material: IRON_AXE
+  lore:
+  - '&7&oA very powerful yet hard'
+  - '&7&oto manipulate weapon...'
+  - '&7&oBe very careful!'
+  critical-strike-power: 800.0=900.0
+  critical-strike-chance: 48.0=52.0
+  attack-damage: 1.4=1.5
+  attack-speed: 1.0=1.1
+  required-level: 10.0
+  enchants:
+    unbreaking: 5
+  hide-enchants: true
+  name: '&b&l&o"Double or Nothing"'
+  gem-sockets:
+  - Red
+  - Uncolored
+  - Green
+  - Blue
+  ability:
+    on-hit:
+      type: SLOW
+      mode: ON_HIT
+      cooldown: 30.0
+      duration: 4.0
+      amplifier: 2.0
+  pvp-damage: 12.0

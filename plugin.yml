@@ -1,0 +1,47 @@
+name: MMOItems
+version: 4.7.13
+main: net.Indyuce.mmoitems.MMOItems
+author: Indyuce
+softdepend: [WorldGuard,Holograms,Residence,BossShopPro,SkillAPI,MMOCore,MythicMobs]
+api-version: 1.13
+commands:
+    advancedworkbench:
+        description: Opens the advanced workbench.
+        aliases: [advancedwb,awb]
+    mmoitems:
+        description: MMOItems main command.
+        aliases: [mi]
+    updateitem:
+        description: Update the item you are holding.
+        aliases: [upitem,itemup]
+permissions:
+    mmoitems.admin:
+        description: Access to admin commands.
+        default: op
+    mmoitems.awb:
+        description: Access to /advancedworkbench.
+        default: op
+    mmoitems.update:
+        description: Access to /updateitem.
+        default: op
+    mmoitems.bypass.item:
+        description: Bypasses item permission restriction.
+        default: false
+    mmoitems.bypass.ability:
+        description: Bypasses ability permission restriction.
+        default: false
+    mmoitems.bypass.class:
+        description: Bypasses item class restriction.
+        default: false
+    mmoitems.bypass.soulbound:
+        description: Bypasses soulbound restriction.
+        default: false
+    mmoitems.bypass.level:
+        description: Bypasses item level restriction.
+        default: false
+    mmoitems.update-notify:
+        description: Receive a notification when a new update is available.
+        default: op
+    mmoitems.soulbound:
+        description: Allows to use /soulbound.
+        default: op

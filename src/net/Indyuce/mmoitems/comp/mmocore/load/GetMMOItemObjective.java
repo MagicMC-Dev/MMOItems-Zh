@@ -1,0 +1,68 @@
+package net.Indyuce.mmoitems.comp.mmocore.load;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+import net.Indyuce.mmocore.api.item.NBTItem;
+import net.Indyuce.mmocore.api.load.MMOLineConfig;
+import net.Indyuce.mmocore.api.quest.ObjectiveProgress;
+import net.Indyuce.mmocore.api.quest.QuestProgress;
+import net.Indyuce.mmocore.api.quest.objective.Objective;
+import net.Indyuce.mmocore.comp.citizens.CitizenInteractEvent;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+
+public class GetMMOItemObjective extends Objective {
+	private final Type type;
+	private final String id;
+	private final int required, npcId;
+
+	public GetMMOItemObjective(ConfigurationSection section, MMOLineConfig config) {
+		super(section);
+
+		config.validate("type", "id", "npc");
+
+		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
+		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type " + format);
+		type = MMOItems.plugin.getTypes().get(format);
+
+		id = config.getString("id");
+		required = config.contains("amount") ? Math.min(config.getInt("amount"), 1) : 1;
+		npcId = config.getInt("npc");
+	}
+
+	@Override
+	public ObjectiveProgress newProgress(QuestProgress questProgress) {
+		return new GotoProgress(questProgress, this);
+	}
+
+	public class GotoProgress extends ObjectiveProgress implements Listener {
+		public GotoProgress(QuestProgress questProgress, Objective objective) {
+			super(questProgress, objective);
+		}
+
+		@EventHandler
+		public void a(CitizenInteractEvent event) {
+			Player player = event.getPlayer();
+			if (player.equals(getQuestProgress().getPlayer().getPlayer()) && event.getNPC().getId() == npcId && player.getInventory().getItemInMainHand() != null) {
+				NBTItem item = NBTItem.get(player.getInventory().getItemInMainHand());
+				int amount;
+				if (item.getString("MMOITEMS_ITEM_TYPE").equals(type.getId()) && item.getString("MMOITEMS_ITEM_ID").equals(id) && (amount = player.getInventory().getItemInMainHand().getAmount()) >= amount) {
+					if (amount <= required)
+						player.getInventory().setItemInMainHand(null);
+					else
+						player.getInventory().getItemInMainHand().setAmount(amount - required);
+					getQuestProgress().completeObjective();
+				}
+			}
+		}
+
+		@Override
+		public String formatLore(String lore) {
+			return lore;
+		}
+	}
+}

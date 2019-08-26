@@ -1,0 +1,24 @@
+FIRE_GREATLANCE:
+  material: BLAZE_ROD
+  required-level: 30.0
+  attack-damage: 14.0=15.0
+  attack-speed: 1.1
+  name: '&fFire Greatlance'
+  ability:
+    on-hit:
+      type: LIFE_ENDER
+      mode: ON_HIT
+      damage: 10.0
+      cooldown: 30.0
+  lore:
+  - '&7Every 40s in combat, casts'
+  - '&7a devastating &6fire comet'
+  - '&7that wipes out any life form'
+  - '&7nearby whenever it lands.'
+  item-particles:
+    type: DOUBLE_RINGS
+    particle: FLAME
+    radius: 1.3
+    rotation-speed: 0.4
+  disable-crafting: true
+  two-handed: true

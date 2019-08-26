@@ -1,0 +1,210 @@
+# --------------------------------------------------------------
+#
+# Thanks for using MMOItems!
+#
+# --------------------------------------------------------------
+
+# Notifies players with the 'mmoitems.update-notify' perm node when
+# they join the server if a new update is available for download.
+# Requires /reload when changed.
+update-notify: true
+
+# The plugin takes a few milliseconds to read the item data from the item
+# config and a few hundred MICROseconds to actually generate it. Caching the
+# item allows to skip the first step which reduces ~6 times the delay needed
+# to generate any mmoitem.
+#
+# However, it does take up much more RAM space. Toggle it on if you have
+# too many items which makes item generation time consuming. Toggle it off
+# to get some spare memory.
+use-item-caching: true
+
+# Default: 2.5 ; critical strikes deal 2.5x damage.
+# Can be increased by 'Critical Strike Power'
+crit-coefficient: 2.5
+
+# By default, all player inventories will be updated every
+# 10 ticks which corresponds to 2 inventory updates a second.
+inventory-update-delay: 10
+
+# Changes the default value for some stats.
+default:
+    attack-speed: 0.67
+    range: 16
+    blunt-rating: 33
+    recoil: 0.1
+
+# Enable/disable the item glow feature. Make sure you
+# reload your server when changing this option. This
+# option might take extra performance so consider toggling
+# it off if you have players or mobs dropping many items.
+item-glow: true
+
+item-upgrading:
+    # Display name suffix for upgraded items.
+    name-suffix: '&f &a+#lvl#'
+
+soulbound:
+    # Edit soulbound damage when players try to use
+    # items which are not bound to themselves.
+    damage:
+        base: 2
+        per-lvl: 2
+
+# Default and max. values of armor stats. These systems
+# all have a cooldown which can be reduced using the
+# '*** Cooldown Reduction' item stat.
+mitigation:
+    block:
+        power:
+            default: 25.0
+            max: 75.0
+        rating-max: 80.0
+        cooldown:
+            base: 5.0
+            max-reduction: 80.0
+    dodge:
+        knockback:
+            enabled: true
+            force: 1
+        rating-max: 80.0
+        cooldown:
+            base: 5.0
+            max-reduction: 80.0
+    parry:
+        knockback-force: 1.0
+        rating-max: 80.0
+        cooldown:
+            base: 8.0
+            max-reduction: 80.0
+        
+# Enable, disable and customize the weapon effects here.
+# Weapon effects depend on the item type & type set.
+item-ability:
+    staff:
+        enabled: true
+        cooldown: 30
+        power: 1
+    gauntlet:
+        enabled: true
+        cooldown: 60
+        power: 1
+    blunt:
+        aoe:
+            enabled: true
+            cooldown: 2
+        stun:
+            enabled: true
+            chance: 5
+            cooldown: 30
+            power: 1
+    slashing:
+        enabled: true
+        cooldown: 2
+    piercing:
+        enabled: true
+        cooldown: 4
+
+gem-sockets:
+    # Define the text you need to enter in the
+    # item gem sockets if you want to create an
+    # uncolored gem socket i.e a socket for any type of gem.
+    uncolored: 'Uncolored'
+
+advanced-workbench:
+    # Define on what actions the adv workbench will open.
+    open-when:
+        # When enabled, players can open the adv. workbench
+        # by right-clicking a workbench while NOT sneaking.
+        simple-click: false
+        # When enabled, players can open the adv. workbench
+        # by right-clicking a workbench WHILE SNEAKING.
+        shift-click: true
+    # Players can click the anvil in the advanced workbench
+    # to see all the available advanced crafting recipes.
+    recipe-list: true
+
+# Use this option if your chat management plugin is having
+# conflicts with the MMOItems chat input feature. This will
+# bring up an anvil GUI which you can input text in instead
+# of using the chat.
+anvil-text-input: false
+
+# Players can't use their weapon/abilities when holding
+# two-handed item and one other item simultaneously.
+# When toggled off, players still receive slow 4.
+two-handed-item-restriction: true
+
+# You can select what char will be used to create
+# the item ability cooldown progress bar.
+cooldown-progress-bar-char: █
+
+# When toggled off, players can't damage each other using item abilities.
+ability-player-damage: true
+
+# Displays a message on the action bar instead of on the chat.
+# Can be used to reduce chat spam.
+# Might interfere with other action bar plugins.
+action-bar-display:
+    ability-cooldown: true
+    not-enough-mana: true
+    not-enough-stamina: true
+    two-handed: true
+    cant-use-item: true
+    mitigation: true
+    item-break: false
+
+# Displays in-game damage indicators.
+# Requires HolographicDisplays/Holograms to work.
+# Requires /reload when enabled/disabled.
+game-indicators:
+    damage:
+        enabled: true
+        decimal-format: '0.#'
+        format: '&c-#'
+#        format: '&c&l✦ #'
+    heal:
+        enabled: true
+        decimal-format: '0.#'
+        format: '&a+#'
+#        format: '&a&l❤ #'
+
+# Unregisters all crafting recipes. Requires /reload.
+# Also disables the advanced workbench when disabling advanced craftings.
+disable-craftings:
+    vanilla: false
+    advanced: false
+
+# "repair" prevents players from repairing MMOItems.
+# "smelt" prevents players from smelting MMOItems.
+# 'enchant" disables enchanting for MMOItems.
+# "craft" prevents players from using MMOItems as ingredients.
+# "arrow-shooting" prevents players from shooting any MMOItem that is an arrow.
+disable-interactions:
+    interact: false
+    repair: false
+    enchant: false
+    smelt: false
+    craft: false
+    arrow-shooting: false
+
+# Block types that can't be broken by an ability/item effect
+block-blacklist:
+- OBSIDIAN
+- BEDROCK
+
+# Allows/disables the permissions needed in order to use items/abilities.
+# General permission node for abilities: mmoitems.ability.ability-id
+# Ex: - mmoitems.ability.fire-meteor
+#     - mmoitems.ability.slow
+#     - mmoitems.ability.cursed-fangs
+#     etc.
+permissions:
+    abilities: false
+    items: true
+
+# Disables non MMOItems from being crafted in the vanilla workbench.
+# Add [] if the list is empty.
+disable-vanilla-recipes: []
+# - DIAMOND_PICKAXE
+# - IRON_BLOCK

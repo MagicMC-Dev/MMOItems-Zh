@@ -1,0 +1,47 @@
+AMPLIFICATION_TOME:
+  material: ENCHANTED_BOOK
+  name: '&9Amplification Tome'
+  required-level: 9.0
+  lore:
+  - '&7It emits a strong magical aura.'
+  - '&7Hold it to &5greatly enhance'
+  - '&7your magical powers.'
+  magic-damage: 80.0=90.0
+WYVERN_FEATHER:
+  material: FEATHER
+  disable-crafting: true
+  name: '&fWyvern Feather'
+  fall-damage-reduction: 65.0
+WYVERN_SOUL:
+  material: ENDER_EYE
+  name: '&fWyvern Soul'
+  disable-interaction: true
+  disable-crafting: true
+  enchants:
+    unbreaking: 1
+  perm-effects:
+    LEVITATION: 2
+  hide-enchants: true
+TOME_OF_ACCURACY:
+  material: ENCHANTED_BOOK
+  disable-repairing: true
+  name: '&eTome of Accuracy'
+  critical-strike-power: 25.0=30.0
+  critical-strike-chance: 5.0=10.0
+  lore:
+  - '&7Increases your critical power.'
+NAUGHTY_SPELL_BOOK:
+  material: ENCHANTED_BOOK
+  disable-repairing: true
+  name: '&8Naughty Spell Book'
+  required-level: 20.0
+  ability:
+    right-click:
+      type: CURSED_BEAM
+      mode: RIGHT_CLICK
+      cooldown: 30.0
+      damage: 6.0
+  lore:
+  - '&7Right click to cast a &5cursed beam&7.'
+  - '&7This magic projectile deals &57'
+  - '&5damage &7to the first enemy it hits.'

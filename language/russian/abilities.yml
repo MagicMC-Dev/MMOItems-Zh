@@ -1,0 +1,105 @@
+ability:
+  overload: Перегрузка
+  freeze: Заморозка
+  magical-shield: Магический Щит
+  blizzard: Снежная Буря
+  bouncy-fireball: Скачущий Огненный Шар
+  burning-hands: Горящие Руки
+  fire-meteor: Огненный Метеор
+  light-dash: Бросок
+  tactical-grenade: Тактическая Граната
+  ignite: Поджог
+  sparkle: Искра
+  tnt-throw: Бросок TNT
+  earthquake: Землятрясение
+  stun: Оглушение
+  holy-missile: Святая Ракета
+  black-hole: Черная Дыра
+  cursed-beam: Проклятый Луч
+  circular-slash: Круговое Рассечение
+  throw-up: Подбрасывание
+  slow: Замедление
+  heavy-charge: Тяжелый Выпад
+  thrust: Колющий Удар
+  item-throw: Бросок Предмета
+  shock: Шок
+  minor-explosion: Небольшой Взрыв
+  shadow-veil: Исчезновение
+  frog-mode: Режим Лягушки
+  regen-ally: Исцеление Союзников
+  lightning-beam: Удар Молнией
+  death-mark: Метка Смерти
+  confuse: Сбивание
+  shulker-missile: Снаряд Шалкера
+  contamination: Заражение
+  heal: Восстановление
+  corrosion: Коррозия
+  leap: Прыжок
+  explosive-turkey: Взрывной Турк
+  hoearthquake: Большая Вскопка
+  burn: Поджог
+  starfall: Звездопад
+  wither: Иссушение
+  shockwave: Ударная Волна
+  vampirism: Вампризм
+  snowman-turret: Турель - Снеговик
+  smite: Молния
+  corrupt: Искажение
+  arcane-hail: Волшебный Дождь
+  firebolt: Огненный Шар
+  grand-heal: Массовое Исцеление
+  magical-path: Магия Полета
+  life-ender: Месть Эндера
+  swiftness: Ускорение
+  present-throw: Бросок Подарка
+  weaken-target: Ослабление Противника
+  chicken-wraith: Куриный Призрак
+  freezing-curse: Проклятие Заморозки
+  arcane-rift: Чародейский Разлом
+  targeted-fireball: Нацеленный огненный Шар
+  corrupted-fangs: Клыки Искажения
+  ice-crystal: Ледяной Кристалл
+  blind: Слепота
+  firefly: Светлячок
+  poison: Яд
+  blink: Блинк
+  frozen-aura: Аура Обморожения
+  sky-smash: Воздушный Бросок
+  magma-fissure: Трещина Магмы
+  bunny-mode: Режим Кролика
+  bloodbath: Резня
+  item-bomb: Бомба
+modifier:
+  damage: Урон
+  mana: Мана
+  stamina: Стамина
+  cooldown: Перезарядка
+  radius: Радиус
+  duration: Длителньость
+  amplifier: Усиление
+  power: Мощь
+  inaccuracy: Неточность
+  force: Сила
+  ignite: Поджог
+  speed: Скорость
+  knockback: Отбрасывание
+  length: Длина
+  knock-up: Вертикальное Отбрасывание
+  max-ignite: Максимальная длительность Горения
+  limit: Лимит
+  jump-force: Сила Прыжка
+  heal: Восстановление
+  effect-duration: Длительность Эффекта
+  drain: Вампризм
+  extra-damage: Дополнительный урон
+  range: Дальность
+  amount: Количество
+  slow-duration: Длительность Замедления
+  slow-amplifier: Усиление Замедления
+cast-mode:
+  on-hit: При Попадании
+  when-hit: При получении Урона
+  left-click: Левый Клик
+  right-click: Правый Клик
+  shift-left-click: Шифт + Левый Клик
+  shift-right-click: Шифт + Првый Клик

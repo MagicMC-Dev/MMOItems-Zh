@@ -1,0 +1,64 @@
+PALADIN_SHIELD:
+  material: SHIELD
+  name: '&f&m--[&e Paladin Shield &f&m]--'
+  tier: RARE
+  two-handed: false
+  max-health: 8.0
+  armor: 6.0
+  armor-thoughness: 3.0
+  unbreakable: true
+  block-power: 50.0
+  block-rating: 20.0
+  perm-effects:
+    SLOW: 3
+  gem-sockets:
+  - Red
+  - Red
+  required-level: 15.0
+  shield-pattern:
+    color: YELLOW
+    '0':
+      pattern: CURLY_BORDER
+      color: ORANGE
+    '1':
+      pattern: STRIPE_MIDDLE
+      color: YELLOW
+MAGICAL_SHIELD:
+  material: SHIELD
+  required-level: 5.0
+  tier: MAGICAL
+  perm-effects:
+    SLOW: 4
+    DAMAGE_RESISTANCE: 4
+  gem-sockets:
+  - Red
+  - Red
+  shield-pattern:
+    color: WHITE
+    '0':
+      pattern: STRAIGHT_CROSS
+      color: YELLOW
+    '1':
+      pattern: FLOWER
+      color: ORANGE
+    '2':
+      pattern: BORDER
+      color: YELLOW
+  name: '&fMagical Shield'
+  lore:
+  - '&7A rudimentary shield to'
+  - '&7carry your gem stones.'
+  block-rating: 5.0
+  block-power: 5.0=7.0
+ABSORBING_SHIELD:
+  material: SHIELD
+  required-level: 15.0
+  shield-pattern:
+    color: BLUE
+  name: '&9Absorbing Shield'
+  unbreakable: true
+  damage-reduction: 50.0=60.0
+  movement-speed: -0.03
+  two-handed: true
+  disable-smelting: false
+  disable-crafting: true

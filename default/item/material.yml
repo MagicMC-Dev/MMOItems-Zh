@@ -1,0 +1,224 @@
+STEEL_INGOT:
+  material: IRON_INGOT
+  name: '&fSteel Ingot'
+  disable-repairing: true
+  disable-crafting: true
+  lore:
+  - '&7Can be used at the steel crafting'
+  - '&7station to craft advanced gear.'
+UNCOMMON_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft uncommon items.'
+  name: '&eUncommon Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+WITHER_ESSENCE:
+  material: BLACK_DYE
+  name: '&8Wither Essence'
+  disable-crafting: true
+RARE_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft rare items.'
+  name: '&eRare Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+VERY_RARE_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft very rare items.'
+  name: '&eVery rare Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+LEGENDARY_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft legendary items.'
+  name: '&eLegendary Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+MYTHICAL_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft mythical items.'
+  name: '&eMythical Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+EPIC_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft epic items.'
+  name: '&eEpic Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+MAGICAL_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft magical items.'
+  name: '&eMagical Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+UNIQUE_WEAPON_ESSENCE:
+  material: BLAZE_POWDER
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  lore:
+  - '&7Can be used to craft unique items.'
+  name: '&eUnique Weapon Essence'
+  disable-crafting: true
+  disable-smelting: true
+WEAPON_POWDER:
+  material: GUNPOWDER
+  tier: TRASH
+  name: '&7Broken Weapon Powder'
+  lore:
+  - '&7Can be used as regular gunpowder.'
+  - '&7Obtained when deconstructing an item.'
+MAGIC_FRAGMENT:
+  material: MAGENTA_DYE
+  disable-crafting: true
+  tier: RARE
+  name: '&8Magic Fragment'
+MAGIC_ESSENCE:
+  material: BOOK
+  disable-crafting: true
+  tier: RARE
+  name: '&5Magic Essence'
+FIRE_ESSENCE:
+  material: BLAZE_POWDER
+  disable-crafting: true
+  name: '&bFire Essence'
+  hide-enchants: true
+  enchants:
+    unbreaking: 1
+  advanced-craft:
+    '8':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '7':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '6':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '5':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '2':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '1':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '0':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '3':
+      material: BLAZE_POWDER
+      amount: 1
+      durability: 0
+      name: ''
+    '4':
+      material: BLAZE_ROD
+      amount: 1
+      durability: 0
+      name: ''
+RARE_DIAMOND:
+  material: DIAMOND
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  disable-crafting: true
+  name: '&bRare Diamond'
+SILVER_COIN:
+  material: IRON_NUGGET
+  name: '&fSilver Coin'
+  lore:
+  - '&7A very shiny silver coin.'
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  disable-crafting: true
+SILVER_INGOT:
+  material: IRON_INGOT
+  name: '&fSilver Ingot'
+  lore:
+  - '&7A very shiny silver ingot.'
+  enchants:
+    unbreaking: 1
+  hide-enchants: true
+  disable-crafting: true
+  advanced-craft:
+    '7':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '6':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '3':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '8':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '4':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '5':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '0':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '1':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1
+    '2':
+      type: MISCELLANEOUS
+      id: SILVER_COIN
+      amount: 1

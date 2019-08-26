@@ -1,0 +1,63 @@
+RUBY:
+  material: EMERALD
+  name: '&fRuby of Strength'
+  critical-strike-power: 10.0=12.0
+  attack-damage: 1.0=2.0
+  required-level: 5.0
+  disable-crafting: true
+GEM_OF_ACCURACY:
+  material: DIAMOND
+  disable-crafting: true
+  name: '&fGem of Accuracy'
+  success-rate: 90.0=99.0
+  attack-speed: 0.05=0.1
+  tier: COMMON
+  critical-strike-chance: 10.0=15.0
+  gem-color: Blue
+  displayed-type: Blue Gem Stone
+GEM_OF_LIFE:
+  material: RED_DYE
+  max-health: 4.0
+  name: '&fGem of Life'
+  item-type-restriction:
+  - ARMOR
+  gem-color: Red
+  displayed-type: Red Armor Gem Stone
+  block-power: 3.0
+  disable-crafting: true
+NATURE_GIFT:
+  material: EMERALD
+  name: '&fNature''s Gift'
+  displayed-type: Green Gem Stone
+  regeneration: 50.0=70.0
+  fire-damage-reduction: 20.0=30.0
+  required-level: 6.0
+SPITEFUL_OPAQUE_DIAMOND:
+  material: DIAMOND
+  name: '&9Spiteful Opaque Diamond'
+  success-rate: 10.0=12.0
+  attack-damage: 3.0=4.0
+  armor: 2.0
+  disable-crafting: true
+  gem-color: Blue
+  displayed-type: Blue Gem Stone
+GOLDEN_RELIC:
+  material: GOLD_NUGGET
+  name: '&eGolden Relic'
+  lore:
+  - '&7Apply it onto &eany&7 socket.'
+  - '&7'
+  critical-strike-chance: 10.0=20.0
+  required-level: 20.0
+  disable-crafting: true
+BLAZE_SOUL:
+  material: ORANGE_DYE
+  disable-crafting: true
+  name: '&cBlaze Soul'
+  required-level: 15.0
+  displayed-type: Red Gem Stone
+  hide-enchants: true
+  enchants:
+    unbreaking: 1
+  fire-damage-reduction: 50.0=60.0
+  success-rate: 60.0=80.0

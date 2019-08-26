@@ -1,0 +1,14 @@
+staff-spirit:
+  nether-spirit: '&7■ Дух Ада'
+  void-spirit: '&7■ Дух Пустоты'
+  mana-spirit: '&7■ Дух Маны'
+  lightning-spirit: '&7■ Дух Молнии'
+  xray-spirit: '&7■ Дух X-Ray '
+  thunder-spirit: '&7■ Дух Грозы'
+  sunfire-spirit: '&7■ Дух Солнца'
+lute-attack:
+  wave: '&7■ Волновая Атака'
+  circular: '&7■ Круговая Атака'
+  simple: '&7■ Простая Атака'
+  brute: '&7■ Грубая Атака'
+  slash: '&7■ Разящая Атака'

@@ -1,0 +1,30 @@
+UNIDENTIFIED_ITEM:
+  name: '&kNiezidentyfikowany'
+  lore:
+  - '&e&oTen przedmiot jest &c&o&nniezindentyfikowany&e&o.'
+  - '&e&oMusisz znalezc sposob by go zidentyfikowac'
+TYPE_DISPLAY:
+  name: '#type# &8(Nacisnij by przegladac)'
+  lore:
+  - '&7Jest &6#recipes#&7 dostepnych przepisow.'
+RECIPE_LIST:
+  name: Zaawansowane przepisy
+  lore: []
+BACK:
+  name: Wroc
+  lore: []
+NEXT_PAGE:
+  name: Nastepna Strona
+  lore: []
+PREVIOUS_PAGE:
+  name: Poprzednia strona
+  lore: []
+NO_ITEM:
+  name: '- Brak Przedmiotu -'
+  lore: []
+NO_TYPE:
+  name: '- Brak rodzaju -'
+  lore: []
+NO_GEM_STONE:
+  name: '- Puste gniazdo na klejnot -'
+  lore: []

@@ -1,0 +1,22 @@
+package net.Indyuce.mmoitems.stat;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.type.BooleanStat;
+import net.Indyuce.mmoitems.version.nms.ItemTag;
+
+public class Vanilla_Eating_Animation extends BooleanStat {
+	public Vanilla_Eating_Animation() {
+		super(new ItemStack(Material.COOKED_BEEF), "Vanilla Eating Animation", new String[] { "When enabled, players have to wait", "for the vanilla eating animation", "in order to eat the consumable." }, "vanilla-eating", new String[] { "consumable" });
+	}
+
+	@Override
+	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+		if (((BooleanData) data).isEnabled())
+			item.addItemTag(new ItemTag("MMOITEMS_VANILLA_EATING", true));
+		return true;
+	}
+}

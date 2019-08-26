@@ -1,0 +1,104 @@
+# Weapon Stats
+attack-damage: '&7➸ Obrazenia: &f#'
+attack-speed: '&7➸ Szybkosc Ataku: &f#'
+critical-strike-chance: '&7■ Szansa na krytyka: &f<plus>#%'
+critical-strike-power: '&7■ Sila krytyka: &f<plus>#%'
+range: '&7■ Zasieg: &f#'
+mana-cost: '&9■ Uzywa # Many'
+stamina-cost: '&9■ Uzywa # Wytrzymalosci'
+arrow-velocity: '&7■ Predkosc Strzaly: &f#%'
+blunt-power: '&7■ Sila Obuchowa: &f#%'
+blunt-rating: '&7■ Klasa Obuchu: &f#%'
+two-handed: '&7■ Dwureczny'
+knockback: '&7■ Odrzut: &f#'
+recoil: '&7■ Odrzut: &f#%'
+note-weight: '&7■ Waga: &f#'
+
+# Extra Damage
+pve-damage: '&7■ Obrazenia PvE: &f<plus>#%'
+pvp-damage: '&7■ Obrazenia PvP: &f<plus>#%'
+magic-damage: '&7■ Obrazenia Magiczne: &f<plus>#%'
+weapon-damage: '&7■ Obrazenia Od Broni: &f<plus>#%'
+undead-damage: '&7■ Obrazenia Dla Nieumarlych: &f<plus>#%'
+
+# Abilities
+ability-format: '&2#c: #a'
+ability-modifier: '&2#m: #v'
+ability-splitter: '&2'
+
+# Armor Stats
+block-power: '&7■ Sila Bloku: &f<plus>#%'
+block-rating: '&7■ Klasa Bloku: &f<plus>#%'
+block-cooldown-reduction: '&7■ Zmniejszenie Czasu Odnowienia Bloku: &f<plus>#%'
+dodge-rating: '&7■ Klasa Uniku: &f<plus>#%'
+dodge-cooldown-reduction: '&7■ Zmniejszenie Czasu Odnowienia Uniku: &f<plus>#%'
+parry-rating: '&7■ Klasa Parowania: &f<plus>#%'
+parry-cooldown-reduction: '&7■ Zmniejszenie Czasu Odnowienia Parowania: &f<plus>#%'
+armor: '&7✠ Pancerz: &f<plus>#'
+armor-toughness: '&7✠ Wytrzymalosc Pancerza: &f<plus>#'
+knockback-resistance: '&7✠ Odpornosc Na Odepchniecie: &f<plus>#%'
+max-health: '&c❤ Zdrowie: <plus>#'
+movement-speed: '&7■ Szybkosc Ruchu: &f<plus>#'
+regeneration: '&7■ Regeneracja Zdrowia: &f<plus>#%'
+
+# Damage Reduction
+damage-reduction: '&7■ Zmniejszenie Obrazen: &f<plus>#%'
+fall-damage-reduction: '&7■ Zmniejszenie Obrazen Od Upadku: &f<plus>#%'
+fire-damage-reduction: '&7■ Zmniejszenie Obrazen Od Ognia: &f<plus>#%'
+magic-damage-reduction: '&7■ Zmniejszenie Obrazen Magicznych: &f<plus>#%'
+physical-damage-reduction: '&7■ Zmniejszenie Obrazen Psychicznych: &f<plus>#%'
+
+# Extra Options
+max-mana: '&7■ Maksymalna Mana: &f<plus>#'
+perm-effect: '&7■ Staly &f#'
+command: '&7■ Komenda: &f#c &7(&f#cd&7s)'
+item-cooldown: '&7■ &f#&7s Czas Odnowienia'
+
+# Consumables
+restore-health: '&7■ Odnawia &f# &7Zdrowia'
+restore-food: '&7■ Odnawia &f# &7Jedzenia'
+restore-saturation: '&7■ Odnawia &f# &7Nasycenia'
+restore-mana: '&7■ Odnawia &f# &7Many'
+restore-stamina: '&7■ Odnawia &f# &7Wytrzymalosci'
+effect: '&7■ Zapewnia &f#e &7na &f#d&7s'
+repair: '&7■ Napraw: &f#'
+can-identify: '&7■ Moze identyfikowac przedmioty.'
+can-deconstruct: '&7■ Moze rozkladac wielopoziomowe przedmioty.'
+success-rate: '&7■ Szansa na sukces: &a&l#%'
+
+# Gem Stones
+empty-gem-socket: '&a◆ Puste Miejsce Na Klejnot'
+filled-gem-socket: '&a◆ #'
+when-applied: '&aKiedy Wlozony:'
+gem-stone-lore: '&8&l[&2&l*&8&l] &aPrzesun na przedmiot &7by uzyc!'
+
+# Soulbound
+soulbinding-chance: '&7■ Ma &a#%&7 szansy by przywiazac twoj przedmiot.'
+soulbound-break-chance: '&7■ Ma &a#%&7 szansy by zlamac twoje wiezi.'
+soulbound-level: '&7■ Wiez poziomu &e# &7'
+
+# Tool Enchants
+autosmelt: '&7■ &fAutomatyczne Wytapianie'
+bouncing-crack: '&7■Skoczne Pekniecie &f'
+
+# General
+item-type: '&c#'
+tier: '# PRZEDMIOT'
+required-class: '&7# Przedmiot'
+required-level: '&ePoziom #'
+
+# Elemental Damage
+fire-damage: '&c❖ #% Obrazenia Od Ognia'
+ice-damage: '&b❖ #% Obrazenia Od Lodu'
+earth-damage: '&2❖ #% Obrazenia Od Ziemi'
+wind-damage: '&7❖ #% Obrazenia Od Wiatru'
+thunder-damage: '&e❖ #% Obrazenia Od Burzy'
+water-damage: '&3❖ #% Obrazenia Od Wody'
+
+# Elemental Defense
+fire-defense: '&c❖ #% Odpornosc Na Ogien'
+ice-defense: '&b❖ #% Odpornosc Na Lod'
+earth-defense: '&2❖ #% Odpornosc Na Ziemie'
+wind-defense: '&7❖ #% Odpornosc Na Wiatr'
+thunder-defense: '&e❖ #% Odpornosc Na Burze'
+water-defense: '&3❖ #% Odpornosc Na Wode'

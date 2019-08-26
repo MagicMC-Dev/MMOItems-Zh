@@ -1,0 +1,104 @@
+# Weapon Stats
+attack-damage: '&7➸ 攻击伤害: &f#'
+attack-speed: '&7➸ 攻击速度: &f#'
+critical-strike-chance: '&7■ 暴击概率: &f<plus>#%'
+critical-strike-power: '&7■ 暴击附加: &f<plus>#%'
+range: '&7■ 范围: &f#'
+mana-cost: '&9■ 消耗 # 法力值'
+stamina-cost: '&9■ 消耗 # 体力'
+arrow-velocity: '&7■ 箭矢速度: &f#%'
+blunt-power: '&7■ AOE 伤害半径: &f#'
+blunt-rating: '&7■ AOE 伤害比例: &f#%'
+two-handed: '&7■ 双持'
+knockback: '&7■ 击退: &f#'
+recoil: '&7■ 后坐力: &f#%'
+note-weight: '&7■ Note Weight: &f#'
+
+# Extra Damage
+pve-damage: '&7■ PvE 伤害加成: &f<plus>#%'
+pvp-damage: '&7■ PvP 伤害加成: &f<plus>#%'
+magic-damage: '&7■ 法术伤害加成: &f<plus>#%'
+weapon-damage: '&7■ 武器伤害加成: &f<plus>#%'
+undead-damage: '&7■ 不死生物伤害加成: &f<plus>#%'
+
+# Abilities
+ability-format: '&2#c: #a'
+ability-modifier: '&2#m: #v'
+ability-splitter: '&2'
+
+# Armor Stats
+block-power: '&7■ 阻挡: &f<plus>#%'
+block-rating: '&7■ 阻挡概率: &f<plus>#%'
+block-cooldown-reduction: '&7■ 阻挡冷却缩减: &f<plus>#%'
+dodge-rating: '&7■ 闪避几率: &f<plus>#%'
+dodge-cooldown-reduction: '&7■ 闪避冷却缩减: &f<plus>#%'
+parry-rating: '&7■ 招架几率: &f<plus>#%'
+parry-cooldown-reduction: '&7■ 招架冷却缩减: &f<plus>#%'
+armor: '&7✠ 护甲[B]: &f<plus>#'
+armor-toughness: '&7✠ 护甲[A]: &f<plus>#'
+knockback-resistance: '&7✠ 击退保护: &f<plus>#%'
+max-health: '&c❤ 生命值: <plus>#'
+movement-speed: '&7■ 移动速度: &f<plus>#'
+regeneration: '&7■ 生命恢复: &f<plus>#%'
+
+# Damage Reduction
+damage-reduction: '&7■ 伤害减免: &f<plus>#%'
+fall-damage-reduction: '&7■ 摔落伤害减免: &f<plus>#%'
+fire-damage-reduction: '&7■ 火焰伤害减免: &f<plus>#%'
+magic-damage-reduction: '&7■ 魔法伤害减免: &f<plus>#%'
+physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
+
+# Extra Options
+max-mana: '&7■ 最大法力值加成: &f<plus>#'
+perm-effect: '&7■ 效果 &f#'
+command: '&7■ 指令: &f#c &7(&f#d&7s)'
+item-cooldown: '&7■ &f#&7 秒 冷却'
+
+# Consumables
+restore-health: '&7■ 恢复 &f# &7生命值'
+restore-food: '&7■ 恢复 &f# &7饥饿值'
+restore-saturation: '&7■ 恢复 &f# &7饱和度'
+restore-mana: '&7■ 恢复 &f# &7法力值'
+restore-stamina: '&7■ 恢复 &f# &7法力值'
+effect: '&7■ 获得 &f#e &7持续 &f#d&7 秒'
+repair: '&7■ 修复: &f#'
+can-identify: '&7■ 可识别'
+can-deconstruct: '&7■ 可分解'
+success-rate: '&7■ 成功概率: &a&l#%'
+
+# Gem Stones
+empty-gem-socket: '&a◆ Empty # Gem Socket'
+filled-gem-socket: '&a◆ #'
+when-applied: '&a镶嵌时间:'
+gem-stone-lore: '&8&l[&2&l*&8&l] 放置宝石以镶嵌'
+
+# Soulbound
+soulbinding-chance: '&7■ &a#%&7 几率绑定物品'
+soulbound-break-chance: '&7■ &a#%&7 几率破坏绑定'
+soulbound-level: '&7■ 绑定等级 &e#'
+
+# Tool Enchants
+autosmelt: '&7■ &f自动熔炼'
+bouncing-crack: '&7■ &f 范围破坏'
+
+# General
+item-type: '&7> 类型: #'
+tier: '&7[&f&l品质&7]: #'
+required-class: '&7> &9&l职业限制&7&l: #'
+required-level: '&7> &c&l等级限制&7&l: #'
+
+# Elemental Damage
+fire-damage: '&c❖ #% 火属性伤害'
+ice-damage: '&b❖ #% 冰属性伤害'
+earth-damage: '&2❖ #% 地属性伤害'
+wind-damage: '&7❖ #% 风属性伤害'
+thunder-damage: '&e❖ #% 电属性伤害'
+water-damage: '&3❖ #% 水属性伤害'
+
+# Elemental Defence
+fire-defense: '&c❖ #% 火属性防御'
+ice-defense: '&b❖ #% 冰属性防御'
+earth-defense: '&2❖ #% 地属性防御'
+wind-defense: '&7❖ #% 风属性防御'
+thunder-defense: '&e❖ #% 电属性防御'
+water-defense: '&3❖ #% 水属性防御'

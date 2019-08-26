@@ -1,0 +1,60 @@
+NO_ITEM:
+  name: '&c- Нет Предмета -'
+  lore: []
+NO_TYPE:
+  name: '&c- Нет Типа -'
+  lore: []
+TYPE_DISPLAY:
+  name: '&a#type# &8(Нажмите, чтобы просмотреть)'
+  lore:
+  - '&7Есть &6#recipes#&7 доступных рецептов.'
+PREVIOUS_PAGE:
+  name: '&aПредыдущая Страница'
+  lore: []
+NEXT_PAGE:
+  name: '&aСледующая Страница'
+  lore: []
+PREVIOUS_IN_QUEUE:
+  name: '&aПредыдущая'
+  lore: []
+NEXT_IN_QUEUE:
+  name: '&aСледующая'
+  lore: []
+BACK:
+  name: '&aНазад'
+  lore: []
+RECIPE_LIST:
+  name: '&aУлучшенные Рецепты'
+  lore: []
+CRAFTING_RECIPE_DISPLAY:
+  name: '&a&lСоздание&f #name#'
+  lore:
+  - '{conditions}'
+  - '#condition_level#'
+  - '{crafting_time}'
+  - '{crafting_time}&7Время Создания: &c#crafting-time#&7s'
+  - ''
+  - '&8Ингредиенты:'
+  - '#ingredients#'
+  - ''
+  - '&eНажмите, чтобы скрафтить!'
+UPGRADING_RECIPE_DISPLAY:
+  name: '&e&lУлучшение&f #name#'
+  lore:
+  - '{conditions}'
+  - '#condition_level#'
+  - ''
+  - '&8Ингредиенты:'
+  - '#ingredients#'
+  - ''
+  - '&eНажмите, чтобы улучшить!'
+QUEUE_ITEM_DISPLAY:
+  name: '&6&lОчередь&f #name#'
+  lore:
+  - '{ready}&7&oЭтот предмет был успешно создан.'
+  - '{queue}&7&oЭтот предмет находиться в очереди создания.'
+  - '{queue}'
+  - '{queue}&7Времени Осталось: &c#left#'
+  - ''
+  - '{ready}&eНажмите, чтобы взять!'
+  - '{queue}&eНажмите, чтобы отменить.'

@@ -1,0 +1,49 @@
+STEEL_DAGGER:
+  material: IRON_SWORD
+  name: '&fSteel Dagger'
+  attack-damage: 4.5=5.0
+  attack-speed: 1.8=2.0
+  pvp-damage: 15.0=20.0
+  movement-speed: 0.02
+  critical-strike-chance: 50.0=60.0
+  gem-sockets:
+  - Uncolored
+  - Blue
+  ability:
+    right-click:
+      type: THRUST
+      mode: RIGHT_CLICK
+      damage: 4.3
+      cooldown: 5.0
+      stamina: 20.0
+  tier: COMMON
+  required-level: 5.0
+  required-class:
+  - Rogue
+  - Archer
+DRACULA_DAGGER:
+  material: IRON_SWORD
+  tier: RARE
+  required-level: 15.0
+  attack-damage: 7.0=8.0
+  name: '&fDracula''s Dagger'
+  attack-speed: 1.6=1.7
+  critical-strike-chance: 15.0
+  fall-damage-reduction: 43.0
+  regeneration: 40.0=45.0
+  gem-sockets:
+  - Uncolored
+  - Red
+  ability:
+    on-hit:
+      type: VAMPIRISM
+      mode: ON_HIT
+      drain: 3.0
+      cooldown: 4.0
+  lore:
+  - '&7Every 4sec, hitting an'
+  - '&7enemy &cdrains&7 his health,'
+  - '&7healing you for &c1.5 heart&7.'
+  enchants:
+    unbreaking: 10
+  hide-enchants: true

@@ -1,0 +1,66 @@
+# Item sets let you create links betweens the different items you create.
+# By wearing multiple items from the same set, the player will benefit from
+# set bonuses which incites him to use items from the same type.
+# This is a very powerful system for RPG items.
+#
+# You can also use potion effects as set bonuses, e.g
+# - speed: 2 gives permanent Speed II
+# - increase_damage: 3 gives permanent Strength III
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
+#
+# You may also add abilities as full set bonuses. The ability ID
+# must start with 'ability-' but it is only used as reference.
+# You can configure the ability cast mode, type & modifiers as usual.
+
+
+ARCANE:
+    name: '&2Arcane Set'
+    bonuses:
+        '3':
+            magic-damage: 20
+        '4':
+            max-mana: 30
+            speed: 1
+    lore-tag:
+    - '&7Arcane Set Bonus:'
+    - '&8[3] +20% Magic Damage'
+    - '&8[4] 30 Max Mana'
+    - '&8[4] Permanent Speed I'
+
+STEEL:
+    name: '&8Steel Set'
+    bonuses:
+        '3':
+            damage-reduction: 5
+        '4':
+            damage-reduction: 5
+    lore-tag:
+    - '&7Steel Set Bonus:'
+    - '&8[3] +5% Damage Reduction'
+    - '&8[4] +5% Damage Reduction'
+
+GINGERBREAD:
+    name: '&cGingerbread Set'
+    bonuses:
+        '4':
+            damage-reduction: 6
+            jump: 3
+    lore-tag:
+    - '&7Gingerbread Set Bonus:'
+    - '&8[4] +5% Damage Reduction'
+    - '&8[4] Permanent Jump III'
+
+# Not used by default, but works.
+HATRED:
+    name: '&cHatred Set'
+    bonuses:
+        '2':
+            damage-reduction: 6
+            ability-1:
+                type: LIFE_ENDER
+                cooldown: 30
+                mode: ON_HIT
+    lore-tag:
+    - '&7Hatred Set Bonus:'
+    - '&8[2] -6% Damage Taken'
+    - '&8[2] Summons a devastating fire meteor on hit.'

@@ -1,0 +1,76 @@
+ability:
+  overload: Sobrecarga
+  magical-shield: Escudo Mágico
+  bouncy-fireball: Bouncy Fireball
+  burning-hands: Arma flameante
+  fire-meteor: Meteorito
+  light-dash: Embestida de Luz
+  sparkle: Destellos
+  tnt-throw: TNT
+  earthquake: Terremoto
+  stun: Aturdir
+  holy-missile: Misil sagrado
+  black-hole: Agujero negro
+  slow: Relentizar
+  throw-up: Maldición Podrida
+  circular-slash: Circulo mortal
+  cursed-beam: Viga maldita
+  thrust: Thrust
+  heavy-charge: Super carga
+  item-throw: Lanzar
+  shock: Electrocutar
+  shadow-veil: Velo de Sombras
+  frog-mode: Modo rana
+  lightning-beam: Rayo de luz
+  death-mark: Marca mortal
+  confuse: Confusión
+  shulker-missile: Misil Shulker
+  heal: Cura
+  leap: Salto
+  burn: Quemar
+  starfall: Lluvia de Estrellas
+  wither: Wither
+  shockwave: Onda de Choque
+  vampirism: Vampirismo
+  smite: Herida profunda
+  corrupt: Corrupción
+  arcane-hail: Maldición del protector
+  grand-heal: Gran meditación
+  firebolt: Rayo de Fuego
+  magical-path: Botas mágicas
+  life-ender: Diluvio Letal
+  swiftness: Rapidez
+  freezing-curse: Congelar
+  ice-crystal: Cristal de hielo
+  blind: Cegar
+  firefly: Mariposa
+  poison: Veneno
+  blink: Teletransporte
+  sky-smash: Aplaste Aéreo
+  bloodbath: Baño de sangre
+  bunny-mode: Modo conejo
+  item-bomb: Bomba
+modifier:
+  damage: '&7Daño'
+  mana: Mana
+  stamina: '&7Stamina'
+  cooldown: '&7Enfriamiento'
+  radius: '&7Radio'
+  duration: '&7Duración'
+  power: '&7Poder'
+  ignite: '&7Ignición'
+  speed: '&7Velocidad'
+  knockback: '&7Empuje'
+  length: '&7Longitud'
+  limit: '&7Límite'
+  force: '&7Fuerza'
+  amplifier: '&7Mejora'
+  jump-force: '&7Fuerza de salto'
+  slow-amplifier: '&7Mejora de relentización'
+  effect-duration: '&7Duración del efecto'
+  heal: '&7Curación'
+  knock-up: '&7Aturdir'
+  drain: '&7Drenar'
+  range: '&7Rango'
+  amount: '&7Cantidad'
+  slow-duration: '&7Tiempo de relentización'

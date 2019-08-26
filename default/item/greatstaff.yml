@@ -1,0 +1,19 @@
+STIFF_GREATSTAFF:
+  material: STICK
+  name: '&fStiff Greatstaff'
+  attack-damage: 10.0=12.0
+  required-level: 6.0
+  attack-speed: 0.9
+  ability:
+    on-hit:
+      type: STUN
+      mode: ON_HIT
+      cooldown: 15.0
+  lore:
+  - '&7So heavy it &cstuns&7 enemies on hit.'
+  disable-crafting: true
+  disable-smelting: true
+  block-rating: 5.0
+  blunt-rating: 75.0
+  dodge-rating: -30.0
+  tier: COMMON

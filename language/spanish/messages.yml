@@ -1,0 +1,33 @@
+hands-too-charged: Estás usando un ítem a dos manos, no puedes hacer eso.
+spell-on-cooldown: '#progress# &e#left# Segundo#s#'
+item-on-cooldown: Aún no esta listo!
+item-command-on-cooldown: Aún no esta listo!
+not-enough-perms-command: '&fComando desconocido usa "/ayuda" para mas info'
+attack-blocked: 'Has bloqueado #percent#% de daño recibido!'
+attack-dodged: Has esquivado un ataque!
+not-enough-levels: '&e&lNo tienes nivel suficiente para usar este ítem'
+not-enough-perms: '&c&lNo puedes hacer eso.'
+not-enough-mana: No tienes mana suficiente!
+not-enough-stamina: No tienes suficiente resistencia!
+not-identified: No puedes usar un ítem sin identificar.
+wrong-class: You don't have the right class!
+successfully-identified: 'Ítem identificado: #item#&e.'
+successfully-deconstructed: 'Has destruido: #item#&e.'
+gem-stone-applied: Has aplicado &f#gem#&e a &f#item#&e.
+repaired-item: Has reparado &f#item#&e por &f#amount# &ede durabilidad.
+gave-item: '&eHas dado &f#item#&e#amount# a &f#player#&e.'
+received-item: '&a&l➱ &eHas recibido &f#item#&e#amount#.'
+cant-update-item: El ítem no se puede actualizar.
+update-item: Ítem actualizado.
+empty-workbench-first: Primero vacía la mesa de creación.
+not-enough-perms-craft: '&fComando desconocido usa "/ayuda" para mas info'
+miss-spell: Fallaste &c#spell#&e.
+advanced-workbench: Mesa de creación avanzada
+advanced-recipes: Recetas avanzadas
+gem-stats: Estadísticas de gemas
+click-advanced-recipe: Clic para ver la receta.
+attack-parried: Has reflejado un ataque!
+gem-stone-broke: La gema &f#gem#&c se ha roto al intentar aplicarse a &f#item#&c.
+broken-item: This item is broken, you first need to repair it.
+item-broke: 'Your #item#&c broke.'
+zero-durability: Your item has no durability left. Repair it in order to use it again.

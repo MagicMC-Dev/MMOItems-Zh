@@ -1,0 +1,49 @@
+hands-too-charged: Nie mozesz nic zrobic, twoje rece sa zbyt naladowane
+spell-on-cooldown: '#progress# &eMusisz poczekac #left# second#s# przed rzuceniem
+  tego zaklecia.'
+item-on-cooldown: Ten przedmiot nie jest jeszcze gotowy!
+not-enough-perms-command: Nie masz wystarczajacych uprawnien!
+attack-blocked: 'Wlasnie zablokowales #percent#% z obrazen z tego ataku!'
+attack-dodged: Wlasnie uniknales ataku!
+attack-parried: Wlasnie sparowales atak!
+not-enough-levels: Nie masz wystarczajacego poziomu by uzyc tego przedmiotu!
+soulbound-restriction: Ten przedmiot jest przypisany do innego gracza, nie mozesz
+  go uzyc!
+not-enough-perms: Nie masz wystarczajacych uprawnien by tego uzyc!
+broken-item: Ten przedmiot jest zniszczony, musisz go naprawic.
+item-broke: 'Twoj #item#&c zostal zniszczony.'
+zero-durability: Twoj przedmiot nie ma juz wytrzymalosci, napraw go by go uzywac.
+not-enough-mana: Nie masz wystarczajaco many!
+not-enough-stamina: Nie masz wystarczajaco staminy!
+wrong-class: Nie masz odpowiedniej klasy!
+successfully-identified: 'Udalo ci sie zidentyfikowac #item#&e.'
+successfully-deconstructed: 'Udalo ci sie rozlozyc #item#&e.'
+gem-stone-applied: Udalo ci sie wlozyc &f#gem#&e do twojego &f#item#&e.
+gem-stone-broke: Twoj klejnot &f#gem#&c zostal zniszczony kiedy probowales wlozyc
+  go do &f#item#&c.
+repaired-item: Udalo ci sie naprawic &f#item#&e za &f#amount# &euzyc.
+gave-item: '&eDales &f#item#&e#amount# dla &f#player#&e.'
+received-item: '&eOtrzymales &f#item#&e#amount#.'
+cant-update-item: Nie bylo mozliwe ulepszenie twojego przedmiotu.
+update-item: Udalo sie ulepszyc twoj przedmiot.
+empty-workbench-first: Oproznij stol warsztatowy
+not-enough-perms-craft: Nie posiadasz uprawnien by wytworzyc ten przedmiot
+cant-bind-item: 'Ten przedmiot jest aktualnie przypisany do #player# za pomoca wiezu
+  poziomu #level#. Musisz najpierw przerwac wiez'
+no-soulbound: Ten przedmiot nie jest przypisany do nikogo.
+cant-bind-stacked: Nie mozesz przywiazach zestackowanych przedmiotow.
+unsuccessful-soulbound: Twoja proba zwiazania nie udala sie.
+unsuccessful-soulbound-break: Nie byles w stanie przerwac wiezu.
+low-soulbound-level: 'Ten przedmiot jest jest przypisany wiezem poziomu #level#. Potrzebujesz
+  wiekszego poziomu wiezu na twoim przedmiocie by zerwac ten wiaz.'
+successfully-bind-item: Udalo ci sie uzyc przywiazania poziomu &6#level# &e na twoim
+  &6#item#&e.
+successfully-break-bind: Udalo ci sie przerwac przywiazanie poziomu &6#level# do &eprzedmiotu!
+soulbound-item-lore: '&7//&4Przypisany do #player#//&4Lvl #level#'
+soulbound-command-no: Ten przedmiot nie jest do nikogo przypisany
+soulbound-command-info: Twoj przedmiot jest przypisany do &6#player# &eza pomoca wiezu
+  poziomu &6#level# &e.
+advanced-workbench: Zaawansowany stol warsztatowy
+advanced-recipes: Zaawansowane przepisy
+gem-stats: Klejnoty
+click-advanced-recipe: '#d Kliknij by poznac przepis.'

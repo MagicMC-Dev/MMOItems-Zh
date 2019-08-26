@@ -1,0 +1,183 @@
+# 'name' is used to display the tier in the item lore.
+#
+# 'deconstruct-item' is the drop table for the item
+# that drops when deconstructing an item.
+#
+# Tier IDs (TRASH,COMMON...) are case sensitive.
+
+TRASH:
+    name: '&8&lTRASH'
+    unidentification:
+        range: 6
+        name: 'Trash'
+        prefix: '&8'
+    deconstruct-item: {}
+
+COMMON:
+    name: '&7&lCOMMON'
+    parent: TRASH
+    unidentification:
+        range: 6
+        name: 'Common'
+        prefix: '&7'
+    deconstruct-item: {}
+UNCOMMON:
+
+    # Tier name displayed in the item lore. 
+    name: '&8&lUNCOMMON'
+    
+    # Unidentified items display the item tier.
+    unidentification:
+        
+        # Only applies for items with a required
+        # levels. Corresponds to the range within
+        # which the required level is located.
+        range: 6
+        
+        # Tier name displayed in lore.
+        name: 'Uncommon'
+        
+        # unidentification item name prefix.
+        prefix: '&8'
+    
+    item-glow:
+        
+        # When enabled, dropped items display
+        # an item hint (looks like a hologram).
+        hint: true
+        
+        # Item glow color. List (line 400+):
+        # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Color.html
+        color: 'GRAY'
+    
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    UNCOMMON_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 2
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+RARE:
+    name: '&6&lRARE'
+    unidentification:
+        name: 'Rare'
+        range: 6
+        prefix: '&6'
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    RARE_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 3
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+VERY_RARE:
+    name: '&e&lVERY RARE'
+    unidentification:
+        name: 'Very Rare'
+        prefix: '&e'
+        range: 6
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    VERY_RARE_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 3
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+LEGENDARY:
+    name: '&b&lLEGENDARY'
+    unidentification:
+        name: 'Legendary'
+        prefix: '&b'
+        range: 6
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    LEGENDARY_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 4
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+MYTHICAL:
+    name: '&5&lMYTHICAL'
+    unidentification:
+        name: 'Mythical'
+        prefix: '&5'
+        range: 6
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    MYTHICAL_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 5
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+EPIC:
+    name: '&4&lEPIC'
+    unidentification:
+        name: 'Epic'
+        prefix: '&4'
+        range: 6
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    EPIC_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 6
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+
+MAGICAL:
+    name: '&2&lMAGICAL'
+    unidentification:
+        name: 'Magical'
+        prefix: '&2'
+        range: 6
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    MAGICAL_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 3
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0
+UNIQUE:
+    name: '&c&lUNIQUE'
+    unidentification:
+        name: 'Unique'
+        prefix: '&c'
+        range: 6
+    deconstruct-item:
+        sucess:
+            coef: 1
+            items:
+                MATERIAL:
+                    UNIQUE_WEAPON_ESSENCE: 100,1-1,0
+        lose:
+            coef: 9
+            items:
+                MATERIAL:
+                    WEAPON_POWDER: 100,1-1,0

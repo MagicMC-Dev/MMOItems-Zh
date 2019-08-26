@@ -1,0 +1,102 @@
+package net.Indyuce.mmoitems.stat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.Indyuce.mmoitems.version.nms.ItemTag;
+
+public class Permission extends ItemStat {
+	public Permission() {
+		super(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission", new String[] { "The permission needed to use this item." }, "permission", new String[] { "all" });
+	}
+
+	@Override
+	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+		ConfigFile config = inv.getItemType().getConfigFile();
+		if (event.getAction() == InventoryAction.PICKUP_ALL)
+			new StatEdition(inv, ItemStat.PERMISSION).enable("Write in the chat the permission you want your item to require.");
+
+		if (event.getAction() == InventoryAction.PICKUP_HALF) {
+			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("permission")) {
+				List<String> requiredPerms = config.getConfig().getStringList(inv.getItemId() + ".permission");
+				if (requiredPerms.size() < 1)
+					return true;
+				String last = requiredPerms.get(requiredPerms.size() - 1);
+				requiredPerms.remove(last);
+				config.getConfig().set(inv.getItemId() + ".permission", requiredPerms.size() == 0 ? null : requiredPerms);
+				inv.registerItemEdition(config);
+				inv.open();
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+		if (message.contains("|")) {
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your perm node must not contain any | symbol.");
+			return false;
+		}
+
+		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains("permission") ? config.getConfig().getStringList(inv.getItemId() + ".permission") : new ArrayList<>();
+		lore.add(message);
+		config.getConfig().set(inv.getItemId() + ".permission", lore);
+		inv.registerItemEdition(config);
+		inv.open();
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
+		return true;
+	}
+
+	@Override
+	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Current Value:");
+		if (!config.getConfigurationSection(path).contains("permission"))
+			lore.add(ChatColor.RED + "No permission.");
+		else
+			for (String s : config.getStringList(path + ".permission"))
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + s);
+		lore.add("");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a required permission.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last permission.");
+	}
+
+	@Override
+	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+		item.setData(ItemStat.PERMISSION, new StringListData(config.getStringList("permission")));
+		return true;
+	}
+
+	@Override
+	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+		item.addItemTag(new ItemTag("MMOITEMS_PERMISSION", String.join("|", ((StringListData) data).getList())));
+		return true;
+	}
+	
+	@Override
+	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+		if (item.hasTag(getNBTPath()))
+			mmoitem.setData(this, new StringListData(Arrays.asList(item.getString(getNBTPath()).split("\\|"))));
+	}
+}

@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import net.Indyuce.mmocore.MMOCore;
-import net.Indyuce.mmocore.api.event.LevelUpEvent;
+import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.stats.StatType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -47,7 +47,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	}
 
 	@EventHandler
-	public void a(LevelUpEvent event) {
+	public void a(PlayerLevelUpEvent event) {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 

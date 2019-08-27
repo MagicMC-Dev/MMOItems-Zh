@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.api.crafting.condition;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
+import org.apache.commons.lang.StringUtils;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
@@ -34,7 +34,7 @@ public class PermissionCondition extends Condition {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#perms#", Strings.join(permissions, ", "));
+		return string.replace("#perms#", StringUtils.join(permissions, ", "));
 	}
 
 	@Override

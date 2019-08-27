@@ -3,8 +3,6 @@ package net.Indyuce.mmoitems.api.crafting.condition;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.AltChar;
@@ -35,7 +33,7 @@ public class ClassCondition extends Condition {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#class#", StringUtils.join(classes, ", "));
+		return string.replace("#class#", String.join(", ", classes));
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 public class PlayerStats {
 	private final PlayerData playerData;
 
-	private Map<String, StatInstance> stats = new HashMap<>();
+	private final Map<String, StatInstance> stats = new HashMap<>();
 
 	/*
 	 * This is not a player data class. This class is used to temporarily save
@@ -66,7 +66,7 @@ public class PlayerStats {
 		if (stats.containsKey(stat.getId()))
 			return stats.get(stat.getId());
 
-		StatInstance ins = new StatInstance(stat);
+		StatInstance ins = new StatInstance();
 		stats.put(stat.getId(), ins);
 		return ins;
 	}
@@ -96,7 +96,7 @@ public class PlayerStats {
 
 	private Map<String, Double> mapCurrentStats() {
 		Map<String, Double> map = new HashMap<>();
-		stats.values().forEach(ins -> map.put(ins.getStat().getId(), ins.getTotal()));
+		stats.forEach((id, ins) -> map.put(id, ins.getTotal()));
 		return map;
 	}
 
@@ -137,16 +137,7 @@ public class PlayerStats {
 	}
 
 	public class StatInstance {
-		private final ItemStat stat;
 		private final Map<String, Double> extra = new HashMap<>();
-
-		public StatInstance(ItemStat stat) {
-			this.stat = stat;
-		}
-
-		public ItemStat getStat() {
-			return stat;
-		}
 
 		public double getTotal() {
 			double t = 0;

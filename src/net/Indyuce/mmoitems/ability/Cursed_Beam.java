@@ -65,7 +65,7 @@ public class Cursed_Beam extends Ability {
 							loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, .7f);
 
 							for (Entity aoeTarget : entities)
-								if (MMOUtils.canDamage(stats.getPlayer(), target) && loc.distanceSquared(aoeTarget.getLocation().add(0, 1, 0)) < 9) {
+								if (MMOUtils.canDamage(stats.getPlayer(), aoeTarget) && loc.distanceSquared(aoeTarget.getLocation().add(0, 1, 0)) < 9) {
 									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) aoeTarget, damage, DamageType.MAGIC);
 									((LivingEntity) aoeTarget).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (duration * 20), 0));
 								}

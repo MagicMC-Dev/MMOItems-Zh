@@ -31,7 +31,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 	@Override
 	public boolean canBeDamaged(Entity entity) {
-		return true;
+		return !MMOCore.plugin.damage.hasDamage(entity);
 	}
 
 	@Override

@@ -72,7 +72,7 @@ public class MMOItemsCompletion implements TabCompleter {
 				list.add("spirit");
 			}
 
-			else if (args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load"))
+			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load"))
 				for (Type type : MMOItems.plugin.getTypes().getAll())
 					list.add(type.getId());
 

@@ -4,6 +4,7 @@ public class AltChar {
 	public static final String gemSymbol = "۞";
 	public static final String square = "█";
 	public static final String star = "✦";
+	public static final String star2 = "★";
 	public static final String rightArrow = "⇨";
 	public static final String fourEdgedClub = "✤";
 

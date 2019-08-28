@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -159,7 +158,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	public class DoubleData extends StatData {
 		private double min, max;
 		private boolean hasMax;
-
+		
 		public DoubleData() {
 		}
 
@@ -221,7 +220,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		}
 
 		public double generateNewValue() {
-			return hasMax ? min + new Random().nextDouble() * (max - min) : min;
+			return hasMax ? min + random.nextDouble() * (max - min) : min;
 		}
 	}
 }

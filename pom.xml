@@ -3,7 +3,14 @@
   <groupId>net.Indyuce</groupId>
   <artifactId>MMOItems</artifactId>
   <version>4.7.14</version>
+  <description>A great item solution for your RPG server.</description>
   <build>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

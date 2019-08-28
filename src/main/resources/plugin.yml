@@ -1,7 +1,8 @@
-name: MMOItems
-version: ${version}
+name: ${project.name}
+version: ${project.version}
 main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce
+description: ${project.description}
 softdepend: [WorldGuard,Holograms,Residence,BossShopPro,SkillAPI,MMOCore,MythicMobs]
 api-version: 1.13
 commands:

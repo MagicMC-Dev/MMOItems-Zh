@@ -28,7 +28,7 @@ public class LegacyVersionWrapper implements VersionWrapper {
 
 	@Override
 	public void spawnParticle(Particle particle, Location loc, int amount, double x, double y, double z, double speed, float size, Color color) {
-		loc.getWorld().spawnParticle(particle, loc, 0, (double) color.getRed() / 255, (double) y / 255, (double) z / 255, 0);
+		loc.getWorld().spawnParticle(particle, loc, 0, (double) color.getRed() / 255, (double) color.getGreen() / 255, (double) color.getBlue() / 255, 0);
 	}
 
 	@Override

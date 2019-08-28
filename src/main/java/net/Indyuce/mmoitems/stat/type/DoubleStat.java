@@ -157,40 +157,30 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 	public class DoubleData extends StatData {
 		private double min, max;
-		private boolean hasMax;
-		
+
 		public DoubleData() {
 		}
 
 		public DoubleData(String string) {
-			try {
-				String[] split = string.split("\\=");
+			String[] split = string.split("\\=");
+			if (split.length == 2) {
 				min = Double.parseDouble(split[0]);
 				max = Double.parseDouble(split[1]);
-				hasMax = true;
-			} catch (Exception e) {
+			} else
 				min = Double.valueOf(string);
-				hasMax = false;
-			}
 		}
 
-		// max not used if there is only one value
 		public DoubleData(double value) {
-			this(value, 0, false);
+			this(value, 0);
 		}
 
-		public DoubleData(double min, double max) {
-			this(min, max, true);
-		}
-
-		private DoubleData(double min, double max, boolean hasMax) {
+		private DoubleData(double min, double max) {
 			this.min = min;
 			this.max = max;
-			this.hasMax = hasMax;
 		}
 
 		public boolean hasMax() {
-			return hasMax;
+			return max > min;
 		}
 
 		public double getMin() {
@@ -203,12 +193,10 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 		public void setMax(double value) {
 			max = value;
-			hasMax = max > min;
 		}
 
 		public void setMin(double value) {
 			min = value;
-			hasMax = max > min;
 		}
 
 		public void add(double value) {
@@ -220,7 +208,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		}
 
 		public double generateNewValue() {
-			return hasMax ? min + random.nextDouble() * (max - min) : min;
+			return hasMax() ? min + random.nextDouble() * (max - min) : min;
 		}
 	}
 }

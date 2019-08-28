@@ -83,7 +83,7 @@ public class ItemEdition extends EditionInventory {
 		previousMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
 		previous.setItemMeta(previousMeta);
 
-		addEditionInventoryItems(inv, false);
+		addEditionInventoryItems(inv, true);
 
 		while (n < slots.length)
 			inv.setItem(slots[n++], glass);

@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.AdvancedRecipeEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -43,8 +44,10 @@ public class GuiListener implements Listener {
 
 			Type type = ((EditionInventory) inventory).getItemType();
 			String id = ((EditionInventory) inventory).getItemId();
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
-				new ItemEdition(player, type, id).open();
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back")) {
+				if(inventory instanceof ItemEdition) new ItemBrowser(player, type).open();
+				else new ItemEdition(player, type, id).open();
+			}
 		}
 	}
 

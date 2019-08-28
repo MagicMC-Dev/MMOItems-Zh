@@ -11,6 +11,11 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <junitArtifactName>junit:junit</junitArtifactName>
+          <encoding>UTF-8</encoding>
+          <inputEncoding>UTF-8</inputEncoding>
+          <outputEncoding>UTF-8</outputEncoding>
+          <argLine>-ea -Dfile.encoding=UTF-8</argLine>
         </configuration>
       </plugin>
     </plugins>
@@ -218,5 +223,7 @@
     <properties>
     	<downloadSources>false</downloadSources>
     	<downloadJavadocs>false</downloadJavadocs>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 </project>

@@ -87,8 +87,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			if (args.length < 2) {
 				new ItemBrowser((Player) sender).open();
+				return true;
 			}
-
 			if (!Type.isValid(args[1])) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a valid item type.");
 				return true;
@@ -592,11 +592,11 @@ public class MMOItemsCommand implements CommandExecutor {
 					if (MMOItems.plugin.getVersion().getDurabilityHandler().isDamaged(item, item.getItemMeta()))
 						config.getConfig().set(name + ".durability", MMOItems.plugin.getVersion().getDurabilityHandler().getDurability(item, item.getItemMeta()));
 					if (item.getItemMeta().hasDisplayName())
-						config.getConfig().set(name + ".name", item.getItemMeta().getDisplayName().replace("�", "&"));
+						config.getConfig().set(name + ".name", item.getItemMeta().getDisplayName().replace("§", "&"));
 					if (item.getItemMeta().hasLore()) {
 						List<String> lore = new ArrayList<>();
 						for (String line : item.getItemMeta().getLore())
-							lore.add(line.replace("�", "&"));
+							lore.add(line.replace("§", "&"));
 						config.getConfig().set(name + ".lore", lore);
 					}
 					if (item.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS))

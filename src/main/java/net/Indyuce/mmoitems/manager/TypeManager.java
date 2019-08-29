@@ -13,8 +13,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
 
 public class TypeManager {
-	private Map<String, Type> map = new LinkedHashMap<>();
-	private ConfigFile config;
+	private final Map<String, Type> map = new LinkedHashMap<>();
 
 	public TypeManager() {
 		reload();
@@ -30,7 +29,9 @@ public class TypeManager {
 		 * and only custom types are registered with a parent.
 		 */
 		DefaultFile.ITEM_TYPES.checkFile();
-		for (String id : (config = new ConfigFile("item-types")).getConfig().getKeys(false))
+
+		ConfigFile config = new ConfigFile("item-types");
+		for (String id : config.getConfig().getKeys(false))
 			if (!map.containsKey(id))
 				try {
 					add(new Type(this, config.getConfig().getConfigurationSection(id)));

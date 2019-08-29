@@ -197,9 +197,9 @@ public class Type {
 		config.save();
 	}
 
-	public boolean canHaveStat(ItemStat stat) {
+	public boolean canHave(ItemStat stat) {
 		if (isSubtype())
-			return getParent().canHaveStat(stat);
+			return getParent().canHave(stat);
 
 		for (String s1 : stat.getCompatibleTypes()) {
 			if (s1.equalsIgnoreCase("!" + getId()))

@@ -114,7 +114,7 @@ public class DamageManager implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void a(EntityDamageByEntityEvent event) {
 		removeDamaged(event.getEntity());
 	}

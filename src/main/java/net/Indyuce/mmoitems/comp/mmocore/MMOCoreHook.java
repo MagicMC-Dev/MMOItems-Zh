@@ -18,16 +18,10 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOCoreHook implements RPGHandler, Listener {
-	
+
 	private final ItemStat manaRegen = new DoubleStat(new ItemStack(Material.LAPIS_LAZULI), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regen");
 	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
 	private final ItemStat additionalExperience = new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
-	
-	private final ItemStat weaponDamage = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Weapon Damage (MMOCore)", new String[] { "Additional weapon damage in %." }, "weapon-damage");
-	private final ItemStat skillDamage = new DoubleStat(new ItemStack(Material.BLAZE_POWDER), "Skill Damage (MMOCore)", new String[] { "Additional skill damage in %." }, "skill-damage");
-	private final ItemStat projectileDamage = new DoubleStat(new ItemStack(Material.SPECTRAL_ARROW), "Projectile Damage (MMOCore)", new String[] { "Additional projectile damage in %." }, "projectile-damage");
-	private final ItemStat magicalDamage = new DoubleStat(new ItemStack(Material.ENCHANTED_BOOK), "Magical Damage (MMOCore)", new String[] { "Additional magical damage in %." }, "magical-damage");
-	private final ItemStat physicalDamage = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Physical Damage (MMOCore)", new String[] { "Additional physical damage in %." }, "physical-damage");
 
 	/*
 	 * called when MMOItems enables
@@ -44,11 +38,6 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		MMOItems.plugin.getStats().register("MANA_REGENERATION", manaRegen);
 		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", cooldownReduction);
 		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", additionalExperience);
-		MMOItems.plugin.getStats().register("WEAPON_DAMAGE", weaponDamage);
-		MMOItems.plugin.getStats().register("SKILL_DAMAGE", skillDamage);
-		MMOItems.plugin.getStats().register("PROJECTILE_DAMAGE", projectileDamage);
-		MMOItems.plugin.getStats().register("MAGICAL_DAMAGE", magicalDamage);
-		MMOItems.plugin.getStats().register("PHYSICAL_DAMAGE", physicalDamage);
 	}
 
 	@Override
@@ -65,11 +54,11 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		rpgdata.getStats().getInstance(StatType.COOLDOWN_REDUCTION).addModifier("MMOItems", data.getStats().getStat(cooldownReduction));
 		rpgdata.getStats().getInstance(StatType.ADDITIONAL_EXPERIENCE).addModifier("MMOItems", data.getStats().getStat(additionalExperience));
 
-		rpgdata.getStats().getInstance(StatType.SKILL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(skillDamage));
-		rpgdata.getStats().getInstance(StatType.WEAPON_DAMAGE).addModifier("MMOItems", data.getStats().getStat(weaponDamage));
-		rpgdata.getStats().getInstance(StatType.PROJECTILE_DAMAGE).addModifier("MMOItems", data.getStats().getStat(projectileDamage));
-		rpgdata.getStats().getInstance(StatType.PHYSICAL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(physicalDamage));
-		rpgdata.getStats().getInstance(StatType.MAGICAL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(magicalDamage));
+		rpgdata.getStats().getInstance(StatType.SKILL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(ItemStat.SKILL_DAMAGE));
+		rpgdata.getStats().getInstance(StatType.WEAPON_DAMAGE).addModifier("MMOItems", data.getStats().getStat(ItemStat.WEAPON_DAMAGE));
+		rpgdata.getStats().getInstance(StatType.PROJECTILE_DAMAGE).addModifier("MMOItems", data.getStats().getStat(ItemStat.PROJECTILE_DAMAGE));
+		rpgdata.getStats().getInstance(StatType.PHYSICAL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(ItemStat.PHYSICAL_DAMAGE));
+		rpgdata.getStats().getInstance(StatType.MAGICAL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(ItemStat.MAGIC_DAMAGE));
 	}
 
 	@Override

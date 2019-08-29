@@ -16,9 +16,9 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class StatManager {
-	private Map<String, ItemStat> stats = new LinkedHashMap<>();
-	private Set<DoubleStat> gem = new HashSet<>();
-	private Set<AttributeStat> attribute = new HashSet<>();
+	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
+	private final Set<DoubleStat> gem = new HashSet<>();
+	private final Set<AttributeStat> attribute = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -65,6 +65,15 @@ public class StatManager {
 
 		if (stat instanceof AttributeStat)
 			attribute.add((AttributeStat) stat);
+
+		/*
+		 * cache stat for every type which may have this stat. really important
+		 * otherwise the stat will NOT be used anywhere in the plugin.
+		 */
+		if (MMOItems.plugin.getTypes() != null)
+			for (Type type : MMOItems.plugin.getTypes().getAll())
+				if (type.canHave(stat))
+					type.getAvailableStats().add(stat);
 	}
 
 	public ItemStat get(String str) {
@@ -72,6 +81,6 @@ public class StatManager {
 	}
 
 	private boolean isGemStoneStat(ItemStat stat) {
-		return Type.GEM_STONE.canHaveStat(stat) && stat != ItemStat.REQUIRED_LEVEL && stat != ItemStat.CUSTOM_MODEL_DATA && stat != ItemStat.DURABILITY && stat != ItemStat.MAX_CUSTOM_DURABILITY && stat != ItemStat.SUCCESS_RATE && stat instanceof DoubleStat;
+		return Type.GEM_STONE.canHave(stat) && stat != ItemStat.REQUIRED_LEVEL && stat != ItemStat.CUSTOM_MODEL_DATA && stat != ItemStat.DURABILITY && stat != ItemStat.MAX_CUSTOM_DURABILITY && stat != ItemStat.SUCCESS_RATE && stat instanceof DoubleStat;
 	}
 }

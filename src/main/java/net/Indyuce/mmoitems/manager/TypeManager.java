@@ -63,7 +63,7 @@ public class TypeManager {
 			 * both item generation (and GUI) calculations. probably the thing
 			 * which takes the most time when loading item types.
 			 */
-			type.cacheAvailableStats(MMOItems.plugin.getStats().getAll().stream().filter(stat -> type.canHaveStat(stat)).collect(Collectors.toList()));
+			type.cacheAvailableStats(MMOItems.plugin.getStats().getAll().stream().filter(stat -> type.canHave(stat)).collect(Collectors.toList()));
 		}
 	}
 

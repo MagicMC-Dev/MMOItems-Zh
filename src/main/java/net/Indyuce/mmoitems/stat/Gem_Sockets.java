@@ -46,7 +46,6 @@ public class Gem_Sockets extends ItemStat {
 		item.addItemTag(new ItemTag("MMOITEMS_GEM_STONES", sockets.toJson().toString()));
 
 		String empty = ItemStat.translate("empty-gem-socket"), filled = ItemStat.translate("filled-gem-socket");
-
 		List<String> lore = new ArrayList<>();
 		sockets.getGemstones().forEach(gem -> lore.add(filled.replace("#", gem.getName())));
 		sockets.getEmptySlots().forEach(slot -> lore.add(empty.replace("#", slot)));

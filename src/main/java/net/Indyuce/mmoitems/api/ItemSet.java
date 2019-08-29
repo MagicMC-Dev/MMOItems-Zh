@@ -21,9 +21,9 @@ import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class ItemSet {
-	private Map<Integer, SetBonuses> bonuses = new HashMap<>();
-	private List<String> loreTag;
-	private String name, id;
+	private final Map<Integer, SetBonuses> bonuses = new HashMap<>();
+	private final List<String> loreTag;
+	private final String name, id;
 
 	public ItemSet(ConfigurationSection section) {
 		this.id = section.getName().toUpperCase().replace("-", "_");
@@ -40,20 +40,6 @@ public class ItemSet {
 				for (String key : section.getConfigurationSection("bonuses." + j).getKeys(false)) {
 					String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
 
-					// stat
-					ItemStat stat = MMOItems.plugin.getStats().get(format);
-					if (stat != null) {
-						bonuses.addStat(stat, section.getDouble("bonuses." + j + "." + key));
-						continue;
-					}
-
-					// potion effect
-					PotionEffectType potionEffectType = PotionEffectType.getByName(format);
-					if (potionEffectType != null) {
-						bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt("bonuses." + j + "." + key) - 1));
-						continue;
-					}
-
 					// ability
 					if (key.startsWith("ability-")) {
 						AbilityData ability = new AbilityData(null, section.getConfigurationSection("bonuses." + j + "." + key));
@@ -61,7 +47,17 @@ public class ItemSet {
 							bonuses.addAbility(ability);
 						else
 							MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't load set bonus ability, path: " + id + ".bonuses." + j + "." + key);
+						continue;
+					}
 
+					// potion effect
+					if (key.startsWith("potion-")) {
+						PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
+						if (potionEffectType != null) {
+							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt("bonuses." + j + "." + key) - 1));
+							continue;
+						}
+						continue;
 					}
 
 					// particle effect
@@ -72,6 +68,15 @@ public class ItemSet {
 						else
 							MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't load set bonus particle effect, path: " + id + ".bonuses." + j + "." + key);
 					}
+
+					// stat
+					ItemStat stat = MMOItems.plugin.getStats().get(format);
+					if (stat != null) {
+						bonuses.addStat(stat, section.getDouble("bonuses." + j + "." + key));
+						continue;
+					}
+
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + key + "' from " + id + ".");
 				}
 
 				this.bonuses.put(j, bonuses);
@@ -82,7 +87,7 @@ public class ItemSet {
 		return name;
 	}
 
-	public String getID() {
+	public String getId() {
 		return id;
 	}
 

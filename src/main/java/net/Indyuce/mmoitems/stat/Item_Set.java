@@ -33,7 +33,7 @@ public class Item_Set extends StringStat {
 			new StatEdition(inv, ItemStat.SET).enable("Write in the chat the item set ID.");
 			player.sendMessage("");
 			for (ItemSet set : MMOItems.plugin.getSets().getAll())
-				player.sendMessage(ChatColor.GRAY + "* " + ChatColor.GREEN + set.getID() + ChatColor.GRAY + " (" + set.getName() + ChatColor.GRAY + ")");
+				player.sendMessage(ChatColor.GRAY + "* " + ChatColor.GREEN + set.getId() + ChatColor.GRAY + " (" + set.getName() + ChatColor.GRAY + ")");
 			return true;
 		}
 

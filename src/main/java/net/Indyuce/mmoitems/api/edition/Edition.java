@@ -4,4 +4,6 @@ public interface Edition {
 	public boolean output(String input);
 	
 	public void enable(String... message);
+	
+	public boolean shouldGoBack();
 }

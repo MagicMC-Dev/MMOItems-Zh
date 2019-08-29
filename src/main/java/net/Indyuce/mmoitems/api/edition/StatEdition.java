@@ -61,4 +61,7 @@ public class StatEdition implements Edition {
 	public boolean output(String input) {
 		return input.equals("cancel") || stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getItemType().getConfigFile(), input, info);
 	}
+	
+	public boolean shouldGoBack()
+	{ return true; }
 }

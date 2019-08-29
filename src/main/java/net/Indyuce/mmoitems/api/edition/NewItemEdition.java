@@ -53,4 +53,7 @@ public class NewItemEdition implements Edition {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(inv.getPlayer(), "mi create " + inv.getType().getId() + " " + input.toUpperCase().replace(" ", "_").replace("-", "_")));
 		return true;
 	}
+	
+	public boolean shouldGoBack()
+	{ return false; }
 }

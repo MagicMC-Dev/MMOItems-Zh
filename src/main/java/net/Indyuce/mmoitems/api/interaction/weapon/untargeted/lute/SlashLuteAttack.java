@@ -11,10 +11,10 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 
 public class SlashLuteAttack implements LuteAttackHandler {
 
@@ -42,6 +42,6 @@ public class SlashLuteAttack implements LuteAttackHandler {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(stats.getPlayer().getLocation()))
 			if (entity.getLocation().distanceSquared(stats.getPlayer().getLocation()) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
-				new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, nbt, (LivingEntity) entity, DamageType.PROJECTILE);
+				new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, nbt, (LivingEntity) entity, DamageType.WEAPON, DamageType.PROJECTILE);
 	}
 }

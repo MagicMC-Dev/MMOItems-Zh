@@ -13,8 +13,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Explosive_Turkey extends Ability {
@@ -71,7 +71,7 @@ public class Explosive_Turkey extends Ability {
 					chicken.getWorld().playSound(chicken.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(chicken.getLocation()))
 						if (!entity.isDead() && entity.getLocation().distanceSquared(chicken.getLocation()) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity)) {
-							MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.MAGIC);
+							MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.SKILL, DamageType.PROJECTILE, DamageType.MAGICAL);
 							entity.setVelocity(entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback).setY(.4 * knockback));
 						}
 					cancel();

@@ -17,8 +17,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Earthquake extends Ability {
@@ -62,7 +62,7 @@ public class Earthquake extends Ability {
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 					if (MMOUtils.canDamage(stats.getPlayer(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
 						hit.add(entity.getEntityId());
-						MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.MAGIC);
+						MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.SKILL, DamageType.MAGICAL);
 						((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));
 					}
 			}

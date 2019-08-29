@@ -14,12 +14,12 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.api.util.SoundReader;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.version.VersionSound;
@@ -69,7 +69,7 @@ public class Lute extends UntargetedWeapon {
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(getPlayer(), loc, target)) {
-							new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target, DamageType.PROJECTILE);
+							new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target, DamageType.WEAPON, DamageType.PROJECTILE);
 							cancel();
 							return;
 						}

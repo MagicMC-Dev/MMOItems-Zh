@@ -10,8 +10,8 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -39,7 +39,7 @@ public class Sparkle extends Ability {
 		double radius = data.getModifier("radius");
 		double limit = data.getModifier("limit");
 
-		MMOItems.plugin.getDamage().damage(stats, (LivingEntity) target, damage1, DamageType.MAGIC);
+		MMOItems.plugin.getDamage().damage(stats, (LivingEntity) target, damage1, DamageType.SKILL, DamageType.MAGICAL);
 		target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 		int count = 0;
@@ -49,7 +49,7 @@ public class Sparkle extends Ability {
 
 			if (ent instanceof LivingEntity && ent != stats.getPlayer() && !(ent instanceof ArmorStand)) {
 				count++;
-				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) ent, damage1, DamageType.MAGIC);
+				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) ent, damage1, DamageType.SKILL, DamageType.MAGICAL);
 				ent.getWorld().playSound(ent.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 				Location loc_t = target.getLocation().add(0, .75, 0);
 				Location loc_ent = ent.getLocation().add(0, .75, 0);

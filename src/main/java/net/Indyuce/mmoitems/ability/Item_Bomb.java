@@ -15,9 +15,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -59,7 +59,7 @@ public class Item_Bomb extends Ability implements Listener {
 					for (Entity entity : item.getEntity().getNearbyEntities(radius, radius, radius))
 						if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
 							LivingEntity living = (LivingEntity) entity;
-							MMOItems.plugin.getDamage().damage(stats, living, damage, DamageType.MAGIC);
+							MMOItems.plugin.getDamage().damage(stats, living, damage, DamageType.SKILL, DamageType.PROJECTILE, DamageType.MAGICAL);
 							living.removePotionEffect(PotionEffectType.SLOW);
 							living.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));
 						}

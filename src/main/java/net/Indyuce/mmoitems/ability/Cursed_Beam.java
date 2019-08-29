@@ -16,8 +16,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -66,7 +66,7 @@ public class Cursed_Beam extends Ability {
 
 							for (Entity aoeTarget : entities)
 								if (MMOUtils.canDamage(stats.getPlayer(), aoeTarget) && loc.distanceSquared(aoeTarget.getLocation().add(0, 1, 0)) < 9) {
-									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) aoeTarget, damage, DamageType.MAGIC);
+									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) aoeTarget, damage, DamageType.SKILL, DamageType.PROJECTILE, DamageType.MAGICAL);
 									((LivingEntity) aoeTarget).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (duration * 20), 0));
 								}
 							cancel();

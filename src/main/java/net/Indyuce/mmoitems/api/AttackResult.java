@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class AttackResult {
@@ -87,8 +87,8 @@ public class AttackResult {
 	// applyEffectsAndDamage(stats, item, target, DamageType.WEAPON);
 	// }
 
-	public void applyEffectsAndDamage(TemporaryStats stats, NBTItem item, LivingEntity target, DamageType type) {
-		MMOItems.plugin.getDamage().damage(stats, target, applyEffects(stats, item, target).damage, type);
+	public void applyEffectsAndDamage(TemporaryStats stats, NBTItem item, LivingEntity target, DamageType... types) {
+		MMOItems.plugin.getDamage().damage(stats, target, applyEffects(stats, item, target).damage, types);
 	}
 
 	public AttackResult applyElementalEffects(TemporaryStats stats, NBTItem item, LivingEntity target) {

@@ -15,6 +15,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import net.Indyuce.mmoitems.api.DamageInfo;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -25,24 +27,15 @@ public class DamageManager implements Listener {
 		return customDamage.containsKey(entity.getEntityId());
 	}
 
-	public void setDamaged(Entity entity, double value, DamageType type) {
-		if (!customDamage.containsKey(entity.getEntityId()))
-			customDamage.put(entity.getEntityId(), new DamageInfo(value, type));
-	}
-
 	public DamageInfo getDamage(Entity entity) {
 		return customDamage.get(entity.getEntityId());
 	}
 
-	public void removeDamaged(Entity entity) {
-		customDamage.remove(Integer.valueOf(entity.getEntityId()));
+	public void damage(TemporaryStats playerStats, LivingEntity target, double value, DamageType... types) {
+		damage(playerStats, target, value, true, types);
 	}
 
-	public void damage(TemporaryStats playerStats, LivingEntity target, double value, DamageType damageType) {
-		damage(playerStats, target, value, damageType, true);
-	}
-
-	public void damage(TemporaryStats playerStats, LivingEntity target, double value, DamageType damageType, boolean knockback) {
+	public void damage(TemporaryStats playerStats, LivingEntity target, double value, boolean knockback, DamageType... types) {
 		if (target.hasMetadata("NPC") || playerStats.getPlayer().hasMetadata("NPC"))
 			return;
 
@@ -50,13 +43,16 @@ public class DamageManager implements Listener {
 		 * calculate extra damage depending on the type of attack and the entity
 		 * that is being damaged
 		 */
-		if (damageType.isSpell()) {
-			value *= 1 + (damageType == DamageType.MAGIC ? playerStats.getStat(ItemStat.MAGIC_DAMAGE) / 100 : 0);
-			value *= 1 + (isUndead(target) ? playerStats.getStat(ItemStat.UNDEAD_DAMAGE) / 100 : 0);
+		DamageInfo info = new DamageInfo(value, types);
+		if (info.hasType(DamageType.SKILL)) {
+			if (info.hasType(DamageType.MAGICAL))
+				value *= 1 + playerStats.getStat(ItemStat.MAGIC_DAMAGE) / 100;
+			if (isUndead(target))
+				value *= 1 + playerStats.getStat(ItemStat.UNDEAD_DAMAGE) / 100;
 			value *= 1 + (playerStats.getStat(target instanceof Player ? ItemStat.PVP_DAMAGE : ItemStat.PVE_DAMAGE) / 100);
 		}
 
-		setDamaged(target, value, damageType);
+		customDamage.put(target.getEntityId(), info);
 
 		if (!knockback) {
 			final double baseKnockbackValue = target.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getBaseValue();
@@ -77,45 +73,8 @@ public class DamageManager implements Listener {
 		return entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Wither;
 	}
 
-	public enum DamageType {
-
-		// damage dealt by weapons & weapon passives
-		WEAPON,
-
-		// damage dealt by physical skills
-		PHYSICAL,
-
-		// damage dealt by magical abilities
-		MAGIC,
-
-		// damage dealt by projectile based weapons
-		PROJECTILE;
-
-		public boolean isSpell() {
-			return this == MAGIC || this == PHYSICAL;
-		}
-	}
-
-	public class DamageInfo {
-		private final double value;
-		private final DamageType type;
-
-		private DamageInfo(double value, DamageType type) {
-			this.value = value;
-			this.type = type;
-		}
-
-		public double getValue() {
-			return value;
-		}
-
-		public DamageType getType() {
-			return type;
-		}
-	}
-
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void a(EntityDamageByEntityEvent event) {
-		removeDamaged(event.getEntity());
+		customDamage.remove(Integer.valueOf(event.getEntity().getEntityId()));
 	}
 }

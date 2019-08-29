@@ -10,8 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Death_Mark extends Ability {
@@ -50,7 +50,7 @@ public class Death_Mark extends Ability {
 				target.getWorld().spawnParticle(Particle.SPELL_MOB, target.getLocation(), 4, .2, 0, .2, 0);
 
 				if (ti % 20 == 0)
-					MMOItems.plugin.getDamage().damage(stats, target, dps, DamageType.MAGIC, false);
+					MMOItems.plugin.getDamage().damage(stats, target, dps, false, DamageType.SKILL, DamageType.MAGICAL);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 1, 2);

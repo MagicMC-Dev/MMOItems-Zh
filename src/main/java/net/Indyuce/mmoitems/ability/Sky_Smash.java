@@ -12,8 +12,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Sky_Smash extends Ability {
@@ -40,7 +40,7 @@ public class Sky_Smash extends Ability {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) < 10) {
-				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.PHYSICAL);
+				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.SKILL, DamageType.PHYSICAL);
 				Location loc1 = stats.getPlayer().getEyeLocation().clone();
 				loc1.setPitch(-70);
 				((LivingEntity) entity).setVelocity(loc1.getDirection().multiply(1.2 * knockUp));

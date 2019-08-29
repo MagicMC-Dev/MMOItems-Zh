@@ -13,7 +13,6 @@ import com.sucy.skill.api.player.PlayerData;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class SkillAPIHook implements RPGHandler, Listener {
@@ -28,12 +27,6 @@ public class SkillAPIHook implements RPGHandler, Listener {
 
 	@EventHandler
 	public void a(SkillDamageEvent event) {
-
-		/*
-		 * registers the target as a custom damaged entity, this way MMOItems
-		 * weapons effects do not apply when the entity is hit
-		 */
-		MMOItems.plugin.getDamage().setDamaged(event.getTarget(), event.getDamage(), DamageType.MAGIC);
 
 		if (event.getDamager() instanceof Player)
 			event.setDamage(event.getDamage() * (1 + net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getDamager()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));

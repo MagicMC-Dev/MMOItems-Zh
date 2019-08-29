@@ -1,17 +1,22 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.stats.StatType;
+import net.Indyuce.mmocore.comp.rpg.damage.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOCoreHook implements RPGHandler, Listener {
@@ -27,6 +32,11 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		 * register custom damage
 		 */
 		MMOCore.plugin.damage.registerHandler(new MMOCoreDamageHandler());
+
+		MMOItems.plugin.getStats().register(StatType.COOLDOWN_REDUCTION.name(), new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "(%) Reduces cooldowns of MMOCore skills." }, "skill-cooldown-reduction"));
+		MMOItems.plugin.getStats().register(StatType.ADDITIONAL_EXPERIENCE.name(), new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional % MMOCore main class experience." }, "additional-experience"));
+		for (DamageType type : DamageType.values())
+			MMOItems.plugin.getStats().register(type.name() + "_DAMAGE", new DoubleStat(new ItemStack(Material.GRAY_DYE), MMOUtils.caseOnWords(type.name().toLowerCase().replace("_", " ")) + " Damage (MMOCore)", new String[] { "Additional % MMOCore main class experience." }, "additional-experience"));
 	}
 
 	@Override

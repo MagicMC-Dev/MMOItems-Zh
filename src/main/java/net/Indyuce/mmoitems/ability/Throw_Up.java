@@ -15,9 +15,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
@@ -54,7 +54,7 @@ public class Throw_Up extends Ability implements Listener {
 						if (ent.getLocation().distanceSquared(loc) < 40)
 							if (stats.getPlayer().getEyeLocation().getDirection().angle(ent.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6)
 								if (MMOUtils.canDamage(stats.getPlayer(), ent))
-									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) ent, dps, DamageType.MAGIC);
+									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) ent, dps, DamageType.SKILL, DamageType.MAGICAL);
 
 				loc.getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
 

@@ -12,8 +12,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -39,7 +39,7 @@ public class Overload extends Ability {
 
 		for (Entity entity : stats.getPlayer().getNearbyEntities(radius, radius, radius))
 			if (MMOUtils.canDamage(stats.getPlayer(), entity))
-				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.MAGIC);
+				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.SKILL, DamageType.MAGICAL);
 
 		double step = 12 + (radius * 2.5);
 		for (double j = 0; j < Math.PI * 2; j += Math.PI / step) {

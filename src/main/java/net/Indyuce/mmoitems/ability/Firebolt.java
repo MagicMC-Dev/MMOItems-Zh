@@ -14,8 +14,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -59,7 +59,7 @@ public class Firebolt extends Ability {
 							loc.getWorld().spawnParticle(Particle.LAVA, loc, 8, 0, 0, 0, 0);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 3, 1);
-							MMOItems.plugin.getDamage().damage(stats, (LivingEntity) target, data.getModifier("damage"), DamageType.MAGIC);
+							MMOItems.plugin.getDamage().damage(stats, (LivingEntity) target, data.getModifier("damage"), DamageType.SKILL, DamageType.PROJECTILE, DamageType.MAGICAL);
 							target.setFireTicks((int) data.getModifier("ignite") * 20);
 							cancel();
 							return;

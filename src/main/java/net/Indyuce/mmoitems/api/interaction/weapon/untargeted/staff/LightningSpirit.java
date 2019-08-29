@@ -8,10 +8,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.version.VersionSound;
 
 public class LightningSpirit implements StaffAttackHandler {
@@ -29,7 +29,7 @@ public class LightningSpirit implements StaffAttackHandler {
 			loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 0);
 			for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
 				if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-					new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, nbt, (LivingEntity) target, DamageType.PROJECTILE);
+					new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, nbt, (LivingEntity) target, DamageType.WEAPON, DamageType.PROJECTILE);
 					loc.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, loc, 16, 0, 0, 0, .1);
 					return;
 				}

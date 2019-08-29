@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
+import java.util.stream.Collectors;
+
 import org.bukkit.entity.Entity;
 
 import net.Indyuce.mmocore.comp.rpg.damage.DamageHandler;
@@ -11,8 +13,8 @@ public class MMOCoreDamageHandler implements DamageHandler {
 
 	@Override
 	public DamageInfo getDamage(Entity entity) {
-		net.Indyuce.mmoitems.manager.DamageManager.DamageInfo miInfo = MMOItems.plugin.getDamage().getDamage(entity);
-		return new DamageInfo(DamageType.valueOf(miInfo.getType().name()), miInfo.getValue());
+		net.Indyuce.mmoitems.api.DamageInfo mmoitemsInfo = MMOItems.plugin.getDamage().getDamage(entity);
+		return new DamageInfo(mmoitemsInfo.getValue(), mmoitemsInfo.getTypes().stream().map((type) -> DamageType.valueOf(type.name())).collect(Collectors.toSet()));
 	}
 
 	@Override

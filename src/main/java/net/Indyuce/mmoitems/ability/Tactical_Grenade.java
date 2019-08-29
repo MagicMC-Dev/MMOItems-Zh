@@ -15,8 +15,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Tactical_Grenade extends Ability {
@@ -73,7 +73,7 @@ public class Tactical_Grenade extends Ability {
 						if (entity.equals(target))
 							cancel();
 
-						MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, data.getModifier("damage"), DamageType.MAGIC);
+						MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, data.getModifier("damage"), DamageType.SKILL, DamageType.PROJECTILE, DamageType.MAGICAL);
 						entity.setVelocity(entity.getVelocity().add(offsetVector(knockup)));
 					}
 			}

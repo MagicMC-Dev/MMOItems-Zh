@@ -8,12 +8,12 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.api.util.MMORayTraceResult;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class Musket extends UntargetedWeapon {
@@ -46,7 +46,7 @@ public class Musket extends UntargetedWeapon {
 
 		MMORayTraceResult trace = MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), vec, range);
 		if (trace.hasHit())
-			new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit(), DamageType.PROJECTILE);
+			new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit(), DamageType.WEAPON, DamageType.PROJECTILE);
 		trace.draw(loc, vec, 2, Color.BLACK);
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, 2);
 	}

@@ -12,8 +12,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.manager.DamageManager.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Bouncy_Fireball extends Ability {
@@ -74,7 +74,7 @@ public class Bouncy_Fireball extends Ability {
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (entity.getLocation().distanceSquared(loc) < radius * radius)
 							if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
-								MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage, DamageType.MAGIC);
+								MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage, DamageType.SKILL, DamageType.PROJECTILE, DamageType.MAGICAL);
 								((LivingEntity) entity).setFireTicks((int) (ignite * 20));
 							}
 

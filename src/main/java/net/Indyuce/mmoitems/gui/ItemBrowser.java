@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.NBTItem;
@@ -96,7 +97,6 @@ public class ItemBrowser extends PluginInventory {
 			return inv;
 		}
 
-
 		ItemStack error = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 		ItemMeta errorMeta = error.getItemMeta();
 		errorMeta.setDisplayName(ChatColor.RED + "- Error -");
@@ -126,13 +126,10 @@ public class ItemBrowser extends PluginInventory {
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
 				lore.add("");
-				if(deleteMode)
-				{
+				if (deleteMode) {
 					lore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
 					meta.setDisplayName(ChatColor.RED + "DELETE: " + meta.getDisplayName());
-				}
-				else
-				{
+				} else {
 					lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
 					lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
 				}
@@ -155,19 +152,19 @@ public class ItemBrowser extends PluginInventory {
 		nextMeta.setDisplayName(ChatColor.GREEN + "Next Page");
 		next.setItemMeta(nextMeta);
 
-		ItemStack back = new ItemStack(deleteMode ? Material.BARRIER : Material.ARROW);
+		ItemStack back = new ItemStack(Material.ARROW);
 		ItemMeta backMeta = back.getItemMeta();
-		backMeta.setDisplayName(deleteMode ? (ChatColor.RED + "Cancel") : (ChatColor.GREEN + AltChar.rightArrow + " Back"));
+		backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " Back");
 		back.setItemMeta(backMeta);
 
-		ItemStack create = new ItemStack(VersionMaterial.GREEN_STAINED_GLASS_PANE.toItem());
+		ItemStack create = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
 		ItemMeta createMeta = create.getItemMeta();
 		createMeta.setDisplayName(ChatColor.GREEN + "Create New");
 		create.setItemMeta(createMeta);
 
-		ItemStack delete = new ItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toItem());
+		ItemStack delete = new ItemStack(VersionMaterial.CAULDRON.toMaterial());
 		ItemMeta deleteMeta = delete.getItemMeta();
-		deleteMeta.setDisplayName(ChatColor.RED + "Delete Item");
+		deleteMeta.setDisplayName(ChatColor.RED + (deleteMode ? "Cancel Deletion" : "Delete Item"));
 		delete.setItemMeta(deleteMeta);
 
 		ItemStack previous = new ItemStack(Material.ARROW);
@@ -177,11 +174,9 @@ public class ItemBrowser extends PluginInventory {
 
 		while (n < slots.length)
 			inv.setItem(slots[n++], noItem);
-		if(!deleteMode)
-		{
-			inv.setItem(47, delete);
+		if (!deleteMode)
 			inv.setItem(51, create);
-		}
+		inv.setItem(47, delete);
 		inv.setItem(49, back);
 		inv.setItem(18, page > 1 ? previous : null);
 		inv.setItem(26, max >= itemIds.size() ? null : next);
@@ -215,12 +210,11 @@ public class ItemBrowser extends PluginInventory {
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(player).open();
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel"))
-			{
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
 				deleteMode = false;
 				open();
 			}
-			
+
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
 				new NewItemEdition(this).enable("Write in the chat the text you want.");
 
@@ -228,7 +222,7 @@ public class ItemBrowser extends PluginInventory {
 				deleteMode = true;
 				open();
 			}
-			
+
 			if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -")) {
 				Type type = MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"));
 				new ItemBrowser(player, type).open();
@@ -240,17 +234,13 @@ public class ItemBrowser extends PluginInventory {
 			return;
 
 		if (deleteMode) {
-			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(player, "mi delete " + type.getId() + " " + id));
+			ConfigFile config = type.getConfigFile();
+			config.getConfig().set(id, null);
+			config.save();
 			deleteMode = false;
-			ItemStack newItem = new ItemStack(VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem());
-			ItemMeta noItemMeta = newItem.getItemMeta();
-			noItemMeta.setDisplayName(ChatColor.RED + "- No Item -");
-			item.setType(newItem.getType());
-			item.setItemMeta(noItemMeta);
 			open();
-		}
-		else
-		{
+			
+		} else {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				player.getInventory().addItem(removeLastLoreLines(item, 3));
 				player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);

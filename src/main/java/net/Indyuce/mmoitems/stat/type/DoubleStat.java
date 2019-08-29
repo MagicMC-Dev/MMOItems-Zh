@@ -25,6 +25,10 @@ import net.Indyuce.mmoitems.stat.data.upgrade.UpgradeInfo;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class DoubleStat extends ItemStat implements Upgradable {
+	public DoubleStat(ItemStack item, String name, String[] lore, String path) {
+		super(item, name, lore, path, new String[] { "!miscellaneous", "all" });
+	}
+
 	public DoubleStat(ItemStack item, String name, String[] lore, String path, String[] types, Material... materials) {
 		super(item, name, lore, path, types, materials);
 	}

@@ -33,11 +33,11 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		 */
 		MMOCore.plugin.damage.registerHandler(new MMOCoreDamageHandler());
 
-		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "(%) Reduces cooldowns of MMOCore skills." }, "skill-cooldown-reduction"));
-		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional % MMOCore main class experience." }, "additional-experience"));
+		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction"));
+		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience"));
 		for (DamageType type : DamageType.values()) {
 			String name = MMOUtils.caseOnWords(type.name().toLowerCase());
-			MMOItems.plugin.getStats().register(type.name() + "_DAMAGE", new DoubleStat(new ItemStack(Material.IRON_SWORD), name + " Damage (MMOCore)", new String[] { "Additional " + name + " damage." }, type.getPath() + "-damage"));
+			MMOItems.plugin.getStats().register(type.name() + "_DAMAGE", new DoubleStat(new ItemStack(Material.IRON_SWORD), name + " Damage (MMOCore)", new String[] { "Additional " + name + " damage in %." }, type.getPath() + "-damage"));
 		}
 	}
 

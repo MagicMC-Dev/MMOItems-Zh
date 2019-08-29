@@ -18,9 +18,11 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOCoreHook implements RPGHandler, Listener {
-
+	
+	private final ItemStat manaRegen = new DoubleStat(new ItemStack(Material.LAPIS_LAZULI), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regen");
 	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
 	private final ItemStat additionalExperience = new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
+	
 	private final ItemStat weaponDamage = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Weapon Damage (MMOCore)", new String[] { "Additional weapon damage in %." }, "weapon-damage");
 	private final ItemStat skillDamage = new DoubleStat(new ItemStack(Material.BLAZE_POWDER), "Skill Damage (MMOCore)", new String[] { "Additional skill damage in %." }, "skill-damage");
 	private final ItemStat projectileDamage = new DoubleStat(new ItemStack(Material.SPECTRAL_ARROW), "Projectile Damage (MMOCore)", new String[] { "Additional projectile damage in %." }, "projectile-damage");
@@ -39,6 +41,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		 */
 		MMOCore.plugin.damage.registerHandler(new MMOCoreDamageHandler());
 
+		MMOItems.plugin.getStats().register("MANA_REGENERATION", manaRegen);
 		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", cooldownReduction);
 		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", additionalExperience);
 		MMOItems.plugin.getStats().register("WEAPON_DAMAGE", weaponDamage);
@@ -57,6 +60,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	public void refreshStats(net.Indyuce.mmoitems.api.player.PlayerData data) {
 		PlayerData rpgdata = PlayerData.get(data.getPlayer());
 		rpgdata.getStats().getInstance(StatType.MAX_MANA).addAttribute("MMOItems", data.getStats().getStat(ItemStat.MAX_MANA));
+		rpgdata.getStats().getInstance(StatType.MANA_REGENERATION).addAttribute("MMOItems", data.getStats().getStat(manaRegen));
 		rpgdata.getStats().getInstance(StatType.HEALTH_REGENERATION).addAttribute("MMOItems", data.getStats().getStat(ItemStat.REGENERATION));
 		rpgdata.getStats().getInstance(StatType.COOLDOWN_REDUCTION).addAttribute("MMOItems", data.getStats().getStat(cooldownReduction));
 		rpgdata.getStats().getInstance(StatType.ADDITIONAL_EXPERIENCE).addAttribute("MMOItems", data.getStats().getStat(additionalExperience));

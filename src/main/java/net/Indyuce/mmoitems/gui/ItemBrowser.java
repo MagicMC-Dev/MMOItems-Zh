@@ -29,6 +29,7 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class ItemBrowser extends PluginInventory {
 	private Type type;
+	private boolean deleteMode;
 	private Map<String, ItemStack> cached = new HashMap<>();
 
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
@@ -111,7 +112,7 @@ public class ItemBrowser extends PluginInventory {
 		 * displays every item in a specific type. items are cached inside the
 		 * map at the top to reduce performance impact and are directly rendered
 		 */
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Explorer: " + type.getName());
+		Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? (ChatColor.UNDERLINE + "DELETE MODE: ") : (ChatColor.UNDERLINE + "Item Explorer: ")) + type.getName());
 		for (int j = min; j < Math.min(max, itemIds.size()); j++) {
 			String id = itemIds.get(j);
 			if (!cached.containsKey(id)) {
@@ -125,8 +126,16 @@ public class ItemBrowser extends PluginInventory {
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
 				lore.add("");
-				lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
-				lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
+				if(deleteMode)
+				{
+					lore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
+					meta.setDisplayName(ChatColor.RED + "DELETE: " + meta.getDisplayName());
+				}
+				else
+				{
+					lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
+					lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
+				}
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 
@@ -146,15 +155,20 @@ public class ItemBrowser extends PluginInventory {
 		nextMeta.setDisplayName(ChatColor.GREEN + "Next Page");
 		next.setItemMeta(nextMeta);
 
-		ItemStack back = new ItemStack(Material.ARROW);
+		ItemStack back = new ItemStack(deleteMode ? Material.BARRIER : Material.ARROW);
 		ItemMeta backMeta = back.getItemMeta();
-		backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " Back");
+		backMeta.setDisplayName(deleteMode ? (ChatColor.RED + "Cancel") : (ChatColor.GREEN + AltChar.rightArrow + " Back"));
 		back.setItemMeta(backMeta);
 
-		ItemStack create = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+		ItemStack create = new ItemStack(VersionMaterial.GREEN_STAINED_GLASS_PANE.toItem());
 		ItemMeta createMeta = create.getItemMeta();
 		createMeta.setDisplayName(ChatColor.GREEN + "Create New");
 		create.setItemMeta(createMeta);
+
+		ItemStack delete = new ItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toItem());
+		ItemMeta deleteMeta = delete.getItemMeta();
+		deleteMeta.setDisplayName(ChatColor.RED + "Delete Item");
+		delete.setItemMeta(deleteMeta);
 
 		ItemStack previous = new ItemStack(Material.ARROW);
 		ItemMeta previousMeta = previous.getItemMeta();
@@ -163,8 +177,12 @@ public class ItemBrowser extends PluginInventory {
 
 		while (n < slots.length)
 			inv.setItem(slots[n++], noItem);
+		if(!deleteMode)
+		{
+			inv.setItem(47, delete);
+			inv.setItem(51, create);
+		}
 		inv.setItem(49, back);
-		inv.setItem(51, create);
 		inv.setItem(18, page > 1 ? previous : null);
 		inv.setItem(26, max >= itemIds.size() ? null : next);
 		return inv;
@@ -197,9 +215,20 @@ public class ItemBrowser extends PluginInventory {
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(player).open();
 
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel"))
+			{
+				deleteMode = false;
+				open();
+			}
+			
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
 				new NewItemEdition(this).enable("Write in the chat the text you want.");
 
+			if (type != null && item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Delete Item")) {
+				deleteMode = true;
+				open();
+			}
+			
 			if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -")) {
 				Type type = MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"));
 				new ItemBrowser(player, type).open();
@@ -210,13 +239,26 @@ public class ItemBrowser extends PluginInventory {
 		if (id.equals(""))
 			return;
 
-		if (event.getAction() == InventoryAction.PICKUP_ALL) {
-			player.getInventory().addItem(removeLastLoreLines(item, 3));
-			player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
+		if (deleteMode) {
+			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(player, "mi delete " + type.getId() + " " + id));
+			deleteMode = false;
+			ItemStack newItem = new ItemStack(VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem());
+			ItemMeta noItemMeta = newItem.getItemMeta();
+			noItemMeta.setDisplayName(ChatColor.RED + "- No Item -");
+			item.setType(newItem.getType());
+			item.setItemMeta(noItemMeta);
+			open();
 		}
+		else
+		{
+			if (event.getAction() == InventoryAction.PICKUP_ALL) {
+				player.getInventory().addItem(removeLastLoreLines(item, 3));
+				player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
+			}
 
-		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new ItemEdition(player, type, id, removeLastLoreLines(item, 3)).open();
+			if (event.getAction() == InventoryAction.PICKUP_HALF)
+				new ItemEdition(player, type, id, removeLastLoreLines(item, 3)).open();
+		}
 	}
 
 	private ItemStack removeLastLoreLines(ItemStack item, int amount) {

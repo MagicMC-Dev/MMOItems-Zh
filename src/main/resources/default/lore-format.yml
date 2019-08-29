@@ -34,6 +34,8 @@ lore-format:
 - '#blunt-rating#'
 - '#weapon-damage#'
 - '#magic-damage#'
+- '#physical-damage#'
+- '#projectile-damage#'
 - '#damage-reduction#'
 - '#fall-damage-reduction#'
 - '#fire-damage-reduction#'

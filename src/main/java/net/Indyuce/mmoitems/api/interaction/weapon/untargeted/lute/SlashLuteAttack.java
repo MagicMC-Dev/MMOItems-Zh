@@ -11,15 +11,14 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 
 public class SlashLuteAttack implements LuteAttackHandler {
 
 	@Override
-	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range, UntargetedWeapon untargeted, Vector weight, Sound sound) {
+	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
 		new BukkitRunnable() {
 			final Vector vec = stats.getPlayer().getEyeLocation().getDirection();
 			Location loc = stats.getPlayer().getLocation().add(0, 1.3, 0);
@@ -42,6 +41,6 @@ public class SlashLuteAttack implements LuteAttackHandler {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(stats.getPlayer().getLocation()))
 			if (entity.getLocation().distanceSquared(stats.getPlayer().getLocation()) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
-				new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, nbt, (LivingEntity) entity, DamageType.WEAPON, DamageType.PROJECTILE);
+				new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE).applyEffectsAndDamage(stats, nbt, (LivingEntity) entity);
 	}
 }

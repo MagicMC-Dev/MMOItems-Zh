@@ -16,9 +16,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ArrowParticles;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.ProjectileData;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
@@ -109,11 +109,9 @@ public class EntityManager implements Listener {
 		LivingEntity target = (LivingEntity) event.getEntity();
 		TemporaryStats stats = data.getPlayerStats();
 
-		AttackResult result = new AttackResult(true, stats.getStat(ItemStat.ATTACK_DAMAGE)).applyEffects(stats, target);
+		AttackResult result = new AttackResult(stats.getStat(ItemStat.ATTACK_DAMAGE), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
 		if (data.isCustomWeapon())
 			result.applyElementalEffects(stats, data.getSourceItem(), target);
-
-		stats.getPlayerData().castAbilities(target, result, CastingMode.ON_HIT);
 
 		if (data.getSourceItem().getItem().hasItemMeta())
 			if (data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))

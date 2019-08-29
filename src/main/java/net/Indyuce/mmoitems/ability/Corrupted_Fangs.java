@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -63,7 +63,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
 			TemporaryStats stats = (TemporaryStats) data[0];
 			if (MMOUtils.canDamage(stats.getPlayer(), event.getEntity()))
-				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) event.getEntity(), (double) data[1], DamageType.SKILL, DamageType.MAGICAL);
+				new AttackResult((double) data[1], DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) event.getEntity());
 		}
 	}
 }

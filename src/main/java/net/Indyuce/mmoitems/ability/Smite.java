@@ -5,7 +5,7 @@ import org.bukkit.entity.LivingEntity;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -27,7 +27,7 @@ public class Smite extends Ability {
 			return;
 		}
 
-		MMOItems.plugin.getDamage().damage(stats, target, data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL);
+		new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, target);
 		target.getWorld().strikeLightningEffect(target.getLocation());
 	}
 }

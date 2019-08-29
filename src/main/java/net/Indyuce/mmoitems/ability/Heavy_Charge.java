@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -50,7 +50,7 @@ public class Heavy_Charge extends Ability {
 						stats.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 						target.setVelocity(stats.getPlayer().getVelocity().setY(0.3).multiply(1.7 * knockback));
 						stats.getPlayer().setVelocity(stats.getPlayer().getVelocity().setX(0).setY(0).setZ(0));
-						MMOItems.plugin.getDamage().damage(stats, (LivingEntity) target, data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL);
+						new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) target);
 						cancel();
 						break;
 					}

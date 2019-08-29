@@ -25,7 +25,6 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.Type;
@@ -142,8 +141,7 @@ public class ItemUse implements Listener {
 		/*
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
-		result.applyEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, target);
-		playerData.castAbilities(stats, target, result, CastingMode.ON_HIT);
+		result.applyOnHitEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, target);
 
 		event.setDamage(result.getDamage());
 	}

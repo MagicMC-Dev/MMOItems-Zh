@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
@@ -30,34 +30,31 @@ public class Sparkle extends Ability {
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
 		target = target == null ? MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), 50).getHit() : target;
-		if (target == null){
+		if (target == null) {
 			result.setSuccessful(false);
 			return;
 		}
 
-		double damage1 = data.getModifier("damage");
+		double damage = data.getModifier("damage");
 		double radius = data.getModifier("radius");
 		double limit = data.getModifier("limit");
 
-		MMOItems.plugin.getDamage().damage(stats, (LivingEntity) target, damage1, DamageType.SKILL, DamageType.MAGICAL);
+		new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, target);
 		target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
-		int count = 0;
-		for (Entity ent : target.getNearbyEntities(radius, radius, radius)) {
-			if (count >= limit)
-				break;
 
-			if (ent instanceof LivingEntity && ent != stats.getPlayer() && !(ent instanceof ArmorStand)) {
+		int count = 0;
+		for (Entity entity : target.getNearbyEntities(radius, radius, radius))
+			if (count < limit && entity instanceof LivingEntity && entity != stats.getPlayer() && !(entity instanceof ArmorStand)) {
 				count++;
-				MMOItems.plugin.getDamage().damage(stats, (LivingEntity) ent, damage1, DamageType.SKILL, DamageType.MAGICAL);
-				ent.getWorld().playSound(ent.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
+				new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				entity.getWorld().playSound(entity.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 				Location loc_t = target.getLocation().add(0, .75, 0);
-				Location loc_ent = ent.getLocation().add(0, .75, 0);
+				Location loc_ent = entity.getLocation().add(0, .75, 0);
 				for (double j1 = 0; j1 < 1; j1 += .04) {
 					Vector d = loc_ent.toVector().subtract(loc_t.toVector());
 					target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc_t.clone().add(d.multiply(j1)), 3, .1, .1, .1, .008);
 				}
 			}
-		}
 	}
 }

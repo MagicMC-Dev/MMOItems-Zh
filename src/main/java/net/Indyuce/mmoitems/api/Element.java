@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.version.VersionMaterial;
@@ -89,7 +89,7 @@ public enum Element {
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
 			for (Entity entity : target.getNearbyEntities(3, 2, 3))
 				if (MMOUtils.canDamage(stats.getPlayer(), entity))
-					MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, result.getDamage() * attack / 100, DamageType.WEAPON);
+					new AttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats, (LivingEntity) entity);
 
 			result.addDamage(absolute);
 			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)

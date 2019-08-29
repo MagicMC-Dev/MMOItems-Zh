@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -52,7 +53,7 @@ public class Shulker_Missile extends Ability implements Listener {
 				stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0), EntityType.SHULKER_BULLET);
 				shulkerBullet.setShooter(stats.getPlayer());
-				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, data.getModifier("damage"), data.getModifier("effect-duration"));
+				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE), data.getModifier("effect-duration"));
 				new BukkitRunnable() {
 					double ti = 0;
 
@@ -82,12 +83,12 @@ public class Shulker_Missile extends Ability implements Listener {
 			}
 
 			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
-			AttackResult result = new AttackResult(true, (double) data[0]);
+			AttackResult result = (AttackResult) data[0];
 			double duration = (double) data[1] * 20;
 
 			// void spirit
 			if (data.length > 2)
-				result.applyEffects((TemporaryStats) data[4], (NBTItem) data[3], entity);
+				result.applyEffects((TemporaryStats) data[2], (NBTItem) data[3], entity);
 
 			event.setDamage(result.getDamage());
 

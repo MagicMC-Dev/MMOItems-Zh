@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
@@ -31,7 +31,7 @@ public class Light_Dash extends Ability {
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
-		double damage1 = data.getModifier("damage");
+		double damage = data.getModifier("damage");
 		double length = data.getModifier("length");
 
 		new BukkitRunnable() {
@@ -49,7 +49,7 @@ public class Light_Dash extends Ability {
 				for (Entity entity : stats.getPlayer().getNearbyEntities(1, 1, 1))
 					if (!hit.contains(entity.getEntityId()) && MMOUtils.canDamage(stats.getPlayer(), entity)) {
 						hit.add(entity.getEntityId());
-						MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.SKILL, DamageType.PHYSICAL);
+						new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 					}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 2);

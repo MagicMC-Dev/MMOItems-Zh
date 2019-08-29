@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
@@ -60,7 +60,7 @@ public class Contamination extends Ability {
 					loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 2, 1);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) <= 25)
-							MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, dps, false, DamageType.SKILL, DamageType.MAGICAL);
+							MMOItems.plugin.getDamage().damage(stats.getPlayer(), (LivingEntity) entity, new AttackResult(dps, DamageType.SKILL, DamageType.MAGICAL).applySkillEffects(stats, (LivingEntity) entity), false);
 				}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);

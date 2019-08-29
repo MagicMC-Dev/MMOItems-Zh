@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -50,11 +50,9 @@ public class Throw_Up extends Ability implements Listener {
 				loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * 30));
 
 				if (j % 5 == 0)
-					for (Entity ent : MMOUtils.getNearbyChunkEntities(loc))
-						if (ent.getLocation().distanceSquared(loc) < 40)
-							if (stats.getPlayer().getEyeLocation().getDirection().angle(ent.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6)
-								if (MMOUtils.canDamage(stats.getPlayer(), ent))
-									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) ent, dps, DamageType.SKILL, DamageType.MAGICAL);
+					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
+						if (entity.getLocation().distanceSquared(loc) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
+							new AttackResult(dps, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 
 				loc.getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
 

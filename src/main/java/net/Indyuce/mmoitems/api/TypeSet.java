@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
@@ -39,7 +38,7 @@ public enum TypeSet {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (entity.getLocation().distanceSquared(loc) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().subtract(stats.getPlayer().getLocation()).toVector()) < Math.PI / 3 && MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
-				result.clone().multiplyDamage(.4).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity, DamageType.WEAPON);
+				result.clone().multiplyDamage(.4).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity);
 	}),
 
 	/*
@@ -62,7 +61,7 @@ public enum TypeSet {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (entity.getLocation().distanceSquared(stats.getPlayer().getLocation()) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 18 && MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
-				result.clone().multiplyDamage(.4).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity, DamageType.WEAPON);
+				result.clone().multiplyDamage(.4).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity);
 	}),
 
 	/*
@@ -81,7 +80,7 @@ public enum TypeSet {
 				double bluntRating = weapon.getValue(stats.getStat(ItemStat.BLUNT_RATING), MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
 				for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
 					if (MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
-						result.clone().multiplyDamage(bluntRating).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity, DamageType.WEAPON);
+						result.clone().multiplyDamage(bluntRating).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity);
 			}
 		}
 

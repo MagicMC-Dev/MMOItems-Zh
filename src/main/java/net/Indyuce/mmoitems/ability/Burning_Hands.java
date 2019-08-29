@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -31,7 +31,7 @@ public class Burning_Hands extends Ability implements Listener {
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
 		double duration = data.getModifier("duration") * 10;
-		double damage1 = data.getModifier("damage") / 2;
+		double damage = data.getModifier("damage") / 2;
 
 		new BukkitRunnable() {
 			int j = 0;
@@ -58,7 +58,7 @@ public class Burning_Hands extends Ability implements Listener {
 						if (entity.getLocation().distanceSquared(loc) < 60)
 							if (stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6)
 								if (MMOUtils.canDamage(stats.getPlayer(), entity))
-									MMOItems.plugin.getDamage().damage(stats, (LivingEntity) entity, damage1, DamageType.SKILL, DamageType.MAGICAL);
+									new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 2);

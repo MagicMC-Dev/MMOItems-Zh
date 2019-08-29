@@ -12,11 +12,6 @@ import net.Indyuce.mmoitems.api.item.NBTItem;
 
 public abstract class UntargetedWeapon extends Weapon {
 
-	/*
-	 * this final field is used in the AttackResult constructor to be able to
-	 * cast on-hit abilities since the weapon is untargeted.
-	 */
-	protected final UntargetedWeapon untargeted = this;
 	protected final WeaponType weaponType;
 
 	public UntargetedWeapon(Player player, NBTItem item, Type type, WeaponType weaponType) {

@@ -4,12 +4,11 @@ import java.util.Random;
 
 import org.bukkit.Location;
 
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 
 public interface StaffAttackHandler {
-	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range, UntargetedWeapon untargeted);
+	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range);
 
 	static final Random random = new Random();
 

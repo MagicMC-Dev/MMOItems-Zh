@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.DamageInfo.DamageType;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -37,7 +37,7 @@ public class Staff extends UntargetedWeapon {
 
 		StaffSpirit spirit = StaffSpirit.get(getNBTItem());
 		if (spirit != null) {
-			spirit.getAttack().handle(stats, getNBTItem(), attackDamage, range, untargeted);
+			spirit.getAttack().handle(stats, getNBTItem(), attackDamage, range);
 			return;
 		}
 
@@ -46,7 +46,7 @@ public class Staff extends UntargetedWeapon {
 
 		MMORayTraceResult trace = MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), range);
 		if (trace.hasHit())
-			new AttackResult(untargeted, attackDamage).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit(), DamageType.WEAPON, DamageType.PROJECTILE);
+			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2, (tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 	}

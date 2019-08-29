@@ -55,7 +55,6 @@ public class AttackResult {
 		return damage;
 	}
 
-	// not used in MMOItems
 	public boolean isDamageModified() {
 		return initial != damage;
 	}

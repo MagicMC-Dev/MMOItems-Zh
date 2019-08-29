@@ -33,8 +33,8 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		 */
 		MMOCore.plugin.damage.registerHandler(new MMOCoreDamageHandler());
 
-		MMOItems.plugin.getStats().register(StatType.COOLDOWN_REDUCTION.name(), new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "(%) Reduces cooldowns of MMOCore skills." }, "skill-cooldown-reduction"));
-		MMOItems.plugin.getStats().register(StatType.ADDITIONAL_EXPERIENCE.name(), new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional % MMOCore main class experience." }, "additional-experience"));
+		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "(%) Reduces cooldowns of MMOCore skills." }, "skill-cooldown-reduction"));
+		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional % MMOCore main class experience." }, "additional-experience"));
 		for (DamageType type : DamageType.values())
 			MMOItems.plugin.getStats().register(type.name() + "_DAMAGE", new DoubleStat(new ItemStack(Material.GRAY_DYE), MMOUtils.caseOnWords(type.name().toLowerCase().replace("_", " ")) + " Damage (MMOCore)", new String[] { "Additional % MMOCore main class experience." }, "additional-experience"));
 	}

@@ -20,6 +20,9 @@ pvp-damage: '&7■ PvP Урон: &f<plus>#%'
 magic-damage: '&7■ Магический Урон: &f<plus>#%'
 weapon-damage: '&7■ Урон от Оружия: &f<plus>#%'
 undead-damage: '&7■ Урон по Нежити: &f<plus>#%'
+skill-damage: '&7■ Skill Damage: &f<plus>#%'
+physical-damage: '&7■ Physical Damage: &f<plus>#%'
+projectile-damage: '&7■ Projectile Damage: &f<plus>#%'
 
 # Abilities
 ability-format: '&2#c: #a'

@@ -20,6 +20,9 @@ pvp-damage: '&7■ PvP 伤害加成: &f<plus>#%'
 magic-damage: '&7■ 法术伤害加成: &f<plus>#%'
 weapon-damage: '&7■ 武器伤害加成: &f<plus>#%'
 undead-damage: '&7■ 不死生物伤害加成: &f<plus>#%'
+skill-damage: '&7■ Skill Damage: &f<plus>#%'
+physical-damage: '&7■ Physical Damage: &f<plus>#%'
+projectile-damage: '&7■ Projectile Damage: &f<plus>#%'
 
 # Abilities
 ability-format: '&2#c: #a'

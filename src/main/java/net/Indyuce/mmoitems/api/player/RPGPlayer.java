@@ -1,18 +1,15 @@
 package net.Indyuce.mmoitems.api.player;
 
 import java.text.DecimalFormat;
-import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.Indyuce.mmoitems.stat.type.Conditional;
 
 public abstract class RPGPlayer {
 	private final PlayerData playerData;
@@ -56,60 +53,11 @@ public abstract class RPGPlayer {
 		setStamina(getStamina() + value);
 	}
 
-	public boolean canUse(NBTItem item, boolean msg) {
+	public boolean canUse(NBTItem item, boolean message) {
 
-		// item permission
-		String perm = item.getString("MMOITEMS_PERMISSION");
-		if (!perm.equals("") && !player.hasPermission("mmoitems.bypass.item") && MMOItems.plugin.getConfig().getBoolean("permissions.items")) {
-			String[] split = perm.split("\\|");
-			for (String s : split)
-				if (!player.hasPermission(s)) {
-					if (msg) {
-						Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player, "cant-use-item");
-						player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-					}
-					return false;
-				}
-		}
-
-		if (item.hasTag("MMOITEMS_SOULBOUND") && !item.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString())) {
-			if (msg) {
-				int level = new JsonParser().parse(item.getString("MMOITEMS_SOULBOUND")).getAsJsonObject().get("Level").getAsInt();
-				Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(player, "cant-use-item");
-				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-				player.damage(MMOItems.plugin.getLanguage().soulboundBaseDamage + level * MMOItems.plugin.getLanguage().soulboundPerLvlDamage);
-			}
-			return false;
-		}
-
-		// durability
-		if (item.hasTag("MMOITEMS_DURABILITY") && item.getDouble("MMOITEMS_DURABILITY") < 1) {
-			if (msg) {
-				Message.ZERO_DURABILITY.format(ChatColor.RED).send(player, "cant-use-item");
-				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-			}
-			return false;
-		}
-
-		// required class
-		String requiredClass = item.getString("MMOITEMS_REQUIRED_CLASS");
-		if (!requiredClass.equals("") && !hasRightClass(requiredClass) && !player.hasPermission("mmoitems.bypass.class")) {
-			if (msg) {
-				Message.WRONG_CLASS.format(ChatColor.RED).send(player, "cant-use-item");
-				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-			}
-			return false;
-		}
-
-		// required level
-		int level = item.getInteger("MMOITEMS_REQUIRED_LEVEL");
-		if (getLevel() < level && !player.hasPermission("mmoitems.bypass.level")) {
-			if (msg) {
-				Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(player, "cant-use-item");
-				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-			}
-			return false;
-		}
+		for (Conditional condition : MMOItems.plugin.getStats().getConditionals())
+			if (!condition.canUse(this, item, message))
+				return false;
 
 		return true;
 	}
@@ -146,13 +94,4 @@ public abstract class RPGPlayer {
 		return true;
 	}
 
-	private boolean hasRightClass(String requiredClass) {
-		String name = ChatColor.stripColor(getClassName());
-
-		for (String found : requiredClass.split(Pattern.quote(", ")))
-			if (found.equalsIgnoreCase(name))
-				return true;
-
-		return false;
-	}
 }

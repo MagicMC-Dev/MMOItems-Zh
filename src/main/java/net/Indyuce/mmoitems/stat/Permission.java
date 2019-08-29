@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
@@ -13,19 +14,22 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
-public class Permission extends ItemStat {
+public class Permission extends ItemStat implements Conditional {
 	public Permission() {
 		super(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission", new String[] { "The permission needed to use this item." }, "permission", new String[] { "all" });
 	}
@@ -93,10 +97,27 @@ public class Permission extends ItemStat {
 		item.addItemTag(new ItemTag("MMOITEMS_PERMISSION", String.join("|", ((StringListData) data).getList())));
 		return true;
 	}
-	
+
 	@Override
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		if (item.hasTag(getNBTPath()))
 			mmoitem.setData(this, new StringListData(Arrays.asList(item.getString(getNBTPath()).split("\\|"))));
+	}
+
+	@Override
+	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+		String perm = item.getString("MMOITEMS_PERMISSION");
+		if (!perm.equals("") && !player.getPlayer().hasPermission("mmoitems.bypass.item") && MMOItems.plugin.getConfig().getBoolean("permissions.items")) {
+			String[] split = perm.split("\\|");
+			for (String s : split)
+				if (!player.getPlayer().hasPermission(s)) {
+					if (message) {
+						Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+						player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+					}
+					return false;
+				}
+		}
+		return true;
 	}
 }

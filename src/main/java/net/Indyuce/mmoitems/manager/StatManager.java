@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
+import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -19,6 +20,7 @@ public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
 	private final Set<DoubleStat> gem = new HashSet<>();
 	private final Set<AttributeStat> attribute = new HashSet<>();
+	private final Set<Conditional> conditionals = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -48,6 +50,10 @@ public class StatManager {
 	public Set<DoubleStat> getDoubleStats() {
 		return gem;
 	}
+	
+	public Set<Conditional> getConditionals() {
+		return conditionals;
+	}
 
 	/*
 	 * the extra checks in that method to register stats even after the plugin
@@ -65,6 +71,9 @@ public class StatManager {
 
 		if (stat instanceof AttributeStat)
 			attribute.add((AttributeStat) stat);
+
+		if (stat instanceof Conditional)
+			conditionals.add((Conditional) stat);
 
 		/*
 		 * cache stat for every type which may have this stat. really important

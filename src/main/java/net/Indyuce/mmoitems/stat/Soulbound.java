@@ -3,24 +3,29 @@ package net.Indyuce.mmoitems.stat;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
-public class Soulbound extends InternalStat {
+public class Soulbound extends InternalStat implements Conditional {
 	public Soulbound() {
 		super(new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbound", new String[0], "soulbound", new String[] { "all" });
 	}
@@ -85,5 +90,19 @@ public class Soulbound extends InternalStat {
 			object.addProperty("UUID", uuid.toString());
 			return object;
 		}
+	}
+
+	@Override
+	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+		if (item.hasTag("MMOITEMS_SOULBOUND") && !item.getString("MMOITEMS_SOULBOUND").contains(player.getPlayer().getUniqueId().toString())) {
+			if (message) {
+				int level = new JsonParser().parse(item.getString("MMOITEMS_SOULBOUND")).getAsJsonObject().get("Level").getAsInt();
+				Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+				player.getPlayer().damage(MMOItems.plugin.getLanguage().soulboundBaseDamage + level * MMOItems.plugin.getLanguage().soulboundPerLvlDamage);
+			}
+			return false;
+		}
+		return true;
 	}
 }

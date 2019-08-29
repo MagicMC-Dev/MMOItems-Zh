@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
@@ -13,20 +14,23 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
-public class Required_Class extends StringStat {
+public class Required_Class extends StringStat implements Conditional {
 	public Required_Class() {
 		super(new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class", new String[] { "The class you need to", "profress to use your item." }, "required-class", new String[] { "all" });
 	}
@@ -97,5 +101,28 @@ public class Required_Class extends StringStat {
 		item.getLore().insert("required-class", translate().replace("#", joined));
 		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_CLASS", joined));
 		return true;
+	}
+
+	@Override
+	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+		String requiredClass = item.getString("MMOITEMS_REQUIRED_CLASS");
+		if (!requiredClass.equals("") && !hasRightClass(player, requiredClass) && !player.getPlayer().hasPermission("mmoitems.bypass.class")) {
+			if (message) {
+				Message.WRONG_CLASS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private boolean hasRightClass(RPGPlayer player, String requiredClass) {
+		String name = ChatColor.stripColor(player.getClassName());
+
+		for (String found : requiredClass.split(Pattern.quote(", ")))
+			if (found.equalsIgnoreCase(name))
+				return true;
+
+		return false;
 	}
 }

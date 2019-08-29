@@ -10,9 +10,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
@@ -25,7 +23,7 @@ public class RealDualWieldHook implements Listener {
 
 		// check for npc
 		// safety checks
-		if (event.getEntity().hasMetadata("NPC") || event.isCancelled() || !(event.getEntity() instanceof LivingEntity))
+		if (event.getEntity().hasMetadata("NPC") || event.isCancelled() || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0)
 			return;
 
 		// custom damage check
@@ -33,38 +31,40 @@ public class RealDualWieldHook implements Listener {
 		if (MMOItems.plugin.getDamage().isDamaged(target) || !MMOItems.plugin.getRPG().canBeDamaged(target))
 			return;
 
+		Player player = (Player) event.getPlayer();
+		TemporaryStats stats = null;
+
+		/*
+		 * must apply attack conditions before apply any effects. the event must
+		 * be cancelled before anything is applied
+		 */
+		PlayerData playerData = PlayerData.get(player);
+		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(event.getItemInOffhand());
+		AttackResult result = new AttackResult(true, event.getDamage());
+		if (item.hasType()) {
+			Weapon weapon = new Weapon(playerData, item, item.getType());
+
+			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
+				event.setCancelled(true);
+				return;
+			}
+
+			if (!weapon.canBeUsed()) {
+				event.setCancelled(true);
+				return;
+			}
+
+			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, EquipmentSlot.HAND, result.setSuccessful(true));
+			if (!result.isSuccessful()) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+
 		/*
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
-		Player player = event.getPlayer();
-		PlayerData playerData = PlayerData.get(player);
-		TemporaryStats stats = playerData.getStats().newTemporary();
-		AttackResult result = playerData.castAbilities(stats, target, new AttackResult(true, event.getDamage()), CastingMode.ON_HIT);
-		event.setDamage(result.getDamage());
-
-		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
-		Type type = item.getType();
-		if (type == null)
-			return;
-
-		Weapon weapon = new Weapon(playerData, item, type);
-
-		// can't attack melee
-		if (type.getItemSet() == TypeSet.RANGE) {
-			event.setCancelled(true);
-			return;
-		}
-
-		if (!weapon.canBeUsed()) {
-			event.setCancelled(true);
-			return;
-		}
-
-		weapon.targetedAttack(stats, target, EquipmentSlot.OFF_HAND, result);
-		if (!result.isSuccessful()) {
-			event.setCancelled(true);
-			return;
-		}
+		result.applyOnHitEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, target);
 
 		event.setDamage(result.getDamage());
 	}

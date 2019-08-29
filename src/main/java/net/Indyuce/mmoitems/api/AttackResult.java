@@ -81,11 +81,6 @@ public class AttackResult {
 		return new AttackResult(this);
 	}
 
-	// public void applyEffectsAndDamage(TemporaryStats stats, NBTItem item,
-	// LivingEntity target) {
-	// applyEffectsAndDamage(stats, item, target, DamageType.WEAPON);
-	// }
-
 	public void applyEffectsAndDamage(TemporaryStats stats, NBTItem item, LivingEntity target, DamageType... types) {
 		MMOItems.plugin.getDamage().damage(stats, target, applyEffects(stats, item, target).damage, types);
 	}

@@ -4,8 +4,8 @@
 # This is a very powerful system for RPG items.
 #
 # You can also use potion effects as set bonuses, e.g
-# - speed: 2 gives permanent Speed II
-# - increase_damage: 3 gives permanent Strength III
+# - "potion-speed: 2" gives permanent Speed II
+# - "potion-increase_damage: 3" gives permanent Strength III
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
 #
 # You may also add abilities as full set bonuses. The ability ID
@@ -20,7 +20,7 @@ ARCANE:
             magic-damage: 20
         '4':
             max-mana: 30
-            speed: 1
+            potion-speed: 1
     lore-tag:
     - '&7Arcane Set Bonus:'
     - '&8[3] +20% Magic Damage'
@@ -37,14 +37,14 @@ STEEL:
     lore-tag:
     - '&7Steel Set Bonus:'
     - '&8[3] +5% Damage Reduction'
-    - '&8[4] +5% Damage Reduction'
+    - '&8[4] +10% Damage Reduction'
 
 GINGERBREAD:
     name: '&cGingerbread Set'
     bonuses:
         '4':
             damage-reduction: 6
-            jump: 3
+            potion-jump: 3
     lore-tag:
     - '&7Gingerbread Set Bonus:'
     - '&8[4] +5% Damage Reduction'

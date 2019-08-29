@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.edition;
+package net.Indyuce.mmoitems.api.edition.process;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -9,14 +9,12 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.ChatEditionBase.ChatEditionProcess;
+import net.Indyuce.mmoitems.api.edition.Edition;
+import net.Indyuce.mmoitems.gui.PluginInventory;
 
-public class ChatEdition implements ChatEditionProcess, Listener {
-	private ChatEditionBase edition;
-
-	@Override
-	public void open(ChatEditionBase edition) {
-		this.edition = edition;
+public class ChatEdition extends EditionProcess implements Listener {
+	public ChatEdition(PluginInventory inv, Edition edition) {
+		super(inv, edition);
 
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
@@ -28,16 +26,16 @@ public class ChatEdition implements ChatEditionProcess, Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void a(AsyncPlayerChatEvent event) {
-		if (event.getPlayer().equals(edition.getPlayer())) {
+		if (event.getPlayer().equals(getPlayer())) {
 			event.setCancelled(true);
-			edition.output(event.getMessage());
+			input(event.getMessage());
 		}
 	}
 
 	// cancel stat edition when opening any gui
 	@EventHandler
 	public void b(InventoryOpenEvent event) {
-		if (event.getPlayer().equals(edition.getPlayer()))
+		if (event.getPlayer().equals(getPlayer()))
 			close();
 	}
 }

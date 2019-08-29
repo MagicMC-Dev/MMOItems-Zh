@@ -9,13 +9,13 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.StatEdition.StatEditionProcess;
+import net.Indyuce.mmoitems.api.edition.ChatEditionBase.ChatEditionProcess;
 
-public class ChatEdition implements StatEditionProcess, Listener {
-	private StatEdition edition;
+public class ChatEdition implements ChatEditionProcess, Listener {
+	private ChatEditionBase edition;
 
 	@Override
-	public void open(StatEdition edition) {
+	public void open(ChatEditionBase edition) {
 		this.edition = edition;
 
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);

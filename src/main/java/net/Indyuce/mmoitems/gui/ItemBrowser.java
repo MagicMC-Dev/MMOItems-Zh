@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
@@ -68,7 +69,7 @@ public class ItemBrowser extends PluginInventory {
 				meta.setDisplayName(ChatColor.GREEN + type.getName() + ChatColor.DARK_GRAY + " (Click to browse)");
 				meta.addItemFlags(ItemFlag.values());
 				List<String> lore = new ArrayList<>();
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "There " + (items > 1 || items < 1 ? "are" : "is") + " " + (items < 1 ? "" + ChatColor.RED + ChatColor.ITALIC + "no" : "" + ChatColor.GOLD + ChatColor.ITALIC + items) + ChatColor.GRAY + ChatColor.ITALIC + " item" + (items > 1 ? "s" : "") + " in that type.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "There " + (items != 1 ? "are" : "is") + " " + (items < 1 ? "" + ChatColor.RED + ChatColor.ITALIC + "no" : "" + ChatColor.GOLD + ChatColor.ITALIC + items) + ChatColor.GRAY + ChatColor.ITALIC + " item" + (items != 1 ? "s" : "") + " in that type.");
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 
@@ -151,6 +152,11 @@ public class ItemBrowser extends PluginInventory {
 		backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " Back");
 		back.setItemMeta(backMeta);
 
+		ItemStack create = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+		ItemMeta createMeta = create.getItemMeta();
+		createMeta.setDisplayName(ChatColor.GREEN + "Create New");
+		create.setItemMeta(createMeta);
+		
 		ItemStack previous = new ItemStack(Material.ARROW);
 		ItemMeta previousMeta = previous.getItemMeta();
 		previousMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
@@ -159,6 +165,7 @@ public class ItemBrowser extends PluginInventory {
 		while (n < slots.length)
 			inv.setItem(slots[n++], noItem);
 		inv.setItem(49, back);
+		inv.setItem(51, create);
 		inv.setItem(18, page > 1 ? previous : null);
 		inv.setItem(26, max >= itemIDs.size() ? null : next);
 		return inv;
@@ -186,6 +193,9 @@ public class ItemBrowser extends PluginInventory {
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(player).open();
+
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
+				new NewItemEdition(this, this.type).enable("Write in the chat the text you want.");
 
 			if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -")) {
 				Type type = MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"));

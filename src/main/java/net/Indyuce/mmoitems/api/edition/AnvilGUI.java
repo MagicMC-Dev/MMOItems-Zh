@@ -12,10 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.StatEdition.StatEditionProcess;
+import net.Indyuce.mmoitems.api.edition.ChatEditionBase.ChatEditionProcess;
 
-public class AnvilGUI implements StatEditionProcess, Listener {
-	private StatEdition edition;
+public class AnvilGUI implements ChatEditionProcess, Listener {
+	private ChatEditionBase edition;
 
 	private int containerId;
 	private Inventory inventory;
@@ -26,7 +26,7 @@ public class AnvilGUI implements StatEditionProcess, Listener {
 	}
 
 	@Override
-	public void open(StatEdition edition) {
+	public void open(ChatEditionBase edition) {
 		this.edition = edition;
 
 		ItemStack paper = new ItemStack(Material.PAPER);

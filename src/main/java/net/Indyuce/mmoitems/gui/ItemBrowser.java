@@ -48,8 +48,6 @@ public class ItemBrowser extends PluginInventory {
 		int max = page * slots.length;
 		int n = 0;
 
-		List<String> itemIds = new ArrayList<>(type.getConfigFile().getConfig().getKeys(false));
-
 		/*
 		 * displays all possible item types if no type was previously selected
 		 * by the player
@@ -97,6 +95,7 @@ public class ItemBrowser extends PluginInventory {
 			return inv;
 		}
 
+
 		ItemStack error = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 		ItemMeta errorMeta = error.getItemMeta();
 		errorMeta.setDisplayName(ChatColor.RED + "- Error -");
@@ -105,6 +104,8 @@ public class ItemBrowser extends PluginInventory {
 		errorLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "trying to generate that item.");
 		errorMeta.setLore(errorLore);
 		error.setItemMeta(errorMeta);
+
+		List<String> itemIds = new ArrayList<>(type.getConfigFile().getConfig().getKeys(false));
 
 		/*
 		 * displays every item in a specific type. items are cached inside the

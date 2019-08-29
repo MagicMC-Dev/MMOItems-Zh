@@ -29,6 +29,7 @@ import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.interaction.GemStone.ApplyResult;
@@ -117,7 +118,7 @@ public class ItemUse implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(player);
 		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
-		AttackResult result = new AttackResult(true, event.getDamage());
+		AttackResult result = new AttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 		if (item.hasType()) {
 			Weapon weapon = new Weapon(playerData, item, item.getType());
 

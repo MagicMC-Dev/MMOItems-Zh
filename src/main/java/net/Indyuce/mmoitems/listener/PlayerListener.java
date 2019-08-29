@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Magical_Shield;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -87,7 +88,7 @@ public class PlayerListener implements Listener {
 
 		LivingEntity damager = (LivingEntity) event.getDamager();
 		Player player = (Player) event.getEntity();
-		PlayerData.get(player).castAbilities(damager, new AttackResult(true, event.getDamage()), CastingMode.WHEN_HIT);
+		PlayerData.get(player).castAbilities(damager, new AttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -97,7 +98,7 @@ public class PlayerListener implements Listener {
 
 		Player player = event.getPlayer();
 		boolean left = event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK;
-		PlayerData.get(player).castAbilities(null, new AttackResult(true), player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
+		PlayerData.get(player).castAbilities(null, new AttackResult(true, DamageType.SKILL), player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
 	}
 
 	/*

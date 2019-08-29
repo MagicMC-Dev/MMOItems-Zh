@@ -12,6 +12,7 @@ import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.TypeSet;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -40,7 +41,7 @@ public class RealDualWieldHook implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(player);
 		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(event.getItemInOffhand());
-		AttackResult result = new AttackResult(true, event.getDamage());
+		AttackResult result = new AttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 		if (item.hasType()) {
 			Weapon weapon = new Weapon(playerData, item, item.getType());
 

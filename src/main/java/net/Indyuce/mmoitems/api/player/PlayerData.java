@@ -26,6 +26,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -375,11 +376,11 @@ public class PlayerData {
 	 * cast
 	 */
 	public void cast(Ability ability) {
-		cast(getStats().newTemporary(), null, new AttackResult(true), new AbilityData(ability), true);
+		cast(getStats().newTemporary(), null, new AttackResult(true, DamageType.SKILL), new AbilityData(ability), true);
 	}
 
 	public void cast(AbilityData data) {
-		cast(getStats().newTemporary(), null, new AttackResult(true), data, true);
+		cast(getStats().newTemporary(), null, new AttackResult(true, DamageType.SKILL), data, true);
 	}
 
 	public void cast(TemporaryStats stats, LivingEntity target, AttackResult result, AbilityData ability, boolean message) {

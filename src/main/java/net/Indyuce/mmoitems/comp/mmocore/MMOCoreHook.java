@@ -59,17 +59,17 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	@Override
 	public void refreshStats(net.Indyuce.mmoitems.api.player.PlayerData data) {
 		PlayerData rpgdata = PlayerData.get(data.getPlayer());
-		rpgdata.getStats().getInstance(StatType.MAX_MANA).addAttribute("MMOItems", data.getStats().getStat(ItemStat.MAX_MANA));
-		rpgdata.getStats().getInstance(StatType.MANA_REGENERATION).addAttribute("MMOItems", data.getStats().getStat(manaRegen));
-		rpgdata.getStats().getInstance(StatType.HEALTH_REGENERATION).addAttribute("MMOItems", data.getStats().getStat(ItemStat.REGENERATION));
-		rpgdata.getStats().getInstance(StatType.COOLDOWN_REDUCTION).addAttribute("MMOItems", data.getStats().getStat(cooldownReduction));
-		rpgdata.getStats().getInstance(StatType.ADDITIONAL_EXPERIENCE).addAttribute("MMOItems", data.getStats().getStat(additionalExperience));
+		rpgdata.getStats().getInstance(StatType.MAX_MANA).addModifier("MMOItems", data.getStats().getStat(ItemStat.MAX_MANA));
+		rpgdata.getStats().getInstance(StatType.MANA_REGENERATION).addModifier("MMOItems", data.getStats().getStat(manaRegen));
+		rpgdata.getStats().getInstance(StatType.HEALTH_REGENERATION).addModifier("MMOItems", data.getStats().getStat(ItemStat.REGENERATION));
+		rpgdata.getStats().getInstance(StatType.COOLDOWN_REDUCTION).addModifier("MMOItems", data.getStats().getStat(cooldownReduction));
+		rpgdata.getStats().getInstance(StatType.ADDITIONAL_EXPERIENCE).addModifier("MMOItems", data.getStats().getStat(additionalExperience));
 
-		rpgdata.getStats().getInstance(StatType.SKILL_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(skillDamage));
-		rpgdata.getStats().getInstance(StatType.WEAPON_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(weaponDamage));
-		rpgdata.getStats().getInstance(StatType.PROJECTILE_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(projectileDamage));
-		rpgdata.getStats().getInstance(StatType.PHYSICAL_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(physicalDamage));
-		rpgdata.getStats().getInstance(StatType.MAGICAL_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(magicalDamage));
+		rpgdata.getStats().getInstance(StatType.SKILL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(skillDamage));
+		rpgdata.getStats().getInstance(StatType.WEAPON_DAMAGE).addModifier("MMOItems", data.getStats().getStat(weaponDamage));
+		rpgdata.getStats().getInstance(StatType.PROJECTILE_DAMAGE).addModifier("MMOItems", data.getStats().getStat(projectileDamage));
+		rpgdata.getStats().getInstance(StatType.PHYSICAL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(physicalDamage));
+		rpgdata.getStats().getInstance(StatType.MAGICAL_DAMAGE).addModifier("MMOItems", data.getStats().getStat(magicalDamage));
 	}
 
 	@Override

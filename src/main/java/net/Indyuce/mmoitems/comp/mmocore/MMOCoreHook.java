@@ -11,15 +11,21 @@ import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.stats.StatType;
-import net.Indyuce.mmocore.comp.rpg.damage.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOCoreHook implements RPGHandler, Listener {
+
+	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
+	private final ItemStat additionalExperience = new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
+	private final ItemStat weaponDamage = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Weapon Damage (MMOCore)", new String[] { "Additional weapon damage in %." }, "weapon-damage");
+	private final ItemStat skillDamage = new DoubleStat(new ItemStack(Material.BLAZE_POWDER), "Skill Damage (MMOCore)", new String[] { "Additional skill damage in %." }, "skill-damage");
+	private final ItemStat projectileDamage = new DoubleStat(new ItemStack(Material.SPECTRAL_ARROW), "Projectile Damage (MMOCore)", new String[] { "Additional projectile damage in %." }, "projectile-damage");
+	private final ItemStat magicalDamage = new DoubleStat(new ItemStack(Material.ENCHANTED_BOOK), "Magical Damage (MMOCore)", new String[] { "Additional magical damage in %." }, "magical-damage");
+	private final ItemStat physicalDamage = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Physical Damage (MMOCore)", new String[] { "Additional physical damage in %." }, "physical-damage");
 
 	/*
 	 * called when MMOItems enables
@@ -33,12 +39,13 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		 */
 		MMOCore.plugin.damage.registerHandler(new MMOCoreDamageHandler());
 
-		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction"));
-		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience"));
-		for (DamageType type : DamageType.values()) {
-			String name = MMOUtils.caseOnWords(type.name().toLowerCase());
-			MMOItems.plugin.getStats().register(type.name() + "_DAMAGE", new DoubleStat(new ItemStack(Material.IRON_SWORD), name + " Damage (MMOCore)", new String[] { "Additional " + name + " damage in %." }, type.getPath() + "-damage"));
-		}
+		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", cooldownReduction);
+		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", additionalExperience);
+		MMOItems.plugin.getStats().register("WEAPON_DAMAGE", weaponDamage);
+		MMOItems.plugin.getStats().register("SKILL_DAMAGE", skillDamage);
+		MMOItems.plugin.getStats().register("PROJECTILE_DAMAGE", projectileDamage);
+		MMOItems.plugin.getStats().register("MAGICAL_DAMAGE", magicalDamage);
+		MMOItems.plugin.getStats().register("PHYSICAL_DAMAGE", physicalDamage);
 	}
 
 	@Override
@@ -51,6 +58,14 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		PlayerData rpgdata = PlayerData.get(data.getPlayer());
 		rpgdata.getStats().getInstance(StatType.MAX_MANA).addAttribute("MMOItems", data.getStats().getStat(ItemStat.MAX_MANA));
 		rpgdata.getStats().getInstance(StatType.HEALTH_REGENERATION).addAttribute("MMOItems", data.getStats().getStat(ItemStat.REGENERATION));
+		rpgdata.getStats().getInstance(StatType.COOLDOWN_REDUCTION).addAttribute("MMOItems", data.getStats().getStat(cooldownReduction));
+		rpgdata.getStats().getInstance(StatType.ADDITIONAL_EXPERIENCE).addAttribute("MMOItems", data.getStats().getStat(additionalExperience));
+
+		rpgdata.getStats().getInstance(StatType.SKILL_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(skillDamage));
+		rpgdata.getStats().getInstance(StatType.WEAPON_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(weaponDamage));
+		rpgdata.getStats().getInstance(StatType.PROJECTILE_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(projectileDamage));
+		rpgdata.getStats().getInstance(StatType.PHYSICAL_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(physicalDamage));
+		rpgdata.getStats().getInstance(StatType.MAGICAL_DAMAGE).addAttribute("MMOItems", data.getStats().getStat(magicalDamage));
 	}
 
 	@Override

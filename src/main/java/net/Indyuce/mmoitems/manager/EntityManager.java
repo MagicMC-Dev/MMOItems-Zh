@@ -96,7 +96,7 @@ public class EntityManager implements Listener {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void b(EntityDamageByEntityEvent event) {
 		if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC") || event.isCancelled())
 			return;
@@ -109,13 +109,18 @@ public class EntityManager implements Listener {
 		LivingEntity target = (LivingEntity) event.getEntity();
 		TemporaryStats stats = data.getPlayerStats();
 
-		AttackResult result = new AttackResult(stats.getStat(ItemStat.ATTACK_DAMAGE), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
-		if (data.isCustomWeapon())
+		AttackResult result = new AttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
+
+		/*
+		 * only modify the damage when the bow used is a custom weapon.
+		 */
+		if (data.isCustomWeapon()) {
 			result.applyElementalEffects(stats, data.getSourceItem(), target);
 
-		if (data.getSourceItem().getItem().hasItemMeta())
-			if (data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
-				result.addRelativeDamage(.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
+			if (data.getSourceItem().getItem().hasItemMeta())
+				if (data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
+					result.addRelativeDamage(.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
+		}
 
 		event.setDamage(result.getDamage());
 		unregisterCustomProjectile(arrow);

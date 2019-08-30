@@ -16,10 +16,13 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.version.VersionMaterial;
 
 public class MMOCoreHook implements RPGHandler, Listener {
 
 	private final ItemStat manaRegen = new DoubleStat(new ItemStack(Material.LAPIS_LAZULI), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regen");
+	private final ItemStat maxStamina = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." }, "max-stamina");
+	private final ItemStat staminaRegen = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." }, "stamina-regen");
 	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
 	private final ItemStat additionalExperience = new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
 
@@ -36,6 +39,8 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		MMOCore.plugin.damage.registerHandler(new MMOCoreDamageHandler());
 
 		MMOItems.plugin.getStats().register("MANA_REGENERATION", manaRegen);
+		MMOItems.plugin.getStats().register("MAX_STAMINA", maxStamina);
+		MMOItems.plugin.getStats().register("STAMINA_REGENERATION", staminaRegen);
 		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", cooldownReduction);
 		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", additionalExperience);
 	}
@@ -48,9 +53,12 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	@Override
 	public void refreshStats(net.Indyuce.mmoitems.api.player.PlayerData data) {
 		PlayerData rpgdata = PlayerData.get(data.getPlayer());
+		rpgdata.getStats().getInstance(StatType.HEALTH_REGENERATION).addModifier("MMOItems", data.getStats().getStat(ItemStat.REGENERATION));
 		rpgdata.getStats().getInstance(StatType.MAX_MANA).addModifier("MMOItems", data.getStats().getStat(ItemStat.MAX_MANA));
 		rpgdata.getStats().getInstance(StatType.MANA_REGENERATION).addModifier("MMOItems", data.getStats().getStat(manaRegen));
-		rpgdata.getStats().getInstance(StatType.HEALTH_REGENERATION).addModifier("MMOItems", data.getStats().getStat(ItemStat.REGENERATION));
+		rpgdata.getStats().getInstance(StatType.MAX_STAMINA).addModifier("MMOItems", data.getStats().getStat(maxStamina));
+		rpgdata.getStats().getInstance(StatType.STAMINA_REGENERATION).addModifier("MMOItems", data.getStats().getStat(staminaRegen));
+
 		rpgdata.getStats().getInstance(StatType.COOLDOWN_REDUCTION).addModifier("MMOItems", data.getStats().getStat(cooldownReduction));
 		rpgdata.getStats().getInstance(StatType.ADDITIONAL_EXPERIENCE).addModifier("MMOItems", data.getStats().getStat(additionalExperience));
 
@@ -97,7 +105,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 		@Override
 		public double getStamina() {
-			return data.getStellium();
+			return data.getStamina();
 		}
 
 		@Override
@@ -107,7 +115,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 		@Override
 		public void setStamina(double value) {
-			data.setStellium(value);
+			data.setStamina(value);
 		}
 
 		@Override
@@ -117,7 +125,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 		@Override
 		public void giveStamina(double value) {
-			data.giveStellium(value);
+			data.giveStamina(value);
 		}
 	}
 }

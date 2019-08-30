@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.version.VersionMaterial;
 
 public class MMOCoreHook implements RPGHandler, Listener {
 
-	private final ItemStat manaRegen = new DoubleStat(new ItemStack(Material.LAPIS_LAZULI), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regen");
+	private final ItemStat manaRegen = new DoubleStat(VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regen");
 	private final ItemStat maxStamina = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." }, "max-stamina");
 	private final ItemStat staminaRegen = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." }, "stamina-regen");
 	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
@@ -80,7 +80,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	}
 
 	public class MMOCoreRPGPlayer extends RPGPlayer {
-		private PlayerData data;
+		private final PlayerData data;
 
 		public MMOCoreRPGPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
 			super(playerData);

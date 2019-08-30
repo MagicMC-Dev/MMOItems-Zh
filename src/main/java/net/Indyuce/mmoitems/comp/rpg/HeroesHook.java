@@ -71,7 +71,7 @@ public class HeroesHook implements RPGHandler, Listener {
 	}
 
 	public class HeroesPlayer extends RPGPlayer {
-		private Hero hero;
+		private final Hero hero;
 
 		public HeroesPlayer(PlayerData playerData) {
 			super(playerData);

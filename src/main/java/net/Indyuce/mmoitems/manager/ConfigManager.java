@@ -22,9 +22,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityState;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Message;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityState;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
@@ -55,10 +55,8 @@ public class ConfigManager {
 	// try to setup non existing languages
 	public ConfigManager() {
 		File mainLanguageFolder = new File(MMOItems.plugin.getDataFolder() + "/language");
-		if (!mainLanguageFolder.exists()) {
-			DefaultFile.LEGACY_CONFIGS.checkFile();
+		if (!mainLanguageFolder.exists())
 			mainLanguageFolder.mkdir();
-		}
 
 		File itemFolder = new File(MMOItems.plugin.getDataFolder() + "/item");
 		if (!itemFolder.exists())
@@ -281,7 +279,7 @@ public class ConfigManager {
 		NAME_PLACEHOLDERS("name-placeholders.yml", "", "name-placeholders.yml"),
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
 
-		LEGACY_CONFIGS("legacy-configs.zip", "", "legacy-configs.zip", true),
+		// LEGACY_CONFIGS("legacy-configs.zip", "", "legacy-configs.zip", true),
 
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),

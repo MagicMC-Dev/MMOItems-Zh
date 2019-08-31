@@ -187,38 +187,38 @@ SILVER_INGOT:
   disable-crafting: true
   advanced-craft:
     '7':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '6':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '3':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '8':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '4':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '5':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '0':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '1':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1
     '2':
-      type: MISCELLANEOUS
+      type: MATERIAL
       id: SILVER_COIN
       amount: 1

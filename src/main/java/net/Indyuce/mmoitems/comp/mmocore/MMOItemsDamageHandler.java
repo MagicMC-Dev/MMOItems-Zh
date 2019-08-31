@@ -10,7 +10,7 @@ import net.Indyuce.mmocore.comp.rpg.damage.DamageInfo.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.AttackResult;
 
-public class MMOCoreDamageHandler implements DamageHandler {
+public class MMOItemsDamageHandler implements DamageHandler {
 
 	@Override
 	public DamageInfo getDamage(Entity entity) {

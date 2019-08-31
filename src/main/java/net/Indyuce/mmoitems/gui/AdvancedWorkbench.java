@@ -18,8 +18,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AdvancedRecipe;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.version.VersionMaterial;
 
 public class AdvancedWorkbench extends PluginInventory {

@@ -13,10 +13,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class AdvancedRecipeTypeList extends PluginInventory {

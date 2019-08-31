@@ -26,7 +26,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.AttackResult.DamageType;
@@ -44,6 +43,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.W
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.AdvancedWorkbench;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 

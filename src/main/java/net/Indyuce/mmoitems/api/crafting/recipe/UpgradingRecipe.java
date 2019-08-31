@@ -8,7 +8,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
@@ -17,6 +16,7 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.Upgrade_Stat.UpgradeData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 

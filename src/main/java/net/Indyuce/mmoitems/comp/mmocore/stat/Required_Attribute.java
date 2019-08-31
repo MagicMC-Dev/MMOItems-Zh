@@ -1,8 +1,12 @@
 package net.Indyuce.mmoitems.comp.mmocore.stat;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.message.AddonMessage;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook.MMOCoreRPGPlayer;
 import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
@@ -20,6 +24,13 @@ public class Required_Attribute extends DoubleStat implements Conditional {
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 		MMOCoreRPGPlayer mmocore = (MMOCoreRPGPlayer) player;
-		return mmocore.getData().getAttributes().getAttribute(attribute) >= item.getStat(this);
+		if (mmocore.getData().getAttributes().getAttribute(attribute) < item.getStat(this)) {
+			if (message) {
+				new AddonMessage("not-enough-attribute").format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+			}
+			return false;
+		}
+		return true;
 	}
 }

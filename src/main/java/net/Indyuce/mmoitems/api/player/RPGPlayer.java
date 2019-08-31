@@ -6,8 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.Conditional;
 

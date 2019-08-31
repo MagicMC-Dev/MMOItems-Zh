@@ -23,9 +23,9 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.version.VersionSound;

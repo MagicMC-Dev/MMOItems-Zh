@@ -1,8 +1,6 @@
-package net.Indyuce.mmoitems.api;
+package net.Indyuce.mmoitems.api.util.message;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
 
@@ -78,12 +76,11 @@ public enum Message {
 
 	;
 
-	private String defaultMessage;
-	private String messagePath;
+	private final String defaultMessage, path;
 
 	private Message(String defaultMessage) {
 		this.defaultMessage = defaultMessage;
-		this.messagePath = name().toLowerCase().replace("_", "-");
+		this.path = name().toLowerCase().replace("_", "-");
 	}
 
 	public String getDefault() {
@@ -91,44 +88,15 @@ public enum Message {
 	}
 
 	public String getUpdated() {
-		return MMOItems.plugin.getLanguage().getMessage(messagePath);
+		return MMOItems.plugin.getLanguage().getMessage(path);
 	}
 
 	// toReplace length must be even
 	public String formatRaw(ChatColor prefix, String... toReplace) {
-		String message = prefix + getUpdated();
-		for (int j = 0; j < toReplace.length; j += 2)
-			message = message.replace(toReplace[j], toReplace[j + 1]);
-		return message;
+		return format(prefix, toReplace).toString();
 	}
 
 	public PlayerMessage format(ChatColor prefix, String... toReplace) {
-		return new PlayerMessage(formatRaw(prefix, toReplace));
-	}
-
-	public class PlayerMessage {
-		private final String message;
-
-		// this class allows the plugin to send
-		// only non-empty messages to the chat
-		public PlayerMessage(String message) {
-			this.message = message;
-		}
-
-		public void send(CommandSender player) {
-			if (!ChatColor.stripColor(message).equals(""))
-				player.sendMessage(message);
-		}
-
-		// send on action bar or chat
-		public void send(Player player, String actionBarBooleanPath) {
-			if (ChatColor.stripColor(message).equals(""))
-				return;
-
-			if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath))
-				MMOItems.plugin.getNMS().sendActionBar(player, message);
-			else
-				player.sendMessage(message);
-		}
+		return new PlayerMessage(getUpdated()).format(prefix, toReplace);
 	}
 }

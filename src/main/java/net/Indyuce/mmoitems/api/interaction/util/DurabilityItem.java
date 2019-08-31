@@ -14,11 +14,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.event.ItemBreakEvent;
 import net.Indyuce.mmoitems.api.event.ItemLoseDurabilityEvent;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class DurabilityItem {

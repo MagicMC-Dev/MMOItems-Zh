@@ -23,10 +23,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityState;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 

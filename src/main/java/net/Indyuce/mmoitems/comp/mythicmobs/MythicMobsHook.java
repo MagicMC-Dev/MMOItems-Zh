@@ -24,6 +24,7 @@ import net.Indyuce.mmoitems.api.drop.DropItem;
 public class MythicMobsHook implements Listener {
 	public MythicMobsHook() {
 		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getSkillData().getCachedModifier(arg))));
+		MMOItems.plugin.getDamage().registerHandler(new MythicMobsDamageHandler());
 	}
 
 	@EventHandler

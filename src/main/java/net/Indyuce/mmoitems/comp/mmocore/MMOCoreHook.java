@@ -87,6 +87,10 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 			data = PlayerData.get(playerData.getPlayer());
 		}
+		
+		public PlayerData getData() {
+			return data;
+		}
 
 		@Override
 		public int getLevel() {

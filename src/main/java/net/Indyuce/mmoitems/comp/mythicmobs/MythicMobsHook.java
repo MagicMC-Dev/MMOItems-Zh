@@ -38,7 +38,7 @@ public class MythicMobsHook implements Listener {
 	 */
 	@EventHandler
 	public void b(MythicReloadedEvent event) {
-		new MythicMobsHook();
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getSkillData().getCachedModifier(arg))));
 	}
 
 	public class MMOItemsDrop extends Drop implements IMultiDrop {

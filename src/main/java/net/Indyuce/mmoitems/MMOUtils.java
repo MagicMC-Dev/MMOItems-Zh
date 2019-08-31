@@ -15,6 +15,9 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Wither;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
@@ -59,6 +62,10 @@ public class MMOUtils {
 		for (int k = 0; k < n; k++)
 			bar += barChar;
 		return bar.substring(0, (int) (ratio * n)) + ChatColor.WHITE + bar.substring((int) (ratio * n));
+	}
+
+	public static boolean isUndead(Entity entity) {
+		return entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Wither;
 	}
 
 	public static void giveOrDrop(Player player, ItemStack item) {

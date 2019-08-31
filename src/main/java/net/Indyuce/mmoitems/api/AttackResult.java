@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
@@ -122,7 +123,7 @@ public class AttackResult {
 				addRelativeDamage(stats.getStat(type.getStat()) / 100);
 
 		addRelativeDamage(stats.getStat(target instanceof Player ? ItemStat.PVP_DAMAGE : ItemStat.PVE_DAMAGE) / 100);
-		if (MMOItems.plugin.getDamage().isUndead(target))
+		if (MMOUtils.isUndead(target))
 			addRelativeDamage(stats.getStat(ItemStat.UNDEAD_DAMAGE) / 100);
 
 		return this;
@@ -148,7 +149,7 @@ public class AttackResult {
 				addRelativeDamage(stats.getStat(type.getStat()) / 100);
 
 		addRelativeDamage(stats.getStat(target instanceof Player ? ItemStat.PVP_DAMAGE : ItemStat.PVE_DAMAGE) / 100);
-		if (MMOItems.plugin.getDamage().isUndead(target))
+		if (MMOUtils.isUndead(target))
 			addRelativeDamage(stats.getStat(ItemStat.UNDEAD_DAMAGE) / 100);
 
 		// critical strikes

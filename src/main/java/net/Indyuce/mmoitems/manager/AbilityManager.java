@@ -67,7 +67,7 @@ public class AbilityManager {
 
 		File mythicMobs = new File(MMOItems.plugin.getDataFolder() + "/dynamic/mythic-mobs-abilities");
 		if (!mythicMobs.exists())
-			mythicMobs.mkdir();
+			mythicMobs.mkdirs();
 
 		/*
 		 * load MythicMobs addon skills

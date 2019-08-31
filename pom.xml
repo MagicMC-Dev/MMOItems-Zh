@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
-	<version>4.7.15</version>
+	<version>4.7.16</version>
 	<description>A great item solution for your RPG server.</description>
 	<build>
 		<finalName>MMOItems Premium</finalName>

@@ -7,12 +7,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+
 import net.Indyuce.mmocore.MMOCore;
+import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
+import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmocore.api.player.stats.StatType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -43,6 +47,13 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		MMOItems.plugin.getStats().register("STAMINA_REGENERATION", staminaRegen);
 		MMOItems.plugin.getStats().register("COOLDOWN_REDUCTION", cooldownReduction);
 		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", additionalExperience);
+
+		/*
+		 * only works when the server is reloaded. needs /reload when changing
+		 * attributes to refresh MMOItems stats
+		 */
+		for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
+			MMOItems.plugin.getStats().register("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), new Required_Attribute(attribute));
 	}
 
 	@Override
@@ -79,6 +90,11 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 
+	@EventHandler
+	public void b(PlayerChangeClassEvent event) {
+		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+	}
+
 	public class MMOCoreRPGPlayer extends RPGPlayer {
 		private final PlayerData data;
 
@@ -87,7 +103,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 			data = PlayerData.get(playerData.getPlayer());
 		}
-		
+
 		public PlayerData getData() {
 			return data;
 		}

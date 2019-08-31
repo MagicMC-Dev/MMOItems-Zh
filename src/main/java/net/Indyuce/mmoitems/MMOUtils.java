@@ -43,6 +43,17 @@ public class MMOUtils {
 		}
 	}
 
+	/*
+	 * used by many plugin abilities and mecanisms. sometimes vector cannot be
+	 * normalized because its length is equal to 0 (normalizing a vector just
+	 * divides the vector coordinates by its length) however you cannot divide
+	 * by 0. just return vec if its null. lengthSquared better for performance
+	 * because it has no square root
+	 */
+	public static Vector normalize(Vector vector) {
+		return vector.lengthSquared() == 0 ? vector : vector.normalize();
+	}
+
 	public static String getProgressBar(double ratio, int n, String barChar) {
 		String bar = "";
 		for (int k = 0; k < n; k++)

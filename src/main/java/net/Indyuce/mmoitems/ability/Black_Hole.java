@@ -60,16 +60,8 @@ public class Black_Hole extends Ability {
 
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 					if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && MMOUtils.canDamage(stats.getPlayer(), entity))
-						entity.setVelocity(normalizeIfNotNull(loc.clone().subtract(entity.getLocation()).toVector()).multiply(.5));
+						entity.setVelocity(MMOUtils.normalize(loc.clone().subtract(entity.getLocation()).toVector()).multiply(.5));
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
-	}
-
-	/*
-	 * if the vector is null, you can't normalize it because you cannot divide
-	 * by 0.
-	 */
-	private Vector normalizeIfNotNull(Vector vector) {
-		return vector.length() == 0 ? vector : vector.normalize();
 	}
 }

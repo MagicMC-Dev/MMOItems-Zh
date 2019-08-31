@@ -5,7 +5,6 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
@@ -45,15 +44,7 @@ public class Minor_Explosion extends Ability {
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity)) {
 				new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
-				entity.setVelocity(normalizeIfNotNull(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.2).multiply(2 * knockback));
+				entity.setVelocity(MMOUtils.normalize(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.2).multiply(2 * knockback));
 			}
-	}
-
-	/*
-	 * if the vector is null, you can't normalize it because you cannot divide
-	 * by 0.
-	 */
-	private Vector normalizeIfNotNull(Vector vector) {
-		return vector.length() == 0 ? vector : vector.normalize();
 	}
 }

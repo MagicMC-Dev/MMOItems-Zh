@@ -22,6 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Message;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -67,7 +68,7 @@ public class MitigationListener implements Listener {
 			player.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, player.getLocation(), 16, 0, 0, 0, .06);
 			if (event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof LivingEntity) {
 				LivingEntity attacker = (LivingEntity) ((EntityDamageByEntityEvent) event).getDamager();
-				attacker.setVelocity(attacker.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.35).multiply(MMOItems.plugin.getConfig().getDouble("mitigation.parry.knockback-force")));
+				attacker.setVelocity(MMOUtils.normalize(attacker.getLocation().toVector().subtract(player.getLocation().toVector())).setY(.35).multiply(MMOItems.plugin.getConfig().getDouble("mitigation.parry.knockback-force")));
 			}
 			return;
 		}
@@ -90,7 +91,7 @@ public class MitigationListener implements Listener {
 	}
 
 	private Vector getVector(Player player, EntityDamageEvent event) {
-		return event instanceof EntityDamageByEntityEvent ? player.getLocation().subtract(((EntityDamageByEntityEvent) event).getDamager().getLocation()).toVector().normalize() : player.getEyeLocation().getDirection();
+		return event instanceof EntityDamageByEntityEvent ? MMOUtils.normalize(player.getLocation().subtract(((EntityDamageByEntityEvent) event).getDamager().getLocation()).toVector()) : player.getEyeLocation().getDirection();
 	}
 
 	private double getYaw(Entity player, Vector vec) {

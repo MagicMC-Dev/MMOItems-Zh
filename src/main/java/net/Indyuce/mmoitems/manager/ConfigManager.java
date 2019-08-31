@@ -213,7 +213,8 @@ public class ConfigManager {
 	}
 
 	public String getMessage(String path) {
-		return ChatColor.translateAlternateColorCodes('&', messages.getConfig().getString(path));
+		String found = messages.getConfig().getString(path);
+		return ChatColor.translateAlternateColorCodes('&', found == null ? "<MessageNotFound:" + path + ">" : found);
 	}
 
 	public String getAbilityName(Ability ability) {

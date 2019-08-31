@@ -26,7 +26,7 @@ public class Required_Attribute extends DoubleStat implements Conditional {
 		MMOCoreRPGPlayer mmocore = (MMOCoreRPGPlayer) player;
 		if (mmocore.getData().getAttributes().getAttribute(attribute) < item.getStat(this)) {
 			if (message) {
-				new AddonMessage("not-enough-attribute").format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				new AddonMessage("not-enough-attribute").format(ChatColor.RED, "#attribute#", attribute.getName()).send(player.getPlayer(), "cant-use-item");
 				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 			}
 			return false;

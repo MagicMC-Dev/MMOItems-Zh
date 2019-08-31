@@ -26,9 +26,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.interaction.GemStone.ApplyResult;
@@ -96,17 +96,17 @@ public class ItemUse implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void b(EntityDamageByEntityEvent event) {
 
 		// check for npc
 		// safety checks
-		if (event.getEntity().hasMetadata("NPC") || event.isCancelled() || !(event.getDamager() instanceof Player) || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK)
+		if (event.getEntity().hasMetadata("NPC") || !(event.getDamager() instanceof Player) || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK)
 			return;
 
 		// custom damage check
 		LivingEntity target = (LivingEntity) event.getEntity();
-		if (MMOItems.plugin.getDamage().isDamaged(target) || !MMOItems.plugin.getRPG().canBeDamaged(target))
+		if (MMOItems.plugin.getDamage().findInfo(target) != null)
 			return;
 
 		Player player = (Player) event.getDamager();

@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.comp.rpg.damage.DamageInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class AttackResult {
@@ -37,13 +38,17 @@ public class AttackResult {
 	}
 
 	public AttackResult(boolean successful, double damage, DamageType... types) {
-		Validate.isTrue(types.length > 0, "Attack must have at least one damage type!");
+		this(successful, damage, Arrays.asList(types));
+	}
+
+	public AttackResult(boolean successful, double damage, List<DamageType> types) {
+		Validate.isTrue(types.size() > 0, "Attack must have at least one damage type!");
 
 		this.successful = successful;
 		this.initial = damage;
 		this.damage = damage;
 
-		this.damageTypes = Arrays.asList(types);
+		this.damageTypes = types;
 	}
 
 	public AttackResult(AttackResult result) {
@@ -160,6 +165,10 @@ public class AttackResult {
 		}
 
 		return this;
+	}
+
+	public DamageInfo toDamageInfo() {
+		return new DamageInfo(damage, damageTypes);
 	}
 
 	public enum DamageType {

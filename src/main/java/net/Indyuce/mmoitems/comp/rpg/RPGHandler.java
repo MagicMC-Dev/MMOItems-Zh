@@ -2,8 +2,6 @@ package net.Indyuce.mmoitems.comp.rpg;
 
 import java.util.logging.Level;
 
-import org.bukkit.entity.Entity;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -13,8 +11,6 @@ public interface RPGHandler {
 	public RPGPlayer getInfo(PlayerData data);
 
 	public void refreshStats(PlayerData data);
-
-	public boolean canBeDamaged(Entity entity);
 
 	public enum PluginEnum {
 		MMOCORE("MMOCore", MMOCoreHook.class),

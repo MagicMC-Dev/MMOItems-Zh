@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -28,11 +27,6 @@ public class BattleLevelsHook implements RPGHandler, Listener {
 
 	@Override
 	public void refreshStats(PlayerData data) {
-	}
-
-	@Override
-	public boolean canBeDamaged(Entity entity) {
-		return true;
 	}
 
 	public class BattleLevelsPlayer extends RPGPlayer {

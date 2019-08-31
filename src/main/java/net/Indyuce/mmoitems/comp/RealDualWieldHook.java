@@ -11,27 +11,23 @@ import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.AttackResult.DamageType;
+import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 
 public class RealDualWieldHook implements Listener {
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void a(PlayerDamageEntityWithOffhandEvent event) {
 
 		// check for npc
 		// safety checks
-		if (event.getEntity().hasMetadata("NPC") || event.isCancelled() || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0)
+		if (event.getEntity().hasMetadata("NPC") || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0)
 			return;
 
-		// custom damage check
 		LivingEntity target = (LivingEntity) event.getEntity();
-		if (MMOItems.plugin.getDamage().isDamaged(target) || !MMOItems.plugin.getRPG().canBeDamaged(target))
-			return;
-
 		Player player = (Player) event.getPlayer();
 		TemporaryStats stats = null;
 

@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.comp.rpg;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -24,11 +23,6 @@ public class SkillsHook implements RPGHandler, Listener {
 		OfflinePlayer player = event.getPlayer();
 		if (player.isOnline())
 			PlayerData.get(player).scheduleDelayedInventoryUpdate();
-	}
-
-	@Override
-	public boolean canBeDamaged(Entity entity) {
-		return true;
 	}
 
 	@Override

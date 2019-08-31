@@ -23,8 +23,8 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Magical_Shield;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
@@ -46,19 +46,21 @@ public class PlayerListener implements Listener {
 					event.setDamage(event.getDamage() * (1 - Math.max(values[1], 1)));
 			}
 
-		// damage reduction stats
+		/*
+		 * damage reduction
+		 */
+		if (MMOItems.plugin.getDamage().findInfo(player) != null)
+			return;
 		PlayerStats stats = PlayerData.get(player).getStats();
 
-		if (MMOItems.plugin.getRPG().canBeDamaged(player) && !MMOItems.plugin.getDamage().isDamaged(player)) {
-			if (event.getCause() == DamageCause.FIRE)
-				event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FIRE_DAMAGE_REDUCTION) / 100));
-			else if (event.getCause() == DamageCause.FALL)
-				event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FALL_DAMAGE_REDUCTION) / 100));
-			else if (event.getCause() == DamageCause.MAGIC)
-				event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
-			else if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == DamageCause.PROJECTILE)
-				event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
-		}
+		if (event.getCause() == DamageCause.FIRE)
+			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FIRE_DAMAGE_REDUCTION) / 100));
+		else if (event.getCause() == DamageCause.FALL)
+			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FALL_DAMAGE_REDUCTION) / 100));
+		else if (event.getCause() == DamageCause.MAGIC)
+			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
+		else if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == DamageCause.PROJECTILE)
+			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
 
 		event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100));
 	}

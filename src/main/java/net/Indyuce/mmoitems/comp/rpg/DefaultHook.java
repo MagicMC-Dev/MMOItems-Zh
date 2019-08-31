@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
@@ -13,11 +12,6 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 public class DefaultHook implements RPGHandler, Listener {
 	public DefaultHook() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-	}
-
-	@Override
-	public boolean canBeDamaged(Entity entity) {
-		return true;
 	}
 
 	@Override

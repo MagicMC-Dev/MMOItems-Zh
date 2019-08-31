@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,11 +37,6 @@ public class SkillAPIHook implements RPGHandler, Listener {
 	@EventHandler
 	public void b(PlayerLevelUpEvent event) {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayerData().getPlayer()).scheduleDelayedInventoryUpdate();
-	}
-
-	@Override
-	public boolean canBeDamaged(Entity entity) {
-		return true;
 	}
 
 	@Override

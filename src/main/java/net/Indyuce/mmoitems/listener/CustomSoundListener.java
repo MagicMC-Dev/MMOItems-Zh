@@ -48,7 +48,7 @@ public class CustomSoundListener implements Listener {
 
 	@EventHandler
 	public void d(PlayerInteractEvent event) {
-		if(event.getHand().equals(EquipmentSlot.OFF_HAND) || !event.hasItem()) return;
+		if(event.getHand() == EquipmentSlot.OFF_HAND || !event.hasItem()) return;
 		
 		if(event.hasBlock())
 		{

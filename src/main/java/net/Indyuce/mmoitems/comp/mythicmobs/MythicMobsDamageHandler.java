@@ -10,7 +10,7 @@ public class MythicMobsDamageHandler implements DamageHandler {
 
 	@Override
 	public DamageInfo getDamage(Entity entity) {
-		return new DamageInfo(0, DamageType.MAGICAL);
+		return new DamageInfo(0, DamageType.MAGICAL, DamageType.SKILL);
 	}
 
 	@Override

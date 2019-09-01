@@ -31,7 +31,8 @@ public class MMOCoreMMOLoader implements MMOLoader {
 		 * register extra conditions for MMOItems crafting.
 		 */
 		MMOItems.plugin.getCrafting().registerCondition(new ProfessionCondition());
-		MMOItems.plugin.getCrafting().registerTrigger(new ExperienceCraftingTrigger());}
+		MMOItems.plugin.getCrafting().registerTrigger(new ExperienceCraftingTrigger());
+	}
 
 	@Override
 	public Condition loadCondition(MMOLineConfig config) {

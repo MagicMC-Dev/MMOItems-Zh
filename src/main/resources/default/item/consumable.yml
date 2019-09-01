@@ -332,3 +332,18 @@ EGGNOG:
   lore:
   - '&eEarned during X-Mas 2018!'
   - '&e&oA fresh & cold eggnog!'
+MANGO:
+  material: PLAYER_HEAD
+  name: '&fMango'
+  skull-texture:
+    value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk1MzM4OGNjZDZmZjY0ZmMxOTUwZGQ0Y2VjNGFkZWFhMzQ4YWFhYmNjNTMyODI4ZTcxNDRmNTA5ZjIzYyJ9fX0=
+    uuid: 1c6aa7d0-582e-4111-8376-74a2a2f74a58
+  tier: COMMON
+  lore:
+  - '&7&oSweet and sour, hmm. Perfect combination'
+  effects:
+    REGENERATION: 20.0,1
+  restore:
+    food: 8.0
+    saturation: 10.0
+  vanilla-eating: false

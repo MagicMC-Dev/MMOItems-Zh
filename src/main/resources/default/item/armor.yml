@@ -560,3 +560,99 @@ WYVERN_CAP:
       type: TOME
       id: WYVERN_SOUL
       amount: 1
+TRAVEL_BOOTS:
+  material: LEATHER_BOOTS
+  name: §fTravel boots
+  tier: NORMAL
+  movement-speed: 0.005
+  dye-color: 187 118 126
+  will-break: true
+  max-durability: 100.0
+  armor: 2.0
+  fall-damage-reduction: 5.0
+SHADOWVEIL:
+  material: LEATHER_HELMET
+  dye-color: 0 0 0
+  name: '&cDark Veil'
+  tier: RARE
+  unbreakable: true
+  max-durability: 1000.0
+  enchants:
+    protection: 4
+    unbreaking: 3
+  hide-enchants: false
+  disable-enchanting: true
+  disable-repairing: true
+  ability:
+    ability1:
+      type: SHADOW_VEIL
+      mode: SHIFT_LEFT_CLICK
+      duration: 5.0
+      cooldown: 20.0
+  lore:
+  - '&7&oObtained from the depths of bedrock'
+  max-health: 10.0
+  armor: 3.0
+  armor-toughness: 2.0
+SHADOWROBE:
+  material: LEATHER_CHESTPLATE
+  lore:
+  - '&7&oObtained from the depths of bedrock'
+  name: '&cShadow Robe'
+  max-durability: 1000.0
+  disable-repairing: true
+  disable-enchanting: true
+  enchants:
+    unbreaking: 3
+    protection: 4
+  tier: RARE
+  unbreakable: true
+  magic-damage-reduction: 25.0
+  armor-toughness: 2.0
+  armor: 8.0
+  dye-color: 0 0 0
+  max-health: 16.0
+  ability:
+    ability1:
+      type: CORRUPT
+      mode: WHEN_HIT
+      duration: 4.0
+      damage: 12.0
+      cooldown: 15.0
+      amplifier: 1.0
+SHADOWLEGGINGS:
+  material: LEATHER_LEGGINGS
+  lore:
+  - '&7&oObtained from the depths of bedrock'
+  name: '&cShadow Leggings'
+  enchants:
+    unbreaking: 3
+    protection: 4
+  disable-repairing: true
+  disable-enchanting: true
+  magic-damage-reduction: 25.0
+  unbreakable: true
+  tier: RARE
+  armor-toughness: 2.0
+  armor: 6.0
+  max-health: 14.0
+  dye-color: 0 0 0
+SHADOWBOOTS:
+  material: LEATHER_BOOTS
+  name: '&cShadow Boots'
+  lore:
+  - '&7&oObtained from the depths of bedrock'
+  enchants:
+    unbreaking: 3
+    protection: 4
+  disable-repairing: true
+  disable-enchanting: true
+  max-durability: 1000.0
+  unbreakable: true
+  tier: RARE
+  fall-damage-reduction: 15.0
+  armor-toughness: 2.0
+  armor: 3.0
+  max-health: 8.0
+  movement-speed: 0.01
+  dye-color: 0 0 0

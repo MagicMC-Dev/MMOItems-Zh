@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -25,6 +26,7 @@ import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.listener.CustomSoundListener;
 
 public class CraftingStationView extends PluginInventory {
 	private final CraftingStation station;
@@ -188,7 +190,9 @@ public class CraftingStationView extends PluginInventory {
 			if (craft.isReady()) {
 				CraftingRecipe recipe = craft.getRecipe();
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-				MMOUtils.giveOrDrop(data.getPlayer(), recipe.getOutput().generate());
+				ItemStack craftedItem = recipe.getOutput().generate();
+				CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
+				MMOUtils.giveOrDrop(data.getPlayer(), craftedItem);
 			} else
 				for (Ingredient ingredient : craft.getRecipe().getIngredients())
 					MMOUtils.giveOrDrop(player, ingredient.generateItemStack());

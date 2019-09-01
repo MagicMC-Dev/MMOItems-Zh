@@ -17,7 +17,6 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
-import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.Soulbound.SoulboundData;
@@ -245,8 +244,6 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
-		// play sound only if it's recognized.
-		new SoundReader(getNBTItem().getString("MMOITEMS_CONSUME_SOUND"), Sound.ENTITY_GENERIC_EAT).play(player);
 		return consume && !getNBTItem().getBoolean("MMOITEMS_DISABLE_RIGHT_CLICK_CONSUME");
 	}
 

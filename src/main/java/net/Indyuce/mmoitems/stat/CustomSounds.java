@@ -29,9 +29,8 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class CustomSounds extends ItemStat {
 	public CustomSounds() {
-		super(new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use.", "Requires a custom resourcepack!" }, "sounds", new String[] { "all" });
+		super(new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." }, "sounds", new String[] { "all" });
 	}
-	//inv.getPlayer().playSound(inv.getPlayer().getLocation(), sound, vol, p);
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
@@ -133,9 +132,9 @@ public class CustomSounds extends ItemStat {
 			SoundData value = sounds.get(sound);
 			String s = sound.getName().replace(" ", "_").toUpperCase();
 			
-			item.addItemTag(new ItemTag("MMOITEMS_" + s, value.getSound()));
-			item.addItemTag(new ItemTag("MMOITEMS_" + s + "_VOL", value.getVolume()));
-			item.addItemTag(new ItemTag("MMOITEMS_" + s + "_PIT", value.getPitch()));
+			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s, value.getSound()));
+			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_VOL", value.getVolume()));
+			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_PIT", value.getPitch()));
 		});
 
 		return true;
@@ -150,11 +149,11 @@ public class CustomSounds extends ItemStat {
 		for (CustomSound sound : CustomSound.values())
 		{
 			s = sound.getName().replace(" ", "_").toUpperCase();
-			soundName = item.getString("MMOITEMS_" + s);
+			soundName = item.getString("MMOITEMS_SOUND_" + s);
 			if (soundName != null && !soundName.isEmpty())
 			{
-				double vol = item.getDouble("MMOITEMS_" + s + "_VOL");
-				double pit = item.getDouble("MMOITEMS_" + s + "_PIT");
+				double vol = item.getDouble("MMOITEMS_SOUND_" + s + "_VOL");
+				double pit = item.getDouble("MMOITEMS_SOUND_" + s + "_PIT");
 				sounds.set(sound, soundName, vol, pit);
 			}
 		}

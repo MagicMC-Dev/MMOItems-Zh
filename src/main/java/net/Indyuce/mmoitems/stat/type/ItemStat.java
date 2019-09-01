@@ -25,7 +25,6 @@ import net.Indyuce.mmoitems.stat.Arrow_Particles;
 import net.Indyuce.mmoitems.stat.Attack_Damage;
 import net.Indyuce.mmoitems.stat.Attack_Speed;
 import net.Indyuce.mmoitems.stat.Commands;
-import net.Indyuce.mmoitems.stat.Consume_Sound;
 import net.Indyuce.mmoitems.stat.Crafting_Recipe;
 import net.Indyuce.mmoitems.stat.CustomSounds;
 import net.Indyuce.mmoitems.stat.Custom_Model_Data;
@@ -133,7 +132,6 @@ public abstract class ItemStat {
 	public static final ItemStat SOULBOUND_BREAK_CHANCE = new DoubleStat(new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbound Break Chance", new String[] { "The chance of breaking an item's", "soulbound when drag & drop'd on it.", "This chance is lowered depending", "on the soulbound's level." }, "soulbound-break-chance", new String[] { "consumable" });
 	public static final ItemStat SOULBOUND_LEVEL = new Soulbound_Level();
 	public static final ItemStat ITEM_COOLDOWN = new DoubleStat(new ItemStack(Material.COOKED_CHICKEN), "Item Cooldown", new String[] { "This cooldown applies for consumables", "as well as for item commands." }, "item-cooldown", new String[] { "!armor", "!gem_stone", "all" });
-	public static final ItemStat CONSUME_SOUND = new Consume_Sound();
 	public static final ItemStat DISABLE_RIGHT_CLICK_CONSUME = new DisableStat(Material.BARRIER, "right-click-consume", "Disable Right Click Consume", new String[] { "consumable" }, "This item will not be consumed", "when eaten by players.");
 	public static final ItemStat VANILLA_EATING_ANIMATION = new Vanilla_Eating_Animation(), INEDIBLE = new Inedible(), GEM_COLOR = new Gem_Color(), ITEM_TYPE_RESTRICTION = new Item_Type_Restriction();
 

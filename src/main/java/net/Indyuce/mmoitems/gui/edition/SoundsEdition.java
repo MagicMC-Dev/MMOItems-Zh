@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -40,16 +41,17 @@ public class SoundsEdition extends EditionInventory {
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Custom Sounds: " + id);
-		int[] slots = { 19, 22, 25 };
+		int[] slots = { 19, 22, 25, 28, 31, 34, 37, 40, 43 };
 		int n = 0;
 
 		FileConfiguration config = type.getConfigFile().getConfig();
 		for (CustomSound sound : CustomSound.values()) {
 			ItemStack soundEvent = sound.getItem().clone();
 			ItemMeta soundEventMeta = soundEvent.getItemMeta();
+			soundEventMeta.addItemFlags(ItemFlag.values());
 			soundEventMeta.setDisplayName(ChatColor.GREEN + sound.getName());
 			List<String> eventLore = new ArrayList<String>();
-			for(String lore : sound.getLore())
+			for(String lore : sound.getLore().split("\\+"))
 				eventLore.add(ChatColor.GRAY + lore);
 			eventLore.add("");
 			String configSoundName = sound.getName().replace(" ", "-").toLowerCase();

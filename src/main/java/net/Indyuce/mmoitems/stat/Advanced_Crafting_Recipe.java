@@ -35,7 +35,7 @@ public class Advanced_Crafting_Recipe extends StringStat {
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new AdvancedRecipeEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open();
+			new AdvancedRecipeEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("advanced-craft")) {
 				config.getConfig().set(inv.getItemId() + ".advanced-craft", null);

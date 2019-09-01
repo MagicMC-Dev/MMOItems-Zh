@@ -46,7 +46,7 @@ public class GuiListener implements Listener {
 			String id = ((EditionInventory) inventory).getItemId();
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back")) {
 				if(inventory instanceof ItemEdition) new ItemBrowser(player, type).open();
-				else new ItemEdition(player, type, id).open();
+				else new ItemEdition(player, type, id).onPage(((EditionInventory) inventory).getPreviousPage()).open();
 			}
 		}
 	}

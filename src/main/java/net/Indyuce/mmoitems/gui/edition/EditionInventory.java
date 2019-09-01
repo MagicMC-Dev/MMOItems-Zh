@@ -22,6 +22,7 @@ public abstract class EditionInventory extends PluginInventory {
 	protected Type type;
 	protected String id;
 
+	private int prevPage;
 	private ItemStack cached;
 
 	public EditionInventory(Player player, Type type, String id) {
@@ -89,5 +90,14 @@ public abstract class EditionInventory extends PluginInventory {
 
 		inv.setItem(2, get);
 		inv.setItem(4, getCachedItem());
+	}
+
+	public void open(int page) {
+		prevPage = page;
+		open();
+	}
+	
+	public int getPreviousPage() {
+		return prevPage;
 	}
 }

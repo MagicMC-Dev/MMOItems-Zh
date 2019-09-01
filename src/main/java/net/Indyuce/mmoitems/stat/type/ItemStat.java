@@ -27,6 +27,7 @@ import net.Indyuce.mmoitems.stat.Attack_Speed;
 import net.Indyuce.mmoitems.stat.Commands;
 import net.Indyuce.mmoitems.stat.Consume_Sound;
 import net.Indyuce.mmoitems.stat.Crafting_Recipe;
+import net.Indyuce.mmoitems.stat.CustomSounds;
 import net.Indyuce.mmoitems.stat.Custom_Model_Data;
 import net.Indyuce.mmoitems.stat.Disable_AdvancedEnchantments;
 import net.Indyuce.mmoitems.stat.Display_Name;
@@ -141,6 +142,7 @@ public abstract class ItemStat {
 	public static final ItemStat CRAFTING_RECIPE = new Crafting_Recipe(), FURNACE_RECIPE = new Furnace_Recipe(), SHAPELESS_RECIPE = new Shapeless_Recipe(), ADVANCED_CRAFTING_RECIPE = new Advanced_Crafting_Recipe(), ADVANCED_CRAFTING_RECIPE_PERMISSION = new Advanced_Crafting_Recipe_Permission();
 	public static final ItemStat AUTOSMELT = new BooleanStat(new ItemStack(Material.COAL), "Autosmelt", new String[] { "If set to true, your tool will", "automaticaly smelt mined ores." }, "autosmelt", new String[] { "tool" });
 	public static final ItemStat BOUNCING_CRACK = new BooleanStat(new ItemStack(VersionMaterial.COBBLESTONE_WALL.toMaterial()), "Bouncing Crack", new String[] { "If set to true, your tool will", "also break nearby blocks." }, "bouncing-crack", new String[] { "tool" });
+	public static final ItemStat CUSTOM_SOUNDS = new CustomSounds();
 	public static final ItemStat ELEMENTS = new Elements();
 	public static final ItemStat COMMANDS = new Commands(), STAFF_SPIRIT = new Staff_Spirit(), LUTE_ATTACK_SOUND = new Lute_Attack_Sound(), LUTE_ATTACK_EFFECT = new Lute_Attack_Effect();
 	public static final ItemStat NOTE_WEIGHT = new DoubleStat(new ItemStack(VersionMaterial.MUSIC_DISC_MALL.toMaterial()), "Note Weight", new String[] { "Defines how the projectile cast", "by your lute tilts downwards." }, "note-weight", new String[] { "lute" });

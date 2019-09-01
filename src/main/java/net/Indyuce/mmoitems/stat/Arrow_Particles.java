@@ -98,7 +98,7 @@ public class Arrow_Particles extends StringStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new ArrowParticlesEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open();
+		new ArrowParticlesEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
 		return true;
 	}
 

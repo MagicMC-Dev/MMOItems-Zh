@@ -117,4 +117,7 @@ public class ItemEdition extends EditionInventory {
 		if (!tag.equals(""))
 			MMOItems.plugin.getStats().get(tag).whenClicked(this, event);
 	}
+
+	public ItemEdition onPage(int value)
+	{ page = value; return this; }
 }

@@ -82,7 +82,7 @@ public class Abilities extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new AbilityListEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open();
+		new AbilityListEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
 		return true;
 	}
 

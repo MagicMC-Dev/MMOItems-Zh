@@ -38,7 +38,7 @@ public class Elements extends ItemStat {
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new ElementsEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open();
+			new ElementsEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("element")) {

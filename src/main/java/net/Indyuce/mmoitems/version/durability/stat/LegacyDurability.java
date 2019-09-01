@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class LegacyDurability extends DoubleStat {
 	public LegacyDurability() {
-		super(new ItemStack(Material.FISHING_ROD), "DefaultDurability/ID", new String[] { "The durability of your item." }, "durability", new String[] { "all" });
+		super(new ItemStack(Material.FISHING_ROD), "Default Durability/ID", new String[] { "The durability of your item." }, "durability", new String[] { "all" });
 	}
 
 	@Override

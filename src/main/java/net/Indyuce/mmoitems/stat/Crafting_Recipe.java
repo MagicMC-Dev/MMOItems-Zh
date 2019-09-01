@@ -32,7 +32,7 @@ public class Crafting_Recipe extends StringStat {
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new RecipeEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open();
+			new RecipeEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("craft")) {
 				config.getConfig().set(inv.getItemId() + ".craft", null);

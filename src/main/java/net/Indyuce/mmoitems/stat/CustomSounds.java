@@ -144,18 +144,11 @@ public class CustomSounds extends ItemStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		SoundListData sounds = new SoundListData();
 
-		String soundName;
-		String s;
 		for (CustomSound sound : CustomSound.values())
 		{
-			s = sound.getName().replace(" ", "_").toUpperCase();
-			soundName = item.getString("MMOITEMS_SOUND_" + s);
+			String soundName = item.getString("MMOITEMS_SOUND_" + sound.name());
 			if (soundName != null && !soundName.isEmpty())
-			{
-				double vol = item.getDouble("MMOITEMS_SOUND_" + s + "_VOL");
-				double pit = item.getDouble("MMOITEMS_SOUND_" + s + "_PIT");
-				sounds.set(sound, soundName, vol, pit);
-			}
+				sounds.set(sound, soundName, item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"), item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
 		}
 
 		if (sounds.total() > 0)

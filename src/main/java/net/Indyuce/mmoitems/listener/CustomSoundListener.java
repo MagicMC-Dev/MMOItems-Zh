@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -52,12 +51,10 @@ public class CustomSoundListener implements Listener {
 		
 		if(event.hasBlock())
 		{
-			if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-					|| event.getAction().equals(Action.RIGHT_CLICK_AIR))
+			if(event.getAction().name().contains("RIGHT_CLICK"))
 				playSound(event.getItem(), "ON_RIGHT_CLICK", event.getPlayer());
 
-			if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)
-					|| event.getAction().equals(Action.LEFT_CLICK_AIR))
+			if(event.getAction().name().contains("LEFT_CLICK"))
 				playSound(event.getItem(), "ON_LEFT_CLICK", event.getPlayer());
 		}
 	}

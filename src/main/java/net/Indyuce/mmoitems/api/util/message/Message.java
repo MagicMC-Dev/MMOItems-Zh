@@ -21,6 +21,7 @@ public enum Message {
 
 	// item restrictions
 	NOT_ENOUGH_LEVELS("You don't have enough levels to use this item!"),
+	NOT_ENOUGH_ATTRIBUTE("You don't have enough attributes to use this item!"),
 	SOULBOUND_RESTRICTION("This item is linked to another player, you can't use it!"),
 	NOT_ENOUGH_PERMS("You don't have enough permissions to use this."),
 	WRONG_CLASS("You don't have the right class!"),
@@ -73,7 +74,6 @@ public enum Message {
 	// ALREADY_CRAFTING_STATION("You are already crafting something else in that
 	// station."),
 	// CRAFTING_SUBTITLE("#bar# &e#left# left"),
-
 	;
 
 	private final String defaultMessage, path;

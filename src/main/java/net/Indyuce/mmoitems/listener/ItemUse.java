@@ -249,6 +249,9 @@ public class ItemUse implements Listener {
 				return;
 			}
 
+		Arrow arrow = (Arrow) event.getProjectile();
+		if(!(item.getStat(ItemStat.ARROW_VELOCITY) <= 0))
+			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStat.ARROW_VELOCITY) / 2)));
 		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), (Arrow) event.getProjectile(), type != null, event.getForce());
 	}
 

@@ -51,7 +51,7 @@ public class SoundsEdition extends EditionInventory {
 			soundEventMeta.addItemFlags(ItemFlag.values());
 			soundEventMeta.setDisplayName(ChatColor.GREEN + sound.getName());
 			List<String> eventLore = new ArrayList<String>();
-			for(String lore : sound.getLore().split("\\+"))
+			for(String lore : sound.getLore())
 				eventLore.add(ChatColor.GRAY + lore);
 			eventLore.add("");
 			String configSoundName = sound.getName().replace(" ", "-").toLowerCase();

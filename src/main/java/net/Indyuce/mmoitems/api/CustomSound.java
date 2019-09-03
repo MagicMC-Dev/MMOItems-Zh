@@ -13,15 +13,15 @@ public enum CustomSound {
 	ON_PICKUP(Material.IRON_INGOT, 28, "Plays when you pickup the item from the ground."),
 	ON_LEFT_CLICK(Material.STONE_AXE, 31, "Plays when item is left-clicked."),
 	ON_CRAFT(VersionMaterial.CRAFTING_TABLE.toMaterial(), 34, "Plays when item is crafted in a crafting inventory,+or when smelted from someting in a furnace."),
-	ON_CONSUME(Material.APPLE, 37, "Plays when item has been consumed.+(After eating/drinking animation)"),
+	ON_CONSUME(Material.APPLE, 37, "Plays when item has been consumed.", "(After eating/drinking animation)"),
 	ON_ITEM_BREAK(Material.FLINT, 40, "Plays when the item breaks."),
 	ON_PLACED(Material.STONE, 43, "Plays when the block is placed.");
 	
 	private final ItemStack item;
-	private final String lore;
+	private final String[] lore;
 	private final int slot;
 
-	private CustomSound(Material material, int slot, String lore) {
+	private CustomSound(Material material, int slot, String... lore) {
 		this.item = new ItemStack(material);
 		this.lore = lore;
 		this.slot = slot;
@@ -35,7 +35,7 @@ public enum CustomSound {
 		return MMOUtils.caseOnWords(name().toLowerCase().replace('_', ' '));
 	}
 	
-	public String getLore() {
+	public String[] getLore() {
 		return lore;
 	}
 	

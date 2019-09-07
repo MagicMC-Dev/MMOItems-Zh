@@ -106,7 +106,7 @@ public class AbilityListEdition extends EditionInventory {
 			if (!config.getConfig().getConfigurationSection(id).contains("ability")) {
 				config.getConfig().createSection(id + ".ability.ability1");
 				registerItemEdition(config);
-				new AbilityEdition(player, type, id, "ability1").open();
+				new AbilityEdition(player, type, id, "ability1").open(getPreviousPage());
 				return;
 			}
 
@@ -119,7 +119,7 @@ public class AbilityListEdition extends EditionInventory {
 				if (!config.getConfig().getConfigurationSection(id + ".ability").contains("ability" + j)) {
 					config.getConfig().createSection(id + ".ability.ability" + j);
 					registerItemEdition(config);
-					new AbilityEdition(player, type, id, "ability" + j).open();
+					new AbilityEdition(player, type, id, "ability" + j).open(getPreviousPage());
 					break;
 				}
 		}
@@ -129,7 +129,7 @@ public class AbilityListEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new AbilityEdition(player, type, id, tag).open();
+			new AbilityEdition(player, type, id, tag).open(getPreviousPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = type.getConfigFile();

@@ -139,7 +139,7 @@ public class AbilityEdition extends EditionInventory {
 			return;
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Ability List")) {
-			new AbilityListEdition(player, type, id).open();
+			new AbilityListEdition(player, type, id).open(getPreviousPage());
 			return;
 		}
 

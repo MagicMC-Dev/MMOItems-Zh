@@ -32,7 +32,7 @@ public class AdvancedWorkbenchCommand implements CommandExecutor {
 			return true;
 		}
 
-		new AdvancedWorkbench((Player) sender).open();
+		new AdvancedWorkbench(player).open();
 		return true;
 	}
 }

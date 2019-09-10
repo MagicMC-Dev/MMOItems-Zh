@@ -44,6 +44,7 @@ public class MMOItemsCompletion implements TabCompleter {
 			list.add("allitems");
 			list.add("update");
 			list.add("stations");
+			list.add("giveall");
 
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("help"))
@@ -72,7 +73,7 @@ public class MMOItemsCompletion implements TabCompleter {
 				list.add("spirit");
 			}
 
-			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load"))
+			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("giveall"))
 				for (Type type : MMOItems.plugin.getTypes().getAll())
 					list.add(type.getId());
 
@@ -89,7 +90,7 @@ public class MMOItemsCompletion implements TabCompleter {
 			else if (args[0].equalsIgnoreCase("stations") && args[1].equalsIgnoreCase("open"))
 				MMOItems.plugin.getCrafting().getAll().forEach(station -> list.add(station.getId()));
 
-			else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("drop"))
+			else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("giveall"))
 				if (Type.isValid(args[1]))
 					Type.get(args[1]).getConfigFile().getConfig().getKeys(false).forEach(key -> list.add(key.toUpperCase()));
 
@@ -128,7 +129,14 @@ public class MMOItemsCompletion implements TabCompleter {
 					for (int j = 0; j < 10; j++)
 						list.add("" + j);
 			}
+		} else if (args[0].equalsIgnoreCase("giveall")) {
+			if (args.length == 4)
+				for (String str : new String[] { "1", "16", "64", "1-5", "1-10", "4-16" })
+					list.add(str);
 
+			if (args.length == 5)
+				for (int j : new int[] { 0, 10, 25, 50, 75, 100 })
+					list.add("" + j);
 		} else if (Type.isValid(args[0])) {
 			if (args.length == 4)
 				for (String str : new String[] { "1", "16", "64", "1-5", "1-10", "4-16" })

@@ -829,6 +829,81 @@ public class MMOItemsCommand implements CommandExecutor {
 			PlayerData.get(target).cast(ability);
 		}
 		// ==================================================================================================================================
+		else if (args[0].equalsIgnoreCase("giveall")) {
+			if (args.length != 5) {
+				sender.sendMessage(MMOItems.plugin.getPrefix() + "Usage: /mi giveall <type> <item-id> <[min]-[max]> <unidentified-chance>");
+				return true;
+			}
+
+			if (!Type.isValid(args[1])) {
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.RED + "to see all the available item types.");
+				return true;
+			}
+
+			Type type = Type.get(args[1]);
+			String name = args[2].toUpperCase().replace("-", "_");
+			FileConfiguration config = type.getConfigFile().getConfig();
+			if (!config.contains(name)) {
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + name + ".");
+				return true;
+			}
+			double unidentifiedChance;
+			int min, max;
+
+			try {
+				unidentifiedChance = Double.parseDouble(args[4]);
+			} catch (Exception e) {
+				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[4] + " is not a valid number.");
+				return true;
+			}
+
+			String[] splitAmount = args[3].split("\\-");
+			if (splitAmount.length != 2) {
+				try {
+					min = Integer.parseInt(args[3]);
+					max = Integer.parseInt(args[3]);
+				} catch (Exception e) {
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "The quantity format is incorrect,");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "or " + args[3] + " is not a valid number.");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Format: [min]-[max]");
+					return true;
+				}
+			}
+			else
+			{
+				try {
+					min = Integer.parseInt(splitAmount[0]);
+				} catch (Exception e) {
+					((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[0] + " is not a valid number.");
+					return true;
+				}
+
+				try {
+					max = Integer.parseInt(splitAmount[1]);
+				} catch (Exception e) {
+					((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[1] + " is not a valid number.");
+					return true;
+				}
+			}
+
+			ItemStack item = new DropItem(type, name, 1, unidentifiedChance / 100, min, max).getItem();
+			if (item == null || item.getType() == Material.AIR) {
+				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
+				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
+				return true;
+			}
+
+			for(Player target : Bukkit.getOnlinePlayers())
+			{
+				if (target.getInventory().firstEmpty() == -1) {
+					target.getWorld().dropItem(target.getLocation(), item);
+					return true;
+				}
+				target.getInventory().addItem(item);
+			}
+		}
+		// ==================================================================================================================================
 		else if (args.length > 1) {
 			if (args.length < 3 && !(sender instanceof Player)) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a player to use this command.");

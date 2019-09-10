@@ -58,7 +58,7 @@ public class MMOItemIngredient extends Ingredient {
 
 	@Override
 	public boolean isValid(NBTItem item) {
-		return item.hasTag("MMOITEMS_ITEM_TYPE");
+		return item.hasType();
 	}
 
 	private String findName() {

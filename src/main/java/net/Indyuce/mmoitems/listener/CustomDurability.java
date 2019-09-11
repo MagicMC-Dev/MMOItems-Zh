@@ -22,6 +22,7 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -242,5 +243,15 @@ public class CustomDurability implements Listener {
 
 		elytraDurabilityLoss.put(player.getUniqueId(), runnable);
 		runnable.runTaskTimer(MMOItems.plugin, 10, 20);
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void j(PlayerItemMendEvent event) {
+		if (event.isCancelled())
+			return;
+
+		DurabilityItem durItem = new DurabilityItem(event.getPlayer(), event.getItem());
+		if (durItem.isValid())
+			event.getItem().setItemMeta(durItem.addDurability(event.getRepairAmount()).toItem().getItemMeta());
 	}
 }

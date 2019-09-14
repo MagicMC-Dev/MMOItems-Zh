@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -167,7 +167,7 @@ public class Abilities extends ItemStat {
 	}
 
 	public class AbilityListData extends StatData implements Mergeable {
-		private Set<AbilityData> abilities = new HashSet<>();
+		private Set<AbilityData> abilities = new LinkedHashSet<>();
 
 		public AbilityListData() {
 		}

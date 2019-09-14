@@ -8,10 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -41,6 +43,9 @@ public class Shadow_Veil extends Ability implements Listener {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
 		for (Player online : Bukkit.getOnlinePlayers())
 			online.hidePlayer(MMOItems.plugin, stats.getPlayer());
+		for (Mob serverEntities : stats.getPlayer().getWorld().getEntitiesByClass(Mob.class))
+			if (serverEntities.getTarget() != null && serverEntities.getTarget().equals(stats.getPlayer()))
+				serverEntities.setTarget(null);
 		new BukkitRunnable() {
 			double ti = 0;
 			double y = 0;
@@ -84,9 +89,19 @@ public class Shadow_Veil extends Ability implements Listener {
 	public void a(EntityDamageByEntityEvent event) {
 		if (!(event.getDamager() instanceof Player))
 			return;
-
+		
 		Player player = (Player) event.getDamager();
 		if (shadowVeil.contains(player.getUniqueId()))
 			shadowVeil.remove(player.getUniqueId());
+	}
+
+	@EventHandler
+	public void b(EntityTargetEvent event) {
+		if (!(event.getTarget() instanceof Player))
+			return;
+			
+		Player player = (Player) event.getTarget();
+		if (shadowVeil.contains(player.getUniqueId()))
+			event.setCancelled(true);
 	}
 }

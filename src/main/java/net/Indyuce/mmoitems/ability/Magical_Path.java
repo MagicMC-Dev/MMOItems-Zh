@@ -50,7 +50,7 @@ public class Magical_Path extends Ability implements Listener {
 				if (j++ > duration * 10) {
 					stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1, 1);
 					stats.getPlayer().setAllowFlight(false);
-					fallDamage.put(stats.getPlayer().getUniqueId(), (long) (System.currentTimeMillis() + 3000));
+					fallDamage.put(stats.getPlayer().getUniqueId(), (long) (System.currentTimeMillis() + 5000));
 					cancel();
 					return;
 				}
@@ -77,16 +77,14 @@ public class Magical_Path extends Ability implements Listener {
 			return;
 
 		if (fallDamageQuit.containsKey(player.getUniqueId()) || fallDamage.get(player.getUniqueId()) > System.currentTimeMillis()) {
+			event.setCancelled(true);
 			player.getWorld().spawnParticle(Particle.SPELL, player.getLocation(), 16, .5, 0, .5, .1);
 			player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation(), 32, .5, 0, .5, .1);
 			player.getWorld().playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 2);
-			event.setCancelled(true);
+			fallDamage.remove(player.getUniqueId());
+			fallDamageQuit.remove(player.getUniqueId());
 			return;
 		}
-
-		// clear player from map not to overload memory
-		fallDamage.remove(player.getUniqueId());
-		fallDamageQuit.remove(player.getUniqueId());
 	}
 
 	@EventHandler
@@ -100,6 +98,6 @@ public class Magical_Path extends Ability implements Listener {
 			public void run() {
 				fallDamageQuit.remove(player.getUniqueId());
 			}
-		}.runTaskLater(MMOItems.plugin, 60);
+		}.runTaskLater(MMOItems.plugin, 100);
 	}
 }

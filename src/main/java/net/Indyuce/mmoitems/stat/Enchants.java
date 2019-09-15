@@ -48,7 +48,7 @@ public class Enchants extends ItemStat {
 					config.getConfig().set(inv.getItemId() + ".enchants", null);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase().replace("_", " ") + "§7.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase().replace("_", " ") + ".");
 			}
 		}
 		return true;

@@ -4,7 +4,7 @@
 #
 # The lines starting with {bar} are strips that will be
 # removed from the lore if there is nothing under it.
-# The lines starting with {superbar} will stay whatever is below them.
+# The lines starting with {sbar} will stay whatever is below them.
 
 lore-format:
 # - '{bar}&8&m--------&f&l &nGeneral&8 &m--------------'
@@ -12,6 +12,9 @@ lore-format:
 - '{bar}'
 - '#required-class#'
 - '#required-level#'
+- '#required-dexterity#'
+- '#required-strength#'
+- '#required-intelligence#'
 - '#durability-state#'
 - '#success-rate#'
 - '{bar}'
@@ -25,6 +28,7 @@ lore-format:
 - '#recoil#'
 - '#note-weight#'
 - '#attack-speed#'
+- '#arrow-velocity#'
 - '#critical-strike-chance#'
 - '#critical-strike-power#'
 - '#range#'
@@ -56,6 +60,9 @@ lore-format:
 - '#knockback-resistance#'
 - '#max-health#'
 - '#max-mana#'
+- '#mana-regen#'
+- '#max-stamina#'
+- '#stamina-regen#'
 - '#movement-speed#'
 - '#staff-spirit#'
 - '#lute-attack-effect#'
@@ -71,6 +78,8 @@ lore-format:
 - '#soulbound-level#'
 - '#repair#'
 - '#item-cooldown#'
+- '#additional-experience#'
+- '#skill-cooldown-reduction#'
 - '#mana-cost#'
 - '#stamina-cost#'
 # - '{bar}&8&m--------&2&l &nElements&8 &m--------------'
@@ -102,7 +111,7 @@ lore-format:
 # - '{bar}&8&m--------&e&l &nGem Stones&8 &m-----------'
 - '{bar}'
 - '#gem-stones#'
-# - '{superbar}&8&m--------------------------------'
+# - '{sbar}&8&m--------------------------------'
 - '{bar}'
 - '#lore#'
 - '#gem-stone-lore#'

@@ -28,6 +28,7 @@ lore-format:
 - '#recoil#'
 - '#note-weight#'
 - '#attack-speed#'
+- '#arrow-velocity#'
 - '#critical-strike-chance#'
 - '#critical-strike-power#'
 - '#range#'

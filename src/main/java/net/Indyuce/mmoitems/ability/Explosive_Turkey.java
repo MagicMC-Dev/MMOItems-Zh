@@ -2,10 +2,14 @@ package net.Indyuce.mmoitems.ability;
 
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -17,27 +21,40 @@ import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
-public class Explosive_Turkey extends Ability {
+public class Explosive_Turkey extends Ability implements Listener {
 	public Explosive_Turkey() {
 		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("damage", 6);
 		addModifier("radius", 4);
+		addModifier("duration", 4);
 		addModifier("knockback", 1);
 		addModifier("cooldown", 10);
 		addModifier("mana", 0);
 		addModifier("stamina", 0);
 	}
+	
+	Chicken chicken = null;
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+		double duration = data.getModifier("duration") * 10;
 		double damage = data.getModifier("damage");
 		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
 		double knockback = data.getModifier("knockback");
+		
+		Vector vec = stats.getPlayer().getEyeLocation().getDirection().clone().multiply(.6);
 
-		final Chicken chicken = (Chicken) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1.3, 0), EntityType.CHICKEN);
+		chicken = (Chicken) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1.3, 0).add(vec), EntityType.CHICKEN);
 		chicken.setInvulnerable(true);
-
+		chicken.setSilent(true);
+		/*
+		 * Sets the health to 2048 (Default max Spigot value)
+		 * which stops the bug where you can kill the chicken for a brief
+		 * few ticks after it spawns in!
+		 */
+		chicken.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2048);
+		chicken.setHealth(2048);
 		/*
 		 * when items are moving through the air, they loose a percent of their
 		 * velocity proportionally to their coordinates in each axis. this means
@@ -45,15 +62,15 @@ public class Explosive_Turkey extends Ability {
 		 * be the same. check for any change of that ratio to check for a
 		 * trajectory change
 		 */
-		Vector vec = stats.getPlayer().getEyeLocation().getDirection().clone().multiply(.6);
 		chicken.setVelocity(vec);
+		
 		final double trajRatio = chicken.getVelocity().getX() / chicken.getVelocity().getZ();
 
 		new BukkitRunnable() {
 			double ti = 0;
 
 			public void run() {
-				if (ti++ > 40 || chicken.isDead() || chicken == null) {
+				if (ti++ > duration || chicken.isDead() || chicken == null) {
 					chicken.remove();
 					cancel();
 					return;
@@ -81,4 +98,16 @@ public class Explosive_Turkey extends Ability {
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
+	
+	@EventHandler
+	public void a(EntityDeathEvent event) {
+		if (event.getEntity() == null || !event.getEntityType().equals(EntityType.CHICKEN))
+			return;
+		
+		if (event.getEntity().equals(chicken)) {
+			event.getDrops().clear();
+			event.setDroppedExp(0);
+		}
+	}
+	
 }

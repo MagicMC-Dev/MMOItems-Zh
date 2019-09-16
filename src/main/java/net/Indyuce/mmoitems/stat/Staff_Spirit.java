@@ -66,9 +66,7 @@ public class Staff_Spirit extends StringStat {
 		XRAY_SPIRIT(ChatColor.RED, "X-Ray Spirit", "Fires piercing & powerful X-rays.", new XRaySpirit()),
 		THUNDER_SPIRIT(ChatColor.YELLOW, "Thunder Spirit", "Fires AoE damaging thunder strikes.", new ThunderSpirit()),
 		SUNFIRE_SPIRIT(ChatColor.RED, "Sunfire Spirit", "Fires AoE damaging fire comets.", new SunfireSpirit()),
-		// CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a
-		// targeted
-		// cursed projectile."),
+		// CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a targeted cursed projectile."), new CursedSpirit()),
 		;
 
 		private final ChatColor prefix;

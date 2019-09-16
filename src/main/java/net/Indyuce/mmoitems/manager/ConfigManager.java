@@ -153,12 +153,12 @@ public class ConfigManager {
 		ConfigFile attackEffects = new ConfigFile("/language", "attack-effects");
 		for (StaffSpirit spirit : StaffSpirit.values()) {
 			String path = spirit.name().toLowerCase().replace("_", "-");
-			if (!attackEffects.getConfig().contains(path))
+			if (!attackEffects.getConfig().contains("staff-spirit." + path))
 				attackEffects.getConfig().set("staff-spirit." + path, "&7" + AltChar.listSquare + " " + spirit.getDefaultName());
 		}
 		for (LuteAttackEffect effect : LuteAttackEffect.values()) {
 			String path = effect.name().toLowerCase().replace("_", "-");
-			if (!attackEffects.getConfig().contains(path))
+			if (!attackEffects.getConfig().contains("lute-attack." + path))
 				attackEffects.getConfig().set("lute-attack." + path, "&7" + AltChar.listSquare + " " + effect.getDefaultName() + " Attacks");
 		}
 		attackEffects.save();

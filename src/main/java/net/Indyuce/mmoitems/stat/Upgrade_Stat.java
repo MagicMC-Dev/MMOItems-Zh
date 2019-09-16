@@ -47,7 +47,7 @@ public class Upgrade_Stat extends ItemStat {
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new UpgradingEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open();
+			new UpgradingEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPreviousPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = inv.getItemType().getConfigFile();

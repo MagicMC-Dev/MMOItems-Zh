@@ -83,7 +83,7 @@ public class AttackResult {
 	}
 
 	public void addRelativeDamage(double coef) {
-		multiplyDamage(1 + coef);
+		multiplyDamage(Math.max(1, coef));
 	}
 
 	public AttackResult multiplyDamage(double coef) {

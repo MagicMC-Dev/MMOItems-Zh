@@ -32,7 +32,9 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 
 public class CustomDurability implements Listener {
-	private final List<DamageCause> applyDamageCauses = Arrays.asList(DamageCause.ENTITY_ATTACK, DamageCause.ENTITY_EXPLOSION, DamageCause.BLOCK_EXPLOSION, DamageCause.THORNS, DamageCause.THORNS);
+	private final List<DamageCause> applyDamageCauses = Arrays.asList(
+		DamageCause.ENTITY_ATTACK, DamageCause.ENTITY_EXPLOSION, DamageCause.BLOCK_EXPLOSION, DamageCause.THORNS,
+		DamageCause.CONTACT, DamageCause.FIRE, DamageCause.HOT_FLOOR, DamageCause.LAVA, DamageCause.PROJECTILE );
 	private final List<String> hoeableBlocks = Arrays.asList("GRASS_PATH", "GRASS", "DIRT");
 	private final List<PlayerFishEvent.State> applyFishStates = Arrays.asList(State.IN_GROUND, State.CAUGHT_ENTITY, State.CAUGHT_FISH);
 
@@ -64,6 +66,7 @@ public class CustomDurability implements Listener {
 
 	/*
 	 * when getting hit, any armor piece will lose 1 durability point
+	 * (explosions deal 2 points of damage)
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void c(EntityDamageEvent event) {
@@ -72,6 +75,11 @@ public class CustomDurability implements Listener {
 
 		if (!applyDamageCauses.contains(event.getCause()))
 			return;
+		
+		int dura = 1;
+		if(event.getCause() == DamageCause.BLOCK_EXPLOSION ||
+		   event.getCause() == DamageCause.ENTITY_EXPLOSION)
+			dura = 2;
 
 		Player player = (Player) event.getEntity();
 		DurabilityItem durabilityItem;
@@ -79,27 +87,27 @@ public class CustomDurability implements Listener {
 		ItemStack helmet = player.getInventory().getHelmet();
 		if (helmet != null)
 			if ((durabilityItem = new DurabilityItem(player, helmet)).isValid())
-				player.getInventory().setHelmet(durabilityItem.decreaseDurability(1).toItem());
+				player.getInventory().setHelmet(durabilityItem.decreaseDurability(dura).toItem());
 
 		ItemStack chestplate = player.getInventory().getChestplate();
 		if (chestplate != null)
 			if ((durabilityItem = new DurabilityItem(player, chestplate)).isValid())
-				player.getInventory().setChestplate(durabilityItem.decreaseDurability(1).toItem());
+				player.getInventory().setChestplate(durabilityItem.decreaseDurability(dura).toItem());
 
 		ItemStack leggings = player.getInventory().getLeggings();
 		if (leggings != null)
 			if ((durabilityItem = new DurabilityItem(player, leggings)).isValid())
-				player.getInventory().setLeggings(durabilityItem.decreaseDurability(1).toItem());
+				player.getInventory().setLeggings(durabilityItem.decreaseDurability(dura).toItem());
 
 		ItemStack boots = player.getInventory().getBoots();
 		if (boots != null)
 			if ((durabilityItem = new DurabilityItem(player, boots)).isValid())
-				player.getInventory().setBoots(durabilityItem.decreaseDurability(1).toItem());
+				player.getInventory().setBoots(durabilityItem.decreaseDurability(dura).toItem());
 
 		InteractItem intItem = new InteractItem(player, Material.SHIELD);
 		if (intItem.hasItem() && player.isBlocking())
 			if ((durabilityItem = new DurabilityItem(player, intItem.getItem())).isValid())
-				intItem.setItem(durabilityItem.decreaseDurability(1).toItem());
+				intItem.setItem(durabilityItem.decreaseDurability(dura).toItem());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)

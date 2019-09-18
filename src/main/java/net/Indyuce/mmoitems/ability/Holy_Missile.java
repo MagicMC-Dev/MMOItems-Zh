@@ -25,12 +25,16 @@ public class Holy_Missile extends Ability {
 
 		addModifier("damage", 6);
 		addModifier("cooldown", 10);
+		addModifier("duration", 4);
 		addModifier("mana", 0);
 		addModifier("stamina", 0);
 	}
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+		double duration = data.getModifier("duration") * 10;
+		double damage = data.getModifier("damage");
+		
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
 		new BukkitRunnable() {
 			Vector vec = getTargetDirection(stats.getPlayer(), target).multiply(.45);
@@ -38,7 +42,7 @@ public class Holy_Missile extends Ability {
 			double ti = 0;
 
 			public void run() {
-				if (ti++ > 40)
+				if (ti++ > duration)
 					cancel();
 
 				loc.getWorld().playSound(loc, VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 2, 1);
@@ -59,7 +63,7 @@ public class Holy_Missile extends Ability {
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
 							loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 32, 0, 0, 0, .2);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
-							new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 							cancel();
 							return;
 						}
@@ -68,3 +72,4 @@ public class Holy_Missile extends Ability {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 }
+

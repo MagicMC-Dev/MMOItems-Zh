@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
@@ -47,6 +48,7 @@ public class UpgradingRecipe extends Recipe {
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
 		uncastRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
+		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());
 		data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 	}
 
@@ -73,6 +75,8 @@ public class UpgradingRecipe extends Recipe {
 			Message.UPGRADE_FAIL.format(ChatColor.RED).send(data.getPlayer());
 			if (recipe.getUpgradeData().destroysOnFail())
 				recipe.getUpgraded().setAmount(recipe.getUpgraded().getAmount() - 1);
+			
+			recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 2);
 			return false;
 		}

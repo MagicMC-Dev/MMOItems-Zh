@@ -43,7 +43,7 @@ public class SpigotPlugin {
 				return;
 			}
 
-			if (version.equals(plugin.getDescription().getVersion()))
+			if (isOlderThan(version, plugin.getDescription().getVersion()))
 				return;
 
 			plugin.getLogger().log(Level.INFO, "A new build is available: " + version + " (you are running " + plugin.getDescription().getVersion() + ")");
@@ -63,6 +63,43 @@ public class SpigotPlugin {
 					}
 				}, plugin));
 		});
+	}
+
+	private boolean isOlderThan(String v1, String v2) {
+		String[] netVersion = v1.replaceAll("[^0-9.]", "").split("\\.");
+		String[] localVersion = v2.replaceAll("[^0-9.]", "").split("\\.");
+		
+		int netVersionFirst = parse(netVersion[0]);
+		int localVersionFirst = parse(localVersion[0]);
+		
+		if(netVersionFirst > localVersionFirst)
+			return false;
+		else {
+			int netVersionMiddle = parse(netVersion[1]);
+			int localVersionMiddle = parse(localVersion[1]);
+			
+			if(netVersionMiddle > localVersionMiddle)
+				return false;
+			else {
+				int netVersionLast = netVersion.length > 2 ? parse(netVersion[2]) : 0;
+				int localVersionLast = localVersion.length > 2 ? parse(localVersion[2]) : 0;
+				
+				if(netVersionLast > localVersionLast)
+					return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private int parse(String s) {
+		try {
+			return Integer.parseInt(s);
+		}
+		catch(NumberFormatException e) {
+			plugin.getLogger().warning("Something went wrong checking the version numbers!");
+			return 0;
+		}
 	}
 
 	private List<String> getOutOfDateMessage() {

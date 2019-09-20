@@ -42,7 +42,7 @@ public class NetherSpirit implements StaffAttackHandler {
 					loc.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 0);
 					for (Entity target : targets)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							cancel();
 							return;

@@ -69,7 +69,7 @@ public class Lute extends UntargetedWeapon {
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(getPlayer(), loc, target)) {
-							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target);
+							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target);
 							cancel();
 							return;
 						}

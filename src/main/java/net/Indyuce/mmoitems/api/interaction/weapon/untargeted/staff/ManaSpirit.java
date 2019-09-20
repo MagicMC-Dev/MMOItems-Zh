@@ -50,7 +50,7 @@ public class ManaSpirit implements StaffAttackHandler {
 					}
 					for (Entity target : targets)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							cancel();
 							return;

@@ -44,7 +44,7 @@ public class SunfireSpirit implements StaffAttackHandler {
 						loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 						for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
 							if (MMOUtils.canDamage(stats.getPlayer(), target) && target.getLocation().distanceSquared(loc) <= 9)
-								new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+								new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 						cancel();
 						break;
 					}

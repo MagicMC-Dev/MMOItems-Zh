@@ -32,6 +32,6 @@ public class VoidSpirit implements StaffAttackHandler {
 				shulkerBullet.setVelocity(vec);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
-		MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE), 0., stats, nbt);
+		MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGICAL, DamageType.PROJECTILE), 0., stats, nbt);
 	}
 }

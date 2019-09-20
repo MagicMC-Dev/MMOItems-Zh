@@ -28,7 +28,7 @@ public class LightningSpirit implements StaffAttackHandler {
 			loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 0);
 			for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
 				if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-					new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+					new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 					loc.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, loc, 16, 0, 0, 0, .1);
 					return;
 				}

@@ -52,7 +52,7 @@ public class Throw_Up extends Ability implements Listener {
 				if (j % 5 == 0)
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (entity.getLocation().distanceSquared(loc) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
-							new AttackResult(dps, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new AttackResult(dps, DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 
 				loc.getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
 

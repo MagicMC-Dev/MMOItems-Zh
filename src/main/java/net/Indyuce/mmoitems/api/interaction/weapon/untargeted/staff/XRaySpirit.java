@@ -23,7 +23,7 @@ public class XRaySpirit implements StaffAttackHandler {
 
 		MMORayTraceResult trace = MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), range);
 		if (trace.hasHit())
-			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, nbt, trace.getHit());
+			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, trace.getHit());
 		trace.draw(loc, stats.getPlayer().getEyeLocation().getDirection(), 2, Color.BLACK);
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 0.40f, 2);
 	}

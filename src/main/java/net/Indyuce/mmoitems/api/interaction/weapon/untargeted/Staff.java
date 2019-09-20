@@ -46,7 +46,7 @@ public class Staff extends UntargetedWeapon {
 
 		MMORayTraceResult trace = MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), range);
 		if (trace.hasHit())
-			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
+			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2, (tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 	}

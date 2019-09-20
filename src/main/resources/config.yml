@@ -19,6 +19,12 @@ update-notify: true
 # to get some spare memory.
 use-item-caching: true
 
+# Enable/disable the plugin iterating over the whole player inventory
+# instead of just the players armor and held items.
+# This option is required for the Ornamnet item type, however
+# it CAN cause lag and/or take a lot of memory.
+iterate-whole-inventory: false
+
 # Default: 2.5 ; critical strikes deal 2.5x damage.
 # Can be increased by 'Critical Strike Power'
 crit-coefficient: 2.5

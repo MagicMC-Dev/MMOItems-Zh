@@ -50,6 +50,7 @@ import net.Indyuce.mmoitems.listener.DisableInteractions;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.listener.MitigationListener;
+import net.Indyuce.mmoitems.listener.OrnamentTypeListener;
 import net.Indyuce.mmoitems.listener.PlayerListener;
 import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
 import net.Indyuce.mmoitems.manager.AbilityManager;
@@ -161,6 +162,8 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
+		if(configManager.iterateWholeInventory)
+			Bukkit.getPluginManager().registerEvents(new OrnamentTypeListener(), this);
 		if (version.isStrictlyHigher(1, 12))
 			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
 

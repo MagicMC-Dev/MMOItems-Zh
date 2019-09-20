@@ -42,7 +42,7 @@ public class ConfigManager {
 	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders, durabilityStatesConfig;
 
 	// cached config options
-	public boolean abilityPlayerDamage, dodgeKnockbackEnabled;
+	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, iterateWholeInventory;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 
@@ -188,6 +188,7 @@ public class ConfigManager {
 		 * reload cached config options for quicker access - these options are
 		 * used in runnables, it is thus better to cache them
 		 */
+		iterateWholeInventory = MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory");
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
 		healIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
 		damageIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));

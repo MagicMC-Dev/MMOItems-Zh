@@ -36,7 +36,7 @@ public class Lute_Attack_Effect extends StringStat {
 			config.getConfig().set(inv.getItemId() + ".lute-attack-effect", null);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed lute attack effect.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
 			return true;
 		}
 
@@ -52,7 +52,7 @@ public class Lute_Attack_Effect extends StringStat {
 			effect = LuteAttackEffect.valueOf(format);
 		} catch (Exception e1) {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid lute attack effect.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all lute effects here: /mi list lute.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all lute attack effects here: /mi list lute.");
 			return false;
 		}
 
@@ -70,7 +70,7 @@ public class Lute_Attack_Effect extends StringStat {
 			item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
 			item.getLore().insert("lute-attack-effect", effect.getName());
 		} catch (Exception e) {
-			item.getMMOItem().log(Level.WARNING, "Coudln't read lute attack effect from " + ((StringData) data).toString());
+			item.getMMOItem().log(Level.WARNING, "Couldn't read lute attack effect from " + ((StringData) data).toString());
 		}
 		return true;
 	}

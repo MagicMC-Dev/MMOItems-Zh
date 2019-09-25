@@ -53,7 +53,7 @@ public class Staff_Spirit extends StringStat {
 			item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
 			item.getLore().insert("staff-spirit", staffSpirit.getPrefix() + staffSpirit.getName());
 		} catch (Exception e) {
-			item.getMMOItem().log(Level.WARNING, "Coudln't read staff spirit from " + ((StringData) data).toString());
+			item.getMMOItem().log(Level.WARNING, "Couldn't read staff spirit from " + ((StringData) data).toString());
 		}
 		return true;
 	}
@@ -118,3 +118,4 @@ public class Staff_Spirit extends StringStat {
 		}
 	}
 }
+

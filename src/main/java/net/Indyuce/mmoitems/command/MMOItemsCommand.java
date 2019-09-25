@@ -42,6 +42,7 @@ import net.Indyuce.mmoitems.gui.CraftingStationView;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.Indyuce.mmoitems.manager.UpdaterManager.UpdaterData;
+import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -518,6 +519,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " MMOItems: lists " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list type " + ChatColor.WHITE + "shows all item types (sword, axe...)");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list spirit " + ChatColor.WHITE + "shows all available staff spirits");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list lute " + ChatColor.WHITE + "shows all available lute attack effects");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list ability " + ChatColor.WHITE + "shows all available abilities");
 				if(sender instanceof Player) {
 					sender.sendMessage("");
@@ -555,6 +557,13 @@ public class MMOItemsCommand implements CommandExecutor {
 					String lore = !ss.hasLore() ? " " + ChatColor.WHITE + ">> " + ChatColor.GRAY + "" + ChatColor.ITALIC + ss.getLore() : "";
 					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + ss.getName() + lore);
 				}
+			}
+
+			// lute attack effect list
+			if (args[1].equalsIgnoreCase("lute")) {
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Lute Attack Effects " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				for (LuteAttackEffect la : LuteAttackEffect.values())
+					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + la.getName());
 			}
 		}
 		// ==================================================================================================================================
@@ -989,3 +998,4 @@ public class MMOItemsCommand implements CommandExecutor {
 		return false;
 	}
 }
+

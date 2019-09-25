@@ -42,7 +42,8 @@ public class CircularLuteAttack implements LuteAttackHandler {
 					Vector vec = MMOUtils.rotateFunc(new Vector(Math.cos(a), Math.sin(a), 0).multiply(.3), loc);
 					loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(vec), 0);
 					loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(vec.multiply(-1)), 0);
-					loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range));
+					if (j == 0)
+						loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range)); 
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
@@ -55,3 +56,4 @@ public class CircularLuteAttack implements LuteAttackHandler {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 }
+

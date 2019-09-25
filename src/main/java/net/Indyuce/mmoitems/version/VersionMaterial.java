@@ -49,6 +49,7 @@ public enum VersionMaterial {
 	COMMAND_BLOCK_MINECART("COMMAND_BLOCK_MINECART", "COMMAND_MINECART"),
 	OAK_PLANKS("OAK_PLANKS", "WOOD"),
 	CAULDRON("CAULDRON", "CAULDRON_ITEM"),
+	DIAMOND_HORSE_ARMOR("DIAMOND_HORSE_ARMOR", "DIAMOND_BARDING"),
 
 	;
 
@@ -79,3 +80,4 @@ public enum VersionMaterial {
 		return hasItem() ? item.clone() : new ItemStack(material);
 	}
 }
+

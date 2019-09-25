@@ -37,7 +37,7 @@ public class Arcane_Hail extends Ability {
 		}
 
 		double damage = data.getModifier("damage");
-		double duration = data.getModifier("duration");
+		double duration = data.getModifier("duration") * 10;
 		double radius = data.getModifier("radius");
 
 		new BukkitRunnable() {
@@ -45,16 +45,16 @@ public class Arcane_Hail extends Ability {
 
 			public void run() {
 				j++;
-				if (j > 10 * duration) {
+				if (j > duration) {
 					cancel();
 					return;
 				}
 
 				Location loc1 = loc.clone().add(randomCoordMultiplier() * radius, 0, randomCoordMultiplier() * radius);
 				loc1.getWorld().playSound(loc1, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
-				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc1))
-					if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc1) <= 4)
-						new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, target);
+				for (Entity target : MMOUtils.getNearbyChunkEntities(loc1))
+					if (MMOUtils.canDamage(stats.getPlayer(), target) && loc1.distanceSquared(target.getLocation()) <= 4)
+						new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) target);
 				loc1.getWorld().spawnParticle(Particle.SPELL_WITCH, loc1, 12, 0, 0, 0, .1);
 				loc1.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc1, 6, 0, 0, 0, .1);
 
@@ -70,3 +70,4 @@ public class Arcane_Hail extends Ability {
 		return (random.nextDouble() - .5) * 2;
 	}
 }
+

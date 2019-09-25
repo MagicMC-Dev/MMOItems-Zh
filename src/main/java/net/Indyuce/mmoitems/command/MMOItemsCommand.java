@@ -562,8 +562,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			// lute attack effect list
 			if (args[1].equalsIgnoreCase("lute")) {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Lute Attack Effects " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
-				for (LuteAttackEffect la : LuteAttackEffect.values())
-					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + la.getName());
+				for (LuteAttackEffect lae : LuteAttackEffect.values())
+					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + lae.getName());
 			}
 		}
 		// ==================================================================================================================================

@@ -39,7 +39,8 @@ public class Consumable extends UseItem {
 	 * of its item options. if so, the consumable should be consumed
 	 */
 	public boolean useOnItem(InventoryClickEvent event, NBTItem target) {
-
+		if(event.getClickedInventory() != event.getWhoClicked().getInventory()) return false;
+		
 		/*
 		 * unidentified items do not have any type, so you must check if the
 		 * item has a type first.

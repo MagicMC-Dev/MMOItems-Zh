@@ -245,7 +245,7 @@ public class PlayerData {
 			/*
 			 * apply abilities
 			 */
-			if (item.hasData(ItemStat.ABILITIES))
+			if (item.hasData(ItemStat.ABILITIES) && item.getType().getEquipmentType() != Type.EquipmentSlot.ANY)
 				((AbilityListData) item.getData(ItemStat.ABILITIES)).getAbilities().forEach(ability -> itemAbilities.add(ability));
 		}
 

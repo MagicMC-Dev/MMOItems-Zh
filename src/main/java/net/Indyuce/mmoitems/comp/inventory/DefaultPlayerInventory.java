@@ -18,7 +18,7 @@ public class DefaultPlayerInventory implements PlayerInventory {
 		list.add(new EquippedItem(player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
 		for (ItemStack armor : player.getInventory().getArmorContents())
 			list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
-		
+
 		if(MMOItems.plugin.getLanguage().iterateWholeInventory)
 			for (ItemStack item : player.getInventory().getContents()) {
 				if(item != null)

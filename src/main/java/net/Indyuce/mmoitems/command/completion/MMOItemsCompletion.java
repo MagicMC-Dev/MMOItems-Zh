@@ -68,9 +68,10 @@ public class MMOItemsCompletion implements TabCompleter {
 				list.add("stations");
 
 			} else if (args[0].equalsIgnoreCase("list")) {
-				list.add("ability");
 				list.add("type");
 				list.add("spirit");
+				list.add("lute");
+				list.add("ability");
 			}
 
 			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("giveall"))
@@ -150,3 +151,4 @@ public class MMOItemsCompletion implements TabCompleter {
 		return args[args.length - 1].isEmpty() ? list : list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
 	}
 }
+

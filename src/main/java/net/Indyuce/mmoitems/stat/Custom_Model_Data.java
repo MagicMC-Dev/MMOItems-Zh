@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class Custom_Model_Data extends DoubleStat {
 	public Custom_Model_Data() {
-		super(new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14 model data." }, "custom-model-data", new String[] { "all" });
+		super(new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data." }, "custom-model-data", new String[] { "all" });
 
 		if (MMOItems.plugin.getVersion().isBelowOrEqual(1, 13))
 			disable();
@@ -31,3 +31,4 @@ public class Custom_Model_Data extends DoubleStat {
 			mmoitem.setData(this, new DoubleData(item.getDouble("CustomModelData")));
 	}
 }
+

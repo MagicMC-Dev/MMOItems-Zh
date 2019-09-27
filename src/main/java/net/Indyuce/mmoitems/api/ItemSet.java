@@ -54,7 +54,7 @@ public class ItemSet {
 					if (key.startsWith("potion-")) {
 						PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
 						if (potionEffectType != null) {
-							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt("bonuses." + j + "." + key) - 1));
+							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt("bonuses." + j + "." + key) - 1, true, false));
 							continue;
 						}
 						continue;
@@ -162,3 +162,4 @@ public class ItemSet {
 		}
 	}
 }
+

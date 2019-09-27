@@ -41,7 +41,8 @@ public class WaveLuteAttack implements LuteAttackHandler {
 					Vector vec = MMOUtils.rotateFunc(new Vector(.5, 0, 0), loc);
 					loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(vec.multiply(Math.sin((double) ti / 2))), 0);
 					loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(vec.multiply(-1)), 0);
-					loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range));
+					if (j == 0)
+						loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range));
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
@@ -54,3 +55,4 @@ public class WaveLuteAttack implements LuteAttackHandler {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 }
+

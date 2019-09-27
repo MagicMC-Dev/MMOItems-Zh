@@ -227,7 +227,7 @@ public class Shield_Pattern extends StringStat {
 
 	@EventHandler
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof BlockStateMeta) {
+		if (item.getItem().getItemMeta() instanceof BlockStateMeta && ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState() instanceof Banner) {
 			ShieldPatternData shieldPattern = new ShieldPatternData();
 			Banner banner = (Banner) ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState();
 			shieldPattern.setBaseColor(banner.getBaseColor());

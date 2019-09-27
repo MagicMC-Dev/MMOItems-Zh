@@ -39,7 +39,8 @@ public class BruteLuteAttack implements LuteAttackHandler {
 					}
 
 					loc.getWorld().spawnParticle(Particle.NOTE, loc, 2, .1, .1, .1, 0);
-					loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range));
+					if (j == 0)
+						loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range)); 
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
@@ -52,3 +53,4 @@ public class BruteLuteAttack implements LuteAttackHandler {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 }
+

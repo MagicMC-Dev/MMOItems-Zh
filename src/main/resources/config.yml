@@ -25,13 +25,20 @@ use-item-caching: true
 # it CAN cause lag and/or take a lot of memory.
 iterate-whole-inventory: false
 
-# Default: 2.5 ; critical strikes deal 2.5x damage.
-# Can be increased by 'Critical Strike Power'
-crit-coefficient: 2.5
-
 # By default, all player inventories will be updated every
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10
+
+# Default: 1.0 ; critical strikes deal 1.0x EXTRA damage.
+#
+# Example:
+# If a sword has 10 attack damage and 50% critical power and the
+# weapon hits the critical chance it'll deal 15 attack damage (50% Extra).
+# If the below value was 2.0 for example it'll deal 
+# 10 (Base damage) + 10 critical damage! (100% Extra)
+#
+# Can be increased by 'Critical Strike Power'
+crit-coefficient: 1.0
 
 # Changes the default value for some stats.
 default:

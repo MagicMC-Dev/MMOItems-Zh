@@ -17,13 +17,14 @@ public interface RPGHandler {
 		HEROES("Heroes", HeroesHook.class),
 		SKILLAPI("SkillAPI", SkillAPIHook.class),
 		RPGPLAYERLEVELING("RPGPlayerLeveling", RPGPlayerLevelingHook.class),
+		RACESANDCLASSES("RacesAndClasses", RacesAndClassesHook.class),
 		BATTLELEVELS("BattleLevels", BattleLevelsHook.class),
 		MCMMO("mcMMO", McMMOHook.class),
 		MCRPG("McRPG", McRPGHook.class),
 		SKILLS("Skills", SkillsHook.class);
 
-		private Class<? extends RPGHandler> pluginClass;
-		private String name;
+		private final Class<? extends RPGHandler> pluginClass;
+		private final String name;
 
 		private PluginEnum(String name, Class<? extends RPGHandler> pluginClass) {
 			this.pluginClass = pluginClass;

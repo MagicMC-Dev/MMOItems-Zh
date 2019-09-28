@@ -61,6 +61,7 @@ public enum Message {
 	CANT_UPGRADED_STACK("You can't upgrade stacked items."),
 	MAX_UPGRADES_HIT("This item cannot be upgraded anymore."),
 	UPGRADE_FAIL("Your upgrade failed and you lost your consumable."),
+	UPGRADE_FAIL_STATION("Your upgrade failed and you lost your materials."),
 	WRONG_UPGRADE_REFERENCE("You cannot upgrade this item with this consumable."),
 	UPGRADE_SUCCESS("You successfully upgraded your &6#item#&e!"),
 	NOT_HAVE_ITEM_UPGRADE("You don't have the item to upgrade!"),

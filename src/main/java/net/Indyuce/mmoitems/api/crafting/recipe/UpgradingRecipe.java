@@ -72,7 +72,7 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		if (random.nextDouble() > recipe.getUpgradeData().getSuccess()) {
-			Message.UPGRADE_FAIL.format(ChatColor.RED).send(data.getPlayer());
+			Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(data.getPlayer());
 			if (recipe.getUpgradeData().destroysOnFail())
 				recipe.getUpgraded().setAmount(recipe.getUpgraded().getAmount() - 1);
 			

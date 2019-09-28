@@ -50,7 +50,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 
 	@Override
 	public void refreshStats(PlayerData data) {
-		Hero hero = Heroes.getInstance().getCharacterManager().getHero(data.getPlayer());
+		Hero hero = ((HeroesPlayer) data.getRPG()).hero;
 		hero.removeMaxMana("MMOItems");
 		hero.addMaxMana("MMOItems", (int) data.getStats().getStat(ItemStat.MAX_MANA));
 	}

@@ -44,7 +44,7 @@ public class SkillAPIHook implements RPGHandler, Listener {
 	}
 
 	public class SkillAPIPlayer extends RPGPlayer {
-		private PlayerData rpgdata;
+		private final PlayerData rpgdata;
 
 		public SkillAPIPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
 			super(playerData);

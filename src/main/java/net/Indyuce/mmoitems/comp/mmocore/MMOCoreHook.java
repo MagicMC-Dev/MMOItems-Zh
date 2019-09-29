@@ -59,6 +59,8 @@ public class MMOCoreHook implements RPGHandler, Listener, DamageHandler {
 		 */
 		for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
 			MMOItems.plugin.getStats().register("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), new Required_Attribute(attribute));
+
+		MMOItems.plugin.getUpgrades().reload();
 	}
 
 	@Override

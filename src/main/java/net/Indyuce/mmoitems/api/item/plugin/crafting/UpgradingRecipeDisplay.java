@@ -22,7 +22,7 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class UpgradingRecipeDisplay extends ConfigItem {
 	public UpgradingRecipeDisplay() {
-		super("UPGRADING_RECIPE_DISPLAY", Material.BARRIER, "&e&lUpgrade&f #name#", "{conditions}", "#condition_level#", "", "&8Ingredients:", "#ingredients#", "", "&eClick to craft!");
+		super("UPGRADING_RECIPE_DISPLAY", Material.BARRIER, "&e&lUpgrade&f #name#", "{conditions}", "#condition_level#", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(RecipeInfo recipe) {

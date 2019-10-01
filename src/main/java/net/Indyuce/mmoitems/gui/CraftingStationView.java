@@ -40,11 +40,12 @@ public class CraftingStationView extends PluginInventory {
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25 }, queueSlots = { 38, 39, 40, 41, 42 };
 	private static final int[] fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 28, 29, 30, 31, 32, 33, 34 };
 
-	public CraftingStationView(Player player, CraftingStation station) {
+	public CraftingStationView(Player player, CraftingStation station, int page) {
 		super(player);
 
 		this.data = PlayerData.get(player);
 		this.station = station;
+		this.page = page;
 
 		updateData();
 	}
@@ -152,29 +153,12 @@ public class CraftingStationView extends PluginInventory {
 		String tag = item.getString("recipeId");
 		if (!tag.equals("")) {
 			RecipeInfo recipe = getRecipe(tag);
-			if (!recipe.areConditionsMet()) {
-				Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(player);
-				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			if(event.isRightClick()) {
+				new CraftingStationPreview(player, station, recipe, page).open();
 				return;
 			}
-
-			if (!recipe.allIngredientsHad()) {
-				Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(player);
-				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-				return;
-			}
-
-			if (!recipe.getRecipe().canUse(data, ingredients, recipe, station))
-				return;
-
-			PlayerUseRecipeEvent called = new PlayerUseRecipeEvent(data, station, recipe);
-			Bukkit.getPluginManager().callEvent(called);
-			if (called.isCancelled())
-				return;
-
-			recipe.getRecipe().whenUsed(data, ingredients, recipe, station);
-			recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
-			recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(data));
+			
+			processRecipe(recipe);
 
 			updateData();
 			open();
@@ -200,6 +184,32 @@ public class CraftingStationView extends PluginInventory {
 			updateData();
 			open();
 		}
+	}
+
+	public void processRecipe(RecipeInfo recipe) {
+		if (!recipe.areConditionsMet()) {
+			Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(player);
+			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			return;
+		}
+
+		if (!recipe.allIngredientsHad()) {
+			Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(player);
+			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			return;
+		}
+
+		if (!recipe.getRecipe().canUse(data, ingredients, recipe, station))
+			return;
+
+		PlayerUseRecipeEvent called = new PlayerUseRecipeEvent(data, station, recipe);
+		Bukkit.getPluginManager().callEvent(called);
+		if (called.isCancelled())
+			return;
+
+		recipe.getRecipe().whenUsed(data, ingredients, recipe, station);
+		recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
+		recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(data));
 	}
 
 	private RecipeInfo getRecipe(String id) {

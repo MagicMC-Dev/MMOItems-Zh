@@ -375,7 +375,7 @@ public class MMOItemsCommand implements CommandExecutor {
 					return true;
 				}
 
-				new CraftingStationView(target, MMOItems.plugin.getCrafting().getStation(args[2])).open();
+				new CraftingStationView(target, MMOItems.plugin.getCrafting().getStation(args[2]), 1).open();
 			}
 		}
 		// ==================================================================================================================================

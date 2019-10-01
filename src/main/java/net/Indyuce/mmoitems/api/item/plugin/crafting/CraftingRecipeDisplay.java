@@ -25,7 +25,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
 
 	public CraftingRecipeDisplay() {
-		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "#condition_level#", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eClick to craft!");
+		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "#condition_level#", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(RecipeInfo recipe) {

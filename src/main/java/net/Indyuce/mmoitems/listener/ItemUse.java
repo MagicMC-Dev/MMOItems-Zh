@@ -118,7 +118,9 @@ public class ItemUse implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(player);
 		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem offhandItem = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
 		AttackResult result = new AttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
+		
 		if (item.hasType()) {
 			Weapon weapon = new Weapon(playerData, item, item.getType());
 
@@ -134,6 +136,19 @@ public class ItemUse implements Listener {
 
 			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, EquipmentSlot.HAND, result.setSuccessful(true));
 			if (!result.isSuccessful()) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+		if (offhandItem.hasType()) {
+			Weapon weapon = new Weapon(playerData, offhandItem, offhandItem.getType());
+			
+			if(weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
+				event.setCancelled(true);
+				return;
+			}
+
+			if (!weapon.canBeUsed()) {
 				event.setCancelled(true);
 				return;
 			}

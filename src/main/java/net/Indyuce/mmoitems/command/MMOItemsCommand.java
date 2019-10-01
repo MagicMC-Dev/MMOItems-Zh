@@ -237,6 +237,24 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 		}
 		// ==================================================================================================================================
+		else if (args[0].equalsIgnoreCase("checkstats")) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "This command is only for players.");
+				return true;
+			}
+			
+			Player player = (Player) sender;
+			try {
+				for(ItemStat stat : MMOItems.plugin.getStats().getAll()) {
+					player.sendMessage("Stat: " + stat.getId() + "|" + stat.getName() + " | Value: " + PlayerData.get(player).getStats().getStat(stat));
+				}
+			} catch (IllegalArgumentException exception) {
+				player.sendMessage("Couldn't find stats.");
+			} catch (NoSuchMethodError error) {
+				player.sendMessage("This command is not supported by your server version.");
+			}
+		}
+		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("checkupdater")) {
 			if (args.length < 2) {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");

@@ -73,8 +73,8 @@ public class Magical_Path extends Ability {
 				event.setCancelled(true);
 				safe = false;
 
-				player.getWorld().spawnParticle(Particle.SPELL, player.getLocation(), 16, .5, 0, .5, .1);
-				player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation(), 32, .5, 0, .5, .1);
+				player.getWorld().spawnParticle(Particle.SPELL, player.getLocation(), 8, .35, 0, .35, .08);
+				player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation(), 16, .35, 0, .35, .08);
 				player.getWorld().playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 2);
 			}
 		}

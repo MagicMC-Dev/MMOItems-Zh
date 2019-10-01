@@ -51,7 +51,7 @@ public class Staff_Spirit extends StringStat {
 		try {
 			StaffSpirit staffSpirit = StaffSpirit.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 			item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
-			item.getLore().insert("staff-spirit", staffSpirit.getPrefix() + staffSpirit.getName());
+			item.getLore().insert("staff-spirit", staffSpirit.getName());
 		} catch (Exception e) {
 			item.getMMOItem().log(Level.WARNING, "Couldn't read staff spirit from " + ((StringData) data).toString());
 		}
@@ -59,24 +59,22 @@ public class Staff_Spirit extends StringStat {
 	}
 
 	public enum StaffSpirit {
-		NETHER_SPIRIT(ChatColor.GOLD, "Nether Spirit", "Shoots fire beams.", new NetherSpirit()),
-		VOID_SPIRIT(ChatColor.DARK_GRAY, "Void Spirit", "Shoots shulker missiles.", new VoidSpirit()),
-		MANA_SPIRIT(ChatColor.BLUE, "Mana Spirit", "Summons mana bolts.", new ManaSpirit()),
-		LIGHTNING_SPIRIT(ChatColor.WHITE, "Lightning Spirit", "Summons lightning bolts.", new LightningSpirit()),
-		XRAY_SPIRIT(ChatColor.RED, "X-Ray Spirit", "Fires piercing & powerful X-rays.", new XRaySpirit()),
-		THUNDER_SPIRIT(ChatColor.YELLOW, "Thunder Spirit", "Fires AoE damaging thunder strikes.", new ThunderSpirit()),
-		SUNFIRE_SPIRIT(ChatColor.RED, "Sunfire Spirit", "Fires AoE damaging fire comets.", new SunfireSpirit()),
+		NETHER_SPIRIT("Nether Spirit", "Shoots fire beams.", new NetherSpirit()),
+		VOID_SPIRIT("Void Spirit", "Shoots shulker missiles.", new VoidSpirit()),
+		MANA_SPIRIT("Mana Spirit", "Summons mana bolts.", new ManaSpirit()),
+		LIGHTNING_SPIRIT("Lightning Spirit", "Summons lightning bolts.", new LightningSpirit()),
+		XRAY_SPIRIT("X-Ray Spirit", "Fires piercing & powerful X-rays.", new XRaySpirit()),
+		THUNDER_SPIRIT("Thunder Spirit", "Fires AoE damaging thunder strikes.", new ThunderSpirit()),
+		SUNFIRE_SPIRIT("Sunfire Spirit", "Fires AoE damaging fire comets.", new SunfireSpirit()),
 		// CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a targeted cursed projectile."), new CursedSpirit()),
 		;
 
-		private final ChatColor prefix;
 		private final String lore;
 		private final StaffAttackHandler handler;
 		
 		private String name;
 
-		private StaffSpirit(ChatColor prefix, String name, String lore, StaffAttackHandler handler) {
-			this.prefix = prefix;
+		private StaffSpirit(String name, String lore, StaffAttackHandler handler) {
 			this.name = name;
 			this.lore = lore;
 			this.handler = handler;
@@ -88,10 +86,6 @@ public class Staff_Spirit extends StringStat {
 			} catch (Exception e) {
 				return null;
 			}
-		}
-
-		public ChatColor getPrefix() {
-			return prefix;
 		}
 
 		public String getDefaultName() {

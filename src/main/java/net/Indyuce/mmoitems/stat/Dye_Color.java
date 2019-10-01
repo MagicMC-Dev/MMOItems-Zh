@@ -52,13 +52,19 @@ public class Dye_Color extends StringStat {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: '75 0 130' stands for Indigo Purple.");
 			return false;
 		}
-		for (String s : split)
+		for (String s : split) {
+			int i;
+			
 			try {
-				Integer.parseInt(s);
+				i = Integer.parseInt(s);
 			} catch (Exception e1) {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s + " is not a valid number.");
 				return false;
 			}
+			
+			if (i < 0) inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s + " is too low! Setting to 0...");
+			if (i > 255) inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s +  " is too high! Setting to 255...");
+		}
 
 		config.getConfig().set(inv.getItemId() + ".dye-color", message);
 		inv.registerItemEdition(config);

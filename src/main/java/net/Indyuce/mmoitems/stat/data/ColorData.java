@@ -15,9 +15,9 @@ public class ColorData extends StatData {
 		
 		try {
 			String[] split = string.split("\\ ");
-			red = Integer.parseInt(split[0]);
-			green = Integer.parseInt(split[1]);
-			blue = Integer.parseInt(split[2]);
+			red = Math.min(255, Math.max(0, Integer.parseInt(split[0])));
+			green = Math.min(255, Math.max(0, Integer.parseInt(split[1])));
+			blue = Math.min(255, Math.max(0, Integer.parseInt(split[2])));
 		} catch (IndexOutOfBoundsException | NumberFormatException exception) {
 			throwError("Could not read color from " + string);
 		}

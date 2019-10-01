@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
+import net.Indyuce.mmoitems.api.item.NBTItem;
 
 public class DefaultPlayerInventory implements PlayerInventory {
 	@Override
@@ -21,8 +22,11 @@ public class DefaultPlayerInventory implements PlayerInventory {
 
 		if(MMOItems.plugin.getLanguage().iterateWholeInventory)
 			for (ItemStack item : player.getInventory().getContents()) {
-				if(item != null)
-					list.add(new EquippedItem(item, EquipmentSlot.ANY));
+				if(item != null && NBTItem.get(item).hasType())
+					if(NBTItem.get(item).getType().getEquipmentType() == EquipmentSlot.ANY) {
+						MMOItems.plugin.getLogger().info("Found: " + item.getType() + " with custom name: " + item.getItemMeta().getDisplayName());
+						list.add(new EquippedItem(item, EquipmentSlot.ANY));
+					}
 			}
 		
 		return list;

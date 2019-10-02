@@ -6,6 +6,20 @@
 	<artifactId>MMOItems</artifactId>
 	<version>4.7.19b</version>
 	<description>A great item solution for your RPG server.</description>
+	
+	<distributionManagement>
+		<repository>
+	    	<id>nexus</id>
+	    	<name>Lumine Releases</name>
+	        <url>http://mvn.lumine.io/repository/maven-releases/</url>
+	  	</repository>
+	  	<snapshotRepository>
+	    	<id>nexus</id>
+	    	<name>Lumine Snapshots</name>
+	        <url>http://mvn.lumine.io/repository/maven-snapshots/</url>
+	  	</snapshotRepository>
+	</distributionManagement>
+	
 	<build>
 		<finalName>MMOItems Premium</finalName>
 		<resources>

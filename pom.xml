@@ -5,7 +5,16 @@
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
 	<version>4.7.19b</version>
+	<name>MMOItems</name>
 	<description>A great item solution for your RPG server.</description>
+	
+	<properties>
+    	<build.number>SNAPSHOT</build.number>
+    	<downloadSources>false</downloadSources>
+		<downloadJavadocs>false</downloadJavadocs>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 	
 	<distributionManagement>
 		<repository>
@@ -19,9 +28,9 @@
 	        <url>http://mvn.lumine.io/repository/maven-snapshots/</url>
 	  	</snapshotRepository>
 	</distributionManagement>
-	
+	 
 	<build> 
-		<finalName>MMOItems Premium</finalName>
+		<finalName>${project.name}-${project.version}</finalName>
 		<resources>
 			<resource>
 				<filtering>true</filtering>
@@ -256,10 +265,4 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	<properties>
-		<downloadSources>false</downloadSources>
-		<downloadJavadocs>false</downloadJavadocs>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 </project>

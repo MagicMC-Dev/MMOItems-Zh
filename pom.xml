@@ -14,13 +14,13 @@
 	        <url>http://mvn.lumine.io/repository/maven-releases/</url>
 	  	</repository>
 	  	<snapshotRepository>
-	    	<id>nexus</id> 
+	    	<id>nexus</id>  
 	    	<name>Lumine Snapshots</name>
 	        <url>http://mvn.lumine.io/repository/maven-snapshots/</url>
 	  	</snapshotRepository>
 	</distributionManagement>
 	
-	<build>
+	<build> 
 		<finalName>MMOItems Premium</finalName>
 		<resources>
 			<resource>

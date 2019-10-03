@@ -49,6 +49,7 @@ damage-reduction: '&7■ Damage Reduction: &f<plus>#%'
 fall-damage-reduction: '&7■ Fall Damage Reduction: &f<plus>#%'
 fire-damage-reduction: '&7■ Fire Damage Reduction: &f<plus>#%'
 magic-damage-reduction: '&7■ Magic Damage Reduction: &f<plus>#%'
+projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
 # Extra Options

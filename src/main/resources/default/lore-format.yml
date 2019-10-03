@@ -45,6 +45,7 @@ lore-format:
 - '#fall-damage-reduction#'
 - '#fire-damage-reduction#'
 - '#magic-damage-reduction#'
+- '#projectile-damage-reduction#'
 - '#physical-damage-reduction#'
 - '#undead-damage#'
 - '#regeneration#'

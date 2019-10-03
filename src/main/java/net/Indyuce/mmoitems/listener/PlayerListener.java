@@ -59,6 +59,8 @@ public class PlayerListener implements Listener {
 			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FALL_DAMAGE_REDUCTION) / 100));
 		else if (event.getCause() == DamageCause.MAGIC)
 			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
+		else if (event.getCause() == DamageCause.PROJECTILE)
+			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.PROJECTILE_DAMAGE_REDUCTION) / 100));
 		else if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == DamageCause.PROJECTILE)
 			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
 

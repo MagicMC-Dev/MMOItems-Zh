@@ -31,6 +31,10 @@ public class Life_Ender extends Ability {
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+		double damage = data.getModifier("damage");
+		double knockback = data.getModifier("knockback");
+		double radius = data.getModifier("radius");
+		
 		Location loc = getTargetLocation(stats.getPlayer(), target);
 		if (loc == null) {
 			result.setSuccessful(false);
@@ -62,10 +66,6 @@ public class Life_Ender extends Ability {
 					source.getWorld().spawnParticle(Particle.LAVA, source, 32);
 					for (double j = 0; j < Math.PI * 2; j += Math.PI / 24)
 						source.getWorld().spawnParticle(Particle.SMOKE_LARGE, source, 0, Math.cos(j), 0, Math.sin(j), .5);
-
-					double knockback = data.getModifier("knockback");
-					double radius = data.getModifier("radius");
-					double damage = data.getModifier("radius");
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(source))
 						if (entity.getLocation().distanceSquared(source) < radius * radius && MMOUtils.canDamage(stats.getPlayer(), entity)) {

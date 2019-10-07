@@ -43,9 +43,8 @@ public class SpigotPlugin {
 				return;
 			}
 
-			if (isOlderThan(version, plugin.getDescription().getVersion()))
-				return;
-
+			if (!isOldVersion(version, plugin.getDescription().getVersion())) return;
+			
 			plugin.getLogger().log(Level.INFO, "A new build is available: " + version + " (you are running " + plugin.getDescription().getVersion() + ")");
 			plugin.getLogger().log(Level.INFO, "Download it here: " + getResourceUrl());
 
@@ -65,30 +64,27 @@ public class SpigotPlugin {
 		});
 	}
 
-	private boolean isOlderThan(String v1, String v2) {
+	private boolean isOldVersion(String v1, String v2) {
+		if(v1.equals(v2)) return false;
 		String[] netVersion = v1.replaceAll("[^0-9.]", "").split("\\.");
 		String[] localVersion = v2.replaceAll("[^0-9.]", "").split("\\.");
 		
 		int netVersionFirst = parse(netVersion[0]);
 		int localVersionFirst = parse(localVersion[0]);
+
+		if(netVersionFirst < localVersionFirst) return false;
+		if(netVersionFirst > localVersionFirst) return true;
 		
-		if(netVersionFirst > localVersionFirst)
-			return false;
-		else {
-			int netVersionMiddle = parse(netVersion[1]);
-			int localVersionMiddle = parse(localVersion[1]);
-			
-			if(netVersionMiddle > localVersionMiddle)
-				return false;
-			else {
-				int netVersionLast = netVersion.length > 2 ? parse(netVersion[2]) : 0;
-				int localVersionLast = localVersion.length > 2 ? parse(localVersion[2]) : 0;
-				
-				if(netVersionLast > localVersionLast)
-					return false;
-			}
-		}
-		
+		int netVersionMiddle = parse(netVersion[1]);
+		int localVersionMiddle = parse(localVersion[1]);
+
+		if(netVersionMiddle < localVersionMiddle) return false;
+		if(netVersionMiddle > localVersionMiddle) return true;
+
+		int netVersionLast = netVersion.length > 1 ? parse(netVersion[2]) : 0;
+		int localVersionLast = localVersion.length > 1 ? parse(localVersion[2]) : 0;
+
+		if(netVersionLast < localVersionLast) return false;
 		return true;
 	}
 	

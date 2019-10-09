@@ -32,7 +32,7 @@ SWORD:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 DAGGER:
-    display: IRON_SWORD
+    display: STONE_SWORD
     name: 'Dagger'
     unident-item:
         name: '&f#prefix#Unidentified Dagger'
@@ -45,7 +45,7 @@ DAGGER:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 SPEAR:
-    display: STICK
+    display: TRIDENT
     name: 'Spear'
     unident-item:
         name: '&f#prefix#Unidentified Spear'
@@ -58,7 +58,7 @@ SPEAR:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 HAMMER:
-    display: IRON_SHOVEL
+    display: IRON_AXE
     name: 'Hammer'
     unident-item:
         name: '&f#prefix#Unidentified Hammer'
@@ -97,7 +97,7 @@ WHIP:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 STAFF:
-    display: STICK
+    display: DIAMOND_HOE
     name: 'Staff'
     unident-item:
         name: '&f#prefix#Unidentified Staff'
@@ -149,7 +149,7 @@ MUSKET:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 LUTE:
-    display: GOLDEN_HORSE_ARMOR
+    display: NAME_TAG
     name: 'Lute'
     unident-item:
         name: '&f#prefix#Unidentified Lute'
@@ -162,7 +162,7 @@ LUTE:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 CATALYST:
-    display: DIAMOND
+    display: PRISMARINE_SHARD
     name: 'Catalyst'
     unident-item:
         name: '&f#prefix#Unidentified Catalyst'
@@ -175,10 +175,10 @@ CATALYST:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 OFF_CATALYST:
-    display: DIAMOND
-    name: 'Catalyst'
+    display: PRISMARINE_CRYSTALS
+    name: 'Offhand Catalyst'
     unident-item:
-        name: '&f#prefix#Unidentified Catalyst'
+        name: '&f#prefix#Unidentified Offhand Catalyst'
         lore:
         - '&7This item is unidentified. I must'
         - '&7find a way to identify it!'
@@ -201,7 +201,7 @@ ORNAMENT:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 ACCESSORY:
-    display: EMERALD
+    display: DIAMOND
     name: 'Accessory'
     unident-item:
         name: '&f#prefix#Unidentified Accessory'
@@ -214,7 +214,7 @@ ACCESSORY:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 ARMOR:
-    display: GOLDEN_CHESTPLATE
+    display: IRON_CHESTPLATE
     name: 'Armor'
     unident-item:
         name: '&f#prefix#Unidentified Armor'
@@ -280,7 +280,7 @@ GEM_STONE:
 
 # Default subtypes
 GREATSWORD:
-    display: IRON_SWORD
+    display: DIAMOND_SWORD
     name: 'Greatsword'
     parent: 'SWORD'
     unident-item:
@@ -294,7 +294,7 @@ GREATSWORD:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 LONG_SWORD:
-    display: IRON_SWORD:0
+    display: STONE_SWORD
     name: 'Long Sword'
     parent: 'SWORD'
     unident-item:
@@ -322,7 +322,7 @@ KATANA:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 THRUSTING_SWORD:
-    display: IRON_SWORD
+    display: GOLDEN_SWORD
     name: 'Thrusting Sword'
     parent: 'DAGGER'
     unident-item:
@@ -336,7 +336,7 @@ THRUSTING_SWORD:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
     
 AXE:
-    display: IRON_AXE
+    display: STONE_AXE
     name: 'Axe'
     parent: 'SWORD'
     unident-item:
@@ -350,7 +350,7 @@ AXE:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
     
 GREATAXE:
-    display: IRON_AXE
+    display: DIAMOND_AXE
     name: 'Greataxe'
     parent: 'SWORD'
     unident-item:
@@ -392,7 +392,7 @@ LANCE:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
     
 GREATHAMMER:
-    display: IRON_AXE
+    display: DIAMOND_AXE
     name: 'Greathammer'
     parent: 'HAMMER'
     unident-item:
@@ -406,7 +406,7 @@ GREATHAMMER:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
     
 GREATSTAFF:
-    display: STICK
+    display: DIAMOND_HOE
     name: 'Greatstaff'
     parent: 'HAMMER'
     unident-item:
@@ -420,7 +420,7 @@ GREATSTAFF:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
     
 STAVE:
-    display: IRON_AXE
+    display: IRON_HOE
     name: 'Stave'
     parent: 'HAMMER'
     unident-item:
@@ -448,7 +448,7 @@ TOME:
         - '{tier}&8- &7Item Tier: #prefix##tier#'
     
 TALISMAN:
-    display: GOLD_NUGGET
+    display: TOTEM_OF_UNDYING
     name: 'Talisman'
     parent: 'CATALYST'
     unident-item:

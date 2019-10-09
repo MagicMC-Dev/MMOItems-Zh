@@ -80,10 +80,8 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				if (str.startsWith("#condition_")) {
 					String format = str.substring("#condition_".length(), str.length() - 1);
 					ConditionInfo info = recipe.getCondition(format);
-					if (info != null && info.getCondition().displays()) {
-						MMOItems.plugin.getLogger().info("Condition Things: " + info.getCondition().getId());
+					if (info != null && info.getCondition().displays())
 						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? info.getCondition().getDisplay().getPositive() : info.getCondition().getDisplay().getNegative()));
-					}
 					else
 						iterator.remove();
 				}

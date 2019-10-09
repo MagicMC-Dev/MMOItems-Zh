@@ -103,6 +103,7 @@ public class UnidentifiedItem extends ConfigItem {
 			ItemStack unidentified = MMOItems.plugin.getVersion().getDurabilityHandler().copyTexture(item).addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
+			meta.setUnbreakable(true);
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
 			meta.setLore(lore);
 			unidentified.setItemMeta(meta);

@@ -25,7 +25,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
 
 	public CraftingRecipeDisplay() {
-		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "#condition_level#", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
+		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "#condition_class#", "#condition_level#", "#condition_profession#", "#condition_mana#", "#condition_stamina#", "#condition_food#", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(RecipeInfo recipe) {
@@ -80,8 +80,10 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				if (str.startsWith("#condition_")) {
 					String format = str.substring("#condition_".length(), str.length() - 1);
 					ConditionInfo info = recipe.getCondition(format);
-					if (info != null && info.getCondition().displays())
+					if (info != null && info.getCondition().displays()) {
+						MMOItems.plugin.getLogger().info("Condition Things: " + info.getCondition().getId());
 						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? info.getCondition().getDisplay().getPositive() : info.getCondition().getDisplay().getNegative()));
+					}
 					else
 						iterator.remove();
 				}

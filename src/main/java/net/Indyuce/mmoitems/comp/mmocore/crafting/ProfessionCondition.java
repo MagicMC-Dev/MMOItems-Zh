@@ -5,6 +5,7 @@ import org.apache.commons.lang.Validate;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.player.PlayerData;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.util.AltChar;
@@ -15,7 +16,7 @@ public class ProfessionCondition extends Condition {
 
 	public ProfessionCondition() {
 		super("profession");
-		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #skill#", "&c" + AltChar.check + " Requires #level# in #skill#"));
+		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.check + " Requires #level# in #profession#"));
 	}
 
 	@Override
@@ -36,7 +37,8 @@ public class ProfessionCondition extends Condition {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#level#", "" + level).replace("#skill#", profession.getName());
+		MMOItems.plugin.getLogger().info("Formatting");
+		return string.replace("#level#", "" + level).replace("#profession#", profession.getName());
 	}
 
 	@Override

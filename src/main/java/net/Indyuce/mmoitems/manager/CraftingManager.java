@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.condition.ClassCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.condition.FoodCondition;
+import net.Indyuce.mmoitems.api.crafting.condition.IngredientCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.LevelCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.ManaCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.PermissionCondition;
@@ -47,6 +48,7 @@ public class CraftingManager {
 		registerCondition(new StaminaCondition());
 		registerCondition(new FoodCondition());
 		registerCondition(new ClassCondition());
+		registerCondition(new IngredientCondition());
 
 		registerIngredient(new MMOItemIngredient());
 		registerIngredient(new VanillaIngredient());

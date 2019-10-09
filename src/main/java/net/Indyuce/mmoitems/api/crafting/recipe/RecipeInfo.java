@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
+import net.Indyuce.mmoitems.api.crafting.condition.IngredientCondition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.IngredientInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -26,19 +27,24 @@ public class RecipeInfo {
 
 	public RecipeInfo(Recipe recipe, PlayerData data, IngredientInventory inv) {
 		this.recipe = recipe;
-		
-		for (Condition condition : recipe.getConditions()) {
-			ConditionInfo info = condition.newConditionInfo(data);
-			conditions.add(info);
-			if (!info.isMet())
-				conditionsMet = false;
-		}
 
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			IngredientInfo info = ingredient.newIngredientInfo(inv);
 			ingredients.add(info);
 			if (!info.isHad())
 				ingredientsHad = false;
+		}
+		
+		for (Condition condition : recipe.getConditions()) {
+			ConditionInfo info = condition.newConditionInfo(data);
+			conditions.add(info);
+			if (!info.isMet())
+				conditionsMet = false;
+			
+			if (info.getCondition() instanceof IngredientCondition) {
+				if(ingredientsHad)
+					conditionsMet = true;
+			}
 		}
 	}
 

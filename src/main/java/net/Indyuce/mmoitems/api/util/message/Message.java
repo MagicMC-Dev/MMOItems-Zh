@@ -27,6 +27,7 @@ public enum Message {
 	WRONG_CLASS("You don't have the right class!"),
 	NOT_ENOUGH_MANA("You don't have enough mana!"),
 	NOT_ENOUGH_STAMINA("You don't have enough stamina!"),
+	UNIDENTIFIED_ITEM("You can't use an unidentified item!"),
 
 	// custom durability
 	ITEM_BROKE("Your #item#&c broke."),

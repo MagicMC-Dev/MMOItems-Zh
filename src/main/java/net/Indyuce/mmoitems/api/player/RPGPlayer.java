@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.player;
 import java.text.DecimalFormat;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -54,7 +55,14 @@ public abstract class RPGPlayer {
 	}
 
 	public boolean canUse(NBTItem item, boolean message) {
-
+		if (item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
+			if (message) {
+				Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+			}
+			return false;
+		}
+		
 		for (Conditional condition : MMOItems.plugin.getStats().getConditionals())
 			if (!condition.canUse(this, item, message))
 				return false;

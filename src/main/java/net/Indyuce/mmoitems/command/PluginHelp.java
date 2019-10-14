@@ -56,7 +56,8 @@ public class PluginHelp {
 
 		HELP("mi help <page>", "Shows the help page."),
 		GIVE("mi <type> <item> (player) (min-max) (unident-chance)...", "&a/mi <type> <item> (player) (min-max) (unidentification-chance) (drop-chance)\\n&fGives an item to a player.\\nSupports drop chance, unidentification chance & random amounts."),
-		BROWSE("mi browse", "Allows you to browse through all the items you created."),
+		GIVEALL("mi giveall <type> <item> <min-max> <unident-chance>", "Gives an item to all online players on the server."),
+		BROWSE("mi browse (type)", "Allows you to browse through all the items you created."),
 		ABILITY("mi ability <ability> (player) (mod1) (val1) (mod2) (val2)...", "Forces a player to cast an ability."),
 		DROP("mi drop <type> <item-id> <world-name> <x> <y> <z>...", "&a/mi drop <type> <item-id> <world-name> <x> <y> <z> <drop-chance> <[min]-[max]> <unidentified-chance>\\n&fDrops an item at the target location."),
 		HEAL("mi heal", "Heals you & remove negative potion effects."),
@@ -74,10 +75,11 @@ public class PluginHelp {
 		ALLITEMS("mi allitems", "Lists items from every type."),
 		STATIONS_LIST("mi stations list", "Lists available crafting stations."),
 		STATIONS_OPEN("mi stations open <station> (player)", "Opens a crafting station to a player"),
+
 		ADVANCEDWORKBENCH("advancedworkbench", "Opens the advanced workbench."),
 		UPDATEITEM("updateitem", "Updates the item you are holding."),
 		UPDATEITEM_ITEM("updateitem <type> <id>", "Enables the item updater for a specific item."),
-
+		
 		;
 
 		private String usage, help;

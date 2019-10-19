@@ -38,7 +38,7 @@ public class PlayerMessage {
 
 		if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath)) {
 			if(Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
-				MMOCore.plugin.pauseDefaultActionBar(player.getUniqueId(), 120);
+				MMOCore.plugin.pauseDefaultActionBar(player.getUniqueId(), 60);
 			
 			MMOItems.plugin.getNMS().sendActionBar(player, message);
 		}

@@ -29,9 +29,10 @@ import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class ItemBrowser extends PluginInventory {
+	private final Map<String, ItemStack> cached = new HashMap<>();
+	
 	private Type type;
 	private boolean deleteMode;
-	private Map<String, ItemStack> cached = new HashMap<>();
 
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
 
@@ -97,7 +98,7 @@ public class ItemBrowser extends PluginInventory {
 			while (n < slots.length)
 				inv.setItem(slots[n++], glass);
 			inv.setItem(18, page > 1 ? previous : null);
-			inv.setItem(26, inv.getItem(34).equals(glass) ? null : next);
+			inv.setItem(26, max >= MMOItems.plugin.getTypes().getAll().size() ? null : next);
 
 			inv.setItem(53, switchBrowse);
 			

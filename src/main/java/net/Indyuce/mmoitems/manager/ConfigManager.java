@@ -42,7 +42,7 @@ public class ConfigManager {
 	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders, durabilityStatesConfig;
 
 	// cached config options
-	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, iterateWholeInventory;
+	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, iterateWholeInventory, replaceMushroomDrops, worldGenEnabled;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 
@@ -189,6 +189,8 @@ public class ConfigManager {
 		 * used in runnables, it is thus better to cache them
 		 */
 		iterateWholeInventory = MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory");
+		replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
+		worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
 		healIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
 		damageIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));
@@ -275,6 +277,8 @@ public class ConfigManager {
 		// default general config files -> /MMOItems
 		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
 		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
+		CUSTOM_BLOCKS("custom-blocks.yml", "", "custom-blocks.yml"),
+		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
 		DROPS("drops.yml", "", "drops.yml"),
 		USE_STATES("use-states.yml", "", "use-states.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
@@ -282,6 +286,7 @@ public class ConfigManager {
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
 
 		// LEGACY_CONFIGS("legacy-configs.zip", "", "legacy-configs.zip", true),
+		// Not included in the jar anymore
 
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
@@ -314,7 +319,7 @@ public class ConfigManager {
 
 		/*
 		 * allows to use the checkFile() method while not loading it
-		 * automatically e.g legacy-configs.zip and item-types.yml
+		 * automatically e.g item-types.yml
 		 */
 		private final boolean manual;
 

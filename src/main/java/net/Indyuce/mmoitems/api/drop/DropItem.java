@@ -13,6 +13,7 @@ public class DropItem {
 	private final String id;
 	private final double unidentification, drop;
 	private final int min, max;
+	private final int blockId;
 
 	private static final Random random = new Random();
 
@@ -20,13 +21,18 @@ public class DropItem {
 	 * used in MythicDrops drop tables.
 	 */
 	public DropItem(Type type, String id, double unidentification) {
-		this(type, id, 100, unidentification, 1, 1);
+		this(type, id, 0, 100, unidentification, 1, 1);
 	}
 
-	public DropItem(Type type, String id, double drop, double unidentification, int min, int max) {
+	public DropItem(int blockId, double drop, int min, int max) {
+		this(null, null, blockId, drop, 0, min, max);
+	}
+	
+	public DropItem(Type type, String id, int blockId, double drop, double unidentification, int min, int max) {
 		this.type = type;
 		this.id = id;
 
+		this.blockId = 0;
 		this.drop = drop;
 		this.unidentification = unidentification;
 		this.min = min;
@@ -39,6 +45,7 @@ public class DropItem {
 	public DropItem(Type type, String id, String info) throws Exception {
 		this.type = type;
 		this.id = id;
+		this.blockId = 0;
 
 		String[] argSplit = info.split("\\,");
 		drop = Double.parseDouble(argSplit[0]) / 100;
@@ -48,6 +55,21 @@ public class DropItem {
 		max = amountSplit.length > 1 ? Integer.parseInt(amountSplit[1]) : min;
 
 		unidentification = Double.parseDouble(argSplit[2]) / 100;
+	}
+
+	public DropItem(int blockId, String info) throws Exception {
+		this.type = null;
+		this.id = null;
+		this.blockId = blockId;
+
+		String[] argSplit = info.split("\\,");
+		drop = Double.parseDouble(argSplit[0]) / 100;
+
+		String[] amountSplit = argSplit[1].split("\\-");
+		min = Integer.parseInt(amountSplit[0]);
+		max = amountSplit.length > 1 ? Integer.parseInt(amountSplit[1]) : min;
+
+		unidentification = 0;
 	}
 
 	public boolean isDropped() {
@@ -67,7 +89,7 @@ public class DropItem {
 	}
 
 	public ItemStack getItem(int amount) {
-		ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
+		ItemStack item = blockId == 0 ? MMOItems.plugin.getItems().getItem(type, id) : MMOItems.plugin.getCustomBlocks().getBlock(blockId).getItem();
 		if (item == null || item.getType() == Material.AIR)
 			return null;
 

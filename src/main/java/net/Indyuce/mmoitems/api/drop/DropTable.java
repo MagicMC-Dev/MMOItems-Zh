@@ -28,8 +28,8 @@ public class DropTable {
 				MMOItems.plugin.getLogger().warning("Couldn't read sub-table " + key + ": it is missing a sub-table coefficient.");
 				continue;
 			}
-			if (!subtable.contains("items")) {
-				MMOItems.plugin.getLogger().warning("Couldn't read sub-table " + key + ": it is missing sub-table items.");
+			if (!subtable.contains("items") && !subtable.contains("blocks")) {
+				MMOItems.plugin.getLogger().warning("Couldn't read sub-table " + key + ": it is missing sub-table items (or blocks).");
 				continue;
 			}
 
@@ -80,6 +80,7 @@ public class DropTable {
 		private boolean disableSilkTouch;
 
 		public Subtable(ConfigurationSection subtable) {
+			if(subtable.contains("items"))
 			for (String typeFormat : subtable.getConfigurationSection("items").getKeys(false)) {
 				Type type = null;
 				try {
@@ -95,6 +96,25 @@ public class DropTable {
 					} catch (Exception e) {
 						MMOItems.plugin.getLogger().warning("Couldn't read subtable item " + subtable.getName() + "." + type.getId() + "." + id + ": wrong format.");
 					}
+			}
+			if(subtable.contains("blocks"))
+			for (String typeFormat : subtable.getConfigurationSection("blocks").getKeys(false)) {
+				int id = 0;
+				try { id = Integer.parseInt(typeFormat);
+				} catch (Exception e) {
+					MMOItems.plugin.getLogger().warning("Couldn't read subtable " + subtable.getName() + ". " + typeFormat + " is not a valid number.");
+					continue;
+				}
+				if(id > 160 || id < 1 || id == 54) {
+					MMOItems.plugin.getLogger().warning("Couldn't read subtable " + subtable.getName() + ". " + typeFormat + " is not a valid block id.");
+					continue;
+				}
+				
+				try {
+					items.add(new DropItem(id, subtable.getString("blocks." + typeFormat)));
+				} catch (Exception e) {
+					MMOItems.plugin.getLogger().warning("Couldn't read subtable block " + subtable.getName() + "." + id + ": wrong format.");
+				}
 			}
 
 			disableSilkTouch = subtable.getBoolean("disable-silk-touch");

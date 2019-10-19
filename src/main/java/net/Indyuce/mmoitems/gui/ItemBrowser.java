@@ -89,11 +89,18 @@ public class ItemBrowser extends PluginInventory {
 			previousMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
 			previous.setItemMeta(previousMeta);
 
+			ItemStack switchBrowse = new ItemStack(Material.STONE);
+			ItemMeta switchMeta = switchBrowse.getItemMeta();
+			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
+			switchBrowse.setItemMeta(switchMeta);
+			
 			while (n < slots.length)
 				inv.setItem(slots[n++], glass);
 			inv.setItem(18, page > 1 ? previous : null);
 			inv.setItem(26, inv.getItem(34).equals(glass) ? null : next);
 
+			inv.setItem(53, switchBrowse);
+			
 			return inv;
 		}
 
@@ -209,6 +216,12 @@ public class ItemBrowser extends PluginInventory {
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(player).open();
+			
+
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
+				new BlockBrowser(player).open();
+				return;
+			}
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
 				deleteMode = false;

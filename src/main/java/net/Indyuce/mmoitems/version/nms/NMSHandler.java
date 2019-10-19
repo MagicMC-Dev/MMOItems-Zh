@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.version.nms;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -33,7 +35,11 @@ public interface NMSHandler {
 
 	void addActiveContainerSlotListener(Object container, Player player);
 
+	void playArmAnimation(Player player);
+
 	Inventory toBukkitInventory(Object container);
+
+	Sound getBlockPlaceSound(Block block);
 
 	Object newContainerAnvil(Player player);
 

@@ -89,6 +89,7 @@ soulbound-level: '&7■ Level &e# &7Soulbound'
 # Tool Enchants
 autosmelt: '&7■ &fAutosmelt'
 bouncing-crack: '&7■ &fBouncing Crack'
+pickaxe-power: '&7■ &fPickaxe Power: &a#'
 
 # General
 item-type: '&c#'

@@ -151,8 +151,10 @@ public class MMOItems extends JavaPlugin {
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
-		worldGenManager = new WorldGenManager();
-		blockManager = new BlockManager();
+		if (version.isStrictlyHigher(1, 12)) {
+			worldGenManager = new WorldGenManager();
+			blockManager = new BlockManager();
+		}
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
 		stationRecipeManager.reload();

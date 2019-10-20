@@ -77,6 +77,8 @@ public class MMOItemsCompletion implements TabCompleter {
 			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("giveall"))
 				for (Type type : MMOItems.plugin.getTypes().getAll())
 					list.add(type.getId());
+			if(args[0].equalsIgnoreCase("browse"))
+				list.add("BLOCKS");
 
 			else if (Type.isValid(args[0]))
 				MMOItems.plugin.getTypes().get(args[0].toUpperCase().replace("-", "_")).getConfigFile().getConfig().getKeys(false).forEach(key -> list.add(key.toUpperCase()));

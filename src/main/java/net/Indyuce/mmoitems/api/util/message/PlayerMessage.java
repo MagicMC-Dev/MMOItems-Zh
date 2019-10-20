@@ -1,9 +1,11 @@
 package net.Indyuce.mmoitems.api.util.message;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmoitems.MMOItems;
 
 public class PlayerMessage {
@@ -34,8 +36,12 @@ public class PlayerMessage {
 		if (ChatColor.stripColor(message).equals(""))
 			return;
 
-		if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath))
+		if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath)) {
+			if(Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
+				MMOCore.plugin.pauseDefaultActionBar(player.getUniqueId(), 120);
+			
 			MMOItems.plugin.getNMS().sendActionBar(player, message);
+		}
 		else
 			player.sendMessage(message);
 	}

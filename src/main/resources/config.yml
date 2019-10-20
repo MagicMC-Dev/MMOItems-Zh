@@ -124,6 +124,18 @@ gem-sockets:
     # uncolored gem socket i.e a socket for any type of gem.
     uncolored: 'Uncolored'
 
+custom-blocks:
+    # Whether or not custom blocks should
+    # generate in the world according to
+    # their generation template.
+    enable-world-gen: false
+    # Whether or not to remove mushroom block drops
+    # from the droplist when mining a mushroom block
+    # with silk-touch.
+    # HIGHLY Recommended for servers that use
+    # custom blocks, as the mushroom blocks can BREAK everything.
+    replace-mushroom-drops: false
+
 advanced-workbench:
     # Define on what actions the adv workbench will open.
     open-when:

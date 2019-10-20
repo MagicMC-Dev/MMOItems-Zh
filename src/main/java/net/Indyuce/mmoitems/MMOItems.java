@@ -44,6 +44,7 @@ import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
 import net.Indyuce.mmoitems.listener.AdvancedWorkbenchListener;
+import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import net.Indyuce.mmoitems.listener.CustomDurability;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.listener.DisableInteractions;
@@ -54,6 +55,7 @@ import net.Indyuce.mmoitems.listener.OrnamentTypeListener;
 import net.Indyuce.mmoitems.listener.PlayerListener;
 import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
 import net.Indyuce.mmoitems.manager.AbilityManager;
+import net.Indyuce.mmoitems.manager.BlockManager;
 import net.Indyuce.mmoitems.manager.ConfigManager;
 import net.Indyuce.mmoitems.manager.CraftingManager;
 import net.Indyuce.mmoitems.manager.DamageManager;
@@ -68,6 +70,7 @@ import net.Indyuce.mmoitems.manager.TierManager;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.manager.UpdaterManager;
 import net.Indyuce.mmoitems.manager.UpgradeManager;
+import net.Indyuce.mmoitems.manager.WorldGenManager;
 import net.Indyuce.mmoitems.version.ServerVersion;
 import net.Indyuce.mmoitems.version.SpigotPlugin;
 import net.Indyuce.mmoitems.version.nms.NMSHandler;
@@ -88,6 +91,8 @@ public class MMOItems extends JavaPlugin {
 	private ItemManager itemManager;
 	private SetManager setManager;
 	private UpgradeManager upgradeManager;
+	private WorldGenManager worldGenManager;
+	private BlockManager blockManager;
 	private AbilityManager abilityManager = new AbilityManager();
 	private CraftingManager stationRecipeManager = new CraftingManager();
 	private PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
@@ -146,6 +151,10 @@ public class MMOItems extends JavaPlugin {
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
+		if (version.isStrictlyHigher(1, 12)) {
+			worldGenManager = new WorldGenManager();
+			blockManager = new BlockManager();
+		}
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
 		stationRecipeManager.reload();
@@ -157,6 +166,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 		Bukkit.getPluginManager().registerEvents(new MitigationListener(), this);
+		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomDurability(), this);
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
@@ -363,6 +373,14 @@ public class MMOItems extends JavaPlugin {
 
 	public AbilityManager getAbilities() {
 		return abilityManager;
+	}
+	
+	public BlockManager getCustomBlocks() {
+		return blockManager;
+	}
+	
+	public WorldGenManager getWorldGen() {
+		return worldGenManager;
 	}
 
 	public RecipeManager getRecipes() {

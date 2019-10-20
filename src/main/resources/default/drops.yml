@@ -30,7 +30,16 @@ blocks:
                 MATERIAL:
                     RARE_DIAMOND: 100,2-3,0
 
-
+# Custom Blocks Drop Tables
+# Read when a custom block is mined/broken by a player.
+customblocks:
+    1:
+        more-rare-diamond:
+            coef: 1
+            disable-silk-touch: true
+            items:
+                MATERIAL:
+                    RARE_DIAMOND: 100,2-3,0
 
 # Monsters Drop Tables
 # Read when any monster dies.

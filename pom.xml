@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
-	<version>4.7.21-SNAPSHOT</version>
+	<version>5.0</version>
 	<name>MMOItems</name>
 	<description>A great item solution for your RPG server.</description>
 	
@@ -61,10 +61,6 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-		<repository>
-			<id>everything</id>
-			<url>https://repo.citizensnpcs.co/</url>
 		</repository>
 		<repository>
 			<id>sk89q-repo</id>
@@ -249,7 +245,8 @@
 			<groupId>net.citizensnpcs</groupId>
 			<artifactId>citizens</artifactId>
 			<version>2.0.25-SNAPSHOT</version>
-			<scope>provided</scope>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/Citizens.jar</systemPath>
 		</dependency> 
 		<dependency>
 			<groupId>org.inventivetalent</groupId>
@@ -262,7 +259,8 @@
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
 			<version>2.10.3</version>
-			<scope>provided</scope>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/PlaceholderAPI.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>

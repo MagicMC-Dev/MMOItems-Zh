@@ -38,6 +38,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AmountReader;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
+import net.Indyuce.mmoitems.gui.BlockBrowser;
 import net.Indyuce.mmoitems.gui.CraftingStationView;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
@@ -88,6 +89,10 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			if (args.length < 2) {
 				new ItemBrowser((Player) sender).open();
+				return true;
+			}
+			if(args[1].equalsIgnoreCase("blocks")) {
+				new BlockBrowser((Player) sender).open();
 				return true;
 			}
 			if (!Type.isValid(args[1])) {
@@ -456,6 +461,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getTiers().reload();
 			MMOItems.plugin.getSets().reload();
 			MMOItems.plugin.getUpgrades().reload();
+			MMOItems.plugin.getCustomBlocks().reload();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
@@ -669,7 +675,7 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			World world = Bukkit.getWorld(args[3]);
 			if (world == null) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find the world called " + args[3] + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find the world called " + args[3] + ".");
 				return true;
 			}
 
@@ -679,35 +685,35 @@ public class MMOItemsCommand implements CommandExecutor {
 			try {
 				x = Double.parseDouble(args[4]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[4] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[4] + " is not a valid number.");
 				return true;
 			}
 
 			try {
 				y = Double.parseDouble(args[5]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[5] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[5] + " is not a valid number.");
 				return true;
 			}
 
 			try {
 				z = Double.parseDouble(args[6]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[6] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[6] + " is not a valid number.");
 				return true;
 			}
 
 			try {
 				dropChance = Double.parseDouble(args[7]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[7] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[7] + " is not a valid number.");
 				return true;
 			}
 
 			try {
 				unidentifiedChance = Double.parseDouble(args[9]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[9] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[9] + " is not a valid number.");
 				return true;
 			}
 
@@ -721,21 +727,21 @@ public class MMOItemsCommand implements CommandExecutor {
 			try {
 				min = Integer.parseInt(splitAmount[0]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[0] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[0] + " is not a valid number.");
 				return true;
 			}
 
 			try {
 				max = Integer.parseInt(splitAmount[1]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[1] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[1] + " is not a valid number.");
 				return true;
 			}
 
-			ItemStack item = new DropItem(type, name, dropChance / 100, unidentifiedChance / 100, min, max).getItem();
+			ItemStack item = new DropItem(type, name, 0, dropChance / 100, unidentifiedChance / 100, min, max).getItem();
 			if (item == null || item.getType() == Material.AIR) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 				return true;
 			}
 
@@ -783,13 +789,13 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (args.length < 3) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi edit <type> <item-id>");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi edit <type> <item-id>");
 				return false;
 			}
 
 			if (!Type.isValid(args[1])) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
 				return true;
 			}
 
@@ -803,8 +809,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
 			if (item == null || item.getType() == Material.AIR) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + args[2].toUpperCase() + ".");
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + args[2].toUpperCase() + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 				return true;
 			}
 
@@ -821,7 +827,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (args.length < 2) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi ability <ability> (player) (modifier1) (value1) (modifier2) (value2)...");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi ability <ability> (player) (modifier1) (value1) (modifier2) (value2)...");
 				return false;
 			}
 
@@ -881,7 +887,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			try {
 				unidentifiedChance = Double.parseDouble(args[4]);
 			} catch (Exception e) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[4] + " is not a valid number.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[4] + " is not a valid number.");
 				return true;
 			}
 
@@ -902,22 +908,22 @@ public class MMOItemsCommand implements CommandExecutor {
 				try {
 					min = Integer.parseInt(splitAmount[0]);
 				} catch (Exception e) {
-					((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[0] + " is not a valid number.");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[0] + " is not a valid number.");
 					return true;
 				}
 
 				try {
 					max = Integer.parseInt(splitAmount[1]);
 				} catch (Exception e) {
-					((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[1] + " is not a valid number.");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + splitAmount[1] + " is not a valid number.");
 					return true;
 				}
 			}
 
-			ItemStack item = new DropItem(type, name, 1, unidentifiedChance / 100, min, max).getItem();
+			ItemStack item = new DropItem(type, name, 0, 1, unidentifiedChance / 100, min, max).getItem();
 			if (item == null || item.getType() == Material.AIR) {
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
-				((Player) sender).sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 				return true;
 			}
 

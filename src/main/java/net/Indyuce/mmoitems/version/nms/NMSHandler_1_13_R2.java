@@ -1,9 +1,12 @@
 package net.Indyuce.mmoitems.version.nms;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -13,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.util.BoundingBox;
 
 import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.minecraft.server.v1_13_R2.Block;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.ChatMessage;
@@ -20,14 +24,23 @@ import net.minecraft.server.v1_13_R2.ChatMessageType;
 import net.minecraft.server.v1_13_R2.Container;
 import net.minecraft.server.v1_13_R2.ContainerAnvil;
 import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_13_R2.ItemStack;
+import net.minecraft.server.v1_13_R2.MinecraftKey;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.PacketPlayInArmAnimation;
+import net.minecraft.server.v1_13_R2.PacketPlayOutAnimation;
 import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
 import net.minecraft.server.v1_13_R2.PacketPlayOutCloseWindow;
 import net.minecraft.server.v1_13_R2.PacketPlayOutOpenWindow;
 import net.minecraft.server.v1_13_R2.PacketPlayOutTitle;
 import net.minecraft.server.v1_13_R2.PacketPlayOutTitle.EnumTitleAction;
+import net.minecraft.server.v1_13_R2.PlayerConnection;
+import net.minecraft.server.v1_13_R2.SoundEffect;
+import net.minecraft.server.v1_13_R2.SoundEffectType;
+import net.minecraft.server.v1_13_R2.World;
 
 public class NMSHandler_1_13_R2 implements NMSHandler {
 	@Override
@@ -193,5 +206,37 @@ public class NMSHandler_1_13_R2 implements NMSHandler {
 		double dz = loc.getZ() > box.getMinZ() && loc.getZ() < box.getMaxZ() ? 0 : Math.min(Math.abs(box.getMinZ() - loc.getZ()), Math.abs(box.getMaxZ() - loc.getZ()));
 
 		return dx * dx + dx * dy + dz * dz;
+	}
+
+	@Override
+	public void playArmAnimation(Player player) {
+		EntityPlayer p = ((CraftPlayer) player).getHandle();
+		PlayerConnection connection = p.playerConnection;
+	    PacketPlayOutAnimation armSwing = new PacketPlayOutAnimation(p, 0);
+	    connection.sendPacket(armSwing);
+	    connection.a(new PacketPlayInArmAnimation(EnumHand.MAIN_HAND));
+	}
+
+	@Override
+	public Sound getBlockPlaceSound(org.bukkit.block.Block block) {
+		try {
+            World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+
+            Block nmsBlock = nmsWorld.getType(new BlockPosition(block.getX(), block.getY(), block.getZ())).getBlock();
+            SoundEffectType soundEffectType = nmsBlock.getStepSound();
+
+            Field breakSound = SoundEffectType.class.getDeclaredField("y");
+            breakSound.setAccessible(true);
+            SoundEffect nmsSound = (SoundEffect) breakSound.get(soundEffectType);
+
+            Field keyField = SoundEffect.class.getDeclaredField("a");
+            keyField.setAccessible(true);
+            MinecraftKey nmsString = (MinecraftKey) keyField.get(nmsSound);
+
+            return Sound.valueOf(nmsString.getKey().replace(".", "_").toUpperCase());
+        } catch (IllegalAccessException | NoSuchFieldException ex) {
+            ex.printStackTrace();
+        }
+        return null;
 	}
 }

@@ -184,7 +184,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		}
 
 		public boolean hasMax() {
-			return max > min;
+			return max > min && max != 0;
 		}
 
 		public double getMin() {

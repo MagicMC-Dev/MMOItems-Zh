@@ -20,15 +20,13 @@ public class DefaultPlayerInventory implements PlayerInventory {
 		for (ItemStack armor : player.getInventory().getArmorContents())
 			list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
 
-		if(MMOItems.plugin.getLanguage().iterateWholeInventory)
+		if (MMOItems.plugin.getLanguage().iterateWholeInventory)
 			for (ItemStack item : player.getInventory().getContents()) {
-				if(item != null && NBTItem.get(item).hasType())
-					if(NBTItem.get(item).getType().getEquipmentType() == EquipmentSlot.ANY) {
-						MMOItems.plugin.getLogger().info("Found: " + item.getType() + " with custom name: " + item.getItemMeta().getDisplayName());
-						list.add(new EquippedItem(item, EquipmentSlot.ANY));
-					}
+				NBTItem nbtItem;
+				if (item != null && (nbtItem = MMOItems.plugin.getNMS().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
+					list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
 			}
-		
+
 		return list;
 	}
 }

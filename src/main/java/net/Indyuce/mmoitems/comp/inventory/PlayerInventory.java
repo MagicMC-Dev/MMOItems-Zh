@@ -14,20 +14,25 @@ public interface PlayerInventory {
 	public List<EquippedItem> getInventory(Player player);
 
 	public class EquippedItem {
-		private final ItemStack item;
+		private final NBTItem item;
 		private final EquipmentSlot slot;
 
 		public EquippedItem(ItemStack item, EquipmentSlot slot) {
+			this(MMOItems.plugin.getNMS().getNBTItem(item), slot);
+		}
+
+		public EquippedItem(NBTItem item, EquipmentSlot slot) {
 			this.item = item;
 			this.slot = slot;
 		}
 
 		public NBTItem newNBTItem() {
-			return MMOItems.plugin.getNMS().getNBTItem(item);
+			return item;
 		}
 
 		public boolean matches(Type type) {
-			return slot == EquipmentSlot.ANY || (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS ? slot.isHand() : slot == EquipmentSlot.BOTH_HANDS ? type.getEquipmentType().isHand() : slot == type.getEquipmentType());
+			return slot == EquipmentSlot.ANY
+					|| (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS ? slot.isHand() : slot == EquipmentSlot.BOTH_HANDS ? type.getEquipmentType().isHand() : slot == type.getEquipmentType());
 		}
 	}
 }

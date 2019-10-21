@@ -114,7 +114,7 @@ public class CustomBlock {
 		}
 	}
 
-	//Gets a new CustomBlock instance from a mushroom blockstate.
+	//Gets a new CustomBlock instance from a mushroom blockstate. 
 	public static CustomBlock getFromData(BlockData data) {
 		if(!MMOItems.plugin.getCustomBlocks().isMushroomBlock(data.getMaterial())) return null;
 		if(!(data instanceof MultipleFacing)) return null;

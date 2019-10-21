@@ -9,15 +9,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
+import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 
 public class RPGInventoryHook implements PlayerInventory, Listener {
-	public RPGInventoryHook(Plugin plugin) {
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+	private final boolean ornaments;
+
+	/*
+	 * RPGInventory is outdated. MI still supports it but it shall NEVER be
+	 * considered a priority to keep MI compatible OR performance efficient with
+	 * RPGInventory
+	 */
+	public RPGInventoryHook() {
+		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+		if (ornaments = MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
+			Bukkit.getPluginManager().registerEvents(new OrnamentPlayerInventory(), MMOItems.plugin);
 	}
 
 	@Override
@@ -30,6 +40,13 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 			list.add(new EquippedItem(item, EquipmentSlot.BOTH_HANDS));
 		for (ItemStack armor : player.getInventory().getArmorContents())
 			list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
+
+		if (ornaments)
+			for (ItemStack item : player.getInventory().getContents()) {
+				NBTItem nbtItem;
+				if (item != null && (nbtItem = MMOItems.plugin.getNMS().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
+					list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
+			}
 
 		return list;
 	}

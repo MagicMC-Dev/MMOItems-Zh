@@ -42,7 +42,7 @@ public class ConfigManager {
 	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders, durabilityStatesConfig;
 
 	// cached config options
-	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, iterateWholeInventory, replaceMushroomDrops, worldGenEnabled;
+	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 
@@ -88,7 +88,8 @@ public class ConfigManager {
 			for (String fileName : fileNames)
 				if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
 					try {
-						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"), new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
+								new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -188,7 +189,6 @@ public class ConfigManager {
 		 * reload cached config options for quicker access - these options are
 		 * used in runnables, it is thus better to cache them
 		 */
-		iterateWholeInventory = MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory");
 		replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
 		worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");

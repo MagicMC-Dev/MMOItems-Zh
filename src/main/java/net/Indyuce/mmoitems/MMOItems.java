@@ -30,6 +30,7 @@ import net.Indyuce.mmoitems.comp.holograms.HologramSupport;
 import net.Indyuce.mmoitems.comp.holograms.HologramsPlugin;
 import net.Indyuce.mmoitems.comp.holograms.HolographicDisplaysPlugin;
 import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
+import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
@@ -51,7 +52,6 @@ import net.Indyuce.mmoitems.listener.DisableInteractions;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.listener.MitigationListener;
-import net.Indyuce.mmoitems.listener.OrnamentTypeListener;
 import net.Indyuce.mmoitems.listener.PlayerListener;
 import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
 import net.Indyuce.mmoitems.manager.AbilityManager;
@@ -172,8 +172,6 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
-		if(configManager.iterateWholeInventory)
-			Bukkit.getPluginManager().registerEvents(new OrnamentTypeListener(), this);
 		if (version.isStrictlyHigher(1, 12))
 			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
 
@@ -201,9 +199,10 @@ public class MMOItems extends JavaPlugin {
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("RPGInventory") != null) {
-			inventory = new RPGInventoryHook(this);
+			inventory = new RPGInventoryHook();
 			getLogger().log(Level.INFO, "Hooked onto RPGInventory");
-		}
+		} else if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
+			inventory = new OrnamentPlayerInventory();
 
 		if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
 			Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this);

@@ -67,7 +67,6 @@ public class PlayerData {
 	 * inventory
 	 */
 	private ItemStack helmet = null, chestplate = null, leggings = null, boots = null, hand = null, offhand = null;
-	private Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
 	private List<MMOItem> playerInventory = new ArrayList<>();
 
 	private CraftingStatus craftingStatus = new CraftingStatus();
@@ -79,6 +78,7 @@ public class PlayerData {
 	/*
 	 * specific stat calculation
 	 */
+	private Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
 	private Set<ParticleRunnable> itemParticles = new HashSet<>();
 	private ParticleRunnable overridingItemParticles = null;
 	private Set<AbilityData> itemAbilities = new HashSet<>();
@@ -103,16 +103,12 @@ public class PlayerData {
 			craftingStatus.load(this, config.getConfigurationSection("crafting-queue"));
 	}
 
-	private void save(FileConfiguration config) {
-		config.createSection("crafting-queue");
-		craftingStatus.save(config.getConfigurationSection("crafting-queue"));
-	}
-
 	public void save() {
 		cancelRunnables();
 
 		ConfigFile config = new ConfigFile("/userdata", getUniqueId().toString());
-		save(config.getConfig());
+		config.getConfig().createSection("crafting-queue");
+		craftingStatus.save(config.getConfig().getConfigurationSection("crafting-queue"));
 		config.save();
 
 		/*
@@ -149,7 +145,8 @@ public class PlayerData {
 
 	public void checkForInventoryUpdate() {
 		PlayerInventory inv = player.getInventory();
-		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings()) || !equals(boots, inv.getBoots()) || !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
+		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings()) || !equals(boots, inv.getBoots())
+				|| !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
 			updateInventory();
 	}
 
@@ -174,7 +171,8 @@ public class PlayerData {
 	public boolean areHandsFull() {
 		NBTItem main = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 		NBTItem off = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
-		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR)) || (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
+		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
+				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
 
 	public void updateInventory() {
@@ -328,7 +326,7 @@ public class PlayerData {
 	public CraftingStatus getCrafting() {
 		return craftingStatus;
 	}
-	
+
 	public PlayerAbilityData getAbilityData() {
 		return playerAbilityData;
 	}
@@ -433,7 +431,8 @@ public class PlayerData {
 	 */
 	public void applyCooldown(CooldownType type, double value) {
 		String mitigation;
-		long extra = (long) (1000 * (type.isMitigation() ? getMitigationCooldown(mitigation = type.name().toLowerCase()) * (1 - Math.min(getMaxMitigationCooldownReduction(mitigation), value) / 100) : value));
+		long extra = (long) (1000
+				* (type.isMitigation() ? getMitigationCooldown(mitigation = type.name().toLowerCase()) * (1 - Math.min(getMaxMitigationCooldownReduction(mitigation), value) / 100) : value));
 		extraCooldowns.put(type, System.currentTimeMillis() + extra);
 	}
 

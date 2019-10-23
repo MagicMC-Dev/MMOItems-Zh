@@ -20,8 +20,6 @@ import net.Indyuce.mmoitems.comp.rpg.damage.DamageInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class AttackResult {
-	private final double initial;
-
 	private double damage;
 	private boolean successful;
 
@@ -45,14 +43,12 @@ public class AttackResult {
 		Validate.isTrue(types.size() > 0, "Attack must have at least one damage type!");
 
 		this.successful = successful;
-		this.initial = damage;
 		this.damage = damage;
 
 		this.damageTypes = types;
 	}
 
 	public AttackResult(AttackResult result) {
-		initial = result.initial;
 		damage = result.damage;
 		successful = result.successful;
 		damageTypes = new ArrayList<>(result.damageTypes);
@@ -72,10 +68,6 @@ public class AttackResult {
 
 	public double getDamage() {
 		return damage;
-	}
-
-	public boolean isDamageModified() {
-		return initial != damage;
 	}
 
 	public void addDamage(double value) {

@@ -49,13 +49,19 @@ damage-reduction: '&7■ Zmniejszenie Obrazen: &f<plus>#%'
 fall-damage-reduction: '&7■ Zmniejszenie Obrazen Od Upadku: &f<plus>#%'
 fire-damage-reduction: '&7■ Zmniejszenie Obrazen Od Ognia: &f<plus>#%'
 magic-damage-reduction: '&7■ Zmniejszenie Obrazen Magicznych: &f<plus>#%'
+projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Zmniejszenie Obrazen Psychicznych: &f<plus>#%'
 
 # Extra Options
 max-mana: '&7■ Maksymalna Mana: &f<plus>#'
+mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
+max-stamina: '&7■ Max Stamina: &f<plus>#'
+stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
 perm-effect: '&7■ Staly &f#'
 command: '&7■ Komenda: &f#c &7(&f#cd&7s)'
 item-cooldown: '&7■ &f#&7s Czas Odnowienia'
+skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
+additional-experience: '&7■ Additional Experience: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ Odnawia &f# &7Zdrowia'
@@ -83,12 +89,16 @@ soulbound-level: '&7■ Wiez poziomu &e# &7'
 # Tool Enchants
 autosmelt: '&7■ &fAutomatyczne Wytapianie'
 bouncing-crack: '&7■Skoczne Pekniecie &f'
+pickaxe-power: '&7■ &fPickaxe Power: &a#'
 
 # General
 item-type: '&c#'
 tier: '# PRZEDMIOT'
 required-class: '&7# Przedmiot'
 required-level: '&ePoziom #'
+required-dexterity: '&eRequires &c# &eDexterity'
+required-strength: '&eRequires &c# &eStrength'
+required-intelligence: '&eRequires &c# &eIntelligence'
 
 # Elemental Damage
 fire-damage: '&c❖ #% Obrazenia Od Ognia'

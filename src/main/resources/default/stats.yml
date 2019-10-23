@@ -54,9 +54,9 @@ physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
 # Extra Options
 max-mana: '&7■ Max Mana: &f<plus>#'
-mana-regen: '&7■ Mana Regeneration: &f<plus>#'
+mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-stamina: '&7■ Max Stamina: &f<plus>#'
-stamina-regen: '&7■ Stamina Regeneration: &f<plus>#'
+stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
 perm-effect: '&7■ Permanent &f#'
 command: '&7■ Command: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7s Cooldown'

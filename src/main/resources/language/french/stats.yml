@@ -49,13 +49,19 @@ damage-reduction: '&7■ Réduction de dégats: &f<plus>#%'
 fall-damage-reduction: '&7■ Réduction de dégats de chute: &f<plus>#%'
 fire-damage-reduction: '&7■ Réduction de dégats de feu: &f<plus>#%'
 magic-damage-reduction: '&7■ Réduction de dégats magiques: &f<plus>#%'
+projectile-damage-reduction: '&7■ Réduction de dégats des projectiles: &f<plus>#%'
 physical-damage-reduction: '&7■ Réduction de dégats physiques: &f<plus>#%'
 
 # Extra Options
 max-mana: '&7■ Mana Max: &f<plus>#'
+mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
+max-stamina: '&7■ Max Stamina: &f<plus>#'
+stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
 perm-effect: '&7■ &f# &7 permanent'
 command: '&7■ Commande: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7s de récupération'
+skill-cooldown-reduction: '&7■ Réduction de délais de récup.: &f<plus>#%'
+additional-experience: '&7■ Expérience supplémentaire: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ Restaure &f# &7Health'
@@ -82,13 +88,17 @@ soulbound-level: '&7■ &7Soulbound de niv. &e#'
 
 # Tool Enchants
 autosmelt: '&7■ &fAutosmelt'
-bouncing-crack: '&7■ &fBouncing Crack'
+bouncing-crack: '&7■ &fFaille rebondissante'
+pickaxe-power: '&7■ &fPuissance de pioche: &a#'
 
 # General
 item-type: '&c#'
 tier: '#'
 required-class: '&7Classe requise: #'
 required-level: '&eRequiert niv. #'
+required-dexterity: '&eRequiert &c# &eDextérité'
+required-strength: '&eRequiert &c# &eForce'
+required-intelligence: '&eRequiert &c# &eIntelligence'
 
 # Elemental Damage
 fire-damage: '&c❖ #% Dégats de feu'

@@ -49,13 +49,19 @@ damage-reduction: '&7■ Снижение Урона: &f<plus>#%'
 fall-damage-reduction: '&7■ Снижение Урона от Падения: &f<plus>#%'
 fire-damage-reduction: '&7■ Снижение Урона от Огня: &f<plus>#%'
 magic-damage-reduction: '&7■ Снижение Урона от Магии: &f<plus>#%'
+projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
 # Extra Options
 max-mana: '&9■ Максимальная Мана: <plus>#'
+mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
+max-stamina: '&7■ Max Stamina: &f<plus>#'
+stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
 perm-effect: '&7■ Бесконечный &f#'
 command: '&7■ Команда: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7 сек перезарядка'
+skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
+additional-experience: '&7■ Additional Experience: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ Восстанавливает &f# &7Здоровья'
@@ -83,12 +89,16 @@ soulbound-level: '&7■ Уровень &e# &7Персонализации'
 # Tool Enchants
 autosmelt: '&7■ &fАвтоплавлка'
 bouncing-crack: '&7■ &fТрещина'
+pickaxe-power: '&7■ &fPickaxe Power: &a#'
 
 # General
 item-type: '&c■ #'
 tier: '# Предмет'
 required-class: '&7Требуется Класс: &7#'
 required-level: '&eНеобходимый Уровень: #'
+required-dexterity: '&eRequires &c# &eDexterity'
+required-strength: '&eRequires &c# &eStrength'
+required-intelligence: '&eRequires &c# &eIntelligence'
 
 # Elemental Damage
 fire-damage: '&c❖ #% Урон Огнём'

@@ -49,13 +49,19 @@ damage-reduction: '&7■ 伤害减免: &f<plus>#%'
 fall-damage-reduction: '&7■ 摔落伤害减免: &f<plus>#%'
 fire-damage-reduction: '&7■ 火焰伤害减免: &f<plus>#%'
 magic-damage-reduction: '&7■ 魔法伤害减免: &f<plus>#%'
+projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
 # Extra Options
 max-mana: '&7■ 最大法力值加成: &f<plus>#'
+mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
+max-stamina: '&7■ Max Stamina: &f<plus>#'
+stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
 perm-effect: '&7■ 效果 &f#'
 command: '&7■ 指令: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7 秒 冷却'
+skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
+additional-experience: '&7■ Additional Experience: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ 恢复 &f# &7生命值'
@@ -83,12 +89,16 @@ soulbound-level: '&7■ 绑定等级 &e#'
 # Tool Enchants
 autosmelt: '&7■ &f自动熔炼'
 bouncing-crack: '&7■ &f 范围破坏'
+pickaxe-power: '&7■ &fPickaxe Power: &a#'
 
 # General
 item-type: '&7> 类型: #'
 tier: '&7[&f&l品质&7]: #'
 required-class: '&7> &9&l职业限制&7&l: #'
 required-level: '&7> &c&l等级限制&7&l: #'
+required-dexterity: '&eRequires &c# &eDexterity'
+required-strength: '&eRequires &c# &eStrength'
+required-intelligence: '&eRequires &c# &eIntelligence'
 
 # Elemental Damage
 fire-damage: '&c❖ #% 火属性伤害'

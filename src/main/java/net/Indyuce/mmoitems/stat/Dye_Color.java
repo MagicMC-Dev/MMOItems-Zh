@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -52,19 +53,14 @@ public class Dye_Color extends StringStat {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: '75 0 130' stands for Indigo Purple.");
 			return false;
 		}
-		for (String s : split) {
-			int i;
-			
+		for (String str : split)
 			try {
-				i = Integer.parseInt(s);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s + " is not a valid number.");
+				int k = Integer.parseInt(str);
+				Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
+			} catch (IllegalArgumentException exception) {
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + str + " is not a valid number (must be between 0 and 255).");
 				return false;
 			}
-			
-			if (i < 0) inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s + " is too low! Setting to 0...");
-			if (i > 255) inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s +  " is too high! Setting to 255...");
-		}
 
 		config.getConfig().set(inv.getItemId() + ".dye-color", message);
 		inv.registerItemEdition(config);

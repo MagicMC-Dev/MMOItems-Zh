@@ -119,15 +119,16 @@ public class NMSHandler_1_13_R1 implements NMSHandler {
 
 	@Override
 	public NBTItem getNBTItem(org.bukkit.inventory.ItemStack item) {
-		return new NBTItem_v1_13_2(item);
+		return new NBTItem_v1_13_R1(item);
 	}
 
-	public class NBTItem_v1_13_2 extends NBTItem {
-		private ItemStack nms;
-		private NBTTagCompound compound;
+	public class NBTItem_v1_13_R1 extends NBTItem {
+		private final ItemStack nms;
+		private final NBTTagCompound compound;
 
-		public NBTItem_v1_13_2(org.bukkit.inventory.ItemStack item) {
+		public NBTItem_v1_13_R1(org.bukkit.inventory.ItemStack item) {
 			super(item);
+			
 			nms = CraftItemStack.asNMSCopy(item);
 			compound = nms.hasTag() ? nms.getTag() : new NBTTagCompound();
 		}

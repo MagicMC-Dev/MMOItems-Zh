@@ -101,7 +101,7 @@ public class ItemUse implements Listener {
 
 		// check for npc
 		// safety checks
-		if (event.getEntity().hasMetadata("NPC") || !(event.getDamager() instanceof Player) || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK)
+		if (event.getEntity().hasMetadata("NPC") || !(event.getDamager() instanceof Player) || event.getDamager().hasMetadata("NPC") || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK)
 			return;
 
 		// custom damage check

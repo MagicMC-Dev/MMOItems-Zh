@@ -99,9 +99,11 @@ public class ItemUse implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void b(EntityDamageByEntityEvent event) {
 
-		// check for npc
-		// safety checks
-		if (event.getEntity().hasMetadata("NPC") || !(event.getDamager() instanceof Player) || event.getDamager().hasMetadata("NPC") || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK)
+		/*
+		 * Citizens and Sentinels NPC support; damage = 0 check to ignore safety
+		 * checks; check for entity attack
+		 */
+		if (event.getDamage() == 0 || !(event.getEntity() instanceof LivingEntity) || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC") || event.getCause() != DamageCause.ENTITY_ATTACK)
 			return;
 
 		// custom damage check

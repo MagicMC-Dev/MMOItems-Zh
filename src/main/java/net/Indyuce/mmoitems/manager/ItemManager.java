@@ -92,7 +92,8 @@ public class ItemManager extends BukkitRunnable {
 	}
 
 	public class LoadedItem {
-		private MMOItem item;
+		private final MMOItem item;
+		
 		private long loaded = System.currentTimeMillis();
 
 		public LoadedItem(MMOItem item) {

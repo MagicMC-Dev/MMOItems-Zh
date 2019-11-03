@@ -22,13 +22,19 @@ public class RealDualWieldHook implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void a(PlayerDamageEntityWithOffhandEvent event) {
 
-		// check for npc
-		// safety checks
-		if (event.getEntity().hasMetadata("NPC") || !(event.getEntity() instanceof LivingEntity) || event.getDamage() == 0)
+		/*
+		 * Citizens and Sentinels NPC support; damage = 0 check to ignore safety
+		 * checks; check for entity attack
+		 */
+		if (event.getDamage() == 0 || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
 			return;
 
+		// custom damage check
 		LivingEntity target = (LivingEntity) event.getEntity();
-		Player player = (Player) event.getPlayer();
+		if (MMOItems.plugin.getDamage().findInfo(target) != null)
+			return;
+
+		Player player = event.getPlayer();
 		TemporaryStats stats = null;
 
 		/*
@@ -36,8 +42,10 @@ public class RealDualWieldHook implements Listener {
 		 * be cancelled before anything is applied
 		 */
 		PlayerData playerData = PlayerData.get(player);
-		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(event.getItemInOffhand());
+		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem offhandItem = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
 		AttackResult result = new AttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
+
 		if (item.hasType()) {
 			Weapon weapon = new Weapon(playerData, item, item.getType());
 
@@ -53,6 +61,19 @@ public class RealDualWieldHook implements Listener {
 
 			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, EquipmentSlot.HAND, result.setSuccessful(true));
 			if (!result.isSuccessful()) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+		if (offhandItem.hasType()) {
+			Weapon weapon = new Weapon(playerData, offhandItem, offhandItem.getType());
+
+			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
+				event.setCancelled(true);
+				return;
+			}
+
+			if (!weapon.canBeUsed()) {
 				event.setCancelled(true);
 				return;
 			}

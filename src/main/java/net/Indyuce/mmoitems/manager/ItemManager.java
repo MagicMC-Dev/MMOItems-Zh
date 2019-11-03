@@ -15,20 +15,14 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class ItemManager extends BukkitRunnable {
-	private Map<Type, Map<String, LoadedItem>> map = new HashMap<>();
-	private boolean cache = false;
+	private final Map<Type, Map<String, LoadedItem>> map = new HashMap<>();
+	private final boolean cache;
 
-	public ItemManager() {
-		runTaskTimerAsynchronously(MMOItems.plugin, 60 * 20, 2 * 60 * 20);
-	}
-
-	public void useCache(boolean cache) {
+	public ItemManager(boolean cache) {
 		this.cache = cache;
-		if (!cache) {
-			map.clear();
-			if (!isCancelled())
-				cancel();
-		}
+
+		if (cache)
+			runTaskTimerAsynchronously(MMOItems.plugin, 60 * 20, 2 * 60 * 20);
 	}
 
 	public void uncache(Type type, String id) {

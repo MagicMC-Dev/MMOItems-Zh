@@ -147,7 +147,7 @@ public class MMOItems extends JavaPlugin {
 		abilityManager.stopRegistration();
 
 		configManager = new ConfigManager();
-		itemManager = new ItemManager();
+		itemManager = new ItemManager(getConfig().getBoolean("use-item-caching"));
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();

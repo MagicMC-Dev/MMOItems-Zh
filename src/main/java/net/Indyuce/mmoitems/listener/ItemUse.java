@@ -69,8 +69,13 @@ public class ItemUse implements Listener {
 		if (useItem instanceof Consumable && ((Consumable) useItem).hasVanillaEating())
 			return;
 
-		if (!useItem.canBeUsed())
+		/*
+		 * (BUG FIX) cancel the event to prevent things like shield blocking
+		 */
+		if (!useItem.canBeUsed()) {
+			event.setCancelled(true);
 			return;
+		}
 
 		// commands & consummables
 		if (event.getAction().name().contains("RIGHT_CLICK")) {

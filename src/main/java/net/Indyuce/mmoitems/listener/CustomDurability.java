@@ -32,9 +32,7 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 
 public class CustomDurability implements Listener {
-	private final List<DamageCause> applyDamageCauses = Arrays.asList(
-		DamageCause.ENTITY_ATTACK, DamageCause.ENTITY_EXPLOSION, DamageCause.BLOCK_EXPLOSION, DamageCause.THORNS,
-		DamageCause.CONTACT, DamageCause.FIRE, DamageCause.HOT_FLOOR, DamageCause.LAVA, DamageCause.PROJECTILE );
+	private final List<DamageCause> applyDamageCauses = Arrays.asList(DamageCause.ENTITY_ATTACK, DamageCause.ENTITY_EXPLOSION, DamageCause.BLOCK_EXPLOSION, DamageCause.THORNS, DamageCause.CONTACT, DamageCause.FIRE, DamageCause.HOT_FLOOR, DamageCause.LAVA, DamageCause.PROJECTILE);
 	private final List<String> hoeableBlocks = Arrays.asList("GRASS_PATH", "GRASS", "DIRT");
 	private final List<PlayerFishEvent.State> applyFishStates = Arrays.asList(State.IN_GROUND, State.CAUGHT_ENTITY, State.CAUGHT_FISH);
 
@@ -75,10 +73,9 @@ public class CustomDurability implements Listener {
 
 		if (!applyDamageCauses.contains(event.getCause()))
 			return;
-		
+
 		int dura = 1;
-		if(event.getCause() == DamageCause.BLOCK_EXPLOSION ||
-		   event.getCause() == DamageCause.ENTITY_EXPLOSION)
+		if (event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION)
 			dura = 2;
 
 		Player player = (Player) event.getEntity();
@@ -139,10 +136,9 @@ public class CustomDurability implements Listener {
 			intItem.setItem(durItem.decreaseDurability(1).toItem());
 	}
 
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void f(PlayerInteractEvent event) {
-		if (event.isCancelled() || !event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || !event.hasBlock())
+		if (!event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || !event.hasBlock())
 			return;
 
 		Player player = event.getPlayer();
@@ -252,7 +248,7 @@ public class CustomDurability implements Listener {
 		elytraDurabilityLoss.put(player.getUniqueId(), runnable);
 		runnable.runTaskTimer(MMOItems.plugin, 10, 20);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void j(PlayerItemMendEvent event) {
 		if (event.isCancelled())

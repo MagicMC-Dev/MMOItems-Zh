@@ -21,7 +21,7 @@ import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class MMOItemBuilder {
-	private MMOItem mmoitem;
+	private final MMOItem mmoitem;
 
 	private ItemStack item = new ItemStack(VersionMaterial.NETHER_WART.toMaterial());
 	private ItemMeta meta;

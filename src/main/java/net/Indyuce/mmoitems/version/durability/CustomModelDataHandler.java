@@ -31,6 +31,7 @@ public class CustomModelDataHandler implements DurabilityHandler {
 	public void repair(ItemStack item, int amount) {
 		ItemMeta meta = item.getItemMeta();
 		((Damageable) meta).setDamage(Math.max(0, ((Damageable) meta).getDamage() - amount));
+		item.setItemMeta(meta);
 	}
 
 	@Override

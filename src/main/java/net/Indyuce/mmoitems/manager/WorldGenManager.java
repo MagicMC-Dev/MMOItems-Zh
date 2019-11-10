@@ -49,16 +49,13 @@ public class WorldGenManager implements Listener {
 					if(wgt.canGenerate(generatePoint)) {
 						CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(blocks);
 						Block modify = event.getWorld().getBlockAt(generatePoint);
-						boolean failedLastCheck = false;
-						
+
 						for(int j = 0; j < wgt.veinSize; j++) {
 							if(wgt.canReplace(modify.getType())) {
-								if(failedLastCheck) continue;
-								failedLastCheck = true; j -= 1; continue;
+								modify.setType(block.getType(), false);
+								modify.setBlockData(block.getBlockData(), false);
 							}
-							failedLastCheck = false;
-							modify.setType(block.getType(), false);
-							modify.setBlockData(block.getBlockData(), false);
+
 							BlockFace nextFace = faces[rnd.nextInt(faces.length)];
 							modify = modify.getRelative(nextFace);
 						}

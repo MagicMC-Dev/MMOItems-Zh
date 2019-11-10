@@ -60,6 +60,6 @@ public class WorldGenTemplate {
 	}
 
 	public boolean canReplace(Material type) {
-		return replaceableMaterials.contains(type);
+		return replaceableMaterials.isEmpty() || replaceableMaterials.contains(type);
 	}
 }

@@ -243,8 +243,13 @@ public class PlayerData {
 			/*
 			 * apply abilities
 			 */
-			if (item.hasData(ItemStat.ABILITIES))
-				((AbilityListData) item.getData(ItemStat.ABILITIES)).getAbilities().forEach(ability -> itemAbilities.add(ability));
+			if (item.hasData(ItemStat.ABILITIES)) {
+				// if the item with the abilities is in the players offhand AND its disabled in the config then just move on, else add the ability
+				if (item.getNBTItem().getItem().equals(player.getInventory().getItemInOffHand()) && MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
+					continue;
+				} else
+					((AbilityListData) item.getData(ItemStat.ABILITIES)).getAbilities().forEach(ability -> itemAbilities.add(ability));
+			}
 		}
 
 		/*

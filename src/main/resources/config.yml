@@ -25,6 +25,12 @@ use-item-caching: true
 # it CAN cause lag and/or take a lot of memory.
 iterate-whole-inventory: false
 
+# Enable/Disable abilities in the players offhand, stops
+# players using abilities when interacting with chests, mining etc.
+# Very useful if your have a lot of items that your players use in their
+# off-hand like tomes!
+disable-abilities-in-offhand: false
+
 # By default, all player inventories will be updated every
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10

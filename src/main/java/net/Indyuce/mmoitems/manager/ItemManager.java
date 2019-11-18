@@ -112,4 +112,8 @@ public class ItemManager extends BukkitRunnable {
 			return loaded + 5 * 60 * 1000 < System.currentTimeMillis();
 		}
 	}
+
+	public void reload() {
+		map.clear();
+	}
 }

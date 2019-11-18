@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Indyuce.mmocore.MMOCore;
+import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
 
 public class PlayerMessage {
@@ -38,7 +38,7 @@ public class PlayerMessage {
 
 		if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath)) {
 			if(Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
-				MMOCore.plugin.pauseDefaultActionBar(player.getUniqueId(), 60);
+				PlayerData.get(player).setActionBarTimeOut(60);
 			
 			MMOItems.plugin.getNMS().sendActionBar(player, message);
 		}

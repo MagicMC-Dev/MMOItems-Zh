@@ -178,6 +178,7 @@ ability-player-damage: true
 # Might interfere with other action bar plugins.
 action-bar-display:
     ability-cooldown: true
+    item-cooldown: true
     not-enough-mana: true
     not-enough-stamina: true
     two-handed: true

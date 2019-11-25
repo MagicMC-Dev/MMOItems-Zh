@@ -80,7 +80,8 @@ public class ItemUse implements Listener {
 		// commands & consummables
 		if (event.getAction().name().contains("RIGHT_CLICK")) {
 			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
-				Message.ITEM_ON_COOLDOWN.format(ChatColor.RED, "#left#", digit.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId()))).send(player);
+				Message.ITEM_ON_COOLDOWN.format(ChatColor.RED, "#left#", digit.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId()))).send(player, "item-cooldown");
+				event.setCancelled(true);
 				return;
 			}
 

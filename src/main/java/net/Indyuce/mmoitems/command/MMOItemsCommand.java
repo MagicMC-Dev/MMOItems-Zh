@@ -91,7 +91,9 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 			if (args[1].equalsIgnoreCase("blocks")) {
-				new BlockBrowser((Player) sender).open();
+				if (MMOItems.plugin.getVersion().isStrictlyHigher(1, 12))
+					new BlockBrowser((Player) sender).open();
+				else sender.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return true;
 			}
 			if (!Type.isValid(args[1])) {

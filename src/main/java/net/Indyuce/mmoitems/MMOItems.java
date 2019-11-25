@@ -166,14 +166,15 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 		Bukkit.getPluginManager().registerEvents(new MitigationListener(), this);
-		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomDurability(), this);
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
-		if (version.isStrictlyHigher(1, 12))
+		if (version.isStrictlyHigher(1, 12)) {
+			Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
+		}
 
 		/*
 		 * this class implements the Listener, if the option

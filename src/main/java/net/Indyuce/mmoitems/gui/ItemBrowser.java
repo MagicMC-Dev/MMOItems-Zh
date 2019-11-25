@@ -93,6 +93,15 @@ public class ItemBrowser extends PluginInventory {
 			ItemStack switchBrowse = new ItemStack(Material.STONE);
 			ItemMeta switchMeta = switchBrowse.getItemMeta();
 			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
+
+			if(!MMOItems.plugin.getVersion().isStrictlyHigher(1, 12)) {
+				List<String> lore = new ArrayList<String>();
+				lore.add("");
+				lore.add("&cThis feature is disabled.");
+				lore.add("&cUpdating to 1.13+ is recommended.");
+				switchMeta.setLore(lore);
+			}
+			
 			switchBrowse.setItemMeta(switchMeta);
 			
 			while (n < slots.length)
@@ -220,7 +229,9 @@ public class ItemBrowser extends PluginInventory {
 			
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
-				new BlockBrowser(player).open();
+				if (MMOItems.plugin.getVersion().isStrictlyHigher(1, 12))
+					new BlockBrowser(player).open();
+				else player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return;
 			}
 

@@ -85,7 +85,9 @@ public class SpigotPlugin {
 		int localVersionLast = localVersion.length > 1 ? parse(localVersion[2]) : 0;
 
 		if(netVersionLast < localVersionLast) return false;
-		return true;
+		if(netVersionLast > localVersionLast) return true;
+		
+		return false;
 	}
 	
 	private int parse(String s) {
@@ -102,6 +104,6 @@ public class SpigotPlugin {
 		return Arrays.asList("&8--------------------------------------------", "&a" + plugin.getName() + " " + version + " is available!", "&a" + getResourceUrl(), "&7&oYou can disable this notification in the config file.", "&8--------------------------------------------");
 	}
 	public String getResourceUrl() {
-		return "https://www.spigotmc.org/resources/" + id + "/";
+		return "https://www.mythicmobs.net/index.php?pages/download-mmoitems/";
 	}
 }

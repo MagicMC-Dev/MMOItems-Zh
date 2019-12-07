@@ -32,7 +32,7 @@ public class MMOCoreHook implements RPGHandler, Listener, DamageHandler {
 	private final ItemStat maxStamina = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." }, "max-stamina");
 	private final ItemStat staminaRegen = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." }, "stamina-regeneration");
 	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
-	private final ItemStat additionalExperience = new DoubleStat(new ItemStack(Material.EXPERIENCE_BOTTLE), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
+	private final ItemStat additionalExperience = new DoubleStat(VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
 
 	/*
 	 * called when MMOItems enables

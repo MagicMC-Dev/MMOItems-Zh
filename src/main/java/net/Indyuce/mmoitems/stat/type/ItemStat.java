@@ -25,6 +25,7 @@ import net.Indyuce.mmoitems.stat.Arrow_Particles;
 import net.Indyuce.mmoitems.stat.Attack_Damage;
 import net.Indyuce.mmoitems.stat.Attack_Speed;
 import net.Indyuce.mmoitems.stat.Commands;
+import net.Indyuce.mmoitems.stat.Compatible_Types;
 import net.Indyuce.mmoitems.stat.Crafting_Recipe;
 import net.Indyuce.mmoitems.stat.CustomSounds;
 import net.Indyuce.mmoitems.stat.Custom_Model_Data;
@@ -138,8 +139,9 @@ public abstract class ItemStat {
 	public static final ItemStat DISABLE_RIGHT_CLICK_CONSUME = new DisableStat(Material.BARRIER, "right-click-consume", "Disable Right Click Consume", new String[] { "consumable" }, "This item will not be consumed", "when eaten by players.");
 	public static final ItemStat VANILLA_EATING_ANIMATION = new Vanilla_Eating_Animation(), INEDIBLE = new Inedible(), GEM_COLOR = new Gem_Color(), ITEM_TYPE_RESTRICTION = new Item_Type_Restriction();
 
-	public static final ItemStat SUCCESS_RATE = new DoubleStat(new ItemStack(Material.EMERALD), "Success Rate", new String[] { "The chance of your gem to successfully", "apply onto an item. This value is 100%", "by default. If it is not successfully", "applied, the gem stone will be lost." }, "success-rate", new String[] { "gem_stone" });
-
+	public static final ItemStat SUCCESS_RATE = new DoubleStat(new ItemStack(Material.EMERALD), "Success Rate", new String[] { "The chance of your gem to successfully", "apply onto an item. This value is 100%", "by default. If it is not successfully", "applied, the gem stone will be lost." }, "success-rate", new String[] { "gem_stone", "skin" });
+	public static final ItemStat COMPATIBLE_TYPES = new Compatible_Types();
+	
 	public static final ItemStat CRAFTING_RECIPE = new Crafting_Recipe(), FURNACE_RECIPE = new Furnace_Recipe(), SHAPELESS_RECIPE = new Shapeless_Recipe(), ADVANCED_CRAFTING_RECIPE = new Advanced_Crafting_Recipe(), ADVANCED_CRAFTING_RECIPE_PERMISSION = new Advanced_Crafting_Recipe_Permission();
 	public static final ItemStat AUTOSMELT = new BooleanStat(new ItemStack(Material.COAL), "Autosmelt", new String[] { "If set to true, your tool will", "automaticaly smelt mined ores." }, "autosmelt", new String[] { "tool" });
 	public static final ItemStat BOUNCING_CRACK = new BooleanStat(new ItemStack(VersionMaterial.COBBLESTONE_WALL.toMaterial()), "Bouncing Crack", new String[] { "If set to true, your tool will", "also break nearby blocks." }, "bouncing-crack", new String[] { "tool" });

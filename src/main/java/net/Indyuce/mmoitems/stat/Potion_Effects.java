@@ -185,10 +185,8 @@ public class Potion_Effects extends StringStat {
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getMaterial().name().contains("POTION") || item.getMaterial() == Material.TIPPED_ARROW)
-			((EffectListData) data).getEffects().forEach(effect -> {
-				((PotionMeta) item.getMeta()).clearCustomEffects();
+			for(PotionEffectData effect : ((EffectListData) data).getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
-			});
 		return true;
 	}
 }

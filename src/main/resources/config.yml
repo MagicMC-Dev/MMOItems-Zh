@@ -25,6 +25,9 @@ use-item-caching: true
 # it CAN cause lag and/or take a lot of memory.
 iterate-whole-inventory: false
 
+# When this is set to true, skins can only be applied to an item ONCE. 
+locked-skins: true
+
 # Enable/Disable abilities in the players offhand, stops
 # players using abilities when interacting with chests, mining etc.
 # Very useful if your have a lot of items that your players use in their

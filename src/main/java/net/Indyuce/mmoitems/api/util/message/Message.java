@@ -39,6 +39,10 @@ public enum Message {
 	GEM_STONE_APPLIED("You successfully applied &6#gem#&e onto your &6#item#&e."),
 	GEM_STONE_BROKE("Your gem stone &6#gem#&c broke while trying to apply it onto &6#item#&c."),
 	REPAIRED_ITEM("You successfully repaired &6#item#&e for &6#amount# &euses."),
+	SKIN_APPLIED("You successfully applied the skin onto your &6#item#&e!"),
+	SKIN_BROKE("Your skin broke while trying to apply it onto your &6#item#&c."),
+	SKIN_REJECTED("A skin has already been applied onto your &6#item#&c!"),
+	SKIN_INCOMPATIBLE("This skin is not compatible with your &6#item#&c!"),
 
 	// advanced workbennch
 	ADVANCED_WORKBENCH("Advanced Workbench"),

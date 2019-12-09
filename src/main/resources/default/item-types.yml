@@ -265,6 +265,19 @@ MISCELLANEOUS:
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
+SKIN:
+    display: LEATHER
+    name: 'Skin'
+    unident-item:
+        name: '&f#prefix#Unidentified Skin Item'
+        lore:
+        - '&7This item is unidentified. I must'
+        - '&7find a way to identify it!'
+        - '{tier}'
+        - '{tier}&8Item Info:'
+        - '{range}&8- &7Lvl Range: &e#range#'
+        - '{tier}&8- &7Item Tier: #prefix##tier#'
+
 GEM_STONE:
     display: EMERALD
     name: 'Gem Stone'

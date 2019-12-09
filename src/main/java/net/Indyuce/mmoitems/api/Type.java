@@ -46,6 +46,7 @@ public class Type {
 	public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, false, true, EquipmentSlot.MAIN_HAND);
 	public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, false, true, EquipmentSlot.MAIN_HAND);
 	public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, false, true, EquipmentSlot.OTHER);
+	public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, false, true, EquipmentSlot.OTHER);
 	public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, false, true, EquipmentSlot.ACCESSORY);
 	
 	private final String id;

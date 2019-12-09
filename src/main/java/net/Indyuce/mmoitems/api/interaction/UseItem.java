@@ -100,6 +100,8 @@ public class UseItem {
 	public static UseItem getItem(Player player, NBTItem item, Type type) {
 		if (type.corresponds(Type.CONSUMABLE))
 			return new Consumable(player, item, type);
+		if (type.corresponds(Type.SKIN))
+			return new ItemSkin(player, item, type);
 		if (type.corresponds(Type.GEM_STONE))
 			return new GemStone(player, item, type);
 		if (type.corresponds(Type.MUSKET))

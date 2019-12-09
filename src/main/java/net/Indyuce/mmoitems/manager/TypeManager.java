@@ -22,7 +22,7 @@ public class TypeManager {
 	public void reload() {
 		map.clear();
 		addAll(Type.ACCESSORY, Type.ARMOR, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER,
-			Type.GAUNTLET,Type.GEM_STONE, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST,
+			Type.GAUNTLET,Type.GEM_STONE, Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST,
 			Type.ORNAMENT, Type.SPEAR, Type.STAFF, Type.SWORD, Type.TOOL, Type.WHIP);
 
 		/*

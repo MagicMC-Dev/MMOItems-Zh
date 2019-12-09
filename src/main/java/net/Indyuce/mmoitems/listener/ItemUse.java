@@ -31,8 +31,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
-import net.Indyuce.mmoitems.api.interaction.GemStone.ApplyResult;
-import net.Indyuce.mmoitems.api.interaction.GemStone.ResultType;
+import net.Indyuce.mmoitems.api.interaction.ItemSkin;
 import net.Indyuce.mmoitems.api.interaction.Tool;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
@@ -232,19 +231,37 @@ public class ItemUse implements Listener {
 		if (!useItem.canBeUsed())
 			return;
 
-		if (useItem instanceof GemStone) {
+		if (useItem instanceof ItemSkin) {
 			NBTItem picked = MMOItems.plugin.getNMS().getNBTItem(event.getCurrentItem());
 			if (!picked.hasType())
 				return;
 
-			ApplyResult result = ((GemStone) useItem).applyOntoItem(picked, picked.getType());
-			if (result.getType() == ResultType.NONE)
+			ItemSkin.ApplyResult result = ((ItemSkin) useItem).applyOntoItem(picked, picked.getType());
+			if (result.getType() == ItemSkin.ResultType.NONE)
 				return;
 
 			event.setCancelled(true);
 			item.getItem().setAmount(item.getItem().getAmount() - 1);
 
-			if (result.getType() == ResultType.FAILURE)
+			if (result.getType() == ItemSkin.ResultType.FAILURE)
+				return;
+
+			event.setCurrentItem(result.getResult());
+		}
+		
+		if (useItem instanceof GemStone) {
+			NBTItem picked = MMOItems.plugin.getNMS().getNBTItem(event.getCurrentItem());
+			if (!picked.hasType())
+				return;
+
+			GemStone.ApplyResult result = ((GemStone) useItem).applyOntoItem(picked, picked.getType());
+			if (result.getType() == GemStone.ResultType.NONE)
+				return;
+
+			event.setCancelled(true);
+			item.getItem().setAmount(item.getItem().getAmount() - 1);
+
+			if (result.getType() == GemStone.ResultType.FAILURE)
 				return;
 
 			event.setCurrentItem(result.getResult());

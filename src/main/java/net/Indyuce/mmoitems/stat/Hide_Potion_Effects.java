@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class Hide_Potion_Effects extends BooleanStat {
 	public Hide_Potion_Effects() {
-		super(new ItemStack(Material.POTION), "Hide Potion Effects", new String[] { "Hides potion effects & 'No Effects'", "from your item lore." }, "hide-potion-effects", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION);
+		super(new ItemStack(Material.POTION), "Hide Potion Effects", new String[] { "Hides potion effects & 'No Effects'", "from your item lore." }, "hide-potion-effects", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override

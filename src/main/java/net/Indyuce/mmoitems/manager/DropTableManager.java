@@ -89,7 +89,8 @@ public class DropTableManager implements Listener {
 
 		Block block = event.getBlock();
 		final Material type = block.getType();
-		CustomBlock custom = CustomBlock.getFromData(block.getBlockData());
+
+		CustomBlock custom = MMOItems.plugin.getVersion().isStrictlyHigher(1, 12) ? CustomBlock.getFromData(block.getBlockData()) : null;
 		if(custom != null) {
 			if (customBlocks.containsKey(custom.getId()))
 				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {

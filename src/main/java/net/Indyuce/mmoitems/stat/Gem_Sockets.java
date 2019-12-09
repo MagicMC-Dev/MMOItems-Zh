@@ -32,7 +32,7 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class Gem_Sockets extends ItemStat {
 	public Gem_Sockets() {
-		super(new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." }, "gem-sockets", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor" });
+		super(new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." }, "gem-sockets", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
 	}
 
 	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {

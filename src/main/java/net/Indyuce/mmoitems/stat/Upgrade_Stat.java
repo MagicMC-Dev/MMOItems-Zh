@@ -29,7 +29,7 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class Upgrade_Stat extends ItemStat {
 	public Upgrade_Stat() {
-		super(new ItemStack(Material.FLINT), "Item Upgrading", new String[] { "Upgrading your item improves its", "current stats. It requires either a", "consumable or a specific crafting ", "station. Upgrading may sometimes &cfail&7..." }, "upgrade", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "consumable" });
+		super(new ItemStack(Material.FLINT), "Item Upgrading", new String[] { "Upgrading your item improves its", "current stats. It requires either a", "consumable or a specific crafting ", "station. Upgrading may sometimes &cfail&7..." }, "upgrade", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "consumable", "accessory" });
 	}
 
 	@Override

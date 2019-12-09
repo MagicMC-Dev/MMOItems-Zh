@@ -26,7 +26,7 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 
 public class Potion_Color extends StringStat {
 	public Potion_Color() {
-		super(new ItemStack(Material.POTION), "Potion Color", new String[] { "The color of your potion.", "(Doesn't impact the effects)." }, "potion-color", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION);
+		super(new ItemStack(Material.POTION), "Potion Color", new String[] { "The color of your potion.", "(Doesn't impact the effects)." }, "potion-color", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class Potion_Color extends StringStat {
 
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		if (item.getMaterial().name().contains("POTION"))
+		if (item.getMaterial().name().contains("POTION") || item.getMaterial() == Material.TIPPED_ARROW)
 			((PotionMeta) item.getMeta()).setColor(((ColorData) data).getColor());
 		return true;
 	}

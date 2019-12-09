@@ -56,6 +56,7 @@ import net.Indyuce.mmoitems.stat.Perm_Effects;
 import net.Indyuce.mmoitems.stat.Permission;
 import net.Indyuce.mmoitems.stat.Pickaxe_Power;
 import net.Indyuce.mmoitems.stat.Potion_Color;
+import net.Indyuce.mmoitems.stat.Potion_Effects;
 import net.Indyuce.mmoitems.stat.Required_Class;
 import net.Indyuce.mmoitems.stat.Required_Level;
 import net.Indyuce.mmoitems.stat.Restore;
@@ -101,8 +102,8 @@ public abstract class ItemStat {
 	public static final ItemStat MANA_COST = new DoubleStat(VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Cost", new String[] { "Mana spent by your weapon to be used." }, "mana-cost", new String[] { "piercing", "slashing", "blunt", "range" });
 	public static final ItemStat STAMINA_COST = new DoubleStat(VersionMaterial.LIGHT_GRAY_DYE.toItem(), "Stamina Cost", new String[] { "Stamina spent by your weapon to be used." }, "stamina-cost", new String[] { "piercing", "slashing", "blunt", "range" });
 	public static final ItemStat ARROW_VELOCITY = new DoubleStat(new ItemStack(Material.ARROW), "Arrow Velocity", new String[] { "Determins how far your", "crossbow can shoot.", "Default: 1.0" }, "arrow-velocity", new String[] { "bow", "crossbow" });
-	public static final ItemStat PVE_DAMAGE = new DoubleStat(new ItemStack(VersionMaterial.PORKCHOP.toMaterial()), "PvE Damage", new String[] { "Additional damage against", "non human entities in %." }, "pve-damage", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
-	public static final ItemStat PVP_DAMAGE = new DoubleStat(new ItemStack(VersionMaterial.SKELETON_SKULL.toMaterial()), "PvP Damage", new String[] { "Additional damage", "against players in %." }, "pvp-damage", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
+	public static final ItemStat PVE_DAMAGE = new DoubleStat(new ItemStack(VersionMaterial.PORKCHOP.toMaterial()), "PvE Damage", new String[] { "Additional damage against", "non human entities in %." }, "pve-damage", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "gem_stone", "accessory" });
+	public static final ItemStat PVP_DAMAGE = new DoubleStat(new ItemStack(VersionMaterial.SKELETON_SKULL.toMaterial()), "PvP Damage", new String[] { "Additional damage", "against players in %." }, "pvp-damage", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "gem_stone", "accessory" });
 	public static final ItemStat BLUNT_POWER = new DoubleStat(new ItemStack(Material.IRON_AXE), "Blunt Power", new String[] { "The radius of the AoE attack.", "If set to 2.0, enemies within 2 blocks", "around your target will take damage." }, "blunt-power", new String[] { "blunt", "gem_stone" });
 	public static final ItemStat BLUNT_RATING = new DoubleStat(new ItemStack(Material.BRICK), "Blunt Rating", new String[] { "The force of the blunt attack.", "If set to 50%, enemies hit by the attack", "will take 50% of the initial damage." }, "blunt-rating", new String[] { "blunt", "gem_stone" });
 	public static final ItemStat WEAPON_DAMAGE = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Weapon Damage", new String[] { "Additional on-hit weapon damage in %." }, "weapon-damage");
@@ -154,7 +155,7 @@ public abstract class ItemStat {
 	public static final ItemStat RECOIL = new DoubleStat(new ItemStack(VersionMaterial.IRON_HORSE_ARMOR.toMaterial()), "Recoil", new String[] { "Corresponds to the shooting innacuracy." }, "recoil", new String[] { "musket" });
 
 	public static final ItemStat ABILITIES = new Abilities(), UPGRADE = new Upgrade_Stat();
-	public static final ItemStat SKULL_TEXTURE = new Skull_Texture(), DYE_COLOR = new Dye_Color(), POTION_COLOR = new Potion_Color(), SHIELD_PATTERN = new Shield_Pattern(), HIDE_POTION_EFFECTS = new Hide_Potion_Effects();
+	public static final ItemStat SKULL_TEXTURE = new Skull_Texture(), DYE_COLOR = new Dye_Color(), POTION_EFFECTS = new Potion_Effects(), POTION_COLOR = new Potion_Color(), SHIELD_PATTERN = new Shield_Pattern(), HIDE_POTION_EFFECTS = new Hide_Potion_Effects();
 
 	/*
 	 * internal stats

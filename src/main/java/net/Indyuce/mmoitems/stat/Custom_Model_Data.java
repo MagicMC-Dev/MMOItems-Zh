@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
@@ -13,10 +12,9 @@ import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class Custom_Model_Data extends DoubleStat {
 	public Custom_Model_Data() {
-		super(new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data." }, "custom-model-data", new String[] { "all" });
+		super(new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data.", "(Only works on 1.14+)" }, "custom-model-data", new String[] { "all" });
 
-		if (MMOItems.plugin.getVersion().isBelowOrEqual(1, 13))
-			disable();
+		//if (MMOItems.plugin.getVersion().isBelowOrEqual(1, 13)) disable();
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.UpgradingEdition;
 import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat.StringData;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
@@ -192,12 +193,21 @@ public class Upgrade_Stat extends ItemStat {
 		}
 
 		public void upgrade(MMOItem mmoitem) {
-
 			// change display name
-			if (mmoitem.hasData(ItemStat.NAME)) {
-				String suffix = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
-				StringData nameData = (StringData) mmoitem.getData(ItemStat.NAME);
-				nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1)) : nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
+			String suffix = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+			if(MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
+				if (mmoitem.hasData(ItemStat.NAME)) {
+					StringData nameData = (StringData) mmoitem.getData(ItemStat.NAME);
+					nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1)) : nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
+				}
+			else if (mmoitem.hasData(ItemStat.LORE)) {
+				StringListData loreData = (StringListData) mmoitem.getData(ItemStat.LORE);
+				loreData.getList().forEach(line -> {
+					if(line.contains("%upgrade_level%") || line.contains(suffix.replace("#lvl#", "" + level))) {
+						line.replace("%upgrade_level%", suffix.replace("#lvl#", "" + level + 1));
+						line.replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + level + 1));
+					}
+				});
 			}
 
 			// apply stat updates

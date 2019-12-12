@@ -50,7 +50,7 @@ public class NewItemEdition implements Edition {
 		if (input.equals("cancel"))
 			return true;
 
-		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(inv.getPlayer(), "mi create " + inv.getType().getId() + " " + input.toUpperCase().replace(" ", "_").replace("-", "_")));
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(inv.getPlayer(), "mmoitems create " + inv.getType().getId() + " " + input.toUpperCase().replace(" ", "_").replace("-", "_")));
 		return true;
 	}
 	

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
@@ -26,11 +25,12 @@ import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class Compatible_Types extends StringStat {
 	public Compatible_Types() {
-		super(new ItemStack(Material.COMMAND_BLOCK), "Compatible Types", new String[] { "The item types this skin is", "compatible with." }, "compatible-types", new String[] { "skin" });
+		super(new ItemStack(VersionMaterial.COMMAND_BLOCK.toMaterial()), "Compatible Types", new String[] { "The item types this skin is", "compatible with." }, "compatible-types", new String[] { "skin" });
 	}
 
 	@Override

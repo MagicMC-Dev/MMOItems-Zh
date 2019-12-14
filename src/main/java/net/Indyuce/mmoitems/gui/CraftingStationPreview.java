@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.md_5.bungee.api.ChatColor;
 
 public class CraftingStationPreview extends PluginInventory {
@@ -97,26 +98,26 @@ public class CraftingStationPreview extends PluginInventory {
 		if (!MMOUtils.isPluginItem(event.getCurrentItem(), false))
 			return;
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.CONFIRM.getItem())) {
+		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.CONFIRM.getItem())) {
 			CraftingStationView csv = new CraftingStationView(player, station, previousPage);
 			csv.processRecipe(recipe);
 			csv.open();
 			return;
 		}
 		
-		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_PAGE.getItem())) {
+		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.PREVIOUS_PAGE.getItem())) {
 			page--;
 			open();
 			return;
 		}
 		
-		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_PAGE.getItem())) {
+		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.NEXT_PAGE.getItem())) {
 			page++;
 			open();
 			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.BACK.getItem())) {
+		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.BACK.getItem())) {
 			new CraftingStationView(player, station, previousPage).open();
 			return;
 		}

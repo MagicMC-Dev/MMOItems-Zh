@@ -24,6 +24,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.version.durability.DurabilityHandler;
 
@@ -78,7 +79,7 @@ public class UpdaterManager implements Listener {
 			return;
 
 		ItemStack newItem = getUpdated(item);
-		if (!newItem.isSimilar(item))
+		if (!IsSimilar.check(newItem, item))
 			event.setCurrentItem(newItem);
 	}
 

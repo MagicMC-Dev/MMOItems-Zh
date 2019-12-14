@@ -13,12 +13,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
+import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.version.nms.ItemTag;
 
 public class CraftingRecipeDisplay extends ConfigItem {
@@ -105,13 +106,18 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				lore.set(n, ChatColor.translateAlternateColorCodes('&', lore.get(n)));
 
 			ItemStack item = craftingRecipe.getOutput().getPreview();
+			int amount = craftingRecipe.getOutput().getAmount();
+			
+			if(amount > 64) lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", "" + amount).toString());
+			else item.setAmount(amount);
+			
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name.replace("#name#", MMOUtils.getDisplayName(item))));
+			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOItems.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("recipeId", craftingRecipe.getId())).toItem();
+			return NBTItem.get(item).addTag(new ItemTag("recipeId", craftingRecipe.getId())).toItem();
 		}
 	}
 }

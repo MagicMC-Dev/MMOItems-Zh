@@ -76,6 +76,7 @@ public enum Message {
 	CONDITIONS_NOT_MET("You cannot craft this item."),
 	CRAFTING_CANCELED("You cancelled a crafting recipe."),
 	CRAFTING_QUEUE_FULL("The crafting queue is currently full."),
+	STATION_BIG_STACK("Amount Crafted: #size#"),
 	// ALREADY_CRAFTING("You are already crafting something else."),
 	// ALREADY_CRAFTING_STATION("You are already crafting something else in that
 	// station."),

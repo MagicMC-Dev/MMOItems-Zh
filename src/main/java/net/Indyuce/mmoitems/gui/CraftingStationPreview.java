@@ -62,8 +62,11 @@ public class CraftingStationPreview extends PluginInventory {
 		for (int slot : fill)
 			inv.setItem(slot, ConfigItem.FILL.getItem());
 
-		if(recipe.getRecipe() instanceof CraftingRecipe)
-			inv.setItem(16, ((CraftingRecipe) recipe.getRecipe()).getOutput().getPreview());
+		if(recipe.getRecipe() instanceof CraftingRecipe) {
+			ItemStack item = ((CraftingRecipe) recipe.getRecipe()).getOutput().getPreview();
+			item.setAmount(((CraftingRecipe) recipe.getRecipe()).getOutput().getAmount());
+			inv.setItem(16, item);
+		}
 		if(recipe.getRecipe() instanceof UpgradingRecipe) {
 			ItemStack stack = ((UpgradingRecipe) recipe.getRecipe()).getItem().getPreview();
 			ItemMeta meta = stack.getItemMeta();
@@ -76,6 +79,7 @@ public class CraftingStationPreview extends PluginInventory {
 		inv.setItem(34, ConfigItem.CONFIRM.getItem());
 		ItemStack book = recipe.display();
 		book.setType(Material.KNOWLEDGE_BOOK);
+		book.setAmount(1);
 		ItemMeta meta = book.getItemMeta();
 		List<String> newLore = meta.getLore().subList(0, meta.getLore().size() - 3);
 		meta.setLore(newLore);

@@ -227,8 +227,10 @@ public class MMOItems extends JavaPlugin {
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			Bukkit.getPluginManager().registerEvents(new MythicMobsHook(), this);
-			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
+			Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+				Bukkit.getPluginManager().registerEvents(new MythicMobsHook(), this);
+				getLogger().log(Level.INFO, "Hooked onto MythicMobs (async)");
+			});
 		}
 
 		if (getConfig().getBoolean("item-glow")) {

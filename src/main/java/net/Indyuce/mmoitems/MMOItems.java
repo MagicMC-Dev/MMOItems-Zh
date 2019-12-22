@@ -115,7 +115,6 @@ public class MMOItems extends JavaPlugin {
 			getLogger().log(Level.INFO, "Your server version is not compatible.");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
-			// nms = new NMSHandler_Reflection();
 		}
 
 		try {
@@ -136,6 +135,15 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public void onEnable() {
+
+		/*
+		 * server version compatibility checks are ran when the plugin loads. if
+		 * the nms object is null, it means the version is not compatible
+		 * therefore MI should not enable
+		 */
+		if (nms == null)
+			return;
+
 		new SpigotPlugin(39267, this).checkForUpdate();
 
 		new MMOItemsMetrics();
@@ -376,11 +384,11 @@ public class MMOItems extends JavaPlugin {
 	public AbilityManager getAbilities() {
 		return abilityManager;
 	}
-	
+
 	public BlockManager getCustomBlocks() {
 		return blockManager;
 	}
-	
+
 	public WorldGenManager getWorldGen() {
 		return worldGenManager;
 	}

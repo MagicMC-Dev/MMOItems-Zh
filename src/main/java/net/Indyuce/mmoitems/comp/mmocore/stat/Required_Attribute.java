@@ -4,13 +4,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.AddonMessage;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook.MMOCoreRPGPlayer;
 import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Required_Attribute extends DoubleStat implements Conditional {
 	private final PlayerAttribute attribute;

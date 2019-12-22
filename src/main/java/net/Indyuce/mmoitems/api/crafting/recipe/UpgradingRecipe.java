@@ -7,7 +7,6 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
@@ -20,6 +19,7 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.Upgrade_Stat.UpgradeData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
 
 public class UpgradingRecipe extends Recipe {
 	private final ConfigMMOItem item;
@@ -62,7 +62,7 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new MMOItem(MMOItems.plugin.getNMS().getNBTItem(inv.getIngredient(ingredient).getFirstItem()))).hasData(ItemStat.UPGRADE))
+		if (!(recipe.mmoitem = new MMOItem(MMOLib.plugin.getNMS().getNBTItem(inv.getIngredient(ingredient).getFirstItem()))).hasData(ItemStat.UPGRADE))
 			return false;
 
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStat.UPGRADE)).canLevelUp()) {

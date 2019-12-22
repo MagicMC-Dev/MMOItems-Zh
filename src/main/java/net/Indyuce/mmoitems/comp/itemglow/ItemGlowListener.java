@@ -13,7 +13,7 @@ import org.inventivetalent.glow.GlowAPI;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemGlowListener implements Listener {
 

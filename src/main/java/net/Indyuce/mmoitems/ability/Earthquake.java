@@ -16,10 +16,10 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Earthquake extends Ability {
 	public Earthquake() {
@@ -34,7 +34,7 @@ public class Earthquake extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		if (!stats.getPlayer().isOnGround()) {
 			result.setSuccessful(false);
 			return;
@@ -62,7 +62,7 @@ public class Earthquake extends Ability {
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 					if (MMOUtils.canDamage(stats.getPlayer(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
 						hit.add(entity.getEntityId());
-						new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 						((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));
 					}
 			}

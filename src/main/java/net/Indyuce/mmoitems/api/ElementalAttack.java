@@ -7,21 +7,20 @@ import java.util.Random;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ElementalAttack {
 	private Map<Element, Double> relative = new HashMap<>();
 	private Map<Element, Double> absolute = new HashMap<>();
-	private AttackResult result;
+	private ItemAttackResult result;
 	private LivingEntity target;
 
 	private static final Random random = new Random();
 
-	public ElementalAttack(NBTItem item, AttackResult result) {
+	public ElementalAttack(NBTItem item, ItemAttackResult result) {
 		this.result = result;
 
 		for (Element element : Element.values()) {
@@ -40,7 +39,7 @@ public class ElementalAttack {
 		this.target = target;
 
 		for (ItemStack equip : target.getEquipment().getArmorContents()) {
-			NBTItem nbtEquip = MMOItems.plugin.getNMS().getNBTItem(equip);
+			NBTItem nbtEquip = MMOLib.plugin.getNMS().getNBTItem(equip);
 			if (nbtEquip.getType() != null)
 				for (Element element : absolute.keySet()) {
 					double defense = nbtEquip.getStat(element.name() + "_DEFENSE") / 100;

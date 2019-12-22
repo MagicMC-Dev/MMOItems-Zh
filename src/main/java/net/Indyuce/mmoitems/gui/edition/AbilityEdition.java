@@ -25,8 +25,9 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AbilityEdition extends EditionInventory {
 	private String configKey;
@@ -104,7 +105,7 @@ public class AbilityEdition extends EditionInventory {
 				modifierItemMeta.setLore(modifierItemLore);
 				modifierItem.setItemMeta(modifierItemMeta);
 
-				modifierItem = MMOItems.plugin.getNMS().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier)).toItem();
+				modifierItem = MMOLib.plugin.getNMS().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier)).toItem();
 
 				inv.setItem(slots[n++], modifierItem);
 			}
@@ -193,7 +194,7 @@ public class AbilityEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MMOItems.plugin.getNMS().getNBTItem(item).getString("abilityModifier");
+		String tag = MMOLib.plugin.getNMS().getNBTItem(item).getString("abilityModifier");
 		if (tag.equals(""))
 			return;
 

@@ -5,11 +5,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Hide_Potion_Effects extends BooleanStat {
 	public Hide_Potion_Effects() {

@@ -16,12 +16,12 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Whip;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.Commands.CommandListData;
 import net.Indyuce.mmoitems.stat.Commands.CommandListData.CommandData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class UseItem {
 	protected final Player player;

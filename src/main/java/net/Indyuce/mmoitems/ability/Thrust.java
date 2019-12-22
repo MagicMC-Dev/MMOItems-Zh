@@ -11,10 +11,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Thrust extends Ability {
 	public Thrust() {
@@ -27,7 +27,7 @@ public class Thrust extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double damage = data.getModifier("damage");
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, 0);
@@ -39,7 +39,7 @@ public class Thrust extends Ability {
 			loc.add(vec);
 			for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 				if (MMOUtils.canDamage(stats.getPlayer(), loc, entity))
-					new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+					new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 			loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 0);
 		}
 	}

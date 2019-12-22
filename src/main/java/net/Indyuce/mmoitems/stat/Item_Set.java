@@ -15,13 +15,13 @@ import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Item_Set extends StringStat {
 	public Item_Set() {

@@ -22,12 +22,13 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.event.crafting.PlayerUseRecipeEvent;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CraftingStationView extends PluginInventory {
 	private final CraftingStation station;
@@ -154,7 +155,7 @@ public class CraftingStationView extends PluginInventory {
 			return;
 		}
 
-		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(event.getCurrentItem());
+		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getCurrentItem());
 		String tag = item.getString("recipeId");
 		if (!tag.equals("")) {
 			RecipeInfo recipe = getRecipe(tag);

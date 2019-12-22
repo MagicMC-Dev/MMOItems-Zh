@@ -17,10 +17,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");

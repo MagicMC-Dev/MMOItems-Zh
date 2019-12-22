@@ -20,15 +20,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Magical_Shield;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
 		/*
 		 * damage reduction
 		 */
-		if (MMOItems.plugin.getDamage().findInfo(player) != null)
+		if (MMOLib.plugin.getDamage().findInfo(player) != null)
 			return;
 		PlayerStats stats = PlayerData.get(player).getStats();
 
@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
 
 		LivingEntity damager = (LivingEntity) event.getDamager();
 		Player player = (Player) event.getEntity();
-		PlayerData.get(player).castAbilities(damager, new AttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);
+		PlayerData.get(player).castAbilities(damager, new ItemAttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -102,7 +102,7 @@ public class PlayerListener implements Listener {
 
 		Player player = event.getPlayer();
 		boolean left = event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK;
-		PlayerData.get(player).castAbilities(null, new AttackResult(true, DamageType.SKILL), player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
+		PlayerData.get(player).castAbilities(null, new ItemAttackResult(true, DamageType.SKILL), player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
 	}
 
 	/*
@@ -122,7 +122,7 @@ public class PlayerListener implements Listener {
 		ItemStack item;
 		Iterator<ItemStack> iterator = event.getDrops().iterator();
 		while (iterator.hasNext())
-			if (MMOItems.plugin.getNMS().getNBTItem(item = iterator.next()).getString("MMOITEMS_SOULBOUND").equals(player.getUniqueId().toString())) {
+			if (MMOLib.plugin.getNMS().getNBTItem(item = iterator.next()).getString("MMOITEMS_SOULBOUND").equals(player.getUniqueId().toString())) {
 				iterator.remove();
 				soulboundInfo.add(item);
 			}

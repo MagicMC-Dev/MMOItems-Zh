@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AdvancedRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AdvancedWorkbench extends PluginInventory {
 	private List<InventoryAction> allowedCraftingClicks = Arrays.asList(new InventoryAction[] { InventoryAction.PICKUP_ALL, InventoryAction.MOVE_TO_OTHER_INVENTORY });

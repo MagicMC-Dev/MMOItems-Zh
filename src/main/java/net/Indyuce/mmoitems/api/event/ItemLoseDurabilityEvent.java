@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemLoseDurabilityEvent extends PlayerEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();

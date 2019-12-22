@@ -5,8 +5,8 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Lute_Attack_Sound extends StringStat {
 	public Lute_Attack_Sound() {

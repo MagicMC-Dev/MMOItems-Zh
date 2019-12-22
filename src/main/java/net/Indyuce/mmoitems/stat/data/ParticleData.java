@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
+import net.mmogroup.mmolib.MMOLib;
 
 public class ParticleData extends StatData {
 	private ParticleType type;
@@ -122,14 +123,14 @@ public class ParticleData extends StatData {
 
 	public void display(Location location, int amount, float offsetX, float offsetY, float offsetZ, float speed) {
 		if (isColored())
-			MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, 1, color);
+			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, 1, color);
 		else
 			location.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed);
 	}
 
 	public void display(Location location, Vector direction, float speed) {
 		if (isColored())
-			MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed, 1, color);
+			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed, 1, color);
 		else
 			location.getWorld().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed);
 	}

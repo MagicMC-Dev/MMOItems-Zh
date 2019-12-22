@@ -25,10 +25,11 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class MitigationListener implements Listener {
 	private static final Random random = new Random();
@@ -86,7 +87,7 @@ public class MitigationListener implements Listener {
 			double yaw = getYaw(player, getVector(player, event)) + 95;
 			for (double j = yaw - 90; j < yaw + 90; j += 5)
 				for (double y = 0; y < 2; y += .1)
-					MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(Math.cos(Math.toRadians(j)) * .7, y, Math.sin(Math.toRadians(j)) * .7), Color.GRAY);
+					MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(Math.cos(Math.toRadians(j)) * .7, y, Math.sin(Math.toRadians(j)) * .7), Color.GRAY);
 		}
 	}
 

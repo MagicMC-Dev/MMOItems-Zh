@@ -7,10 +7,10 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.Conditional;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public abstract class RPGPlayer {
 	private final PlayerData playerData;

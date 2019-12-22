@@ -16,9 +16,10 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.MMOLib;
 
 public class Shockwave extends Ability {
 	public Shockwave() {
@@ -32,7 +33,7 @@ public class Shockwave extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double knockUp = data.getModifier("knock-up");
 		double length = data.getModifier("length");
 
@@ -50,7 +51,7 @@ public class Shockwave extends Ability {
 				loc.add(vec);
 
 				loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 2);
-				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, loc, 12, .5, 0, .5, 0, Material.DIRT);
+				MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, loc, 12, .5, 0, .5, 0, Material.DIRT);
 
 				for (Entity ent : MMOUtils.getNearbyChunkEntities(loc))
 					if (ent.getLocation().distance(loc) < 1.1 && ent instanceof LivingEntity && !ent.equals(stats.getPlayer()) && !hit.contains(ent.getEntityId())) {

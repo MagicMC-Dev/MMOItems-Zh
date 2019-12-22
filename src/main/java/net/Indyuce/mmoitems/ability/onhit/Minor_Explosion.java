@@ -8,10 +8,10 @@ import org.bukkit.entity.LivingEntity;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Minor_Explosion extends Ability {
 	public Minor_Explosion() {
@@ -26,7 +26,7 @@ public class Minor_Explosion extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		Location loc = getTargetLocation(stats.getPlayer(), target);
 		if (loc == null) {
 			result.setSuccessful(false);
@@ -43,7 +43,7 @@ public class Minor_Explosion extends Ability {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity)) {
-				new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 				entity.setVelocity(MMOUtils.normalize(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.2).multiply(2 * knockback));
 			}
 	}

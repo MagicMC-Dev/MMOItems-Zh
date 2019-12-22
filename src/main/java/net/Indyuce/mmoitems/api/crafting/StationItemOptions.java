@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.api.item.plugin.NamedItemStack;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class StationItemOptions {
 	private final CraftingStation station;

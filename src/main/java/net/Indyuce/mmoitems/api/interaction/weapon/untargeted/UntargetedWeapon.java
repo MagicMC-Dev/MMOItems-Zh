@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public abstract class UntargetedWeapon extends Weapon {
 

@@ -11,10 +11,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Magical_Shield extends Ability {
 	public static Map<Location, Double[]> magicalShield = new HashMap<>();
@@ -31,7 +32,7 @@ public class Magical_Shield extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		if (!stats.getPlayer().isOnGround()) {
 			result.setSuccessful(false);
 			return;
@@ -51,7 +52,7 @@ public class Magical_Shield extends Ability {
 				ti++;
 				for (double j = 0; j < Math.PI / 2; j += Math.PI / (28 + random.nextInt(5)))
 					for (double i = 0; i < Math.PI * 2; i += Math.PI / (14 + random.nextInt(5)))
-						MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(2.5 * Math.cos(i + j) * Math.sin(j), 2.5 * Math.cos(j), 2.5 * Math.sin(i + j) * Math.sin(j)), Color.FUCHSIA);
+						MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(2.5 * Math.cos(i + j) * Math.sin(j), 2.5 * Math.cos(j), 2.5 * Math.sin(i + j) * Math.sin(j)), Color.FUCHSIA);
 
 				if (ti > duration * 20 / 3) {
 					magicalShield.remove(loc);

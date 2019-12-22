@@ -17,7 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MushroomState;
 import net.Indyuce.mmoitems.manager.BlockManager;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class CustomBlock {
 	MushroomState state;
@@ -80,11 +81,11 @@ public class CustomBlock {
 		meta.setUnbreakable(true);
 		meta.addItemFlags(ItemFlag.values());
 
-		if(MMOItems.plugin.getVersion().isBelowOrEqual(1, 13)) ((Damageable) meta).setDamage(id);
+		if(MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) ((Damageable) meta).setDamage(id);
 		
         item.setItemMeta(meta);
 
-        return MMOItems.plugin.getNMS().getNBTItem(item)
+        return MMOLib.plugin.getNMS().getNBTItem(item)
         	.addTag(new ItemTag("MMOITEMS_DISABLE_CRAFTING", true),
         		new ItemTag("MMOITEMS_DISABLE_SMITHING", true),
         		new ItemTag("MMOITEMS_DISABLE_ENCHANTING", true),

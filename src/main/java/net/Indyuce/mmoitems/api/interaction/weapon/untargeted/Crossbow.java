@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Crossbow extends UntargetedWeapon {
 	public Crossbow(Player player, NBTItem item, Type type) {

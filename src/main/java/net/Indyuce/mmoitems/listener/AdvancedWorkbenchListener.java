@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.gui.AdvancedWorkbench;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AdvancedWorkbenchListener implements Listener {
 	@EventHandler

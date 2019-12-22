@@ -21,13 +21,13 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ParticlesEdition extends EditionInventory {
 	public ParticlesEdition(Player player, Type type, String id) {

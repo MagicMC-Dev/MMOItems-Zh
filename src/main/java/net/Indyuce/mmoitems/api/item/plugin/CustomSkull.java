@@ -14,7 +14,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class CustomSkull extends ConfigItem {
 	private String textureValue;

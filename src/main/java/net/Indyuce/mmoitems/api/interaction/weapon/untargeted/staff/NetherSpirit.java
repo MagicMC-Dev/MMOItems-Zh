@@ -12,10 +12,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class NetherSpirit implements StaffAttackHandler {
 
@@ -42,7 +42,7 @@ public class NetherSpirit implements StaffAttackHandler {
 					loc.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 0);
 					for (Entity target : targets)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							cancel();
 							return;

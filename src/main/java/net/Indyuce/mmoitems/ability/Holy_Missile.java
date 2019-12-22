@@ -13,11 +13,11 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Holy_Missile extends Ability {
 	public Holy_Missile() {
@@ -31,7 +31,7 @@ public class Holy_Missile extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double duration = data.getModifier("duration") * 10;
 		double damage = data.getModifier("damage");
 		
@@ -63,7 +63,7 @@ public class Holy_Missile extends Ability {
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
 							loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 32, 0, 0, 0, .2);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
-							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 							cancel();
 							return;
 						}

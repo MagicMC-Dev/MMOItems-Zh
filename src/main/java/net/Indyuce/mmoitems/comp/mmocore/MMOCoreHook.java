@@ -1,10 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -17,16 +14,13 @@ import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmocore.api.player.stats.StatType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
-import net.Indyuce.mmoitems.comp.rpg.damage.DamageHandler;
-import net.Indyuce.mmoitems.comp.rpg.damage.DamageInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class MMOCoreHook implements RPGHandler, Listener, DamageHandler {
+public class MMOCoreHook implements RPGHandler, Listener {
 
 	private final ItemStat manaRegen = new DoubleStat(VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regeneration");
 	private final ItemStat maxStamina = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." }, "max-stamina");
@@ -40,12 +34,6 @@ public class MMOCoreHook implements RPGHandler, Listener, DamageHandler {
 	public MMOCoreHook() {
 
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-
-		/*
-		 * register custom damage
-		 */
-		MMOCore.plugin.damage.registerHandler(new MMOItemsDamageHandler());
-		MMOItems.plugin.getDamage().registerHandler(this);
 
 		MMOItems.plugin.getStats().register("MANA_REGENERATION", manaRegen);
 		MMOItems.plugin.getStats().register("MAX_STAMINA", maxStamina);
@@ -61,17 +49,6 @@ public class MMOCoreHook implements RPGHandler, Listener, DamageHandler {
 			MMOItems.plugin.getStats().register("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), new Required_Attribute(attribute));
 
 		MMOItems.plugin.getUpgrades().reload();
-	}
-
-	@Override
-	public boolean hasDamage(Entity entity) {
-		return MMOCore.plugin.damage.hasDamage(entity);
-	}
-
-	@Override
-	public DamageInfo getDamage(Entity entity) {
-		net.Indyuce.mmocore.comp.rpg.damage.DamageInfo info = MMOCore.plugin.damage.getDamage(entity);
-		return new DamageInfo(info.getValue(), info.getTypes().stream().map((type) -> DamageType.valueOf(type.name())).collect(Collectors.toList()));
 	}
 
 	@Override

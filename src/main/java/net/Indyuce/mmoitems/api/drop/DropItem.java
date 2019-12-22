@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.mmogroup.mmolib.MMOLib;
 
 public class DropItem {
 	private final Type type;
@@ -94,7 +95,7 @@ public class DropItem {
 			return null;
 
 		item.setAmount(amount);
-		return isUnidentified() ? type.getUnidentifiedTemplate().newBuilder(MMOItems.plugin.getNMS().getNBTItem(item)).build() : item;
+		return isUnidentified() ? type.getUnidentifiedTemplate().newBuilder(MMOLib.plugin.getNMS().getNBTItem(item)).build() : item;
 	}
 
 	public Type getType() {

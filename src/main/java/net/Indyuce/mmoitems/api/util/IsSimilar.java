@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.util;
 
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class IsSimilar {
 	public static boolean check(ItemStack i1, ItemStack i2) {

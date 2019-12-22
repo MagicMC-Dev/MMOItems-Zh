@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ProjectileData {
 	private final NBTItem sourceItem;

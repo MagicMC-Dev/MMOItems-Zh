@@ -10,9 +10,10 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.ItemUpdaterEdition;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class UpdateItemCommand implements CommandExecutor {
 	@Override
@@ -27,7 +28,7 @@ public class UpdateItemCommand implements CommandExecutor {
 
 		Player player = (Player) sender;
 		if (args.length < 1) {
-			NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 
 			// for items generated before 2.0
 			if (!item.hasTag("MMOITEMS_ITEM_TYPE")) {

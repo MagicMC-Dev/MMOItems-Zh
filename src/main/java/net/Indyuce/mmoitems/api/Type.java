@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.plugin.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
 
 public class Type {
 
@@ -224,12 +225,12 @@ public class Type {
 
 		String[] split = str.split("\\:");
 		Material material = Material.valueOf(split[0]);
-		return split.length > 1 ? MMOItems.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
+		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 
 	@Deprecated
 	public static Type get(ItemStack item) {
-		return MMOItems.plugin.getNMS().getNBTItem(item).getType();
+		return MMOLib.plugin.getNMS().getNBTItem(item).getType();
 	}
 
 	/*

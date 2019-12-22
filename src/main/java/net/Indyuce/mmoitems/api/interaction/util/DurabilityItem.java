@@ -16,10 +16,11 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.event.ItemBreakEvent;
 import net.Indyuce.mmoitems.api.event.ItemLoseDurabilityEvent;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DurabilityItem {
 	private final NBTItem nbtItem;
@@ -31,7 +32,7 @@ public class DurabilityItem {
 	private static final Random random = new Random();
 
 	public DurabilityItem(Player player, ItemStack item) {
-		this(player, MMOItems.plugin.getNMS().getNBTItem(item));
+		this(player, MMOLib.plugin.getNMS().getNBTItem(item));
 	}
 
 	/*

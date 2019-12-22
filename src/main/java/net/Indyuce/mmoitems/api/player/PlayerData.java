@@ -26,17 +26,15 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ItemSet;
+import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory.EquippedItem;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
@@ -45,6 +43,9 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.EffectListData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class PlayerData {
 
@@ -169,8 +170,8 @@ public class PlayerData {
 	 * one two handed item and one other item at the same time. this will
 	 */
 	public boolean areHandsFull() {
-		NBTItem main = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
-		NBTItem off = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
+		NBTItem main = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem off = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
 		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
 				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
@@ -352,11 +353,11 @@ public class PlayerData {
 		return itemAbilities.stream().filter(abilityData -> abilityData.getCastingMode() == castMode).collect(Collectors.toSet());
 	}
 
-	public AttackResult castAbilities(LivingEntity target, AttackResult result, CastingMode castMode) {
+	public ItemAttackResult castAbilities(LivingEntity target, ItemAttackResult result, CastingMode castMode) {
 		return castAbilities(getStats().newTemporary(), target, result, castMode);
 	}
 
-	public AttackResult castAbilities(TemporaryStats stats, LivingEntity target, AttackResult result, CastingMode castMode) {
+	public ItemAttackResult castAbilities(TemporaryStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
 		if (target == null) {
 			if (!MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES))
 				return result.setSuccessful(false);
@@ -379,14 +380,14 @@ public class PlayerData {
 	 * cast
 	 */
 	public void cast(Ability ability) {
-		cast(getStats().newTemporary(), null, new AttackResult(true, DamageType.SKILL), new AbilityData(ability), true);
+		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), new AbilityData(ability), true);
 	}
 
 	public void cast(AbilityData data) {
-		cast(getStats().newTemporary(), null, new AttackResult(true, DamageType.SKILL), data, true);
+		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), data, true);
 	}
 
-	public void cast(TemporaryStats stats, LivingEntity target, AttackResult result, AbilityData ability, boolean message) {
+	public void cast(TemporaryStats stats, LivingEntity target, ItemAttackResult result, AbilityData ability, boolean message) {
 		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled())
@@ -394,7 +395,7 @@ public class PlayerData {
 
 		/*
 		 * check if the player can cast the ability, if he can't just return a
-		 * new instance of of AttackResult with false boolean
+		 * new instance of of ItemAttackResult with false boolean
 		 */
 		if (!rpgPlayer.canCast(ability, message))
 			return;

@@ -19,13 +19,13 @@ import com.mojang.authlib.properties.Property;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Present_Throw extends Ability {
 	private ItemStack present = VersionMaterial.PLAYER_HEAD.toItem();
@@ -57,7 +57,7 @@ public class Present_Throw extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double damage = data.getModifier("damage");
 		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
 
@@ -89,7 +89,7 @@ public class Present_Throw extends Ability {
 					item.getEntity().getWorld().playSound(item.getEntity().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(item.getEntity().getLocation()))
 						if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity))
-							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 					item.close();
 					cancel();
 				}

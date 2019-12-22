@@ -18,11 +18,12 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Shulker_Missile extends Ability implements Listener {
 	public Shulker_Missile() {
@@ -37,7 +38,7 @@ public class Shulker_Missile extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double duration = data.getModifier("duration");
 
 		new BukkitRunnable() {
@@ -53,7 +54,7 @@ public class Shulker_Missile extends Ability implements Listener {
 				stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0), EntityType.SHULKER_BULLET);
 				shulkerBullet.setShooter(stats.getPlayer());
-				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE), data.getModifier("effect-duration"));
+				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE), data.getModifier("effect-duration"));
 				new BukkitRunnable() {
 					double ti = 0;
 
@@ -83,7 +84,7 @@ public class Shulker_Missile extends Ability implements Listener {
 			}
 
 			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
-			AttackResult result = (AttackResult) data[0];
+			ItemAttackResult result = (ItemAttackResult) data[0];
 			double duration = (double) data[1] * 20;
 
 			// void spirit
@@ -108,7 +109,7 @@ public class Shulker_Missile extends Ability implements Listener {
 						y += .04;
 						for (int j = 0; j < 2; j++) {
 							double xz = y * Math.PI * 1.3 + (j * Math.PI);
-							MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)), Color.MAROON);
+							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)), Color.MAROON);
 						}
 					}
 					if (y >= 2)

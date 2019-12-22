@@ -7,14 +7,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
-import net.Indyuce.mmoitems.api.util.MMORayTraceResult;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.MMORayTraceResult;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Musket extends UntargetedWeapon {
 	public Musket(Player player, NBTItem item, Type type) {
@@ -44,9 +46,9 @@ public class Musket extends UntargetedWeapon {
 		loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * 2 * recoil));
 		Vector vec = loc.getDirection();
 
-		MMORayTraceResult trace = MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range);
+		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range, entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
 		if (trace.hasHit())
-			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
+			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
 		trace.draw(loc, vec, 2, Color.BLACK);
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, 2);
 	}

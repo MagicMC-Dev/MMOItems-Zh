@@ -11,9 +11,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.MMOLib;
 
 public class Hoearthquake extends Ability {
 	public Hoearthquake() {
@@ -23,12 +24,12 @@ public class Hoearthquake extends Ability {
 		addModifier("mana", 0);
 		addModifier("stamina", 0);
 
-		if (!MMOItems.plugin.getVersion().isBelowOrEqual(1, 12))
+		if (!MMOLib.plugin.getVersion().isBelowOrEqual(1, 12))
 			disable();
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		if (!stats.getPlayer().isOnGround()) {
 			result.setSuccessful(false);
 			return;

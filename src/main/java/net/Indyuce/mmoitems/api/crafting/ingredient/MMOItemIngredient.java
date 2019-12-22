@@ -8,11 +8,11 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.Display_Name;
 import net.Indyuce.mmoitems.stat.MaterialStat.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemIngredient extends Ingredient {
 	private Type type;

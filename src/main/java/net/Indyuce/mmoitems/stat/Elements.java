@@ -19,7 +19,6 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.Element.StatType;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
@@ -27,7 +26,8 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Elements extends ItemStat {
 	public Elements() {

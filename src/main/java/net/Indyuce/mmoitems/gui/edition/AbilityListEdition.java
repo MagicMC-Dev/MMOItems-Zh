@@ -19,11 +19,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.Indyuce.mmoitems.api.util.AltChar;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AbilityListEdition extends EditionInventory {
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
@@ -70,7 +71,7 @@ public class AbilityListEdition extends EditionInventory {
 				abilityItemMeta.setLore(abilityItemLore);
 				abilityItem.setItemMeta(abilityItemMeta);
 
-				abilityItem = MMOItems.plugin.getNMS().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
+				abilityItem = MMOLib.plugin.getNMS().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
 
 				inv.setItem(slots[n++], abilityItem);
 			}
@@ -124,7 +125,7 @@ public class AbilityListEdition extends EditionInventory {
 				}
 		}
 
-		String tag = MMOItems.plugin.getNMS().getNBTItem(item).getString("configKey");
+		String tag = MMOLib.plugin.getNMS().getNBTItem(item).getString("configKey");
 		if (tag.equals(""))
 			return;
 

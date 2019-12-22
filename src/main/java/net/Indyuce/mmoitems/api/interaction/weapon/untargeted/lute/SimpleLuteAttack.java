@@ -12,10 +12,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class SimpleLuteAttack implements LuteAttackHandler {
 
@@ -44,7 +44,7 @@ public class SimpleLuteAttack implements LuteAttackHandler {
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 							cancel();
 							return;
 						}

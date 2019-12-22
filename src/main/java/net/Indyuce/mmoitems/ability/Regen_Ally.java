@@ -1,3 +1,4 @@
+
 package net.Indyuce.mmoitems.ability;
 
 import org.bukkit.Particle;
@@ -8,9 +9,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.MMOLib;
 
 public class Regen_Ally extends Ability {
 	public Regen_Ally() {
@@ -24,8 +26,8 @@ public class Regen_Ally extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, AttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : initialTarget;
+	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
+		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
 		if (target == null || !(target instanceof Player)) {
 			result.setSuccessful(false);
 			return;

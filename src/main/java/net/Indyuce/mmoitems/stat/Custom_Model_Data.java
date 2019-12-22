@@ -4,17 +4,17 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Custom_Model_Data extends DoubleStat {
 	public Custom_Model_Data() {
 		super(new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data.", "(Only works on 1.14+)" }, "custom-model-data", new String[] { "all" });
 
-		//if (MMOItems.plugin.getVersion().isBelowOrEqual(1, 13)) disable();
+		//if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) disable();
 	}
 
 	@Override

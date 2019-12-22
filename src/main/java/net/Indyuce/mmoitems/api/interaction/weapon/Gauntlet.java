@@ -9,8 +9,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 
 public class Gauntlet extends Weapon {
 	public Gauntlet(Player player, NBTItem item, Type type) {

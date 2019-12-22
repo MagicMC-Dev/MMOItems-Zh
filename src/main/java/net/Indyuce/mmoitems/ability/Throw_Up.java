@@ -14,12 +14,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Throw_Up extends Ability implements Listener {
 	public Throw_Up() {
@@ -33,7 +34,7 @@ public class Throw_Up extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double duration = data.getModifier("duration") * 10;
 		double dps = data.getModifier("damage") / 2;
 
@@ -52,11 +53,11 @@ public class Throw_Up extends Ability implements Listener {
 				if (j % 5 == 0)
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (entity.getLocation().distanceSquared(loc) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
-							new AttackResult(dps, DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new ItemAttackResult(dps, DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 
 				loc.getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
 
-				NoInteractItemEntity item = new NoInteractItemEntity(stats.getPlayer().getLocation().add(0, 1.2, 0), MMOItems.plugin.getNMS().getNBTItem(new ItemStack(Material.ROTTEN_FLESH)).addTag(new ItemTag("noStack", random.nextInt(1000))).toItem());
+				NoInteractItemEntity item = new NoInteractItemEntity(stats.getPlayer().getLocation().add(0, 1.2, 0), MMOLib.plugin.getNMS().getNBTItem(new ItemStack(Material.ROTTEN_FLESH)).addTag(new ItemTag("noStack", random.nextInt(1000))).toItem());
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> item.close(), 40);
 				item.getEntity().setVelocity(loc.getDirection().multiply(.8));
 				stats.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, stats.getPlayer().getLocation().add(0, 1.2, 0), 0, loc.getDirection().getX(), loc.getDirection().getY(), loc.getDirection().getZ(), 1);

@@ -31,7 +31,6 @@ import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.drop.DropItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -46,7 +45,9 @@ import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemsCommand implements CommandExecutor {
 	private static final Random random = new Random();
@@ -91,7 +92,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 			if (args[1].equalsIgnoreCase("blocks")) {
-				if (MMOItems.plugin.getVersion().isStrictlyHigher(1, 12))
+				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
 					new BlockBrowser((Player) sender).open();
 				else sender.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return true;
@@ -260,7 +261,7 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			Player player = (Player) sender;
 			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-			for (String s : MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getTags())
+			for (String s : MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getTags())
 				player.sendMessage("- " + s);
 		}
 		// ==================================================================================================================================
@@ -274,7 +275,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (args.length < 2)
 				return true;
 
-			NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
 			player.sendMessage(ChatColor.AQUA + "Boolean = " + ChatColor.RESET + item.getBoolean("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
 			player.sendMessage(ChatColor.AQUA + "Double = " + ChatColor.RESET + item.getDouble("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
@@ -291,7 +292,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (args.length < 3)
 				return true;
 			try {
-				player.getInventory().setItemInMainHand(MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand())
+				player.getInventory().setItemInMainHand(MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand())
 						.addTag(new ItemTag(args[1].toUpperCase().replace("-", "_"), args[2].replace("%%", " "))).toItem());
 				player.sendMessage("Successfully set tag.");
 
@@ -307,7 +308,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			Player player = (Player) sender;
-			NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 			if (item.getType() == null) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + "Couldn't unidentify the item you are holding.");
 				return true;
@@ -329,7 +330,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			Player player = (Player) sender;
-			NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 			String tag = item.getString("MMOITEMS_UNIDENTIFIED_ITEM");
 			if (tag.equals("")) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding is already identified.");
@@ -520,7 +521,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				String nameFormat = config.getConfigurationSection(s).contains("name")
 						? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")) + ChatColor.WHITE + ")"
 						: "";
-				MMOItems.plugin.getNMS().sendJson((Player) sender,
+				MMOLib.plugin.getNMS().sendJson((Player) sender,
 						"{\"text\":\"* " + ChatColor.GREEN + s + nameFormat + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit " + type.getId() + " " + s
 								+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit "
 								+ (nameFormat.equals("") ? s : ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name"))) + ChatColor.WHITE + ".\",\"color\":\"white\"}}}");
@@ -538,14 +539,14 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (sender instanceof Player) {
 					sender.sendMessage("");
 					sender.sendMessage("Spigot Javadoc Links:");
-					MMOItems.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
+					MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
 							+ "Materials/Blocks\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
 							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
 							+ "Potion Effects\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
 							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
 							+ "Sounds\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
 							+ ChatColor.GREEN + "Click to open webpage.\"}]}}}]");
-					MMOItems.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
+					MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
 							+ "Entities/Mobs\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
 							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
 							+ "Enchantments\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
@@ -631,8 +632,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				}
 
 				if (item.hasItemMeta()) {
-					if (MMOItems.plugin.getVersion().getWrapper().isDamaged(item, item.getItemMeta()))
-						config.getConfig().set(name + ".durability", MMOItems.plugin.getVersion().getWrapper().getDurability(item, item.getItemMeta()));
+					if (MMOLib.plugin.getVersion().getWrapper().isDamaged(item, item.getItemMeta()))
+						config.getConfig().set(name + ".durability", MMOLib.plugin.getVersion().getWrapper().getDurability(item, item.getItemMeta()));
 					if (item.getItemMeta().hasDisplayName())
 						config.getConfig().set(name + ".name", item.getItemMeta().getDisplayName().replace("§", "&"));
 					if (item.getItemMeta().hasLore()) {
@@ -647,10 +648,10 @@ public class MMOItemsCommand implements CommandExecutor {
 					if (!skullTextureUrl.equals(""))
 						config.getConfig().set(name + ".skull-texture", skullTextureUrl);
 				}
-				if (MMOItems.plugin.getNMS().getNBTItem(item).getBoolean("Unbreakable"))
+				if (MMOLib.plugin.getNMS().getNBTItem(item).getBoolean("Unbreakable"))
 					config.getConfig().set(name + ".unbreakable", true);
 				for (Enchantment enchant : item.getEnchantments().keySet())
-					config.getConfig().set(name + ".enchants." + MMOItems.plugin.getVersion().getWrapper().getName(enchant), item.getEnchantmentLevel(enchant));
+					config.getConfig().set(name + ".enchants." + MMOLib.plugin.getVersion().getWrapper().getName(enchant), item.getEnchantmentLevel(enchant));
 			}
 			config.getConfig().set(name + ".material", args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());
 
@@ -824,7 +825,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			long old = System.currentTimeMillis();
 			new ItemEdition((Player) sender, type, args[2], item).open();
 			long ms = System.currentTimeMillis() - old;
-			MMOItems.plugin.getNMS().sendActionBar((Player) sender,
+			MMOLib.plugin.getNMS().sendActionBar((Player) sender,
 					ChatColor.YELLOW + "Took " + ms + "ms (" + new DecimalFormat("#.##").format(ms / 50.) + "tick" + (ms > 99 ? "s" : "") + ") to open the menu.");
 		}
 		// ==================================================================================================================================
@@ -1009,7 +1010,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 
 			if (unidentifiedChance > 0 && random.nextDouble() < unidentifiedChance / 100)
-				item = type.getUnidentifiedTemplate().newBuilder(MMOItems.plugin.getNMS().getNBTItem(item)).build();
+				item = type.getUnidentifiedTemplate().newBuilder(MMOLib.plugin.getNMS().getNBTItem(item)).build();
 
 			// message
 			if (sender != target)

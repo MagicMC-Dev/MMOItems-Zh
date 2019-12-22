@@ -16,11 +16,12 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Ice_Crystal extends Ability {
 	public Ice_Crystal() {
@@ -35,7 +36,7 @@ public class Ice_Crystal extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
 		new BukkitRunnable() {
 			Vector vec = getTargetDirection(stats.getPlayer(), target).multiply(.45);
@@ -63,7 +64,7 @@ public class Ice_Crystal extends Ability {
 						for (double a = 0; a < Math.PI * 2; a += Math.PI / 2) {
 							Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(a + (double) ti / 10), r * Math.sin(a + (double) ti / 10), 0), loc);
 							loc.add(vec);
-							MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc, .7f, Color.WHITE);
+							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc, .7f, Color.WHITE);
 							loc.add(vec.multiply(-1));
 						}
 
@@ -72,7 +73,7 @@ public class Ice_Crystal extends Ability {
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 48, 0, 0, 0, .2);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
-							new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 							((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (data.getModifier("duration") * 20), (int) data.getModifier("amplifier")));
 							cancel();
 							return;

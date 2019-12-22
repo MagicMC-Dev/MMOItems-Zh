@@ -8,14 +8,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Corrupt extends Ability {
 	public Corrupt() {
@@ -30,7 +30,7 @@ public class Corrupt extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		Location loc = getTargetLocation(stats.getPlayer(), target);
 		if (loc == null) {
 			result.setSuccessful(false);
@@ -48,12 +48,12 @@ public class Corrupt extends Ability {
 			Location loc1 = loc.clone().add(Math.cos(j) * radius, 1, Math.sin(j) * radius);
 			double y_max = .5 + random.nextDouble();
 			for (double y = 0; y < y_max; y += .1)
-				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc1.clone().add(0, y, 0), Color.PURPLE);
+				MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc1.clone().add(0, y, 0), Color.PURPLE);
 		}
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) <= radius * radius) {
-				new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 				((LivingEntity) entity).removePotionEffect(PotionEffectType.WITHER);
 				((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) (duration * 20), (int) amplifier));
 			}

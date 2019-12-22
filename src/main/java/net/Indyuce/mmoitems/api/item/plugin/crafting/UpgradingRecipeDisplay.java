@@ -12,13 +12,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class UpgradingRecipeDisplay extends ConfigItem {
 	public UpgradingRecipeDisplay() {
@@ -97,7 +97,7 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOItems.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
+			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
 		}
 	}
 }

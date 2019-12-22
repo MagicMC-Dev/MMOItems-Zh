@@ -19,11 +19,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class UnidentifiedItem extends ConfigItem {
 	public UnidentifiedItem(Type type) {
@@ -100,7 +101,7 @@ public class UnidentifiedItem extends ConfigItem {
 			/*
 			 * apply changes to item
 			 */
-			ItemStack unidentified = MMOItems.plugin.getVersion().getWrapper().copyTexture(item).addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
+			ItemStack unidentified = MMOLib.plugin.getVersion().getWrapper().copyTexture(item).addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);

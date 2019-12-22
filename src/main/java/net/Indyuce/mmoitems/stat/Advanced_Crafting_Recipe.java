@@ -12,14 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.AdvancedRecipeEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Advanced_Crafting_Recipe extends StringStat {
 	public Advanced_Crafting_Recipe() {

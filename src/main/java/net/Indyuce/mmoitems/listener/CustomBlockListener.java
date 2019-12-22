@@ -27,7 +27,8 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.CustomBlock;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomBlockListener implements Listener {
 	Random rnd = new Random();
@@ -63,7 +64,7 @@ public class CustomBlockListener implements Listener {
 		if (!event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND || event.getClickedBlock().getType().isInteractable())
 			return;
 		if (event.getItem().getType() == Material.CLAY_BALL) {
-			NBTItem nbtItem = MMOItems.plugin.getNMS().getNBTItem(event.getItem());
+			NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(event.getItem());
 			if (nbtItem.getInteger("MMOITEMS_BLOCK_ID") > 160 || nbtItem.getInteger("MMOITEMS_BLOCK_ID") < 1)
 				return;
 
@@ -92,8 +93,8 @@ public class CustomBlockListener implements Listener {
 			modify.setType(block.getType(), false);
 			modify.setBlockData(block.getBlockData(), false);
 
-			MMOItems.plugin.getNMS().playArmAnimation(event.getPlayer());
-			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOItems.plugin.getNMS().getBlockPlaceSound(modify), 0.8f, 1.0f);
+			MMOLib.plugin.getNMS().playArmAnimation(event.getPlayer());
+			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOLib.plugin.getNMS().getBlockPlaceSound(modify), 0.8f, 1.0f);
 
 			BlockPlaceEvent bpe = new BlockPlaceEvent(modify, oldState.getState(), event.getClickedBlock(), event.getItem(), event.getPlayer(), true, EquipmentSlot.HAND);
 			Bukkit.getServer().getPluginManager().callEvent(bpe);

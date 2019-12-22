@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
@@ -23,6 +22,8 @@ import net.Indyuce.mmoitems.stat.Soulbound.SoulboundData;
 import net.Indyuce.mmoitems.stat.Upgrade_Stat.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.EffectListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item, Type type) {
@@ -203,8 +204,8 @@ public class Consumable extends UseItem {
 			}
 
 			// vanilla durability
-			if (!target.getBoolean("Unbreakable") && MMOItems.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
-				MMOItems.plugin.getVersion().getWrapper().repair(target.getItem(), repairPower);
+			if (!target.getBoolean("Unbreakable") && MMOLib.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
+				MMOLib.plugin.getVersion().getWrapper().repair(target.getItem(), repairPower);
 				Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower).send(player);
 				return true;
 			}

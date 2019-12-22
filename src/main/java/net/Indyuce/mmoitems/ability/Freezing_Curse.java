@@ -12,11 +12,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Freezing_Curse extends Ability {
 	public Freezing_Curse() {
@@ -32,7 +32,7 @@ public class Freezing_Curse extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		Location loc = getTargetLocation(stats.getPlayer(), target);
 		if (loc == null) {
 			result.setSuccessful(false);
@@ -65,7 +65,7 @@ public class Freezing_Curse extends Ability {
 					double damage = data.getModifier("damage");
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (entity.getLocation().distanceSquared(loc) < radius * radius && MMOUtils.canDamage(stats.getPlayer(), entity)) {
-							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 							((LivingEntity) entity).removePotionEffect(PotionEffectType.SLOW);
 							((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (duration * 20), (int) amplifier));
 						}

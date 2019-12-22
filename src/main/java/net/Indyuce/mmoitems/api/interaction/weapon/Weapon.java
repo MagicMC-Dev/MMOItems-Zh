@@ -8,18 +8,18 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Weapon extends UseItem {
 	public Weapon(Player player, NBTItem item, Type type) {
@@ -70,7 +70,7 @@ public class Weapon extends UseItem {
 		return true;
 	}
 
-	public AttackResult targetedAttack(TemporaryStats stats, LivingEntity target, EquipmentSlot slot, AttackResult result) {
+	public ItemAttackResult targetedAttack(TemporaryStats stats, LivingEntity target, EquipmentSlot slot, ItemAttackResult result) {
 
 		// custom durability
 		DurabilityItem durItem = new DurabilityItem(getPlayer(), getNBTItem());

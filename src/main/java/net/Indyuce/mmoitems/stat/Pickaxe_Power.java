@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Pickaxe_Power extends DoubleStat {
 	public Pickaxe_Power() {

@@ -17,12 +17,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ArrowParticles;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ProjectileData;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class EntityManager implements Listener {
 
@@ -109,7 +109,7 @@ public class EntityManager implements Listener {
 		LivingEntity target = (LivingEntity) event.getEntity();
 		TemporaryStats stats = data.getPlayerStats();
 
-		AttackResult result = new AttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
+		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
 
 		/*
 		 * only modify the damage when the bow used is a custom weapon.

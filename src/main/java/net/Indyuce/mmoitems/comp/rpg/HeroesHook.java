@@ -20,17 +20,18 @@ import com.herocraftonline.heroes.characters.skill.SkillType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
-import net.Indyuce.mmoitems.comp.rpg.damage.DamageHandler;
-import net.Indyuce.mmoitems.comp.rpg.damage.DamageInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.AttackResult;
+import net.mmogroup.mmolib.api.DamageHandler;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<SkillType, DamageType> damages = new HashMap<>();
 
 	public HeroesHook() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-		MMOItems.plugin.getDamage().registerHandler(this);
+		MMOLib.plugin.getDamage().registerHandler(this);
 
 		damages.put(SkillType.ABILITY_PROPERTY_PHYSICAL, DamageType.PHYSICAL);
 		damages.put(SkillType.ABILITY_PROPERTY_MAGICAL, DamageType.MAGICAL);
@@ -43,9 +44,9 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	}
 
 	@Override
-	public DamageInfo getDamage(Entity entity) {
+	public AttackResult getDamage(Entity entity) {
 		SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-		return new DamageInfo(0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type)).collect(Collectors.toList()));
+		return new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type)).collect(Collectors.toList()));
 	}
 
 	@Override

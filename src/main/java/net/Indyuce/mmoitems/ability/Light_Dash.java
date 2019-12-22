@@ -12,11 +12,11 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Light_Dash extends Ability {
 	public Light_Dash() {
@@ -30,7 +30,7 @@ public class Light_Dash extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double damage = data.getModifier("damage");
 		double length = data.getModifier("length");
 
@@ -49,7 +49,7 @@ public class Light_Dash extends Ability {
 				for (Entity entity : stats.getPlayer().getNearbyEntities(1, 1, 1))
 					if (!hit.contains(entity.getEntityId()) && MMOUtils.canDamage(stats.getPlayer(), entity)) {
 						hit.add(entity.getEntityId());
-						new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 					}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 2);

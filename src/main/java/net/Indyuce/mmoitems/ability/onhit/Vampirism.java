@@ -10,9 +10,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.MMOLib;
 
 public class Vampirism extends Ability {
 	public Vampirism() {
@@ -25,8 +26,8 @@ public class Vampirism extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, AttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : initialTarget;
+	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
+		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
 		if (target == null) {
 			result.setSuccessful(false);
 			return;
@@ -43,7 +44,7 @@ public class Vampirism extends Ability {
 					dis += ti <= 10 ? .15 : -.15;
 
 					for (double j = 0; j < Math.PI * 2; j += Math.PI / 4)
-						MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j + (ti / 20)) * dis, 0, Math.sin(j + (ti / 20)) * dis), Color.RED);
+						MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(j + (ti / 20)) * dis, 0, Math.sin(j + (ti / 20)) * dis), Color.RED);
 				}
 				if (ti >= 17)
 					cancel();

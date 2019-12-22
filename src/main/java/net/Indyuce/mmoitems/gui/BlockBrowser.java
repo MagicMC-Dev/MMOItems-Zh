@@ -21,10 +21,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.CustomBlock;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.BlockEdition;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class BlockBrowser extends PluginInventory {
 	private Map<CustomBlock, ItemStack> cached = new HashMap<>();
@@ -141,7 +142,7 @@ public class BlockBrowser extends PluginInventory {
 			}
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
-				MMOItems.plugin.getNMS().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\",\"italic\":true,\"color\":\"white\"}]}}]");
+				MMOLib.plugin.getNMS().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\",\"italic\":true,\"color\":\"white\"}]}}]");
 				player.closeInventory();
 				return;
 			}

@@ -6,8 +6,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class VanillaIngredient extends Ingredient {
 	private Material material;

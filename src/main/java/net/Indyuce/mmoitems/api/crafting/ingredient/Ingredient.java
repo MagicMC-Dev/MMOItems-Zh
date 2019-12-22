@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public abstract class Ingredient {
 	private final String id;

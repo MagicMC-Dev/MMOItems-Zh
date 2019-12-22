@@ -8,11 +8,12 @@ import org.bukkit.inventory.ItemStack;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	private DecimalFormat oneDigit = new DecimalFormat("0.#");
@@ -43,13 +44,13 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 			PlayerData.get(player).getRemainingAbilityCooldown(identifier.substring(11));
 
 		if (identifier.equals("durability"))
-			return "" + (int) MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getDouble("MMOITEMS_DURABILITY");
+			return "" + (int) MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getDouble("MMOITEMS_DURABILITY");
 
 		if (identifier.equals("durability_max"))
-			return "" + (int) MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getDouble("MMOITEMS_MAX_DURABILITY");
+			return "" + (int) MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getDouble("MMOITEMS_MAX_DURABILITY");
 
 		if (identifier.equals("durability_ratio")) {
-			NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 			double durability = item.getDouble("MMOITEMS_DURABILITY");
 			double maxDurability = item.getDouble("MMOITEMS_MAX_DURABILITY");
 			return oneDigit.format(durability / maxDurability * 100);
@@ -67,7 +68,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	}
 
 	private String getCurrentDurabilityBar(ItemStack item, String barChar, int length) {
-		NBTItem nbtItem = MMOItems.plugin.getNMS().getNBTItem(item);
+		NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(item);
 		double durability = nbtItem.getDouble("MMOITEMS_DURABILITY");
 		double maxDurability = nbtItem.getDouble("MMOITEMS_MAX_DURABILITY");
 		long r = Math.round(durability / maxDurability * length);

@@ -24,7 +24,7 @@ import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Item_Type_Restriction extends StringStat {
 	public Item_Type_Restriction() {

@@ -14,13 +14,13 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.SunfireSpiri
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.ThunderSpirit;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.VoidSpirit;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.XRaySpirit;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Staff_Spirit extends StringStat {
 	public Staff_Spirit() {

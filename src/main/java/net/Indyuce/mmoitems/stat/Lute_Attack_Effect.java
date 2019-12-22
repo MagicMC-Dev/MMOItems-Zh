@@ -16,13 +16,13 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.LuteAttackHan
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SimpleLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SlashLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.WaveLuteAttack;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Lute_Attack_Effect extends StringStat {
 	public Lute_Attack_Effect() {

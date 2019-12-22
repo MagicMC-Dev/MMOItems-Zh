@@ -17,7 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DisableInteractions implements Listener {
 

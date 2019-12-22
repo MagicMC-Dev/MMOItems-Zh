@@ -11,10 +11,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Circular_Slash extends Ability {
 	public Circular_Slash() {
@@ -29,7 +29,7 @@ public class Circular_Slash extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double damage = data.getModifier("damage");
 		double radius = data.getModifier("radius");
 		double knockback = data.getModifier("knockback");
@@ -38,7 +38,7 @@ public class Circular_Slash extends Ability {
 		stats.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 254));
 		for (Entity entity : stats.getPlayer().getNearbyEntities(radius, radius, radius)) {
 			if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
-				new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 				Vector v1 = entity.getLocation().toVector();
 				Vector v2 = stats.getPlayer().getLocation().toVector();
 				double y = .5;

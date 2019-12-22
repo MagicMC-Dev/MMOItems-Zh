@@ -14,10 +14,10 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Corrupted_Fangs extends Ability implements Listener {
 	public Corrupted_Fangs() {
@@ -30,7 +30,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double damage1 = data.getModifier("damage");
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
@@ -63,7 +63,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
 			TemporaryStats stats = (TemporaryStats) data[0];
 			if (MMOUtils.canDamage(stats.getPlayer(), event.getEntity()))
-				new AttackResult((double) data[1], DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) event.getEntity());
+				new ItemAttackResult((double) data[1], DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) event.getEntity());
 		}
 	}
 }

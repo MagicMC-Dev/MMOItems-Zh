@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.api.item.plugin.crafting.CraftingRecipeDisplay;
 import net.Indyuce.mmoitems.api.item.plugin.crafting.QueueItemDisplay;
 import net.Indyuce.mmoitems.api.item.plugin.crafting.UpgradingRecipeDisplay;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ConfigItem {
 	private final String id;
@@ -88,7 +88,7 @@ public class ConfigItem {
 		}
 
 		item.setItemMeta(meta);
-		// item = MMOItems.plugin.getNMS().getNBTItem(item).addTag(new
+		// item = MMOLib.plugin.getNMS().getNBTItem(item).addTag(new
 		// ItemTag("itemId", id)).toItem();
 	}
 

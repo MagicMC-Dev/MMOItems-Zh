@@ -5,10 +5,10 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public interface PlayerInventory {
 	public List<EquippedItem> getInventory(Player player);
@@ -18,7 +18,7 @@ public interface PlayerInventory {
 		private final EquipmentSlot slot;
 
 		public EquippedItem(ItemStack item, EquipmentSlot slot) {
-			this(MMOItems.plugin.getNMS().getNBTItem(item), slot);
+			this(MMOLib.plugin.getNMS().getNBTItem(item), slot);
 		}
 
 		public EquippedItem(NBTItem item, EquipmentSlot slot) {

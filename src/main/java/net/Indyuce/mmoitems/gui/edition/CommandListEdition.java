@@ -18,11 +18,12 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class CommandListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25, 28, 29, 33, 34, 37, 38, 42, 43 };
@@ -92,7 +93,7 @@ public class CommandListEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MMOItems.plugin.getNMS().getNBTItem(item).getString("configKey");
+		String tag = MMOLib.plugin.getNMS().getNBTItem(item).getString("configKey");
 		if (tag.equals(""))
 			return;
 

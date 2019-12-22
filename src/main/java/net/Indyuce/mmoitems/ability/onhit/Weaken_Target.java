@@ -20,11 +20,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Weaken_Target extends Ability implements Listener {
 	public Map<UUID, WeakenedInfo> marked = new HashMap<>();
@@ -40,8 +42,8 @@ public class Weaken_Target extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, AttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : initialTarget;
+	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
+		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
 		if (target == null || marked.containsKey(target.getUniqueId())) {
 			result.setSuccessful(false);
 			return;
@@ -102,7 +104,7 @@ public class Weaken_Target extends Ability implements Listener {
 				for (int j = 0; j < 3; j++) {
 					y += .07;
 					for (int k = 0; k < 3; k++)
-						MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5, y, Math.sin(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5), Color.BLACK);
+						MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5, y, Math.sin(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5), Color.BLACK);
 				}
 				if (y > 3)
 					cancel();

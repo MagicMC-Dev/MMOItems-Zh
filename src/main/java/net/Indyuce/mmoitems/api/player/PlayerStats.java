@@ -49,7 +49,7 @@ public class PlayerStats {
 			double t = 0;
 
 			for (MMOItem item : playerData.getMMOItems())
-				t += item.getNBTItem().getStat(stat);
+				t += item.getNBTItem().getStat(stat.getId());
 
 			if (t != 0)
 				getInstance(stat).set("item", t);

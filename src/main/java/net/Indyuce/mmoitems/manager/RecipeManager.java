@@ -20,7 +20,8 @@ import org.bukkit.inventory.ShapelessRecipe;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.AdvancedRecipe;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class RecipeManager {
 
@@ -148,7 +149,7 @@ public class RecipeManager {
 							float exp = (float) config.getDouble(path + ".furnace-craft.exp");
 							int cook = config.getInt(path + ".furnace-craft.cook");
 							cook = cook == 0 ? 80 : cook;
-							Bukkit.getServer().addRecipe(MMOItems.plugin.getVersion().getWrapper().getFurnaceRecipe(path, item, material, exp, cook));
+							Bukkit.getServer().addRecipe(MMOLib.plugin.getVersion().getWrapper().getFurnaceRecipe(path, item, material, exp, cook));
 						}
 					}
 				}
@@ -294,7 +295,7 @@ public class RecipeManager {
 				continue;
 			}
 
-			NBTItem item = MMOItems.plugin.getNMS().getNBTItem(inv.getItem(j));
+			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(inv.getItem(j));
 
 			// type, id
 			String id1 = item.getString("MMOITEMS_ITEM_ID");

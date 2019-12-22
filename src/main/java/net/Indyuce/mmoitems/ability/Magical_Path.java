@@ -15,10 +15,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Magical_Path extends Ability {
 	public Magical_Path() {
@@ -32,7 +32,7 @@ public class Magical_Path extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		stats.getPlayer().setAllowFlight(true);
 		stats.getPlayer().setFlying(true);
 		stats.getPlayer().setVelocity(stats.getPlayer().getVelocity().setY(.5));

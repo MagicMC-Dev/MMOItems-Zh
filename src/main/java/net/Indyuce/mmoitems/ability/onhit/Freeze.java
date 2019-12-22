@@ -9,10 +9,10 @@ import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Freeze extends Ability {
 	public Freeze() {
@@ -27,7 +27,7 @@ public class Freeze extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		Location loc = getTargetLocation(stats.getPlayer(), target);
 		if (loc == null) {
 			result.setSuccessful(false);

@@ -21,7 +21,8 @@ import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.plugin.NamedItemStack;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class UpgradingEdition extends EditionInventory {
 	private static final ItemStack notAvailable = new NamedItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toMaterial(), "&cNot Available");
@@ -135,7 +136,7 @@ public class UpgradingEdition extends EditionInventory {
 		inv.setItem(24, successItem);
 
 		if (success > 0 && !type.corresponds(Type.CONSUMABLE)) {
-			ItemStack destroyOnFail = MMOItems.plugin.getVersion().getWrapper().generate(Material.FISHING_ROD, 30);
+			ItemStack destroyOnFail = MMOLib.plugin.getVersion().getWrapper().generate(Material.FISHING_ROD, 30);
 			ItemMeta destroyOnFailMeta = destroyOnFail.getItemMeta();
 			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "Destroy on fail?");
 			List<String> destroyOnFailLore = new ArrayList<>();

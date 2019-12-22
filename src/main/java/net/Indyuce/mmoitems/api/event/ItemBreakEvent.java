@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemBreakEvent extends PlayerEvent {
 	private static final HandlerList handlers = new HandlerList();

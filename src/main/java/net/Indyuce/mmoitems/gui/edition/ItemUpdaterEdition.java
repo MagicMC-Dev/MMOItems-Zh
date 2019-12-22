@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.manager.UpdaterManager.UpdaterData;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemUpdaterEdition extends EditionInventory {
 	public ItemUpdaterEdition(Player player, Type type, String id) {

@@ -18,10 +18,11 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43 };
@@ -65,7 +66,7 @@ public class ItemEdition extends EditionInventory {
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);
-			inv.setItem(slots[n++], MMOItems.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
+			inv.setItem(slots[n++], MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
 		}
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();

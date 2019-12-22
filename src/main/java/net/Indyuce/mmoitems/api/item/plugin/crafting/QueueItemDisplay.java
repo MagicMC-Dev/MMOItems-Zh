@@ -12,11 +12,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class QueueItemDisplay extends ConfigItem {
 	private static final long[] ms = { 1000, 60 * 1000, 60 * 60 * 1000, 24 * 60 * 60 * 1000 };
@@ -87,7 +87,7 @@ public class QueueItemDisplay extends ConfigItem {
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOItems.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString())).toItem();
+			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString())).toItem();
 		}
 	}
 

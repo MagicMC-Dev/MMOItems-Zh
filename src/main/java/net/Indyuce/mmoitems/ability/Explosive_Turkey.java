@@ -16,10 +16,10 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Explosive_Turkey extends Ability implements Listener {
 	public Explosive_Turkey() {
@@ -37,7 +37,7 @@ public class Explosive_Turkey extends Ability implements Listener {
 	Chicken chicken = null;
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double duration = data.getModifier("duration") * 10;
 		double damage = data.getModifier("damage");
 		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
@@ -88,7 +88,7 @@ public class Explosive_Turkey extends Ability implements Listener {
 					chicken.getWorld().playSound(chicken.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(chicken.getLocation()))
 						if (!entity.isDead() && entity.getLocation().distanceSquared(chicken.getLocation()) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity)) {
-							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 							entity.setVelocity(entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback).setY(.4 * knockback));
 						}
 					cancel();

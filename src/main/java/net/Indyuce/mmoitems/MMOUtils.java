@@ -29,6 +29,7 @@ import com.mojang.authlib.properties.Property;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
 
 public class MMOUtils {
 	private static final Random random = new Random();
@@ -112,7 +113,7 @@ public class MMOUtils {
 		for (ItemStack item : new ItemStack[] { player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() }) {
 			if (item.getType() != Material.AIR)
 				normal++;
-			if (MMOItems.plugin.getNMS().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
+			if (MMOLib.plugin.getNMS().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
 				twoHanded++;
 		}
 		return twoHanded > 0 && normal > 1;
@@ -193,7 +194,7 @@ public class MMOUtils {
 		if (target instanceof Player && (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
 			return false;
 
-		return loc == null ? true : MMOItems.plugin.getNMS().isInBoundingBox(target, loc);
+		return loc == null ? true : MMOLib.plugin.getNMS().isInBoundingBox(target, loc);
 	}
 
 	public static String intToRoman(int input) {

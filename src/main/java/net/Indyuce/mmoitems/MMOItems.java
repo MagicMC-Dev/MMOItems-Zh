@@ -58,7 +58,6 @@ import net.Indyuce.mmoitems.manager.AbilityManager;
 import net.Indyuce.mmoitems.manager.BlockManager;
 import net.Indyuce.mmoitems.manager.ConfigManager;
 import net.Indyuce.mmoitems.manager.CraftingManager;
-import net.Indyuce.mmoitems.manager.StandaloneDamageManager;
 import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.manager.ItemManager;
@@ -71,19 +70,16 @@ import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.manager.UpdaterManager;
 import net.Indyuce.mmoitems.manager.UpgradeManager;
 import net.Indyuce.mmoitems.manager.WorldGenManager;
-import net.Indyuce.mmoitems.version.ServerVersion;
-import net.Indyuce.mmoitems.version.SpigotPlugin;
-import net.Indyuce.mmoitems.version.nms.NMSHandler;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.version.SpigotPlugin;
 
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
 
-	private ServerVersion version;
 	private RecipeManager recipeManager;
 	private ConfigManager configManager;
 	private StatManager statManager;
 	private EntityManager entityManager;
-	private StandaloneDamageManager damageManager;
 	private DropTableManager dropTableManager;
 	private UpdaterManager itemUpdaterManager;
 	private TypeManager typeManager;
@@ -102,23 +98,12 @@ public class MMOItems extends JavaPlugin {
 	private HologramSupport hologramSupport;
 	private FlagPlugin flagPlugin = new DefaultFlags();
 	private PlayerInventory inventory = new DefaultPlayerInventory();
-	private NMSHandler nms;
 
 	public void onLoad() {
 		plugin = this;
-		version = new ServerVersion(Bukkit.getServer().getClass());
 
 		try {
-			getLogger().log(Level.INFO, "Detected Bukkit Version: " + version.toString());
-			nms = (NMSHandler) Class.forName("net.Indyuce.mmoitems.version.nms.NMSHandler_" + version.toString().substring(1)).newInstance();
-		} catch (Exception e) {
-			getLogger().log(Level.INFO, "Your server version is not compatible.");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-
-		try {
-			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && version.isStrictlyHigher(1, 12)) {
+			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 				flagPlugin = new WorldGuardFlags();
 				getLogger().log(Level.INFO, "Hooked onto WorldGuard");
 			}
@@ -135,15 +120,6 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public void onEnable() {
-
-		/*
-		 * server version compatibility checks are ran when the plugin loads. if
-		 * the nms object is null, it means the version is not compatible
-		 * therefore MI should not enable
-		 */
-		if (nms == null)
-			return;
-
 		new SpigotPlugin(39267, this).checkForUpdate();
 
 		new MMOItemsMetrics();
@@ -159,7 +135,7 @@ public class MMOItems extends JavaPlugin {
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
-		if (version.isStrictlyHigher(1, 12)) {
+		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			worldGenManager = new WorldGenManager();
 			blockManager = new BlockManager();
 		}
@@ -168,7 +144,6 @@ public class MMOItems extends JavaPlugin {
 		stationRecipeManager.reload();
 
 		Bukkit.getPluginManager().registerEvents(entityManager = new EntityManager(), this);
-		Bukkit.getPluginManager().registerEvents(damageManager = new StandaloneDamageManager(), this);
 		Bukkit.getPluginManager().registerEvents(dropTableManager = new DropTableManager(), this);
 		Bukkit.getPluginManager().registerEvents(itemUpdaterManager = new UpdaterManager(), this);
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
@@ -179,7 +154,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
-		if (version.isStrictlyHigher(1, 12)) {
+		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
 		}
@@ -325,10 +300,6 @@ public class MMOItems extends JavaPlugin {
 		return setManager;
 	}
 
-	public NMSHandler getNMS() {
-		return nms;
-	}
-
 	public FlagPlugin getFlags() {
 		return flagPlugin;
 	}
@@ -357,10 +328,6 @@ public class MMOItems extends JavaPlugin {
 		inventory = value;
 	}
 
-	public ServerVersion getVersion() {
-		return version;
-	}
-
 	public StatManager getStats() {
 		return statManager;
 	}
@@ -371,10 +338,6 @@ public class MMOItems extends JavaPlugin {
 
 	public EntityManager getEntities() {
 		return entityManager;
-	}
-
-	public StandaloneDamageManager getDamage() {
-		return damageManager;
 	}
 
 	public DropTableManager getDropTables() {

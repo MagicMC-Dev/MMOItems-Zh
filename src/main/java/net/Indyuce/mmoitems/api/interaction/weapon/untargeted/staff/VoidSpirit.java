@@ -7,10 +7,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class VoidSpirit implements StaffAttackHandler {
 
@@ -32,6 +32,6 @@ public class VoidSpirit implements StaffAttackHandler {
 				shulkerBullet.setVelocity(vec);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
-		MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGICAL, DamageType.PROJECTILE), 0., stats, nbt);
+		MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGICAL, DamageType.PROJECTILE), 0., stats, nbt);
 	}
 }

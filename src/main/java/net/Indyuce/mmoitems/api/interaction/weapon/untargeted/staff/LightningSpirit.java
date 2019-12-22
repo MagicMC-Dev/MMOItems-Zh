@@ -7,11 +7,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class LightningSpirit implements StaffAttackHandler {
 
@@ -28,7 +28,7 @@ public class LightningSpirit implements StaffAttackHandler {
 			loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 0);
 			for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
 				if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-					new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+					new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 					loc.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, loc, 16, 0, 0, 0, .1);
 					return;
 				}

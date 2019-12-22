@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.AltChar;
+import net.mmogroup.mmolib.MMOLib;
 
 public class PluginHelp {
 	private static final int commandsPerPage = 8;
@@ -35,7 +35,7 @@ public class PluginHelp {
 			while (n++ < commandsPerPage)
 				sender.sendMessage("");
 
-			MMOItems.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "------------------" + ChatColor.DARK_GRAY + "[\"},{\"text\":\"" + ChatColor.RED + "««\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help " + (page - 1) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Previous Page\"}}},{\"text\":\"" + ChatColor.DARK_GRAY + "]" + ChatColor.STRIKETHROUGH + "---" + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + page + ChatColor.DARK_GRAY + "/" + ChatColor.GREEN + getMaxPage() + ChatColor.DARK_GRAY + ")" + ChatColor.STRIKETHROUGH + "---" + ChatColor.DARK_GRAY + "[\"},{\"text\":\"" + ChatColor.GREEN + "»»\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help " + (page + 1) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Next Page\"}}},{\"text\":\"" + ChatColor.DARK_GRAY + "]" + ChatColor.STRIKETHROUGH + "-----------------\"}]");
+			MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "------------------" + ChatColor.DARK_GRAY + "[\"},{\"text\":\"" + ChatColor.RED + "««\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help " + (page - 1) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Previous Page\"}}},{\"text\":\"" + ChatColor.DARK_GRAY + "]" + ChatColor.STRIKETHROUGH + "---" + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + page + ChatColor.DARK_GRAY + "/" + ChatColor.GREEN + getMaxPage() + ChatColor.DARK_GRAY + ")" + ChatColor.STRIKETHROUGH + "---" + ChatColor.DARK_GRAY + "[\"},{\"text\":\"" + ChatColor.GREEN + "»»\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help " + (page + 1) + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Next Page\"}}},{\"text\":\"" + ChatColor.DARK_GRAY + "]" + ChatColor.STRIKETHROUGH + "-----------------\"}]");
 		} else {
 			for (PluginCommand command : PluginCommand.values())
 				command.sendAsMessage(sender);
@@ -99,7 +99,7 @@ public class PluginHelp {
 
 		private void sendAsJson(Player player) {
 			if (isCommand())
-				MMOItems.plugin.getNMS().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY + " /" + usage + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + help + "\"}}}");
+				MMOLib.plugin.getNMS().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY + " /" + usage + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + help + "\"}}}");
 			else
 				player.sendMessage(ChatColor.LIGHT_PURPLE + usage);
 		}

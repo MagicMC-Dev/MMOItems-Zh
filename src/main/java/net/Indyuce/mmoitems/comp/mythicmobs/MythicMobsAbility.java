@@ -12,8 +12,8 @@ import org.bukkit.entity.LivingEntity;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class MythicMobsAbility extends Ability {
@@ -46,7 +46,7 @@ public class MythicMobsAbility extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		List<Entity> targets = new ArrayList<>();
 		targets.add(target == null || selfOnly ? stats.getPlayer() : target);
 

@@ -12,11 +12,11 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Firefly extends Ability {
 	public Firefly() {
@@ -31,7 +31,7 @@ public class Firefly extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double duration = data.getModifier("duration") * 20;
 
 		new BukkitRunnable() {
@@ -62,7 +62,7 @@ public class Firefly extends Ability {
 						stats.getPlayer().getWorld().spawnParticle(Particle.FLAME, stats.getPlayer().getLocation().add(0, 1, 0), 24, 0, 0, 0, .3);
 						entity.setVelocity(stats.getPlayer().getVelocity().setY(0.3).multiply(1.7 * knockback));
 						stats.getPlayer().setVelocity(stats.getPlayer().getEyeLocation().getDirection().multiply(-3).setY(.5));
-						new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 						cancel();
 						return;
 					}

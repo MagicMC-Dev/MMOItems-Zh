@@ -12,11 +12,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Item_Throw extends Ability implements Listener {
 	public Item_Throw() {
@@ -30,7 +30,7 @@ public class Item_Throw extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		ItemStack itemStack = stats.getPlayer().getInventory().getItemInMainHand().clone();
 		if (itemStack == null || itemStack.getType() == Material.AIR) {
 			result.setSuccessful(false);
@@ -53,7 +53,7 @@ public class Item_Throw extends Ability implements Listener {
 				item.getEntity().getWorld().spawnParticle(Particle.CRIT, item.getEntity().getLocation(), 0);
 				for (Entity target : item.getEntity().getNearbyEntities(1, 1, 1))
 					if (MMOUtils.canDamage(stats.getPlayer(), target)) {
-						new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) target);
+						new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) target);
 						item.close();
 						cancel();
 					}

@@ -8,8 +8,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ArrowParticles extends BukkitRunnable {
 	private Arrow arrow;
@@ -58,7 +58,7 @@ public class ArrowParticles extends BukkitRunnable {
 		}
 
 		if (colored)
-			MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, 0, 1, color);
+			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, 0, 1, color);
 		else
 			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
 	}

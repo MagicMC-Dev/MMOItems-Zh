@@ -13,11 +13,11 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class ThunderSpirit implements StaffAttackHandler {
 
@@ -42,7 +42,7 @@ public class ThunderSpirit implements StaffAttackHandler {
 						loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 						for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
 							if (MMOUtils.canDamage(stats.getPlayer(), target) && target.getLocation().distanceSquared(loc) <= 9)
-								new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+								new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 						cancel();
 					}
 				}

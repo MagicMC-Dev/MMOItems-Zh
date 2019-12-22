@@ -20,9 +20,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
-import net.Indyuce.mmoitems.version.VersionMaterial;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AdvancedRecipeEdition extends EditionInventory implements Listener {
 
@@ -135,7 +136,7 @@ public class AdvancedRecipeEdition extends EditionInventory implements Listener 
 			return;
 
 		// type/id overrides material/name/damage
-		NBTItem nbtCursor = MMOItems.plugin.getNMS().getNBTItem(cursor);
+		NBTItem nbtCursor = MMOLib.plugin.getNMS().getNBTItem(cursor);
 		String id1 = nbtCursor.getString("MMOITEMS_ITEM_ID");
 		String type1 = nbtCursor.getString("MMOITEMS_ITEM_TYPE");
 		if (id1 == null || id1.equals("") || type1 == null || type1.equals("")) {

@@ -12,8 +12,8 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Tool extends UseItem {
 	public Tool(Player player, NBTItem item, Type type) {

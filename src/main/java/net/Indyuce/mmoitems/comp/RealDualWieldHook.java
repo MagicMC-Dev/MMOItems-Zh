@@ -9,14 +9,14 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 
-import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class RealDualWieldHook implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -31,7 +31,7 @@ public class RealDualWieldHook implements Listener {
 
 		// custom damage check
 		LivingEntity target = (LivingEntity) event.getEntity();
-		if (MMOItems.plugin.getDamage().findInfo(target) != null)
+		if (MMOLib.plugin.getDamage().findInfo(target) != null)
 			return;
 
 		Player player = event.getPlayer();
@@ -42,9 +42,9 @@ public class RealDualWieldHook implements Listener {
 		 * be cancelled before anything is applied
 		 */
 		PlayerData playerData = PlayerData.get(player);
-		NBTItem item = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
-		NBTItem offhandItem = MMOItems.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
-		AttackResult result = new AttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
+		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem offhandItem = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
+		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType()) {
 			Weapon weapon = new Weapon(playerData, item, item.getType());

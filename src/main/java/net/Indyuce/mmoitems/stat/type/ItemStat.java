@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.Abilities;
@@ -72,12 +71,14 @@ import net.Indyuce.mmoitems.stat.Upgrade_Stat;
 import net.Indyuce.mmoitems.stat.Vanilla_Eating_Animation;
 import net.Indyuce.mmoitems.stat.Will_Break;
 import net.Indyuce.mmoitems.stat.data.StatData;
-import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.durability.stat.DefaultDurability;
 import net.Indyuce.mmoitems.version.durability.stat.LegacyDurability;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class ItemStat {
-	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = MMOItems.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(), CUSTOM_MODEL_DATA = new Custom_Model_Data(), MAX_CUSTOM_DURABILITY = new Max_Custom_Durability(), WILL_BREAK = new Will_Break();
+	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(), CUSTOM_MODEL_DATA = new Custom_Model_Data(), MAX_CUSTOM_DURABILITY = new Max_Custom_Durability(), WILL_BREAK = new Will_Break();
 	public static final ItemStat NAME = new Display_Name(), LORE = new Lore();
 	public static final ItemStat DISPLAYED_TYPE = new StringStat(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Displayed Type", new String[] { "This option will only affect the", "type displayed on the item lore." }, "displayed-type", new String[] { "all" });
 	public static final ItemStat ENCHANTS = new Enchants(), HIDE_ENCHANTS = new Hide_Enchants(), PERMISSION = new Permission(), ITEM_PARTICLES = new Item_Particles(), ARROW_PARTICLES = new Arrow_Particles();

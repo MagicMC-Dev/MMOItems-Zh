@@ -10,11 +10,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Contamination extends Ability {
 	public Contamination() {
@@ -28,7 +29,7 @@ public class Contamination extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		Location loc = getTargetLocation(stats.getPlayer(), target);
 		if (loc == null) {
 			result.setSuccessful(false);
@@ -48,7 +49,7 @@ public class Contamination extends Ability {
 				if (j >= duration)
 					cancel();
 
-				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(ti / 3) * 5, 0, Math.sin(ti / 3) * 5), Color.PURPLE);
+				MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(ti / 3) * 5, 0, Math.sin(ti / 3) * 5), Color.PURPLE);
 				for (int j = 0; j < 3; j++) {
 					ti += Math.PI / 32;
 					double r = Math.sin(ti / 2) * 4;
@@ -60,7 +61,7 @@ public class Contamination extends Ability {
 					loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 2, 1);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) <= 25)
-							MMOItems.plugin.getDamage().damage(stats.getPlayer(), (LivingEntity) entity, new AttackResult(dps, DamageType.SKILL, DamageType.MAGICAL).applySkillEffects(stats, (LivingEntity) entity), false);
+							MMOLib.plugin.getDamage().damage(stats.getPlayer(), (LivingEntity) entity, new ItemAttackResult(dps, DamageType.SKILL, DamageType.MAGICAL).applySkillEffects(stats, (LivingEntity) entity), false);
 				}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);

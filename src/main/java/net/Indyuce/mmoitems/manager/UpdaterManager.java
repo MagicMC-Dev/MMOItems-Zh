@@ -23,10 +23,11 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.wrapper.VersionWrapper;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.wrapper.VersionWrapper;
 
 public class UpdaterManager implements Listener {
 	private Map<String, UpdaterData> map = new HashMap<>();
@@ -101,7 +102,7 @@ public class UpdaterManager implements Listener {
 	}
 
 	public ItemStack getUpdated(ItemStack item) {
-		return getUpdated(MMOItems.plugin.getNMS().getNBTItem(item));
+		return getUpdated(MMOLib.plugin.getNMS().getNBTItem(item));
 	}
 
 	public ItemStack getUpdated(NBTItem item) {
@@ -175,7 +176,7 @@ public class UpdaterManager implements Listener {
 		 * keep durability can be used for tools to save their durability so
 		 * users do not get extra durability when the item is updated
 		 */
-		VersionWrapper wrapper = MMOItems.plugin.getVersion().getWrapper();
+		VersionWrapper wrapper = MMOLib.plugin.getVersion().getWrapper();
 		if (did.keepDurability() && wrapper.isDamageable(item.getItem()) && wrapper.isDamageable(newItem))
 			wrapper.applyDurability(newItem, newItemMeta, wrapper.getDurability(item.getItem(), item.getItem().getItemMeta()));
 

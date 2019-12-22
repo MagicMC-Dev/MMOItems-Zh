@@ -26,6 +26,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.CustomBlock;
 import net.Indyuce.mmoitems.api.drop.DropTable;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
+import net.mmogroup.mmolib.MMOLib;
 
 public class DropTableManager implements Listener {
 	private Map<EntityType, DropTable> monsters = new HashMap<>();
@@ -90,7 +91,7 @@ public class DropTableManager implements Listener {
 		Block block = event.getBlock();
 		final Material type = block.getType();
 
-		CustomBlock custom = MMOItems.plugin.getVersion().isStrictlyHigher(1, 12) ? CustomBlock.getFromData(block.getBlockData()) : null;
+		CustomBlock custom = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ? CustomBlock.getFromData(block.getBlockData()) : null;
 		if(custom != null) {
 			if (customBlocks.containsKey(custom.getId()))
 				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {

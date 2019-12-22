@@ -17,8 +17,9 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat.StringData;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOItemBuilder {
 	private final MMOItem mmoitem;
@@ -99,6 +100,6 @@ public class MMOItemBuilder {
 
 		item.setItemMeta(meta);
 
-		return MMOItems.plugin.getNMS().getNBTItem(item).addTag(tags).toItem();
+		return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags).toItem();
 	}
 }

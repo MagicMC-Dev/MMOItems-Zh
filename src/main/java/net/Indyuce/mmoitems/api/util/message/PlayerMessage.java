@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
+import net.mmogroup.mmolib.MMOLib;
 
 public class PlayerMessage {
 	private String message;
@@ -37,15 +38,14 @@ public class PlayerMessage {
 			return;
 
 		if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath)) {
-			if(Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
+			if (Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
 				PlayerData.get(player).setActionBarTimeOut(60);
-			
-			MMOItems.plugin.getNMS().sendActionBar(player, message);
-		}
-		else
+
+			MMOLib.plugin.getNMS().sendActionBar(player, message);
+		} else
 			player.sendMessage(message);
 	}
-	
+
 	@Override
 	public String toString() {
 		return message;

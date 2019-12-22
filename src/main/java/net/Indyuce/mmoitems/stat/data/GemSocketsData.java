@@ -15,9 +15,9 @@ import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.Abilities.AbilityListData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class GemSocketsData extends StatData {

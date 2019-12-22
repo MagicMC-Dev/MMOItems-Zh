@@ -12,8 +12,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 
 public class RPGInventoryHook implements PlayerInventory, Listener {
@@ -44,7 +45,7 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 		if (ornaments)
 			for (ItemStack item : player.getInventory().getContents()) {
 				NBTItem nbtItem;
-				if (item != null && (nbtItem = MMOItems.plugin.getNMS().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
+				if (item != null && (nbtItem = MMOLib.plugin.getNMS().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
 					list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
 			}
 

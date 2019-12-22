@@ -4,8 +4,8 @@ import java.util.Random;
 
 import org.bukkit.Location;
 
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public interface StaffAttackHandler {
 	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range);

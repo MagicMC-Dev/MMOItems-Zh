@@ -22,11 +22,12 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.Indyuce.mmoitems.version.VersionMaterial;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
@@ -94,7 +95,7 @@ public class ItemBrowser extends PluginInventory {
 			ItemMeta switchMeta = switchBrowse.getItemMeta();
 			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
 
-			if(!MMOItems.plugin.getVersion().isStrictlyHigher(1, 12)) {
+			if(!MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 				List<String> lore = new ArrayList<String>();
 				lore.add("");
 				lore.add("&cThis feature is disabled.");
@@ -229,7 +230,7 @@ public class ItemBrowser extends PluginInventory {
 			
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
-				if (MMOItems.plugin.getVersion().isStrictlyHigher(1, 12))
+				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
 					new BlockBrowser(player).open();
 				else player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return;

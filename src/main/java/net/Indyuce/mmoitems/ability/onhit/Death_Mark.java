@@ -8,11 +8,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
 
 public class Death_Mark extends Ability {
 	public Death_Mark() {
@@ -27,8 +29,8 @@ public class Death_Mark extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, AttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : initialTarget;
+	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
+		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
 		if (target == null) {
 			result.setSuccessful(false);
 			return;
@@ -50,7 +52,7 @@ public class Death_Mark extends Ability {
 				target.getWorld().spawnParticle(Particle.SPELL_MOB, target.getLocation(), 4, .2, 0, .2, 0);
 
 				if (ti % 20 == 0)
-					MMOItems.plugin.getDamage().damage(stats.getPlayer(), target, new AttackResult(dps, DamageType.SKILL, DamageType.MAGICAL).applySkillEffects(stats, target), false);
+					MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, new ItemAttackResult(dps, DamageType.SKILL, DamageType.MAGICAL).applySkillEffects(stats, target), false);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 1, 2);

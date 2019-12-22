@@ -23,7 +23,6 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -31,7 +30,8 @@ import net.Indyuce.mmoitems.stat.data.EffectListData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.nms.ItemTag;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Perm_Effects extends ItemStat {
 	public Perm_Effects() {
@@ -53,7 +53,7 @@ public class Perm_Effects extends ItemStat {
 					config.getConfig().set(inv.getItemId() + ".perm-effects", null);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase() + "§7.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase() + "ï¿½7.");
 			}
 		}
 		return true;

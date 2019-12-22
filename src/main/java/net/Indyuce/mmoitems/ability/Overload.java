@@ -10,11 +10,11 @@ import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult;
-import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.version.VersionSound;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.version.VersionSound;
 
 public class Overload extends Ability {
 	public Overload() {
@@ -28,7 +28,7 @@ public class Overload extends Ability {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
+	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double damage = data.getModifier("damage");
 		double radius = data.getModifier("radius");
 
@@ -38,7 +38,7 @@ public class Overload extends Ability {
 
 		for (Entity entity : stats.getPlayer().getNearbyEntities(radius, radius, radius))
 			if (MMOUtils.canDamage(stats.getPlayer(), entity))
-				new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
 
 		double step = 12 + (radius * 2.5);
 		for (double j = 0; j < Math.PI * 2; j += Math.PI / step) {

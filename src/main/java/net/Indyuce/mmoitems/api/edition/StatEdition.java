@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
 
 public class StatEdition implements Edition {
 
@@ -45,7 +46,7 @@ public class StatEdition implements Edition {
 		 * anvil text input feature. enables players to use an anvil to input
 		 * text if they are having conflicts with their chat management plugins.
 		 */
-		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOItems.plugin.getVersion().isBelowOrEqual(1, 13)) {
+		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
 			new AnvilGUI(inv, this);
 			return;
 		}
@@ -54,7 +55,7 @@ public class StatEdition implements Edition {
 		 * default chat edition feature
 		 */
 		new ChatEdition(inv, this);
-		MMOItems.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
+		MMOLib.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
 	}
 
 	@Override

@@ -11,8 +11,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Listener_v1_13 implements Listener {
 	@EventHandler
@@ -24,7 +25,7 @@ public class Listener_v1_13 implements Listener {
 		if (!item.hasItem())
 			return;
 
-		NBTItem nbtItem = MMOItems.plugin.getNMS().getNBTItem(item.getItem());
+		NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(item.getItem());
 		Type type = nbtItem.getType();
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());

@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.comp.rpg.damage;
 import java.util.Arrays;
 import java.util.List;
 
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 
 public class DamageInfo {
 	private final double damage;

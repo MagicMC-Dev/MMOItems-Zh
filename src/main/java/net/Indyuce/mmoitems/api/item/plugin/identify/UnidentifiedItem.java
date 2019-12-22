@@ -100,7 +100,7 @@ public class UnidentifiedItem extends ConfigItem {
 			/*
 			 * apply changes to item
 			 */
-			ItemStack unidentified = MMOItems.plugin.getVersion().getDurabilityHandler().copyTexture(item).addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
+			ItemStack unidentified = MMOItems.plugin.getVersion().getWrapper().copyTexture(item).addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);

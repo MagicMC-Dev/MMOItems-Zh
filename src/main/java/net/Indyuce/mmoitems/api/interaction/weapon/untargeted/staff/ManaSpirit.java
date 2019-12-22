@@ -13,10 +13,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 
 public class ManaSpirit implements StaffAttackHandler {
 
@@ -46,7 +46,7 @@ public class ManaSpirit implements StaffAttackHandler {
 					for (double item = 0; item < Math.PI * 2; item += Math.PI / 3.5) {
 						Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(item), r * Math.sin(item), 0), loc);
 						if (random.nextDouble() <= .6)
-							MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), Color.AQUA);
+							MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), Color.AQUA);
 					}
 					for (Entity target : targets)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {

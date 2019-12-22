@@ -58,7 +58,7 @@ public class ArrowParticles extends BukkitRunnable {
 		}
 
 		if (colored)
-			MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, 0, 1, color);
+			MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, 0, 1, color);
 		else
 			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
 	}

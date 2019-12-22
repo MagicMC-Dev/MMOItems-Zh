@@ -224,7 +224,7 @@ public class Type {
 
 		String[] split = str.split("\\:");
 		Material material = Material.valueOf(split[0]);
-		return split.length > 1 ? MMOItems.plugin.getVersion().getDurabilityHandler().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
+		return split.length > 1 ? MMOItems.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 
 	@Deprecated

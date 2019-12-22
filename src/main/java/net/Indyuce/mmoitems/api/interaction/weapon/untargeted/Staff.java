@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.util.MMORayTraceResult;
 import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -44,7 +44,7 @@ public class Staff extends UntargetedWeapon {
 		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-		MMORayTraceResult trace = MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), range);
+		MMORayTraceResult trace = MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range);
 		if (trace.hasHit())
 			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2, (tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));

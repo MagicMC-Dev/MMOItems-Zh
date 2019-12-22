@@ -16,9 +16,9 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -63,7 +63,7 @@ public class Ice_Crystal extends Ability {
 						for (double a = 0; a < Math.PI * 2; a += Math.PI / 2) {
 							Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(a + (double) ti / 10), r * Math.sin(a + (double) ti / 10), 0), loc);
 							loc.add(vec);
-							MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc, .7f, Color.WHITE);
+							MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc, .7f, Color.WHITE);
 							loc.add(vec.multiply(-1));
 						}
 

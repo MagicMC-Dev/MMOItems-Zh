@@ -8,9 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -27,7 +27,7 @@ public class Targeted_Fireball extends Ability {
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity initialTarget, AbilityData data, AttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), 50).getHit() : initialTarget;
+		LivingEntity target = initialTarget == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : initialTarget;
 		if (target == null) {
 			result.setSuccessful(false);
 			return;

@@ -1,18 +1,14 @@
 package net.Indyuce.mmoitems.version;
 
-import net.Indyuce.mmoitems.version.durability.CustomModelDataHandler;
-import net.Indyuce.mmoitems.version.durability.DurabilityHandler;
-import net.Indyuce.mmoitems.version.durability.Durability_v1_13_Handler;
-import net.Indyuce.mmoitems.version.durability.LegacyDurabilityHandler;
-import net.Indyuce.mmoitems.version.wrapper.DefaultVersionWrapper;
-import net.Indyuce.mmoitems.version.wrapper.LegacyVersionWrapper;
 import net.Indyuce.mmoitems.version.wrapper.VersionWrapper;
+import net.Indyuce.mmoitems.version.wrapper.VersionWrapper_1_13;
+import net.Indyuce.mmoitems.version.wrapper.VersionWrapper_1_14;
+import net.Indyuce.mmoitems.version.wrapper.VersionWrapper_Legacy;
 
 public class ServerVersion {
 	private final String version;
 	private final int[] integers;
 
-	private final DurabilityHandler durabilityHandler;
 	private final VersionWrapper versionWrapper;
 
 	public ServerVersion(Class<?> clazz) {
@@ -20,8 +16,7 @@ public class ServerVersion {
 		String[] split = version.substring(1).split("\\_");
 		integers = new int[] { Integer.parseInt(split[0]), Integer.parseInt(split[1]) };
 
-		versionWrapper = isBelowOrEqual(1, 12) ? new LegacyVersionWrapper() : new DefaultVersionWrapper();
-		durabilityHandler = isBelowOrEqual(1, 12) ? new LegacyDurabilityHandler() : isBelowOrEqual(1, 13) ? new Durability_v1_13_Handler() : new CustomModelDataHandler();
+		versionWrapper = isBelowOrEqual(1, 12) ? new VersionWrapper_Legacy() : isBelowOrEqual(1, 13) ? new VersionWrapper_1_13() : new VersionWrapper_1_14();
 	}
 
 	public boolean isBelowOrEqual(int... version) {
@@ -41,14 +36,9 @@ public class ServerVersion {
 		return integers;
 	}
 
-	public DurabilityHandler getDurabilityHandler() {
-		return durabilityHandler;
-	}
-
-	public VersionWrapper getVersionWrapper() {
+	public VersionWrapper getWrapper() {
 		return versionWrapper;
 	}
-
 
 	@Override
 	public String toString() {

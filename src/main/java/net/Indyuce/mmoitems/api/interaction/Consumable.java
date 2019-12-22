@@ -203,8 +203,8 @@ public class Consumable extends UseItem {
 			}
 
 			// vanilla durability
-			if (!target.getBoolean("Unbreakable") && MMOItems.plugin.getVersion().getDurabilityHandler().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
-				MMOItems.plugin.getVersion().getDurabilityHandler().repair(target.getItem(), repairPower);
+			if (!target.getBoolean("Unbreakable") && MMOItems.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
+				MMOItems.plugin.getVersion().getWrapper().repair(target.getItem(), repairPower);
 				Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower).send(player);
 				return true;
 			}

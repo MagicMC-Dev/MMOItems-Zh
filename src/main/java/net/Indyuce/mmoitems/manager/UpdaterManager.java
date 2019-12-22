@@ -26,7 +26,7 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.version.durability.DurabilityHandler;
+import net.Indyuce.mmoitems.version.wrapper.VersionWrapper;
 
 public class UpdaterManager implements Listener {
 	private Map<String, UpdaterData> map = new HashMap<>();
@@ -175,9 +175,9 @@ public class UpdaterManager implements Listener {
 		 * keep durability can be used for tools to save their durability so
 		 * users do not get extra durability when the item is updated
 		 */
-		DurabilityHandler durability = MMOItems.plugin.getVersion().getDurabilityHandler();
-		if (did.keepDurability() && durability.isDamageable(item.getItem()) && durability.isDamageable(newItem))
-			durability.applyDurability(newItem, newItemMeta, durability.getDurability(item.getItem(), item.getItem().getItemMeta()));
+		VersionWrapper wrapper = MMOItems.plugin.getVersion().getWrapper();
+		if (did.keepDurability() && wrapper.isDamageable(item.getItem()) && wrapper.isDamageable(newItem))
+			wrapper.applyDurability(newItem, newItemMeta, wrapper.getDurability(item.getItem(), item.getItem().getItemMeta()));
 
 		/*
 		 * keep name so players who renamed the item in the anvil does not have

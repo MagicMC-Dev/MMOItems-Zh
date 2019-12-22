@@ -631,8 +631,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				}
 
 				if (item.hasItemMeta()) {
-					if (MMOItems.plugin.getVersion().getDurabilityHandler().isDamaged(item, item.getItemMeta()))
-						config.getConfig().set(name + ".durability", MMOItems.plugin.getVersion().getDurabilityHandler().getDurability(item, item.getItemMeta()));
+					if (MMOItems.plugin.getVersion().getWrapper().isDamaged(item, item.getItemMeta()))
+						config.getConfig().set(name + ".durability", MMOItems.plugin.getVersion().getWrapper().getDurability(item, item.getItemMeta()));
 					if (item.getItemMeta().hasDisplayName())
 						config.getConfig().set(name + ".name", item.getItemMeta().getDisplayName().replace("§", "&"));
 					if (item.getItemMeta().hasLore()) {
@@ -650,7 +650,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (MMOItems.plugin.getNMS().getNBTItem(item).getBoolean("Unbreakable"))
 					config.getConfig().set(name + ".unbreakable", true);
 				for (Enchantment enchant : item.getEnchantments().keySet())
-					config.getConfig().set(name + ".enchants." + MMOItems.plugin.getVersion().getVersionWrapper().getName(enchant), item.getEnchantmentLevel(enchant));
+					config.getConfig().set(name + ".enchants." + MMOItems.plugin.getVersion().getWrapper().getName(enchant), item.getEnchantmentLevel(enchant));
 			}
 			config.getConfig().set(name + ".material", args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());
 

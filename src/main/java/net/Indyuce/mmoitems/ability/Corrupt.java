@@ -11,9 +11,9 @@ import org.bukkit.potion.PotionEffectType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -48,7 +48,7 @@ public class Corrupt extends Ability {
 			Location loc1 = loc.clone().add(Math.cos(j) * radius, 1, Math.sin(j) * radius);
 			double y_max = .5 + random.nextDouble();
 			for (double y = 0; y < y_max; y += .1)
-				MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc1.clone().add(0, y, 0), Color.PURPLE);
+				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc1.clone().add(0, y, 0), Color.PURPLE);
 		}
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))

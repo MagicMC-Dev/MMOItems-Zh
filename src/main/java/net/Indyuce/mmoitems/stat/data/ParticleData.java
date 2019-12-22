@@ -122,14 +122,14 @@ public class ParticleData extends StatData {
 
 	public void display(Location location, int amount, float offsetX, float offsetY, float offsetZ, float speed) {
 		if (isColored())
-			MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, 1, color);
+			MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, 1, color);
 		else
 			location.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed);
 	}
 
 	public void display(Location location, Vector direction, float speed) {
 		if (isColored())
-			MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed, 1, color);
+			MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed, 1, color);
 		else
 			location.getWorld().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed);
 	}

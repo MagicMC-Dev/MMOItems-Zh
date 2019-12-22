@@ -16,8 +16,8 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Shockwave extends Ability {
@@ -50,7 +50,7 @@ public class Shockwave extends Ability {
 				loc.add(vec);
 
 				loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 2);
-				MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.BLOCK_CRACK, loc, 12, .5, 0, .5, 0, Material.DIRT);
+				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, loc, 12, .5, 0, .5, 0, Material.DIRT);
 
 				for (Entity ent : MMOUtils.getNearbyChunkEntities(loc))
 					if (ent.getLocation().distance(loc) < 1.1 && ent instanceof LivingEntity && !ent.equals(stats.getPlayer()) && !hit.contains(ent.getEntityId())) {

@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.util.MMORayTraceResult;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -44,7 +44,7 @@ public class Musket extends UntargetedWeapon {
 		loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * 2 * recoil));
 		Vector vec = loc.getDirection();
 
-		MMORayTraceResult trace = MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), vec, range);
+		MMORayTraceResult trace = MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range);
 		if (trace.hasHit())
 			new AttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
 		trace.draw(loc, vec, 2, Color.BLACK);

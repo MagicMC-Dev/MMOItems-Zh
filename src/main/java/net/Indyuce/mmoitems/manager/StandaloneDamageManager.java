@@ -14,15 +14,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import net.Indyuce.mmoitems.api.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.comp.rpg.damage.DamageHandler;
 import net.Indyuce.mmoitems.comp.rpg.damage.DamageInfo;
 
-public class DamageManager implements Listener, DamageHandler {
+public class StandaloneDamageManager implements Listener, DamageHandler {
 	private final Map<Integer, DamageInfo> customDamage = new HashMap<>();
 	private final List<DamageHandler> handlers = new ArrayList<>();
 
-	public DamageManager() {
+	public StandaloneDamageManager() {
 		handlers.add(this);
 	}
 

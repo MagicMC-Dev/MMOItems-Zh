@@ -31,7 +31,7 @@ public class MMORayTraceResult {
 	}
 
 	public void draw(Location source, Vector vec, double c, Color color) {
-		draw(source, vec, c, (loc) -> MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc, color));
+		draw(source, vec, c, (loc) -> MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc, color));
 	}
 
 	public void draw(Location loc, Vector vec, double c, Consumer<Location> tick) {

@@ -55,7 +55,7 @@ public class Enchants extends ItemStat {
 	}
 
 	private String getName(Enchantment enchant) {
-		return MMOItems.plugin.getVersion().getVersionWrapper().getName(enchant);
+		return MMOItems.plugin.getVersion().getWrapper().getName(enchant);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class MitigationListener implements Listener {
 			double yaw = getYaw(player, getVector(player, event)) + 95;
 			for (double j = yaw - 90; j < yaw + 90; j += 5)
 				for (double y = 0; y < 2; y += .1)
-					MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(Math.cos(Math.toRadians(j)) * .7, y, Math.sin(Math.toRadians(j)) * .7), Color.GRAY);
+					MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, player.getLocation().clone().add(Math.cos(Math.toRadians(j)) * .7, y, Math.sin(Math.toRadians(j)) * .7), Color.GRAY);
 		}
 	}
 

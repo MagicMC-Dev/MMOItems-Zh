@@ -11,8 +11,8 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -28,7 +28,7 @@ public class Blind extends Ability {
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
-		target = target == null ? MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), 50).getHit() : target;
+		target = target == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : target;
 		if (target == null) {
 			result.setSuccessful(false);
 			return;
@@ -39,7 +39,7 @@ public class Blind extends Ability {
 			for (double j = 0; j < 2; j++) {
 				Location loc = target.getLocation();
 				Vector vec = MMOUtils.rotateFunc(new Vector(Math.cos(i), 1 + Math.cos(i + (Math.PI * j)) * .5, Math.sin(i)), stats.getPlayer().getLocation());
-				MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc.add(vec), Color.BLACK);
+				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.add(vec), Color.BLACK);
 			}
 		target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (data.getModifier("duration") * 20), 0));
 	}

@@ -58,7 +58,7 @@ import net.Indyuce.mmoitems.manager.AbilityManager;
 import net.Indyuce.mmoitems.manager.BlockManager;
 import net.Indyuce.mmoitems.manager.ConfigManager;
 import net.Indyuce.mmoitems.manager.CraftingManager;
-import net.Indyuce.mmoitems.manager.DamageManager;
+import net.Indyuce.mmoitems.manager.StandaloneDamageManager;
 import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.manager.ItemManager;
@@ -83,7 +83,7 @@ public class MMOItems extends JavaPlugin {
 	private ConfigManager configManager;
 	private StatManager statManager;
 	private EntityManager entityManager;
-	private DamageManager damageManager;
+	private StandaloneDamageManager damageManager;
 	private DropTableManager dropTableManager;
 	private UpdaterManager itemUpdaterManager;
 	private TypeManager typeManager;
@@ -168,7 +168,7 @@ public class MMOItems extends JavaPlugin {
 		stationRecipeManager.reload();
 
 		Bukkit.getPluginManager().registerEvents(entityManager = new EntityManager(), this);
-		Bukkit.getPluginManager().registerEvents(damageManager = new DamageManager(), this);
+		Bukkit.getPluginManager().registerEvents(damageManager = new StandaloneDamageManager(), this);
 		Bukkit.getPluginManager().registerEvents(dropTableManager = new DropTableManager(), this);
 		Bukkit.getPluginManager().registerEvents(itemUpdaterManager = new UpdaterManager(), this);
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
@@ -373,7 +373,7 @@ public class MMOItems extends JavaPlugin {
 		return entityManager;
 	}
 
-	public DamageManager getDamage() {
+	public StandaloneDamageManager getDamage() {
 		return damageManager;
 	}
 

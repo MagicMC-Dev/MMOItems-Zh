@@ -6,8 +6,8 @@ import org.bukkit.entity.LivingEntity;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class Bloodbath extends Ability {
@@ -22,7 +22,7 @@ public class Bloodbath extends Ability {
 
 	@Override
 	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, AttackResult result) {
-		target = target == null ? MMOItems.plugin.getVersion().getVersionWrapper().rayTrace(stats.getPlayer(), 50).getHit() : target;
+		target = target == null ? MMOItems.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50).getHit() : target;
 		if (target == null) {
 			result.setSuccessful(false);
 			return;

@@ -10,13 +10,13 @@ import org.bukkit.inventory.EquipmentSlot;
 import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 
 public class RealDualWieldHook implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

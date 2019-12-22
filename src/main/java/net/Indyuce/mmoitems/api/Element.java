@@ -18,8 +18,9 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.version.VersionMaterial;
 import net.Indyuce.mmoitems.version.VersionSound;
@@ -45,7 +46,7 @@ public enum Element {
 						if ((y += .07) >= 3)
 							cancel();
 						for (double k = 0; k < Math.PI * 2; k += Math.PI * 2 / 3)
-							MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5, y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5), Color.WHITE);
+							MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5, y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5), Color.WHITE);
 					}
 				}
 			}.runTaskTimer(MMOItems.plugin, 0, 1);
@@ -74,7 +75,7 @@ public enum Element {
 	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), "Earth", ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT), new ElementHandler() {
 		public void elementAttack(TemporaryStats stats, AttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
-			MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1, 0, Material.DIRT);
+			MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1, 0, Material.DIRT);
 			result.addDamage(absolute);
 
 			target.setVelocity(new Vector(0, 1, 0));
@@ -166,7 +167,7 @@ public enum Element {
 		}
 
 		public ElementParticle(Particle particle, float speed, int amount, Material material) {
-			display = (entity) -> MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(particle, entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0, speed, material);
+			display = (entity) -> MMOItems.plugin.getVersion().getWrapper().spawnParticle(particle, entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0, speed, material);
 		}
 
 		public void displayParticle(Entity entity) {

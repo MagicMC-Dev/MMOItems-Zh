@@ -10,9 +10,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.AttackResult;
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.version.VersionSound;
 
@@ -48,7 +48,7 @@ public class Contamination extends Ability {
 				if (j >= duration)
 					cancel();
 
-				MMOItems.plugin.getVersion().getVersionWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(ti / 3) * 5, 0, Math.sin(ti / 3) * 5), Color.PURPLE);
+				MMOItems.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(ti / 3) * 5, 0, Math.sin(ti / 3) * 5), Color.PURPLE);
 				for (int j = 0; j < 3; j++) {
 					ti += Math.PI / 32;
 					double r = Math.sin(ti / 2) * 4;

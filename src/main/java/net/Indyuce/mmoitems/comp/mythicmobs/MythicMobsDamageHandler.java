@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.comp.mythicmobs;
 
 import org.bukkit.entity.Entity;
 
-import net.Indyuce.mmoitems.api.AttackResult.DamageType;
+import net.Indyuce.mmoitems.api.player.damage.AttackResult.DamageType;
 import net.Indyuce.mmoitems.comp.rpg.damage.DamageHandler;
 import net.Indyuce.mmoitems.comp.rpg.damage.DamageInfo;
 

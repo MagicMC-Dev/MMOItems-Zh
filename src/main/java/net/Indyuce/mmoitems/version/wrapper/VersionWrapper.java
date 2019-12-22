@@ -8,8 +8,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
+import net.Indyuce.mmoitems.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.util.MMORayTraceResult;
 
 public interface VersionWrapper {
@@ -34,4 +36,20 @@ public interface VersionWrapper {
 	}
 
 	MMORayTraceResult rayTrace(Player player, Vector direction, double range);
+
+	public void applyDurability(ItemStack item, ItemMeta meta, int damage);
+
+	public int getDurability(ItemStack item, ItemMeta meta);
+
+	public boolean isDamaged(ItemStack item, ItemMeta meta);
+
+	public boolean isDamageable(ItemStack item);
+
+	public void repair(ItemStack item, int amount);
+
+	public ItemStack generate(Material material, int damage);
+
+	public NBTItem copyTexture(NBTItem item);
+
+	public ItemStack textureItem(Material material, int model);
 }

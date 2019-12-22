@@ -148,7 +148,7 @@ public class RecipeManager {
 							float exp = (float) config.getDouble(path + ".furnace-craft.exp");
 							int cook = config.getInt(path + ".furnace-craft.cook");
 							cook = cook == 0 ? 80 : cook;
-							Bukkit.getServer().addRecipe(MMOItems.plugin.getVersion().getVersionWrapper().getFurnaceRecipe(path, item, material, exp, cook));
+							Bukkit.getServer().addRecipe(MMOItems.plugin.getVersion().getWrapper().getFurnaceRecipe(path, item, material, exp, cook));
 						}
 					}
 				}

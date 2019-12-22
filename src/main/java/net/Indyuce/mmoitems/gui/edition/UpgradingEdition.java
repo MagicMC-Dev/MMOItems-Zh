@@ -135,7 +135,7 @@ public class UpgradingEdition extends EditionInventory {
 		inv.setItem(24, successItem);
 
 		if (success > 0 && !type.corresponds(Type.CONSUMABLE)) {
-			ItemStack destroyOnFail = MMOItems.plugin.getVersion().getDurabilityHandler().generate(Material.FISHING_ROD, 30);
+			ItemStack destroyOnFail = MMOItems.plugin.getVersion().getWrapper().generate(Material.FISHING_ROD, 30);
 			ItemMeta destroyOnFailMeta = destroyOnFail.getItemMeta();
 			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "Destroy on fail?");
 			List<String> destroyOnFailLore = new ArrayList<>();

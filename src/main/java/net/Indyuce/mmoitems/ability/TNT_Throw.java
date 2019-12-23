@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class TNT_Throw extends Ability implements Listener {
@@ -29,7 +29,7 @@ public class TNT_Throw extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		Vector vec = getTargetDirection(stats.getPlayer(), target).multiply(2 * data.getModifier("force"));
 		TNTPrimed tnt = (TNTPrimed) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0), EntityType.PRIMED_TNT);
 		tnt.setFuseTicks(80);

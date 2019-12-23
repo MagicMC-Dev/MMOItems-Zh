@@ -74,12 +74,12 @@ public class PlayerListener implements Listener {
 			event.setAmount(event.getAmount() * (1 + PlayerData.get((Player) event.getEntity()).getStats().getStat(ItemStat.REGENERATION) / 100));
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.LOW)
 	public void d(PlayerJoinEvent event) {
 		PlayerData.load(event.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void e(PlayerQuitEvent event) {
 		PlayerData.get(event.getPlayer()).save();
 	}

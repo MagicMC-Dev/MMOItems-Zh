@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public abstract class Ability {
@@ -99,7 +99,7 @@ public abstract class Ability {
 	 * these methods need to be overriden by ability classes depending on their
 	 * ability type
 	 */
-	public abstract void whenCast(TemporaryStats playerStats, LivingEntity target, AbilityData data, ItemAttackResult result);
+	public abstract void whenCast(CachedStats playerStats, LivingEntity target, AbilityData data, ItemAttackResult result);
 
 	/*
 	 * util methods for abilities

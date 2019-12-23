@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -31,7 +31,7 @@ public class Lute extends UntargetedWeapon {
 
 	@Override
 	public void untargetedAttackEffects() {
-		TemporaryStats stats = getPlayerData().getStats().newTemporary();
+		CachedStats stats = getPlayerData().getStats().newTemporary();
 
 		double attackSpeed = 1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
 		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, false))

@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.DamageType;
 
@@ -37,7 +37,7 @@ public class Explosive_Turkey extends Ability implements Listener {
 	Chicken chicken = null;
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		double duration = data.getModifier("duration") * 10;
 		double damage = data.getModifier("damage");
 		double radiusSquared = Math.pow(data.getModifier("radius"), 2);

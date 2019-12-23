@@ -34,7 +34,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory.EquippedItem;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
@@ -85,7 +85,7 @@ public class PlayerData {
 	private Set<AbilityData> itemAbilities = new HashSet<>();
 
 	private SetBonuses setBonuses = null;
-	private PlayerStats stats = new PlayerStats(this);
+	private final PlayerStats stats;
 
 	private boolean fullHands = false;
 
@@ -94,6 +94,7 @@ public class PlayerData {
 	private PlayerData(Player player) {
 		this.offline = player;
 		setPlayer(player);
+		stats = new PlayerStats(this);
 
 		load(new ConfigFile("/userdata", getUniqueId().toString()).getConfig());
 		updateInventory();
@@ -146,8 +147,7 @@ public class PlayerData {
 
 	public void checkForInventoryUpdate() {
 		PlayerInventory inv = player.getInventory();
-		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings()) || !equals(boots, inv.getBoots())
-				|| !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
+		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings()) || !equals(boots, inv.getBoots()) || !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
 			updateInventory();
 	}
 
@@ -172,8 +172,7 @@ public class PlayerData {
 	public boolean areHandsFull() {
 		NBTItem main = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 		NBTItem off = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
-		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
-				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
+		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR)) || (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
 
 	public void updateInventory() {
@@ -245,7 +244,9 @@ public class PlayerData {
 			 * apply abilities
 			 */
 			if (item.hasData(ItemStat.ABILITIES)) {
-				// if the item with the abilities is in the players offhand AND its disabled in the config then just move on, else add the ability
+				// if the item with the abilities is in the players offhand AND
+				// its disabled in the config then just move on, else add the
+				// ability
 				if (item.getNBTItem().getItem().equals(player.getInventory().getItemInOffHand()) && MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
 					continue;
 				} else
@@ -357,7 +358,7 @@ public class PlayerData {
 		return castAbilities(getStats().newTemporary(), target, result, castMode);
 	}
 
-	public ItemAttackResult castAbilities(TemporaryStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
+	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
 		if (target == null) {
 			if (!MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES))
 				return result.setSuccessful(false);
@@ -387,7 +388,7 @@ public class PlayerData {
 		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), data, true);
 	}
 
-	public void cast(TemporaryStats stats, LivingEntity target, ItemAttackResult result, AbilityData ability, boolean message) {
+	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult result, AbilityData ability, boolean message) {
 		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled())
@@ -437,8 +438,7 @@ public class PlayerData {
 	 */
 	public void applyCooldown(CooldownType type, double value) {
 		String mitigation;
-		long extra = (long) (1000
-				* (type.isMitigation() ? getMitigationCooldown(mitigation = type.name().toLowerCase()) * (1 - Math.min(getMaxMitigationCooldownReduction(mitigation), value) / 100) : value));
+		long extra = (long) (1000 * (type.isMitigation() ? getMitigationCooldown(mitigation = type.name().toLowerCase()) * (1 - Math.min(getMaxMitigationCooldownReduction(mitigation), value) / 100) : value));
 		extraCooldowns.put(type, System.currentTimeMillis() + extra);
 	}
 

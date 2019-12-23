@@ -19,7 +19,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ArrowParticles;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ProjectileData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -35,11 +35,11 @@ public class EntityManager implements Listener {
 
 	private Map<Integer, ProjectileData> projectiles = new HashMap<>();
 
-	public void registerCustomProjectile(NBTItem sourceItem, TemporaryStats stats, Entity entity, boolean customWeapon) {
+	public void registerCustomProjectile(NBTItem sourceItem, CachedStats stats, Entity entity, boolean customWeapon) {
 		registerCustomProjectile(sourceItem, stats, entity, customWeapon, 1);
 	}
 
-	public void registerCustomProjectile(NBTItem sourceItem, TemporaryStats stats, Entity entity, boolean customWeapon, double damageCoefficient) {
+	public void registerCustomProjectile(NBTItem sourceItem, CachedStats stats, Entity entity, boolean customWeapon, double damageCoefficient) {
 		/*
 		 * if damage is null, then it uses the default minecraft bow damage.
 		 * it's then multiplied by the damage coefficient which corresponds for
@@ -107,7 +107,7 @@ public class EntityManager implements Listener {
 
 		ProjectileData data = getProjectileData(arrow);
 		LivingEntity target = (LivingEntity) event.getEntity();
-		TemporaryStats stats = data.getPlayerStats();
+		CachedStats stats = data.getPlayerStats();
 
 		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
 

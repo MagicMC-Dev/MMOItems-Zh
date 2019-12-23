@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -35,7 +35,7 @@ public class RealDualWieldHook implements Listener {
 			return;
 
 		Player player = event.getPlayer();
-		TemporaryStats stats = null;
+		CachedStats stats = null;
 
 		/*
 		 * must apply attack conditions before apply any effects. the event must

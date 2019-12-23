@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -57,11 +57,11 @@ public class ItemAttackResult extends AttackResult {
 		return (ItemAttackResult) super.multiplyDamage(coef);
 	}
 
-	public void damage(TemporaryStats stats, LivingEntity target) {
+	public void damage(CachedStats stats, LivingEntity target) {
 		MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, this);
 	}
 
-	public void applyEffectsAndDamage(TemporaryStats stats, NBTItem item, LivingEntity target) {
+	public void applyEffectsAndDamage(CachedStats stats, NBTItem item, LivingEntity target) {
 		MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, applyEffects(stats, item, target));
 	}
 
@@ -69,7 +69,7 @@ public class ItemAttackResult extends AttackResult {
 	 * this methods makes applying ALL effects including elemental damage easier
 	 * for untargeted weapons like staffs.
 	 */
-	public ItemAttackResult applyEffects(TemporaryStats stats, NBTItem item, LivingEntity target) {
+	public ItemAttackResult applyEffects(CachedStats stats, NBTItem item, LivingEntity target) {
 		if (hasType(DamageType.WEAPON)) {
 			applyElementalEffects(stats, item, target);
 			applyOnHitEffects(stats, target);
@@ -78,7 +78,7 @@ public class ItemAttackResult extends AttackResult {
 		return this;
 	}
 
-	public ItemAttackResult applySkillEffects(TemporaryStats stats, LivingEntity target) {
+	public ItemAttackResult applySkillEffects(CachedStats stats, LivingEntity target) {
 
 		for (DamageType type : DamageType.values())
 			if (hasType(type))
@@ -91,7 +91,7 @@ public class ItemAttackResult extends AttackResult {
 		return this;
 	}
 
-	public ItemAttackResult applyElementalEffects(TemporaryStats stats, NBTItem item, LivingEntity target) {
+	public ItemAttackResult applyElementalEffects(CachedStats stats, NBTItem item, LivingEntity target) {
 		new ElementalAttack(item, this).applyElementalArmor(target).apply(stats);
 		return this;
 	}
@@ -100,7 +100,7 @@ public class ItemAttackResult extends AttackResult {
 	 * vanilla melee weapons have no NBTTitems so this method only provides for
 	 * non-weapon specific effects like critical strikes and extra stat damage
 	 */
-	public ItemAttackResult applyOnHitEffects(TemporaryStats stats, LivingEntity target) {
+	public ItemAttackResult applyOnHitEffects(CachedStats stats, LivingEntity target) {
 
 		// abilities
 		stats.getPlayerData().castAbilities(stats, target, this, CastingMode.ON_HIT);

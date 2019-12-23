@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -70,7 +70,7 @@ public class Weapon extends UseItem {
 		return true;
 	}
 
-	public ItemAttackResult targetedAttack(TemporaryStats stats, LivingEntity target, EquipmentSlot slot, ItemAttackResult result) {
+	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, EquipmentSlot slot, ItemAttackResult result) {
 
 		// custom durability
 		DurabilityItem durItem = new DurabilityItem(getPlayer(), getNBTItem());

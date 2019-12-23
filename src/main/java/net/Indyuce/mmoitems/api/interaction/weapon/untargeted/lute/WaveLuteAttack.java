@@ -13,14 +13,14 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class WaveLuteAttack implements LuteAttackHandler {
 
 	@Override
-	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
+	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
 		new BukkitRunnable() {
 			Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
 			Location loc = stats.getPlayer().getEyeLocation();

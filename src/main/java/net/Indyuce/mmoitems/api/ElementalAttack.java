@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -53,7 +53,7 @@ public class ElementalAttack {
 		return this;
 	}
 
-	public void apply(TemporaryStats stats) {
+	public void apply(CachedStats stats) {
 
 		// elemental attacks
 		double p = 1;

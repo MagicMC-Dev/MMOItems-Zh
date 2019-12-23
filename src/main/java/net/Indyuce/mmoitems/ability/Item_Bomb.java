@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.DamageType;
@@ -35,7 +35,7 @@ public class Item_Bomb extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(TemporaryStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
 		ItemStack itemStack = stats.getPlayer().getInventory().getItemInMainHand().clone();
 		if (itemStack == null || itemStack.getType() == Material.AIR) {
 			result.setSuccessful(false);

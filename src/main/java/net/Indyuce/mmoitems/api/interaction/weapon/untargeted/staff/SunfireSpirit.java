@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -22,7 +22,7 @@ import net.mmogroup.mmolib.version.VersionSound;
 public class SunfireSpirit implements StaffAttackHandler {
 
 	@Override
-	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range) {
+	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
 			Location target = getGround(stats.getPlayer().getTargetBlock((Set<Material>) null, (int) range * 2).getLocation()).add(0, 1.2, 0);

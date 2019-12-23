@@ -39,7 +39,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.AdvancedWorkbench;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -118,7 +118,7 @@ public class ItemUse implements Listener {
 			return;
 
 		Player player = (Player) event.getDamager();
-		TemporaryStats stats = null;
+		CachedStats stats = null;
 
 		/*
 		 * must apply attack conditions before apply any effects. the event must

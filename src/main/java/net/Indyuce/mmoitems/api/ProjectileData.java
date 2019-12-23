@@ -1,14 +1,14 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ProjectileData {
 	private final NBTItem sourceItem;
-	private final TemporaryStats playerStats;
+	private final CachedStats playerStats;
 	private final boolean customWeapon;
 
-	public ProjectileData(NBTItem sourceItem, TemporaryStats playerStats, boolean customWeapon) {
+	public ProjectileData(NBTItem sourceItem, CachedStats playerStats, boolean customWeapon) {
 		this.playerStats = playerStats;
 		this.sourceItem = sourceItem;
 		this.customWeapon = customWeapon;
@@ -18,7 +18,7 @@ public class ProjectileData {
 		return sourceItem;
 	}
 
-	public TemporaryStats getPlayerStats() {
+	public CachedStats getPlayerStats() {
 		return playerStats;
 	}
 

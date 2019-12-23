@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -16,7 +16,7 @@ import net.mmogroup.mmolib.version.VersionSound;
 public class LightningSpirit implements StaffAttackHandler {
 
 	@Override
-	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range) {
+	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 		Location loc = stats.getPlayer().getEyeLocation();
 		Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.75);

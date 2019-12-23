@@ -14,7 +14,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.version.VersionSound;
 
@@ -116,18 +116,18 @@ public enum TypeSet {
 	 */
 	EXTRA;
 
-	private SetAttackHandler<TemporaryStats, LivingEntity, Weapon, ItemAttackResult> attackHandler;
+	private SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler;
 
 	private TypeSet() {
 		this((playerStats, target, weapon, result) -> {
 		});
 	}
 
-	private TypeSet(SetAttackHandler<TemporaryStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {
+	private TypeSet(SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {
 		this.attackHandler = attackHandler;
 	}
 
-	public void applyAttackEffect(TemporaryStats playerStats, LivingEntity target, Weapon weapon, ItemAttackResult result) {
+	public void applyAttackEffect(CachedStats playerStats, LivingEntity target, Weapon weapon, ItemAttackResult result) {
 		attackHandler.apply(playerStats, target, weapon, result);
 	}
 

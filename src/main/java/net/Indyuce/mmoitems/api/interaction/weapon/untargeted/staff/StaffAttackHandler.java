@@ -4,11 +4,11 @@ import java.util.Random;
 
 import org.bukkit.Location;
 
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public interface StaffAttackHandler {
-	public void handle(TemporaryStats stats, NBTItem nbt, double attackDamage, double range);
+	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range);
 
 	static final Random random = new Random();
 

@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -29,7 +29,7 @@ public class Staff extends UntargetedWeapon {
 
 	@Override
 	public void untargetedAttackEffects() {
-		TemporaryStats stats = getPlayerData().getStats().newTemporary();
+		CachedStats stats = getPlayerData().getStats().newTemporary();
 
 		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")), CooldownType.ATTACK, false))
 			return;

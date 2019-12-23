@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.player.PlayerStats.TemporaryStats;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
@@ -27,7 +27,7 @@ import net.mmogroup.mmolib.version.VersionSound;
 
 public enum Element {
 	FIRE(Material.BLAZE_POWDER, "Fire", ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), new ElementHandler() {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, target.getHeight() / 2, 0), 14);
 			target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, .8f);
 			target.setFireTicks((int) (attack * 2));
@@ -36,7 +36,7 @@ public enum Element {
 	}),
 
 	ICE(VersionMaterial.SNOWBALL.toMaterial(), "Ice", ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE), new ElementHandler() {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			new BukkitRunnable() {
 				double y = 0;
 				Location loc = target.getLocation();
@@ -57,7 +57,7 @@ public enum Element {
 	}),
 
 	WIND(Material.FEATHER, "Wind", ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), new ElementHandler() {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDER_DRAGON_GROWL.toSound(), 2, 2f);
 			Vector vec = target.getLocation().subtract(stats.getPlayer().getLocation()).toVector().normalize().multiply(1.7).setY(.5);
 			target.setVelocity(vec);
@@ -73,7 +73,7 @@ public enum Element {
 	}),
 
 	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), "Earth", ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT), new ElementHandler() {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
 			MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1, 0, Material.DIRT);
 			result.addDamage(absolute);
@@ -86,7 +86,7 @@ public enum Element {
 	}),
 
 	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), "Thunder", ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8), new ElementHandler() {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
 			for (Entity entity : target.getNearbyEntities(3, 2, 3))
 				if (MMOUtils.canDamage(stats.getPlayer(), entity))
@@ -99,7 +99,7 @@ public enum Element {
 	}),
 
 	WATER(VersionMaterial.LILY_PAD.toMaterial(), "Water", ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER), new ElementHandler() {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			ElementListener.weaken(target);
 			new BukkitRunnable() {
 				double step = Math.PI / 2;
@@ -156,7 +156,7 @@ public enum Element {
 	}
 
 	public interface ElementHandler {
-		public void elementAttack(TemporaryStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute);
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute);
 	}
 
 	public static class ElementParticle {

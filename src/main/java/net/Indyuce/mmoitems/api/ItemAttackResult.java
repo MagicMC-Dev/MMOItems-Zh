@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.Set;
-
 import org.bukkit.entity.LivingEntity;
 
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
@@ -18,14 +16,6 @@ public class ItemAttackResult extends AttackResult {
 
 	public ItemAttackResult(double damage, DamageType... types) {
 		super(true, damage, types);
-	}
-
-	public ItemAttackResult(boolean successful, double damage, DamageType... types) {
-		super(successful, damage, types);
-	}
-
-	public ItemAttackResult(boolean successful, double damage, Set<DamageType> types) {
-		super(successful, damage, types);
 	}
 
 	public ItemAttackResult(ItemAttackResult result) {

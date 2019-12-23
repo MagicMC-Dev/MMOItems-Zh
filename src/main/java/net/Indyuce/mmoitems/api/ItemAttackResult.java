@@ -7,10 +7,8 @@ import java.util.Random;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -73,21 +71,7 @@ public class ItemAttackResult extends AttackResult {
 		if (hasType(DamageType.WEAPON)) {
 			applyElementalEffects(stats, item, target);
 			applyOnHitEffects(stats, target);
-		} else if (hasType(DamageType.SKILL))
-			applySkillEffects(stats, target);
-		return this;
-	}
-
-	public ItemAttackResult applySkillEffects(CachedStats stats, LivingEntity target) {
-
-		for (DamageType type : DamageType.values())
-			if (hasType(type))
-				addRelativeDamage(stats.getStat((ItemStat) type.getMMOItemsStat()) / 100);
-
-		addRelativeDamage(stats.getStat(target instanceof Player ? ItemStat.PVP_DAMAGE : ItemStat.PVE_DAMAGE) / 100);
-		if (MMOUtils.isUndead(target))
-			addRelativeDamage(stats.getStat(ItemStat.UNDEAD_DAMAGE) / 100);
-
+		}
 		return this;
 	}
 
@@ -97,22 +81,13 @@ public class ItemAttackResult extends AttackResult {
 	}
 
 	/*
-	 * vanilla melee weapons have no NBTTitems so this method only provides for
+	 * vanilla melee weapons have no NBT tags so this method only provides for
 	 * non-weapon specific effects like critical strikes and extra stat damage
 	 */
 	public ItemAttackResult applyOnHitEffects(CachedStats stats, LivingEntity target) {
 
 		// abilities
 		stats.getPlayerData().castAbilities(stats, target, this, CastingMode.ON_HIT);
-
-		// extra damage
-		for (DamageType type : DamageType.values())
-			if (hasType(type))
-				addRelativeDamage(stats.getStat((ItemStat) type.getMMOItemsStat()) / 100);
-
-		addRelativeDamage(stats.getStat(target instanceof Player ? ItemStat.PVP_DAMAGE : ItemStat.PVE_DAMAGE) / 100);
-		if (MMOUtils.isUndead(target))
-			addRelativeDamage(stats.getStat(ItemStat.UNDEAD_DAMAGE) / 100);
 
 		// critical strikes
 		if (random.nextDouble() <= stats.getStat(ItemStat.CRITICAL_STRIKE_CHANCE) / 100) {

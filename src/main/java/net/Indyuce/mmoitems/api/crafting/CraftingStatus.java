@@ -172,10 +172,10 @@ public class CraftingStatus {
 	//
 	// public
 	// public class InstantCraftingInfo extends CraftingInfo {
-	// private final PlayerData data;
+	// private final PlayerDataManager data;
 	// private boolean timedOut;
 	//
-	// public InstantCraftingInfo(PlayerData data, Recipe recipe) {
+	// public InstantCraftingInfo(PlayerDataManager data, Recipe recipe) {
 	// super(recipe);
 	// this.data = data;
 	// }

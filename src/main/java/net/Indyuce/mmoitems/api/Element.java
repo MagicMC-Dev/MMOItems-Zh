@@ -90,7 +90,7 @@ public enum Element {
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
 			for (Entity entity : target.getNearbyEntities(3, 2, 3))
 				if (MMOUtils.canDamage(stats.getPlayer(), entity))
-					new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats, (LivingEntity) entity);
+					new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(), (LivingEntity) entity);
 
 			result.addDamage(absolute);
 			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)

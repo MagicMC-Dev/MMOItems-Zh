@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Tactical_Grenade extends Ability {
@@ -74,7 +75,7 @@ public class Tactical_Grenade extends Ability {
 						if (entity.equals(target))
 							cancel();
 
-						new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 						entity.setVelocity(entity.getVelocity().add(offsetVector(knockup)));
 					}
 			}

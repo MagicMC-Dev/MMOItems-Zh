@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Item_Throw extends Ability implements Listener {
@@ -53,7 +54,7 @@ public class Item_Throw extends Ability implements Listener {
 				item.getEntity().getWorld().spawnParticle(Particle.CRIT, item.getEntity().getLocation(), 0);
 				for (Entity target : item.getEntity().getNearbyEntities(1, 1, 1))
 					if (MMOUtils.canDamage(stats.getPlayer(), target)) {
-						new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) target);
+						new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) target);
 						item.close();
 						cancel();
 					}

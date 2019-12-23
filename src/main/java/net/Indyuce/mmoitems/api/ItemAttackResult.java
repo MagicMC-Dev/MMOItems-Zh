@@ -2,24 +2,17 @@ package net.Indyuce.mmoitems.api;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
-import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemAttackResult extends AttackResult {
-	private static final Random random = new Random();
-
 	public ItemAttackResult(boolean successful, DamageType... types) {
 		this(successful, 0, types);
 	}
@@ -55,10 +48,6 @@ public class ItemAttackResult extends AttackResult {
 		return (ItemAttackResult) super.multiplyDamage(coef);
 	}
 
-	public void damage(CachedStats stats, LivingEntity target) {
-		MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, this);
-	}
-
 	public void applyEffectsAndDamage(CachedStats stats, NBTItem item, LivingEntity target) {
 		MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, applyEffects(stats, item, target));
 	}
@@ -85,18 +74,7 @@ public class ItemAttackResult extends AttackResult {
 	 * non-weapon specific effects like critical strikes and extra stat damage
 	 */
 	public ItemAttackResult applyOnHitEffects(CachedStats stats, LivingEntity target) {
-
-		// abilities
 		stats.getPlayerData().castAbilities(stats, target, this, CastingMode.ON_HIT);
-
-		// critical strikes
-		if (random.nextDouble() <= stats.getStat(ItemStat.CRITICAL_STRIKE_CHANCE) / 100) {
-			multiplyDamage(MMOItems.plugin.getConfig().getDouble("crit-coefficient") + stats.getStat(ItemStat.CRITICAL_STRIKE_POWER) / 100);
-			target.getWorld().playSound(target.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1, 1);
-			target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, 1, 0), 16, 0, 0, 0, .1);
-		}
-
 		return this;
 	}
-
 }

@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Smite extends Ability {
@@ -28,7 +29,7 @@ public class Smite extends Ability {
 			return;
 		}
 
-		new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, target);
+		new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), target);
 		target.getWorld().strikeLightningEffect(target.getLocation());
 	}
 }

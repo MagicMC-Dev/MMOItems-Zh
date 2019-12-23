@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Thrust extends Ability {
@@ -39,7 +40,7 @@ public class Thrust extends Ability {
 			loc.add(vec);
 			for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 				if (MMOUtils.canDamage(stats.getPlayer(), loc, entity))
-					new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+					new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 			loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 0);
 		}
 	}

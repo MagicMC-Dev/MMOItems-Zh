@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionSound;
 
@@ -49,7 +50,7 @@ public class Light_Dash extends Ability {
 				for (Entity entity : stats.getPlayer().getNearbyEntities(1, 1, 1))
 					if (!hit.contains(entity.getEntityId()) && MMOUtils.canDamage(stats.getPlayer(), entity)) {
 						hit.add(entity.getEntityId());
-						new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 					}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 2);

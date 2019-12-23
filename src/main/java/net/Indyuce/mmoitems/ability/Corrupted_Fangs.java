@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Corrupted_Fangs extends Ability implements Listener {
@@ -63,7 +64,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
 			CachedStats stats = (CachedStats) data[0];
 			if (MMOUtils.canDamage(stats.getPlayer(), event.getEntity()))
-				new ItemAttackResult((double) data[1], DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) event.getEntity());
+				new AttackResult((double) data[1], DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) event.getEntity());
 		}
 	}
 }

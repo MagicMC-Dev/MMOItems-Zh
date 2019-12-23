@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Death_Mark extends Ability {
@@ -52,7 +53,7 @@ public class Death_Mark extends Ability {
 				target.getWorld().spawnParticle(Particle.SPELL_MOB, target.getLocation(), 4, .2, 0, .2, 0);
 
 				if (ti % 20 == 0)
-					MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, new ItemAttackResult(dps, DamageType.SKILL, DamageType.MAGICAL), false);
+					MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, new AttackResult(dps, DamageType.SKILL, DamageType.MAGICAL), false);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 1, 2);

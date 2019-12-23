@@ -82,7 +82,7 @@ public class RealDualWieldHook implements Listener {
 		/*
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
-		result.applyOnHitEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, target);
+		result.applyEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, item, target);
 
 		event.setDamage(result.getDamage());
 	}

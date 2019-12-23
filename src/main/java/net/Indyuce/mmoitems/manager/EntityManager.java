@@ -119,7 +119,7 @@ public class EntityManager implements Listener {
 
 			if (data.getSourceItem().getItem().hasItemMeta())
 				if (data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
-					result.addRelativeDamage(.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
+					result.multiplyDamage(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
 		}
 
 		event.setDamage(result.getDamage());

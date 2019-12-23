@@ -13,6 +13,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Sky_Smash extends Ability {
@@ -39,7 +40,7 @@ public class Sky_Smash extends Ability {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) < 10) {
-				new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 				Location loc1 = stats.getPlayer().getEyeLocation().clone();
 				loc1.setPitch(-70);
 				((LivingEntity) entity).setVelocity(loc1.getDirection().multiply(1.2 * knockUp));

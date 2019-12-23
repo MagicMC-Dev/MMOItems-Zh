@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionSound;
 
@@ -58,7 +59,7 @@ public class Magma_Fissure extends Ability {
 				if (target.getLocation().distanceSquared(loc) < 1) {
 					loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_HURT, 2, 1);
 					target.setFireTicks((int) (target.getFireTicks() + data.getModifier("ignite") * 20));
-					new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, target);
+					new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), target);
 					cancel();
 				}
 			}

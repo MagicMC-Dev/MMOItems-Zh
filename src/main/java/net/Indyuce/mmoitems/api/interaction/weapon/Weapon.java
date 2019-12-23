@@ -83,7 +83,6 @@ public class Weapon extends UseItem {
 		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, true))
 			return result.setSuccessful(false);
 
-		result.applyElementalEffects(stats, getNBTItem(), target);
 		if (!getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE"))
 			getMMOItem().getType().getItemSet().applyAttackEffect(stats, target, this, result);
 

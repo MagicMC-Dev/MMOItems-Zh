@@ -23,6 +23,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -89,7 +90,7 @@ public class Present_Throw extends Ability {
 					item.getEntity().getWorld().playSound(item.getEntity().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(item.getEntity().getLocation()))
 						if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity))
-							new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) entity);
 					item.close();
 					cancel();
 				}

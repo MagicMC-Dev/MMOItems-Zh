@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionSound;
 
@@ -62,7 +63,7 @@ public class Firefly extends Ability {
 						stats.getPlayer().getWorld().spawnParticle(Particle.FLAME, stats.getPlayer().getLocation().add(0, 1, 0), 24, 0, 0, 0, .3);
 						entity.setVelocity(stats.getPlayer().getVelocity().setY(0.3).multiply(1.7 * knockback));
 						stats.getPlayer().setVelocity(stats.getPlayer().getEyeLocation().getDirection().multiply(-3).setY(.5));
-						new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 						cancel();
 						return;
 					}

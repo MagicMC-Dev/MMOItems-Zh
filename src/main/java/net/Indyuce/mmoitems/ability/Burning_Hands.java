@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Burning_Hands extends Ability implements Listener {
@@ -55,10 +56,8 @@ public class Burning_Hands extends Ability implements Listener {
 
 				if (j % 5 == 0)
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-						if (entity.getLocation().distanceSquared(loc) < 60)
-							if (stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6)
-								if (MMOUtils.canDamage(stats.getPlayer(), entity))
-									new ItemAttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+						if (entity.getLocation().distanceSquared(loc) < 60 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
+							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 2);

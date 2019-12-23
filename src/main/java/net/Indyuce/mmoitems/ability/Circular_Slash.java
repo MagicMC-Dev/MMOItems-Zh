@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Circular_Slash extends Ability {
@@ -38,7 +39,7 @@ public class Circular_Slash extends Ability {
 		stats.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 254));
 		for (Entity entity : stats.getPlayer().getNearbyEntities(radius, radius, radius)) {
 			if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
-				new ItemAttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) entity);
+				new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 				Vector v1 = entity.getLocation().toVector();
 				Vector v2 = stats.getPlayer().getLocation().toVector();
 				double y = .5;

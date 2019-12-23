@@ -13,6 +13,7 @@ import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class Heavy_Charge extends Ability {
@@ -50,7 +51,7 @@ public class Heavy_Charge extends Ability {
 						stats.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 						target.setVelocity(stats.getPlayer().getVelocity().setY(0.3).multiply(1.7 * knockback));
 						stats.getPlayer().setVelocity(stats.getPlayer().getVelocity().setX(0).setY(0).setZ(0));
-						new ItemAttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL).applyEffectsAndDamage(stats, null, (LivingEntity) target);
+						new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL).damage(stats.getPlayer(), (LivingEntity) target);
 						cancel();
 						break;
 					}

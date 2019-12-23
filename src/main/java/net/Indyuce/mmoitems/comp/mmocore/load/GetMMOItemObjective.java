@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import net.Indyuce.mmocore.api.item.NBTItem;
 import net.Indyuce.mmocore.api.load.MMOLineConfig;
 import net.Indyuce.mmocore.api.quest.ObjectiveProgress;
 import net.Indyuce.mmocore.api.quest.QuestProgress;
@@ -14,6 +13,7 @@ import net.Indyuce.mmocore.api.quest.objective.Objective;
 import net.Indyuce.mmocore.comp.citizens.CitizenInteractEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GetMMOItemObjective extends Objective {
 	private final Type type;

@@ -47,7 +47,7 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
 					PlayerData data = PlayerData.get(player.get());
 					for (SmeltMMOItemExperienceSource source : getSources())
 						if (source.matches(data, nbt))
-							source.giveExperience(data);
+							source.giveExperience(data, event.getBlock().getLocation().add(.5, 1, .5));
 				}
 			}
 		};

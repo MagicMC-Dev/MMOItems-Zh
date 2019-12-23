@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import org.bukkit.entity.LivingEntity;
 
@@ -14,18 +13,18 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemAttackResult extends AttackResult {
 	public ItemAttackResult(boolean successful, DamageType... types) {
-		this(successful, 0, types);
+		super(successful, 0, types);
 	}
 
 	public ItemAttackResult(double damage, DamageType... types) {
-		this(true, damage, types);
+		super(true, damage, types);
 	}
 
 	public ItemAttackResult(boolean successful, double damage, DamageType... types) {
-		this(successful, damage, Arrays.asList(types));
+		super(successful, damage, types);
 	}
 
-	public ItemAttackResult(boolean successful, double damage, List<DamageType> types) {
+	public ItemAttackResult(boolean successful, double damage, Set<DamageType> types) {
 		super(successful, damage, types);
 	}
 

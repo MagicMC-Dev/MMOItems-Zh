@@ -46,7 +46,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	@Override
 	public AttackResult getDamage(Entity entity) {
 		SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-		return new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type)).collect(Collectors.toList()));
+		return new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type)).collect(Collectors.toSet()));
 	}
 
 	@Override

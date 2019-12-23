@@ -66,33 +66,6 @@ soulbound:
     damage:
         base: 2
         per-lvl: 2
-
-# Default and max. values of armor stats. These systems
-# all have a cooldown which can be reduced using the
-# '*** Cooldown Reduction' item stat.
-mitigation:
-    block:
-        power:
-            default: 25.0
-            max: 75.0
-        rating-max: 80.0
-        cooldown:
-            base: 5.0
-            max-reduction: 80.0
-    dodge:
-        knockback:
-            enabled: true
-            force: 1
-        rating-max: 80.0
-        cooldown:
-            base: 5.0
-            max-reduction: 80.0
-    parry:
-        knockback-force: 1.0
-        rating-max: 80.0
-        cooldown:
-            base: 8.0
-            max-reduction: 80.0
         
 # Enable, disable and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.

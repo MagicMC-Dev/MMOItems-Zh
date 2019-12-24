@@ -437,9 +437,7 @@ public class PlayerData {
 	 * type is mitigation
 	 */
 	public void applyCooldown(CooldownType type, double value) {
-		String mitigation;
-		long extra = (long) (1000 * (type.isMitigation() ? getMitigationCooldown(mitigation = type.name().toLowerCase()) * (1 - Math.min(getMaxMitigationCooldownReduction(mitigation), value) / 100) : value));
-		extraCooldowns.put(type, System.currentTimeMillis() + extra);
+		extraCooldowns.put(type, (long) (System.currentTimeMillis() + 1000 * value));
 	}
 
 	public boolean canUseItem(String id) {
@@ -470,14 +468,6 @@ public class PlayerData {
 		return Math.max(0, (double) (itemCooldowns.get(id) - System.currentTimeMillis()) / 1000);
 	}
 
-	private double getMaxMitigationCooldownReduction(String path) {
-		return MMOItems.plugin.getConfig().getDouble("mitigation." + path + ".cooldown.max-reduction");
-	}
-
-	private double getMitigationCooldown(String path) {
-		return MMOItems.plugin.getConfig().getDouble("mitigation." + path + ".cooldown.base");
-	}
-
 	public static PlayerData get(OfflinePlayer player) {
 		return playerDatas.get(player.getUniqueId());
 	}
@@ -505,33 +495,18 @@ public class PlayerData {
 	public enum CooldownType {
 
 		// either for consumables or for commands
-		ITEM(false),
+		ITEM,
 
 		// simple attack cooldown
-		ATTACK(false),
+		ATTACK,
 
 		// elemental ttack
-		ELEMENTAL_ATTACK(false),
+		ELEMENTAL_ATTACK,
 
 		// item type special effects
-		SPECIAL_ATTACK(false),
+		SPECIAL_ATTACK,
 
 		// piercing / blunt / slashing passive effects
-		SET_TYPE_ATTACK(false),
-
-		// mitigation cooldowns
-		PARRY(true),
-		BLOCK(true),
-		DODGE(true);
-
-		private boolean mitigation;
-
-		private CooldownType(boolean mitigation) {
-			this.mitigation = mitigation;
-		}
-
-		public boolean isMitigation() {
-			return mitigation;
-		}
+		SET_TYPE_ATTACK;
 	}
 }

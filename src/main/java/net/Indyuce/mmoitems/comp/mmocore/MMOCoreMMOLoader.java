@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
+import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
 import net.Indyuce.mmoitems.comp.mmocore.load.SmeltMMOItemExperienceSource;
 
 public class MMOCoreMMOLoader implements MMOLoader {
@@ -70,6 +71,9 @@ public class MMOCoreMMOLoader implements MMOLoader {
 	@Override
 	public ExperienceSource<?> loadExperienceSource(MMOLineConfig config, Profession profession) {
 
+		if (config.getKey().equals("minemiblock"))
+			return new MineMIBlockExperienceSource(profession, config);
+		
 		if (config.getKey().equalsIgnoreCase("smeltmmoitem"))
 			return new SmeltMMOItemExperienceSource(profession, config);
 

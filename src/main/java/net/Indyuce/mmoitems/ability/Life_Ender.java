@@ -72,7 +72,7 @@ public class Life_Ender extends Ability {
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(source))
 						if (entity.getLocation().distanceSquared(source) < radius * radius && MMOUtils.canDamage(stats.getPlayer(), entity)) {
-							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
+							new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) entity);
 							entity.setVelocity(entity.getLocation().subtract(source).toVector().setY(.75).normalize().multiply(knockback));
 						}
 					cancel();

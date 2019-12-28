@@ -65,7 +65,7 @@ public class Targeted_Fireball extends Ability {
 					loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
 					loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_HURT, 2, 1);
 					target.setFireTicks((int) (target.getFireTicks() + ability.getModifier("ignite") * 20));
-					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), target);
+					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE).damage(stats.getPlayer(), target);
 					cancel();
 				}
 			}

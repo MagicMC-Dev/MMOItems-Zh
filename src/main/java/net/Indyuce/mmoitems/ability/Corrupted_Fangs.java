@@ -71,7 +71,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
 			CachedStats stats = (CachedStats) data[0];
 			if (MMOUtils.canDamage(stats.getPlayer(), event.getEntity()))
-				new AttackResult((double) data[1], DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) event.getEntity());
+				new AttackResult((double) data[1], DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) event.getEntity());
 		}
 	}
 }

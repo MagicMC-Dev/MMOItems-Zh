@@ -34,7 +34,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 		MMOLib.plugin.getDamage().registerHandler(this);
 
 		damages.put(SkillType.ABILITY_PROPERTY_PHYSICAL, DamageType.PHYSICAL);
-		damages.put(SkillType.ABILITY_PROPERTY_MAGICAL, DamageType.MAGICAL);
+		damages.put(SkillType.ABILITY_PROPERTY_MAGICAL, DamageType.MAGIC);
 		damages.put(SkillType.ABILITY_PROPERTY_PROJECTILE, DamageType.PROJECTILE);
 	}
 
@@ -79,7 +79,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 		 */
 		if (event.getSkill().isType(SkillType.ABILITY_PROPERTY_MAGICAL)) {
 			if (event.getDamager().getEntity() instanceof Player)
-				event.setDamage(event.getDamage() * (1 + PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGICAL_DAMAGE) / 100));
+				event.setDamage(event.getDamage() * (1 + PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));
 			if (event.getEntity() instanceof Player)
 				event.setDamage(event.getDamage() * (1 - PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
 		}

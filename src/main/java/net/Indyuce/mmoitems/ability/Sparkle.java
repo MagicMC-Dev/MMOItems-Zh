@@ -41,7 +41,7 @@ public class Sparkle extends Ability {
 		double radius = ability.getModifier("radius");
 		double limit = ability.getModifier("limit");
 
-		new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), target);
+		new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), target);
 		target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 
@@ -49,7 +49,7 @@ public class Sparkle extends Ability {
 		for (Entity entity : target.getNearbyEntities(radius, radius, radius))
 			if (count < limit && entity instanceof LivingEntity && entity != stats.getPlayer() && !(entity instanceof ArmorStand)) {
 				count++;
-				new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
+				new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) entity);
 				entity.getWorld().playSound(entity.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 				Location loc_t = target.getLocation().add(0, .75, 0);
 				Location loc_ent = entity.getLocation().add(0, .75, 0);

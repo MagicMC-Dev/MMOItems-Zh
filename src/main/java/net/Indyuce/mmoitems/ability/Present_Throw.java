@@ -97,7 +97,7 @@ public class Present_Throw extends Ability {
 					item.getEntity().getWorld().playSound(item.getEntity().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(item.getEntity().getLocation()))
 						if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canDamage(stats.getPlayer(), entity))
-							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) entity);
+							new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) entity);
 					item.close();
 					cancel();
 				}

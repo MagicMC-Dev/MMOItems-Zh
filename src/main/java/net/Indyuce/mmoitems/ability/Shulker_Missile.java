@@ -62,7 +62,7 @@ public class Shulker_Missile extends Ability implements Listener {
 				stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0), EntityType.SHULKER_BULLET);
 				shulkerBullet.setShooter(stats.getPlayer());
-				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE), ability.getModifier("effect-duration"));
+				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), ability.getModifier("effect-duration"));
 				new BukkitRunnable() {
 					double ti = 0;
 

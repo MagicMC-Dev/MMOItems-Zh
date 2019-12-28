@@ -76,7 +76,7 @@ public class Tactical_Grenade extends Ability {
 						if (entity.equals(target))
 							cancel();
 
-						new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
+						new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) entity);
 						entity.setVelocity(entity.getVelocity().add(offsetVector(knockup)));
 					}
 			}

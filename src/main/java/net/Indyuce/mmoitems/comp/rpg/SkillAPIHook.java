@@ -28,7 +28,7 @@ public class SkillAPIHook implements RPGHandler, Listener {
 	public void a(SkillDamageEvent event) {
 
 		if (event.getDamager() instanceof Player)
-			event.setDamage(event.getDamage() * (1 + net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getDamager()).getStats().getStat(ItemStat.MAGICAL_DAMAGE) / 100));
+			event.setDamage(event.getDamage() * (1 + net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getDamager()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));
 
 		if (event.getTarget() instanceof Player)
 			event.setDamage(event.getDamage() * (1 - net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getTarget()).getStats().getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));

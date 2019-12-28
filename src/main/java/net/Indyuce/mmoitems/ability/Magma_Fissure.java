@@ -60,7 +60,7 @@ public class Magma_Fissure extends Ability {
 				if (target.getLocation().distanceSquared(loc) < 1) {
 					loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_HURT, 2, 1);
 					target.setFireTicks((int) (target.getFireTicks() + ability.getModifier("ignite") * 20));
-					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), target);
+					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), target);
 					cancel();
 				}
 			}

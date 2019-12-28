@@ -29,7 +29,7 @@ public class Smite extends Ability {
 	@Override
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
-		new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), target);
+		new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), target);
 		target.getWorld().strikeLightningEffect(target.getLocation());
 	}
 }

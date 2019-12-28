@@ -67,7 +67,7 @@ public class Firebolt extends Ability {
 							loc.getWorld().spawnParticle(Particle.LAVA, loc, 8, 0, 0, 0, 0);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 3, 1);
-							new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) target);
+							new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) target);
 							target.setFireTicks((int) ability.getModifier("ignite") * 20);
 							cancel();
 							return;

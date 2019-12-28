@@ -11,8 +11,9 @@ import org.bukkit.entity.LivingEntity;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -46,7 +47,8 @@ public class MythicMobsAbility extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((MythicMobsAbilityResult) ability).getTarget();
 		List<Entity> targets = new ArrayList<>();
 		targets.add(target == null || selfOnly ? stats.getPlayer() : target);
 
@@ -54,9 +56,33 @@ public class MythicMobsAbility extends Ability {
 		 * cache placeholders so they can be retrieved later by MythicMobs math
 		 * formulas
 		 */
-		stats.getPlayerData().getAbilityData().cacheModifiers(this, data);
+		stats.getPlayerData().getAbilityData().cacheModifiers(this, ability.getAbility());
 
 		if (!MythicMobs.inst().getAPIHelper().castSkill(stats.getPlayer(), skill.getInternalName(), stats.getPlayer(), stats.getPlayer().getEyeLocation(), targets, null, 1))
 			result.setSuccessful(false);
+	}
+
+	@Override
+	public AbilityResult whenRan(CachedStats playerStats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+		return new MythicMobsAbilityResult(data, target);
+	}
+
+	public class MythicMobsAbilityResult extends AbilityResult {
+		private final LivingEntity target;
+
+		public MythicMobsAbilityResult(AbilityData ability, LivingEntity target) {
+			super(ability);
+
+			this.target = target;
+		}
+
+		public LivingEntity getTarget() {
+			return target;
+		}
+
+		@Override
+		public boolean isSuccessful() {
+			return true;
+		}
 	}
 }

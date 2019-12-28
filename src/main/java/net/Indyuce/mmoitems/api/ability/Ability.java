@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api;
+package net.Indyuce.mmoitems.api.ability;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,14 +8,13 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -99,23 +98,13 @@ public abstract class Ability {
 	 * these methods need to be overriden by ability classes depending on their
 	 * ability type
 	 */
-	public abstract void whenCast(CachedStats playerStats, LivingEntity target, AbilityData data, ItemAttackResult result);
+	public abstract AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result);
+
+	public abstract void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result);
 
 	/*
 	 * util methods for abilities
 	 */
-	protected Location getTargetLocation(Player player, LivingEntity entity) {
-		return getTargetLocation(player, entity, 50);
-	}
-
-	protected Location getTargetLocation(Player player, LivingEntity entity, int length) {
-		if (entity != null)
-			return entity.getLocation();
-
-		Location loc = player.getTargetBlock((Set<Material>) null, length).getLocation();
-		return loc.getBlock().getType() == Material.AIR ? null : loc.add(.5, 1, .5);
-	}
-
 	protected Vector getTargetDirection(Player player, LivingEntity target) {
 		return target == null ? player.getEyeLocation().getDirection() : target.getLocation().add(0, target.getHeight() / 2, 0).subtract(player.getLocation().add(0, 1.3, 0)).toVector().normalize();
 	}

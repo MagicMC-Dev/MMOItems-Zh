@@ -25,10 +25,10 @@ import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.drop.DropItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;

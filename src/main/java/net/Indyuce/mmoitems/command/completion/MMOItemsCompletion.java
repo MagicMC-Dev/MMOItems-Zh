@@ -11,8 +11,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.command.PluginHelp;
 
 public class MMOItemsCompletion implements TabCompleter {

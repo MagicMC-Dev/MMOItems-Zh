@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api;
 
 import org.bukkit.entity.LivingEntity;
 
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;

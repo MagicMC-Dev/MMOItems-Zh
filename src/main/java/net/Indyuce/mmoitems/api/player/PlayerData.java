@@ -24,13 +24,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -388,24 +389,20 @@ public class PlayerData {
 		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), data, true);
 	}
 
-	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult result, AbilityData ability, boolean message) {
+	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability, boolean message) {
 		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			return;
 
-		/*
-		 * check if the player can cast the ability, if he can't just return a
-		 * new instance of of ItemAttackResult with false boolean
-		 */
 		if (!rpgPlayer.canCast(ability, message))
 			return;
 
 		/*
-		 * cast the actual ability and see if it was successfully cast
+		 * check if ability can be cast (custom conditions)
 		 */
-		ability.getAbility().whenCast(stats, target, ability, result);
-		if (!result.isSuccessful())
+		AbilityResult abilityResult = ability.getAbility().whenRan(stats, target, ability, attack);
+		if (!abilityResult.isSuccessful())
 			return;
 
 		/*
@@ -420,6 +417,13 @@ public class PlayerData {
 		double cooldown = ability.getModifier("cooldown");
 		if (cooldown > 0)
 			applyAbilityCooldown(ability.getAbility(), cooldown);
+
+		/*
+		 * finally cast the ability (BUG FIX) cooldown MUST be applied BEFORE
+		 * the ability is cast otherwise instantaneously damaging abilities like
+		 * Sparkle can trigger deadly crash loops
+		 */
+		ability.getAbility().whenCast(stats, abilityResult, attack);
 	}
 
 	public void log(String... lines) {

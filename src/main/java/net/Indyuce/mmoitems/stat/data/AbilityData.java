@@ -9,8 +9,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 
 public class AbilityData extends StatData {

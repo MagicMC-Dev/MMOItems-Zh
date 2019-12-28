@@ -21,9 +21,9 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.ability.Magical_Shield;
-import net.Indyuce.mmoitems.api.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;

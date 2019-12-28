@@ -16,7 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsAbility;
 
 public class AbilityManager {

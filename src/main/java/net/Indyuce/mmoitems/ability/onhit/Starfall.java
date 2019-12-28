@@ -8,8 +8,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -25,11 +27,13 @@ public class Starfall extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		if (target == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new TargetAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
 
 		new BukkitRunnable() {
 			double ran = random.nextDouble() * Math.PI * 2;
@@ -53,6 +57,6 @@ public class Starfall extends Ability {
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
-		result.addDamage(data.getModifier("damage"));
+		result.addDamage(ability.getModifier("damage"));
 	}
 }

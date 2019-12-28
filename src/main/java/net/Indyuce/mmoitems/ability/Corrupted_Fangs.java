@@ -13,8 +13,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -31,12 +33,17 @@ public class Corrupted_Fangs extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double damage1 = data.getModifier("damage");
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double damage = ability.getModifier("damage");
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
-			Vector vec = getTargetDirection(stats.getPlayer(), target).setY(0).multiply(2);
+			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).multiply(2);
 			Location loc = stats.getPlayer().getLocation();
 			double ti = 0;
 
@@ -45,7 +52,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 				loc.add(vec);
 
 				EvokerFangs evokerFangs = (EvokerFangs) stats.getPlayer().getWorld().spawnEntity(loc, EntityType.EVOKER_FANGS);
-				MMOItems.plugin.getEntities().registerCustomEntity(evokerFangs, stats, damage1);
+				MMOItems.plugin.getEntities().registerCustomEntity(evokerFangs, stats, damage);
 
 				if (ti > 12)
 					cancel();

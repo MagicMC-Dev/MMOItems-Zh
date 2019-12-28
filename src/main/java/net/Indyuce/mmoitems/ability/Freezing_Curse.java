@@ -11,8 +11,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -33,8 +35,13 @@ public class Freezing_Curse extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		Location loc = getTargetLocation(stats.getPlayer(), target);
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new LocationAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		Location loc = ((LocationAbilityResult) ability).getTarget();
 		if (loc == null) {
 			result.setSuccessful(false);
 			return;
@@ -60,10 +67,10 @@ public class Freezing_Curse extends Ability {
 					for (double j = 0; j < Math.PI * 2; j += Math.PI / 32)
 						loc.getWorld().spawnParticle(Particle.CLOUD, loc.clone().add(Math.cos(j) * 3, .1, Math.sin(j) * 3), 0);
 
-					double radius = data.getModifier("radius");
-					double amplifier = data.getModifier("amplifier");
-					double duration = data.getModifier("duration");
-					double damage = data.getModifier("damage");
+					double radius = ability.getModifier("radius");
+					double amplifier = ability.getModifier("amplifier");
+					double duration = ability.getModifier("duration");
+					double damage = ability.getModifier("damage");
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (entity.getLocation().distanceSquared(loc) < radius * radius && MMOUtils.canDamage(stats.getPlayer(), entity)) {
 							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);

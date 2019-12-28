@@ -10,8 +10,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
@@ -32,15 +34,15 @@ public class Magical_Shield extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		if (!stats.getPlayer().isOnGround()) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new SimpleAbilityResult(ability, stats.getPlayer().isOnGround());
+	}
 
-		double duration = data.getModifier("duration");
-		double radius = Math.pow(data.getModifier("radius"), 2);
-		double power = data.getModifier("power") / 100;
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double duration = ability.getModifier("duration");
+		double radius = Math.pow(ability.getModifier("radius"), 2);
+		double power = ability.getModifier("power") / 100;
 
 		Location loc = stats.getPlayer().getLocation().clone();
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);

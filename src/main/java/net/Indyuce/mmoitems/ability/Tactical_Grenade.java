@@ -13,11 +13,12 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
@@ -34,18 +35,18 @@ public class Tactical_Grenade extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
-		if (target == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new TargetAbilityResult(ability, stats.getPlayer(), target);
+	}
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
 
 		new BukkitRunnable() {
 			int j = 0;
 			Location loc = stats.getPlayer().getLocation().add(0, .1, 0);
-			double radius = data.getModifier("radius");
-			double knockup = .7 * data.getModifier("knock-up");
+			double radius = ability.getModifier("radius");
+			double knockup = .7 * ability.getModifier("knock-up");
 			List<Integer> hit = new ArrayList<>();
 
 			public void run() {
@@ -75,7 +76,7 @@ public class Tactical_Grenade extends Ability {
 						if (entity.equals(target))
 							cancel();
 
-						new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
+						new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 						entity.setVelocity(entity.getVelocity().add(offsetVector(knockup)));
 					}
 			}

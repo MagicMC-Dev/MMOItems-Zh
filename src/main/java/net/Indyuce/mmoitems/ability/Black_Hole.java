@@ -9,8 +9,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -27,15 +29,16 @@ public class Black_Hole extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		Location loc = getTargetLocation(stats.getPlayer(), target);
-		if (loc == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new LocationAbilityResult(ability, stats.getPlayer(), target);
+	}
 
-		double duration = data.getModifier("duration") * 20;
-		double radius = data.getModifier("radius");
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		Location loc = ((LocationAbilityResult) ability).getTarget();
+
+		double duration = ability.getModifier("duration") * 20;
+		double radius = ability.getModifier("radius");
 
 		loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 1);
 		new BukkitRunnable() {

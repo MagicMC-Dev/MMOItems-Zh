@@ -15,6 +15,10 @@ public class TargetAbilityResult extends AbilityResult {
 
 		this.target = target != null ? target : MMOLib.plugin.getVersion().getWrapper().rayTrace(caster, 50, entity -> MMOUtils.canDamage(caster, entity)).getHit();
 	}
+	
+	public LivingEntity getTarget() {
+		return target;
+	}
 
 	@Override
 	public boolean isSuccessful() {

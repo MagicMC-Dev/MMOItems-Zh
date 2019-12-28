@@ -9,8 +9,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
@@ -26,13 +28,15 @@ public class Blind extends Ability {
 		addModifier("stamina", 0);
 	}
 
+
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		target = target == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : target;
-		if (target == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new TargetAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
 		
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 2);
 		for (double i = 0; i < Math.PI * 2; i += Math.PI / 24)
@@ -41,6 +45,6 @@ public class Blind extends Ability {
 				Vector vec = MMOUtils.rotateFunc(new Vector(Math.cos(i), 1 + Math.cos(i + (Math.PI * j)) * .5, Math.sin(i)), stats.getPlayer().getLocation());
 				MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.add(vec), Color.BLACK);
 			}
-		target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (data.getModifier("duration") * 20), 0));
+		target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (ability.getModifier("duration") * 20), 0));
 	}
 }

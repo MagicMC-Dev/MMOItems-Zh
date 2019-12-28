@@ -10,8 +10,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -31,11 +33,16 @@ public class Bouncy_Fireball extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
 		new BukkitRunnable() {
 			int j = 0;
-			Vector vec = getTargetDirection(stats.getPlayer(), target).setY(0).normalize().multiply(.5 * data.getModifier("speed"));
+			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).normalize().multiply(.5 * ability.getModifier("speed"));
 			Location loc = stats.getPlayer().getLocation().clone().add(0, 1.2, 0);
 			int bounces = 0;
 
@@ -68,9 +75,9 @@ public class Bouncy_Fireball extends Ability {
 				}
 
 				if (bounces > 2) {
-					double radius = data.getModifier("radius");
-					double damage = data.getModifier("damage");
-					double ignite = data.getModifier("ignite");
+					double radius = ability.getModifier("radius");
+					double damage = ability.getModifier("damage");
+					double ignite = ability.getModifier("ignite");
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 						if (entity.getLocation().distanceSquared(loc) < radius * radius)

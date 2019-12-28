@@ -14,8 +14,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -33,16 +35,16 @@ public class Snowman_Turret extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		Location loc = getTargetLocation(stats.getPlayer(), target);
-		if (loc == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new LocationAbilityResult(ability, stats.getPlayer(), target);
+	}
 
-		double duration = Math.min(data.getModifier("duration") * 20, 300);
-		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
-		double damage1 = data.getModifier("damage");
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		Location loc = ((LocationAbilityResult) ability).getTarget();
+		double duration = Math.min(ability.getModifier("duration") * 20, 300);
+		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
+		double damage1 = ability.getModifier("damage");
 
 		loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, 1);
 		final Snowman snowman = (Snowman) loc.getWorld().spawnEntity(loc.add(0, 1, 0), EntityType.SNOWMAN);

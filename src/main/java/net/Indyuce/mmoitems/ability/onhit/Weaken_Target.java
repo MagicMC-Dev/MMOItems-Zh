@@ -20,9 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
@@ -42,14 +43,15 @@ public class Weaken_Target extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
-		if (target == null || marked.containsKey(target.getUniqueId())) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new TargetAbilityResult(ability, stats.getPlayer(), target);
+	}
 
-		marked.put(target.getUniqueId(), new WeakenedInfo(data.getModifier("extra-damage")));
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
+
+		marked.put(target.getUniqueId(), new WeakenedInfo(ability.getModifier("extra-damage")));
 		effect(target.getLocation());
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 2, 1.5f);
 
@@ -58,7 +60,7 @@ public class Weaken_Target extends Ability implements Listener {
 		 * the mark from the entity
 		 */
 		new BukkitRunnable() {
-			long duration = (long) (data.getModifier("duration") * 1000);
+			long duration = (long) (ability.getModifier("duration") * 1000);
 
 			public void run() {
 				if (!marked.containsKey(target.getUniqueId()) || marked.get(target.getUniqueId()).date + duration < System.currentTimeMillis()) {

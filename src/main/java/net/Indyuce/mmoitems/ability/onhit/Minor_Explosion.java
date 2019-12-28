@@ -7,8 +7,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -27,16 +29,17 @@ public class Minor_Explosion extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		Location loc = getTargetLocation(stats.getPlayer(), target);
-		if (loc == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new LocationAbilityResult(ability, stats.getPlayer(), target);
+	}
 
-		double damage = data.getModifier("damage");
-		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
-		double knockback = data.getModifier("knockback");
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		Location loc = ((LocationAbilityResult) ability).getTarget();
+
+		double damage = ability.getModifier("damage");
+		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
+		double knockback = ability.getModifier("knockback");
 
 		loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc.add(0, .1, 0), 32, 1.7, 1.7, 1.7, 0);
 		loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 64, 0, 0, 0, .3);

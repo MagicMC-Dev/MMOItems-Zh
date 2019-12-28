@@ -15,8 +15,11 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -35,18 +38,18 @@ public class Earthquake extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		if (!stats.getPlayer().isOnGround()) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return stats.getPlayer().isOnGround() ? new VectorAbilityResult(ability, stats.getPlayer(), target) : new SimpleAbilityResult(ability, false);
+	}
 
-		double damage = data.getModifier("damage");
-		double slowDuration = data.getModifier("duration");
-		double slowAmplifier = data.getModifier("amplifier");
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double damage = ability.getModifier("damage");
+		double slowDuration = ability.getModifier("duration");
+		double slowAmplifier = ability.getModifier("amplifier");
 
 		new BukkitRunnable() {
-			Vector vec = getTargetDirection(stats.getPlayer(), target).setY(0);
+			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0);
 			Location loc = stats.getPlayer().getLocation();
 			int ti = 0;
 			List<Integer> hit = new ArrayList<>();

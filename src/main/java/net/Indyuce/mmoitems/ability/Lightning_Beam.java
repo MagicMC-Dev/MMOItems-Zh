@@ -7,8 +7,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -27,17 +29,15 @@ public class Lightning_Beam extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		Location loc = getTargetLocation(stats.getPlayer(), target);
-		if (loc == null) {
-			result.setSuccessful(false);
-			return;
-		}
-		
-		loc = getFirstNonSolidBlock(loc);
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new LocationAbilityResult(ability, stats.getPlayer(), target);
+	}
 
-		double damage = data.getModifier("damage");
-		double radius = data.getModifier("radius");
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		final Location loc = getFirstNonSolidBlock(((LocationAbilityResult) ability).getTarget());
+		double damage = ability.getModifier("damage");
+		double radius = ability.getModifier("radius");
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
 			if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) <= radius * radius)

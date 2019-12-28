@@ -11,8 +11,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
@@ -29,10 +31,15 @@ public class Frozen_Aura extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double duration = data.getModifier("duration") * 20;
-		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
-		double amplifier = data.getModifier("amplifier") - 1;
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new SimpleAbilityResult(ability);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double duration = ability.getModifier("duration") * 20;
+		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
+		double amplifier = ability.getModifier("amplifier") - 1;
 
 		new BukkitRunnable() {
 			double j = 0;

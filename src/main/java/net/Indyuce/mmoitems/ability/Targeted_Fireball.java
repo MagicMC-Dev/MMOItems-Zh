@@ -7,12 +7,12 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -27,14 +27,14 @@ public class Targeted_Fireball extends Ability {
 		addModifier("ignite", 4);
 		addModifier("damage", 4);
 	}
+	@Override
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new TargetAbilityResult(ability, stats.getPlayer(), target);
+	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
-		if (target == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
 
 		new BukkitRunnable() {
 			int j = 0;
@@ -57,8 +57,8 @@ public class Targeted_Fireball extends Ability {
 					loc.getWorld().spawnParticle(Particle.LAVA, loc, 8);
 					loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
 					loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_HURT, 2, 1);
-					target.setFireTicks((int) (target.getFireTicks() + data.getModifier("ignite") * 20));
-					new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), target);
+					target.setFireTicks((int) (target.getFireTicks() + ability.getModifier("ignite") * 20));
+					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), target);
 					cancel();
 				}
 			}

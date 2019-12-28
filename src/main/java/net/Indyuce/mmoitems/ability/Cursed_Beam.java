@@ -14,8 +14,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -34,12 +36,17 @@ public class Cursed_Beam extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double duration = data.getModifier("duration");
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double duration = ability.getModifier("duration");
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
-			Vector dir = getTargetDirection(stats.getPlayer(), target).multiply(.3);
+			Vector dir = ((VectorAbilityResult) ability).getTarget().multiply(.3);
 			Location loc = stats.getPlayer().getEyeLocation().clone();
 			double r = 0.4;
 			int ti = 0;
@@ -62,7 +69,7 @@ public class Cursed_Beam extends Ability {
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
 							effect(target);
-							double damage = data.getModifier("damage");
+							double damage = ability.getModifier("damage");
 							loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, .7f);
 
 							for (Entity entity : entities)

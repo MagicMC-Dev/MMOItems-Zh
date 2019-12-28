@@ -10,8 +10,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -28,14 +30,19 @@ public class Thrust extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double damage = data.getModifier("damage");
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double damage = ability.getModifier("damage");
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, 0);
 		stats.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 3));
 
 		Location loc = stats.getPlayer().getEyeLocation().clone();
-		Vector vec = getTargetDirection(stats.getPlayer(), target).multiply(.5);
+		Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.5);
 		for (double j = 0; j < 7; j += .5) {
 			loc.add(vec);
 			for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))

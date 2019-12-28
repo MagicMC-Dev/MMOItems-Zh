@@ -7,12 +7,12 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 
 public class Burn extends Ability {
 	public Burn() {
@@ -25,12 +25,13 @@ public class Burn extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity initialTarget, AbilityData data, ItemAttackResult result) {
-		LivingEntity target = initialTarget == null ? MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), 50, entity -> MMOUtils.canDamage(stats.getPlayer(), entity)).getHit() : initialTarget;
-		if (target == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new TargetAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		LivingEntity target = ((TargetAbilityResult) ability).getTarget();
 
 		new BukkitRunnable() {
 			final Location loc = target.getLocation();
@@ -50,6 +51,6 @@ public class Burn extends Ability {
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 1, 2);
-		target.setFireTicks((int) (target.getFireTicks() + data.getModifier("duration") * 20));
+		target.setFireTicks((int) (target.getFireTicks() + ability.getModifier("duration") * 20));
 	}
 }

@@ -14,16 +14,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Magical_Path extends Ability {
 	public Magical_Path() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK,
-				CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("duration", 3);
 		addModifier("cooldown", 15);
@@ -32,17 +33,21 @@ public class Magical_Path extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new SimpleAbilityResult(ability);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		stats.getPlayer().setAllowFlight(true);
 		stats.getPlayer().setFlying(true);
 		stats.getPlayer().setVelocity(stats.getPlayer().getVelocity().setY(.5));
-		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(),
-				VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1, 1);
+		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1, 1);
 
-		new ShadowVeilHandler(stats.getPlayer(), data.getModifier("duration"));
+		new MagicalPathHandler(stats.getPlayer(), ability.getModifier("duration"));
 	}
 
-	public class ShadowVeilHandler extends BukkitRunnable implements Listener {
+	public class MagicalPathHandler extends BukkitRunnable implements Listener {
 		private final Player player;
 		private final long duration;
 
@@ -53,7 +58,7 @@ public class Magical_Path extends Ability {
 
 		private int j = 0;
 
-		public ShadowVeilHandler(Player player, double duration) {
+		public MagicalPathHandler(Player player, double duration) {
 			this.player = player;
 			this.duration = (long) (duration * 10);
 
@@ -88,8 +93,7 @@ public class Magical_Path extends Ability {
 		public void run() {
 
 			if (j++ > duration) {
-				player.getWorld().playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1,
-						1);
+				player.getWorld().playSound(player.getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1, 1);
 				player.setAllowFlight(false);
 				cancel();
 				return;

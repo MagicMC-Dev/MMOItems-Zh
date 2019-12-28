@@ -13,8 +13,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -36,7 +38,12 @@ public class Item_Bomb extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		ItemStack itemStack = stats.getPlayer().getInventory().getItemInMainHand().clone();
 		if (itemStack == null || itemStack.getType() == Material.AIR) {
 			result.setSuccessful(false);
@@ -44,7 +51,7 @@ public class Item_Bomb extends Ability implements Listener {
 		}
 
 		final NoInteractItemEntity item = new NoInteractItemEntity(stats.getPlayer().getLocation().add(0, 1.2, 0), itemStack);
-		item.getEntity().setVelocity(getTargetDirection(stats.getPlayer(), target).multiply(1.3));
+		item.getEntity().setVelocity(((VectorAbilityResult) ability).getTarget().multiply(1.3));
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
 
 		new BukkitRunnable() {
@@ -52,10 +59,10 @@ public class Item_Bomb extends Ability implements Listener {
 
 			public void run() {
 				if (j++ > 40) {
-					double radius = data.getModifier("radius");
-					double damage = data.getModifier("damage");
-					double slowDuration = data.getModifier("slow-duration");
-					double slowAmplifier = data.getModifier("slow-amplifier");
+					double radius = ability.getModifier("radius");
+					double damage = ability.getModifier("damage");
+					double slowDuration = ability.getModifier("slow-duration");
+					double slowAmplifier = ability.getModifier("slow-amplifier");
 
 					for (Entity entity : item.getEntity().getNearbyEntities(radius, radius, radius))
 						if (MMOUtils.canDamage(stats.getPlayer(), entity)) {

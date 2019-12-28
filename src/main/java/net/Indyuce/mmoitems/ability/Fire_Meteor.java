@@ -11,8 +11,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -32,12 +34,17 @@ public class Fire_Meteor extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+		}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 1);
 		new BukkitRunnable() {
 			double ti = 0;
 			Location loc = stats.getPlayer().getLocation().clone().add(0, 10, 0);
-			Vector vec = getTargetDirection(stats.getPlayer(), target).multiply(1.3).setY(-1).normalize();
+			Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(1.3).setY(-1).normalize();
 
 			public void run() {
 				ti++;
@@ -53,9 +60,9 @@ public class Fire_Meteor extends Ability {
 					loc.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, loc, 32, 0, 0, 0, .3);
 					loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .3);
 
-					double damage = data.getModifier("damage");
-					double knockback = data.getModifier("knockback");
-					double radius = data.getModifier("radius");
+					double damage = ability.getModifier("damage");
+					double knockback = ability.getModifier("knockback");
+					double radius = ability.getModifier("radius");
 					for (Entity entity : loc.getWorld().getEntitiesByClass(LivingEntity.class))
 						if (MMOUtils.canDamage(stats.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
 							new AttackResult(damage, DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) entity);

@@ -11,8 +11,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -32,8 +34,13 @@ public class Firefly extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double duration = data.getModifier("duration") * 20;
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new SimpleAbilityResult(ability);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double duration = ability.getModifier("duration") * 20;
 
 		new BukkitRunnable() {
 			int j = 0;
@@ -54,8 +61,8 @@ public class Firefly extends Ability {
 
 				for (Entity entity : stats.getPlayer().getNearbyEntities(1, 1, 1))
 					if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
-						double damage = data.getModifier("damage");
-						double knockback = data.getModifier("knockback");
+						double damage = ability.getModifier("damage");
+						double knockback = ability.getModifier("knockback");
 
 						stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, .5f);
 						stats.getPlayer().getWorld().spawnParticle(Particle.LAVA, stats.getPlayer().getLocation().add(0, 1, 0), 32);

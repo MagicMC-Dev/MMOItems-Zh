@@ -12,8 +12,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -32,10 +34,15 @@ public class Firebolt extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
 		new BukkitRunnable() {
-			Vector vec = getTargetDirection(stats.getPlayer(), target).multiply(.8);
+			Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.8);
 			Location loc = stats.getPlayer().getEyeLocation();
 			int ti = 0;
 
@@ -60,8 +67,8 @@ public class Firebolt extends Ability {
 							loc.getWorld().spawnParticle(Particle.LAVA, loc, 8, 0, 0, 0, 0);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 3, 1);
-							new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) target);
-							target.setFireTicks((int) data.getModifier("ignite") * 20);
+							new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) target);
+							target.setFireTicks((int) ability.getModifier("ignite") * 20);
 							cancel();
 							return;
 						}

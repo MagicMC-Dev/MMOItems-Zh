@@ -17,8 +17,10 @@ import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
@@ -39,8 +41,13 @@ public class Shulker_Missile extends Ability implements Listener {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double duration = data.getModifier("duration");
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new VectorAbilityResult(ability, stats.getPlayer(), target);
+	}
+
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double duration = ability.getModifier("duration");
 
 		new BukkitRunnable() {
 			double n = 0;
@@ -51,11 +58,11 @@ public class Shulker_Missile extends Ability implements Listener {
 					cancel();
 					return;
 				}
-				Vector vec = getTargetDirection(stats.getPlayer(), target);
+				Vector vec = ((VectorAbilityResult) ability).getTarget();
 				stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0), EntityType.SHULKER_BULLET);
 				shulkerBullet.setShooter(stats.getPlayer());
-				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(data.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE), data.getModifier("effect-duration"));
+				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGICAL, DamageType.PROJECTILE), ability.getModifier("effect-duration"));
 				new BukkitRunnable() {
 					double ti = 0;
 

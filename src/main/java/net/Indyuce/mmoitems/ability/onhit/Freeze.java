@@ -8,8 +8,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -27,16 +29,17 @@ public class Freeze extends Ability {
 	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		Location loc = getTargetLocation(stats.getPlayer(), target);
-		if (loc == null) {
-			result.setSuccessful(false);
-			return;
-		}
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new LocationAbilityResult(ability, stats.getPlayer(), target);
+	}
 
-		int duration = (int) (data.getModifier("duration") * 20);
-		int amplifier = (int) (data.getModifier("amplifier") - 1);
-		double radiusSquared = Math.pow(data.getModifier("radius"), 2);
+	@Override
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		Location loc = ((LocationAbilityResult) ability).getTarget();
+
+		int duration = (int) (ability.getModifier("duration") * 20);
+		int amplifier = (int) (ability.getModifier("amplifier") - 1);
+		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
 
 		loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc.add(0, .1, 0), 0);
 		loc.getWorld().spawnParticle(Particle.SNOW_SHOVEL, loc, 48, 0, 0, 0, .2);

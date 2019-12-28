@@ -9,10 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
@@ -40,13 +37,6 @@ public abstract class Ability {
 		this.id = id.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
 		this.name = name;
 		this.allowedModes = Arrays.asList(allowedModes);
-	}
-
-	public static Ability getCorrespondingAbility(String name) {
-		for (Ability ability : MMOItems.plugin.getAbilities().getAll())
-			if (name.replace("-", "_").replace(" ", "_").equalsIgnoreCase(ability.getID()))
-				return ability;
-		return null;
 	}
 
 	public void addModifier(String modifierPath, double defaultValue) {
@@ -101,13 +91,6 @@ public abstract class Ability {
 	public abstract AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result);
 
 	public abstract void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result);
-
-	/*
-	 * util methods for abilities
-	 */
-	protected Vector getTargetDirection(Player player, LivingEntity target) {
-		return target == null ? player.getEyeLocation().getDirection() : target.getLocation().add(0, target.getHeight() / 2, 0).subtract(player.getLocation().add(0, 1.3, 0)).toVector().normalize();
-	}
 
 	public enum CastingMode {
 

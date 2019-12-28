@@ -5,8 +5,10 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
@@ -27,6 +29,7 @@ public class Targeted_Fireball extends Ability {
 		addModifier("ignite", 4);
 		addModifier("damage", 4);
 	}
+
 	@Override
 	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
 		return new TargetAbilityResult(ability, stats.getPlayer(), target);
@@ -47,12 +50,16 @@ public class Targeted_Fireball extends Ability {
 					return;
 				}
 
-				loc.add(target.getLocation().add(0, target.getHeight() / 2, 0).subtract(loc).toVector().normalize().multiply(.6));
+				Vector dir = target.getLocation().add(0, target.getHeight() / 2, 0).subtract(loc).toVector().normalize();
+				loc.add(dir.multiply(.6));
+
+				loc.setDirection(dir);
+				for (double a = 0; a < Math.PI * 2; a += Math.PI / 6) {
+					Vector rotated = MMOUtils.rotateFunc(new Vector(Math.cos(a), Math.sin(a), 0), loc);
+					loc.getWorld().spawnParticle(Particle.FLAME, loc, 0, rotated.getX(), rotated.getY(), rotated.getZ(), .06);
+				}
 
 				loc.getWorld().playSound(loc, VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 1, 1);
-				for (double a = 0; a < Math.PI * 2; a += Math.PI / 6)
-					loc.getWorld().spawnParticle(Particle.FLAME, loc, 0, Math.cos(a), Math.sin(a), 0, .06);
-
 				if (target.getLocation().distanceSquared(loc) < 1.3) {
 					loc.getWorld().spawnParticle(Particle.LAVA, loc, 8);
 					loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);

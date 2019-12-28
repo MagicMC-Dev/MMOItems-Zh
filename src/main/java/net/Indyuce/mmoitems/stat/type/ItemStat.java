@@ -111,7 +111,7 @@ public abstract class ItemStat {
 	public static final ItemStat WEAPON_DAMAGE = new DoubleStat(new ItemStack(Material.IRON_SWORD), "Weapon Damage", new String[] { "Additional on-hit weapon damage in %." }, "weapon-damage");
 	public static final ItemStat SKILL_DAMAGE = new DoubleStat(new ItemStack(Material.BOOK), "Skill Damage", new String[] { "Additional ability damage in %." }, "skill-damage");
 	public static final ItemStat PROJECTILE_DAMAGE = new DoubleStat(new ItemStack(Material.ARROW), "Projectile Damage", new String[] { "Additional skill/weapon projectile damage." }, "projectile-damage");
-	public static final ItemStat MAGIC_DAMAGE = new DoubleStat(new ItemStack(Material.BOOK), "Magic Damage", new String[] { "Additional magical skill damage in %." }, "magic-damage");
+	public static final ItemStat MAGICAL_DAMAGE = new DoubleStat(new ItemStack(Material.BOOK), "Magical Damage", new String[] { "Additional magical skill damage in %." }, "magical-damage");
 	public static final ItemStat PHYSICAL_DAMAGE = new DoubleStat(new ItemStack(Material.IRON_AXE), "Physical Damage", new String[] { "Additional skill/weapon physical damage." }, "physical-damage");
 	public static final ItemStat DAMAGE_REDUCTION = new DoubleStat(new ItemStack(Material.IRON_CHESTPLATE), "Damage Reduction", new String[] { "Reduces damage from any source.", "In %." }, "damage-reduction");
 	public static final ItemStat FALL_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(Material.FEATHER), "Fall Damage Reduction", new String[] { "Reduces fall damage.", "In %." }, "fall-damage-reduction");

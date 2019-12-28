@@ -17,13 +17,17 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Ability;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Shadow_Veil extends Ability implements Listener {
+	public final List<UUID> shadowVeil = new ArrayList<>();
+
 	public Shadow_Veil() {
 		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
 
@@ -33,11 +37,14 @@ public class Shadow_Veil extends Ability implements Listener {
 		addModifier("stamina", 0);
 	}
 
-	public static List<UUID> shadowVeil = new ArrayList<UUID>();
+	@Override
+	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
+		return new SimpleAbilityResult(ability);
+	}
 
 	@Override
-	public void whenCast(CachedStats stats, LivingEntity target, AbilityData data, ItemAttackResult result) {
-		double duration = data.getModifier("duration");
+	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
+		double duration = ability.getModifier("duration");
 
 		shadowVeil.add(stats.getPlayer().getUniqueId());
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
@@ -89,7 +96,7 @@ public class Shadow_Veil extends Ability implements Listener {
 	public void a(EntityDamageByEntityEvent event) {
 		if (!(event.getDamager() instanceof Player))
 			return;
-		
+
 		Player player = (Player) event.getDamager();
 		if (shadowVeil.contains(player.getUniqueId()))
 			shadowVeil.remove(player.getUniqueId());
@@ -99,7 +106,7 @@ public class Shadow_Veil extends Ability implements Listener {
 	public void b(EntityTargetEvent event) {
 		if (!(event.getTarget() instanceof Player))
 			return;
-			
+
 		Player player = (Player) event.getTarget();
 		if (shadowVeil.contains(player.getUniqueId()))
 			event.setCancelled(true);

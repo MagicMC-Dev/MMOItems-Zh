@@ -1,12 +1,10 @@
 package net.Indyuce.mmoitems.listener;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,17 +17,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerFishEvent.State;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemMendEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
-import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
+import java.util.*;
 
 public class CustomDurability implements Listener {
 	private final List<DamageCause> applyDamageCauses = Arrays.asList(DamageCause.ENTITY_ATTACK, DamageCause.ENTITY_EXPLOSION, DamageCause.BLOCK_EXPLOSION, DamageCause.THORNS, DamageCause.CONTACT, DamageCause.FIRE, DamageCause.HOT_FLOOR, DamageCause.LAVA, DamageCause.PROJECTILE);
@@ -257,5 +250,58 @@ public class CustomDurability implements Listener {
 		DurabilityItem durItem = new DurabilityItem(event.getPlayer(), event.getItem());
 		if (durItem.isValid())
 			event.getItem().setItemMeta(durItem.addDurability(event.getRepairAmount()).toItem().getItemMeta());
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void k(PlayerExpChangeEvent event) {
+
+		int expAmount = event.getAmount();
+
+		if(expAmount <= 0)
+			return;
+
+		Player player = event.getPlayer();
+		DurabilityItem durabilityItem;
+		int durabilityGain = expAmount * 2;
+
+
+		ItemStack mainHandItem = player.getInventory().getItemInMainHand();
+		if (mainHandItem.getType() != Material.AIR)
+			if ((durabilityItem = new DurabilityItem(player, mainHandItem)).isValid() && isMending(mainHandItem))
+				player.getInventory().setItemInMainHand(durabilityItem.addDurability(durabilityGain).toItem());
+
+		ItemStack offHandItem = player.getInventory().getItemInOffHand();
+		if (offHandItem.getType() != Material.AIR)
+			if ((durabilityItem = new DurabilityItem(player, offHandItem)).isValid() && isMending(offHandItem))
+				player.getInventory().setItemInOffHand(durabilityItem.addDurability(durabilityGain).toItem());
+
+		ItemStack helmet = player.getInventory().getHelmet();
+		if (helmet != null)
+			if ((durabilityItem = new DurabilityItem(player, helmet)).isValid() && isMending(helmet))
+				player.getInventory().setHelmet(durabilityItem.addDurability(durabilityGain).toItem());
+
+		ItemStack chestplate = player.getInventory().getChestplate();
+		if (chestplate != null)
+			if ((durabilityItem = new DurabilityItem(player, chestplate)).isValid() && isMending(chestplate))
+				player.getInventory().setChestplate(durabilityItem.addDurability(durabilityGain).toItem());
+
+		ItemStack leggings = player.getInventory().getLeggings();
+		if (leggings != null)
+			if ((durabilityItem = new DurabilityItem(player, leggings)).isValid() && isMending(leggings))
+				player.getInventory().setLeggings(durabilityItem.addDurability(durabilityGain).toItem());
+
+		ItemStack boots = player.getInventory().getBoots();
+		if (boots != null)
+			if ((durabilityItem = new DurabilityItem(player, boots)).isValid() && isMending(boots))
+				player.getInventory().setBoots(durabilityItem.addDurability(durabilityGain).toItem());
+	}
+
+	private boolean isMending(ItemStack itemStack) {
+		Map<Enchantment, Integer> enchantments = itemStack.getEnchantments();
+
+		if(enchantments.getOrDefault(Enchantment.MENDING, -1) == -1)
+			return false;
+
+		return true;
 	}
 }

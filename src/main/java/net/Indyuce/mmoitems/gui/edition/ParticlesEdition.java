@@ -112,7 +112,7 @@ public class ParticlesEdition extends EditionInventory {
 			int green = config.getInt(id + ".item-particles.color.green");
 			int blue = config.getInt(id + ".item-particles.color.blue");
 
-			ItemStack colorItem = new ItemStack(VersionMaterial.RED_DYE.toMaterial());
+			ItemStack colorItem = VersionMaterial.RED_DYE.toItem();
 			ItemMeta colorItemMeta = colorItem.getItemMeta();
 			colorItemMeta.setDisplayName(ChatColor.GREEN + "Particle Color");
 			List<String> colorItemLore = new ArrayList<String>();

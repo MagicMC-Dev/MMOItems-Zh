@@ -28,7 +28,7 @@ public class AdvancedWorkbenchListener implements Listener {
 			new AdvancedWorkbench(player).open();
 		}
 	}
-
+ 
 	@EventHandler
 	public void b(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();

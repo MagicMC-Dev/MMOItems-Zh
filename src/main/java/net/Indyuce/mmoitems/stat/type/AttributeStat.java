@@ -31,7 +31,6 @@ public abstract class AttributeStat extends DoubleStat {
 		return attribute;
 	}
 
-	@Deprecated
 	public double getOffset() {
 		return offset;
 	}

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.player.MMOData;
 import net.mmogroup.mmolib.api.stat.StatInstance;
@@ -44,7 +45,7 @@ public class PlayerStats {
 				t += item.getNBTItem().getStat(stat.getId());
 
 			if (t != 0)
-				getInstance(stat).addModifier("item", t);
+				getInstance(stat).addModifier("item", t - (stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0));
 		}
 	}
 

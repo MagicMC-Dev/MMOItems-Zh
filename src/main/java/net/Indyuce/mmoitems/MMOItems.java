@@ -119,7 +119,7 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public void onEnable() {
-		new SpigotPlugin(39267, this, "https://www.spigotmc.org/resources/39267/").checkForUpdate();
+		new SpigotPlugin(39267, this).checkForUpdate();
 
 		new MMOItemsMetrics();
 

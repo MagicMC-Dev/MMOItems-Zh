@@ -109,7 +109,7 @@ public class ItemUse implements Listener {
 		 * Citizens and Sentinels NPC support; damage = 0 check to ignore safety
 		 * checks; check for entity attack
 		 */
-		if (event.getDamage() == 0 || !(event.getEntity() instanceof LivingEntity) || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC") || event.getCause() != DamageCause.ENTITY_ATTACK)
+		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity) || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
 			return;
 
 		// custom damage check
@@ -128,7 +128,7 @@ public class ItemUse implements Listener {
 		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 		NBTItem offhandItem = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
-		
+
 		if (item.hasType()) {
 			Weapon weapon = new Weapon(playerData, item, item.getType());
 
@@ -150,8 +150,8 @@ public class ItemUse implements Listener {
 		}
 		if (offhandItem.hasType()) {
 			Weapon weapon = new Weapon(playerData, offhandItem, offhandItem.getType());
-			
-			if(weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
+
+			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);
 				return;
 			}
@@ -249,7 +249,7 @@ public class ItemUse implements Listener {
 
 			event.setCurrentItem(result.getResult());
 		}
-		
+
 		if (useItem instanceof GemStone) {
 			NBTItem picked = MMOLib.plugin.getNMS().getNBTItem(event.getCurrentItem());
 			if (!picked.hasType())
@@ -291,7 +291,7 @@ public class ItemUse implements Listener {
 			}
 
 		Arrow arrow = (Arrow) event.getProjectile();
-		if(!(item.getStat(ItemStat.ARROW_VELOCITY) <= 0))
+		if (!(item.getStat(ItemStat.ARROW_VELOCITY) <= 0))
 			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStat.ARROW_VELOCITY) / 2)));
 		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), (Arrow) event.getProjectile(), type != null, event.getForce());
 	}

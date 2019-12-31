@@ -1,9 +1,15 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerLevelUpEvent;
@@ -13,10 +19,17 @@ import com.sucy.skill.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.AttackResult;
+import net.mmogroup.mmolib.api.DamageHandler;
+import net.mmogroup.mmolib.api.DamageType;
 
-public class SkillAPIHook implements RPGHandler, Listener {
+public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
+	private Map<Integer, AttackResult> damageInfo = new HashMap<>();
+
 	public SkillAPIHook() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+		MMOLib.plugin.getDamage().registerHandler(this);
 	}
 
 	@Override
@@ -24,14 +37,30 @@ public class SkillAPIHook implements RPGHandler, Listener {
 		return new SkillAPIPlayer(data);
 	}
 
-	@EventHandler
+	@Override
+	public AttackResult getDamage(Entity entity) {
+		return damageInfo.get(entity.getEntityId());
+	}
+
+	@Override
+	public boolean hasDamage(Entity entity) {
+		return damageInfo.containsKey(entity.getEntityId());
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void a(SkillDamageEvent event) {
+		damageInfo.put(event.getTarget().getEntityId(), new AttackResult(event.getDamage(), DamageType.SKILL));
 
 		if (event.getDamager() instanceof Player)
 			event.setDamage(event.getDamage() * (1 + net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getDamager()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));
 
 		if (event.getTarget() instanceof Player)
 			event.setDamage(event.getDamage() * (1 - net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getTarget()).getStats().getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+	public void c(EntityDamageByEntityEvent event) {
+		damageInfo.remove(Integer.valueOf(event.getEntity().getEntityId()));
 	}
 
 	@EventHandler

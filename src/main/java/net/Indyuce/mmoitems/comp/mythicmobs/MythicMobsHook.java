@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.comp.mythicmobs;
 
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -41,29 +42,37 @@ public class MythicMobsHook implements Listener {
 	}
 
 	public class MMOItemsDrop extends Drop implements IMultiDrop {
-		private Type type;
-		private String id;
-		private double unidentification = 0;
+		private DropItem dropItem;
 
 		public MMOItemsDrop(MythicLineConfig config) {
 			super(config.getLine(), config);
 
 			try {
-				type = MMOItems.plugin.getTypes().get(config.getString("type").toUpperCase().replace("-", "_"));
-			} catch (Exception e) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Wrong type name in a MM drop table at: " + config.getString("type"));
+				String typeFormat = config.getString("type").toUpperCase().replace("-", "_");
+				Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat), "Could not find type with ID " + typeFormat);
+
+				Type type = MMOItems.plugin.getTypes().get(typeFormat);
+				String id = config.getString("id");
+
+				Validate.notNull(id, "MMOItems ID cannot be null");
+
+				dropItem = new DropItem(type, id, 0, 1, config.getDouble("unidentified", 0), 1, 1);
+
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load drop item: " + exception.getMessage());
 				return;
 			}
-
-			id = config.getString("id");
-			unidentification = config.getDouble("unidentified", 0);
 		}
 
+		/*
+		 * TODO improve null check
+		 */
 		@SuppressWarnings("deprecation")
 		@Override
 		public LootBag get(DropMetadata metadata) {
 			LootBag loot = new LootBag(metadata);
-			loot.add(new ItemDrop(this.getLine(), (MythicLineConfig) this.getConfig(), new BukkitItemStack(new DropItem(type, id, unidentification).getItem((int) getAmount()))));
+			if (dropItem != null)
+				loot.add(new ItemDrop(this.getLine(), (MythicLineConfig) this.getConfig(), new BukkitItemStack(dropItem.getItem(1))));
 			return loot;
 		}
 	}

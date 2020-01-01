@@ -18,17 +18,10 @@ public class DropItem {
 
 	private static final Random random = new Random();
 
-	/*
-	 * used in MythicDrops drop tables.
-	 */
-	public DropItem(Type type, String id, double unidentification) {
-		this(type, id, 0, 100, unidentification, 1, 1);
-	}
-
 	public DropItem(int blockId, double drop, int min, int max) {
 		this(null, null, blockId, drop, 0, min, max);
 	}
-	
+
 	public DropItem(Type type, String id, int blockId, double drop, double unidentification, int min, int max) {
 		this.type = type;
 		this.id = id;

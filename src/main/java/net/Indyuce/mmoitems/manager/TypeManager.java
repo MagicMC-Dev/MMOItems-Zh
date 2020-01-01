@@ -78,6 +78,9 @@ public class TypeManager {
 			add(type);
 	}
 
+	/*
+	 * TODO minor refactor, use Optional<Type>
+	 */
 	public Type get(String id) {
 		return map.get(id);
 	}

@@ -207,11 +207,12 @@ public class MMOItems extends JavaPlugin {
 			placeholderParser = new PlaceholderAPIParser();
 		}
 
+		/*
+		 * does MythicMobs compatibility need to be registered in async?
+		 */
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-				Bukkit.getPluginManager().registerEvents(new MythicMobsHook(), this);
-				getLogger().log(Level.INFO, "Hooked onto MythicMobs (async)");
-			});
+			Bukkit.getPluginManager().registerEvents(new MythicMobsHook(), this);
+			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
 		}
 
 		if (getConfig().getBoolean("item-glow")) {

@@ -50,7 +50,7 @@ public class GetMMOItemObjective extends Objective {
 			if (player.equals(getQuestProgress().getPlayer().getPlayer()) && event.getNPC().getId() == npcId && player.getInventory().getItemInMainHand() != null) {
 				NBTItem item = NBTItem.get(player.getInventory().getItemInMainHand());
 				int amount;
-				if (item.getString("MMOITEMS_ITEM_TYPE").equals(type.getId()) && item.getString("MMOITEMS_ITEM_ID").equals(id) && (amount = player.getInventory().getItemInMainHand().getAmount()) >= amount) {
+				if (item.getString("MMOITEMS_ITEM_TYPE").equals(type.getId()) && item.getString("MMOITEMS_ITEM_ID").equals(id) && (amount = player.getInventory().getItemInMainHand().getAmount()) >= required) {
 					if (amount <= required)
 						player.getInventory().setItemInMainHand(null);
 					else

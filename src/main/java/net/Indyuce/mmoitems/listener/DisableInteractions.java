@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems.listener;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,9 +19,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.api.item.NBTItem;
-
 public class DisableInteractions implements Listener {
 
 	// anvils
@@ -26,6 +26,21 @@ public class DisableInteractions implements Listener {
 	public void a(InventoryClickEvent event) {
 		Inventory inv = event.getClickedInventory();
 		if (inv == null || inv.getType() != InventoryType.ANVIL || event.getSlot() != 2)
+			return;
+
+		NBTItem item = NBTItem.get(event.getCurrentItem());
+		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.repair") || item.getBoolean("MMOITEMS_DISABLE_REPAIRING")))
+			event.setCancelled(true);
+	}
+
+	// grindstone
+	@EventHandler
+	public void grindstoneClickEvent(InventoryClickEvent event) {
+		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
+			return;
+
+		Inventory inv = event.getClickedInventory();
+		if (inv == null || inv.getType() != InventoryType.GRINDSTONE || event.getSlot() != 2)
 			return;
 
 		NBTItem item = NBTItem.get(event.getCurrentItem());

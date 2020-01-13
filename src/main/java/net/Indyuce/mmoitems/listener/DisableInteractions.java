@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,9 +12,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DisableInteractions implements Listener {
 
@@ -35,7 +37,7 @@ public class DisableInteractions implements Listener {
 
 	// grindstone
 	@EventHandler
-	public void grindstoneClickEvent(InventoryClickEvent event) {
+	public void b(InventoryClickEvent event) {
 		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
 			return;
 
@@ -50,7 +52,7 @@ public class DisableInteractions implements Listener {
 
 	// enchanting tables
 	@EventHandler
-	public void b(EnchantItemEvent event) {
+	public void c(EnchantItemEvent event) {
 		NBTItem item = NBTItem.get(event.getItem());
 		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.enchant") || item.getBoolean("MMOITEMS_DISABLE_ENCHANTING")))
 			event.setCancelled(true);
@@ -58,7 +60,7 @@ public class DisableInteractions implements Listener {
 
 	// smelting
 	@EventHandler
-	public void c(FurnaceSmeltEvent event) {
+	public void d(FurnaceSmeltEvent event) {
 		NBTItem item = NBTItem.get(event.getSource());
 		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smelt") || item.getBoolean("MMOITEMS_DISABLE_SMELTING")))
 			event.setCancelled(true);
@@ -66,7 +68,7 @@ public class DisableInteractions implements Listener {
 
 	// interaction
 	@EventHandler
-	public void d(PlayerInteractEvent event) {
+	public void e(PlayerInteractEvent event) {
 		if (!event.hasItem())
 			return;
 
@@ -75,20 +77,35 @@ public class DisableInteractions implements Listener {
 			event.setCancelled(true);
 	}
 
-	// interaction
-	@EventHandler
-	public void g(PlayerInteractEntityEvent event) {
-		if (event.getRightClicked() instanceof ArmorStand)
-			return;
+        // interaction (entity)
+        @EventHandler
+        public void f(PlayerInteractEntityEvent event) {
+                if (event.getRightClicked() instanceof ArmorStand)
+                        return;
 
-		NBTItem item = NBTItem.get(event.getHand() == EquipmentSlot.OFF_HAND ? event.getPlayer().getInventory().getItemInOffHand() : event.getPlayer().getInventory().getItemInMainHand());
-		if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
-			event.setCancelled(true);
-	}
+                NBTItem item = NBTItem.get(event.getHand() == EquipmentSlot.OFF_HAND ? event.getPlayer().getInventory().getItemInOffHand() : event.getPlayer().getInventory().getItemInMainHand());
+                if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
+                        event.setCancelled(true);
+        }
+
+        // interaction (consume)
+        @EventHandler
+        public void g(PlayerItemConsumeEvent event) {
+            NBTItem item = NBTItem.get(event.getItem());
+            if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
+                    event.setCancelled(true);
+        }
+
+        // TODO Cancel for launch event for Ender pearls etc
+        
+        // interaction (launch)
+        // @EventHandler
+        // public void h(ProjectileLaunchEvent event) {
+        // }
 
 	// workbench
 	@EventHandler
-	public void e(CraftItemEvent event) {
+	public void i(CraftItemEvent event) {
 		boolean disableCrafting = MMOItems.plugin.getConfig().getBoolean("disable-interactions.craft");
 		for (ItemStack item : event.getInventory().getMatrix()) {
 			NBTItem nbtItem = NBTItem.get(item);
@@ -103,7 +120,7 @@ public class DisableInteractions implements Listener {
 
 	// preventing the player from shooting the arrow
 	@EventHandler
-	public void f(EntityShootBowEvent event) {
+	public void j(EntityShootBowEvent event) {
 		if (!(event.getEntity() instanceof Player))
 			return;
 

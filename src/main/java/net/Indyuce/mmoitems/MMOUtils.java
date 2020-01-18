@@ -52,7 +52,7 @@ public class MMOUtils {
 	public static Vector normalize(Vector vector) {
 		return vector.getX() == 0 && vector.getY() == 0 ? vector : vector.normalize();
 	}
-
+ 
 	public static String getProgressBar(double ratio, int n, String barChar) {
 		String bar = "";
 		for (int k = 0; k < n; k++)

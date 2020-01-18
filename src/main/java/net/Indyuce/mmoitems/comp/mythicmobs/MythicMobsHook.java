@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mythicmobs;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -23,10 +24,19 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.drop.DropItem;
 
 public class MythicMobsHook implements Listener {
+
+	/*
+	 * has been moved over to MythicMobs because MMOItems needs access to
+	 * MythicMobs abilities and therefore must be enabled after MythicMobs
+	 */
 	public MythicMobsHook() {
 		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getSkillData().getCachedModifier(arg))));
+		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
 
+	/*
+	 * registers custom drop types
+	 */
 	@EventHandler
 	public void a(MythicDropLoadEvent event) {
 		if (event.getDropName().equalsIgnoreCase("mmoitems") || event.getDropName().equalsIgnoreCase("mmoitem"))
@@ -34,7 +44,8 @@ public class MythicMobsHook implements Listener {
 	}
 
 	/*
-	 * register placeholders when MM is reloaded.
+	 * register placeholders when MM is reloaded. the skill placeholder let
+	 * players retrieve cached ability values.
 	 */
 	@EventHandler
 	public void b(MythicReloadedEvent event) {
@@ -47,6 +58,10 @@ public class MythicMobsHook implements Listener {
 		public MMOItemsDrop(MythicLineConfig config) {
 			super(config.getLine(), config);
 
+			/*
+			 * TODO move try-catch to the MythicDropLoadEvent method and make
+			 * the dropItem field final
+			 */
 			try {
 				String typeFormat = config.getString("type").toUpperCase().replace("-", "_");
 				Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat), "Could not find type with ID " + typeFormat);
@@ -65,7 +80,7 @@ public class MythicMobsHook implements Listener {
 		}
 
 		/*
-		 * TODO improve null check
+		 * TODO remove null check with extra method from MythicDropLoadEvent
 		 */
 		@SuppressWarnings("deprecation")
 		@Override

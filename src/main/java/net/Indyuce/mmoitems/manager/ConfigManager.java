@@ -5,11 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -23,7 +20,6 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityState;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -33,13 +29,13 @@ import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 public class ConfigManager {
 
 	// must be updated each time a new language file is needed
-	private String[] fileNames = { "abilities", "lore-format", "messages", "potion-effects", "stats", "items", "attack-effects" };
+	private String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
 
 	// must be updated each time a new language is added
 	private String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
 
 	// cached config files
-	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders, durabilityStatesConfig;
+	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders;
 
 	// cached config options
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled;
@@ -47,8 +43,6 @@ public class ConfigManager {
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage;
-
-	private Map<String, DurabilityState> durabilityStates = new HashMap<>();
 
 	private static final Random random = new Random();
 
@@ -88,8 +82,7 @@ public class ConfigManager {
 			for (String fileName : fileNames)
 				if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
 					try {
-						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
-								new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"), new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -183,7 +176,6 @@ public class ConfigManager {
 		stats = new ConfigFile("/language", "stats");
 		attackEffects = new ConfigFile("/language", "attack-effects");
 		namePlaceholders = new ConfigFile("name-placeholders");
-		durabilityStatesConfig = new ConfigFile("use-states");
 
 		/*
 		 * reload cached config options for quicker access - these options are
@@ -201,11 +193,6 @@ public class ConfigManager {
 		dodgeKnockbackEnabled = MMOItems.plugin.getConfig().getBoolean("mitigation.dodge.knockback.enabled");
 		soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
 		soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
-
-		// reload durability states, cache them into a list
-		durabilityStates.clear();
-		for (String id : durabilityStatesConfig.getConfig().getKeys(false))
-			durabilityStates.put(id, new DurabilityState(durabilityStatesConfig.getConfig().getConfigurationSection(id)));
 
 		for (ConfigItem item : ConfigItem.values)
 			item.update(items.getConfig().getConfigurationSection(item.getId()));
@@ -256,18 +243,6 @@ public class ConfigManager {
 		return ChatColor.translateAlternateColorCodes('&', attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-")));
 	}
 
-	public DurabilityState getDurabilityState(String id) {
-		return durabilityStates.get(id);
-	}
-
-	public boolean hasDurabilityState(String id) {
-		return durabilityStates.containsKey(id);
-	}
-
-	public Collection<DurabilityState> getDurabilityStates() {
-		return durabilityStates.values();
-	}
-
 	/*
 	 * all config files that have a default configuration are stored here, they
 	 * get copied into the plugin folder when the plugin enables
@@ -280,7 +255,6 @@ public class ConfigManager {
 		CUSTOM_BLOCKS("custom-blocks.yml", "", "custom-blocks.yml"),
 		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
 		DROPS("drops.yml", "", "drops.yml"),
-		USE_STATES("use-states.yml", "", "use-states.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
 		NAME_PLACEHOLDERS("name-placeholders.yml", "", "name-placeholders.yml"),
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),

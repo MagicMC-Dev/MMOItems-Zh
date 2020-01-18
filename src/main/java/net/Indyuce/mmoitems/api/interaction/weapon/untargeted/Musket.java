@@ -4,12 +4,15 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -24,11 +27,15 @@ public class Musket extends UntargetedWeapon {
 	}
 
 	@Override
-	public void untargetedAttackEffects() {
+	public void untargetedAttack(EquipmentSlot slot) {
 		CachedStats stats = getPlayerData().getStats().newTemporary();
 
 		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")), CooldownType.ATTACK, false))
 			return;
+		
+		DurabilityItem durItem = new DurabilityItem(getPlayer(), getNBTItem());
+		if (durItem.isValid())
+			new InteractItem(getPlayer(), slot).setItem(durItem.decreaseDurability(1).toItem());
 
 		double attackDamage = stats.getStat(ItemStat.ATTACK_DAMAGE);
 		double range = getValue(getNBTItem().getStat(ItemStat.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));

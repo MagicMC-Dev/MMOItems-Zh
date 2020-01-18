@@ -36,7 +36,6 @@ import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
-import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsHook;
 import net.Indyuce.mmoitems.comp.placeholderapi.DefaultParser;
 import net.Indyuce.mmoitems.comp.placeholderapi.PlaceholderAPIParser;
 import net.Indyuce.mmoitems.comp.placeholderapi.PlaceholderParser;
@@ -205,14 +204,6 @@ public class MMOItems extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
 			placeholderParser = new PlaceholderAPIParser();
-		}
-
-		/*
-		 * does MythicMobs compatibility need to be registered in async?
-		 */
-		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			Bukkit.getPluginManager().registerEvents(new MythicMobsHook(), this);
-			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
 		}
 
 		if (getConfig().getBoolean("item-glow")) {

@@ -1,8 +1,10 @@
 package net.Indyuce.mmoitems.listener;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerItemMendEvent;
 
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 
@@ -30,5 +32,12 @@ public class NewDurabilityListener implements Listener {
 			event.setCancelled(true);
 			event.getItem().setItemMeta(item.toItem().getItemMeta());
 		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void b(PlayerItemMendEvent event) {
+		DurabilityItem durItem = new DurabilityItem(event.getPlayer(), event.getItem());
+		if (durItem.isValid())
+			event.getItem().setItemMeta(durItem.addDurability(event.getRepairAmount()).toItem().getItemMeta());
 	}
 }

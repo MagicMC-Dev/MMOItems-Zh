@@ -115,6 +115,13 @@ public class DurabilityItem {
 		 */
 		double ratio = (double) durability / maxDurability;
 		int damage = (int) ((1. - ratio) * item.getType().getMaxDurability());
+
+		/*
+		 * make sure the vanilla bar displays at least 1 damage so the item can
+		 * always be mended
+		 */
+		damage = Math.max(ratio < 1 ? 1 : 0, damage);
+
 		ItemMeta meta = item.getItemMeta();
 		((Damageable) meta).setDamage(damage);
 		item.setItemMeta(meta);

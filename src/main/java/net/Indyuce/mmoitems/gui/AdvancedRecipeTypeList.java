@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -71,15 +72,15 @@ public class AdvancedRecipeTypeList extends PluginInventory {
 			return;
 
 		if (MMOUtils.isPluginItem(item, false)) {
-			if (item.equals(ConfigItem.BACK.getItem()))
+			if (IsSimilar.check(item, ConfigItem.BACK.getItem()))
 				new AdvancedWorkbench(player).open();
 
-			if (item.equals(ConfigItem.NEXT_PAGE.getItem())) {
+			if (IsSimilar.check(item, ConfigItem.NEXT_PAGE.getItem())) {
 				page++;
 				open();
 			}
 
-			if (item.equals(ConfigItem.PREVIOUS_PAGE.getItem()) && page > 1) {
+			if (IsSimilar.check(item, ConfigItem.PREVIOUS_PAGE.getItem()) && page > 1) {
 				page--;
 				open();
 			}

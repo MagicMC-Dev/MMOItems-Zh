@@ -74,6 +74,7 @@ repair: '&7■ Repair: &f#'
 can-identify: '&7■ Can identify items.'
 can-deconstruct: '&7■ Can deconstruct tiered items.'
 success-rate: '&7■ Success Rate: &a&l#%'
+max-consume: '&7■ Max Consume: &f# &7uses'
 
 # Gem Stones
 empty-gem-socket: '&a◆ Empty # Gem Socket'

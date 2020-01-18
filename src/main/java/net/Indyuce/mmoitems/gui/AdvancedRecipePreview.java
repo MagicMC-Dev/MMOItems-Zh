@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.AdvancedRecipe;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.mmogroup.mmolib.version.VersionMaterial;
@@ -79,7 +80,7 @@ public class AdvancedRecipePreview extends EditionInventory {
 
 		event.setCancelled(true);
 		if (MMOUtils.isPluginItem(item, false))
-			if (item.equals(ConfigItem.BACK.getItem()))
+			if (IsSimilar.check(item, ConfigItem.BACK.getItem()))
 				new AdvancedRecipeList(player, type).open();
 	}
 }

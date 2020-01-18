@@ -85,6 +85,7 @@ lore-format:
 - '#skill-cooldown-reduction#'
 - '#mana-cost#'
 - '#stamina-cost#'
+- '#max-consume#'
 # - '{bar}&8&m--------&2&l &nElements&8 &m--------------'
 - '{bar}'
 - '#fire-damage#'

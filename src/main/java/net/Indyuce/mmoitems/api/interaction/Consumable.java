@@ -1,14 +1,5 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -23,7 +14,17 @@ import net.Indyuce.mmoitems.stat.Upgrade_Stat.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.EffectListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item, Type type) {
@@ -215,27 +216,29 @@ public class Consumable extends UseItem {
 	}
 
 	public boolean useWithoutItem(boolean consume) {
-		if (getNBTItem().getBoolean("MMOITEMS_INEDIBLE"))
+		NBTItem nbtItem = getNBTItem();
+
+		if (nbtItem.getBoolean("MMOITEMS_INEDIBLE"))
 			return false;
 
-		double health = getNBTItem().getStat("RESTORE_HEALTH");
+		double health = nbtItem.getStat("RESTORE_HEALTH");
 		if (health > 0)
 			MMOUtils.heal(player, health);
 
-		double food = getNBTItem().getStat("RESTORE_FOOD");
+		double food = nbtItem.getStat("RESTORE_FOOD");
 		if (food > 0)
 			MMOUtils.feed(player, (int) food);
 
-		double saturation = getNBTItem().getStat("RESTORE_SATURATION");
+		double saturation = nbtItem.getStat("RESTORE_SATURATION");
 		saturation = saturation == 0 ? 6 : saturation;
 		if (saturation > 0)
 			MMOUtils.saturate(player, (float) saturation);
 
-		double mana = getNBTItem().getStat("RESTORE_MANA");
+		double mana = nbtItem.getStat("RESTORE_MANA");
 		if (mana > 0)
 			playerData.getRPG().giveMana(mana);
 
-		double stamina = getNBTItem().getStat("RESTORE_STAMINA");
+		double stamina = nbtItem.getStat("RESTORE_STAMINA");
 		if (stamina > 0)
 			playerData.getRPG().giveStamina(stamina);
 
@@ -246,7 +249,46 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
-		return consume && !getNBTItem().getBoolean("MMOITEMS_DISABLE_RIGHT_CLICK_CONSUME");
+
+		int maxConsume = (int) nbtItem.getStat("MAX_CONSUME");
+		if(maxConsume > 1) {
+			ItemStack item = nbtItem.toItem().clone();
+			String configMaxConsumeLore = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
+			String maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
+
+			maxConsume -= 1;
+			nbtItem.removeTag("MMOITEMS_MAX_CONSUME");
+			nbtItem.addTag(new ItemTag("MMOITEMS_MAX_CONSUME", maxConsume));
+
+			ItemStack usedItem = nbtItem.toItem().clone();
+			usedItem.setAmount(1);
+
+			ItemMeta usedItemMeta = usedItem.getItemMeta();
+			List<String> itemLores = usedItemMeta.getLore();
+
+			for(int i = 0; i < itemLores.size() ; i++) {
+				if(itemLores.get(i).equals(maxConsumeLore)) {
+					maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
+					itemLores.set(i, maxConsumeLore);
+
+					usedItemMeta.setLore(itemLores);
+					usedItem.setItemMeta(usedItemMeta);
+
+					break;
+				}
+			}
+
+			player.getInventory().setItemInMainHand(usedItem);
+
+			if(item.getAmount() > 1) {
+				item.setAmount(item.getAmount() - 1);
+				MMOUtils.giveOrDrop(player, item);
+			}
+
+			return false;
+		}
+
+		return consume && !nbtItem.getBoolean("MMOITEMS_DISABLE_RIGHT_CLICK_CONSUME");
 	}
 
 	public boolean hasVanillaEating() {

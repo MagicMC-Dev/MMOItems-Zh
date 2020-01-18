@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class ItemStat {
-	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(), CUSTOM_MODEL_DATA = new Custom_Model_Data(), MAX_CUSTOM_DURABILITY = new Max_Custom_Durability(), WILL_BREAK = new Will_Break();
+	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(), CUSTOM_MODEL_DATA = new Custom_Model_Data(), MAX_CUSTOM_DURABILITY = new Maximum_Durability(), WILL_BREAK = new Lost_when_Broken();
 	public static final ItemStat NAME = new Display_Name(), LORE = new Lore();
 	public static final ItemStat DISPLAYED_TYPE = new StringStat(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Displayed Type", new String[] { "This option will only affect the", "type displayed on the item lore." }, "displayed-type", new String[] { "all" });
 	public static final ItemStat ENCHANTS = new Enchants(), HIDE_ENCHANTS = new Hide_Enchants(), PERMISSION = new Permission(), ITEM_PARTICLES = new Item_Particles(), ARROW_PARTICLES = new Arrow_Particles();

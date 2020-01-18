@@ -13,7 +13,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DefaultDurability extends DoubleStat {
 	public DefaultDurability() {
-		super(new ItemStack(Material.FISHING_ROD), "Default Durability/ID", new String[] { "The durability of your item." }, "durability", new String[] { "all" });
+		super(new ItemStack(Material.FISHING_ROD), "Item Damage", new String[] { "Default item damage. This does &cNOT", "impact the item's max durability." }, "durability", new String[] { "all" });
 	}
 
 	@Override

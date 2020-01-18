@@ -305,12 +305,7 @@ public class CustomDurability implements Listener {
 				player.getInventory().setBoots(durabilityItem.addDurability(durabilityGain).toItem());
 	}
 
-	private boolean isMending(ItemStack itemStack) {
-		Map<Enchantment, Integer> enchantments = itemStack.getEnchantments();
-
-		if(enchantments.getOrDefault(Enchantment.MENDING, -1) == -1)
-			return false;
-
-		return true;
+	private boolean isMending(ItemStack item) {
+		return item.getEnchantments().getOrDefault(Enchantment.MENDING, -1) != -1;
 	}
 }

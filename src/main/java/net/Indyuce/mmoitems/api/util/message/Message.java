@@ -30,7 +30,7 @@ public enum Message {
 	UNIDENTIFIED_ITEM("You can't use an unidentified item!"),
 
 	// custom durability
-	ITEM_BROKE("Your #item#&c broke."),
+//	ITEM_BROKE("Your #item#&c broke."),
 	ZERO_DURABILITY("This item is broken, you first need to repair it."),
 
 	// consumables & gem stones

@@ -15,7 +15,6 @@ lore-format:
 - '#required-dexterity#'
 - '#required-strength#'
 - '#required-intelligence#'
-- '#durability-state#'
 - '#success-rate#'
 - '{bar}'
 - '#soulbound#'

@@ -29,7 +29,7 @@ public class ElementsEdition extends EditionInventory {
 
 	public ElementsEdition(Player player, Type type, String id) {
 		super(player, type, id);
-
+		
 		if (correspondingSlot.isEmpty()) {
 			correspondingSlot.put(19, "fire.damage");
 			correspondingSlot.put(25, "fire.defense");
@@ -114,7 +114,7 @@ public class ElementsEdition extends EditionInventory {
 				}
 
 				registerItemEdition(config);
-				new ElementsEdition(player, type, id).open();
+				new ElementsEdition(player, type, id).open(getPreviousPage());
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY + " successfully removed.");
 			}
 		}

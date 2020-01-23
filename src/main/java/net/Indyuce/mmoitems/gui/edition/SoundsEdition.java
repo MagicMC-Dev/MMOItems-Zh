@@ -107,7 +107,7 @@ public class SoundsEdition extends EditionInventory {
 				}
 
 				registerItemEdition(config);
-				new SoundsEdition(player, type, id).open();
+				new SoundsEdition(player, type, id).open(getPreviousPage());
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundPath.replace("-", " ")) + " Sound" + ChatColor.GRAY + " successfully removed.");
 			}
 		}

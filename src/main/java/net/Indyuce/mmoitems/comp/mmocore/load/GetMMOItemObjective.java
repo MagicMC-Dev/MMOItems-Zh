@@ -30,7 +30,7 @@ public class GetMMOItemObjective extends Objective {
 		type = MMOItems.plugin.getTypes().get(format);
 
 		id = config.getString("id");
-		required = config.contains("amount") ? Math.min(config.getInt("amount"), 1) : 1;
+		required = config.contains("amount") ? Math.max(config.getInt("amount"), 1) : 1;
 		npcId = config.getInt("npc");
 	}
 

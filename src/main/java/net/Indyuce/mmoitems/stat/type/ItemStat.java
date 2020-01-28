@@ -50,6 +50,7 @@ import net.Indyuce.mmoitems.stat.MaterialStat;
 import net.Indyuce.mmoitems.stat.Max_Custom_Durability;
 import net.Indyuce.mmoitems.stat.Max_Health;
 import net.Indyuce.mmoitems.stat.Movement_Speed;
+import net.Indyuce.mmoitems.stat.NBT_Tags;
 import net.Indyuce.mmoitems.stat.Perm_Effects;
 import net.Indyuce.mmoitems.stat.Permission;
 import net.Indyuce.mmoitems.stat.Pickaxe_Power;
@@ -76,7 +77,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class ItemStat {
 	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(), CUSTOM_MODEL_DATA = new Custom_Model_Data(), MAX_CUSTOM_DURABILITY = new Max_Custom_Durability(), WILL_BREAK = new Will_Break();
-	public static final ItemStat NAME = new Display_Name(), LORE = new Lore();
+	public static final ItemStat NAME = new Display_Name(), LORE = new Lore(), NBT_TAGS = new NBT_Tags();
 	public static final ItemStat DISPLAYED_TYPE = new StringStat(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Displayed Type", new String[] { "This option will only affect the", "type displayed on the item lore." }, "displayed-type", new String[] { "all" });
 	public static final ItemStat ENCHANTS = new Enchants(), HIDE_ENCHANTS = new Hide_Enchants(), PERMISSION = new Permission(), ITEM_PARTICLES = new Item_Particles(), ARROW_PARTICLES = new Arrow_Particles();
 	public static final ItemStat DISABLE_INTERACTION = new DisableStat(VersionMaterial.GRASS_BLOCK.toMaterial(), "interaction", "Disable Interaction", "Disable any unwanted interaction:", "block placement, item use...");

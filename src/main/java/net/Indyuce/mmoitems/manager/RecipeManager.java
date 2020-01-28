@@ -189,8 +189,16 @@ public class RecipeManager {
 	private void setIngredientOrAir(ShapedRecipe recipe, char character, ConfigurationSection c) {
 		if(c.contains("type")) {
 			ItemStack item = MMOItems.plugin.getItems().getItem(Type.get(c.getString("type")), c.getString("id"));
-			item.setAmount(c.getInt("amount", 1));
-			recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
+			if(item == null) {
+				MMOItems.plugin.getLogger().warning("WARNING - Couldn't add (Type: " + c.getString("type") + ", Id: " + c.getString("id") +") as it wasn't found.");
+				MMOItems.plugin.getLogger().warning("Using default material: DIRT BLOCK - (Please fix this as soon as possible!)");
+				
+				recipe.setIngredient(character, new RecipeChoice.MaterialChoice(Material.DIRT));
+			}
+			else {
+				item.setAmount(c.getInt("amount", 1));
+				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
+			}
 		} else if(c.contains("material")) {
 			Material material = Material.valueOf(c.getString("material"));
 			int amount = c.getInt("amount", 1);

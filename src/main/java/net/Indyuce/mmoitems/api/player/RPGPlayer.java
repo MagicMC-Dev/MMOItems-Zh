@@ -62,7 +62,7 @@ public abstract class RPGPlayer {
 			}
 			return false;
 		}
-		
+
 		for (Conditional condition : MMOItems.plugin.getStats().getConditionals())
 			if (!condition.canUse(this, item, message))
 				return false;

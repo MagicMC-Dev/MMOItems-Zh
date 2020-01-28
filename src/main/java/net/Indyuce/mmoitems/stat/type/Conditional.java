@@ -4,5 +4,11 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public interface Conditional {
+
+	/*
+	 * conditional stats are used to let extra plugins implement extra item
+	 * restrictions to MMOItems easily. if the method returns false, the item
+	 * cannot be used by the player.
+	 */
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message);
 }

@@ -5,10 +5,12 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -20,7 +22,7 @@ public class Crossbow extends UntargetedWeapon {
 	}
 
 	@Override
-	public void untargetedAttackEffects() {
+	public void untargetedAttack(EquipmentSlot slot) {
 
 		// check for arrow
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
@@ -29,6 +31,10 @@ public class Crossbow extends UntargetedWeapon {
 		PlayerStats stats = getPlayerData().getStats();
 		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")), CooldownType.ATTACK, false))
 			return;
+
+		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
+		if (durItem.isValid())
+			durItem.decreaseDurability(1).update();
 
 		// consume arrow
 		// has to be after the CD check

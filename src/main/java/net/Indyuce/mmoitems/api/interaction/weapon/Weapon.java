@@ -11,8 +11,6 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
-import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
@@ -71,11 +69,6 @@ public class Weapon extends UseItem {
 	}
 
 	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, EquipmentSlot slot, ItemAttackResult result) {
-
-		// custom durability
-		DurabilityItem durItem = new DurabilityItem(getPlayer(), getNBTItem());
-		if (durItem.isValid())
-			new InteractItem(getPlayer(), slot).setItem(durItem.decreaseDurability(1).toItem());
 
 		// cooldown
 		double attackSpeed = getNBTItem().getStat(ItemStat.ATTACK_SPEED);

@@ -13,7 +13,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class LegacyDurability extends DoubleStat {
 	public LegacyDurability() {
-		super(new ItemStack(Material.FISHING_ROD), "Default Durability/ID", new String[] { "The durability of your item." }, "durability", new String[] { "all" });
+		super(new ItemStack(Material.FISHING_ROD), "Item Damage/ID", new String[] { "The durability/ID of your item. This", "does &cNOT&7 impact the item max durability." }, "durability", new String[] { "all" });
 	}
 
 	@Override

@@ -8,9 +8,9 @@ import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
-public class Will_Break extends BooleanStat {
-	public Will_Break() {
-		super(new ItemStack(Material.SHEARS), "Will Break?", new String[] { "If set to true, the item will break", "once it reaches 0 durability.", "&c&oOnly works with custom durability." }, "will-break", new String[] { "all" });
+public class Lost_when_Broken extends BooleanStat {
+	public Lost_when_Broken() {
+		super(new ItemStack(Material.SHEARS), "Lost when Broken?", new String[] { "If set to true, the item will be lost", "once it reaches 0 durability." }, "will-break", new String[] { "all" });
 	}
 
 	@Override

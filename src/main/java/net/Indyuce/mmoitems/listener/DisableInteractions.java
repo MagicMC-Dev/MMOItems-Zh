@@ -98,13 +98,6 @@ public class DisableInteractions implements Listener {
                     event.setCancelled(true);
         }
 
-        // TODO Cancel for launch event for Ender pearls etc
-        
-        // interaction (launch)
-        // @EventHandler
-        // public void h(ProjectileLaunchEvent event) {
-        // }
-
 	// workbench
 	@EventHandler
 	public void i(CraftItemEvent event) {
@@ -166,8 +159,10 @@ public class DisableInteractions implements Listener {
 
 		Player player = (Player) event.getEntity().getShooter();
 		NBTItem item = NBTItem.get(player.getInventory().getItemInMainHand());
-
-		if(item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
-			return;
+		NBTItem item2 = NBTItem.get(player.getInventory().getItemInOffHand());
+		
+		if(item.getBoolean("MMOITEMS_DISABLE_INTERACTION") ||
+			item2.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
+			event.setCancelled(true);
 	}
 }

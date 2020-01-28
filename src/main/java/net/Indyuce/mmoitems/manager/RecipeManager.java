@@ -49,17 +49,17 @@ public class RecipeManager {
 					ConfigurationSection craftingc = config.getConfigurationSection(id + ".crafting");
 					
 					if(craftingc.contains("shaped")) craftingc.getConfigurationSection("shaped").getKeys(false).forEach(recipe -> 
-						registerShapedRecipe(type, id, craftingc.getStringList("shaped." + recipe)));
+						registerShapedRecipe(type, id, craftingc.getStringList("shaped." + recipe), recipe));
 					if(craftingc.contains("shapeless")) craftingc.getConfigurationSection("shapeless").getKeys(false).forEach(recipe ->
-						registerShapelessRecipe(type, id, craftingc.getConfigurationSection("shapeless." + recipe)));
+						registerShapelessRecipe(type, id, craftingc.getConfigurationSection("shapeless." + recipe), recipe));
 					if(craftingc.contains("furnace")) craftingc.getConfigurationSection("furnace").getKeys(false).forEach(recipe ->
-						registerFurnaceRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("furnace." + recipe))));
+						registerFurnaceRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("furnace." + recipe)), recipe));
 					if(craftingc.contains("blast")) craftingc.getConfigurationSection("blast").getKeys(false).forEach(recipe ->
-						registerBlastRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("blast." + recipe))));
+						registerBlastRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("blast." + recipe)), recipe));
 					if(craftingc.contains("smoker")) craftingc.getConfigurationSection("smoker").getKeys(false).forEach(recipe ->
-						registerSmokerRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("smoker." + recipe))));
+						registerSmokerRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("smoker." + recipe)), recipe));
 					if(craftingc.contains("campfire")) craftingc.getConfigurationSection("campfire").getKeys(false).forEach(recipe ->
-						registerCampfireRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("campfire." + recipe))));
+						registerCampfireRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("campfire." + recipe)), recipe));
 				}
 			}
 		}
@@ -76,8 +76,8 @@ public class RecipeManager {
 		});
 	}
 	
-	private void registerShapedRecipe(Type type, String id, List<String> list) {
-		NamespacedKey key = getRecipeKey(type, id, "shaped");
+	private void registerShapedRecipe(Type type, String id, List<String> list, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "shaped", number);
 		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
 		
 		List<MMORecipeChoice> rcList = MMORecipeChoice.getFromShapedConfig(list);
@@ -103,19 +103,13 @@ public class RecipeManager {
 		else recipe.setIngredient(c, rc.generateChoice());
 	}
 
-	private void registerShapelessRecipe(Type type, String id, ConfigurationSection config) {
-		NamespacedKey key = getRecipeKey(type, id, "shapeless");
+	private void registerShapelessRecipe(Type type, String id, ConfigurationSection config, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "shapeless", number);
 		ShapelessRecipe recipe = new ShapelessRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
-		
-		if(config.contains("item1")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item1")));
-		if(config.contains("item2")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item2")));
-		if(config.contains("item3")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item3")));
-		if(config.contains("item4")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item4")));
-		if(config.contains("item5")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item5")));
-		if(config.contains("item6")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item6")));
-		if(config.contains("item7")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item7")));
-		if(config.contains("item8")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item8")));
-		if(config.contains("item9")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item9")));
+
+		for (int i = 1; i < 10; i++) {
+			if(config.contains("item" + i)) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item" + i)));
+		}
 		
 		if(recipe.getIngredientList().isEmpty()) return;
 		loadedRecipes.add(recipe); keys.add(key);
@@ -125,29 +119,29 @@ public class RecipeManager {
 		if(!rc.isAir()) recipe.addIngredient(rc.generateChoice());
 	}
 	
-	private void registerFurnaceRecipe(Type type, String id, RecipeInformation info) {
-		NamespacedKey key = getRecipeKey(type, id, "furnace");
+	private void registerFurnaceRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
 		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
 	
-	private void registerBlastRecipe(Type type, String id, RecipeInformation info) {
-		NamespacedKey key = getRecipeKey(type, id, "blast");
+	private void registerBlastRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "blast", number);
 		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
 	
-	private void registerSmokerRecipe(Type type, String id, RecipeInformation info) {
-		NamespacedKey key = getRecipeKey(type, id, "smoker");
+	private void registerSmokerRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "smoker", number);
 		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
 	
-	private void registerCampfireRecipe(Type type, String id, RecipeInformation info) {
-		NamespacedKey key = getRecipeKey(type, id, "campfire");
+	private void registerCampfireRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "campfire", number);
 		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
@@ -162,7 +156,7 @@ public class RecipeManager {
 		MMOItems.plugin.getLogger().warning("Found deprecated adv. recipe for " + id + ". Converting it to the new system...");
 		MMOItems.plugin.getLogger().warning("It is recommended to update your recipes!");
 		
-		NamespacedKey key = getRecipeKey(type, id, "advanced");
+		NamespacedKey key = getRecipeKey(type, id, "advanced", "deprecated");
 		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
 		recipe.shape("012", "345", "678");
 		
@@ -180,8 +174,8 @@ public class RecipeManager {
 	}
 	
 	// Just for convenience
-	private NamespacedKey getRecipeKey(Type t, String i, String type) {
-		return new NamespacedKey(MMOItems.plugin, "mmorecipe_" + type + "_" + t.getId() + "_" + i);
+	private NamespacedKey getRecipeKey(Type t, String i, String type, String number) {
+		return new NamespacedKey(MMOItems.plugin, "mmorecipe_" + type + "_" + t.getId() + "_" + i + "_" + number);
 	}
 	
 	/**
@@ -218,10 +212,15 @@ public class RecipeManager {
 	}
 	
 	public void reloadRecipes() {
-		Bukkit.resetRecipes();
-		loadedRecipes.clear();
-		keys.clear();
-		load();
+		Bukkit.getScheduler().runTask(MMOItems.plugin, new Runnable() {
+			@Override
+			public void run() {
+				Bukkit.resetRecipes();
+				loadedRecipes.clear();
+				keys.clear();
+				load();
+			}
+		});
 	}
 
 	// For the reload command

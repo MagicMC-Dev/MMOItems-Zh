@@ -37,7 +37,7 @@ public class NBT_Tags extends StringStat {
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.LORE).enable("Write in the chat the NBT tag you want to add.", ChatColor.AQUA + "Format: [TAG NAME] [TAG VALUE]");
+			new StatEdition(inv, ItemStat.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.", ChatColor.AQUA + "Format: [TAG NAME] [TAG VALUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("custom-nbt")) {

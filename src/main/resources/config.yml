@@ -112,19 +112,6 @@ custom-blocks:
     # custom blocks, as the mushroom blocks can BREAK everything.
     replace-mushroom-drops: false
 
-advanced-workbench:
-    # Define on what actions the adv workbench will open.
-    open-when:
-        # When enabled, players can open the adv. workbench
-        # by right-clicking a workbench while NOT sneaking.
-        simple-click: false
-        # When enabled, players can open the adv. workbench
-        # by right-clicking a workbench WHILE SNEAKING.
-        shift-click: true
-    # Players can click the anvil in the advanced workbench
-    # to see all the available advanced crafting recipes.
-    recipe-list: true
-
 # Use this option if your chat management plugin is having
 # conflicts with the MMOItems chat input feature. This will
 # bring up an anvil GUI which you can input text in instead
@@ -142,6 +129,10 @@ cooldown-progress-bar-char: █
 
 # When toggled off, players can't damage each other using item abilities.
 ability-player-damage: true
+
+# When enabled, all custom recipes will be in the recipe book on join.
+# If toggled off they will have to use to recipe once to add it to their book.
+auto-recipe-book: true
 
 # Displays a message on the action bar instead of on the chat.
 # Can be used to reduce chat spam.
@@ -173,9 +164,7 @@ game-indicators:
 
 # Unregisters all crafting recipes. Requires /reload.
 # Also disables the advanced workbench when disabling advanced craftings.
-disable-craftings:
-    vanilla: false
-    advanced: false
+disable-craftings: false
 
 # "repair" prevents players from repairing MMOItems.
 # "smelt" prevents players from smelting MMOItems.

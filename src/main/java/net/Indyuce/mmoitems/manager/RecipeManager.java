@@ -1,316 +1,243 @@
 package net.Indyuce.mmoitems.manager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.BlastingRecipe;
+import org.bukkit.inventory.CampfireRecipe;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.SmokingRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.AdvancedRecipe;
+import net.Indyuce.mmoitems.api.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
+/**
+ * TODO
+ * When Bukkit changes their 'RecipeChoice.ExactChoice' API
+ * we can remove the suppressed warnings, but right now it works
+ * despite being marked as deprecated. It is just a 
+ */
 public class RecipeManager {
-
-	/*
-	 * recipes are parsed into a string. they are saved both in a map for
-	 * quicker access when checking for patterns - but another map also saves
-	 * parsed recipes in a map to easily access items depending on their item
-	 * type (for the recipe list)
-	 */
-	private Map<String, AdvancedRecipe> recipes = new HashMap<>();
-	private Map<Type, List<AdvancedRecipe>> types = new HashMap<>();
-
-	private List<AdvancedRecipe> recipeList = new ArrayList<>();
-	private List<Type> availableTypes = new ArrayList<>();
-
-	private final String argSeparator = ":";
-	private final String itemSeparator = "|";
-
-	public int[] recipeSlots = { 3, 4, 5, 12, 13, 14, 21, 22, 23 };
-
-	public RecipeManager() {
-		loadRecipes();
-
-		if (!MMOItems.plugin.getConfig().getBoolean("disable-craftings.vanilla"))
-			for (Type type : MMOItems.plugin.getTypes().getAll()) {
-				FileConfiguration config = type.getConfigFile().getConfig();
-				idLoop: for (String path : config.getKeys(false)) {
-
-					// initialize item so it is not calculated twice
-					ItemStack item = config.getConfigurationSection(path).contains("craft") || config.getConfigurationSection(path).contains("shapeless-craft") || config.getConfigurationSection(path).contains("furnace-craft") ? MMOItems.plugin.getItems().getItem(type, path) : null;
-
-					// crafting recipe
-					if (config.getConfigurationSection(path).contains("craft")) {
-						if (item == null || item.getType() == Material.AIR) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (not a valid item)");
-							continue;
-						}
-
-						ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(MMOItems.plugin, "mmoitems_shaped_" + path.toLowerCase()), item);
-						recipe.shape(new String[] { "abc", "def", "ghi" });
-						char[] chars = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' };
-						List<String> list = config.getStringList(path + ".craft");
-						if (list.size() != 3) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (format error)");
-							continue idLoop;
-						}
-
-						// prevent any empty crafting recipe to apply
-						if (list.equals(Arrays.asList(new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" })))
-							continue;
-
-						for (int j = 0; j < 9; j++) {
-							char c = chars[j];
-							List<String> line = Arrays.asList(list.get(j / 3).split("\\ "));
-							if (line.size() < 3) {
-								MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (format error)");
-								continue idLoop;
-							}
-
-							String s = line.get(j % 3);
-							Material material = null;
-							try {
-								material = Material.valueOf(s.replace("-", "_").toUpperCase());
-							} catch (Exception e1) {
-								MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (can't read material from " + s + ")");
-								continue idLoop;
-							}
-
-							if (material != Material.AIR)
-								recipe.setIngredient(c, material);
-						}
-
-						Bukkit.addRecipe(recipe);
-					}
-
-					// shapeless recipe
-					if (config.getConfigurationSection(path).contains("shapeless-craft")) {
-						if (item == null || item.getType() == Material.AIR) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (not a valid item)");
-							continue;
-						}
-
-						boolean check = false;
-						ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(MMOItems.plugin, "mmoitems_shapeless_" + path.toLowerCase()), item);
-						for (String ingredient : config.getStringList(path + ".shapeless-craft")) {
-							String format = ingredient.toUpperCase().replace(" ", "_").replace("-", "_");
-							Material material = null;
-							try {
-								material = Material.valueOf(format);
-							} catch (Exception e1) {
-								MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (can't read material from " + format + ")");
-								continue idLoop;
-							}
-
-							if (material != Material.AIR) {
-								check = true;
-								recipe.addIngredient(material);
-							}
-						}
-						if (check)
-							Bukkit.addRecipe(recipe);
-					}
-
-					// furnace crafting recipe
-					if (config.getConfigurationSection(path).contains("furnace-craft")) {
-						if (item == null || item.getType() == Material.AIR) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (not a valid item)");
-							continue;
-						}
-
-						Material material = null;
-						String format = config.getString(path + ".furnace-craft.input");
-						if (format == null)
-							continue;
-
-						format = format.toUpperCase().replace(" ", "_").replace("-", "_");
-						try {
-							material = Material.valueOf(format);
-						} catch (Exception e1) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the recipe of " + path + " (can't read material from " + format + ")");
-							continue idLoop;
-						}
-
-						if (material != Material.AIR) {
-							float exp = (float) config.getDouble(path + ".furnace-craft.exp");
-							int cook = config.getInt(path + ".furnace-craft.cook");
-							cook = cook == 0 ? 80 : cook;
-							Bukkit.getServer().addRecipe(MMOLib.plugin.getVersion().getWrapper().getFurnaceRecipe(path, item, material, exp, cook));
-						}
-					}
-				}
-			}
-	}
-
-	public void loadRecipes() {
-		if (MMOItems.plugin.getConfig().getBoolean("disable-craftings.advanced"))
-			return;
-
-		recipeList.clear();
-		types.clear();
-		recipes.clear();
-
+	private List<Recipe> loadedRecipes = new ArrayList<>();
+	private Collection<NamespacedKey> keys = new ArrayList<>();
+	
+	public RecipeManager() { load(); }
+	
+	private void load() {
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
-			List<AdvancedRecipe> recipeList = new ArrayList<>();
 
-			itemLoop: for (String id : config.getKeys(false)) {
+			for (String id : config.getKeys(false)) {
 				if (config.getConfigurationSection(id).contains("advanced-craft")) {
-
-					AdvancedRecipe advancedRecipe = new AdvancedRecipe(type, id);
-					String parsedRecipe = "";
-
-					for (int j = 0; j < 9; j++) {
-						if (!config.getConfigurationSection(id + ".advanced-craft").contains("" + j)) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, id.toUpperCase() + " (" + type.getName() + ") is missing ingredient n" + (j + 1));
-							continue itemLoop;
-						}
-
-						// type, id
-						if (config.getConfigurationSection(id + ".advanced-craft." + j).contains("id")) {
-							String type1 = config.getString(id + ".advanced-craft." + j + ".type");
-							String id1 = config.getString(id + ".advanced-craft." + j + ".id");
-							try {
-								String itemFormat = MMOItems.plugin.getTypes().get(type1).getId() + argSeparator + id1;
-								parsedRecipe += (parsedRecipe.length() > 0 ? itemSeparator : "") + itemFormat;
-								advancedRecipe.setAmount(j, config.getInt(id + ".advanced-craft." + j + ".amount"));
-							} catch (Exception e) {
-								MMOItems.plugin.getLogger().log(Level.WARNING, id.toUpperCase() + " (" + type.getName() + ") - " + type1 + " is not a valid item type");
-								continue itemLoop;
-							}
-							continue;
-						}
-
-						// material, name
-						String materialParse = config.getString(id + ".advanced-craft." + j + ".material").toUpperCase().replace(" ", "_").replace("-", "_");
-						try {
-							String itemFormat = Material.valueOf(materialParse).name() + argSeparator + config.getString(id + ".advanced-craft." + j + ".name") + argSeparator + "MN";
-							if (itemFormat.startsWith("AIR:")) {
-								parsedRecipe += (parsedRecipe.length() > 0 ? itemSeparator : "") + "AIR";
-								advancedRecipe.setAmount(j, 0);
-								continue;
-							}
-							parsedRecipe += (parsedRecipe.length() > 0 ? itemSeparator : "") + itemFormat;
-							advancedRecipe.setAmount(j, config.getInt(id + ".advanced-craft." + j + ".amount"));
-						} catch (Exception e) {
-							MMOItems.plugin.getLogger().log(Level.WARNING, id.toUpperCase() + " (" + type.getName() + ") - " +materialParse + " is not a valid material");
-							continue itemLoop;
-						}
-					}
-
-					ItemStack preview = MMOItems.plugin.getItems().getItem(type, id);
-					if (preview == null || preview.getType() == Material.AIR)
-						continue;
-
-					// recipe is now successfully added.
-					advancedRecipe.setPreviewItem(preview);
-					advancedRecipe.setPermission(config.getString(id + ".advanced-craft-permission"));
-					advancedRecipe.setParsed(parsedRecipe);
-
-					recipes.put(type.getId() + "." + id, advancedRecipe);
-					recipeList.add(advancedRecipe);
+					registerAdvancedWorkbenchRecipe(type, id, config);
+				}
+				
+				if (config.getConfigurationSection(id).contains("crafting")) {
+					ConfigurationSection craftingc = config.getConfigurationSection(id + ".crafting");
+					
+					if(craftingc.contains("shaped")) craftingc.getConfigurationSection("shaped").getKeys(false).forEach(recipe -> 
+						registerShapedRecipe(type, id, craftingc.getStringList("shaped." + recipe)));
+					if(craftingc.contains("shapeless")) craftingc.getConfigurationSection("shapeless").getKeys(false).forEach(recipe ->
+						registerShapelessRecipe(type, id, craftingc.getConfigurationSection("shapeless." + recipe)));
+					if(craftingc.contains("furnace")) craftingc.getConfigurationSection("furnace").getKeys(false).forEach(recipe ->
+						registerFurnaceRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("furnace." + recipe))));
+					if(craftingc.contains("blast")) craftingc.getConfigurationSection("blast").getKeys(false).forEach(recipe ->
+						registerBlastRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("blast." + recipe))));
+					if(craftingc.contains("smoker")) craftingc.getConfigurationSection("smoker").getKeys(false).forEach(recipe ->
+						registerSmokerRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("smoker." + recipe))));
+					if(craftingc.contains("campfire")) craftingc.getConfigurationSection("campfire").getKeys(false).forEach(recipe ->
+						registerCampfireRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("campfire." + recipe))));
 				}
 			}
-
-			if (!recipeList.isEmpty())
-				types.put(type, recipeList);
 		}
-
-		recipeList = new ArrayList<>(recipes.values());
-		availableTypes = new ArrayList<>(types.keySet());
+		
+		
+		//registerCampfireRecipe(MMOItems.plugin.getItems().getItem(Type.SWORD, "SILVER_SWORD"), new RecipeChoice.ExactChoice(MMOItems.plugin.getItems().getItem(Type.get("MATERIAL"), "SILVER_INGOT")));
+		
+		Bukkit.getScheduler().runTask(MMOItems.plugin, new Runnable() {
+			@Override
+			public void run() {
+				for(Recipe r : loadedRecipes)
+					Bukkit.addRecipe(r);
+			}
+		});
+	}
+	
+	private void registerShapedRecipe(Type type, String id, List<String> list) {
+		NamespacedKey key = getRecipeKey(type, id, "shaped");
+		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
+		
+		List<MMORecipeChoice> rcList = MMORecipeChoice.getFromShapedConfig(list);
+		if(rcList == null) return;
+		
+		recipe.shape("ABC", "DEF", "GHI");
+		
+		shapedIngredient(recipe, 'A', rcList.get(0));
+		shapedIngredient(recipe, 'B', rcList.get(1));
+		shapedIngredient(recipe, 'C', rcList.get(2));
+		shapedIngredient(recipe, 'D', rcList.get(3));
+		shapedIngredient(recipe, 'E', rcList.get(4));
+		shapedIngredient(recipe, 'F', rcList.get(5));
+		shapedIngredient(recipe, 'G', rcList.get(6));
+		shapedIngredient(recipe, 'H', rcList.get(7));
+		shapedIngredient(recipe, 'I', rcList.get(8));
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+	
+	private void shapedIngredient(ShapedRecipe recipe, char c, MMORecipeChoice rc) {
+		if(rc.isAir()) recipe.setIngredient(c, Material.AIR);
+		else recipe.setIngredient(c, rc.generateChoice());
 	}
 
-	public AdvancedRecipe getData(Type type, String id) {
-		return recipes.get(type.getId() + "." + id);
+	private void registerShapelessRecipe(Type type, String id, ConfigurationSection config) {
+		NamespacedKey key = getRecipeKey(type, id, "shapeless");
+		ShapelessRecipe recipe = new ShapelessRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
+		
+		if(config.contains("item1")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item1")));
+		if(config.contains("item2")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item2")));
+		if(config.contains("item3")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item3")));
+		if(config.contains("item4")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item4")));
+		if(config.contains("item5")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item5")));
+		if(config.contains("item6")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item6")));
+		if(config.contains("item7")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item7")));
+		if(config.contains("item8")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item8")));
+		if(config.contains("item9")) shapelessIngredient(recipe, MMORecipeChoice.getFromString(config.getString("item9")));
+		
+		if(recipe.getIngredientList().isEmpty()) return;
+		loadedRecipes.add(recipe); keys.add(key);
 	}
 
-	public List<AdvancedRecipe> getRecipes() {
-		return recipeList;
+	private void shapelessIngredient(ShapelessRecipe recipe, MMORecipeChoice rc) {
+		if(!rc.isAir()) recipe.addIngredient(rc.generateChoice());
 	}
-
-	public List<Type> getAvailableTypes() {
-		return availableTypes;
+	
+	private void registerFurnaceRecipe(Type type, String id, RecipeInformation info) {
+		NamespacedKey key = getRecipeKey(type, id, "furnace");
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
 	}
-
-	public List<AdvancedRecipe> getTypeRecipes(Type type) {
-		return types.containsKey(type) ? types.get(type) : new ArrayList<>();
+	
+	private void registerBlastRecipe(Type type, String id, RecipeInformation info) {
+		NamespacedKey key = getRecipeKey(type, id, "blast");
+		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
 	}
-
-	/*
-	 * returns the current recipe of the opened adv workbench. it can return
-	 * null either if the player does not have enough permissions to see the
-	 * crafting recipe, or if there is simply no corresponding adv recipe
+	
+	private void registerSmokerRecipe(Type type, String id, RecipeInformation info) {
+		NamespacedKey key = getRecipeKey(type, id, "smoker");
+		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+	
+	private void registerCampfireRecipe(Type type, String id, RecipeInformation info) {
+		NamespacedKey key = getRecipeKey(type, id, "campfire");
+		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice, info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+	
+	/**
+	 * @deprecated Some day I want to get proper rid of the AWB
+	 * but right now we don't want to force players to update
+	 * their recipes right off the bat.
 	 */
-	public AdvancedRecipe getCurrentRecipe(Player player, Inventory inv) {
-
-		// check for valid pattern
-		String parsedRecipe = getRecipeFormat(inv);
-		AdvancedRecipe currentRecipe = null;
-
-		for (AdvancedRecipe recipe : getRecipes())
-			if (recipe.isParsed(parsedRecipe)) {
-				currentRecipe = recipe;
-				break;
+	private void registerAdvancedWorkbenchRecipe(Type type, String id, FileConfiguration config) {
+		MMOItems.plugin.getLogger().warning("Found deprecated adv. recipe for " + id + ". Converting it to the new system...");
+		MMOItems.plugin.getLogger().warning("It is recommended to update your recipes!");
+		
+		NamespacedKey key = getRecipeKey(type, id, "advanced");
+		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
+		recipe.shape("012", "345", "678");
+		
+		setIngredientOrAir(recipe, '0', config.getConfigurationSection(id + ".advanced-craft." + 0));
+		setIngredientOrAir(recipe, '1', config.getConfigurationSection(id + ".advanced-craft." + 1));
+		setIngredientOrAir(recipe, '2', config.getConfigurationSection(id + ".advanced-craft." + 2));
+		setIngredientOrAir(recipe, '3', config.getConfigurationSection(id + ".advanced-craft." + 3));
+		setIngredientOrAir(recipe, '4', config.getConfigurationSection(id + ".advanced-craft." + 4));
+		setIngredientOrAir(recipe, '5', config.getConfigurationSection(id + ".advanced-craft." + 5));
+		setIngredientOrAir(recipe, '6', config.getConfigurationSection(id + ".advanced-craft." + 6));
+		setIngredientOrAir(recipe, '7', config.getConfigurationSection(id + ".advanced-craft." + 7));
+		setIngredientOrAir(recipe, '8', config.getConfigurationSection(id + ".advanced-craft." + 8));
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+	
+	// Just for convenience
+	private NamespacedKey getRecipeKey(Type t, String i, String type) {
+		return new NamespacedKey(MMOItems.plugin, "mmorecipe_" + type + "_" + t.getId() + "_" + i);
+	}
+	
+	/**
+	 * This method is purely for easily converting the AWB recipes.
+	 * 
+	 * @deprecated Some day I want to get proper rid of the AWB
+	 * but right now we don't want to force players to update
+	 * their recipes right off the bat.
+	 */
+	@Deprecated
+	private void setIngredientOrAir(ShapedRecipe recipe, char character, ConfigurationSection c) {
+		if(c.contains("type")) {
+			ItemStack item = MMOItems.plugin.getItems().getItem(Type.get(c.getString("type")), c.getString("id"));
+			item.setAmount(c.getInt("amount", 1));
+			recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
+		} else if(c.contains("material")) {
+			Material material = Material.valueOf(c.getString("material"));
+			int amount = c.getInt("amount", 1);
+			String name = c.getString("name", "");
+			if(name.isEmpty() && amount == 1)
+				recipe.setIngredient(character, material);
+			else {
+				ItemStack item = new ItemStack(material);
+				item.setAmount(amount); ItemMeta meta = item.getItemMeta();
+				meta.setDisplayName(name); item.setItemMeta(meta);
+				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
 			}
-
-		// check for null
-		if (currentRecipe == null)
-			return null;
-
-		// check for permission
-		if (!currentRecipe.hasPermission(player))
-			return null;
-
-		// check for amounts
-		for (int j = 0; j < 9; j++) {
-			ItemStack currentItem = inv.getItem(recipeSlots[j]);
-			int current = currentItem == null ? 0 : currentItem.getAmount();
-			int needed = currentRecipe.getAmount(j);
-			if (current < needed)
-				return null;
 		}
-
-		return currentRecipe;
+	}
+	
+	// For adding the recipes to the book
+	public Collection<NamespacedKey> getNamespacedKeys() {
+		return keys;
+	}
+	
+	public void reloadRecipes() {
+		Bukkit.resetRecipes();
+		loadedRecipes.clear();
+		keys.clear();
+		load();
 	}
 
-	private String getRecipeFormat(Inventory inv) {
-		String recipeFormat = "";
-		for (int j : new int[] { 3, 4, 5, 12, 13, 14, 21, 22, 23 }) {
-			if (inv.getItem(j) == null || inv.getItem(j).getType() == Material.AIR) {
-				recipeFormat += (recipeFormat.length() < 1 ? "" : itemSeparator) + "AIR";
-				continue;
-			}
-
-			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(inv.getItem(j));
-
-			// type, id
-			String id1 = item.getString("MMOITEMS_ITEM_ID");
-			if (id1 != null && !id1.equals("")) {
-				String type1 = item.getString("MMOITEMS_ITEM_TYPE");
-				String itemFormat = type1 + argSeparator + id1;
-				recipeFormat += (recipeFormat.length() < 1 ? "" : itemSeparator) + itemFormat;
-				continue;
-			}
-
-			// material, name
-			String name = item.getItem().getItemMeta().hasDisplayName() ? item.getItem().getItemMeta().getDisplayName() : "";
-			String itemFormat = item.getItem().getType().name() + argSeparator + name + argSeparator + "MN";
-			recipeFormat += (recipeFormat.length() < 1 ? "" : itemSeparator) + itemFormat;
+	// For the reload command
+	public int size() {
+		return loadedRecipes.size();
+	}
+	
+	class RecipeInformation {
+		private final RecipeChoice choice;
+		private final float exp;
+		private final int burnTime;
+		
+		private RecipeInformation(ConfigurationSection config) {
+			choice = MMORecipeChoice.getFromString(config.getString("item")).generateChoice();
+			exp = (float) config.getDouble("exp", 0.35);
+			burnTime = config.getInt("time", 200);
 		}
-		return recipeFormat;
 	}
 }

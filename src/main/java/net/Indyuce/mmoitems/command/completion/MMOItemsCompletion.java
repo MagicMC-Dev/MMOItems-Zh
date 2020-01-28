@@ -64,7 +64,7 @@ public class MMOItemsCompletion implements TabCompleter {
 				list.add("open");
 
 			} else if (args[0].equalsIgnoreCase("reload")) {
-				list.add("adv-recipes");
+				list.add("recipes");
 				list.add("stations");
 
 			} else if (args[0].equalsIgnoreCase("list")) {

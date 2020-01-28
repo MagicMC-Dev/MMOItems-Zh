@@ -41,7 +41,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.W
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.gui.AdvancedWorkbench;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
@@ -221,7 +220,7 @@ public class ItemUse implements Listener {
 	@EventHandler
 	public void e(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
-		if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR || event.getInventory().getHolder() instanceof AdvancedWorkbench)
+		if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR)
 			return;
 
 		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getCursor());

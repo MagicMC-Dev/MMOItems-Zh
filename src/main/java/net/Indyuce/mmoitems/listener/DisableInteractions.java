@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.listener;
 
+import org.bukkit.Keyed;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -107,6 +108,9 @@ public class DisableInteractions implements Listener {
 	// workbench
 	@EventHandler
 	public void i(CraftItemEvent event) {
+		if(event.getRecipe() instanceof Keyed)
+			if(((Keyed) event.getRecipe()).getKey().getNamespace().equalsIgnoreCase("mmoitems")) return;
+		
 		boolean disableCrafting = MMOItems.plugin.getConfig().getBoolean("disable-interactions.craft");
 		for (ItemStack item : event.getInventory().getMatrix()) {
 			NBTItem nbtItem = NBTItem.get(item);

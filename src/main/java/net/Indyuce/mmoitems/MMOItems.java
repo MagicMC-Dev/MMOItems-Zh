@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.command.AdvancedWorkbenchCommand;
 import net.Indyuce.mmoitems.command.MMOItemsCommand;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
 import net.Indyuce.mmoitems.command.completion.MMOItemsCompletion;
@@ -43,7 +42,6 @@ import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
-import net.Indyuce.mmoitems.listener.AdvancedWorkbenchListener;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import net.Indyuce.mmoitems.listener.CustomDurability;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
@@ -171,9 +169,6 @@ public class MMOItems extends JavaPlugin {
 		 */
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).checkForInventoryUpdate()), 100, getConfig().getInt("inventory-update-delay"));
 
-		if (!getConfig().getBoolean("disable-craftings.advanced"))
-			Bukkit.getPluginManager().registerEvents(new AdvancedWorkbenchListener(), this);
-
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
 			flagPlugin = new ResidenceFlags();
 			getLogger().log(Level.INFO, "Hooked onto Residence");
@@ -242,7 +237,6 @@ public class MMOItems extends JavaPlugin {
 
 		// commands
 		getCommand("mmoitems").setExecutor(new MMOItemsCommand());
-		getCommand("advancedworkbench").setExecutor(new AdvancedWorkbenchCommand());
 		getCommand("updateitem").setExecutor(new UpdateItemCommand());
 
 		// tab completion

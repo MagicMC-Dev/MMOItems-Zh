@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Magical_Shield;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
@@ -77,6 +78,9 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void d(PlayerJoinEvent event) {
 		PlayerData.load(event.getPlayer());
+		
+		if(MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
+			event.getPlayer().discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)

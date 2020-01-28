@@ -423,11 +423,11 @@ public class MMOItemsCommand implements CommandExecutor {
 					});
 				}
 
-				if (args[1].equalsIgnoreCase("adv-recipes")) {
+				if (args[1].equalsIgnoreCase("recipes")) {
 					Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
-						MMOItems.plugin.getRecipes().loadRecipes();
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the advanced recipes.");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().getRecipes().size() + ChatColor.GRAY + " Recipes");
+						MMOItems.plugin.getRecipes().reloadRecipes();
+						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
+						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().size() + ChatColor.GRAY + " Recipes");
 					});
 				}
 				return true;

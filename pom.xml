@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOLib</artifactId>
-			<version>1.0</version>
+			<version>1.0.6</version>
 			<scope>system</scope>
         	<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>

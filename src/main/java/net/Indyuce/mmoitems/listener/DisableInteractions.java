@@ -79,24 +79,24 @@ public class DisableInteractions implements Listener {
 			event.setCancelled(true);
 	}
 
-        // interaction (entity)
-        @EventHandler
-        public void f(PlayerInteractEntityEvent event) {
-                if (event.getRightClicked() instanceof ArmorStand)
-                        return;
+    // interaction (entity)
+    @EventHandler
+    public void f(PlayerInteractEntityEvent event) {
+            if (event.getRightClicked() instanceof ArmorStand)
+                    return;
 
-                NBTItem item = NBTItem.get(event.getHand() == EquipmentSlot.OFF_HAND ? event.getPlayer().getInventory().getItemInOffHand() : event.getPlayer().getInventory().getItemInMainHand());
-                if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
-                        event.setCancelled(true);
-        }
-
-        // interaction (consume)
-        @EventHandler
-        public void g(PlayerItemConsumeEvent event) {
-            NBTItem item = NBTItem.get(event.getItem());
+            NBTItem item = NBTItem.get(event.getHand() == EquipmentSlot.OFF_HAND ? event.getPlayer().getInventory().getItemInOffHand() : event.getPlayer().getInventory().getItemInMainHand());
             if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
                     event.setCancelled(true);
-        }
+    }
+
+    // interaction (consume)
+    @EventHandler
+    public void g(PlayerItemConsumeEvent event) {
+        NBTItem item = NBTItem.get(event.getItem());
+        if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
+                event.setCancelled(true);
+    }
 
 	// workbench
 	@EventHandler

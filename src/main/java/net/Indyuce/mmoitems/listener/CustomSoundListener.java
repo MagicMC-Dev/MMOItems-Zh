@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomSoundListener implements Listener {
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void a(EntityDamageByEntityEvent event) {
 		if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof LivingEntity))
 			return;
@@ -33,13 +33,13 @@ public class CustomSoundListener implements Listener {
 		playSound(player.getInventory().getItemInMainHand(), "ON_ATTACK", player);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void b(EntityPickupItemEvent event) {
 		if (event.getEntityType().equals(EntityType.PLAYER))
 			playSound(event.getItem().getItemStack(), "ON_PICKUP", (Player) event.getEntity());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void c(BlockBreakEvent event) {
 		playSound(event.getPlayer().getInventory().getItemInMainHand(), "ON_BLOCK_BREAK", event.getPlayer());
 	}
@@ -58,27 +58,27 @@ public class CustomSoundListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void e(CraftItemEvent event) {
 		playSound(event.getInventory().getResult(), "ON_CRAFT", event.getWhoClicked().getWorld(), event.getWhoClicked().getLocation());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void f(FurnaceSmeltEvent event) {
 		playSound(event.getResult(), "ON_CRAFT", event.getBlock());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void g(PlayerItemConsumeEvent event) {
 		playSound(event.getItem(), "ON_CONSUME", event.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void h1(PlayerItemBreakEvent event) {
 		playSound(event.getBrokenItem(), "ON_ITEM_BREAK", event.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void i(BlockPlaceEvent event) {
 		playSound(event.getItemInHand(), "ON_PLACED", event.getPlayer());
 	}

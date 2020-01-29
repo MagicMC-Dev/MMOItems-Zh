@@ -59,7 +59,7 @@ public class CustomBlockListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void c(PlayerInteractEvent event) {
 		if (!event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND || event.getClickedBlock().getType().isInteractable())
 			return;

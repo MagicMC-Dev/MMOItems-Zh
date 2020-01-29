@@ -49,7 +49,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 public class ItemUse implements Listener {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler
 	public void a(PlayerInteractEvent event) {
 		if (!event.hasItem() || event.getHand() != EquipmentSlot.HAND)
 			return;

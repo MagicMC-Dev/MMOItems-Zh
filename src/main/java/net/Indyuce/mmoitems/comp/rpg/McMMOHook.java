@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -8,14 +9,22 @@ import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelUpEvent;
+import com.gmail.nossr50.events.skills.repair.McMMOPlayerRepairCheckEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.type.DisableStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class McMMOHook implements RPGHandler, Listener {
+	private final ItemStat disableMcMMORepair = new DisableStat(Material.IRON_BLOCK, "mcmmo-repair", "Disable McMMO Repair", "Players can't repair this with McMMO.");
+	
 	public McMMOHook() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+		
+		MMOItems.plugin.getStats().register("DISABLE_MCMMO_REPAIR", disableMcMMORepair);
 	}
 
 	@EventHandler
@@ -26,6 +35,13 @@ public class McMMOHook implements RPGHandler, Listener {
 	@EventHandler
 	public void b(McMMOPlayerLevelDownEvent event) {
 		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+	}
+	
+	@EventHandler
+	public void c(McMMOPlayerRepairCheckEvent event) {
+		NBTItem nbt = NBTItem.get(event.getRepairedObject());
+		if(nbt.hasType() && nbt.getBoolean("MMOITEMS_DISABLE_MCMMO_REPAIR"))
+			event.setCancelled(true);
 	}
 
 	@Override

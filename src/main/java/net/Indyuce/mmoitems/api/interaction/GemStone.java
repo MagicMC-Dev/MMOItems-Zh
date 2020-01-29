@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,8 +17,9 @@ import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.Mergeable;
 import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemStone extends UseItem {
 	public GemStone(Player player, NBTItem item, Type type) {
@@ -23,7 +27,26 @@ public class GemStone extends UseItem {
 	}
 
 	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
-
+		List<ItemTag> tags = new ArrayList<>();
+		
+		for(String tag : target.getTags()) {
+			switch(target.getTagType(target.getTypeId(tag))) {
+			case "double":
+				tags.add(new ItemTag(tag, target.getDouble(tag)));
+				break;
+			case "int":
+				tags.add(new ItemTag(tag, target.getInteger(tag)));
+				break;
+			case "byte":
+				tags.add(new ItemTag(tag, target.getBoolean(tag)));
+				break;
+			case "string":
+				tags.add(new ItemTag(tag, target.getString(tag)));
+				break;
+			default:
+				tags.add(new ItemTag(tag, "UNSUPPORTED TAG TYPE!"));
+			}
+		}
 		/*
 		 * loads all stats and calculates EVERY piece of the lore again.
 		 */
@@ -82,7 +105,7 @@ public class GemStone extends UseItem {
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 		Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
 
-		return new ApplyResult(targetMMO.newBuilder().build());
+		return new ApplyResult(NBTItem.get(targetMMO.newBuilder().build()).addTag(tags).toItem());
 	}
 
 	public class ApplyResult {

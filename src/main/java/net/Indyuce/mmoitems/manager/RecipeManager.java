@@ -198,6 +198,7 @@ public class RecipeManager {
 			else {
 				item.setAmount(c.getInt("amount", 1));
 				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
+				//
 			}
 		} else if(c.contains("material")) {
 			Material material = Material.valueOf(c.getString("material"));

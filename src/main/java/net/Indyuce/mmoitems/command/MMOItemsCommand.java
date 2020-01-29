@@ -336,8 +336,12 @@ public class MMOItemsCommand implements CommandExecutor {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding is already identified.");
 				return true;
 			}
+			
+			final int amount = player.getInventory().getItemInMainHand().getAmount();
+			ItemStack identifiedItem = new IdentifiedItem(item).identify();
+			identifiedItem.setAmount(amount);
 
-			player.getInventory().setItemInMainHand(new IdentifiedItem(item).identify());
+			player.getInventory().setItemInMainHand(identifiedItem);
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully identified the item you are holding.");
 		}
 		// ==================================================================================================================================

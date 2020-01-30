@@ -38,6 +38,10 @@ public class MMORecipeChoice {
 		}
 		return new RecipeChoice.ExactChoice(MMOItems.plugin.getItems().getItem(type, id));
 	}
+	
+	public Material generateLegacy() {
+		return mat;
+	}
 
 	@SuppressWarnings("deprecation")
 	public ItemStack generateStack() {

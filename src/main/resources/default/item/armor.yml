@@ -27,49 +27,13 @@ STEEL_HELMET:
   knockback-resistance: 0.01=0.03
   gem-sockets:
   - Green
-  advanced-craft-enabled: true
   set: STEEL
-  advanced-craft:
-    '4':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '6':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '7':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '8':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '3':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '0':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '2':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+      - AIR AIR AIR
 STEEL_CHESTPLATE:
   material: IRON_CHESTPLATE
   block-power: 5.0=7.0
@@ -83,46 +47,13 @@ STEEL_CHESTPLATE:
   knockback-resistance: 0.01=0.03
   gem-sockets:
   - Blue
-  advanced-craft-enabled: true
   set: STEEL
-  advanced-craft:
-    '1':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '3':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '7':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '6':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '8':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '4':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '0':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '2':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
 STEEL_LEGGINGS:
   material: IRON_LEGGINGS
   block-power: 5.0=7.0
@@ -136,47 +67,13 @@ STEEL_LEGGINGS:
   knockback-resistance: 0.01=0.03
   gem-sockets:
   - Blue
-  advanced-craft-enabled: true
   set: STEEL
-  advanced-craft:
-    '4':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '7':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '8':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '6':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '3':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '0':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '2':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
 STEEL_BOOTS:
   material: IRON_BOOTS
   block-power: 5.0=7.0
@@ -190,50 +87,13 @@ STEEL_BOOTS:
   knockback-resistance: 0.01=0.03
   gem-sockets:
   - Green
-  advanced-craft-enabled: true
   set: STEEL
-  advanced-craft:
-    '0':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '1':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '2':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '4':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '7':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '6':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '3':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '8':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: STEEL_INGOT
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+      - AIR AIR AIR
 CURSED_WITHER_SKULL:
   material: WITHER_SKELETON_SKULL
   name: '&7Cursed Wither Skull'
@@ -243,7 +103,6 @@ CURSED_WITHER_SKULL:
   - Red
   - Blue
   armor: 3.0
-  durability: 3
   armor-toughness: 2.0
   perm-effects:
     ABSORPTION: 1
@@ -256,52 +115,12 @@ CURSED_WITHER_SKULL:
       defense: 67.4
     fire:
       defense: 53.4
-  advanced-craft-enabled: true
-  advanced-craft:
-    '4':
-      type: MATERIAL
-      id: UNIQUE_WEAPON_ESSENCE
-      amount: 1
-    '8':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '7':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '6':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '5':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '2':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '1':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '0':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
-    '3':
-      material: BONE
-      amount: 1
-      durability: 0
-      name: ''
+  crafting:
+    shaped:
+      '1':
+      - BONE BONE BONE
+      - BONE MATERIAL.UNIQUE_WEAPON_ESSENCE BONE
+      - BONE BONE BONE
 HUGE_MOTHRON_WINGS:
   material: ELYTRA
   max-durability: 5.0
@@ -519,47 +338,12 @@ WYVERN_CAP:
     JUMP: 2
   lore:
   - '&7Grants permanent jump boost II'
-  advanced-craft:
-    '4':
-      amount: 1
-      material: AIR
-      durability: 0
-      name: ''
-    '6':
-      amount: 1
-      material: AIR
-      durability: 0
-      name: ''
-    '7':
-      amount: 1
-      material: AIR
-      durability: 0
-      name: ''
-    '8':
-      amount: 1
-      material: AIR
-      durability: 0
-      name: ''
-    '3':
-      type: TOME
-      id: WYVERN_FEATHER
-      amount: 1
-    '5':
-      type: TOME
-      id: WYVERN_FEATHER
-      amount: 1
-    '2':
-      type: TOME
-      id: WYVERN_FEATHER
-      amount: 1
-    '0':
-      type: TOME
-      id: WYVERN_FEATHER
-      amount: 1
-    '1':
-      type: TOME
-      id: WYVERN_SOUL
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
+      - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
+      - AIR AIR AIR
 TRAVEL_BOOTS:
   material: LEATHER_BOOTS
   name: §fTravel boots

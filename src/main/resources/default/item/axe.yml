@@ -18,11 +18,12 @@ BUTCHER_AXE:
       damage: 3.2
   gem-sockets:
   - Uncolored
-  craft-enabled: true
-  craft:
-  - IRON_BLOCK IRON_BLOCK AIR
-  - IRON_BLOCK STICK AIR
-  - AIR STICK AIR
+  crafting:
+    shaped:
+      '1':
+      - IRON_BLOCK IRON_BLOCK AIR
+      - IRON_BLOCK STICK AIR
+      - AIR STICK AIR
 BONE_CRACKER:
   material: STONE_AXE
   disable-repairing: true
@@ -71,40 +72,9 @@ SILVER_AXE:
   - '&7right-click to perform a devastating'
   - '&7circular slash, dealing &c6 &7damage'
   - '&7and knocking back nearby targets.'
-  advanced-craft:
-    '0':
-      material: AIR
-      amount: 1
-      name: ''
-    '3':
-      material: AIR
-      amount: 1
-      name: ''
-    '6':
-      material: AIR
-      amount: 1
-      name: ''
-    '8':
-      material: AIR
-      amount: 1
-      name: ''
-    '7':
-      material: STICK
-      amount: 1
-      name: ''
-    '4':
-      material: STICK
-      amount: 1
-      name: ''
-    '2':
-      type: MATERIAL
-      id: SILVER_INGOT
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: SILVER_INGOT
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: SILVER_INGOT
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
+      - MATERIAL.SILVER_INGOT STICK AIR
+      - AIR STICK AIR

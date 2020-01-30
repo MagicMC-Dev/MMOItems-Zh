@@ -58,48 +58,12 @@ MOLTEN_BLADE:
   name: '&cMolten Blade'
   attack-speed: 1.3
   attack-damage: 11.0
-  advanced-craft:
-    '0':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '2':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '6':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '8':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '7':
-      material: BLAZE_ROD
-      amount: 1
-      durability: 0
-      name: ''
-    '4':
-      type: MATERIAL
-      id: FIRE_ESSENCE
-      amount: 1
-    '3':
-      type: MATERIAL
-      id: FIRE_ESSENCE
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: FIRE_ESSENCE
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: FIRE_ESSENCE
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - AIR MATERIAL.FIRE_ESSENCE AIR
+      - MATERIAL.FIRE_ESSENCE MATERIAL.FIRE_ESSENCE MATERIAL.FIRE_ESSENCE
+      - AIR BLAZE_ROD AIR
   ability:
     ability1:
       type: MAGMA_FISSURE

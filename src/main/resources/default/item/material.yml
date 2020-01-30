@@ -114,52 +114,12 @@ FIRE_ESSENCE:
   hide-enchants: true
   enchants:
     unbreaking: 1
-  advanced-craft:
-    '8':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '7':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '6':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '5':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '2':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '1':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '0':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '3':
-      material: BLAZE_POWDER
-      amount: 1
-      durability: 0
-      name: ''
-    '4':
-      material: BLAZE_ROD
-      amount: 1
-      durability: 0
-      name: ''
+  crafting:
+    shaped:
+      '1':
+      - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
+      - BLAZE_POWDER BLAZE_ROD BLAZE_POWDER
+      - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
 RARE_DIAMOND:
   material: DIAMOND
   enchants:
@@ -185,40 +145,9 @@ SILVER_INGOT:
     unbreaking: 1
   hide-enchants: true
   disable-crafting: true
-  advanced-craft:
-    '7':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '6':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '3':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '8':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '4':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '5':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '0':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
-    '2':
-      type: MATERIAL
-      id: SILVER_COIN
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+      - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+      - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN

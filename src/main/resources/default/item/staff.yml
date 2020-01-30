@@ -14,10 +14,12 @@ EARTH_STAFF:
   perm-effects:
     JUMP: 2
   craft-enabled: true
-  craft:
-  - JUNGLE_SAPLING EMERALD JUNGLE_SAPLING
-  - EMERALD STICK EMERALD
-  - JUNGLE_SAPLING EMERALD JUNGLE_SAPLING
+  crafting:
+    shaped:
+      '1':
+      - JUNGLE_SAPLING EMERALD JUNGLE_SAPLING
+      - EMERALD STICK EMERALD
+      - JUNGLE_SAPLING EMERALD JUNGLE_SAPLING
   element:
     earth:
       damage: 23.0

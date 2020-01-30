@@ -35,48 +35,12 @@ FALCON_BLADE:
   disable-repairing: true
   disable-smelting: true
   tier: EPIC
-  advanced-craft:
-    '0':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '2':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '6':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '8':
-      material: AIR
-      durability: 0
-      amount: 1
-      name: ''
-    '4':
-      material: GOLDEN_SWORD
-      amount: 1
-      durability: 0
-      name: ''
-    '5':
-      type: MATERIAL
-      id: EPIC_WEAPON_ESSENCE
-      amount: 1
-    '7':
-      type: MATERIAL
-      id: EPIC_WEAPON_ESSENCE
-      amount: 1
-    '3':
-      type: MATERIAL
-      id: EPIC_WEAPON_ESSENCE
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: EPIC_WEAPON_ESSENCE
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - AIR MATERIAL.EPIC_WEAPON_ESSENCE AIR
+      - MATERIAL.EPIC_WEAPON_ESSENCE GOLDEN_SWORD MATERIAL.EPIC_WEAPON_ESSENCE
+      - AIR MATERIAL.EPIC_WEAPON_ESSENCE AIR
 KATANA:
   material: IRON_SWORD
   attack-damage: 7.0
@@ -106,43 +70,12 @@ SOULSTEALER:
       type: VAMPIRISM
       mode: ON_HIT
       cooldown: 7.0
-  advanced-craft:
-    '7':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '6':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '3':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '8':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '5':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '2':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '0':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '1':
-      type: MISCELLANEOUS
-      id: HUMAN_SOUL
-      amount: 1
-    '4':
-      type: SWORD
-      id: SILVER_SWORD
-      amount: 1
+  crafting:
+    shaped:
+      '1':
+      - MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL
+      - MISCELLANEOUS.HUMAN_SOUL SWORD.SILVER_SWORD MISCELLANEOUS.HUMAN_SOUL
+      - MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL
   lore:
   - '&7Drains &c10%&7 of the damage'
   - '&7dealt as health points.'
@@ -164,40 +97,9 @@ SILVER_SWORD:
   lore:
   - '&7May be upgraded.'
   required-level: 4.0
-  advanced-craft:
-    '0':
-      material: AIR
-      amount: 1
-      name: ''
-    '2':
-      material: AIR
-      amount: 1
-      name: ''
-    '3':
-      material: AIR
-      amount: 1
-      name: ''
-    '5':
-      material: AIR
-      amount: 1
-      name: ''
-    '6':
-      material: AIR
-      amount: 1
-      name: ''
-    '8':
-      material: AIR
-      amount: 1
-      name: ''
-    '4':
-      type: MATERIAL
-      id: SILVER_INGOT
-      amount: 1
-    '1':
-      type: MATERIAL
-      id: SILVER_INGOT
-      amount: 1
-    '7':
-      material: STICK
-      amount: 1
-      name: ''
+  crafting:
+    shaped:
+      '1':
+      - AIR MATERIAL.SILVER_INGOT AIR
+      - AIR MATERIAL.SILVER_INGOT AIR
+      - AIR STICK AIR

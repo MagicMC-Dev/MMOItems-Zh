@@ -30,11 +30,12 @@ SCROLL_OF_IDENTIFICATION:
   name: '&fScroll of Identification'
   tier: '&8Uncommon'
   can-identify: true
-  craft-enabled: true
-  craft:
-  - AIR AIR AIR
-  - PAPER DIAMOND PAPER
-  - AIR AIR AIR
+  crafting:
+    shaped:
+      '1':
+      - AIR AIR AIR
+      - PAPER DIAMOND PAPER
+      - AIR AIR AIR
   inedible: true
 ITEM_CRUSHER:
   material: IRON_AXE
@@ -292,46 +293,21 @@ EGGNOG:
     '1':
       format: me Mmmmmh!
       cooldown: 3.0
-  advanced-craft:
-    '0':
-      material: AIR
-      amount: 1
-      name: ''
-    '1':
-      material: AIR
-      amount: 1
-      name: ''
-    '2':
-      material: AIR
-      amount: 1
-      name: ''
-    '3':
-      material: AIR
-      amount: 1
-      name: ''
-    '5':
-      material: AIR
-      amount: 1
-      name: ''
-    '6':
-      material: AIR
-      amount: 1
-      name: ''
-    '8':
-      material: AIR
-      amount: 1
-      name: ''
-    '4':
-      material: SUGAR
-      amount: 1
-      name: ''
-    '7':
-      material: EGG
-      amount: 1
-      name: ''
   lore:
   - '&eEarned during X-Mas 2018!'
   - '&e&oA fresh & cold eggnog!'
+  crafting:
+    shapeless:
+      '1':
+        item1: EGG
+        item2: SUGAR
+        item3: AIR
+        item4: AIR
+        item5: AIR
+        item6: AIR
+        item7: AIR
+        item8: AIR
+        item9: AIR
 MANGO:
   material: PLAYER_HEAD
   name: '&fMango'

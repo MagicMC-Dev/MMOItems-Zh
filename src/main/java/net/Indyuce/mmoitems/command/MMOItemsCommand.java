@@ -430,6 +430,11 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (args[1].equalsIgnoreCase("recipes")) {
 					Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
 						MMOItems.plugin.getRecipes().reloadRecipes();
+						
+						if(MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
+							for(Player p : Bukkit.getOnlinePlayers())
+								p.discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
+						
 						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
 						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().size() + ChatColor.GRAY + " Recipes");
 					});

@@ -25,6 +25,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.CustomBlock;
 import net.Indyuce.mmoitems.api.drop.DropTable;
+import net.Indyuce.mmoitems.api.event.blocks.CustomBlockDropEvent;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import net.mmogroup.mmolib.MMOLib;
 
@@ -97,7 +98,11 @@ public class DropTableManager implements Listener {
 				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
 					if(CustomBlockListener.getPickaxePower(player) >= custom.getRequiredPower())
 					for (ItemStack drop : customBlocks.get(custom.getId()).read(hasSilkTouchTool(player))) {
-						Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), drop);
+						CustomBlockDropEvent called = new CustomBlockDropEvent(player, custom, drop);
+						Bukkit.getPluginManager().callEvent(called);
+						if (called.isCancelled())
+							return;
+						Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), called.getDrop());
 						item.setVelocity(item.getVelocity().multiply(0.5f));
 					}
 				}, 2);

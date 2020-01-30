@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -105,6 +107,9 @@ public class UnidentifiedItem extends ConfigItem {
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);
+			for(Attribute att : meta.getAttributeModifiers().keySet())
+				for(AttributeModifier am : meta.getAttributeModifiers(att))
+					meta.removeAttributeModifier(att, am);
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
 			meta.setLore(lore);
 			unidentified.setItemMeta(meta);

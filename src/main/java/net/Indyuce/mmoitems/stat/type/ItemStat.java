@@ -90,8 +90,6 @@ public abstract class ItemStat {
 	public static final ItemStat DISABLE_ARROW_SHOOTING = new DisableStat(Material.ARROW, "arrow-shooting", "Disable Arrow Shooting", new Material[] { Material.ARROW }, "Players can't shoot this", "item using a bow.");
 	public static final ItemStat DISABLE_ATTACK_PASSIVE = new DisableStat(Material.BARRIER, "attack-passive", "Disable Attack Passive", new String[] { "piercing", "slashing", "blunt" }, "Disables the blunt/slashing/piercing", "passive effects on attacks.");
 
-	public static final ItemStat PVE_DEFENSE = new DoubleStat(new ItemStack(Material.BOOK), "PvE Defense", new String[] {"Additional Defense against","non human entities in %."}, "pve-defense", new String[] {"armor"});
-	public static final ItemStat PVP_DEFENSE = new DoubleStat(new ItemStack(Material.BOOK), "PvP Defense", new String[] {"Additional Defense against","human entities in %."}, "pvp-defense", new String[] {"armor"});
 	public static final ItemStat REQUIRED_LEVEL = new Required_Level(), REQUIRED_CLASS = new Required_Class(), ATTACK_DAMAGE = new Attack_Damage(), ATTACK_SPEED = new Attack_Speed();
 	public static final ItemStat CRITICAL_STRIKE_CHANCE = new DoubleStat(new ItemStack(Material.NETHER_STAR), "Critical Strike Chance", new String[] { "Critical Strikes deal more damage.", "In % chance." }, "critical-strike-chance", new String[] { "!miscellaneous", "all" });
 	public static final ItemStat CRITICAL_STRIKE_POWER = new DoubleStat(new ItemStack(Material.NETHER_STAR), "Critical Strike Power", new String[] { "The extra damage weapon crits deals.", "(Stacks with default value)", "In %." }, "critical-strike-power", new String[] { "!miscellaneous", "all" });

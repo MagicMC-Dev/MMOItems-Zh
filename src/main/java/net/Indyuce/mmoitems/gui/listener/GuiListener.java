@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOUtils;
@@ -13,7 +12,6 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.Indyuce.mmoitems.gui.edition.AdvancedRecipeEdition;
 import net.Indyuce.mmoitems.gui.edition.CraftingEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
@@ -51,15 +49,6 @@ public class GuiListener implements Listener {
 				else if(inventory instanceof RecipeEdition) new CraftingEdition(player, type, id).open(((EditionInventory) inventory).getPreviousPage());
 				else new ItemEdition(player, type, id).onPage(((EditionInventory) inventory).getPreviousPage()).open();
 			}
-		}
-	}
-
-	@EventHandler
-	public void b(PlayerDropItemEvent event) {
-		Player player = event.getPlayer();
-		if (AdvancedRecipeEdition.noDrop.contains(player.getUniqueId())) {
-			AdvancedRecipeEdition.noDrop.remove(player.getUniqueId());
-			event.setCancelled(true);
 		}
 	}
 }

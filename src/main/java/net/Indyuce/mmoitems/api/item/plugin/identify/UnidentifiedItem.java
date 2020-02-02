@@ -107,9 +107,12 @@ public class UnidentifiedItem extends ConfigItem {
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);
-			for(Attribute att : meta.getAttributeModifiers().keySet())
-				for(AttributeModifier am : meta.getAttributeModifiers(att))
-					meta.removeAttributeModifier(att, am);
+			if(meta.getAttributeModifiers() != null)
+				for(Attribute att : meta.getAttributeModifiers().keySet()) {
+					if(meta.getAttributeModifiers(att) != null)
+					for(AttributeModifier am : meta.getAttributeModifiers(att))
+						meta.removeAttributeModifier(att, am);
+				}
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
 			meta.setLore(lore);
 			unidentified.setItemMeta(meta);

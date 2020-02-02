@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,6 +35,8 @@ import net.mmogroup.mmolib.api.DamageType;
 public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void b(EntityDamageEvent event) {
+		if(event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK
+				|| event.getCause() == DamageCause.PROJECTILE) return;
 		if (!(event.getEntity() instanceof Player) || event.isCancelled() || event.getEntity().hasMetadata("NPC"))
 			return;
 
@@ -60,12 +63,8 @@ public class PlayerListener implements Listener {
 			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FALL_DAMAGE_REDUCTION) / 100));
 		else if (event.getCause() == DamageCause.MAGIC)
 			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
-		else if (event.getCause() == DamageCause.PROJECTILE)
-			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.PROJECTILE_DAMAGE_REDUCTION) / 100));
-		else if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == DamageCause.PROJECTILE)
-			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
 
-		event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100));
+		event.setDamage(event.getDamage() * (1 - (stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100)));
 	}
 
 	// regeneration
@@ -91,9 +90,32 @@ public class PlayerListener implements Listener {
 	// apply on-hit abilities from armor pieces.
 	@EventHandler(priority = EventPriority.HIGH)
 	public void f(EntityDamageByEntityEvent event) {
-		if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event.getDamager() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+		if (event.isCancelled() || !(event.getEntity() instanceof Player) || (!(event.getDamager() instanceof LivingEntity) && !(event.getDamager() instanceof Projectile)) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
 			return;
 
+		/*
+		 * damage reduction
+		 */
+		if (MMOLib.plugin.getDamage().findInfo(event.getEntity()) != null)
+			return;
+		PlayerStats stats = PlayerData.get((Player) event.getEntity()).getStats();
+		double d = 0;
+		
+		if(event.getCause() == DamageCause.PROJECTILE) {
+			d += (stats.getStat(ItemStat.PROJECTILE_DAMAGE_REDUCTION) / 100);
+			if(((Projectile) event.getDamager()).getShooter() instanceof Player)
+				d += (stats.getStat(ItemStat.PVP_DAMAGE_REDUCTION) / 100);
+			else d += (stats.getStat(ItemStat.PVE_DAMAGE_REDUCTION) / 100);
+		}
+		else {
+			d += (stats.getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100);
+			if(event.getDamager() instanceof Player)
+				d += (stats.getStat(ItemStat.PVP_DAMAGE_REDUCTION) / 100);
+			else d += (stats.getStat(ItemStat.PVE_DAMAGE_REDUCTION) / 100);
+		}
+		
+		event.setDamage((event.getDamage() * (1 - d)) * (1 - (stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100)));
+		
 		LivingEntity damager = (LivingEntity) event.getDamager();
 		Player player = (Player) event.getEntity();
 		PlayerData.get(player).castAbilities(damager, new ItemAttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);

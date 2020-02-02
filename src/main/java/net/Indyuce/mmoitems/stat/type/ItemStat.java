@@ -57,6 +57,7 @@ import net.Indyuce.mmoitems.stat.Permission;
 import net.Indyuce.mmoitems.stat.Pickaxe_Power;
 import net.Indyuce.mmoitems.stat.Potion_Color;
 import net.Indyuce.mmoitems.stat.Potion_Effects;
+import net.Indyuce.mmoitems.stat.Repair_Material;
 import net.Indyuce.mmoitems.stat.Required_Class;
 import net.Indyuce.mmoitems.stat.Required_Level;
 import net.Indyuce.mmoitems.stat.Restore;
@@ -118,6 +119,8 @@ public abstract class ItemStat {
 	public static final ItemStat PHYSICAL_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(Material.LEATHER_CHESTPLATE), "Physical Damage Reduction", new String[] { "Reduces physical damage.", "In %." }, "physical-damage-reduction");
 	public static final ItemStat FIRE_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(Material.BLAZE_POWDER), "Fire Damage Reduction", new String[] { "Reduces fire damage.", "In %." }, "fire-damage-reduction");
 	public static final ItemStat MAGIC_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(Material.POTION), "Magic Damage Reduction", new String[] { "Reduce magic damage dealt by potions.", "In %." }, "magic-damage-reduction");
+	public static final ItemStat PVE_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(VersionMaterial.PORKCHOP.toMaterial()), "PvE Damage Reduction", new String[] { "Reduces damage dealt by mobs.", "In %." }, "pve-damage-reduction");
+	public static final ItemStat PVP_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(VersionMaterial.SKELETON_SKULL.toMaterial()), "PvP Damage Reduction", new String[] { "Reduces damage dealt by players", "In %." }, "pvp-damage-reduction");
 	public static final ItemStat UNDEAD_DAMAGE = new DoubleStat(new ItemStack(VersionMaterial.SKELETON_SKULL.toMaterial()), "Undead Damage", new String[] { "Deals additional damage to undead.", "In %." }, "undead-damage");
 	public static final ItemStat REGENERATION = new DoubleStat(new ItemStack(Material.BREAD), "Regeneration", new String[] { "Increases natural/magic health regen.", "In %." }, "regeneration");
 	public static final ItemStat UNBREAKABLE = new Unbreakable(), TIER = new Item_Tier(), SET = new Item_Set(), ARMOR = new Armor(), ARMOR_TOUGHNESS = new Armor_Toughness(), MAX_HEALTH = new Max_Health();
@@ -153,7 +156,8 @@ public abstract class ItemStat {
 	public static final ItemStat NOTE_WEIGHT = new DoubleStat(new ItemStack(VersionMaterial.MUSIC_DISC_MALL.toMaterial()), "Note Weight", new String[] { "Defines how the projectile cast", "by your lute tilts downwards." }, "note-weight", new String[] { "lute" });
 	public static final ItemStat GEM_SOCKETS = new Gem_Sockets();
 	public static final ItemStat REPAIR = new DoubleStat(new ItemStack(Material.ANVIL), "Repair", new String[] { "The amount of durability your item", "can repair when set an item." }, "repair", new String[] { "consumable" });
-
+	public static final ItemStat REPAIR_MATERIAL = new Repair_Material();
+	
 	public static final ItemStat KNOCKBACK = new DoubleStat(new ItemStack(VersionMaterial.IRON_HORSE_ARMOR.toMaterial()), "Knockback", new String[] { "Using this musket will knock", "the user back if positive." }, "knockback", new String[] { "musket" });
 	public static final ItemStat RECOIL = new DoubleStat(new ItemStack(VersionMaterial.IRON_HORSE_ARMOR.toMaterial()), "Recoil", new String[] { "Corresponds to the shooting innacuracy." }, "recoil", new String[] { "musket" });
 

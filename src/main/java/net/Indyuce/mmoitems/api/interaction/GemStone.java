@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -22,6 +23,9 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemStone extends UseItem {
+	List<String> ignoreList = Arrays.asList("Unbreakable", "display", "Enchantments", "HideFlags",
+			"Damage", "AttributeModifiers", "SkullOwner", "CanDestroy", "PickupDelay", "Age");
+	
 	public GemStone(Player player, NBTItem item, Type type) {
 		super(player, item, type);
 	}
@@ -30,6 +34,8 @@ public class GemStone extends UseItem {
 		List<ItemTag> tags = new ArrayList<>();
 		
 		for(String tag : target.getTags()) {
+			if(ignoreList.contains(tag) || tag.startsWith("MMOITEMS_")) continue;
+			
 			switch(target.getTagType(target.getTypeId(tag))) {
 			case "double":
 				tags.add(new ItemTag(tag, target.getDouble(tag)));
@@ -104,7 +110,7 @@ public class GemStone extends UseItem {
 
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 		Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
-
+		
 		return new ApplyResult(NBTItem.get(targetMMO.newBuilder().build()).addTag(tags).toItem());
 	}
 

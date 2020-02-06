@@ -58,8 +58,6 @@ import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.manager.ItemManager;
 import net.Indyuce.mmoitems.manager.PluginUpdateManager;
-import net.Indyuce.mmoitems.manager.RecipeManager;
-import net.Indyuce.mmoitems.manager.RecipeManagerLegacy;
 import net.Indyuce.mmoitems.manager.SetManager;
 import net.Indyuce.mmoitems.manager.StatManager;
 import net.Indyuce.mmoitems.manager.TierManager;
@@ -67,6 +65,9 @@ import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.manager.UpdaterManager;
 import net.Indyuce.mmoitems.manager.UpgradeManager;
 import net.Indyuce.mmoitems.manager.WorldGenManager;
+import net.Indyuce.mmoitems.manager.recipe.RecipeManager;
+import net.Indyuce.mmoitems.manager.recipe.RecipeManagerDefault;
+import net.Indyuce.mmoitems.manager.recipe.RecipeManagerLegacy;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.SpigotPlugin;
 
@@ -235,7 +236,7 @@ public class MMOItems extends JavaPlugin {
 		// advanced recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
 		recipeManager = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ?
-				new RecipeManager() : new RecipeManagerLegacy();
+				new RecipeManagerDefault() : new RecipeManagerLegacy();
 
 		// commands
 		getCommand("mmoitems").setExecutor(new MMOItemsCommand());

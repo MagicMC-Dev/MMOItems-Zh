@@ -1,42 +1,31 @@
-package net.Indyuce.mmoitems.manager;
+package net.Indyuce.mmoitems.manager.recipe;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.BlastingRecipe;
+import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.Type;
 
-/**
- * TODO
- * When Bukkit changes their 'RecipeChoice.ExactChoice' API
- * we can remove the suppressed warnings, but right now it works
- * despite being marked as deprecated. It is just a 
- */
-public class RecipeManagerLegacy extends RecipeManager {
-	private List<Recipe> loadedRecipes = new ArrayList<>();
-	private Collection<NamespacedKey> keys = new ArrayList<>();
-	
-	public RecipeManagerLegacy() {
-		MMOItems.plugin.getLogger().log(Level.INFO, "1.12 detected! Loading the Legacy recipe manager...");
-		load();
-	}
-	
-	private void load() {
+@SuppressWarnings("deprecation")
+public class RecipeManagerDefault extends RecipeManager {
+	@Override
+	protected void load() {
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 
@@ -54,6 +43,12 @@ public class RecipeManagerLegacy extends RecipeManager {
 						registerShapelessRecipe(type, id, craftingc.getConfigurationSection("shapeless." + recipe), recipe));
 					if(craftingc.contains("furnace")) craftingc.getConfigurationSection("furnace").getKeys(false).forEach(recipe ->
 						registerFurnaceRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("furnace." + recipe)), recipe));
+					if(craftingc.contains("blast")) craftingc.getConfigurationSection("blast").getKeys(false).forEach(recipe ->
+						registerBlastRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("blast." + recipe)), recipe));
+					if(craftingc.contains("smoker")) craftingc.getConfigurationSection("smoker").getKeys(false).forEach(recipe ->
+						registerSmokerRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("smoker." + recipe)), recipe));
+					if(craftingc.contains("campfire")) craftingc.getConfigurationSection("campfire").getKeys(false).forEach(recipe ->
+						registerCampfireRecipe(type, id, new RecipeInformation(craftingc.getConfigurationSection("campfire." + recipe)), recipe));
 				}
 			}
 		}
@@ -70,7 +65,40 @@ public class RecipeManagerLegacy extends RecipeManager {
 		});
 	}
 	
-	private void registerShapedRecipe(Type type, String id, List<String> list, String number) {
+	@Override
+	protected void registerFurnaceRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+	
+	@Override
+	protected void registerBlastRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "blast", number);
+		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+
+	@Override
+	protected void registerSmokerRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "smoker", number);
+		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+
+	@Override
+	protected void registerCampfireRecipe(Type type, String id, RecipeInformation info, String number) {
+		NamespacedKey key = getRecipeKey(type, id, "campfire", number);
+		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		
+		loadedRecipes.add(recipe); keys.add(key);
+	}
+	
+	@Override
+	protected void registerShapedRecipe(Type type, String id, List<String> list, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "shaped", number);
 		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
 		
@@ -92,12 +120,14 @@ public class RecipeManagerLegacy extends RecipeManager {
 		loadedRecipes.add(recipe); keys.add(key);
 	}
 	
-	private void shapedIngredient(ShapedRecipe recipe, char c, MMORecipeChoice rc) {
+	@Override
+	protected void shapedIngredient(ShapedRecipe recipe, char c, MMORecipeChoice rc) {
 		if(rc.isAir()) recipe.setIngredient(c, Material.AIR);
 		else recipe.setIngredient(c, rc.generateChoice());
 	}
 
-	private void registerShapelessRecipe(Type type, String id, ConfigurationSection config, String number) {
+	@Override
+	protected void registerShapelessRecipe(Type type, String id, ConfigurationSection config, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "shapeless", number);
 		ShapelessRecipe recipe = new ShapelessRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
 
@@ -109,68 +139,24 @@ public class RecipeManagerLegacy extends RecipeManager {
 		loadedRecipes.add(recipe); keys.add(key);
 	}
 
-	private void shapelessIngredient(ShapelessRecipe recipe, MMORecipeChoice rc) {
+	@Override
+	protected void shapelessIngredient(ShapelessRecipe recipe, MMORecipeChoice rc) {
 		if(!rc.isAir()) recipe.addIngredient(rc.generateChoice());
 	}
-	
-	private void registerFurnaceRecipe(Type type, String id, RecipeInformation info, String number) {
-		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.input, info.exp, info.burnTime);
-		
-		loadedRecipes.add(recipe); keys.add(key);
-	}
-	
-	/**
-	 * @deprecated Some day I want to get proper rid of the AWB
-	 * but right now we don't want to force players to update
-	 * their recipes right off the bat.
-	 */
-	private void registerAdvancedWorkbenchRecipe(Type type, String id, FileConfiguration config) {
-		MMOItems.plugin.getLogger().warning("Found deprecated adv. recipe for " + id + ". Converting it to the new system...");
-		MMOItems.plugin.getLogger().warning("It is recommended to update your recipes!");
-		
-		NamespacedKey key = getRecipeKey(type, id, "advanced", "deprecated");
-		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
-		recipe.shape("012", "345", "678");
-		
-		setIngredientOrAir(recipe, '0', config.getConfigurationSection(id + ".advanced-craft." + 0));
-		setIngredientOrAir(recipe, '1', config.getConfigurationSection(id + ".advanced-craft." + 1));
-		setIngredientOrAir(recipe, '2', config.getConfigurationSection(id + ".advanced-craft." + 2));
-		setIngredientOrAir(recipe, '3', config.getConfigurationSection(id + ".advanced-craft." + 3));
-		setIngredientOrAir(recipe, '4', config.getConfigurationSection(id + ".advanced-craft." + 4));
-		setIngredientOrAir(recipe, '5', config.getConfigurationSection(id + ".advanced-craft." + 5));
-		setIngredientOrAir(recipe, '6', config.getConfigurationSection(id + ".advanced-craft." + 6));
-		setIngredientOrAir(recipe, '7', config.getConfigurationSection(id + ".advanced-craft." + 7));
-		setIngredientOrAir(recipe, '8', config.getConfigurationSection(id + ".advanced-craft." + 8));
-		
-		loadedRecipes.add(recipe); keys.add(key);
-	}
-	
-	// Just for convenience
-	private NamespacedKey getRecipeKey(Type t, String i, String type, String number) {
-		return new NamespacedKey(MMOItems.plugin, "mmorecipe_" + type + "_" + t.getId() + "_" + i + "_" + number);
-	}
-	
-	/**
-	 * This method is purely for easily converting the AWB recipes.
-	 * 
-	 * @deprecated Some day I want to get proper rid of the AWB
-	 * but right now we don't want to force players to update
-	 * their recipes right off the bat.
-	 */
-	@Deprecated
-	private void setIngredientOrAir(ShapedRecipe recipe, char character, ConfigurationSection c) {
+
+	@Override
+	protected void setIngredientOrAir(ShapedRecipe recipe, char character, ConfigurationSection c) {
 		if(c.contains("type")) {
 			ItemStack item = MMOItems.plugin.getItems().getItem(Type.get(c.getString("type")), c.getString("id"));
 			if(item == null) {
 				MMOItems.plugin.getLogger().warning("WARNING - Couldn't add (Type: " + c.getString("type") + ", Id: " + c.getString("id") +") as it wasn't found.");
 				MMOItems.plugin.getLogger().warning("Using default material: DIRT BLOCK - (Please fix this as soon as possible!)");
 				
-				recipe.setIngredient(character, Material.DIRT);
+				recipe.setIngredient(character, new RecipeChoice.MaterialChoice(Material.DIRT));
 			}
 			else {
 				item.setAmount(c.getInt("amount", 1));
-				recipe.setIngredient(character, item.getType());
+				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
 				//
 			}
 		} else if(c.contains("material")) {
@@ -183,42 +169,8 @@ public class RecipeManagerLegacy extends RecipeManager {
 				ItemStack item = new ItemStack(material);
 				item.setAmount(amount); ItemMeta meta = item.getItemMeta();
 				meta.setDisplayName(name); item.setItemMeta(meta);
-				recipe.setIngredient(character, material);
+				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
 			}
-		}
-	}
-	
-	// For adding the recipes to the book
-	public Collection<NamespacedKey> getNamespacedKeys() {
-		return keys;
-	}
-	
-	public void reloadRecipes() {
-		Bukkit.getScheduler().runTask(MMOItems.plugin, new Runnable() {
-			@Override
-			public void run() {
-				Bukkit.resetRecipes();
-				loadedRecipes.clear();
-				keys.clear();
-				load();
-			}
-		});
-	}
-
-	// For the reload command
-	public int size() {
-		return loadedRecipes.size();
-	}
-	
-	class RecipeInformation {
-		private final Material input;
-		private final float exp;
-		private final int burnTime;
-		
-		private RecipeInformation(ConfigurationSection config) {
-			input = MMORecipeChoice.getFromString(config.getString("item")).generateLegacy();
-			exp = (float) config.getDouble("exp", 0.35);
-			burnTime = config.getInt("time", 200);
 		}
 	}
 }

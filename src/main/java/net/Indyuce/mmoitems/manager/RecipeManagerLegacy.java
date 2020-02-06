@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.manager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,7 +31,10 @@ public class RecipeManagerLegacy extends RecipeManager {
 	private List<Recipe> loadedRecipes = new ArrayList<>();
 	private Collection<NamespacedKey> keys = new ArrayList<>();
 	
-	public RecipeManagerLegacy() { load(); }
+	public RecipeManagerLegacy() {
+		MMOItems.plugin.getLogger().log(Level.INFO, "1.12 detected! Loading the Legacy recipe manager...");
+		load();
+	}
 	
 	private void load() {
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {

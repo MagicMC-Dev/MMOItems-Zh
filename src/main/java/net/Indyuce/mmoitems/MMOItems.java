@@ -59,6 +59,7 @@ import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.manager.ItemManager;
 import net.Indyuce.mmoitems.manager.PluginUpdateManager;
 import net.Indyuce.mmoitems.manager.RecipeManager;
+import net.Indyuce.mmoitems.manager.RecipeManagerLegacy;
 import net.Indyuce.mmoitems.manager.SetManager;
 import net.Indyuce.mmoitems.manager.StatManager;
 import net.Indyuce.mmoitems.manager.TierManager;
@@ -233,7 +234,8 @@ public class MMOItems extends JavaPlugin {
 
 		// advanced recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
-		recipeManager = new RecipeManager();
+		recipeManager = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ?
+				new RecipeManager() : new RecipeManagerLegacy();
 
 		// commands
 		getCommand("mmoitems").setExecutor(new MMOItemsCommand());

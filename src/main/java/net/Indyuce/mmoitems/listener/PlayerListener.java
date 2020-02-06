@@ -116,7 +116,13 @@ public class PlayerListener implements Listener {
 		
 		event.setDamage((event.getDamage() * (1 - d)) * (1 - (stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100)));
 		
-		LivingEntity damager = (LivingEntity) event.getDamager();
+		LivingEntity damager = null;
+		if(event.getDamager() instanceof LivingEntity)
+			damager = (LivingEntity) event.getDamager();
+		else if(((Projectile) event.getDamager()).getShooter() instanceof LivingEntity)
+			damager = (LivingEntity) ((Projectile) event.getDamager()).getShooter();
+		
+		if(damager == null) return;
 		Player player = (Player) event.getEntity();
 		PlayerData.get(player).castAbilities(damager, new ItemAttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);
 	}

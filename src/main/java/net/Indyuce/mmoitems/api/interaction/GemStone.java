@@ -1,9 +1,5 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,40 +15,17 @@ import net.Indyuce.mmoitems.stat.data.GemSocketsData.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.Mergeable;
 import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.item.StoredTags;
 
 public class GemStone extends UseItem {
-	List<String> ignoreList = Arrays.asList("Unbreakable", "display", "Enchantments", "HideFlags",
-			"Damage", "AttributeModifiers", "SkullOwner", "CanDestroy", "PickupDelay", "Age");
 	
 	public GemStone(Player player, NBTItem item, Type type) {
 		super(player, item, type);
 	}
 
 	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
-		List<ItemTag> tags = new ArrayList<>();
-		
-		for(String tag : target.getTags()) {
-			if(ignoreList.contains(tag) || tag.startsWith("MMOITEMS_")) continue;
-			
-			switch(target.getTagType(target.getTypeId(tag))) {
-			case "double":
-				tags.add(new ItemTag(tag, target.getDouble(tag)));
-				break;
-			case "int":
-				tags.add(new ItemTag(tag, target.getInteger(tag)));
-				break;
-			case "byte":
-				tags.add(new ItemTag(tag, target.getBoolean(tag)));
-				break;
-			case "string":
-				tags.add(new ItemTag(tag, target.getString(tag)));
-				break;
-			default:
-				tags.add(new ItemTag(tag, "UNSUPPORTED TAG TYPE!"));
-			}
-		}
+		StoredTags storedTags = new StoredTags(target);
 		/*
 		 * loads all stats and calculates EVERY piece of the lore again.
 		 */
@@ -111,7 +84,7 @@ public class GemStone extends UseItem {
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 		Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
 		
-		return new ApplyResult(NBTItem.get(targetMMO.newBuilder().build()).addTag(tags).toItem());
+		return new ApplyResult(storedTags.reapply(targetMMO.newBuilder().build()).toItem());
 	}
 
 	public class ApplyResult {

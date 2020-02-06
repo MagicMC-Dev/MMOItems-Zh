@@ -211,7 +211,7 @@ public class Upgrade_Stat extends ItemStat {
 			}
 
 			// apply stat updates
-			getTemplate().upgrade(mmoitem, this);
+			getTemplate().upgrade(mmoitem);
 
 			// increase the level
 			level++;

@@ -10,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.stat.Upgrade_Stat.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.upgrade.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
@@ -60,9 +59,9 @@ public class UpgradeTemplate {
 		return stats.get(stat);
 	}
 
-	public void upgrade(MMOItem mmoitem, UpgradeData upgrade) {
+	public void upgrade(MMOItem mmoitem) {
 		for (ItemStat stat : stats.keySet())
-			// if (mmoitem.hasData(stat))
-			((Upgradable) stat).apply(mmoitem, stats.get(stat));
+			if (mmoitem.hasData(stat))
+				((Upgradable) stat).apply(mmoitem, stats.get(stat));
 	}
 }

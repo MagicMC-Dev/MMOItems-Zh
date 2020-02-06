@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
-	<version>5.3</version>
+	<version>5.3.1</version>
 	<name>MMOItems</name>
 	<description>A great item solution for your RPG server.</description>
 	
@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOLib</artifactId>
-			<version>1.0.6</version>
+			<version>1.0.7</version>
 			<scope>system</scope>
         	<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>

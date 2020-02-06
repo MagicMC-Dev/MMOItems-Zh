@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -116,6 +117,24 @@ public class DropTableManager implements Listener {
 					}
 				}, 2);
 		}
+	}
+
+	public Collection<ItemStack> getBlockDrops(Block block, Player player) {
+		final Material type = block.getType();
+
+		CustomBlock custom = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ? CustomBlock.getFromData(block.getBlockData()) : null;
+		if(custom != null) {
+			if(customBlocks.containsKey(custom.getId())) {
+				if(CustomBlockListener.getPickaxePower(player) >= custom.getRequiredPower()) {
+					return customBlocks.get(custom.getId()).read(hasSilkTouchTool(player));
+				}
+			}
+		} else {
+			if(blocks.containsKey(type)) {
+				return blocks.get(type).read(hasSilkTouchTool(player));
+			}
+		}
+		return block.getDrops(player.getInventory().getItemInMainHand());
 	}
 
 	public boolean hasSilkTouchTool(Player player) {

@@ -60,9 +60,9 @@ public class UpgradeTemplate {
 		return stats.get(stat);
 	}
 
-	public void upgrade(MMOItem mmoitem, UpgradeData upgrade) {
+	public void upgrade(MMOItem mmoitem) {
 		for (ItemStat stat : stats.keySet())
-			// if (mmoitem.hasData(stat))
-			((Upgradable) stat).apply(mmoitem, stats.get(stat));
+			if (mmoitem.hasData(stat))
+				((Upgradable) stat).apply(mmoitem, stats.get(stat));
 	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
 
 import net.Indyuce.mmoitems.MMOItems;
 
@@ -28,19 +27,6 @@ public class MMORecipeChoice {
 		this.id = id;
 		this.mat = null;
 		this.meta = 0;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public RecipeChoice generateChoice() {
-		if(mat != null) {
-			if(meta > 0) return new RecipeChoice.ExactChoice(new ItemStack(mat, 1, (short) meta));
-			return new RecipeChoice.MaterialChoice(mat);
-		}
-		return new RecipeChoice.ExactChoice(MMOItems.plugin.getItems().getItem(type, id));
-	}
-	
-	public Material generateLegacy() {
-		return mat;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -136,5 +122,18 @@ public class MMORecipeChoice {
 		}
 		
 		return true;
+	}
+
+	public Material getMaterial() {
+		return mat;
+	}
+	public Type getType() {
+		return type;
+	}
+	public String getId() {
+		return id;
+	}
+	public int getMeta() {
+		return meta;
 	}
 }

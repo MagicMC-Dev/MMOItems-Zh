@@ -18,7 +18,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.Type;
 
-@SuppressWarnings("deprecation")
+
+/** @deprecated One day I'll get rid of 1.12 for real >:) */
 public class RecipeManagerLegacy extends RecipeManager {
 	@Override
 	protected void load() {
@@ -58,7 +59,7 @@ public class RecipeManagerLegacy extends RecipeManager {
 	@Override
 	protected void registerFurnaceRecipe(Type type, String id, RecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateLegacy(), info.exp, info.burnTime);
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.getMaterial(), info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
@@ -96,7 +97,7 @@ public class RecipeManagerLegacy extends RecipeManager {
 	@Override
 	protected void shapedIngredient(ShapedRecipe recipe, char c, MMORecipeChoice rc) {
 		if(rc.isAir()) recipe.setIngredient(c, Material.AIR);
-		else recipe.setIngredient(c, rc.generateLegacy());
+		else recipe.setIngredient(c, rc.getMaterial());
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class RecipeManagerLegacy extends RecipeManager {
 
 	@Override
 	protected void shapelessIngredient(ShapelessRecipe recipe, MMORecipeChoice rc) {
-		if(!rc.isAir()) recipe.addIngredient(rc.generateLegacy());
+		if(!rc.isAir()) recipe.addIngredient(rc.getMaterial());
 	}
 
 	@Override

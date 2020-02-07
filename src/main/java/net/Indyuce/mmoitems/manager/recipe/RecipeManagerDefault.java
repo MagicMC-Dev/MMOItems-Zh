@@ -68,7 +68,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	protected void registerFurnaceRecipe(Type type, String id, RecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), generateChoice(info.choice), info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
@@ -76,7 +76,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	protected void registerBlastRecipe(Type type, String id, RecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "blast", number);
-		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), generateChoice(info.choice), info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
@@ -84,7 +84,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	protected void registerSmokerRecipe(Type type, String id, RecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "smoker", number);
-		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), generateChoice(info.choice), info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
@@ -92,7 +92,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	protected void registerCampfireRecipe(Type type, String id, RecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "campfire", number);
-		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.choice.generateChoice(), info.exp, info.burnTime);
+		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), generateChoice(info.choice), info.exp, info.burnTime);
 		
 		loadedRecipes.add(recipe); keys.add(key);
 	}
@@ -123,7 +123,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	protected void shapedIngredient(ShapedRecipe recipe, char c, MMORecipeChoice rc) {
 		if(rc.isAir()) recipe.setIngredient(c, Material.AIR);
-		else recipe.setIngredient(c, rc.generateChoice());
+		else recipe.setIngredient(c, generateChoice(rc));
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class RecipeManagerDefault extends RecipeManager {
 
 	@Override
 	protected void shapelessIngredient(ShapelessRecipe recipe, MMORecipeChoice rc) {
-		if(!rc.isAir()) recipe.addIngredient(rc.generateChoice());
+		if(!rc.isAir()) recipe.addIngredient(generateChoice(rc));
 	}
 
 	@Override
@@ -172,5 +172,13 @@ public class RecipeManagerDefault extends RecipeManager {
 				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));
 			}
 		}
+	}
+
+	public RecipeChoice generateChoice(MMORecipeChoice rc) {
+		if(rc.getMaterial() != null) {
+			if(rc.getMeta() > 0) return new RecipeChoice.ExactChoice(new ItemStack(rc.getMaterial(), 1, (short) rc.getMeta()));
+			return new RecipeChoice.MaterialChoice(rc.getMaterial());
+		}
+		return new RecipeChoice.ExactChoice(MMOItems.plugin.getItems().getItem(rc.getType(), rc.getId()));
 	}
 }

@@ -19,8 +19,9 @@ import net.Indyuce.mmoitems.api.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.Type;
 
 
-/** @deprecated One day I'll get rid of 1.12 for real >:) */
+/** One day I'll get rid of 1.12 for real >:) */
 public class RecipeManagerLegacy extends RecipeManager {
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void load() {
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {

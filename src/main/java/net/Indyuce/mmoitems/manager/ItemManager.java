@@ -19,9 +19,7 @@ public class ItemManager extends BukkitRunnable {
 	private final boolean cache;
 
 	public ItemManager(boolean cache) {
-		this.cache = cache;
-
-		if (cache)
+		if (this.cache = cache)
 			runTaskTimerAsynchronously(MMOItems.plugin, 60 * 20, 2 * 60 * 20);
 	}
 
@@ -70,8 +68,6 @@ public class ItemManager extends BukkitRunnable {
 
 	public ItemStack getItem(Type type, String id) {
 		MMOItem item = getMMOItem(type, id);
-		// MMOItems.plugin.getLogger().log(Level.INFO, "Generated " +
-		// type.getId() + "." + id);
 		return item == null ? null : item.newBuilder().build();
 	}
 

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.version.durability.stat;
+package net.Indyuce.mmoitems.stat;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

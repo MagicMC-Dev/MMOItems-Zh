@@ -15,15 +15,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class RecipeEdition extends EditionInventory {
 	private final boolean shapeless;
-	
+
 	public RecipeEdition(Player player, Type type, String id, boolean shapeless) {
 		super(player, type, id);
 		this.shapeless = shapeless;
@@ -36,7 +36,7 @@ public class RecipeEdition extends EditionInventory {
 
 	private Inventory setupShapedInventory() {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Recipe Editor: " + id);
-		
+
 		ConfigFile config = type.getConfigFile();
 		if (!config.getConfig().contains(id + ".crafting.shaped.1")) {
 			config.getConfig().set(id + ".crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
@@ -56,7 +56,7 @@ public class RecipeEdition extends EditionInventory {
 			while (line.size() < 3)
 				line.add("AIR");
 
-			ItemStack element = MMORecipeChoice.getFromString(NotAir(line.get(j % 3))).generateStack();
+			ItemStack element = new MMORecipeChoice(fixAir(line.get(j % 3))).generateStack();
 			ItemMeta elementMeta = element.getItemMeta();
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
@@ -67,24 +67,23 @@ public class RecipeEdition extends EditionInventory {
 
 			inv.setItem(slot, element);
 		}
-		
+
 		addEditionInventoryItems(inv, true);
 		return inv;
 	}
-	
+
 	private Inventory setupShapelessInventory() {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Recipe Editor: " + id);
 		ConfigFile config = type.getConfigFile();
 		if (!config.getConfig().contains(id + ".crafting.shapeless.1")) {
-			for (int i = 1; i < 10; i++) {
+			for (int i = 1; i < 10; i++)
 				config.getConfig().set(id + ".crafting.shapeless.1.item" + i, "AIR");
-			}
 			registerItemEdition(config);
 		}
 		for (int j = 0; j < 9; j++) {
 			int slot = intToSlot(j);
 
-			ItemStack element = MMORecipeChoice.getFromString(NotAir(config.getConfig().getString(id + ".crafting.shapeless.1.item" + (j + 1)))).generateStack();
+			ItemStack element = new MMORecipeChoice(fixAir(config.getConfig().getString(id + ".crafting.shapeless.1.item" + (j + 1)))).generateStack();
 			ItemMeta elementMeta = element.getItemMeta();
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
@@ -95,14 +94,13 @@ public class RecipeEdition extends EditionInventory {
 
 			inv.setItem(slot, element);
 		}
-		
+
 		addEditionInventoryItems(inv, true);
 		return inv;
 	}
-	
-	private String NotAir(String string) {
-		if(string.equals("AIR")) return "BARRIER";
-		return string;
+
+	private String fixAir(String string) {
+		return string.equals("AIR") ? "BARRIER" : string;
 	}
 
 	private int intToSlot(int i) {
@@ -125,25 +123,26 @@ public class RecipeEdition extends EditionInventory {
 			if (slotToInt(event.getRawSlot()) > -1) {
 				new StatEdition(this, ItemStat.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot())).enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 			}
-		}
-		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if(shapeless) deleteShapeless(slotToInt(event.getRawSlot()));
-			else deleteShaped(slotToInt(event.getRawSlot()));
+		} else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+			if (shapeless)
+				deleteShapeless(slotToInt(event.getRawSlot()));
+			else
+				deleteShaped(slotToInt(event.getRawSlot()));
 		}
 	}
-	
+
 	private void deleteShaped(int slot) {
 		ConfigFile config = type.getConfigFile();
 		List<String> newList = config.getConfig().getStringList(id + ".crafting.shaped.1");
 		String[] newArray = newList.get((int) Math.floor(slot / 3)).split("\\ ");
 		newArray[slot % 3] = "AIR";
 		newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
-		
+
 		config.getConfig().set(id + ".crafting.shaped.1", newList);
 		registerItemEdition(config);
 		open();
 	}
-	
+
 	private void deleteShapeless(int slot) {
 		ConfigFile config = type.getConfigFile();
 		config.getConfig().set(id + ".crafting.shapeless.1.item" + (slot + 1), "AIR");

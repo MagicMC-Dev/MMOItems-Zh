@@ -436,7 +436,7 @@ public class MMOItemsCommand implements CommandExecutor {
 								p.discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
 						
 						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().size() + ChatColor.GRAY + " Recipes");
+						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().getLoadedRecipes().size() + ChatColor.GRAY + " Recipes");
 					});
 				}
 				return true;

@@ -473,7 +473,11 @@ public class PlayerData {
 	}
 
 	public static PlayerData get(OfflinePlayer player) {
-		return playerDatas.get(player.getUniqueId());
+		return get(player.getUniqueId());
+	}
+
+	public static PlayerData get(UUID uuid) {
+		return playerDatas.get(uuid);
 	}
 
 	public static void load(Player player) {

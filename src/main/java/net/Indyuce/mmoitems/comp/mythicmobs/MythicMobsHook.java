@@ -18,10 +18,10 @@ import io.lumine.xikage.mythicmobs.drops.LootBag;
 import io.lumine.xikage.mythicmobs.drops.droppables.ItemDrop;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
-import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.drop.DropItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class MythicMobsHook implements Listener {
 
@@ -30,7 +30,7 @@ public class MythicMobsHook implements Listener {
 	 * MythicMobs abilities and therefore must be enabled after MythicMobs
 	 */
 	public MythicMobsHook() {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getSkillData().getCachedModifier(arg))));
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
 
@@ -49,7 +49,7 @@ public class MythicMobsHook implements Listener {
 	 */
 	@EventHandler
 	public void b(MythicReloadedEvent event) {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getSkillData().getCachedModifier(arg))));
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 	}
 
 	public class MMOItemsDrop extends Drop implements IMultiDrop {

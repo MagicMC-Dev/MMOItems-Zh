@@ -35,12 +35,15 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 	public List<EquippedItem> getInventory(Player player) {
 		List<EquippedItem> list = new ArrayList<>();
 
-		for (ItemStack item : InventoryAPI.getPassiveItems(player))
-			list.add(new EquippedItem(item, EquipmentSlot.ACCESSORY));
-		for (ItemStack item : InventoryAPI.getActiveItems(player))
-			list.add(new EquippedItem(item, EquipmentSlot.BOTH_HANDS));
+		list.add(new EquippedItem(player.getInventory().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
+		list.add(new EquippedItem(player.getInventory().getItemInOffHand(), EquipmentSlot.OFF_HAND));
+
+		for (ItemStack passive : InventoryAPI.getPassiveItems(player))
+			if (passive != null)
+				list.add(new EquippedItem(passive, EquipmentSlot.ANY));
 		for (ItemStack armor : player.getInventory().getArmorContents())
-			list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
+			if (armor != null)
+				list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
 
 		if (ornaments)
 			for (ItemStack item : player.getInventory().getContents()) {
@@ -55,6 +58,6 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 	@EventHandler
 	public void a(InventoryCloseEvent event) {
 		if (InventoryAPI.isRPGInventory(event.getInventory()))
-			PlayerData.get((Player) event.getPlayer()).checkForInventoryUpdate();
+			PlayerData.get((Player) event.getPlayer()).updateInventory();
 	}
 }

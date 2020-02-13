@@ -41,15 +41,18 @@ public class AbilityManager {
 
 	public void registerAbility(Ability ability) {
 		if (!registration) {
-			MMOItems.plugin.getLogger().log(Level.INFO, "Failed attempt to register ability " + ability.getID() + ". Make sure you register your abilities when MI is loaded.");
+			MMOItems.plugin.getLogger().log(Level.INFO, "Failed attempt to register ability " + ability.getID() + ". Make sure abilities are registered when MI is loading.");
 			return;
 		}
 
 		if (ability.isEnabled()) {
-			if (ability instanceof Listener)
-				Bukkit.getPluginManager().registerEvents((Listener) ability, MMOItems.plugin);
-			abilities.put(ability.getID(), ability);
+			MMOItems.plugin.getLogger().log(Level.INFO, "Cannot register disabled ability " + ability.getID() + ".");
+			return;
 		}
+
+		if (ability instanceof Listener)
+			Bukkit.getPluginManager().registerEvents((Listener) ability, MMOItems.plugin);
+		abilities.put(ability.getID(), ability);
 	}
 
 	public void registerDefaultAbilities() {
@@ -83,11 +86,9 @@ public class AbilityManager {
 				}
 			}
 			if (count > 0)
-				MMOItems.plugin.getLogger().log(Level.INFO, "Loaded " + count + " extra MM abilities");
+				MMOItems.plugin.getLogger().log(Level.INFO, "Loaded " + count + " extra MythicMobs abilities");
 		}
-	}
 
-	public void stopRegistration() {
 		registration = false;
 	}
 }

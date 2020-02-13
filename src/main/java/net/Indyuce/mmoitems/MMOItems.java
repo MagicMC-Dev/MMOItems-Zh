@@ -126,7 +126,6 @@ public class MMOItems extends JavaPlugin {
 			getDataFolder().mkdir();
 
 		abilityManager.registerDefaultAbilities();
-		abilityManager.stopRegistration();
 
 		configManager = new ConfigManager();
 		itemManager = new ItemManager(getConfig().getBoolean("use-item-caching"));

@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import org.bukkit.inventory.ItemStack;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.Indyuce.mmoitems.stat.Upgrade_Stat;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;

@@ -45,7 +45,7 @@ public class AbilityManager {
 			return;
 		}
 
-		if (ability.isEnabled()) {
+		if (!ability.isEnabled()) {
 			MMOItems.plugin.getLogger().log(Level.INFO, "Cannot register disabled ability " + ability.getID() + ".");
 			return;
 		}

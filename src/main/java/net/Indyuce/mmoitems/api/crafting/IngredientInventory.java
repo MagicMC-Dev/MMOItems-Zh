@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -60,12 +61,17 @@ public class IngredientInventory {
 			ingredients.put(key, new PlayerIngredient(item.getItem()));
 	}
 
-	public PlayerIngredient getIngredient(Ingredient ingredient) {
+	public PlayerIngredient getIngredient(Ingredient ingredient, boolean isUpgrading) {
 		String key = ingredient.getKey();
 
-		for (String invKey : ingredients.keySet())
-			if (invKey.equals(key))
+		for (String invKey : ingredients.keySet()) {
+			String ingredientKey = invKey;
+			if(isUpgrading) {
+				ingredientKey = invKey.replaceFirst("-\\d*_", "_");
+			}
+			if (ingredientKey.equals(key))
 				return ingredients.get(invKey);
+		}
 
 		return null;
 	}
@@ -75,7 +81,7 @@ public class IngredientInventory {
 	 * deprecated because used with upgrading recipes.
 	 */
 	public boolean hasIngredient(Ingredient ingredient) {
-		PlayerIngredient found = getIngredient(ingredient);
+		PlayerIngredient found = getIngredient(ingredient, true);
 		return found != null && found.getAmount() >= ingredient.getAmount();
 	}
 

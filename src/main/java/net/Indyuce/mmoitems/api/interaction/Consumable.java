@@ -278,7 +278,11 @@ public class Consumable extends UseItem {
 				}
 			}
 
-			player.getInventory().setItemInMainHand(usedItem);
+			if(player.getInventory().getItemInMainHand().equals(item)) {
+				player.getInventory().setItemInMainHand(usedItem);
+			} else if(player.getInventory().getItemInOffHand().equals(item)) {
+				player.getInventory().setItemInOffHand(usedItem);
+			}
 
 			if(item.getAmount() > 1) {
 				item.setAmount(item.getAmount() - 1);

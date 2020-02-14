@@ -41,8 +41,9 @@ public class Consumable extends UseItem {
 	 * of its item options. if so, the consumable should be consumed
 	 */
 	public boolean useOnItem(InventoryClickEvent event, NBTItem target) {
-		if(event.getClickedInventory() != event.getWhoClicked().getInventory()) return false;
-		
+		if (event.getClickedInventory() != event.getWhoClicked().getInventory())
+			return false;
+
 		/*
 		 * unidentified items do not have any type, so you must check if the
 		 * item has a type first.
@@ -215,6 +216,10 @@ public class Consumable extends UseItem {
 		return false;
 	}
 
+	/*
+	 * when the method returns true, one item will be taken away from the player
+	 * inventory
+	 */
 	public boolean useWithoutItem(boolean consume) {
 		NBTItem nbtItem = getNBTItem();
 
@@ -249,15 +254,13 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
-
 		int maxConsume = (int) nbtItem.getStat("MAX_CONSUME");
-		if(maxConsume > 1) {
+		if (maxConsume > 1) {
 			ItemStack item = nbtItem.toItem().clone();
 			String configMaxConsumeLore = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
 			String maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
 
 			maxConsume -= 1;
-			nbtItem.removeTag("MMOITEMS_MAX_CONSUME");
 			nbtItem.addTag(new ItemTag("MMOITEMS_MAX_CONSUME", maxConsume));
 
 			ItemStack usedItem = nbtItem.toItem().clone();
@@ -266,8 +269,8 @@ public class Consumable extends UseItem {
 			ItemMeta usedItemMeta = usedItem.getItemMeta();
 			List<String> itemLores = usedItemMeta.getLore();
 
-			for(int i = 0; i < itemLores.size() ; i++) {
-				if(itemLores.get(i).equals(maxConsumeLore)) {
+			for (int i = 0; i < itemLores.size(); i++) {
+				if (itemLores.get(i).equals(maxConsumeLore)) {
 					maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
 					itemLores.set(i, maxConsumeLore);
 
@@ -278,13 +281,12 @@ public class Consumable extends UseItem {
 				}
 			}
 
-			if(player.getInventory().getItemInMainHand().equals(item)) {
+			if (player.getInventory().getItemInMainHand().equals(item))
 				player.getInventory().setItemInMainHand(usedItem);
-			} else if(player.getInventory().getItemInOffHand().equals(item)) {
+			else if (player.getInventory().getItemInOffHand().equals(item))
 				player.getInventory().setItemInOffHand(usedItem);
-			}
 
-			if(item.getAmount() > 1) {
+			if (item.getAmount() > 1) {
 				item.setAmount(item.getAmount() - 1);
 				MMOUtils.giveOrDrop(player, item);
 			}

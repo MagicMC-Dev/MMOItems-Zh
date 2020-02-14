@@ -60,8 +60,11 @@ public class AbilityManager {
 			JarFile file = new JarFile(MMOItems.plugin.getJarFile());
 			for (Enumeration<JarEntry> enu = file.entries(); enu.hasMoreElements();) {
 				String name = enu.nextElement().getName().replace("/", ".");
-				if (!name.contains("$") && name.endsWith(".class") && name.startsWith("net.Indyuce.mmoitems.ability."))
-					registerAbility((Ability) Class.forName(name.substring(0, name.length() - 6)).newInstance());
+				if (!name.contains("$") && name.endsWith(".class") && name.startsWith("net.Indyuce.mmoitems.ability.")) {
+					Ability ability = (Ability) Class.forName(name.substring(0, name.length() - 6)).newInstance();
+					if (ability.isEnabled())
+						registerAbility(ability);
+				}
 			}
 			file.close();
 		} catch (IOException | InstantiationException | IllegalAccessException | ClassNotFoundException exception) {

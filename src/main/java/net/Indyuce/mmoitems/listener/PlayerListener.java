@@ -53,8 +53,6 @@ public class PlayerListener implements Listener {
 		/*
 		 * damage reduction
 		 */
-		if (MMOLib.plugin.getDamage().findInfo(player) != null)
-			return;
 		PlayerStats stats = PlayerData.get(player).getStats();
 
 		if (event.getCause() == DamageCause.FIRE)

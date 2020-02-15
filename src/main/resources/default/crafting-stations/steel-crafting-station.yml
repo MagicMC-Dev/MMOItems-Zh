@@ -41,8 +41,7 @@ recipes:
         - permission{list="mmoitems.recipe.steel-sword,mmoitems.recipe.station.steel"}
         
         # Ingredients needed for the recipe
-        # Format 1: 'mmoitem <ITEM_TYPE> <ITEM_ID> <amount> <gui_display_name> [item level]'
-        # Format 2: 'vanilla <MATERIAL> <display_name> <amount> <gui_display_name>'
+        # Available properties: type, id, amount, display, level (optional)
         ingredients:
         - mmoitem{type=MATERIAL,id=STEEL_INGOT,amount=4,display="Steel Ingot"}
         - vanilla{type=STICK,amount=2,display="Wooden Stick"}

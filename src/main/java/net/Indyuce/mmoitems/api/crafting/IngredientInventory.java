@@ -64,10 +64,7 @@ public class IngredientInventory {
 		String key = ingredient.getKey();
 
 		for (String invKey : ingredients.keySet()) {
-			String ingredientKey = invKey;
-			if(isUpgrading) {
-				ingredientKey = invKey.replaceFirst("-\\d*_", "_");
-			}
+			String ingredientKey = isUpgrading ? invKey.replaceFirst("-\\d*_", "_") : invKey;
 			if (ingredientKey.equals(key))
 				return ingredients.get(invKey);
 		}

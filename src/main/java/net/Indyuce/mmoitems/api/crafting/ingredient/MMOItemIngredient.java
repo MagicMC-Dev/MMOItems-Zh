@@ -29,7 +29,6 @@ public class MMOItemIngredient extends Ingredient {
 	public MMOItemIngredient(ConfigMMOItem mmoitem) {
 		super("mmoitem");
 
-
 		type = mmoitem.getType();
 		id = mmoitem.getId();
 
@@ -85,7 +84,7 @@ public class MMOItemIngredient extends Ingredient {
 	public String readKey(NBTItem item) {
 		final String upgradeString = item.getString("MMOITEMS_UPGRADE");
 		int level = 0;
-		if(upgradeString != "") {
+		if (upgradeString != "") {
 			JsonObject upgradeStat = new JsonParser().parse(upgradeString).getAsJsonObject();
 			level = upgradeStat.get("Level").getAsInt();
 		}

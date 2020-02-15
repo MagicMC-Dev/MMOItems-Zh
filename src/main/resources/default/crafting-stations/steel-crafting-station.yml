@@ -41,7 +41,7 @@ recipes:
         - 'perms mmoitems.recipe.steel-sword mmoitems.recipe.station.steel'
         
         # Ingredients needed for the recipe
-        # Format 1: 'mmoitem <ITEM_TYPE> <ITEM_ID> <amount> <gui_display_name>'
+        # Format 1: 'mmoitem <ITEM_TYPE> <ITEM_ID> <amount> <gui_display_name> [item level]'
         # Format 2: 'vanilla <MATERIAL> <display_name> <amount> <gui_display_name>'
         ingredients:
         - 'mmoitem MATERIAL STEEL_INGOT 4 Steel_Ingot'
@@ -63,7 +63,7 @@ recipes:
         conditions:
         - 'level 8'
         ingredients:
-        - 'mmoitem MATERIAL STEEL_INGOT 8 Steel_Ingot'
+        - 'mmoitem SWORD STEEL_SWORD 1 Steel_Sword 5'
         - 'vanilla STICK . 4 Wooden_Stick'
     katana:
         output:

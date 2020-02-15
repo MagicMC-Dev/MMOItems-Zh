@@ -64,7 +64,7 @@ public class MMOItemIngredient extends Ingredient {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#item#", getName()).replace("#level#", getLevel() != 0 ? "lvl." + getLevel() : "").replace("#amount#", "" + getAmount());
+		return string.replace("#item#", getName()).replace("#level#", getLevel() != 0 ? "" + getLevel() : "").replace("#amount#", "" + getAmount());
 	}
 
 	@Override

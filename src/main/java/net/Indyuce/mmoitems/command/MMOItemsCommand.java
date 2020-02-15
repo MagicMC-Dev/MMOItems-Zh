@@ -149,7 +149,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				}
 
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GOLD + "/mi update " + update.getId() + ChatColor.YELLOW + " to apply this config update.");
+				sender.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GOLD + "/mi update apply " + update.getId() + ChatColor.YELLOW + " to apply this config update.");
 			}
 
 			if (args[1].equalsIgnoreCase("list")) {
@@ -176,7 +176,7 @@ public class MMOItemsCommand implements CommandExecutor {
 					if (id != Integer.parseInt(args[3]))
 						throw new NumberFormatException();
 				} catch (NumberFormatException exception) {
-					sender.sendMessage(ChatColor.RED + "Specified IDs do not match.");
+					sender.sendMessage(ChatColor.RED + "Update IDs do not match. Make sure you enter twice the same ID to confirm you want to apply this update.");
 					return true;
 				}
 
@@ -188,7 +188,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				PluginUpdate update = MMOItems.plugin.getUpdates().get(id);
 				sender.sendMessage(ChatColor.YELLOW + "Applying config update " + id + "...");
 				update.apply(sender);
-				sender.sendMessage(ChatColor.YELLOW + "Config update " + id + " was successfully applied.");
+				sender.sendMessage(ChatColor.YELLOW + "Config update " + id + " was successfully applied. Check the console for potential update error logs.");
 			}
 		}
 		// ==================================================================================================================================

@@ -75,8 +75,8 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void d(PlayerJoinEvent event) {
 		PlayerData.load(event.getPlayer());
-		
-		if(MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
+
+		if (!MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) && MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
 			event.getPlayer().discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
 	}
 

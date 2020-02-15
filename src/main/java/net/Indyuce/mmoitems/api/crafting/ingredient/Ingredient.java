@@ -11,7 +11,7 @@ public abstract class Ingredient {
 	private final String id;
 	private String key, name;
 	private ConditionalDisplay display;
-	private int amount;
+	private int amount, level;
 
 	public Ingredient(String id) {
 		this.id = id;
@@ -49,6 +49,10 @@ public abstract class Ingredient {
 		this.name = name;
 	}
 
+	protected void setLevel(Integer level) {
+		this.level = level;
+	}
+
 	protected void setDisplay(ConditionalDisplay display) {
 		this.display = display;
 	}
@@ -66,6 +70,9 @@ public abstract class Ingredient {
 		return name;
 	}
 
+	public Integer getLevel() {
+		return level;
+	}
 	/*
 	 * apply specific placeholders to display the ingredient in the item lore.
 	 */
@@ -81,7 +88,7 @@ public abstract class Ingredient {
 	public abstract ItemStack generateItemStack();
 
 	public IngredientInfo newIngredientInfo(IngredientInventory inv) {
-		return new IngredientInfo(this, inv.getIngredient(this));
+		return new IngredientInfo(this, inv.getIngredient(this, false));
 	}
 
 	public class IngredientInfo {

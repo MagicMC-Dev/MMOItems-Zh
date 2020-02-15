@@ -62,7 +62,7 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new MMOItem(MMOLib.plugin.getNMS().getNBTItem(inv.getIngredient(ingredient).getFirstItem()))).hasData(ItemStat.UPGRADE))
+		if (!(recipe.mmoitem = new MMOItem(MMOLib.plugin.getNMS().getNBTItem(inv.getIngredient(ingredient, true).getFirstItem()))).hasData(ItemStat.UPGRADE))
 			return false;
 
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStat.UPGRADE)).canLevelUp()) {

@@ -2,6 +2,9 @@ package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import org.bukkit.inventory.ItemStack;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -20,17 +23,22 @@ public class MMOItemIngredient extends Ingredient {
 
 	public MMOItemIngredient() {
 		super("mmoitem");
-		setDisplay(new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"));
+		setDisplay(new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level# #item#", "&c" + AltChar.cross + " &7#amount# #level# #item#"));
 	}
 
 	public MMOItemIngredient(ConfigMMOItem mmoitem) {
 		super("mmoitem");
+
 
 		type = mmoitem.getType();
 		id = mmoitem.getId();
 
 		setAmount(mmoitem.getAmount());
 		setKey(type.getId().toLowerCase() + "_" + id.toLowerCase());
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	@Override
@@ -42,7 +50,10 @@ public class MMOItemIngredient extends Ingredient {
 
 			ingredient.setAmount(args.length > 2 ? Math.max(1, Integer.parseInt(args[2])) : 1);
 			ingredient.setName(args.length > 3 ? args[3].replace("_", " ") : findName());
-			ingredient.setKey(ingredient.type.getId().toLowerCase() + "_" + ingredient.id.toLowerCase());
+			ingredient.setLevel(args.length > 4 ? Math.max(0, Integer.parseInt(args[4])) : 0);
+
+			String levelKey = ingredient.getLevel() != 0 ? "-" + ingredient.getLevel() : "";
+			ingredient.setKey(ingredient.type.getId().toLowerCase() + levelKey + "_" + ingredient.id.toLowerCase());
 			ingredient.setDisplay(getDisplay());
 
 			return ingredient;
@@ -53,7 +64,7 @@ public class MMOItemIngredient extends Ingredient {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#item#", getName()).replace("#amount#", "" + getAmount());
+		return string.replace("#item#", getName()).replace("#level#", getLevel() != 0 ? "" + getLevel() : "").replace("#amount#", "" + getAmount());
 	}
 
 	@Override
@@ -72,7 +83,15 @@ public class MMOItemIngredient extends Ingredient {
 
 	@Override
 	public String readKey(NBTItem item) {
-		return item.getString("MMOITEMS_ITEM_TYPE").toLowerCase() + "_" + item.getString("MMOITEMS_ITEM_ID").toLowerCase();
+		final String upgradeString = item.getString("MMOITEMS_UPGRADE");
+		int level = 0;
+		if(upgradeString != "") {
+			JsonObject upgradeStat = new JsonParser().parse(upgradeString).getAsJsonObject();
+			level = upgradeStat.get("Level").getAsInt();
+		}
+		final String levelKey = level != 0 ? "-" + level : "";
+
+		return item.getString("MMOITEMS_ITEM_TYPE").toLowerCase() + levelKey + "_" + item.getString("MMOITEMS_ITEM_ID").toLowerCase();
 	}
 
 	@Override

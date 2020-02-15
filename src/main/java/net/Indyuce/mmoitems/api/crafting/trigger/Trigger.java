@@ -13,7 +13,5 @@ public abstract class Trigger {
 		return id;
 	}
 
-	public abstract Trigger load(String[] args);
-
 	public abstract void whenCrafting(PlayerData data);
 }

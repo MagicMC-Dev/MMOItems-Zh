@@ -5,14 +5,12 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
@@ -30,14 +28,9 @@ public class CraftingStation {
 		this(id.toLowerCase().replace("_", "-").replace(" ", "-"), config.getString("name"));
 
 		for (String key : config.getConfigurationSection("recipes").getKeys(false))
-			try {
-				registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
-			} catch (IllegalArgumentException exception) {
-				log(exception.getMessage());
-			}
+			registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
 
-		itemOptions = new StationItemOptions(this, config.getConfigurationSection("items"));
-
+		itemOptions = new StationItemOptions(config.getConfigurationSection("items"));
 		maxQueueSize = Math.max(1, Math.min(config.getInt("max-queue-size"), 64));
 	}
 
@@ -95,11 +88,6 @@ public class CraftingStation {
 
 	public int getMaxPage() {
 		return Math.max(1, (int) Math.ceil((double) recipes.size() / 14));
-	}
-
-	public void log(String... message) {
-		for (String line : message)
-			MMOItems.plugin.getLogger().log(Level.WARNING, id + ": " + line);
 	}
 
 	/*

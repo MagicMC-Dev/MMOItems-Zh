@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public abstract class Recipe {
 	private final String id;
@@ -39,31 +40,40 @@ public abstract class Recipe {
 		/*
 		 * load ingredients
 		 */
-		for (String format : config.getStringList("ingredients")) {
-			Ingredient ingredient = MMOItems.plugin.getCrafting().getIngredient(format);
-			Validate.notNull(ingredient, id + ": Could not load ingredient '" + format + "'");
-			ingredients.add(ingredient);
-		}
+		for (String format : config.getStringList("ingredients"))
+			try {
+				Ingredient ingredient = MMOItems.plugin.getCrafting().getIngredient(new MMOLineConfig(format));
+				Validate.notNull(ingredient, "Could not match ingredient");
+				ingredients.add(ingredient);
+			} catch (IllegalArgumentException exception) {
+				throw new IllegalArgumentException("Could not load ingredient '" + format + "': " + exception.getMessage());
+			}
 
 		Validate.notEmpty(ingredients, id + ": Ingredients must not be empty");
 
 		/*
 		 * load conditions
 		 */
-		for (String format : config.getStringList("conditions")) {
-			Condition condition = MMOItems.plugin.getCrafting().getCondition(format);
-			Validate.notNull(condition, id + ": Could not load condition '" + format + "'");
-			conditions.add(condition);
-		}
+		for (String format : config.getStringList("conditions"))
+			try {
+				Condition condition = MMOItems.plugin.getCrafting().getCondition(new MMOLineConfig(format));
+				Validate.notNull(condition, "Could not match condition");
+				conditions.add(condition);
+			} catch (IllegalArgumentException exception) {
+				throw new IllegalArgumentException("Could not load condition '" + format + "': " + exception.getMessage());
+			}
 
 		/*
 		 * load triggers
 		 */
-		for (String format : config.getStringList("triggers")) {
-			Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(format);
-			Validate.notNull(trigger, id + ": Could not load trigger '" + format + "'");
-			triggers.add(trigger);
-		}
+		for (String format : config.getStringList("triggers"))
+			try {
+				Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(format));
+				Validate.notNull(trigger, "Could not match trigger");
+				triggers.add(trigger);
+			} catch (IllegalArgumentException exception) {
+				throw new IllegalArgumentException("Could not load trigger '" + format + "': " + exception.getMessage());
+			}
 	}
 
 	private Recipe(String id) {

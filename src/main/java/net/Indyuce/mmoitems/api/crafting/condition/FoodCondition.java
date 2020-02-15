@@ -1,29 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
-import org.apache.commons.lang.Validate;
-
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class FoodCondition extends Condition {
-	private int amount;
+	private final int amount;
 
-	public FoodCondition() {
+	public FoodCondition(MMOLineConfig config) {
 		super("food");
 
-		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
-	}
-
-	@Override
-	public Condition load(String[] args) {
-		Validate.notEmpty(args, "This ingredient requires arguments");
-
-		FoodCondition condition = new FoodCondition();
-		condition.amount = Integer.parseInt(args[0]);
-		condition.setDisplay(getDisplay());
-
-		return condition;
+		config.validate("amount");
+		amount = config.getInt("amount");
 	}
 
 	@Override

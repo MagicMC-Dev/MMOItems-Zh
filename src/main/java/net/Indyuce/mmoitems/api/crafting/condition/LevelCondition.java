@@ -1,29 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
-import org.apache.commons.lang.Validate;
-
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class LevelCondition extends Condition {
-	private int level;
+	private final int level;
 
-	public LevelCondition() {
+	public LevelCondition(MMOLineConfig config) {
 		super("level");
 
-		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
-	}
-
-	@Override
-	public Condition load(String[] args) {
-		Validate.notEmpty(args, "This ingredient requires arguments");
-
-		LevelCondition condition = new LevelCondition();
-		condition.level = Integer.parseInt(args[0]);
-		condition.setDisplay(getDisplay());
-
-		return condition;
+		config.validate("level");
+		level = config.getInt("level");
 	}
 
 	@Override

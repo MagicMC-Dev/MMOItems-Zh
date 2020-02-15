@@ -2,95 +2,63 @@ package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import org.bukkit.inventory.ItemStack;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public abstract class Ingredient {
 	private final String id;
-	private String key, name;
-	private ConditionalDisplay display;
-	private int amount, level;
+	private final int amount;
 
-	public Ingredient(String id) {
+	public Ingredient(String id, MMOLineConfig config) {
+		this(id, config.getInt("amount", 1));
+	}
+
+	public Ingredient(String id, int amount) {
 		this.id = id;
+		this.amount = amount;
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public String getKey() {
-		return key;
-	}
-
-	public ConditionalDisplay getDisplay() {
-		return display;
-	}
-
-	/*
-	 * if the condition has no default display, then the condition CANNOT
-	 * display in the lore at all.
-	 */
-	public boolean hasDisplay() {
-		return display != null;
-	}
-
-	protected void setKey(String key) {
-		this.key = getId() + ":" + key;
-	}
-
-	protected void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	protected void setName(String name) {
-		this.name = name;
-	}
-
-	protected void setLevel(Integer level) {
-		this.level = level;
-	}
-
-	protected void setDisplay(ConditionalDisplay display) {
-		this.display = display;
-	}
-
-	/*
-	 * used when loading recipes.
-	 */
-	public abstract Ingredient load(String[] args);
-
 	public int getAmount() {
 		return amount;
 	}
 
-	public String getName() {
-		return name;
+	/*
+	 * shortcut to RecipeManager map lookup, may throw a stream lookup error if
+	 * the condition has not been registered.
+	 */
+	public ConditionalDisplay getDisplay() {
+		return MMOItems.plugin.getCrafting().getIngredients().stream().filter(type -> type.getId().equals(id)).findAny().get().getDisplay();
 	}
 
-	public Integer getLevel() {
-		return level;
-	}
+	/*
+	 * ingredient key is used internally by plugin to check if two ingredients
+	 * are of the same nature. name is the actual piece of string displayed
+	 */
+	public abstract String getKey();
+
 	/*
 	 * apply specific placeholders to display the ingredient in the item lore.
 	 */
-	public abstract String formatDisplay(String string);
+	public abstract String formatLoreDisplay(String string);
 
-	/*
-	 * check if an itemstack can be read by this ingredient.
-	 */
-	public abstract boolean isValid(NBTItem item);
-
-	public abstract String readKey(NBTItem item);
-	
 	public abstract ItemStack generateItemStack();
 
 	public IngredientInfo newIngredientInfo(IngredientInventory inv) {
 		return new IngredientInfo(this, inv.getIngredient(this, false));
 	}
 
+	/*
+	 * used to reduce calculations when the player has opened the crafting
+	 * station. ingredientInfo instances must be updated everytime the player's
+	 * inventory updates.
+	 */
 	public class IngredientInfo {
 		private final Ingredient inventory;
 		private final PlayerIngredient player;
@@ -100,6 +68,9 @@ public abstract class Ingredient {
 			this.player = player;
 		}
 
+		/*
+		 * checks if the player has a specific item or not
+		 */
 		public boolean isHad() {
 			return player != null && player.getAmount() >= inventory.getAmount();
 		}

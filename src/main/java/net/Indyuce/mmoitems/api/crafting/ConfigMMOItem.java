@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 public class ConfigMMOItem {
 	private final MMOItem mmoitem;
 	private final int amount;
+
 	private ItemStack preview;
 
 	public ConfigMMOItem(ConfigurationSection config) {
@@ -46,6 +47,10 @@ public class ConfigMMOItem {
 		return mmoitem.getId();
 	}
 
+	/*
+	 * reduce startup calculations so that item is calculated the first time it
+	 * needs to be displayed
+	 */
 	public ItemStack getPreview() {
 		return preview == null ? (preview = mmoitem.newBuilder().build()).clone() : preview.clone();
 	}

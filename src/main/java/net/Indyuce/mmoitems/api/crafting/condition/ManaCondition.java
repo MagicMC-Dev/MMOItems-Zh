@@ -1,29 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
-import org.apache.commons.lang.Validate;
-
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class ManaCondition extends Condition {
-	private double amount;
+	private final double amount;
 
-	public ManaCondition() {
+	public ManaCondition(MMOLineConfig config) {
 		super("mana");
 
-		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
-	}
-
-	@Override
-	public Condition load(String[] args) {
-		Validate.notEmpty(args, "This ingredient requires arguments");
-
-		ManaCondition condition = new ManaCondition();
-		condition.amount = Double.parseDouble(args[0]);
-		condition.setDisplay(getDisplay());
-
-		return condition;
+		config.validate("amount");
+		amount = config.getDouble("amount");
 	}
 
 	@Override

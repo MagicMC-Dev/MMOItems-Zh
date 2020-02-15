@@ -27,10 +27,10 @@ recipes:
             amount: 1
         crafting-time: 20
         conditions:
-        - 'level 24'
+        - 'level{level=24}'
         ingredients:
-        - 'mmoitem MISCELLANEOUS HUMAN_SOUL 8 Human_Soul'
-        - 'mmoitem SWORD STEEL_SWORD 1 Steel_Sword'
+        - mmoitem{type=MISCELLANEOUS,id=HUMAN_SOUL,amount=8,display="Human Soul"}
+        - mmoitem{type=SWORD,id=STEEL_SWORD,amount=1,display="Steel Sword"}
     fire-essence:
         output:
             type: MATERIAL
@@ -38,9 +38,9 @@ recipes:
             amount: 1
         crafting-time: 5
         conditions:
-        - 'level 15'
+        - 'level{level=15}'
         ingredients:
-        - 'vanilla BLAZE_POWDER . 4 Blaze_Powder'
+        - vanilla{type=BLAZE_POWDER,amount=4,display="Blaze Powder"}
     fire-totem:
         output:
             type: CATALYST
@@ -48,11 +48,11 @@ recipes:
             amount: 1
         crafting-time: 30
         conditions:
-        - 'level 10'
+        - 'level{level=10}'
         ingredients:
-        - 'mmoitem MATERIAL FIRE_ESSENCE 8 Fire_Essence'
-        - 'vanilla BLAZE_ROD . 1 Blaze_Rod'
-        - 'vanilla BLAZE_POWDER . 4 Blaze_Powder'
+        - mmoitem{type=MATERIAL,id=FIRE_ESSENCE,amount=8,display="Fire Essence"}
+        - vanilla{type=BLAZE_ROD,amount=1,display="Blaze Rod"}
+        - vanilla{type=BLAZE_POWDER,amount=4,display="Blaze Powder"}
     blaze-soul:
         output:
             type: GEM_STONE
@@ -60,9 +60,9 @@ recipes:
             amount: 1
         crafting-time: 20
         conditions:
-        - 'level 12'
+        - 'level{level=12}'
         ingredients:
-        - 'mmoitem MATERIAL FIRE_ESSENCE 5 Fire_Essence'
+        - mmoitem{type=MATERIAL,id=FIRE_ESSENCE,amount=5,display="Fire Essence"}
     hell-bow:
         output:
             type: BOW
@@ -70,10 +70,10 @@ recipes:
             amount: 1
         crafting-time: 20
         conditions:
-        - 'level 24'
+        - 'level{level=24}'
         ingredients:
-        - 'mmoitem MATERIAL FIRE_ESSENCE 2 Fire_Essence'
-        - 'vanilla BOW . 1 Bow'
+        - mmoitem{type=MATERIAL,id=FIRE_ESSENCE,amount=2,display="Fire Essence"}
+        - vanilla{type=BOW,amount=1,display="Bow"}
     fire-greatlance:
         output:
             type: LANCE
@@ -81,9 +81,9 @@ recipes:
             amount: 1
         crafting-time: 35
         conditions:
-        - 'level 30'
+        - 'level{level=30}'
         ingredients:
-        - 'mmoitem MATERIAL FIRE_ESSENCE 4 Fire_Essence'
+        - mmoitem{type=MATERIAL,id=FIRE_ESSENCE,amount=4,display="Fire Essence"}
     molten-blade:
         output:
             type: GREATSWORD
@@ -91,10 +91,10 @@ recipes:
             amount: 1
         crafting-time: 20
         conditions:
-        - 'level 20'
+        - 'level{level=20}'
         ingredients:
-        - 'mmoitem MATERIAL FIRE_ESSENCE 13 Fire_Essence'
-        - 'mmoitem SWORD STEEL_SWORD 1 Steel_Sword'
+        - mmoitem{type=MATERIAL,id=FIRE_ESSENCE,amount=13,display="Fire Essence"}
+        - mmoitem{type=SWORD,id=STEEL_SWORD,amount=1,display="Steel Sword"}
     wither-essence:
         output:
             type: MATERIAL
@@ -102,9 +102,9 @@ recipes:
             amount: 1
         crafting-time: 5
         conditions:
-        - 'level 20'
+        - 'level{level=20}'
         ingredients:
-        - 'vanilla WITHER_SKELETON_SKULL'
+        - vanilla{type=WITHER_SKELETON_SKULL}
     marking-bow:
         output:
             type: BOW
@@ -112,10 +112,10 @@ recipes:
             amount: 1
         crafting-time: 20
         conditions:
-        - 'level 20'
+        - 'level{level=20}'
         ingredients:
-        - 'vanilla BOW . 1 Bow'
-        - 'mmoitem MATERIAL WITHER_ESSENCE 1 Wither_Essence'
+        - vanilla{type=BOW,amount=1,display="Bow"}
+        - mmoitem{type=MATERIAL,id=WITHER_ESSENCE,amount=1,display="Wither Essence"}
     cursed-wither-skull:
         output:
             type: ARMOR
@@ -123,10 +123,10 @@ recipes:
             amount: 1
         crafting-time: 10
         conditions:
-        - 'level 15'
+        - 'level{level=15}'
         ingredients:
-        - 'vanilla IRON_HELMET'
-        - 'mmoitem MATERIAL WITHER_ESSENCE 1 Wither_Essence'
+        - vanilla{type=IRON_HELMET}
+        - mmoitem{type=MATERIAL,id=WITHER_ESSENCE,amount=1,display="Wither Essence"}
     dead-pharaoh-helmet:
         output:
             type: ARMOR
@@ -134,10 +134,10 @@ recipes:
             amount: 1
         crafting-time: 10
         conditions:
-        - 'level 10'
+        - 'level{level=10}'
         ingredients:
-        - 'vanilla DIAMOND'
-        - 'vanilla SKELETON_SKULL'
+        - vanilla{type=DIAMOND}
+        - vanilla{type=SKELETON_SKULL}
     mossy-skeleton-skull:
         output:
             type: ARMOR
@@ -145,7 +145,7 @@ recipes:
             amount: 1
         crafting-time: 10
         conditions:
-        - 'level 17'
+        - 'level{level=17}'
         ingredients:
-        - 'vanilla MOSSY_COBBLESTONE'
-        - 'vanilla SKELETON_SKULL'
+        - vanilla{type=MOSSY_COBBLESTONE}
+        - vanilla{type=SKELETON_SKULL}

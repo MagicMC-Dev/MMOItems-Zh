@@ -4,13 +4,7 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class IngredientCondition extends Condition {
 	public IngredientCondition() {
-		super("has-ingredients");
-	}
-
-	@Override
-	public Condition load(String[] args) {
-		IngredientCondition condition = new IngredientCondition();
-		return condition;
+		super("ingredient");
 	}
 
 	@Override

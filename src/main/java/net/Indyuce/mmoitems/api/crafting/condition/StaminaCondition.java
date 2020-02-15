@@ -1,29 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
-import org.apache.commons.lang.Validate;
-
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class StaminaCondition extends Condition {
-	private double amount;
+	private final double amount;
 
-	public StaminaCondition() {
+	public StaminaCondition(MMOLineConfig config) {
 		super("stamina");
 
-		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
-	}
-
-	@Override
-	public Condition load(String[] args) {
-		Validate.notEmpty(args, "This ingredient requires arguments");
-
-		StaminaCondition condition = new StaminaCondition();
-		condition.amount = Double.parseDouble(args[0]);
-		condition.setDisplay(getDisplay());
-
-		return condition;
+		config.validate("amount");
+		amount = config.getDouble("amount");
 	}
 
 	@Override

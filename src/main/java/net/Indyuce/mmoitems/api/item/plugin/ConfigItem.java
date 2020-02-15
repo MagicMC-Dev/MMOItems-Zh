@@ -41,7 +41,7 @@ public class ConfigItem {
 	public static final CraftingRecipeDisplay CRAFTING_RECIPE_DISPLAY = new CraftingRecipeDisplay();
 	public static final UpgradingRecipeDisplay UPGRADING_RECIPE_DISPLAY = new UpgradingRecipeDisplay();
 	public static final QueueItemDisplay QUEUE_ITEM_DISPLAY = new QueueItemDisplay();
-	
+
 	public static final ConfigItem[] values = { CONFIRM, FILL, NO_ITEM, NO_TYPE, TYPE_DISPLAY, PREVIOUS_PAGE, NEXT_PAGE, PREVIOUS_IN_QUEUE, NEXT_IN_QUEUE, BACK, RECIPE_LIST, CRAFTING_RECIPE_DISPLAY, UPGRADING_RECIPE_DISPLAY, QUEUE_ITEM_DISPLAY };
 
 	public ConfigItem(String id, Material material) {
@@ -58,6 +58,22 @@ public class ConfigItem {
 		this.lore = Arrays.asList(lore);
 	}
 
+	/*
+	 * used as util to load an item stack from a config
+	 */
+	public ConfigItem(ConfigurationSection config) {
+		Validate.notNull(config, "Config cannot be null");
+		id = config.getName();
+
+		Validate.isTrue(config.contains("material"), "Could not find material");
+		material = Material.valueOf(config.getString("material").toUpperCase().replace("-", "_").replace(" ", "_"));
+
+		name = config.getString("name", "");
+		lore = config.getStringList("lore");
+
+		updateItem();
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -70,13 +86,16 @@ public class ConfigItem {
 	public void update(ConfigurationSection config) {
 		Validate.notNull(config, "Config cannot be null");
 
-		setName(config.contains("name") ? config.getString("name") : "");
+		setName(config.getString("name", ""));
 		setLore(config.contains("lore") ? config.getStringList("lore") : new ArrayList<>());
 		updateItem();
 	}
 
 	public void updateItem() {
 		setItem(new ItemStack(material));
+		if (!item.hasItemMeta())
+			return;
+		
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
 		meta.addItemFlags(ItemFlag.values());

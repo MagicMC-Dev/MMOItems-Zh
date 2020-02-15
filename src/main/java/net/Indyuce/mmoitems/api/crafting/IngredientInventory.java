@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
+import net.Indyuce.mmoitems.manager.CraftingManager.IngredientType;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -34,15 +35,15 @@ public class IngredientInventory {
 		loop: for (ItemStack item : inv.getContents())
 			if (item != null && item.getType() != Material.AIR) {
 				NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item);
-				for (Ingredient ingredient : MMOItems.plugin.getCrafting().getIngredients())
-					if (ingredient.isValid(nbt)) {
+				for (IngredientType ingredient : MMOItems.plugin.getCrafting().getIngredients())
+					if (ingredient.check(nbt)) {
 						addIngredient(nbt, ingredient);
 						continue loop;
 					}
 			}
 	}
 
-	public void addIngredient(NBTItem item, Ingredient ingredient) {
+	public void addIngredient(NBTItem item, IngredientType ingredient) {
 		String key = ingredient.getId() + ":" + ingredient.readKey(item);
 
 		if (ingredients.containsKey(key))

@@ -13,18 +13,18 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.IngredientInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
-/*
- * once the recipe is loaded, this class is used to reduce checkups for
- * ingredients and conditions
- */
 public class RecipeInfo {
 	private final Recipe recipe;
-	
-	private Set<ConditionInfo> conditions = new LinkedHashSet<>();
-	private Set<IngredientInfo> ingredients = new LinkedHashSet<>();
+
+	private final Set<ConditionInfo> conditions = new LinkedHashSet<>();
+	private final Set<IngredientInfo> ingredients = new LinkedHashSet<>();
 
 	private boolean ingredientsHad = true, conditionsMet = true;
 
+	/*
+	 * once the recipe is loaded, this class is used to reduce checkups for
+	 * ingredients and conditions
+	 */
 	public RecipeInfo(Recipe recipe, PlayerData data, IngredientInventory inv) {
 		this.recipe = recipe;
 
@@ -34,15 +34,15 @@ public class RecipeInfo {
 			if (!info.isHad())
 				ingredientsHad = false;
 		}
-		
+
 		for (Condition condition : recipe.getConditions()) {
 			ConditionInfo info = condition.newConditionInfo(data);
 			conditions.add(info);
 			if (!info.isMet())
 				conditionsMet = false;
-			
+
 			if (info.getCondition() instanceof IngredientCondition) {
-				if(ingredientsHad)
+				if (ingredientsHad)
 					conditionsMet = true;
 			}
 		}

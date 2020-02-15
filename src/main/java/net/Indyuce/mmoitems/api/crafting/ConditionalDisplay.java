@@ -3,12 +3,18 @@ package net.Indyuce.mmoitems.api.crafting;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ConditionalDisplay {
-	private String negative;
-	private String positive;
+	private final String positive, negative;
 
 	public ConditionalDisplay(String positive, String negative) {
 		this.positive = positive;
 		this.negative = negative;
+	}
+
+	/*
+	 * used when loading translations
+	 */
+	public ConditionalDisplay(ConfigurationSection config) {
+		this(config.getString("positive"), config.getString("negative"));
 	}
 
 	public String getPositive() {
@@ -17,14 +23,6 @@ public class ConditionalDisplay {
 
 	public String getNegative() {
 		return negative;
-	}
-
-	/*
-	 * used when loading translations
-	 */
-	public void load(ConfigurationSection config) {
-		positive = config.getString("positive");
-		negative = config.getString("negative");
 	}
 
 	public void setup(ConfigurationSection config) {

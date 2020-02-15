@@ -6,28 +6,25 @@ import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class ExperienceCraftingTrigger extends Trigger {
-	private int amount;
-	private Profession profession;
+	private final Profession profession;
+	private final int amount;
 
-	public ExperienceCraftingTrigger() {
+	public ExperienceCraftingTrigger(MMOLineConfig config) {
 		super("exp");
-	}
 
-	@Override
-	public Trigger load(String[] args) {
-		Validate.isTrue(args.length > 1, "There must be 2 args exactly, profession (or main) and exp");
+		config.validate("profession", "amount");
 
-		ExperienceCraftingTrigger trigger = new ExperienceCraftingTrigger();
-		if (!args[0].equalsIgnoreCase("main")) {
-			String id = args[0].toLowerCase().replace("_", "-");
+		amount = config.getInt("amount");
+
+		String id = config.getString("profession").toLowerCase().replace("_", "-");
+		if (!id.equalsIgnoreCase("main")) {
 			Validate.isTrue(MMOCore.plugin.professionManager.has(id), "Could not find profession " + id);
-			trigger.profession = MMOCore.plugin.professionManager.get(id);
-		}
-		trigger.amount = Integer.parseInt(args[1]);
-
-		return trigger;
+			profession = MMOCore.plugin.professionManager.get(id);
+		} else
+			profession = null;
 	}
 
 	@Override

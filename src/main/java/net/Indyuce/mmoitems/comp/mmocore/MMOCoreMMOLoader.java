@@ -12,6 +12,8 @@ import net.Indyuce.mmocore.api.load.MMOLoader;
 import net.Indyuce.mmocore.api.quest.objective.Objective;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
+import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ExperienceCraftingTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;
@@ -31,8 +33,8 @@ public class MMOCoreMMOLoader implements MMOLoader {
 		/*
 		 * register extra conditions for MMOItems crafting.
 		 */
-		MMOItems.plugin.getCrafting().registerCondition(new ProfessionCondition());
-		MMOItems.plugin.getCrafting().registerTrigger(new ExperienceCraftingTrigger());
+		MMOItems.plugin.getCrafting().registerCondition("profession", config -> new ProfessionCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.check + " Requires #level# in #profession#"));
+		MMOItems.plugin.getCrafting().registerTrigger("exp", config -> new ExperienceCraftingTrigger(config));
 	}
 
 	@Override

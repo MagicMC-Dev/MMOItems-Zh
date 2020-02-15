@@ -1,25 +1,19 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class PermissionCondition extends Condition {
-	private List<String> permissions = new ArrayList<>();
+	private final List<String> permissions;
 
-	public PermissionCondition() {
-		super("perms");
-	}
+	public PermissionCondition(MMOLineConfig config) {
+		super("permission");
 
-	@Override
-	public Condition load(String[] args) {
-		PermissionCondition condition = new PermissionCondition();
-		for (String permission : args)
-			condition.permissions.add(permission);
-		condition.setDisplay(getDisplay());
-
-		return condition;
+		config.validate("list");
+		permissions = Arrays.asList(config.getString("list").split("\\,"));
 	}
 
 	@Override

@@ -1,54 +1,41 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
-import net.Indyuce.mmoitems.api.util.AltChar;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class VanillaIngredient extends Ingredient {
-	private Material material;
-	private String displayName;
+	private final Material material;
 
-	public VanillaIngredient() {
-		super("vanilla");
-		setDisplay(new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"));
+	/*
+	 * display display is the item's meta display display, display corresponds
+	 * to how the ingredient displays in the crafting recipe GUI item lores
+	 */
+	private final String displayName, display;
+
+	public VanillaIngredient(MMOLineConfig config) {
+		super("vanilla", config);
+
+		config.validate("type");
+
+		material = Material.valueOf(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
+		displayName = config.contains("name") ? ChatColor.translateAlternateColorCodes('&', config.getString("name")) : null;
+
+		display = config.contains("display") ? config.getString("display") : MMOUtils.caseOnWords(material.name().toLowerCase().replace("_", " "));
 	}
 
 	@Override
-	public Ingredient load(String[] args) {
-		try {
-			VanillaIngredient ingredient = new VanillaIngredient();
-			ingredient.material = Material.valueOf(args[0]);
-			ingredient.displayName = args.length > 1 ? ((displayName = args[1].replace("_", " ")).equals(".") ? null : displayName) : null;
-
-			ingredient.setAmount(args.length > 2 ? Math.max(1, Integer.parseInt(args[2])) : 1);
-			ingredient.setName(args.length > 3 ? args[3].replace("_", " ") : (ingredient.displayName == null ? MMOUtils.caseOnWords(ingredient.material.name().toLowerCase().replace("_", " ")) : ingredient.displayName));
-			ingredient.setKey(ingredient.material.name().toLowerCase() + "_" + ingredient.displayName);
-			ingredient.setDisplay(getDisplay());
-
-			return ingredient;
-		} catch (IllegalArgumentException | IndexOutOfBoundsException exception) {
-			return null;
-		}
+	public String getKey() {
+		return material.name().toLowerCase() + "_" + displayName;
 	}
 
 	@Override
-	public String formatDisplay(String string) {
-		return string.replace("#item#", getName()).replace("#amount#", "" + getAmount());
-	}
-
-	@Override
-	public boolean isValid(NBTItem item) {
-		return true;
-	}
-
-	@Override
-	public String readKey(NBTItem item) {
-		return item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null);
+	public String formatLoreDisplay(String string) {
+		return string.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 
 	@Override

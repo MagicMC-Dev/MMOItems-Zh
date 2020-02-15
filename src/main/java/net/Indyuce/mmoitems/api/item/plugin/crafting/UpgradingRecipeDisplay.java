@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
@@ -50,7 +51,6 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			for (Iterator<String> iterator = lore.iterator(); iterator.hasNext();) {
 				String str = iterator.next();
 
-
 				if (str.equals("{conditions}")) {
 					if (recipe.getConditions().size() == 0) {
 						iterator.remove();
@@ -66,10 +66,14 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 				if (str.startsWith("#condition_")) {
 					String format = str.substring("#condition_".length(), str.length() - 1);
 					ConditionInfo info = recipe.getCondition(format);
-					if (info != null && info.getCondition().displays())
-						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? info.getCondition().getDisplay().getPositive() : info.getCondition().getDisplay().getNegative()));
-					else
+					if (info == null) {
 						iterator.remove();
+						continue;
+					}
+
+					ConditionalDisplay display = info.getCondition().getDisplay();
+					if (display != null)
+						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? display.getPositive() : display.getNegative()));
 				}
 			}
 
@@ -82,7 +86,7 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			 */
 			int index = lore.indexOf("#ingredients#");
 			lore.remove(index);
-			recipe.getIngredients().forEach(info -> lore.add(index, info.getIngredient().formatDisplay(info.isHad() ? info.getIngredient().getDisplay().getPositive() : info.getIngredient().getDisplay().getNegative())));
+			recipe.getIngredients().forEach(info -> lore.add(index, info.getIngredient().formatLoreDisplay(info.isHad() ? info.getIngredient().getDisplay().getPositive() : info.getIngredient().getDisplay().getNegative())));
 
 			/*
 			 * apply color to lore

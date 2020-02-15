@@ -49,7 +49,7 @@ public class PluginUpdateManager {
 			for (File file : new File(MMOItems.plugin.getDataFolder() + "\\crafting-stations").listFiles()) {
 				FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-				if (config.contains("recipes"))
+				if (config.contains("recipes")) {
 					for (String key : config.getConfigurationSection("recipes").getKeys(false))
 						try {
 
@@ -59,22 +59,22 @@ public class PluginUpdateManager {
 							for (String ingredient : ingredients) {
 								String[] split = ingredient.split("\\ ");
 								if (split[0].equals("mmoitem")) {
-									String format = "mmoitem{material=\"" + split[1] + "\",id=\"" + split[2] + "\"";
+									String format = "mmoitem{type=" + split[1] + ",id=" + split[2];
 									if (split.length > 3)
 										format += ",amount=" + split[3];
 									if (split.length > 4)
-										format += ",display=\"" + split[4] + "\"";
+										format += ",display=\"" + split[4].replace("_", " ") + "\"";
 									newest.add(format + "}");
 								}
 
 								else if (split[0].equals("vanilla")) {
-									String format = "vanilla{type=\"" + split[1] + "\"";
+									String format = "vanilla{type=" + split[1];
 									if (split.length > 2 && !split[2].equals("."))
-										format += ",display=\"" + split[2] + "\"";
+										format += ",name=\"" + split[2] + "\"";
 									if (split.length > 3)
-										format += "amount=" + split[3];
+										format += ",amount=" + split[3];
 									if (split.length > 4)
-										format += "display=\"" + split[4] + "\"";
+										format += ",display=\"" + split[4].replace("_", " ") + "\"";
 									newest.add(format + "}");
 								}
 
@@ -86,14 +86,39 @@ public class PluginUpdateManager {
 
 							config.set("recipes." + key + ".ingredients", newest);
 
+							List<String> conditions = config.getStringList("recipes." + key + ".conditions");
+							newest = new ArrayList<>();
+
+							for (String condition : conditions) {
+								String[] split = condition.split("\\ ");
+								if (split[0].equalsIgnoreCase("class"))
+									newest.add("class{list=\"" + condition.replace(split[0] + " ", "").replace(" ", ",") + "\"}");
+								else if (split[0].equalsIgnoreCase("perms"))
+									newest.add("permission{list=\"" + condition.replace(split[0] + " ", "").replace(" ", ",") + "\"}");
+								else if (split[0].equalsIgnoreCase("food") || split[0].equals("mana") || split[0].equals("stamina"))
+									newest.add(split[0] + "{amount=" + split[1] + "}");
+								else if (split[0].equalsIgnoreCase("level"))
+									newest.add("level{level=" + split[1] + "}");
+								else if (split[0].equalsIgnoreCase("profession"))
+									newest.add("profession{profession=" + split[1] + ",level=" + split[2] + "}");
+								else if (split[0].equalsIgnoreCase("exp"))
+									newest.add("exp{profession=" + split[1] + ",amount=" + split[2] + "}");
+								else {
+									MMOItems.plugin.getLogger().log(Level.INFO, "Config Update 3: Could not match condition from '" + condition + "' from recipe '" + key + "', added it anyway.");
+									newest.add(condition);
+								}
+							}
+
+							config.set("recipes." + key + ".conditions", newest);
 						} catch (Exception exception) {
 							MMOItems.plugin.getLogger().log(Level.INFO, "Config Update 3: Could not convert recipe with key '" + key + "': " + exception.getMessage());
 						}
 
-				try {
-					config.save(file);
-				} catch (IOException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Config Update 3: Could not save config '" + file.getName() + "': " + exception.getMessage());
+					try {
+						config.save(file);
+					} catch (IOException exception) {
+						MMOItems.plugin.getLogger().log(Level.INFO, "Config Update 3: Could not save config '" + file.getName() + "': " + exception.getMessage());
+					}
 				}
 			}
 		}));

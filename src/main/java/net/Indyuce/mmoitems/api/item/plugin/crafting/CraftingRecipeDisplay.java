@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
@@ -81,10 +82,14 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				if (str.startsWith("#condition_")) {
 					String format = str.substring("#condition_".length(), str.length() - 1);
 					ConditionInfo info = recipe.getCondition(format);
-					if (info != null && info.getCondition().displays())
-						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? info.getCondition().getDisplay().getPositive() : info.getCondition().getDisplay().getNegative()));
-					else
+					if (info == null) {
 						iterator.remove();
+						continue;
+					}
+
+					ConditionalDisplay display = info.getCondition().getDisplay();
+					if (display != null)
+						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? display.getPositive() : display.getNegative()));
 				}
 			}
 
@@ -97,7 +102,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 			 */
 			int index = lore.indexOf("#ingredients#");
 			lore.remove(index);
-			recipe.getIngredients().forEach(info -> lore.add(index, info.getIngredient().formatDisplay(info.isHad() ? info.getIngredient().getDisplay().getPositive() : info.getIngredient().getDisplay().getNegative())));
+			recipe.getIngredients().forEach(info -> lore.add(index, info.getIngredient().formatLoreDisplay(info.isHad() ? info.getIngredient().getDisplay().getPositive() : info.getIngredient().getDisplay().getNegative())));
 
 			/*
 			 * apply color to lore
@@ -107,10 +112,12 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 			ItemStack item = craftingRecipe.getOutput().getPreview();
 			int amount = craftingRecipe.getOutput().getAmount();
-			
-			if(amount > 64) lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", "" + amount).toString());
-			else item.setAmount(amount);
-			
+
+			if (amount > 64)
+				lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", "" + amount).toString());
+			else
+				item.setAmount(amount);
+
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));

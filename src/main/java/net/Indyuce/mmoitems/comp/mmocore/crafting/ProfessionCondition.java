@@ -5,34 +5,25 @@ import org.apache.commons.lang.Validate;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
 public class ProfessionCondition extends Condition {
-	private Profession profession;
-	private int level;
+	private final Profession profession;
+	private final int level;
 
-	public ProfessionCondition() {
+	public ProfessionCondition(MMOLineConfig config) {
 		super("profession");
-		setDisplay(new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.check + " Requires #level# in #profession#"));
+		
+		config.validate("profession", "level");
+		
+		level = config.getInt("level");
+
+		String id = config.getString("profession").toLowerCase().replace("_", "-");
+		Validate.isTrue(MMOCore.plugin.professionManager.has(id), "Could not find profession " + id);
+		profession = MMOCore.plugin.professionManager.get(id);
 	}
 
-	@Override
-	public ProfessionCondition load(String[] args) {
-		try {
-			String id = args[0].toLowerCase().replace("_", "-");
-			Validate.isTrue(MMOCore.plugin.professionManager.has(id), "Could not find profession " + id);
-
-			ProfessionCondition condition = new ProfessionCondition();
-			condition.level = Integer.parseInt(args[1]);
-			condition.profession = MMOCore.plugin.professionManager.get(id);
-			condition.setDisplay(getDisplay());
-			return condition;
-		} catch (IllegalArgumentException | IndexOutOfBoundsException exception) {
-			return null;
-		}
-	}
 
 	@Override
 	public String formatDisplay(String string) {

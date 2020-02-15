@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public abstract class Condition {
 	private final String id;
-	private ConditionalDisplay display;
 
 	public Condition(String id) {
 		this.id = id;
@@ -15,24 +15,18 @@ public abstract class Condition {
 		return id;
 	}
 
+	/*
+	 * shortcut to RecipeManager map lookup, may throw a stream lookup error if
+	 * the condition has not been registered.
+	 */
 	public ConditionalDisplay getDisplay() {
-		return display;
+		return MMOItems.plugin.getCrafting().getConditions().stream().filter(type -> type.getId().equals(id)).findAny().get().getDisplay();
 	}
-
-	public void setDisplay(ConditionalDisplay display) {
-		this.display = display;
-	}
-
-	public boolean displays() {
-		return display != null;
-	}
-
-	public abstract Condition load(String[] args);
 
 	public abstract boolean isMet(PlayerData data);
 
 	public abstract String formatDisplay(String string);
-	
+
 	public abstract void whenCrafting(PlayerData data);
 
 	public ConditionInfo newConditionInfo(PlayerData data) {

@@ -86,26 +86,26 @@ public class CustomSoundListener implements Listener {
 	public static void stationCrafting(ItemStack item, Player player) {
 		if (item == null)
 			return;
+
 		NBTItem nbt = NBTItem.get(item);
-		if (nbt.hasTag("MMOITEMS_SOUND_ON_CRAFT")) {
+		if (nbt.hasTag("MMOITEMS_SOUND_ON_CRAFT"))
 			player.getWorld().playSound(player.getLocation(), nbt.getString("MMOITEMS_SOUND_ON_CRAFT"), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_PIT"));
-		}
 	}
 
-	void playSound(ItemStack item, String sound, Player player) {
+	private void playSound(ItemStack item, String sound, Player player) {
 		playSound(item, sound, player.getWorld(), player.getLocation());
 	}
 
-	void playSound(ItemStack item, String sound, Block block) {
+	private void playSound(ItemStack item, String sound, Block block) {
 		playSound(item, sound, block.getWorld(), block.getLocation());
 	}
 
-	void playSound(ItemStack item, String sound, World world, Location loc) {
+	private void playSound(ItemStack item, String sound, World world, Location loc) {
 		if (item == null)
 			return;
+
 		NBTItem nbt = NBTItem.get(item);
-		if (nbt.hasTag("MMOITEMS_SOUND_" + sound)) {
+		if (nbt.hasTag("MMOITEMS_SOUND_" + sound))
 			world.playSound(loc, nbt.getString("MMOITEMS_SOUND_" + sound), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_PIT"));
-		}
 	}
 }

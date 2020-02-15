@@ -191,6 +191,7 @@ public class CraftingStationView extends PluginInventory {
 			open();
 		}
 	}
+	
 
 	public void processRecipe(RecipeInfo recipe) {
 		if (!recipe.areConditionsMet()) {

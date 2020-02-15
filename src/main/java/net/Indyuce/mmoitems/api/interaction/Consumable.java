@@ -254,6 +254,11 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
+		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME"))
+			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
+		else
+			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
+
 		int maxConsume = (int) nbtItem.getStat("MAX_CONSUME");
 		if (maxConsume > 1) {
 			ItemStack item = nbtItem.toItem().clone();

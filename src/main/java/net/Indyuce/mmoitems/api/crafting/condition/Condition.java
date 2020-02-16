@@ -29,15 +29,15 @@ public abstract class Condition {
 
 	public abstract void whenCrafting(PlayerData data);
 
-	public ConditionInfo newConditionInfo(PlayerData data) {
-		return new ConditionInfo(this, isMet(data));
+	public CheckedCondition newConditionInfo(PlayerData data) {
+		return new CheckedCondition(this, isMet(data));
 	}
 
-	public class ConditionInfo {
+	public class CheckedCondition {
 		private final Condition condition;
 		private final boolean met;
 
-		public ConditionInfo(Condition condition, boolean met) {
+		public CheckedCondition(Condition condition, boolean met) {
 			this.condition = condition;
 			this.met = met;
 		}

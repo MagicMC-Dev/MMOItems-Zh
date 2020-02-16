@@ -11,6 +11,8 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
+import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMode;
+import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -55,14 +57,21 @@ public class UpgradingRecipe extends Recipe {
 	@Override
 	public boolean canUse(PlayerData data, IngredientInventory inv, RecipeInfo uncastRecipe, CraftingStation station) {
 
-		if (!inv.hasIngredient(ingredient)) {
+		/*
+		 * try to find the item which is meant to be updated. null check is
+		 * ugly, BUT it does halve calculations done because it does not calls
+		 * two map lookups. it is not needed to check for the amount because
+		 * only one item is upgraded.
+		 */
+		PlayerIngredient upgraded = inv.getIngredient(ingredient, IngredientLookupMode.IGNORE_ITEM_LEVEL);
+		if (upgraded == null) {
 			Message.NOT_HAVE_ITEM_UPGRADE.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 			return false;
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new MMOItem(MMOLib.plugin.getNMS().getNBTItem(inv.getIngredient(ingredient, true).getFirstItem()))).hasData(ItemStat.UPGRADE))
+		if (!(recipe.mmoitem = new MMOItem(MMOLib.plugin.getNMS().getNBTItem(upgraded.getFirstItem()))).hasData(ItemStat.UPGRADE))
 			return false;
 
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStat.UPGRADE)).canLevelUp()) {
@@ -75,7 +84,7 @@ public class UpgradingRecipe extends Recipe {
 			Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(data.getPlayer());
 			if (recipe.getUpgradeData().destroysOnFail())
 				recipe.getUpgraded().setAmount(recipe.getUpgraded().getAmount() - 1);
-			
+
 			recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 2);
 			return false;

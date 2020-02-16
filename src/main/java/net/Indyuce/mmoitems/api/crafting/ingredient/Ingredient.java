@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
+import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMode;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.util.MMOLineConfig;
 
@@ -50,8 +51,8 @@ public abstract class Ingredient {
 
 	public abstract ItemStack generateItemStack();
 
-	public IngredientInfo newIngredientInfo(IngredientInventory inv) {
-		return new IngredientInfo(this, inv.getIngredient(this, false));
+	public CheckedIngredient newIngredientInfo(IngredientInventory inv) {
+		return new CheckedIngredient(this, inv.getIngredient(this, IngredientLookupMode.BASIC));
 	}
 
 	/*
@@ -59,20 +60,20 @@ public abstract class Ingredient {
 	 * station. ingredientInfo instances must be updated everytime the player's
 	 * inventory updates.
 	 */
-	public class IngredientInfo {
+	public class CheckedIngredient {
 		private final Ingredient inventory;
-		private final PlayerIngredient player;
+		private final PlayerIngredient found;
 
-		private IngredientInfo(Ingredient inventory, PlayerIngredient player) {
+		private CheckedIngredient(Ingredient inventory, PlayerIngredient found) {
 			this.inventory = inventory;
-			this.player = player;
+			this.found = found;
 		}
 
 		/*
 		 * checks if the player has a specific item or not
 		 */
 		public boolean isHad() {
-			return player != null && player.getAmount() >= inventory.getAmount();
+			return found != null && found.getAmount() >= inventory.getAmount();
 		}
 
 		public Ingredient getIngredient() {
@@ -80,7 +81,7 @@ public abstract class Ingredient {
 		}
 
 		public PlayerIngredient getPlayerIngredient() {
-			return player;
+			return found;
 		}
 	}
 }

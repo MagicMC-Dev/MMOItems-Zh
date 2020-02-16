@@ -7,17 +7,17 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
-import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
+import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.IngredientCondition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.IngredientInfo;
+import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class RecipeInfo {
 	private final Recipe recipe;
 
-	private final Set<ConditionInfo> conditions = new LinkedHashSet<>();
-	private final Set<IngredientInfo> ingredients = new LinkedHashSet<>();
+	private final Set<CheckedCondition> conditions = new LinkedHashSet<>();
+	private final Set<CheckedIngredient> ingredients = new LinkedHashSet<>();
 
 	private boolean ingredientsHad = true, conditionsMet = true;
 
@@ -29,14 +29,14 @@ public class RecipeInfo {
 		this.recipe = recipe;
 
 		for (Ingredient ingredient : recipe.getIngredients()) {
-			IngredientInfo info = ingredient.newIngredientInfo(inv);
+			CheckedIngredient info = ingredient.newIngredientInfo(inv);
 			ingredients.add(info);
 			if (!info.isHad())
 				ingredientsHad = false;
 		}
 
 		for (Condition condition : recipe.getConditions()) {
-			ConditionInfo info = condition.newConditionInfo(data);
+			CheckedCondition info = condition.newConditionInfo(data);
 			conditions.add(info);
 			if (!info.isMet())
 				conditionsMet = false;
@@ -68,18 +68,18 @@ public class RecipeInfo {
 		return recipe.display(this);
 	}
 
-	public ConditionInfo getCondition(String format) {
-		for (ConditionInfo condition : conditions)
+	public CheckedCondition getCondition(String format) {
+		for (CheckedCondition condition : conditions)
 			if (condition.getCondition().getId().equals(format))
 				return condition;
 		return null;
 	}
 
-	public Set<ConditionInfo> getConditions() {
+	public Set<CheckedCondition> getConditions() {
 		return conditions;
 	}
 
-	public Set<IngredientInfo> getIngredients() {
+	public Set<CheckedIngredient> getIngredients() {
 		return ingredients;
 	}
 }

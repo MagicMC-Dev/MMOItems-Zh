@@ -20,7 +20,7 @@ public class CraftingStatus {
 	 * saves data about items being constructed in specific stations. players
 	 * must go back to the station GUI and claim their item once it's ready
 	 */
-	private Map<String, CraftingQueue> queues = new HashMap<>();
+	private final Map<String, CraftingQueue> queues = new HashMap<>();
 
 	public void load(PlayerData data, ConfigurationSection config) {
 
@@ -72,7 +72,7 @@ public class CraftingStatus {
 
 	public class CraftingQueue {
 		private final String station;
-		private List<CraftingInfo> crafts = new ArrayList<>();
+		private final List<CraftingInfo> crafts = new ArrayList<>();
 
 		public CraftingQueue(CraftingStation station) {
 			this.station = station.getId();
@@ -238,7 +238,7 @@ public class CraftingStatus {
 	// public void craft() {
 	// timedOut = true;
 	//
-	// for (IngredientInfo ingredient : recipe.getIngredients())
+	// for (CheckedIngredient ingredient : recipe.getIngredients())
 	// ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount(),
 	// ingredient.getIngredient());
 	//

@@ -42,7 +42,7 @@ public class MMOItemIngredient extends Ingredient {
 
 	@Override
 	public String getKey() {
-		return type.getId().toLowerCase() + (level != 0 ? "-" + level : "") + "_" + id.toLowerCase();
+		return "mmoitem:" + type.getId().toLowerCase() + (level != 0 ? "-" + level : "") + "_" + id.toLowerCase();
 	}
 
 	public Type getType() {

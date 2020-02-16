@@ -30,7 +30,7 @@ public class VanillaIngredient extends Ingredient {
 
 	@Override
 	public String getKey() {
-		return material.name().toLowerCase() + "_" + displayName;
+		return "vanilla:" + material.name().toLowerCase() + "_" + displayName;
 	}
 
 	@Override

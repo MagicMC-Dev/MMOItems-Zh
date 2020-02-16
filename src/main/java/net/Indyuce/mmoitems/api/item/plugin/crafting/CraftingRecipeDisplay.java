@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
-import net.Indyuce.mmoitems.api.crafting.condition.Condition.ConditionInfo;
+import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
@@ -81,7 +81,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				 */
 				if (str.startsWith("#condition_")) {
 					String format = str.substring("#condition_".length(), str.length() - 1);
-					ConditionInfo info = recipe.getCondition(format);
+					CheckedCondition info = recipe.getCondition(format);
 					if (info == null) {
 						iterator.remove();
 						continue;

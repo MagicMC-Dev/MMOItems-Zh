@@ -35,11 +35,12 @@ public class IngredientInventory {
 		loop: for (ItemStack item : inv.getContents())
 			if (item != null && item.getType() != Material.AIR) {
 				NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item);
-				for (IngredientType ingredient : MMOItems.plugin.getCrafting().getIngredients())
+				for (IngredientType ingredient : MMOItems.plugin.getCrafting().getIngredients()) {
 					if (ingredient.check(nbt)) {
 						addIngredient(nbt, ingredient);
 						continue loop;
 					}
+				}
 			}
 	}
 
@@ -61,11 +62,11 @@ public class IngredientInventory {
 			ingredients.put(key, new PlayerIngredient(item.getItem()));
 	}
 
-	public PlayerIngredient getIngredient(Ingredient ingredient, boolean isUpgrading) {
+	public PlayerIngredient getIngredient(Ingredient ingredient, IngredientLookupMode lookupMode) {
 		String key = ingredient.getKey();
 
 		for (String invKey : ingredients.keySet()) {
-			String ingredientKey = isUpgrading ? invKey.replaceFirst("-\\d*_", "_") : invKey;
+			String ingredientKey = lookupMode == IngredientLookupMode.IGNORE_ITEM_LEVEL ? invKey.replaceFirst("-\\d*_", "_") : invKey;
 			if (ingredientKey.equals(key))
 				return ingredients.get(invKey);
 		}
@@ -73,20 +74,18 @@ public class IngredientInventory {
 		return null;
 	}
 
-	/*
-	 * warning, this method might make the code run an extra set checkup! not
-	 * deprecated because used with upgrading recipes.
-	 */
+	@Deprecated
 	public boolean hasIngredient(Ingredient ingredient) {
-		PlayerIngredient found = getIngredient(ingredient, true);
+		PlayerIngredient found = getIngredient(ingredient, IngredientLookupMode.IGNORE_ITEM_LEVEL);
 		return found != null && found.getAmount() >= ingredient.getAmount();
 	}
 
 	public class PlayerIngredient {
 
 		/*
-		 * stores the corresponding ItemStacks. when the ingredient is taken off
-		 * the player inventory, the itemstack amounts get lowered
+		 * stores items which correspond to a specific ingredient. when the
+		 * ingredient is taken off the player inventory, the itemstack amounts
+		 * get lowered. these POINT towards the player inventory itemStacks.
 		 */
 		private final List<ItemStack> items = new ArrayList<>();
 
@@ -110,21 +109,46 @@ public class IngredientInventory {
 			return items.get(0);
 		}
 
+		/*
+		 * algorythm which takes away a certain amount of items. used to consume
+		 * ingredients when using recipes
+		 */
 		public void reduceItem(int amount) {
 
 			Iterator<ItemStack> iterator = items.iterator();
 			while (iterator.hasNext() && amount > 0) {
 				ItemStack item = iterator.next();
+
+				// remove itemStack from list if amount <= 0
 				if (item.getAmount() < 1) {
 					iterator.remove();
 					continue;
 				}
 
+				// amount of items it can take from this particular ItemStack
 				int take = Math.min(item.getAmount(), amount);
 
 				amount -= take;
 				item.setAmount(item.getAmount() - take);
 			}
 		}
+	}
+
+	/*
+	 * could use a boolean because there are only two states possible, but makes
+	 * things clearer.
+	 */
+	public enum IngredientLookupMode {
+
+		/*
+		 * item level must be ignored when the player is using an upgrading
+		 * recipe, otherwise recipe cannot identify right item
+		 */
+		IGNORE_ITEM_LEVEL,
+
+		/*
+		 * scans ingredient inventory considering item levels
+		 */
+		BASIC;
 	}
 }

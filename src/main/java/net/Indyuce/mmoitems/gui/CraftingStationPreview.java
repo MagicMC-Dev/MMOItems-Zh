@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.IngredientInfo;
+import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
@@ -27,7 +27,7 @@ public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStation station;
 	private final RecipeInfo recipe;
 
-	private List<IngredientInfo> ingredients = new ArrayList<>();
+	private List<CheckedIngredient> ingredients = new ArrayList<>();
 	
 	private static final int[]
 			slots = { 12, 13, 14, 21, 22, 23, 30, 31, 32 },

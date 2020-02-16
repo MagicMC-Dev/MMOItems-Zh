@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.manager.recipe;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -65,12 +67,19 @@ public abstract class RecipeManager {
 	}
 
 	public NamespacedKey getRecipeKey(Type type, String id, String recipeType, String number) {
-		return new NamespacedKey(MMOItems.plugin, "mmorecipe_" + recipeType + "_" + type.getId() + "_" + id + "_" + number);
+		return new NamespacedKey(MMOItems.plugin, "mmoitems:" + recipeType + "_" + type.getId() + "_" + id + "_" + number);
 	}
 
 	public void reloadRecipes() {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-			Bukkit.resetRecipes();
+
+			Iterator<Recipe> iterator = Bukkit.recipeIterator();
+			while (iterator.hasNext()) {
+				Recipe recipe = iterator.next();
+				if (recipe instanceof Keyed && ((Keyed) recipe).getKey().getKey().startsWith("mmoitems:"))
+					iterator.remove();
+			}
+
 			loadedRecipes.clear();
 			load();
 		});

@@ -58,7 +58,7 @@ public class CraftingManager {
 		registerCondition("ingredient", config -> new IngredientCondition(), null);
 
 		registerIngredient("vanilla", config -> new VanillaIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, item -> item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null));
-		registerIngredient("mmoitem", config -> new MMOItemIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level# #item#", "&c" + AltChar.cross + " &7#amount# #level# #item#"), nbt -> nbt.hasType(), item -> {
+		registerIngredient("mmoitem", config -> new MMOItemIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level##item#", "&c" + AltChar.cross + " &7#amount# #level##item#"), nbt -> nbt.hasType(), item -> {
 			String upgradeString = item.getString("MMOITEMS_UPGRADE");
 			int level = !upgradeString.isEmpty() ? new JsonParser().parse(upgradeString).getAsJsonObject().get("Level").getAsInt() : 0;
 			return item.getString("MMOITEMS_ITEM_TYPE").toLowerCase() + (level != 0 ? "-" + level : "") + "_" + item.getString("MMOITEMS_ITEM_ID").toLowerCase();

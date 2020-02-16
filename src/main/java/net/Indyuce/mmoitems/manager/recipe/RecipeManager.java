@@ -98,8 +98,11 @@ public abstract class RecipeManager {
 		ShapedRecipe recipe = new ShapedRecipe(key, MMOItems.plugin.getItems().getItem(type, id));
 		recipe.shape("012", "345", "678");
 
-		for (int j = 0; j < 9; j++)
-			setIngredientOrAir(recipe, ("" + j).charAt(0), config.getConfigurationSection(id + ".advanced-craft." + j));
+		for (int j = 0; j < 9; j++) {
+			ConfigurationSection section = config.getConfigurationSection(id + ".advanced-craft." + j);
+			if (section != null)
+				setIngredientOrAir(recipe, ("" + j).charAt(0), section);
+		}
 
 		registerRecipe(key, recipe);
 	}

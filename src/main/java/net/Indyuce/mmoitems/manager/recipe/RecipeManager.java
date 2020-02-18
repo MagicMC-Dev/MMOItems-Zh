@@ -67,7 +67,7 @@ public abstract class RecipeManager {
 	}
 
 	public NamespacedKey getRecipeKey(Type type, String id, String recipeType, String number) {
-		return new NamespacedKey(MMOItems.plugin, "mmoitems:" + recipeType + "_" + type.getId() + "_" + id + "_" + number);
+		return new NamespacedKey(MMOItems.plugin, "mmoitems_" + recipeType + "_" + type.getId() + "_" + id + "_" + number);
 	}
 
 	public void reloadRecipes() {

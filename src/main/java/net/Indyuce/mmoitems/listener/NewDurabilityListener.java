@@ -5,10 +5,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
-import org.bukkit.plugin.RegisteredListener;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import net.mmogroup.mmolib.MMOLib;
 
 public class NewDurabilityListener implements Listener {
 
@@ -27,9 +26,8 @@ public class NewDurabilityListener implements Listener {
 			 * do NOT cancel the event and make sure the item is destroyed
 			 */
 			if (item.isBroken() && item.isLostWhenBroken()) {
-				event.getItem().setDurability(event.getItem().getType().getMaxDurability());
+				MMOLib.plugin.getVersion().getWrapper().applyDurability(event.getItem(), event.getItem().getItemMeta(), event.getItem().getType().getMaxDurability());
 				event.setDamage(999);
-
 				return;
 			}
 

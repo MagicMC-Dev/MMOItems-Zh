@@ -46,7 +46,7 @@ public class PluginUpdateManager {
 
 		register(new PluginUpdate(3, new String[] { "5.3.2: converts all your crafting station recipes to the newest config format.", "&cWarning, running this update will get rid of your # config file comments." }, sender -> {
 
-			for (File file : new File(MMOItems.plugin.getDataFolder() + "\\crafting-stations").listFiles()) {
+			for (File file : new File(MMOItems.plugin.getDataFolder() + "/crafting-stations").listFiles()) {
 				FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 				if (config.contains("recipes")) {

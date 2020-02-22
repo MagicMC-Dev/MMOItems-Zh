@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
@@ -23,20 +22,17 @@ import org.bukkit.util.Vector;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 
 public class MMOUtils {
-	private static final Random random = new Random();
-
-	public static String getSkullTextureURL(ItemStack i) {
+	public static String getSkullTextureURL(ItemStack item) {
 		try {
-			ItemMeta meta = i.getItemMeta();
+			ItemMeta meta = item.getItemMeta();
 			Field profileField = meta.getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
-			Collection<Property> properties = ((GameProfile) profileField.get(i.getItemMeta())).getProperties().get("textures");
+			Collection<Property> properties = ((GameProfile) profileField.get(item.getItemMeta())).getProperties().get("textures");
 			Property property = properties.toArray(new Property[properties.size()])[0];
 			return new String(Base64.decodeBase64(property.getValue())).replace("{textures:{SKIN:{url:\"", "").replace("\"}}}", "");
 		} catch (Exception e) {
@@ -52,7 +48,7 @@ public class MMOUtils {
 	public static Vector normalize(Vector vector) {
 		return vector.getX() == 0 && vector.getY() == 0 ? vector : vector.normalize();
 	}
- 
+
 	public static String getProgressBar(double ratio, int n, String barChar) {
 		String bar = "";
 		for (int k = 0; k < n; k++)
@@ -63,11 +59,6 @@ public class MMOUtils {
 	public static void giveOrDrop(Player player, ItemStack item) {
 		for (ItemStack drop : player.getInventory().addItem(item).values())
 			player.getWorld().dropItem(player.getLocation(), drop);
-	}
-
-	// random offset between -a and a
-	public static double rdm(double a) {
-		return (random.nextDouble() - .5) * 2 * a;
 	}
 
 	public static int getEffectDuration(PotionEffectType type) {
@@ -130,13 +121,6 @@ public class MMOUtils {
 
 	public static boolean isPluginItem(ItemStack item, boolean lore) {
 		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null && (!lore || item.getItemMeta().getLore() != null);
-	}
-
-	public static boolean isType(String s) {
-		for (Type type : MMOItems.plugin.getTypes().getAll())
-			if (type.getId().equalsIgnoreCase(s.replace("-", "_")))
-				return true;
-		return false;
 	}
 
 	public static void saturate(Player player, double saturation) {

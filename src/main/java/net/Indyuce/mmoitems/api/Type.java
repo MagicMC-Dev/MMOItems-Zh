@@ -188,20 +188,6 @@ public class Type {
 		available = stats;
 	}
 
-	public void registerItemEdition(ConfigFile config, String id) {
-
-		/*
-		 * uncaches the item so it can be generated to apply newest changes in
-		 * case the same inventory is opened again.
-		 */
-		MMOItems.plugin.getItems().uncache(this, id);
-
-		/*
-		 * finally saves the item.
-		 */
-		config.save();
-	}
-
 	public boolean canHave(ItemStat stat) {
 		if (isSubtype())
 			return getParent().canHave(stat);

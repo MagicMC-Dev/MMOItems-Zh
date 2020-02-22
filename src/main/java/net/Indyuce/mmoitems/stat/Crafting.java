@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -32,7 +33,17 @@ public class Crafting extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new CraftingEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+		if (event.getAction() == InventoryAction.PICKUP_ALL)
+			new CraftingEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+			ConfigFile config = inv.getItemType().getConfigFile();
+			ConfigurationSection section = config.getConfig().getConfigurationSection(inv.getItemId());
+			if (section.contains("crafting")) {
+				section.set("crafting", null);
+				inv.registerItemEdition(config);
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using " + ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
+			}
+		}
 		return true;
 	}
 
@@ -65,14 +76,9 @@ public class Crafting extends ItemStat {
 				}
 			}
 		} else if (type.equals("item")) {
-			if (validate(inv.getPlayer(), message)) {
-				Bukkit.getScheduler().runTask(MMOItems.plugin, new Runnable() {
-					@Override
-					public void run() {
-						new StatEdition(inv, ItemStat.CRAFTING, "time", info[1], message).enable("Write in the chat the cooktime (in ticks) for your recipe.", "Format: '[INTEGER]'");
-					}
-				});
-			}
+			if (validate(inv.getPlayer(), message))
+				Bukkit.getScheduler().runTask(MMOItems.plugin, () -> new StatEdition(inv, ItemStat.CRAFTING, "time", info[1], message).enable("Write in the chat the cooktime (in ticks) for your recipe.", "Format: '[INTEGER]'"));
+
 		} else if (type.equals("time")) {
 			int time;
 			try {
@@ -81,13 +87,8 @@ public class Crafting extends ItemStat {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
 				return false;
 			}
+			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> new StatEdition(inv, ItemStat.CRAFTING, "exp", info[1], time, info[2]).enable("Write in the chat the experience given for your recipe.", "Format: '[FLOAT]'"));
 
-			Bukkit.getScheduler().runTask(MMOItems.plugin, new Runnable() {
-				@Override
-				public void run() {
-					new StatEdition(inv, ItemStat.CRAFTING, "exp", info[1], time, info[2]).enable("Write in the chat the experience given for your recipe.", "Format: '[FLOAT]'");
-				}
-			});
 		} else if (type.equals("exp")) {
 			double exp;
 			try {
@@ -121,52 +122,51 @@ public class Crafting extends ItemStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 	}
 
-	private boolean validate(Player player, String s) {
-		if (s.contains(".")) {
-			String[] typeid = s.split("\\.");
+	private boolean validate(Player player, String input) {
+		if (input.contains(".")) {
+			String[] typeid = input.split("\\.");
 			if (typeid.length != 2) {
-				player.sendMessage("Invalid format.");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
 				return false;
 			}
-			if (!Type.isValid(typeid[0])) {
-				player.sendMessage("'" + typeid[0] + "' isn't a valid Type.");
+			if (!Type.isValid(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"))) {
+				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + typeid[0].toUpperCase().replace("-", "_").replace(" ", "_") + "' isn't a valid item type.");
 				return false;
 			}
-			if (!Type.get(typeid[0]).getConfigFile().getConfig().contains(typeid[1])) {
-				player.sendMessage("'" + typeid[1] + "' isn't a valid MMOItem.");
+
+			Type type = Type.get(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"));
+			if (MMOItems.plugin.getItems().getItem(type, typeid[1]) == null) {
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Could not find item with ID '" + typeid[1].toUpperCase().replace("-", "_").replace(" ", "_") + "'.");
 				return false;
 			}
 
 			return true;
 		}
-		if (s.contains(":")) {
-			String[] matmeta = s.split("\\:");
+		if (input.contains(":")) {
+			String[] matmeta = input.split("\\:");
 			if (matmeta.length != 2) {
-				player.sendMessage("Invalid format.");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
 				return false;
 			}
 			try {
-				Material.valueOf(matmeta[0]);
-			} catch (Exception e) {
-				player.sendMessage("'" + matmeta[0] + "' isn't a valid Material.");
+				Material.valueOf(matmeta[0].toUpperCase().replace("-", "_"));
+			} catch (IllegalArgumentException exception) {
+				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + matmeta[0].toUpperCase().replace("-", "_") + "' isn't a valid material.");
 				return false;
 			}
 			try {
 				Integer.parseInt(matmeta[1]);
-			} catch (NumberFormatException e) {
-				player.sendMessage("'" + matmeta[1] + "' isn't a valid number.");
-				return false;
-			} catch (Exception e) {
-				player.sendMessage("Invalid format.");
+			} catch (NumberFormatException exception) {
+				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + matmeta[1] + "' isn't a valid number.");
 				return false;
 			}
 
 			return true;
 		}
 		try {
-			Material.valueOf(s);
+			Material.valueOf(input.toUpperCase().replace("-", "_"));
 		} catch (Exception e) {
-			player.sendMessage("'" + s + "' isn't a valid Material.");
+			player.sendMessage(MMOItems.plugin.getPrefix() + "'" + input.toUpperCase().replace("-", "_") + "' isn't a valid material.");
 			return false;
 		}
 

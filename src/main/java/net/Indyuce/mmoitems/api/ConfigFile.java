@@ -59,4 +59,18 @@ public class ConfigFile {
 			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml");
 		}
 	}
+
+	public void registerItemEdition(Type type, String id) {
+
+		/*
+		 * uncaches the item so it can be generated to apply newest changes in
+		 * case the same inventory is opened again.
+		 */
+		MMOItems.plugin.getItems().uncache(type, id);
+
+		/*
+		 * finally saves the changes
+		 */
+		save();
+	}
 }

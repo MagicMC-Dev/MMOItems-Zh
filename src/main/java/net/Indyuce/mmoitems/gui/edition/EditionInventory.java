@@ -60,6 +60,10 @@ public abstract class EditionInventory extends PluginInventory {
 		cached = null;
 	}
 
+	public void registerItemEdition(ConfigFile config) {
+		registerItemEdition(config, true);
+	}
+
 	public void registerItemEdition(ConfigFile config, boolean uuid) {
 
 		/*
@@ -67,11 +71,7 @@ public abstract class EditionInventory extends PluginInventory {
 		 * cannot display on the edition GUI
 		 */
 		flushItem();
-		getItemType().registerItemEdition(config, uuid ? id : null);
-	}
-
-	public void registerItemEdition(ConfigFile config) {
-		registerItemEdition(config, true);
+		config.registerItemEdition(getItemType(), uuid ? id : null);
 	}
 
 	public void addEditionInventoryItems(Inventory inv, boolean backBool) {

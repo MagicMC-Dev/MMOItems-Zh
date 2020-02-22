@@ -67,7 +67,7 @@ public abstract class RecipeManager {
 	}
 
 	public NamespacedKey getRecipeKey(Type type, String id, String recipeType, String number) {
-		return new NamespacedKey(MMOItems.plugin, "mmoitems_" + recipeType + "_" + type.getId() + "_" + id + "_" + number);
+		return new NamespacedKey(MMOItems.plugin, recipeType + "_" + type.getId() + "_" + id + "_" + number);
 	}
 
 	public void reloadRecipes() {
@@ -76,7 +76,7 @@ public abstract class RecipeManager {
 			Iterator<Recipe> iterator = Bukkit.recipeIterator();
 			while (iterator.hasNext()) {
 				Recipe recipe = iterator.next();
-				if (recipe instanceof Keyed && ((Keyed) recipe).getKey().getKey().startsWith("mmoitems:"))
+				if (recipe instanceof Keyed && ((Keyed) recipe).getKey().getNamespace().equals("mmoitems"))
 					iterator.remove();
 			}
 

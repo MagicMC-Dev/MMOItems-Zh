@@ -430,13 +430,17 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (args[1].equalsIgnoreCase("recipes")) {
 					Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
 						MMOItems.plugin.getRecipes().reloadRecipes();
-						
-						if(MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
-							for(Player p : Bukkit.getOnlinePlayers())
-								p.discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
-						
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().getLoadedRecipes().size() + ChatColor.GRAY + " Recipes");
+
+						/*
+						 * discoverRecipes must be called on the main thread.
+						 */
+						Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
+							if (MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
+								Bukkit.getOnlinePlayers().forEach(online -> online.discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys()));
+
+							sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
+							sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().getLoadedRecipes().size() + ChatColor.GRAY + " Recipes");
+						});
 					});
 				}
 				return true;
@@ -483,7 +487,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			config.getConfig().set(id2, config.getConfig().getConfigurationSection(id1));
-			type.registerItemEdition(config, id2);
+			config.registerItemEdition(type, id2);
 			if (sender instanceof Player)
 				new ItemEdition((Player) sender, type, id2).open();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + id1 + " to " + id2 + "!");
@@ -664,7 +668,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 			config.getConfig().set(name + ".material", args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());
 
-			type.registerItemEdition(config, name);
+			config.registerItemEdition(type, name);
 			if (sender instanceof Player)
 				new ItemEdition((Player) sender, type, name).open();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully " + args[0].replace("d", "de") + "d " + name + "!");
@@ -786,7 +790,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			config.getConfig().set(id, null);
-			type.registerItemEdition(config, id);
+			config.registerItemEdition(type, id);
 
 			/*
 			 * remove the item updater data and uuid data from the plugin to

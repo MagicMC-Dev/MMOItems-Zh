@@ -19,8 +19,8 @@ import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class EditionInventory extends PluginInventory {
-	protected Type type;
-	protected String id;
+	protected final Type type;
+	protected final String id;
 
 	private int prevPage;
 	private ItemStack cached;
@@ -48,25 +48,30 @@ public abstract class EditionInventory extends PluginInventory {
 		return cached != null;
 	}
 
-	public void flushItem() {
-		cached = null;
-	}
-
-	public void registerItemEdition(ConfigFile config, boolean uuid) {
-		flushItem();
-		getItemType().registerItemEdition(config, uuid ? id : null);
-	}
-
-	public void registerItemEdition(ConfigFile config) {
-		registerItemEdition(config, true);
-	}
-
 	/*
 	 * the item is cached in the inventory class to allow GUIs not to generate
 	 * the item each time the user goes to another GUI or page
 	 */
 	public ItemStack getCachedItem() {
 		return cached != null ? cached : (cached = MMOItems.plugin.getItems().getItem(type, id));
+	}
+
+	public void flushItem() {
+		cached = null;
+	}
+
+	public void registerItemEdition(ConfigFile config, boolean uuid) {
+
+		/*
+		 * cached item needs to be flushed otherwise modifications applied
+		 * cannot display on the edition GUI
+		 */
+		flushItem();
+		getItemType().registerItemEdition(config, uuid ? id : null);
+	}
+
+	public void registerItemEdition(ConfigFile config) {
+		registerItemEdition(config, true);
 	}
 
 	public void addEditionInventoryItems(Inventory inv, boolean backBool) {
@@ -96,7 +101,7 @@ public abstract class EditionInventory extends PluginInventory {
 		prevPage = page;
 		open();
 	}
-	
+
 	public int getPreviousPage() {
 		return prevPage;
 	}

@@ -11,24 +11,19 @@ import net.mmogroup.mmolib.MMOLib;
 
 public class StatEdition implements Edition {
 
-	/* saves the data about the edited data so the plugin can edit the
+	/*
+	 * saves the data about the edited data so the plugin can edit the
 	 * corresponding stat. some stats have complex chat formats, so the object
 	 * array allow to save more complex edition info
 	 */
 	private final EditionInventory inv;
 	private final ItemStat stat;
 	private final Object[] info;
-	private final boolean goBack;
 
 	public StatEdition(EditionInventory inv, ItemStat stat, Object... info) {
-		this(inv, true, stat, info);
-	}
-
-	public StatEdition(EditionInventory inv, boolean goBack, ItemStat stat, Object... info) {
 		this.inv = inv;
 		this.stat = stat;
 		this.info = info;
-		this.goBack = goBack;
 	}
 
 	public ItemStat getStat() {
@@ -47,7 +42,8 @@ public class StatEdition implements Edition {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', line));
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
 
-		/* anvil text input feature. enables players to use an anvil to input
+		/*
+		 * anvil text input feature. enables players to use an anvil to input
 		 * text if they are having conflicts with their chat management plugins.
 		 */
 		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
@@ -55,7 +51,8 @@ public class StatEdition implements Edition {
 			return;
 		}
 
-		/* default chat edition feature
+		/*
+		 * default chat edition feature
 		 */
 		new ChatEdition(inv, this);
 		MMOLib.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
@@ -65,7 +62,9 @@ public class StatEdition implements Edition {
 	public boolean output(String input) {
 		return input.equals("cancel") || stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getItemType().getConfigFile(), input, info);
 	}
-	
-	public boolean shouldGoBack()
-	{ return goBack; }
+
+	@Override
+	public boolean shouldGoBack() {
+		return true;
+	}
 }

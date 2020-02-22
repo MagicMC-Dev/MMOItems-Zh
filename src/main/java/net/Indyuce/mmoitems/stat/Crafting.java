@@ -69,7 +69,7 @@ public class Crafting extends ItemStat {
 				Bukkit.getScheduler().runTask(MMOItems.plugin, new Runnable() {
 					@Override
 					public void run() {
-						new StatEdition(inv, false, ItemStat.CRAFTING, "time", info[1], message).enable("Write in the chat the cooktime (in ticks) for your recipe.", "Format: '[INTEGER]'");
+						new StatEdition(inv, ItemStat.CRAFTING, "time", info[1], message).enable("Write in the chat the cooktime (in ticks) for your recipe.", "Format: '[INTEGER]'");
 					}
 				});
 			}

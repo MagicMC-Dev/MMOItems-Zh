@@ -20,6 +20,10 @@ BUTCHER_AXE:
   - Uncolored
   crafting:
     shaped:
+      '2':
+      - AIR IRON_BLOCK IRON_BLOCK
+      - AIR STICK IRON_BLOCK
+      - AIR STICK AIR
       '1':
       - IRON_BLOCK IRON_BLOCK AIR
       - IRON_BLOCK STICK AIR
@@ -74,6 +78,10 @@ SILVER_AXE:
   - '&7and knocking back nearby targets.'
   crafting:
     shaped:
+      '2':
+      - AIR MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT
+      - AIR STICK MATERIAL.SILVER_INGOT
+      - AIR STICK AIR
       '1':
       - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
       - MATERIAL.SILVER_INGOT STICK AIR

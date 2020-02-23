@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,16 +23,10 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 
 public class CraftingEdition extends EditionInventory {
-	public static Map<Integer, String> correspondingSlot = new HashMap<>();
-
 	private static final int[] slots = { 21, 22, 23, 30, 31, 32 };
 
 	public CraftingEdition(Player player, Type type, String id) {
 		super(player, type, id);
-
-		if (correspondingSlot.isEmpty())
-			for (CraftingType ctype : CraftingType.values())
-				correspondingSlot.put(ctype.getSlot(), ctype.name().toLowerCase());
 	}
 
 	@Override
@@ -79,37 +71,28 @@ public class CraftingEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isPluginItem(item, false))
 			return;
 
-		if (correspondingSlot.containsKey(event.getSlot())) {
-			if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				if (event.getSlot() == 21 || event.getSlot() == 22)
-					new RecipeEdition(player, type, id, event.getSlot() == 22).open(getPreviousPage());
-				else
-					new StatEdition(this, ItemStat.CRAFTING, "item", getTypeFromSlot(event.getSlot()).name().toLowerCase()).enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
-			}
+		CraftingType corresponding = CraftingType.getBySlot(event.getSlot());
+		if (corresponding == null)
+			return;
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = type.getConfigFile();
-				String ctype = correspondingSlot.get(event.getSlot());
-				if (!config.getConfig().contains(id + ".crafting." + ctype))
-					return;
-
-				config.getConfig().set(id + ".crafting." + ctype, null);
-
-				if (config.getConfig().getConfigurationSection(id + ".crafting") == null)
-					config.getConfig().set(id + ".crafting", null);
-
-				registerItemEdition(config);
-			}
+		if (event.getAction() == InventoryAction.PICKUP_ALL) {
+			if (event.getSlot() == 21 || event.getSlot() == 22)
+				new RecipeEdition(player, type, id, event.getSlot() == 22).open(getPreviousPage());
+			else
+				new StatEdition(this, ItemStat.CRAFTING, "item", corresponding.name().toLowerCase()).enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 		}
-	}
 
-	private CraftingType getTypeFromSlot(int slot) {
-		if (slot == 23)
-			return CraftingType.FURNACE;
-		if (slot == 30)
-			return CraftingType.BLAST;
-		if (slot == 31)
-			return CraftingType.SMOKER;
-		return CraftingType.CAMPFIRE;
+		if (event.getAction() == InventoryAction.PICKUP_HALF) {
+			ConfigFile config = type.getConfigFile();
+			if (!config.getConfig().contains(id + ".crafting." + corresponding.name().toLowerCase()))
+				return;
+
+			config.getConfig().set(id + ".crafting." + corresponding.name().toLowerCase(), null);
+
+			if (config.getConfig().getConfigurationSection(id + ".crafting") == null)
+				config.getConfig().set(id + ".crafting", null);
+
+			registerItemEdition(config);
+		}
 	}
 }

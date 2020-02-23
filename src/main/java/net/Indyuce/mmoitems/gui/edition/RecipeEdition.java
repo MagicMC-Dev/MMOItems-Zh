@@ -13,7 +13,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -113,16 +112,15 @@ public class RecipeEdition extends EditionInventory {
 
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
-		ItemStack item = event.getCurrentItem();
 
 		event.setCancelled(true);
-		if (!MMOUtils.isPluginItem(item, false) || event.getInventory() != event.getClickedInventory())
+		if (event.getInventory() != event.getClickedInventory())
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
-			if (slotToInt(event.getRawSlot()) > -1) {
+			if (slotToInt(event.getRawSlot()) >= 0)
 				new StatEdition(this, ItemStat.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot())).enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
-			}
+
 		} else if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (shapeless)
 				deleteShapeless(slotToInt(event.getRawSlot()));

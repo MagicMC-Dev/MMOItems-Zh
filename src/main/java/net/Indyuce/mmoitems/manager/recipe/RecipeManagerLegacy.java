@@ -93,7 +93,7 @@ public class RecipeManagerLegacy extends RecipeManager {
 		if (rc.isAir())
 			recipe.setIngredient(c, Material.AIR);
 		else
-			recipe.setIngredient(c, rc.getMaterial());
+			recipe.setIngredient(c, rc.generateStack().getType());
 	}
 
 	@Override

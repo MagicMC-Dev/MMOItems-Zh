@@ -50,4 +50,11 @@ public enum CraftingType {
 	public boolean shouldAdd() {
 		return MMOLib.plugin.getVersion().isStrictlyHigher(1, 14) || old;
 	}
+
+	public static CraftingType getBySlot(int slot) {
+		for (CraftingType type : values())
+			if (type.getSlot() == slot)
+				return type;
+		return null;
+	}
 }

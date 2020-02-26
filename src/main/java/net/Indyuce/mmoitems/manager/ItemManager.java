@@ -71,6 +71,11 @@ public class ItemManager extends BukkitRunnable {
 		return item == null ? null : item.newBuilder().build();
 	}
 
+	public boolean exists(Type type, String id) {
+		if(type == null) return false;
+		return type.getConfigFile().getConfig().contains(id.replace("-", "_").toUpperCase());
+	}
+	
 	/*
 	 * every two minutes, loops through any loaded item and uncaches any if they
 	 * have not been generated for more than 5 minutes.

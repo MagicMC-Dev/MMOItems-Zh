@@ -25,9 +25,9 @@ public class MMOItemTrigger extends Trigger {
 		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type " + format);
 		type = MMOItems.plugin.getTypes().get(format);
 
-		id = config.getString("id");
+		id = config.getString("id").replace("-", "_").toUpperCase();
 		amount = config.args().length > 0 ? Math.max(1, Integer.parseInt(config.args()[0])) : 1;
-		Validate.isTrue(MMOItems.plugin.getItems().getItem(type, id) != null, "Could not find item id " + id);
+		Validate.isTrue(MMOItems.plugin.getItems().exists(type, id), "Could not find item id " + id);
 	}
 
 	@Override

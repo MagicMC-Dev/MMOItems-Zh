@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
@@ -76,30 +74,30 @@ public class Crafting extends ItemStat {
 				}
 			}
 		} else if (type.equals("item")) {
-			if (validate(inv.getPlayer(), message))
-				Bukkit.getScheduler().runTask(MMOItems.plugin, () -> new StatEdition(inv, ItemStat.CRAFTING, "time", info[1], message).enable("Write in the chat the cooktime (in ticks) for your recipe.", "Format: '[INTEGER]'"));
-
-		} else if (type.equals("time")) {
+			String[] args = message.split("\\ ");
+			if (args.length != 3) {
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
+				return false;
+			}
+			
+			if (!validate(inv.getPlayer(), args[0])) return false;
 			int time;
 			try {
-				time = Integer.parseInt(message);
+				time = Integer.parseInt(args[1]);
 			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[1] + " is not a valid number.");
 				return false;
 			}
-			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> new StatEdition(inv, ItemStat.CRAFTING, "exp", info[1], time, info[2]).enable("Write in the chat the experience given for your recipe.", "Format: '[FLOAT]'"));
-
-		} else if (type.equals("exp")) {
 			double exp;
 			try {
-				exp = Double.parseDouble(message);
+				exp = Double.parseDouble(args[2]);
 			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + args[2] + " is not a valid number.");
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.item", info[3]);
-			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.time", (int) info[2]);
+			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.item", args[0]);
+			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.time", time);
 			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.experience", exp);
 			inv.registerItemEdition(config);
 		} else

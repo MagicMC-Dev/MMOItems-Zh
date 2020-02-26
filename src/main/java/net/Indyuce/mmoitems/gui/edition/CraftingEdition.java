@@ -79,7 +79,7 @@ public class CraftingEdition extends EditionInventory {
 			if (event.getSlot() == 21 || event.getSlot() == 22)
 				new RecipeEdition(player, type, id, event.getSlot() == 22).open(getPreviousPage());
 			else
-				new StatEdition(this, ItemStat.CRAFTING, "item", corresponding.name().toLowerCase()).enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
+				new StatEdition(this, ItemStat.CRAFTING, "item", corresponding.name().toLowerCase()).enable("Write in the chat the item, tickspeed and exp you want.", "Format: '[ITEM] [TICKS] [EXP]'", "[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {

@@ -154,6 +154,7 @@ public abstract class ItemStat {
 	public static final ItemStat ELEMENTS = new Elements();
 	public static final ItemStat COMMANDS = new Commands(), STAFF_SPIRIT = new Staff_Spirit(), LUTE_ATTACK_SOUND = new Lute_Attack_Sound(), LUTE_ATTACK_EFFECT = new Lute_Attack_Effect();
 	public static final ItemStat NOTE_WEIGHT = new DoubleStat(new ItemStack(VersionMaterial.MUSIC_DISC_MALL.toMaterial()), "Note Weight", new String[] { "Defines how the projectile cast", "by your lute tilts downwards." }, "note-weight", new String[] { "lute" });
+	public static final ItemStat REMOVE_ON_CRAFT = new BooleanStat(new ItemStack(Material.GLASS_BOTTLE), "Remove on Craft", new String[] { "If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket." }, "remove-on-craft", new String[] { "all" },  Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET);
 	public static final ItemStat GEM_SOCKETS = new Gem_Sockets();
 	public static final ItemStat REPAIR = new DoubleStat(new ItemStack(Material.ANVIL), "Repair", new String[] { "The amount of durability your item", "can repair when set an item." }, "repair", new String[] { "consumable" });
 	public static final ItemStat REPAIR_MATERIAL = new Repair_Material();

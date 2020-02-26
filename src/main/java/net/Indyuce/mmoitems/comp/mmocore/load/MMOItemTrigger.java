@@ -27,11 +27,13 @@ public class MMOItemTrigger extends Trigger {
 
 		id = config.getString("id");
 		amount = config.args().length > 0 ? Math.max(1, Integer.parseInt(config.args()[0])) : 1;
+		Validate.isTrue(MMOItems.plugin.getItems().getItem(type, id) != null, "Could not find item id " + id);
 	}
 
 	@Override
 	public void apply(PlayerData player) {
 		ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
+		if(item == null) { MMOItems.plugin.getLogger().warning("[MMOCore Quest Trigger] Couldn't load MMOItem"); return; }
 		item.setAmount(amount);
 		if (item != null && item.getType() != Material.AIR)
 			new SmartGive(player.getPlayer()).give(item);

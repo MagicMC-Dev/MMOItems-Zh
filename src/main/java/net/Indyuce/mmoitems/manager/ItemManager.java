@@ -4,45 +4,30 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
-public class ItemManager extends BukkitRunnable {
+public class ItemManager {
 	private final Map<Type, Map<String, LoadedItem>> map = new HashMap<>();
-	private final boolean cache;
+	private final boolean useCache;
 
-	public ItemManager(boolean cache) {
-		if (this.cache = cache)
-			runTaskTimerAsynchronously(MMOItems.plugin, 60 * 20, 2 * 60 * 20);
+	public ItemManager(boolean useCache) {
+		if (this.useCache = useCache)
+		Bukkit.getScheduler().runTaskTimerAsynchronously(MMOItems.plugin, () -> clearCache(), 60 * 20, 2 * 60 * 20);
 	}
 
-	public void uncache(Type type, String id) {
-		if (map.containsKey(type))
-			map.get(type).remove(id);
-	}
-
-	public void cache(MMOItem item) {
-		if (!map.containsKey(item.getType()))
-			map.put(item.getType(), new HashMap<>());
-		map.get(item.getType()).put(item.getId(), new LoadedItem(item));
-	}
-
-	public LoadedItem getCachedMMOItem(Type type, String id) {
-		Map<String, LoadedItem> map;
-		return this.map.containsKey(type) ? (map = this.map.get(type)).containsKey(id) ? map.get(id) : null : null;
-	}
 
 	public MMOItem getMMOItem(Type type, String id) {
 		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
 
-		if (cache) {
+		if (useCache) {
 			LoadedItem cached = getCachedMMOItem(type, id);
 			if (cached != null) {
 				cached.refresh();
@@ -61,8 +46,9 @@ public class ItemManager extends BukkitRunnable {
 			if (section.contains(stat.getPath()) && !stat.whenLoaded(mmoitem, section))
 				return null;
 
-		if (cache)
+		if (useCache)
 			cache(mmoitem);
+
 		return mmoitem;
 	}
 
@@ -71,17 +57,27 @@ public class ItemManager extends BukkitRunnable {
 		return item == null ? null : item.newBuilder().build();
 	}
 
-	public boolean exists(Type type, String id) {
-		if(type == null) return false;
-		return type.getConfigFile().getConfig().contains(id.replace("-", "_").toUpperCase());
+	public LoadedItem getCachedMMOItem(Type type, String id) {
+		Map<String, LoadedItem> map;
+		return this.map.containsKey(type) ? (map = this.map.get(type)).containsKey(id) ? map.get(id) : null : null;
 	}
-	
+
+	public void uncache(Type type, String id) {
+		if (map.containsKey(type))
+			map.get(type).remove(id);
+	}
+
+	private void cache(MMOItem item) {
+		if (!map.containsKey(item.getType()))
+			map.put(item.getType(), new HashMap<>());
+		map.get(item.getType()).put(item.getId(), new LoadedItem(item));
+	}
+
 	/*
 	 * every two minutes, loops through any loaded item and uncaches any if they
 	 * have not been generated for more than 5 minutes.
 	 */
-	@Override
-	public void run() {
+	private void clearCache() {
 		for (Type type : map.keySet()) {
 			Map<String, LoadedItem> map = this.map.get(type);
 			for (String id : new HashSet<>(map.keySet())) {
@@ -94,7 +90,7 @@ public class ItemManager extends BukkitRunnable {
 
 	public class LoadedItem {
 		private final MMOItem item;
-		
+
 		private long loaded = System.currentTimeMillis();
 
 		public LoadedItem(MMOItem item) {

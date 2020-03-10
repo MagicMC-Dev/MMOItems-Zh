@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import me.baks.rpl.PlayerList;
 import me.baks.rpl.api.API;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -21,20 +20,16 @@ public class RPGPlayerLevelingHook implements RPGHandler {
 	 */
 
 	public class RPGPlayerLevelingPlayer extends RPGPlayer {
-		private final PlayerList info;
-
 		/*
 		 * API not adapted to RPGPlayer
 		 */
 		public RPGPlayerLevelingPlayer(PlayerData playerData) {
 			super(playerData);
-
-			info = PlayerList.getByName(playerData.getPlayer().getName());
 		}
 
 		@Override
 		public int getLevel() {
-			return info.getPlayerLevel();
+			return new API().getPlayerLevel(getPlayer());
 		}
 
 		@Override

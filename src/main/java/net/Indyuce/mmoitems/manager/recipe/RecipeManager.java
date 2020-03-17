@@ -29,7 +29,8 @@ public abstract class RecipeManager {
 	private final Set<LoadedRecipe> loadedRecipes = new HashSet<>();
 
 	public RecipeManager() {
-		load();
+		if (!MMOItems.plugin.getConfig().getBoolean("disable-craftings"))
+			load();
 	}
 
 	public abstract void load();

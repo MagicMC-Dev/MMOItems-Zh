@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat.StringData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOItemBuilder {
@@ -29,7 +30,7 @@ public class MMOItemBuilder {
 	private MMOItemLore lore = new MMOItemLore();
 	private List<ItemTag> tags = new ArrayList<>();
 
-	private static final AttributeModifier mod = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "generic.attackSpeed", 0, Operation.ADD_NUMBER);
+	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "generic.attackSpeed", 0, Operation.ADD_NUMBER);
 
 	public MMOItemBuilder(MMOItem item) {
 		mmoitem = item;
@@ -49,7 +50,7 @@ public class MMOItemBuilder {
 	public MMOItem getMMOItem() {
 		return mmoitem;
 	}
-	
+
 	public ItemStack getItemStack() {
 		return item;
 	}
@@ -90,16 +91,20 @@ public class MMOItemBuilder {
 		 * holder. since 4.7 attributes are handled via custom calculations
 		 */
 		try {
-			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, mod);
-		} catch (NoSuchMethodError exception) {
+			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
+			item.setItemMeta(meta);
+			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags).toItem();
+
 			/*
-			 * on legacy spigot, it is not required to override the attribute
-			 * list so it works just fine.
+			 * on legacy spigot, it is not required to add a fake modifier to
+			 * the modifier list, so just override the string tag and it works
+			 * fine.
 			 */
+		} catch (NoSuchMethodError exception) {
+			item.setItemMeta(meta);
+			@SuppressWarnings("deprecation")
+			NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item).cancelVanillaAttributeModifiers();
+			return nbt.addTag(tags).toItem();
 		}
-
-		item.setItemMeta(meta);
-
-		return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags).toItem();
 	}
 }

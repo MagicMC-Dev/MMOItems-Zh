@@ -42,7 +42,7 @@ public class ThunderSpirit implements StaffAttackHandler {
 						loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 						for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
 							if (MMOUtils.canDamage(stats.getPlayer(), target) && target.getLocation().distanceSquared(loc) <= 9)
-								new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+								new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
 						cancel();
 					}
 				}

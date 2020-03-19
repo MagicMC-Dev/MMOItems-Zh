@@ -33,7 +33,7 @@ public class MMOCoreMMOLoader implements MMOLoader {
 		/*
 		 * register extra conditions for MMOItems crafting.
 		 */
-		MMOItems.plugin.getCrafting().registerCondition("profession", config -> new ProfessionCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.check + " Requires #level# in #profession#"));
+		MMOItems.plugin.getCrafting().registerCondition("profession", config -> new ProfessionCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.cross + " Requires #level# in #profession#"));
 		MMOItems.plugin.getCrafting().registerTrigger("exp", config -> new ExperienceCraftingTrigger(config));
 	}
 

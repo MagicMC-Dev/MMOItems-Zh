@@ -7,7 +7,6 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -123,7 +122,7 @@ public class DurabilityItem {
 		damage = Math.max(ratio < 1 ? 1 : 0, damage);
 
 		ItemMeta meta = item.getItemMeta();
-		((Damageable) meta).setDamage(damage);
+		MMOLib.plugin.getVersion().getWrapper().applyDurability(item, meta, damage);
 		item.setItemMeta(meta);
 
 		return item;

@@ -83,5 +83,9 @@ public abstract class Ingredient {
 		public PlayerIngredient getPlayerIngredient() {
 			return found;
 		}
+
+		public String format() {
+			return inventory.formatLoreDisplay(isHad() ? inventory.getDisplay().getPositive() : inventory.getDisplay().getNegative());
+		}
 	}
 }

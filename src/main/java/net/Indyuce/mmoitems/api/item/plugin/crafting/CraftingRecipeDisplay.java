@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.api.item.plugin.crafting;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
@@ -51,8 +51,10 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 		public ItemStack build() {
 			Map<String, String> replace = new HashMap<>();
+			int conditionsIndex = -1;
 
-			for (Iterator<String> iterator = lore.iterator(); iterator.hasNext();) {
+			for (ListIterator<String> iterator = lore.listIterator(); iterator.hasNext();) {
+				int index = iterator.nextIndex();
 				String str = iterator.next();
 
 				/*
@@ -67,29 +69,12 @@ public class CraftingRecipeDisplay extends ConfigItem {
 					replace.put(str, str.replace("{crafting_time}", "").replace("#crafting-time#", craftingTimeFormat.format(craftingRecipe.getCraftingTime())));
 				}
 
-				if (str.equals("{conditions}")) {
-					if (recipe.getConditions().size() == 0) {
+				if (str.startsWith("{conditions}")) {
+					conditionsIndex = index;
+					if (recipe.getConditions().size() == 0)
 						iterator.remove();
-						continue;
-					}
-
-					replace.put(str, str.replace("{conditions}", ""));
-				}
-
-				/*
-				 * load conditions
-				 */
-				if (str.startsWith("#condition_")) {
-					String format = str.substring("#condition_".length(), str.length() - 1);
-					CheckedCondition info = recipe.getCondition(format);
-					if (info == null) {
-						iterator.remove();
-						continue;
-					}
-
-					ConditionalDisplay display = info.getCondition().getDisplay();
-					if (display != null)
-						replace.put(str, info.getCondition().formatDisplay(info.isMet() ? display.getPositive() : display.getNegative()));
+					else
+						replace.put(str, str.replace("{conditions}", ""));
 				}
 			}
 
@@ -102,7 +87,16 @@ public class CraftingRecipeDisplay extends ConfigItem {
 			 */
 			int index = lore.indexOf("#ingredients#");
 			lore.remove(index);
-			recipe.getIngredients().forEach(info -> lore.add(index, info.getIngredient().formatLoreDisplay(info.isHad() ? info.getIngredient().getDisplay().getPositive() : info.getIngredient().getDisplay().getNegative())));
+			recipe.getIngredients().forEach(info -> lore.add(index, info.format()));
+
+			if (conditionsIndex >= 0)
+				for (CheckedCondition condition : recipe.getConditions()) {
+					ConditionalDisplay display = condition.getCondition().getDisplay();
+					if (display != null)
+						// ++ allows to sort displays in the same order as in
+						// the config
+						lore.add(conditionsIndex++, condition.format());
+				}
 
 			/*
 			 * apply color to lore

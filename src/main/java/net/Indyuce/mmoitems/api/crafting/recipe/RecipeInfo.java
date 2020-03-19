@@ -68,12 +68,12 @@ public class RecipeInfo {
 		return recipe.display(this);
 	}
 
-	public CheckedCondition getCondition(String format) {
-		for (CheckedCondition condition : conditions)
-			if (condition.getCondition().getId().equals(format))
-				return condition;
-		return null;
-	}
+//	public CheckedCondition getCondition(String format) {
+//		for (CheckedCondition condition : conditions)
+//			if (condition.getCondition().getId().equals(format))
+//				return condition;
+//		return null;
+//	}
 
 	public Set<CheckedCondition> getConditions() {
 		return conditions;

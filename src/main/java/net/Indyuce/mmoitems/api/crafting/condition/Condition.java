@@ -49,5 +49,9 @@ public abstract class Condition {
 		public Condition getCondition() {
 			return condition;
 		}
+		
+		public String format() {
+			return condition.formatDisplay(isMet() ? condition.getDisplay().getPositive() : condition.getDisplay().getNegative());
+		}
 	}
 }

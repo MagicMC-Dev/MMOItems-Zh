@@ -39,7 +39,6 @@ public class ConfigManager {
 
 	// cached config options
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled;
-	public List<String> worldGenWhitelist;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 
@@ -184,7 +183,6 @@ public class ConfigManager {
 		 */
 		replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
 		worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
-		worldGenWhitelist = MMOItems.plugin.getConfig().getStringList("custom-blocks.gen-whitelist");
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
 		healIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
 		damageIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));

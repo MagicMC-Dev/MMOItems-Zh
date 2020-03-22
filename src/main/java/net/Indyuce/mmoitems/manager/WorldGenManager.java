@@ -37,7 +37,6 @@ public class WorldGenManager implements Listener {
 	
 	@EventHandler
 	public void a(ChunkLoadEvent event) {
-		if(!MMOItems.plugin.getLanguage().worldGenWhitelist.contains(event.getWorld().getName())) return;
 		if(!event.isNewChunk()) return;
 		
 		for(int blocks : assigned.keySet()) {

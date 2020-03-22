@@ -105,11 +105,6 @@ custom-blocks:
     # generate in the world according to
     # their generation template.
     enable-world-gen: false
-    #List of worlds that has custom block world regen enabled
-    gen-whitelist:
-        - world
-        - world_the_end
-        - world_resource
     # Whether or not to remove mushroom block drops
     # from the droplist when mining a mushroom block
     # with silk-touch.

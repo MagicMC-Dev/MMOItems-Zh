@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
@@ -88,6 +89,7 @@ public class CraftingEdition extends EditionInventory {
 				return;
 
 			config.getConfig().set(id + ".crafting." + corresponding.name().toLowerCase(), null);
+			player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + corresponding.getName() + " recipe.");
 
 			if (config.getConfig().getConfigurationSection(id + ".crafting") == null)
 				config.getConfig().set(id + ".crafting", null);

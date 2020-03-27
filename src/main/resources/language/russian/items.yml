@@ -30,7 +30,7 @@ CRAFTING_RECIPE_DISPLAY:
   name: '&a&lСоздание&f #name#'
   lore:
   - '{conditions}'
-  - '#condition_level#'
+  - '{conditions}&8Conditions:'
   - '{crafting_time}'
   - '{crafting_time}&7Время Создания: &c#crafting-time#&7s'
   - ''
@@ -42,7 +42,7 @@ UPGRADING_RECIPE_DISPLAY:
   name: '&e&lУлучшение&f #name#'
   lore:
   - '{conditions}'
-  - '#condition_level#'
+  - '{conditions}&8Conditions:'
   - ''
   - '&8Ингредиенты:'
   - '#ingredients#'

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.crafting.recipe;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -68,15 +69,12 @@ public class RecipeInfo {
 		return recipe.display(this);
 	}
 
-//	public CheckedCondition getCondition(String format) {
-//		for (CheckedCondition condition : conditions)
-//			if (condition.getCondition().getId().equals(format))
-//				return condition;
-//		return null;
-//	}
-
 	public Set<CheckedCondition> getConditions() {
 		return conditions;
+	}
+
+	public Set<CheckedCondition> getDisplayableConditions() {
+		return conditions.stream().filter(condition -> condition.getCondition().getDisplay() != null).collect(Collectors.toSet());
 	}
 
 	public Set<CheckedIngredient> getIngredients() {

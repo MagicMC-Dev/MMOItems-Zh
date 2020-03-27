@@ -27,7 +27,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
 
 	public CraftingRecipeDisplay() {
-		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "#condition_class#", "#condition_level#", "#condition_profession#", "#condition_mana#", "#condition_stamina#", "#condition_food#", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
+		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "{conditions}&8Conditions:", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(RecipeInfo recipe) {
@@ -51,6 +51,12 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 		public ItemStack build() {
 			Map<String, String> replace = new HashMap<>();
+
+			/*
+			 * used to calculate the last index for conditions. if there are no
+			 * conditions, just clean up all {conditions}, otherwise replace all
+			 * {conditions} and display conditions at the last index
+			 */
 			int conditionsIndex = -1;
 
 			for (ListIterator<String> iterator = lore.listIterator(); iterator.hasNext();) {
@@ -70,7 +76,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				}
 
 				if (str.startsWith("{conditions}")) {
-					conditionsIndex = index;
+					conditionsIndex = index + 1;
 					if (recipe.getConditions().size() == 0)
 						iterator.remove();
 					else

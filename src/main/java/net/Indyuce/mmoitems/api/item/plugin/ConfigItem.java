@@ -21,6 +21,7 @@ public class ConfigItem {
 	private final String id;
 	private final Material material;
 
+	// updated when the plugin reloads
 	private String name;
 	private List<String> lore;
 
@@ -28,21 +29,17 @@ public class ConfigItem {
 	private ItemStack item;
 
 	public static final ConfigItem CONFIRM = new ConfigItem("CONFIRM", VersionMaterial.GREEN_STAINED_GLASS_PANE.toMaterial(), "&aConfirm");
-	public static final ConfigItem NO_ITEM = new ConfigItem("NO_ITEM", VersionMaterial.GRAY_STAINED_GLASS_PANE.toMaterial(), "&c- No Item -");
-	public static final ConfigItem NO_TYPE = new ConfigItem("NO_TYPE", VersionMaterial.GRAY_STAINED_GLASS_PANE.toMaterial(), "&c- No Type -");
 	public static final ConfigItem FILL = new ConfigItem("FILL", VersionMaterial.GRAY_STAINED_GLASS_PANE.toMaterial(), "&8");
-	public static final ConfigItem TYPE_DISPLAY = new ConfigItem("TYPE_DISPLAY", Material.BARRIER, "&a#type# &8(Click to browse)", "&7There are &6#recipes#&7 available recipes.");
 	public static final CustomSkull PREVIOUS_PAGE = new CustomSkull("PREVIOUS_PAGE", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==", "&aPrevious Page");
 	public static final CustomSkull NEXT_PAGE = new CustomSkull("NEXT_PAGE", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19", "&aNext Page");
 	public static final CustomSkull PREVIOUS_IN_QUEUE = new CustomSkull("PREVIOUS_IN_QUEUE", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==", "&aPrevious");
 	public static final CustomSkull NEXT_IN_QUEUE = new CustomSkull("NEXT_IN_QUEUE", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19", "&aNext");
 	public static final CustomSkull BACK = new CustomSkull("BACK", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==", "&aBack");
-	public static final CustomSkull RECIPE_LIST = new CustomSkull("RECIPE_LIST", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjMzNTk4NDM3ZTMxMzMyOWViMTQxYTEzZTkyZDliMDM0OWFhYmU1YzY0ODJhNWRkZTdiNzM3NTM2MzRhYmEifX19==", "&aAdvanced Recipes");
 	public static final CraftingRecipeDisplay CRAFTING_RECIPE_DISPLAY = new CraftingRecipeDisplay();
 	public static final UpgradingRecipeDisplay UPGRADING_RECIPE_DISPLAY = new UpgradingRecipeDisplay();
 	public static final QueueItemDisplay QUEUE_ITEM_DISPLAY = new QueueItemDisplay();
 
-	public static final ConfigItem[] values = { CONFIRM, FILL, NO_ITEM, NO_TYPE, TYPE_DISPLAY, PREVIOUS_PAGE, NEXT_PAGE, PREVIOUS_IN_QUEUE, NEXT_IN_QUEUE, BACK, RECIPE_LIST, CRAFTING_RECIPE_DISPLAY, UPGRADING_RECIPE_DISPLAY, QUEUE_ITEM_DISPLAY };
+	public static final ConfigItem[] values = { CONFIRM, FILL, PREVIOUS_PAGE, NEXT_PAGE, PREVIOUS_IN_QUEUE, NEXT_IN_QUEUE, BACK, CRAFTING_RECIPE_DISPLAY, UPGRADING_RECIPE_DISPLAY, QUEUE_ITEM_DISPLAY };
 
 	public ConfigItem(String id, Material material) {
 		this(id, material, null);
@@ -95,7 +92,7 @@ public class ConfigItem {
 		setItem(new ItemStack(material));
 		if (!item.hasItemMeta())
 			return;
-		
+
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
 		meta.addItemFlags(ItemFlag.values());

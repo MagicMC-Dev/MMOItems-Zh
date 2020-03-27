@@ -18,9 +18,9 @@ import org.bukkit.metadata.MetadataValue;
 import net.Indyuce.mmoitems.MMOItems;
 
 public abstract class HologramSupport {
-	protected static final Random random = new Random();
+	private static final Random random = new Random();
 
-	protected HologramSupport() {
+	public HologramSupport() {
 
 		if (MMOItems.plugin.getConfig().getBoolean("game-indicators.damage.enabled"))
 			Bukkit.getPluginManager().registerEvents(new Listener() {

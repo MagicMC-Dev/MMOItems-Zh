@@ -27,19 +27,5 @@ public class HologramsPlugin extends HologramSupport {
 		hologramManager.addActiveHologram(hologram);
 		hologram.addLine(new TextLine(hologram, message));
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> hologramManager.deleteHologram(hologram), 20);
-
-//		new BukkitRunnable() {
-//			int j = 0;
-//
-//			public void run() {
-//				j++;
-//				if (j > 20) {
-//					hologramManager.deleteHologram(hologram);
-//					cancel();
-//					return;
-//				}
-//				hologram.teleport(hologram.getLocation().add(0, -.015, 0));
-//			}
-//		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 }

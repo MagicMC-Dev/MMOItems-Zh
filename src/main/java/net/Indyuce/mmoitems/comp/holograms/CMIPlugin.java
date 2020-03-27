@@ -3,9 +3,9 @@ package net.Indyuce.mmoitems.comp.holograms;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Modules.Holograms.CMIHologram;
@@ -26,10 +26,6 @@ public class CMIPlugin extends HologramSupport {
 		CMI.getInstance().getHologramManager().addHologram(hologram);
 		hologram.update();
 
-		new BukkitRunnable() {
-			public void run() {
-				CMI.getInstance().getHologramManager().removeHolo(hologram);
-			}
-		}.runTaskLater(MMOItems.plugin, 20);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> CMI.getInstance().getHologramManager().removeHolo(hologram), 20);
 	}
 }

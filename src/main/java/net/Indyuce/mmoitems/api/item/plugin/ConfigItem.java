@@ -90,7 +90,7 @@ public class ConfigItem {
 
 	public void updateItem() {
 		setItem(new ItemStack(material));
-		if (!item.hasItemMeta())
+		if (material == Material.AIR)
 			return;
 
 		ItemMeta meta = item.getItemMeta();

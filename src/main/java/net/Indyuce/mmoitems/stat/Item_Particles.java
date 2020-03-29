@@ -41,9 +41,7 @@ public class Item_Particles extends ItemStat {
 
 	@Override
 	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		ParticleData data = new ParticleData(item, config.getConfigurationSection("item-particles"));
-		if (data.isValid())
-			item.setData(ItemStat.ITEM_PARTICLES, data);
+		item.setData(ItemStat.ITEM_PARTICLES, new ParticleData(item, config.getConfigurationSection("item-particles")));
 	}
 
 	@Override

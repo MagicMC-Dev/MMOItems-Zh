@@ -5,21 +5,18 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 
 import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.item.MMOItem;
 
 public class AbilityData extends StatData {
-	private Ability ability;
-	private CastingMode castMode;
-	private Map<String, Double> modifiers = new HashMap<>();
-
-	public AbilityData() {
-	}
+	private final Ability ability;
+	private final CastingMode castMode;
+	private final Map<String, Double> modifiers = new HashMap<>();
 
 	public AbilityData(JsonObject object) {
 		ability = MMOItems.plugin.getAbilities().getAbility(object.get("Id").getAsString());
@@ -29,42 +26,26 @@ public class AbilityData extends StatData {
 		modifiers.entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
 	}
 
-	public AbilityData(MMOItem mmoitem, ConfigurationSection config) {
-		setMMOItem(mmoitem);
-
-		if (!config.contains("type") || !config.contains("mode")) {
-			throwError("Ability is missing type or mode.");
-			return;
-		}
+	public AbilityData(ConfigurationSection config) {
+		Validate.isTrue(config.contains("type") && config.contains("mode"), "Ability is missing type or mode");
 
 		String abilityFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		if (!MMOItems.plugin.getAbilities().hasAbility(abilityFormat)) {
-			throwError(abilityFormat + " is not a valid ability ID.");
-			return;
-		}
-
+		Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
 		ability = MMOItems.plugin.getAbilities().getAbility(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
-		try {
-			castMode = CastingMode.valueOf(modeFormat);
-		} catch (Exception e) {
-			throwError(modeFormat + " is not a valid casting mode.");
-			return;
-		}
+		castMode = CastingMode.valueOf(modeFormat);
 
-		if (!ability.isAllowedMode(castMode)) {
-			throwError(ability.getID() + " does not support " + castMode.name() + ".");
-			return;
-		}
+		Validate.isTrue(ability.isAllowedMode(castMode), "Ability " + ability.getID() + " does not support cast mode " + castMode.name());
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
 				modifiers.put(key, config.getDouble(key));
 	}
 
-	public AbilityData(Ability ability) {
+	public AbilityData(Ability ability, CastingMode castMode) {
 		this.ability = ability;
+		this.castMode = castMode;
 	}
 
 	public Ability getAbility() {
@@ -77,10 +58,6 @@ public class AbilityData extends StatData {
 
 	public Set<String> getModifiers() {
 		return modifiers.keySet();
-	}
-
-	public void setCastingMode(CastingMode castMode) {
-		this.castMode = castMode;
 	}
 
 	public void setModifier(String path, double value) {

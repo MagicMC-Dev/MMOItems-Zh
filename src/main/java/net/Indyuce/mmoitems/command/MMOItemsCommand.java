@@ -833,7 +833,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			// modifiers
-			AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key));
+			AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key), null);
 			for (int j = 3; j < args.length - 1; j += 2) {
 				String name = args[j];
 				String value = args[j + 1];

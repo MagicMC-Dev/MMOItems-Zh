@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -20,14 +21,11 @@ import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.mmogroup.mmolib.MMOLib;
 
 public class ParticleData extends StatData {
-	private ParticleType type;
-	private Particle particle;
-	private Map<String, Double> modifiers = new HashMap<>();
+	private final ParticleType type;
+	private final Particle particle;
+	private final Map<String, Double> modifiers = new HashMap<>();
 
 	private Color color;
-
-	public ParticleData() {
-	}
 
 	public ParticleData(JsonObject object) {
 		particle = Particle.valueOf(object.get("Particle").getAsString());
@@ -42,28 +40,13 @@ public class ParticleData extends StatData {
 	}
 
 	public ParticleData(MMOItem item, ConfigurationSection config) {
-		setMMOItem(item);
-
-		if (config == null || !config.contains("type") || !config.contains("particle")) {
-			throwError("Particle is missing type or selected particle.");
-			return;
-		}
+		Validate.isTrue(config.contains("type") && config.contains("particle"), "Particle is missing type or selected particle.");
 
 		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		try {
-			setType(ParticleType.valueOf(format));
-		} catch (Exception e1) {
-			throwError("Could not read the particle type from '" + format + "'");
-			return;
-		}
+		type = ParticleType.valueOf(format);
 
 		format = config.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_");
-		try {
-			setParticle(Particle.valueOf(format));
-		} catch (Exception e1) {
-			throwError("Could not read the particle name from '" + format + "'");
-			return;
-		}
+		particle = Particle.valueOf(format);
 
 		for (String key : config.getKeys(false)) {
 			if (key.equalsIgnoreCase("color"))
@@ -71,6 +54,11 @@ public class ParticleData extends StatData {
 			else if (!key.equalsIgnoreCase("particle") && !key.equalsIgnoreCase("type"))
 				setModifier(key, config.getDouble(key));
 		}
+	}
+
+	public ParticleData(ParticleType type, Particle particle) {
+		this.type = type;
+		this.particle = particle;
 	}
 
 	public ParticleType getType() {
@@ -95,14 +83,6 @@ public class ParticleData extends StatData {
 
 	public void setColor(int red, int green, int blue) {
 		color = Color.fromRGB(red, green, blue);
-	}
-
-	public void setType(ParticleType type) {
-		this.type = type;
-	}
-
-	public void setParticle(Particle particle) {
-		this.particle = particle;
 	}
 
 	public void setModifier(String path, double value) {

@@ -122,7 +122,7 @@ public class Perm_Effects extends ItemStat {
 		EffectListData effects = new EffectListData();
 
 		for (String effect : config.getConfigurationSection("perm-effects").getKeys(false)) {
-			PotionEffectType type = MMOUtils.valueOfPotionEffectType(effect);
+			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
 			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
 			effects.add(new PotionEffectData(type, config.getInt("perm-effects." + effect)));
 		}

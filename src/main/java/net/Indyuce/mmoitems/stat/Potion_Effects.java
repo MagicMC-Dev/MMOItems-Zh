@@ -3,12 +3,12 @@ package net.Indyuce.mmoitems.stat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -145,30 +145,13 @@ public class Potion_Effects extends StringStat {
 		EffectListData effects = new EffectListData();
 
 		for (String effect : config.getConfigurationSection("potion-effects").getKeys(false)) {
-			PotionEffectType type = MMOUtils.valueOfPotionEffectType(effect);
-
-			if (type == null) {
-				item.log(Level.WARNING, "[Potion Effects] " + effect + " is not a valid potion effect name.");
-				continue;
-			}
+			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
+			Validate.isTrue(type != null, "Could not find potion effect type called '" + effect + "'");
 
 			String[] split = config.getString("potion-effects." + effect).split("\\,");
-			double duration = 0;
-			try {
-				duration = Double.parseDouble(split[0]);
-			} catch (Exception e) {
-				item.log(Level.WARNING, "[Potion Effects] " + split[0] + " is not a valid number.");
-				continue;
-			}
+			double duration = Double.parseDouble(split[0]);
 
-			int amplifier = 0;
-			if (split.length > 1)
-				try {
-					amplifier = Integer.parseInt(split[1]);
-				} catch (Exception e) {
-					item.log(Level.WARNING, "[Potion Effects] " + split[1] + " is not a valid integer.");
-					continue;
-				}
+			int amplifier = split.length > 1 ? Integer.parseInt(split[1]) : 0;
 
 			effects.add(new PotionEffectData(type, duration, amplifier));
 		}
@@ -179,7 +162,7 @@ public class Potion_Effects extends StringStat {
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
-			for(PotionEffectData effect : ((EffectListData) data).getEffects())
+			for (PotionEffectData effect : ((EffectListData) data).getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
 		return true;
 	}

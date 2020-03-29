@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
@@ -37,47 +38,41 @@ public class ItemSet {
 
 				SetBonuses bonuses = new SetBonuses();
 
-				for (String key : section.getConfigurationSection("bonuses." + j).getKeys(false)) {
-					String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
+				for (String key : section.getConfigurationSection("bonuses." + j).getKeys(false))
+					try {
+						String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
 
-					// ability
-					if (key.startsWith("ability-")) {
-						AbilityData ability = new AbilityData(null, section.getConfigurationSection("bonuses." + j + "." + key));
-						if (ability.isValid())
-							bonuses.addAbility(ability);
-						else
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't load set bonus ability, path: " + id + ".bonuses." + j + "." + key);
-						continue;
-					}
+						// ability
+						if (key.startsWith("ability-")) {
+							bonuses.addAbility(new AbilityData(section.getConfigurationSection("bonuses." + j + "." + key)));
+							continue;
+						}
 
-					// potion effect
-					if (key.startsWith("potion-")) {
-						PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-						if (potionEffectType != null) {
+						// potion effect
+						if (key.startsWith("potion-")) {
+							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
+							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
 							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt("bonuses." + j + "." + key) - 1, true, false));
 							continue;
 						}
-						continue;
-					}
 
-					// particle effect
-					if (key.startsWith("particle-")) {
-						ParticleData data = new ParticleData(null, section.getConfigurationSection("bonuses." + j + "." + key));
-						if (data.isValid())
-							bonuses.addParticle(data);
-						else
-							MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't load set bonus particle effect, path: " + id + ".bonuses." + j + "." + key);
-					}
+						// particle effect
+						if (key.startsWith("particle-")) {
+							bonuses.addParticle(new ParticleData(null, section.getConfigurationSection("bonuses." + j + "." + key)));
+							continue;
+						}
 
-					// stat
-					ItemStat stat = MMOItems.plugin.getStats().get(format);
-					if (stat != null) {
-						bonuses.addStat(stat, section.getDouble("bonuses." + j + "." + key));
-						continue;
-					}
+						// stat
+						ItemStat stat = MMOItems.plugin.getStats().get(format);
+						if (stat != null) {
+							bonuses.addStat(stat, section.getDouble("bonuses." + j + "." + key));
+							continue;
+						}
 
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + key + "' from " + id + ".");
-				}
+						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "'.");
+					} catch (IllegalArgumentException exception) {
+						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "': " + exception.getMessage());
+					}
 
 				this.bonuses.put(j, bonuses);
 			}
@@ -162,4 +157,3 @@ public class ItemSet {
 		}
 	}
 }
-

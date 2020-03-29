@@ -382,7 +382,7 @@ public class PlayerData {
 	 * cast
 	 */
 	public void cast(Ability ability) {
-		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), new AbilityData(ability), true);
+		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), new AbilityData(ability, null), true);
 	}
 
 	public void cast(AbilityData data) {

@@ -139,8 +139,6 @@ public class Upgrade_Stat extends ItemStat {
 		private int level;
 
 		public UpgradeData(MMOItem mmoitem, ConfigurationSection section) {
-			setMMOItem(mmoitem);
-
 			reference = section.getString("reference");
 			template = section.getString("template");
 			workbench = section.getBoolean("workbench");

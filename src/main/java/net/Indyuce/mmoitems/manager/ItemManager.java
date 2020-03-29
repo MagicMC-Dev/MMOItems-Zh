@@ -47,7 +47,7 @@ public class ItemManager {
 				try {
 					stat.whenLoaded(mmoitem, section);
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Error while generating " + type.getId() + "." + id + ": " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Error while generating " + type.getId() + "." + id + " (" + stat.getName() + "): " + exception.getMessage());
 				}
 
 		if (useCache)

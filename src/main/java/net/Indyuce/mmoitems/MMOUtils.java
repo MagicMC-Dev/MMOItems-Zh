@@ -62,12 +62,12 @@ public class MMOUtils {
 			player.getWorld().dropItem(player.getLocation(), drop);
 	}
 
-	public static PotionEffectType valueOfPotionEffectType(String effect) {
-		for (PotionEffectType checked : PotionEffectType.values())
-			if (checked.getName().equals(effect.toUpperCase().replace("-", "_")))
-				return checked;
-		return null;
-	}
+//	public static PotionEffectType valueOfPotionEffectType(String effect) {
+//		for (PotionEffectType checked : PotionEffectType.values())
+//			if (checked.getName().equals(effect.toUpperCase().replace("-", "_")))
+//				return checked;
+//		return null;
+//	}
 
 	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
 

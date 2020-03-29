@@ -45,11 +45,8 @@ public class Abilities extends ItemStat {
 	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		AbilityListData list = new AbilityListData();
 
-		for (String key : config.getConfigurationSection("ability").getKeys(false)) {
-			AbilityData data = new AbilityData(item, config.getConfigurationSection("ability." + key));
-			if (data.isValid())
-				list.add(data);
-		}
+		for (String key : config.getConfigurationSection("ability").getKeys(false))
+			list.add(new AbilityData(config.getConfigurationSection("ability." + key)));
 
 		item.setData(ItemStat.ABILITIES, list);
 	}

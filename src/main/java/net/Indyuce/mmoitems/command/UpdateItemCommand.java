@@ -32,18 +32,18 @@ public class UpdateItemCommand implements CommandExecutor {
 
 			// for items generated before 2.0
 			if (!item.hasTag("MMOITEMS_ITEM_TYPE")) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Could not update your item.");
+				sender.sendMessage(ChatColor.RED + "Could not update your item.");
 				return true;
 			}
 
 			ItemStack newItem = MMOItems.plugin.getUpdater().getUpdated(item.getItem());
 			if (newItem == null || newItem.getType() == Material.AIR) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Could not update your item.");
+				sender.sendMessage(ChatColor.RED + "Could not update your item.");
 				return true;
 			}
 
 			player.getInventory().setItemInMainHand(newItem);
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "Successfully updated your item.");
+			sender.sendMessage(ChatColor.YELLOW + "Successfully updated your item.");
 			return true;
 		}
 
@@ -53,19 +53,19 @@ public class UpdateItemCommand implements CommandExecutor {
 			return true;
 		}
 		if (args.length < 2) {
-			player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /updateitem <type> <id> or /updateitem");
+			player.sendMessage(ChatColor.RED + "Usage: /updateitem <type> <id> or /updateitem");
 			return true;
 		}
 
 		Type type = Type.get(args[0]);
 		if (type == null) {
-			player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a valid item type.");
+			player.sendMessage(ChatColor.RED + "Please specify a valid item type.");
 			return true;
 		}
 
 		ItemStack newItem = MMOItems.plugin.getItems().getItem(type, args[1]);
 		if (newItem == null || newItem.getType() == Material.AIR) {
-			player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "This item does not exist or has issues loading.");
+			player.sendMessage(ChatColor.RED + "This item does not exist or has issues loading.");
 			return true;
 		}
 

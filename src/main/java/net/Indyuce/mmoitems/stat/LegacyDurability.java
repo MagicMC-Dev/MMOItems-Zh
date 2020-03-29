@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Damageable;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -17,16 +16,17 @@ public class LegacyDurability extends DoubleStat {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
+	// @SuppressWarnings("deprecation")
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		item.getItemStack().setDurability((short) ((DoubleData) data).generateNewValue());
+		// item.getItemStack().setDurability((short) ((DoubleData)
+		// data).generateNewValue());
 		return true;
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof Damageable)
+		if (item.getItem().getDurability() > 0)
 			mmoitem.setData(ItemStat.DURABILITY, new DoubleData(item.getItem().getDurability()));
 	}
 }

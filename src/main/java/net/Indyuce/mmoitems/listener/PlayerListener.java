@@ -9,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -22,18 +21,10 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class PlayerListener implements Listener {
-
-	// regeneration
-	@EventHandler
-	public void applyMMOItemsRegeneration(EntityRegainHealthEvent event) {
-		if (event.getEntity() instanceof Player)
-			event.setAmount(event.getAmount() * (1 + PlayerData.get((Player) event.getEntity()).getStats().getStat(ItemStat.REGENERATION) / 100));
-	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void loadPlayerData(PlayerJoinEvent event) {

@@ -122,7 +122,6 @@ public abstract class ItemStat {
 	public static final ItemStat PVE_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(VersionMaterial.PORKCHOP.toMaterial()), "PvE Damage Reduction", new String[] { "Reduces damage dealt by mobs.", "In %." }, "pve-damage-reduction");
 	public static final ItemStat PVP_DAMAGE_REDUCTION = new DoubleStat(new ItemStack(VersionMaterial.SKELETON_SKULL.toMaterial()), "PvP Damage Reduction", new String[] { "Reduces damage dealt by players", "In %." }, "pvp-damage-reduction");
 	public static final ItemStat UNDEAD_DAMAGE = new DoubleStat(new ItemStack(VersionMaterial.SKELETON_SKULL.toMaterial()), "Undead Damage", new String[] { "Deals additional damage to undead.", "In %." }, "undead-damage");
-	public static final ItemStat REGENERATION = new DoubleStat(new ItemStack(Material.BREAD), "Regeneration", new String[] { "Increases natural/magic health regen.", "In %." }, "regeneration");
 	public static final ItemStat UNBREAKABLE = new Unbreakable(), TIER = new Item_Tier(), SET = new Item_Set(), ARMOR = new Armor(), ARMOR_TOUGHNESS = new Armor_Toughness(), MAX_HEALTH = new Max_Health();
 	public static final ItemStat MAX_MANA = new DoubleStat(VersionMaterial.LAPIS_LAZULI.toItem(), "Max Mana", new String[] { "Adds mana to your max mana bar." }, "max-mana");
 	public static final ItemStat KNOCKBACK_RESISTANCE = new Knockback_Resistance(), MOVEMENT_SPEED = new Movement_Speed();

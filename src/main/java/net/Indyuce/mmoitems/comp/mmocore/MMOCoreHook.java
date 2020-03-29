@@ -21,12 +21,14 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOCoreHook implements RPGHandler, Listener {
 
-	private final ItemStat manaRegen = new DoubleStat(VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regeneration");
-	private final ItemStat maxStamina = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." }, "max-stamina");
-	private final ItemStat staminaRegen = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." }, "stamina-regeneration");
-	private final ItemStat cooldownReduction = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
-	private final ItemStat additionalExperience = new DoubleStat(VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
-
+	private static final ItemStat MANA_REGENERATION = new DoubleStat(VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration", new String[] { "Increases mana regen." }, "mana-regeneration");
+	private static final ItemStat MAX_STAMINA = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." }, "max-stamina");
+	private static final ItemStat STAMINA_REGENERATION = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." }, "stamina-regeneration");
+	private static final ItemStat SKILL_COOLDOWN_REDUCTION = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
+	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat(VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
+	private static final ItemStat HEALTH_REGENERATION = new DoubleStat(new ItemStack(Material.BREAD), "Health Regeneration", new String[] { "Increases natural/magic health regen.", "In %." }, "health-regeneration");
+	
+	
 	/*
 	 * called when MMOItems enables
 	 */
@@ -34,11 +36,12 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 
-		MMOItems.plugin.getStats().register("MANA_REGENERATION", manaRegen);
-		MMOItems.plugin.getStats().register("MAX_STAMINA", maxStamina);
-		MMOItems.plugin.getStats().register("STAMINA_REGENERATION", staminaRegen);
-		MMOItems.plugin.getStats().register("SKILL_COOLDOWN_REDUCTION", cooldownReduction);
-		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", additionalExperience);
+		MMOItems.plugin.getStats().register("HEALTH_REGENERATION", HEALTH_REGENERATION);
+		MMOItems.plugin.getStats().register("MANA_REGENERATION", MANA_REGENERATION);
+		MMOItems.plugin.getStats().register("MAX_STAMINA", MAX_STAMINA);
+		MMOItems.plugin.getStats().register("STAMINA_REGENERATION", STAMINA_REGENERATION);
+		MMOItems.plugin.getStats().register("SKILL_COOLDOWN_REDUCTION", SKILL_COOLDOWN_REDUCTION);
+		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", ADDITIONAL_EXPERIENCE);
 
 		/*
 		 * only works when the server is reloaded. needs /reload when changing

@@ -38,7 +38,7 @@ public class CustomBlockListener implements Listener {
 			Bukkit.getPluginManager().registerEvents(new MushroomReplacer(), MMOItems.plugin);
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void a(BlockPhysicsEvent event) {
 		if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getChangedType())) {
 			event.setCancelled(true);
@@ -46,7 +46,7 @@ public class CustomBlockListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void b(BlockBreakEvent event) {
 		Material type = event.getBlock().getType();
 
@@ -130,10 +130,8 @@ public class CustomBlockListener implements Listener {
 		 */
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void d(BlockIgniteEvent event) {
-		if (event.isCancelled())
-			return;
 		if (event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.SPREAD) {
 			BlockFace[] faces = { BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST };
 			for (BlockFace face : faces)
@@ -150,7 +148,7 @@ public class CustomBlockListener implements Listener {
 		ItemStack item = player.getInventory().getItemInMainHand();
 		if (item != null && item.getType() != Material.AIR) {
 			NBTItem nbt = NBTItem.get(item);
-			if (nbt.hasType()) 
+			if (nbt.hasType())
 				return nbt.getInteger("MMOITEMS_PICKAXE_POWER");
 		}
 
@@ -158,10 +156,8 @@ public class CustomBlockListener implements Listener {
 	}
 
 	public class MushroomReplacer implements Listener {
-		@EventHandler
+		@EventHandler(ignoreCancelled = true)
 		public void d(BlockBreakEvent event) {
-			if (event.isCancelled())
-				return;
 			if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getType()) && MMOItems.plugin.getDropTables().hasSilkTouchTool(event.getPlayer()))
 				event.setDropItems(false);
 		}

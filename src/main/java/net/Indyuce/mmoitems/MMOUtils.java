@@ -14,6 +14,8 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
@@ -22,9 +24,8 @@ import org.bukkit.util.Vector;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import net.Indyuce.mmoitems.api.util.AltChar;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOUtils {
 	public static String getSkullTextureURL(ItemStack item) {
@@ -61,6 +62,35 @@ public class MMOUtils {
 			player.getWorld().dropItem(player.getLocation(), drop);
 	}
 
+	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
+
+		/*
+		 * check direct damager
+		 */
+		if (event.getDamager() instanceof LivingEntity)
+			return (LivingEntity) event.getDamager();
+
+		/*
+		 * checks projectile and add damage type, which supports every vanilla
+		 * projectile like snowballs, tridents and arrows
+		 */
+		if (event.getDamager() instanceof Projectile) {
+			Projectile proj = (Projectile) event.getDamager();
+			if (proj.getShooter() instanceof LivingEntity)
+				return (LivingEntity) proj.getShooter();
+		}
+
+		/*
+		 * check for last damage
+		 */
+		// if (event.getEntity().getLastDamageCause() instanceof
+		// EntityDamageByEntityEvent && checkLastDamageCause)
+		// return getDamager(result, (EntityDamageByEntityEvent)
+		// event.getEntity().getLastDamageCause(), false);
+
+		return null;
+	}
+
 	public static int getEffectDuration(PotionEffectType type) {
 
 		// confusion takes a lot of time to decay
@@ -77,18 +107,10 @@ public class MMOUtils {
 		return 80;
 	}
 
-	public static String getDisplayName(ItemStack i) {
-		if (!i.hasItemMeta())
-			return MMOUtils.caseOnWords(i.getType().name().toLowerCase().replace("_", " "));
-		return i.getItemMeta().hasDisplayName() ? i.getItemMeta().getDisplayName() : MMOUtils.caseOnWords(i.getType().name().toLowerCase().replace("_", " "));
-	}
-
-	public static Integer[] getSocketSlots(List<String> lore) {
-		List<Integer> list = new ArrayList<Integer>();
-		for (int j = 0; j < lore.size(); j++)
-			if (lore.get(j).equals(ItemStat.translate("empty-gem-socket").replace("#d", AltChar.diamond)))
-				list.add(j);
-		return list.toArray(new Integer[list.size()]);
+	public static String getDisplayName(ItemStack item) {
+		if (!item.hasItemMeta())
+			return MMOUtils.caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+		return item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : MMOUtils.caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
 	}
 
 	public static boolean twoHandedCase(Player player) {
@@ -119,7 +141,7 @@ public class MMOUtils {
 		return builder.toString();
 	}
 
-	public static boolean isPluginItem(ItemStack item, boolean lore) {
+	public static boolean isMetaItem(ItemStack item, boolean lore) {
 		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null && (!lore || item.getItemMeta().getLore() != null);
 	}
 
@@ -220,6 +242,19 @@ public class MMOUtils {
 			input -= 1;
 		}
 		return s;
+	}
+
+	@Deprecated
+	public static boolean areSimilar(ItemStack item1, ItemStack iitem2) {
+		if (item1.getType() == VersionMaterial.PLAYER_HEAD.toMaterial() && iitem2.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
+			ItemMeta meta1 = item1.getItemMeta();
+			ItemMeta meta2 = iitem2.getItemMeta();
+
+			if (meta1.hasDisplayName() && meta2.hasDisplayName())
+				return meta1.getDisplayName().equalsIgnoreCase(meta2.getDisplayName());
+		}
+
+		return item1.isSimilar(iitem2);
 	}
 
 	public static double truncation(double x, int n) {

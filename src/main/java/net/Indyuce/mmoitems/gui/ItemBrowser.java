@@ -212,7 +212,7 @@ public class ItemBrowser extends PluginInventory {
 			return;
 
 		ItemStack item = event.getCurrentItem();
-		if (MMOUtils.isPluginItem(item, false)) {
+		if (MMOUtils.isMetaItem(item, false)) {
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
 				page++;
 				open();

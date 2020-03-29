@@ -4,8 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -16,6 +18,8 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Listener_v1_13 implements Listener {
+	private final boolean autoRecipeBook = MMOItems.plugin.getConfig().getBoolean("auto-recipe-book");
+
 	@EventHandler
 	public void a(ProjectileLaunchEvent event) {
 		if (!(event.getEntity() instanceof Trident) || !(event.getEntity().getShooter() instanceof Player))
@@ -36,5 +40,11 @@ public class Listener_v1_13 implements Listener {
 			}
 
 		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), (Trident) event.getEntity(), type != null);
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void b(PlayerJoinEvent event) {
+		if (autoRecipeBook)
+			event.getPlayer().discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
 	}
 }

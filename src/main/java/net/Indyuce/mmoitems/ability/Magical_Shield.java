@@ -1,12 +1,15 @@
 package net.Indyuce.mmoitems.ability;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -20,8 +23,6 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Magical_Shield extends Ability {
-	public static Map<Location, Double[]> magicalShield = new HashMap<>();
-
 	public Magical_Shield() {
 		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
 
@@ -41,26 +42,50 @@ public class Magical_Shield extends Ability {
 	@Override
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		double duration = ability.getModifier("duration");
-		double radius = Math.pow(ability.getModifier("radius"), 2);
+		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
 		double power = ability.getModifier("power") / 100;
 
-		Location loc = stats.getPlayer().getLocation().clone();
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
-		magicalShield.put(loc, new Double[] { radius, power });
-		new BukkitRunnable() {
-			int ti = 0;
+		new MagicalShield(stats.getPlayer().getLocation().clone(), duration, radiusSquared, power);
+	}
 
-			public void run() {
-				ti++;
-				for (double j = 0; j < Math.PI / 2; j += Math.PI / (28 + random.nextInt(5)))
-					for (double i = 0; i < Math.PI * 2; i += Math.PI / (14 + random.nextInt(5)))
-						MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(2.5 * Math.cos(i + j) * Math.sin(j), 2.5 * Math.cos(j), 2.5 * Math.sin(i + j) * Math.sin(j)), Color.FUCHSIA);
+	public class MagicalShield extends BukkitRunnable implements Listener {
+		private final Location loc;
+		private final double duration, radius, power;
 
-				if (ti > duration * 20 / 3) {
-					magicalShield.remove(loc);
-					cancel();
-				}
-			}
-		}.runTaskTimer(MMOItems.plugin, 0, 3);
+		int ti = 0;
+
+		public MagicalShield(Location loc, double duration, double radius, double power) {
+			this.loc = loc;
+
+			this.duration = duration;
+			this.radius = radius;
+			this.power = power;
+
+			runTaskTimer(MMOItems.plugin, 0, 3);
+			Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+		}
+
+		private void close() {
+			cancel();
+			EntityDamageEvent.getHandlerList().unregister(this);
+		}
+
+		@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+		public void a(EntityDamageEvent event) {
+			if (event.getEntity() instanceof Player && event.getEntity().getLocation().distanceSquared(loc) < radius)
+				event.setDamage(event.getDamage() * (1 - power));
+		}
+
+		@Override
+		public void run() {
+			ti++;
+			if (ti > duration * 20. / 3.)
+				close();
+
+			for (double j = 0; j < Math.PI / 2; j += Math.PI / (28 + random.nextInt(5)))
+				for (double i = 0; i < Math.PI * 2; i += Math.PI / (14 + random.nextInt(5)))
+					MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(2.5 * Math.cos(i + j) * Math.sin(j), 2.5 * Math.cos(j), 2.5 * Math.sin(i + j) * Math.sin(j)), Color.FUCHSIA);
+		}
 	}
 }

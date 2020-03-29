@@ -32,7 +32,7 @@ public class GuiListener implements Listener {
 			if (!(inventory instanceof EditionInventory))
 				return;
 
-			if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isPluginItem(item, false))
+			if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 				return;
 
 			if (!item.getItemMeta().getDisplayName().startsWith(ChatColor.GREEN + ""))

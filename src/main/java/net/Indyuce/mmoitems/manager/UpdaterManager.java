@@ -20,10 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -73,6 +73,7 @@ public class UpdaterManager implements Listener {
 	/*
 	 * updates inventory item when clicked
 	 */
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void a(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
@@ -80,7 +81,7 @@ public class UpdaterManager implements Listener {
 			return;
 
 		ItemStack newItem = getUpdated(item);
-		if (!IsSimilar.check(newItem, item))
+		if (!MMOUtils.areSimilar(newItem, item))
 			event.setCurrentItem(newItem);
 	}
 

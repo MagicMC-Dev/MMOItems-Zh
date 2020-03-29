@@ -2,17 +2,13 @@ package net.Indyuce.mmoitems.listener;
 
 import java.util.Iterator;
 
-import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -21,112 +17,49 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Magical_Shield;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class PlayerListener implements Listener {
-	@EventHandler(priority = EventPriority.HIGH)
-	public void b(EntityDamageEvent event) {
-		if(event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK
-				|| event.getCause() == DamageCause.PROJECTILE) return;
-		if (!(event.getEntity() instanceof Player) || event.isCancelled() || event.getEntity().hasMetadata("NPC"))
-			return;
-
-		Player player = (Player) event.getEntity();
-
-		// magical shield ability
-		for (Location loc : Magical_Shield.magicalShield.keySet())
-			if (loc.getWorld().equals(player.getWorld())) {
-				Double[] values = Magical_Shield.magicalShield.get(loc);
-				if (loc.distanceSquared(player.getLocation()) <= values[0])
-					event.setDamage(event.getDamage() * (1 - Math.max(values[1], 1)));
-			}
-
-		/*
-		 * damage reduction
-		 */
-		PlayerStats stats = PlayerData.get(player).getStats();
-
-		if (event.getCause() == DamageCause.FIRE)
-			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FIRE_DAMAGE_REDUCTION) / 100));
-		else if (event.getCause() == DamageCause.FALL)
-			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.FALL_DAMAGE_REDUCTION) / 100));
-		else if (event.getCause() == DamageCause.MAGIC)
-			event.setDamage(event.getDamage() * (1 - stats.getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
-
-		event.setDamage(event.getDamage() * (1 - (stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100)));
-	}
 
 	// regeneration
 	@EventHandler
-	public void c(EntityRegainHealthEvent event) {
+	public void applyMMOItemsRegeneration(EntityRegainHealthEvent event) {
 		if (event.getEntity() instanceof Player)
 			event.setAmount(event.getAmount() * (1 + PlayerData.get((Player) event.getEntity()).getStats().getStat(ItemStat.REGENERATION) / 100));
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
-	public void d(PlayerJoinEvent event) {
+	public void loadPlayerData(PlayerJoinEvent event) {
 		PlayerData.load(event.getPlayer());
-
-		if (!MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) && MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
-			event.getPlayer().discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void e(PlayerQuitEvent event) {
+	public void savePlayerData(PlayerQuitEvent event) {
 		PlayerData.get(event.getPlayer()).save();
 	}
 
-	// apply on-hit abilities from armor pieces.
-	@EventHandler(priority = EventPriority.HIGH)
-	public void f(EntityDamageByEntityEvent event) {
-		if (event.isCancelled() || !(event.getEntity() instanceof Player) || (!(event.getDamager() instanceof LivingEntity) && !(event.getDamager() instanceof Projectile)) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void castWhenHitAbilities(EntityDamageByEntityEvent event) {
+		if (!(event.getEntity() instanceof Player) || event.getEntity().hasMetadata("NPC"))
 			return;
 
-		/*
-		 * damage reduction
-		 */
-		if (MMOLib.plugin.getDamage().findInfo(event.getEntity()) != null)
+		LivingEntity damager = MMOUtils.getDamager(event);
+		if (damager == null)
 			return;
-		PlayerStats stats = PlayerData.get((Player) event.getEntity()).getStats();
-		double d = 0;
-		
-		if(event.getCause() == DamageCause.PROJECTILE) {
-			d += (stats.getStat(ItemStat.PROJECTILE_DAMAGE_REDUCTION) / 100);
-			if(((Projectile) event.getDamager()).getShooter() instanceof Player)
-				d += (stats.getStat(ItemStat.PVP_DAMAGE_REDUCTION) / 100);
-			else d += (stats.getStat(ItemStat.PVE_DAMAGE_REDUCTION) / 100);
-		}
-		else {
-			d += (stats.getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100);
-			if(event.getDamager() instanceof Player)
-				d += (stats.getStat(ItemStat.PVP_DAMAGE_REDUCTION) / 100);
-			else d += (stats.getStat(ItemStat.PVE_DAMAGE_REDUCTION) / 100);
-		}
-		
-		event.setDamage((event.getDamage() * (1 - d)) * (1 - (stats.getStat(ItemStat.DAMAGE_REDUCTION) / 100)));
-		
-		LivingEntity damager = null;
-		if(event.getDamager() instanceof LivingEntity)
-			damager = (LivingEntity) event.getDamager();
-		else if(((Projectile) event.getDamager()).getShooter() instanceof LivingEntity)
-			damager = (LivingEntity) ((Projectile) event.getDamager()).getShooter();
-		
-		if(damager == null) return;
+
 		Player player = (Player) event.getEntity();
 		PlayerData.get(player).castAbilities(damager, new ItemAttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
-	public void g(PlayerInteractEvent event) {
+	public void castClickAbilities(PlayerInteractEvent event) {
 		if (event.getAction() == Action.PHYSICAL)
 			return;
 
@@ -142,7 +75,7 @@ public class PlayerListener implements Listener {
 	 * way there don't get lost
 	 */
 	@EventHandler
-	public void h(PlayerDeathEvent event) {
+	public void applySoulbound(PlayerDeathEvent event) {
 		if (event.getKeepInventory())
 			return;
 
@@ -161,7 +94,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void i(PlayerRespawnEvent event) {
+	public void readSoulbound(PlayerRespawnEvent event) {
 		SoulboundInfo.read(event.getPlayer());
 	}
 }

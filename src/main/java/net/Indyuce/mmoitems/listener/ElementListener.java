@@ -33,10 +33,10 @@ public class ElementListener implements Listener {
 				iterator.remove();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void a(EntityDamageByEntityEvent event) {
 		Entity entity = event.getEntity();
-		if (!event.isCancelled() && isWeakened(entity)) {
+		if (isWeakened(entity)) {
 			event.setDamage(event.getDamage() * (1 + waterWeaknessDamageIncrease));
 			entity.getWorld().spawnParticle(Particle.WATER_SPLASH, event.getEntity().getLocation().add(0, entity.getHeight() / 2, 0), 16, .3, .3, .3, 0);
 		}

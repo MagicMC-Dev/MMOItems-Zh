@@ -96,9 +96,9 @@ public class EntityManager implements Listener {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void b(EntityDamageByEntityEvent event) {
-		if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC") || event.isCancelled())
+		if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
 			return;
 
 		Projectile arrow = (Projectile) event.getDamager();

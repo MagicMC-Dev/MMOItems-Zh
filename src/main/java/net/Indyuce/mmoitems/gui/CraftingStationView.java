@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.event.crafting.PlayerUseRecipeEvent;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.IsSimilar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.mmogroup.mmolib.MMOLib;
@@ -124,32 +123,33 @@ public class CraftingStationView extends PluginInventory {
 		return inv;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
 		event.setCancelled(true);
 
-		if (!MMOUtils.isPluginItem(event.getCurrentItem(), false))
+		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.PREVIOUS_IN_QUEUE.getItem())) {
+		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.PREVIOUS_IN_QUEUE.getItem())) {
 			queueOffset--;
 			open();
 			return;
 		}
 
-		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.NEXT_IN_QUEUE.getItem())) {
+		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.NEXT_IN_QUEUE.getItem())) {
 			queueOffset++;
 			open();
 			return;
 		}
 
-		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.NEXT_PAGE.getItem())) {
+		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.NEXT_PAGE.getItem())) {
 			page++;
 			open();
 			return;
 		}
 
-		if (IsSimilar.check(event.getCurrentItem(), ConfigItem.PREVIOUS_PAGE.getItem())) {
+		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.PREVIOUS_PAGE.getItem())) {
 			page--;
 			open();
 			return;

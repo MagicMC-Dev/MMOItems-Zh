@@ -101,7 +101,7 @@ public class ItemEdition extends EditionInventory {
 			return;
 
 		ItemStack item = event.getCurrentItem();
-		if (!MMOUtils.isPluginItem(item, false) || event.getInventory().getItem(4) == null)
+		if (!MMOUtils.isMetaItem(item, false) || event.getInventory().getItem(4) == null)
 			return;
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {

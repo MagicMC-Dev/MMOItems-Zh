@@ -85,7 +85,7 @@ public class SoundsEdition extends EditionInventory {
 		ItemStack item = event.getCurrentItem();
 
 		event.setCancelled(true);
-		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isPluginItem(item, false))
+		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
 		if (correspondingSlot.containsKey(event.getSlot())) {

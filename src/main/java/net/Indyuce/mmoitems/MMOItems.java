@@ -128,7 +128,7 @@ public class MMOItems extends JavaPlugin {
 		abilityManager.registerDefaultAbilities();
 
 		configManager = new ConfigManager();
-		itemManager =  new ItemManager(getConfig().getBoolean("use-item-caching"));
+		itemManager = new ItemManager(getConfig().getBoolean("use-item-caching"));
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
@@ -234,8 +234,7 @@ public class MMOItems extends JavaPlugin {
 
 		// advanced recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
-		recipeManager = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ?
-				new RecipeManagerDefault() : new RecipeManagerLegacy();
+		recipeManager = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ? new RecipeManagerDefault() : new RecipeManagerLegacy();
 
 		// commands
 		getCommand("mmoitems").setExecutor(new MMOItemsCommand());

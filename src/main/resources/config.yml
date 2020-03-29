@@ -12,16 +12,12 @@ update-notify: true
 # The plugin takes a few milliseconds to read the item data from the item
 # config and a few hundred MICROseconds to actually generate it. Caching the
 # item allows to skip the first step which reduces ~6 times the delay needed
-# to generate any mmoitem.
-#
-# However, it does take up much more RAM space. Toggle it on if you havee
-# too many items which makes item generation time consuming. Toggle it off
-# to get some spare memory.
+# to generate any mmoitem. Takes up more RAM.
 use-item-caching: true
 
 # Enable/disable the plugin iterating over the whole player inventory
 # instead of just the players armor and held items.
-# This option is required for the Ornamnet item type, however
+# This option is required for the Ornament item type, however
 # it CAN cause lag and/or take a lot of memory.
 iterate-whole-inventory: false
 

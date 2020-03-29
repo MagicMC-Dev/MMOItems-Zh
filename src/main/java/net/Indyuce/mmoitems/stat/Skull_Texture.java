@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -28,21 +29,18 @@ public class Skull_Texture extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		String value = config.getString("skull-texture.value");
-		if (value == null)
-			return true;
+		Validate.notNull(value, "Could not load skull texture value");
 
 		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(safeParse(item, config.getString("skull-texture.uuid")), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
 
 		item.setData(ItemStat.SKULL_TEXTURE, skullTexture);
-		return true;
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
-
 	}
 
 	@Override
@@ -57,7 +55,7 @@ public class Skull_Texture extends StringStat {
 
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		if (item.getMaterial() != VersionMaterial.PLAYER_HEAD.toMaterial())
+		if (item.getItemStack().getType() != VersionMaterial.PLAYER_HEAD.toMaterial())
 			return true;
 
 		try {
@@ -91,7 +89,7 @@ public class Skull_Texture extends StringStat {
 				throw new IllegalArgumentException();
 			return UUID.fromString(str);
 		} catch (IllegalArgumentException exception) {
-			item.log(Level.WARNING, "Warning: the skull texture UUID could not be loaded! You must re-enter the skull texture value. If you don't fix it, heads will not be able to be stacked.");
+			item.log(Level.WARNING, "Warning: the skull texture UUID could not be loaded! You must re-enter it otherwise heads will not be able to stack.");
 			return UUID.randomUUID();
 		}
 	}

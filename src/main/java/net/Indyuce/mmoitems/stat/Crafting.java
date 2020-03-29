@@ -107,8 +107,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
-		return true;
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 	}
 
 	@Override

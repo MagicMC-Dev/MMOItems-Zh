@@ -83,9 +83,8 @@ public class Lore extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.LORE, new StringListData(config.getStringList("lore")));
-		return true;
 	}
 
 	@Override

@@ -82,14 +82,13 @@ public class Potion_Color extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.POTION_COLOR, new ColorData(item, config.getString("potion-color")));
-		return true;
 	}
 
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		if (item.getMaterial().name().contains("POTION") || item.getMaterial() == Material.TIPPED_ARROW)
+		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			((PotionMeta) item.getMeta()).setColor(((ColorData) data).getColor());
 		return true;
 	}

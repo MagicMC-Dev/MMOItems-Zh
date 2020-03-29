@@ -42,7 +42,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		AbilityListData list = new AbilityListData();
 
 		for (String key : config.getConfigurationSection("ability").getKeys(false)) {
@@ -52,7 +52,6 @@ public class Abilities extends ItemStat {
 		}
 
 		item.setData(ItemStat.ABILITIES, list);
-		return true;
 	}
 
 	@Override
@@ -167,10 +166,7 @@ public class Abilities extends ItemStat {
 	}
 
 	public class AbilityListData extends StatData implements Mergeable {
-		private Set<AbilityData> abilities = new LinkedHashSet<>();
-
-		public AbilityListData() {
-		}
+		private final Set<AbilityData> abilities = new LinkedHashSet<>();
 
 		public AbilityListData(AbilityData... abilities) {
 			add(abilities);

@@ -33,9 +33,8 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		super(item, name, lore, path, types, materials);
 	}
 
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(this, new DoubleData(config.getString(getPath())));
-		return true;
 	}
 
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {

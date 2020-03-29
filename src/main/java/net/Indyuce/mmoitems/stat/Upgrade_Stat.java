@@ -34,9 +34,8 @@ public class Upgrade_Stat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(this, new UpgradeData(item, config.getConfigurationSection("upgrade")));
-		return true;
 	}
 
 	@Override

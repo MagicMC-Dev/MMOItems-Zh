@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.manager;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,9 +21,8 @@ public class ItemManager {
 
 	public ItemManager(boolean useCache) {
 		if (this.useCache = useCache)
-		Bukkit.getScheduler().runTaskTimerAsynchronously(MMOItems.plugin, () -> clearCache(), 60 * 20, 2 * 60 * 20);
+			Bukkit.getScheduler().runTaskTimerAsynchronously(MMOItems.plugin, () -> clearCache(), 60 * 20, 2 * 60 * 20);
 	}
-
 
 	public MMOItem getMMOItem(Type type, String id) {
 		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
@@ -43,8 +43,12 @@ public class ItemManager {
 		ConfigurationSection section = items.getConfigurationSection(id);
 
 		for (ItemStat stat : type.getAvailableStats())
-			if (section.contains(stat.getPath()) && !stat.whenLoaded(mmoitem, section))
-				return null;
+			if (section.contains(stat.getPath()))
+				try {
+					stat.whenLoaded(mmoitem, section);
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Error while generating " + type.getId() + "." + id + ": " + exception.getMessage());
+				}
 
 		if (useCache)
 			cache(mmoitem);

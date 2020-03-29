@@ -83,9 +83,8 @@ public class Dye_Color extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.DYE_COLOR, new ColorData(item, config.getString("dye-color")));
-		return true;
 	}
 
 	@Override

@@ -27,9 +27,8 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(this, new StringData(config.getString(getPath())));
-		return true;
 	}
 
 	@Override

@@ -94,9 +94,8 @@ public class Restore extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.RESTORE, new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation")));
-		return true;
 	}
 
 	@Override

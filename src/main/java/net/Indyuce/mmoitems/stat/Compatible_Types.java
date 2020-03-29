@@ -83,9 +83,8 @@ public class Compatible_Types extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.COMPATIBLE_TYPES, new StringListData(config.getStringList("compatible-types")));
-		return true;
 	}
 
 	@Override

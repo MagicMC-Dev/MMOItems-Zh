@@ -87,8 +87,8 @@ public class ItemSkin extends UseItem {
 	}
 
 	public class ApplyResult {
-		private ResultType type;
-		private ItemStack result;
+		private final ResultType type;
+		private final ItemStack result;
 
 		public ApplyResult(ResultType type) {
 			this(null, type);

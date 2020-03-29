@@ -116,7 +116,7 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		EnchantListData enchants = new EnchantListData();
 
 		for (String format : config.getConfigurationSection("enchants").getKeys(false)) {
@@ -136,7 +136,6 @@ public class Enchants extends ItemStat {
 		}
 
 		item.setData(ItemStat.ENCHANTS, enchants);
-		return true;
 	}
 
 	@Override

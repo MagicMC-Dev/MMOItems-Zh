@@ -87,9 +87,8 @@ public class Permission extends ItemStat implements Conditional {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.PERMISSION, new StringListData(config.getStringList("permission")));
-		return true;
 	}
 
 	@Override

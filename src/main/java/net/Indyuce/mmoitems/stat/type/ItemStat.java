@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,6 +67,7 @@ import net.Indyuce.mmoitems.stat.Skull_Texture;
 import net.Indyuce.mmoitems.stat.Soulbound;
 import net.Indyuce.mmoitems.stat.Soulbound_Level;
 import net.Indyuce.mmoitems.stat.Staff_Spirit;
+import net.Indyuce.mmoitems.stat.StoredTags;
 import net.Indyuce.mmoitems.stat.Unbreakable;
 import net.Indyuce.mmoitems.stat.Upgrade_Stat;
 import net.Indyuce.mmoitems.stat.Vanilla_Eating_Animation;
@@ -140,11 +140,11 @@ public abstract class ItemStat {
 	public static final ItemStat ITEM_COOLDOWN = new DoubleStat(new ItemStack(Material.COOKED_CHICKEN), "Item Cooldown", new String[] { "This cooldown applies for consumables", "as well as for item commands." }, "item-cooldown", new String[] { "!armor", "!gem_stone", "all" });
 	public static final ItemStat DISABLE_RIGHT_CLICK_CONSUME = new DisableStat(Material.BARRIER, "right-click-consume", "Disable Right Click Consume", new String[] { "consumable" }, "This item will not be consumed", "when eaten by players.");
 	public static final ItemStat VANILLA_EATING_ANIMATION = new Vanilla_Eating_Animation(), INEDIBLE = new Inedible(), GEM_COLOR = new Gem_Color(), ITEM_TYPE_RESTRICTION = new Item_Type_Restriction();
-	public static final ItemStat MAX_CONSUME = new DoubleStat(new ItemStack(Material.BLAZE_POWDER), "Max Consume", new String[] {"Max amount of usage before", "item disappears."}, "max-consume", new String[] {"consumable"});
+	public static final ItemStat MAX_CONSUME = new DoubleStat(new ItemStack(Material.BLAZE_POWDER), "Max Consume", new String[] { "Max amount of usage before", "item disappears." }, "max-consume", new String[] { "consumable" });
 
 	public static final ItemStat SUCCESS_RATE = new DoubleStat(new ItemStack(Material.EMERALD), "Success Rate", new String[] { "The chance of your gem to successfully", "apply onto an item. This value is 100%", "by default. If it is not successfully", "applied, the gem stone will be lost." }, "success-rate", new String[] { "gem_stone", "skin" });
 	public static final ItemStat COMPATIBLE_TYPES = new Compatible_Types();
-	
+
 	public static final ItemStat CRAFTING = new Crafting(), CRAFT_PERMISSION = new Craft_Permission();
 	public static final ItemStat AUTOSMELT = new BooleanStat(new ItemStack(Material.COAL), "Autosmelt", new String[] { "If set to true, your tool will", "automaticaly smelt mined ores." }, "autosmelt", new String[] { "tool" });
 	public static final ItemStat BOUNCING_CRACK = new BooleanStat(new ItemStack(VersionMaterial.COBBLESTONE_WALL.toMaterial()), "Bouncing Crack", new String[] { "If set to true, your tool will", "also break nearby blocks." }, "bouncing-crack", new String[] { "tool" });
@@ -153,11 +153,11 @@ public abstract class ItemStat {
 	public static final ItemStat ELEMENTS = new Elements();
 	public static final ItemStat COMMANDS = new Commands(), STAFF_SPIRIT = new Staff_Spirit(), LUTE_ATTACK_SOUND = new Lute_Attack_Sound(), LUTE_ATTACK_EFFECT = new Lute_Attack_Effect();
 	public static final ItemStat NOTE_WEIGHT = new DoubleStat(new ItemStack(VersionMaterial.MUSIC_DISC_MALL.toMaterial()), "Note Weight", new String[] { "Defines how the projectile cast", "by your lute tilts downwards." }, "note-weight", new String[] { "lute" });
-	public static final ItemStat REMOVE_ON_CRAFT = new BooleanStat(new ItemStack(Material.GLASS_BOTTLE), "Remove on Craft", new String[] { "If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket." }, "remove-on-craft", new String[] { "all" },  Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET);
+	public static final ItemStat REMOVE_ON_CRAFT = new BooleanStat(new ItemStack(Material.GLASS_BOTTLE), "Remove on Craft", new String[] { "If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket." }, "remove-on-craft", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET);
 	public static final ItemStat GEM_SOCKETS = new Gem_Sockets();
 	public static final ItemStat REPAIR = new DoubleStat(new ItemStack(Material.ANVIL), "Repair", new String[] { "The amount of durability your item", "can repair when set an item." }, "repair", new String[] { "consumable" });
 	public static final ItemStat REPAIR_MATERIAL = new Repair_Material();
-	
+
 	public static final ItemStat KNOCKBACK = new DoubleStat(new ItemStack(VersionMaterial.IRON_HORSE_ARMOR.toMaterial()), "Knockback", new String[] { "Using this musket will knock", "the user back if positive." }, "knockback", new String[] { "musket" });
 	public static final ItemStat RECOIL = new DoubleStat(new ItemStack(VersionMaterial.IRON_HORSE_ARMOR.toMaterial()), "Recoil", new String[] { "Corresponds to the shooting innacuracy." }, "recoil", new String[] { "musket" });
 
@@ -168,6 +168,7 @@ public abstract class ItemStat {
 	 * internal stats
 	 */
 	public static final Soulbound SOULBOUND = new Soulbound();
+	public static final ItemStat STORED_TAGS = new StoredTags();
 
 	private String id;
 	private final String name, path;
@@ -192,14 +193,14 @@ public abstract class ItemStat {
 		this.compatibleTypes = types == null ? new String[0] : types;
 		this.path = path;
 		this.name = name;
-		this.compatibleMaterials = materials == null ? new ArrayList<>() : Arrays.asList(materials);
+		this.compatibleMaterials = Arrays.asList(materials);
 	}
 
 	/*
 	 * reads stat data from a configuration section and applies it to the item
 	 * stack after having generated the corresponding stat data class instance
 	 */
-	public abstract boolean whenLoaded(MMOItem item, ConfigurationSection config);
+	public abstract void whenLoaded(MMOItem item, ConfigurationSection config);
 
 	/*
 	 * applies a stat onto an mmoitem builder instance
@@ -278,26 +279,11 @@ public abstract class ItemStat {
 	}
 
 	public boolean hasValidMaterial(ItemStack item) {
-		if (compatibleMaterials.size() == 0)
-			return true;
-
-		for (Material dm : compatibleMaterials)
-			if (item.getType() == dm)
-				return true;
-		return false;
-	}
-
-	public void setItemType(Material material) {
-		item.setType(material);
+		return compatibleMaterials.size() == 0 || compatibleMaterials.contains(item.getType());
 	}
 
 	public void disable() {
 		enabled = false;
-	}
-
-	public void addCompatibleMaterial(Material... values) {
-		for (Material dm : values)
-			compatibleMaterials.add(dm);
 	}
 
 	public String format(double value, String... replace) {

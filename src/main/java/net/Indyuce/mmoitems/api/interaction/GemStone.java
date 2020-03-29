@@ -16,16 +16,15 @@ import net.Indyuce.mmoitems.stat.data.Mergeable;
 import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.item.StoredTags;
 
 public class GemStone extends UseItem {
-	
+
 	public GemStone(Player player, NBTItem item, Type type) {
 		super(player, item, type);
 	}
 
 	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
-		StoredTags storedTags = new StoredTags(target);
+
 		/*
 		 * loads all stats and calculates EVERY piece of the lore again.
 		 */
@@ -44,9 +43,8 @@ public class GemStone extends UseItem {
 		 * weapon
 		 */
 		String appliableTypes = getNBTItem().getString("MMOITEMS_ITEM_TYPE_RESTRICTION");
-		if (!appliableTypes.equals(""))
-			if ((!targetType.isWeapon() || !appliableTypes.contains("WEAPON")) && !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
-				return new ApplyResult(ResultType.NONE);
+		if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON")) && !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
+			return new ApplyResult(ResultType.NONE);
 
 		// check for success rate
 		double successRate = getNBTItem().getStat(ItemStat.SUCCESS_RATE);
@@ -64,7 +62,7 @@ public class GemStone extends UseItem {
 		 */
 		GemstoneData gemData = sockets.newGemstone(mmoitem.getNBTItem(), mmoitem);
 		sockets.apply(gemType, gemData);
-		
+
 		for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
 			if (mmoitem.hasData(stat)) {
 				if (targetMMO.hasData(stat))
@@ -83,8 +81,8 @@ public class GemStone extends UseItem {
 
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 		Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
-		
-		return new ApplyResult(storedTags.reapply(targetMMO.newBuilder().build()).toItem());
+
+		return new ApplyResult(targetMMO.newBuilder().build());
 	}
 
 	public class ApplyResult {

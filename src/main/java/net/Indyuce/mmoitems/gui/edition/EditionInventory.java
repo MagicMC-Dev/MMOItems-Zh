@@ -16,7 +16,6 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class EditionInventory extends PluginInventory {
 	protected final Type type;
@@ -31,6 +30,7 @@ public abstract class EditionInventory extends PluginInventory {
 
 	public EditionInventory(Player player, Type type, String id, ItemStack cached) {
 		super(player);
+
 		this.type = type;
 		this.id = id == null ? null : id.toUpperCase().replace("-", "_").replace(" ", "_");
 		this.cached = player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory ? ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cached : cached;
@@ -75,7 +75,7 @@ public abstract class EditionInventory extends PluginInventory {
 	}
 
 	public void addEditionInventoryItems(Inventory inv, boolean backBool) {
-		ItemStack get = new ItemStack(VersionMaterial.GUNPOWDER.toMaterial());
+		ItemStack get = new ItemStack(Material.CHEST);
 		ItemMeta getMeta = get.getItemMeta();
 		getMeta.addItemFlags(ItemFlag.values());
 		getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub);

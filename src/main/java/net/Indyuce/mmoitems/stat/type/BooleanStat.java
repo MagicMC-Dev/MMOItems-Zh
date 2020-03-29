@@ -24,9 +24,8 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(this, new BooleanData(config.getBoolean(getPath())));
-		return true;
 	}
 
 	@Override

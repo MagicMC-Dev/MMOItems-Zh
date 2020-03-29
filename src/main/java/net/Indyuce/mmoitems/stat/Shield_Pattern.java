@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -39,48 +38,29 @@ public class Shield_Pattern extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		ShieldPatternData shieldPattern = new ShieldPatternData();
 
 		// dye color
-		if (config.getConfigurationSection("shield-pattern").contains("color")) {
-			String colorFormat = config.getString("shield-pattern.color").toUpperCase().replace("-", "_").replace(" ", "_");
-			try {
-				shieldPattern.setBaseColor(DyeColor.valueOf(colorFormat));
-			} catch (Exception e1) {
-				item.log(Level.WARNING, "Could read dye color from " + colorFormat);
-				return true;
-			}
+		ConfigurationSection section = config.getConfigurationSection("shield-pattern");
+		if (section.contains("color")) {
+			String format = config.getString("shield-pattern.color").toUpperCase().replace("-", "_").replace(" ", "_");
+			shieldPattern.setBaseColor(DyeColor.valueOf(format));
 		}
 
 		// apply patterns
-		for (String key : config.getConfigurationSection("shield-pattern").getKeys(false)) {
-			if (key.equalsIgnoreCase("color"))
-				continue;
+		for (String key : config.getConfigurationSection("shield-pattern").getKeys(false))
+			if (!key.equalsIgnoreCase("color")) {
+				String format = config.getString("shield-pattern." + key + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
+				PatternType type = PatternType.valueOf(format);
 
-			String format = config.getString("shield-pattern." + key + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
-			PatternType type;
-			try {
-				type = PatternType.valueOf(format);
-			} catch (Exception e1) {
-				item.log(Level.WARNING, "[Shield Pattern] " + format + " is not a valid pattern type!");
-				continue;
+				format = config.getString("shield-pattern." + key + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
+				DyeColor color = DyeColor.valueOf(format);
+
+				shieldPattern.add(new Pattern(color, type));
 			}
-
-			format = config.getString("shield-pattern." + key + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
-			DyeColor color;
-			try {
-				color = DyeColor.valueOf(format);
-			} catch (Exception e1) {
-				item.log(Level.WARNING, "Could not read dye color from " + format);
-				continue;
-			}
-
-			shieldPattern.add(new Pattern(color, type));
-		}
 
 		item.setData(ItemStat.SHIELD_PATTERN, shieldPattern);
-		return true;
 	}
 
 	@Override
@@ -90,7 +70,7 @@ public class Shield_Pattern extends StringStat {
 		ShieldPatternData pattern = (ShieldPatternData) data;
 		banner.setBaseColor(pattern.getBaseColor());
 		banner.setPatterns(pattern.getPatterns());
-		meta.setBlockState(banner);
+		((BlockStateMeta) item.getMeta()).setBlockState(banner);
 		item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		return true;
 	}
@@ -245,7 +225,7 @@ public class Shield_Pattern extends StringStat {
 
 	public class ShieldPatternData extends StatData {
 		private DyeColor base;
-		private List<Pattern> patterns = new ArrayList<>();
+		private final List<Pattern> patterns = new ArrayList<>();
 
 		public ShieldPatternData() {
 		}

@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -12,15 +13,12 @@ public class ColorData extends StatData {
 
 	public ColorData(MMOItem mmoitem, String string) {
 		setMMOItem(mmoitem);
-		
-		try {
-			String[] split = string.split("\\ ");
-			red = Math.min(255, Math.max(0, Integer.parseInt(split[0])));
-			green = Math.min(255, Math.max(0, Integer.parseInt(split[1])));
-			blue = Math.min(255, Math.max(0, Integer.parseInt(split[2])));
-		} catch (IndexOutOfBoundsException | NumberFormatException exception) {
-			throwError("Could not read color from " + string);
-		}
+
+		String[] split = string.split("\\ ");
+		Validate.isTrue(split.length > 2, "Must specify 3 numbers for red, green and blue");
+		red = Math.min(255, Math.max(0, Integer.parseInt(split[0])));
+		green = Math.min(255, Math.max(0, Integer.parseInt(split[1])));
+		blue = Math.min(255, Math.max(0, Integer.parseInt(split[2])));
 	}
 
 	public ColorData(Color color) {

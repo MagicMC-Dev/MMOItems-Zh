@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -150,45 +150,21 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		EffectListData effects = new EffectListData();
 
 		for (String effect : config.getConfigurationSection("effects").getKeys(false)) {
-			PotionEffectType type = null;
-			for (PotionEffectType type1 : PotionEffectType.values())
-				if (type1 != null && type1.getName().equals(effect.toUpperCase().replace("-", "_"))) {
-					type = type1;
-					break;
-				}
-
-			if (type == null) {
-				item.log(Level.WARNING, "[Potion Effects] " + effect + " is not a valid potion effect name.");
-				continue;
-			}
+			PotionEffectType type = MMOUtils.valueOfPotionEffectType(effect);
+			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
 
 			String[] split = config.getString("effects." + effect).split("\\,");
-			double duration = 0;
-			try {
-				duration = Double.parseDouble(split[0]);
-			} catch (Exception e) {
-				item.log(Level.WARNING, "[Potion Effects] " + split[0] + " is not a valid number.");
-				continue;
-			}
+			double duration = Double.parseDouble(split[0]);
 
-			int amplifier = 0;
-			if (split.length > 1)
-				try {
-					amplifier = Integer.parseInt(split[1]);
-				} catch (Exception e) {
-					item.log(Level.WARNING, "[Potion Effects] " + split[1] + " is not a valid integer.");
-					continue;
-				}
-
+			int amplifier = Integer.parseInt(split[1]);
 			effects.add(new PotionEffectData(type, duration, amplifier));
 		}
 
 		item.setData(ItemStat.EFFECTS, effects);
-		return true;
 	}
 
 	@Override

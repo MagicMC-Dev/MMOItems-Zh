@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -114,23 +113,15 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
-		if (!config.contains("commands"))
-			return true;
-
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		CommandListData list = new CommandListData();
-		
+
 		for (String key : config.getConfigurationSection("commands").getKeys(false)) {
 			ConfigurationSection section = config.getConfigurationSection("commands." + key);
-			try {
-				list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"), section.getBoolean("op")));
-			} catch (IllegalArgumentException exception) {
-				item.log(Level.WARNING, "Couldn't load command ID " + section.getName());
-			}
+			list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"), section.getBoolean("op")));
 		}
-		
+
 		item.setData(ItemStat.COMMANDS, list);
-		return true;
 	}
 
 	@Override

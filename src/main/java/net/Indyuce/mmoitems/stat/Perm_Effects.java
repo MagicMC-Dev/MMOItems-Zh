@@ -3,12 +3,12 @@ package net.Indyuce.mmoitems.stat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -118,27 +118,16 @@ public class Perm_Effects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		EffectListData effects = new EffectListData();
 
 		for (String effect : config.getConfigurationSection("perm-effects").getKeys(false)) {
-			PotionEffectType type = null;
-			for (PotionEffectType type1 : PotionEffectType.values())
-				if (type1 != null && type1.getName().equals(effect.toUpperCase().replace("-", "_"))) {
-					type = type1;
-					break;
-				}
-
-			if (type == null) {
-				item.log(Level.WARNING, "[Potion Effects] " + effect + " is not a valid potion effect name.");
-				continue;
-			}
-
+			PotionEffectType type = MMOUtils.valueOfPotionEffectType(effect);
+			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
 			effects.add(new PotionEffectData(type, config.getInt("perm-effects." + effect)));
 		}
 
 		item.setData(ItemStat.PERM_EFFECTS, effects);
-		return true;
 	}
 
 	@Override

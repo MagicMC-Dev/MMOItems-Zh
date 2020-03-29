@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
-import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,18 +35,12 @@ public class Arrow_Particles extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
-		if (!config.getConfigurationSection("arrow-particles").contains("particle"))
-			return true;
-		ArrowParticlesData data = new ArrowParticlesData();
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+		Validate.isTrue(config.getConfigurationSection("arrow-particles").contains("particle"), "Could not find arrow particle");
 
+		ArrowParticlesData data = new ArrowParticlesData();
 		String particleFormat = config.getString("arrow-particles.particle").toUpperCase().replace("-", "_").replace(" ", "_");
-		try {
-			data.particle = Particle.valueOf(particleFormat);
-		} catch (IllegalArgumentException exception) {
-			data.getMMOItem().log(Level.WARNING, particleFormat + " is not a valid particle name.");
-			return true;
-		}
+		data.particle = Particle.valueOf(particleFormat);
 
 		data.amount = config.getInt("arrow-particles.amount");
 		data.offset = config.getDouble("arrow-particles.offset");
@@ -60,7 +54,6 @@ public class Arrow_Particles extends StringStat {
 			data.speed = config.getDouble("arrow-particles.speed");
 
 		item.setData(ItemStat.ARROW_PARTICLES, data);
-		return true;
 	}
 
 	@Override

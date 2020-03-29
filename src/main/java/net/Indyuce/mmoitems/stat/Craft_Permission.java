@@ -16,8 +16,7 @@ public class Craft_Permission extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
-		return true;
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 	}
 
 	@Override

@@ -15,30 +15,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.stat.MaterialStat.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat.StringData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOItemBuilder {
 	private final MMOItem mmoitem;
 
-	private ItemStack item = new ItemStack(VersionMaterial.NETHER_WART.toMaterial());
-	private ItemMeta meta;
-	private MMOItemLore lore = new MMOItemLore();
-	private List<ItemTag> tags = new ArrayList<>();
+	private final ItemStack item;
+	private final ItemMeta meta;
+	private final MMOItemLore lore = new MMOItemLore();
+	private final List<ItemTag> tags = new ArrayList<>();
 
 	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "generic.attackSpeed", 0, Operation.ADD_NUMBER);
 
-	public MMOItemBuilder(MMOItem item) {
-		mmoitem = item;
+	public MMOItemBuilder(MMOItem mmoitem) {
+		this.mmoitem = mmoitem;
 
-		tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", item.getType().getId()));
-		tags.add(new ItemTag("MMOITEMS_ITEM_ID", item.getId()));
+		item = new ItemStack(mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
+		meta = item.getItemMeta();
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-		String path = item.getType().getId() + "." + item.getId();
+		tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoitem.getType().getId()));
+		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
+
+		String path = mmoitem.getType().getId() + "." + mmoitem.getId();
 		if (MMOItems.plugin.getUpdater().hasData(path))
 			tags.add(new ItemTag("MMOITEMS_ITEM_UUID", MMOItems.plugin.getUpdater().getData(path).getUniqueId().toString()));
 	}
@@ -64,15 +68,6 @@ public class MMOItemBuilder {
 			tags.add(itemTag);
 	}
 
-	public Material getMaterial() {
-		return item.getType();
-	}
-
-	public void setMaterial(Material material) {
-		item.setType(material);
-		(meta = item.getItemMeta()).addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-	}
-
 	public ItemStack build() {
 
 		for (ItemStat stat : mmoitem.getStats())
@@ -91,6 +86,7 @@ public class MMOItemBuilder {
 		 * holder. since 4.7 attributes are handled via custom calculations
 		 */
 		try {
+
 			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 			item.setItemMeta(meta);
 			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags).toItem();

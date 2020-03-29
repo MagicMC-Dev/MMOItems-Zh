@@ -141,16 +141,11 @@ public class Potion_Effects extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		EffectListData effects = new EffectListData();
 
 		for (String effect : config.getConfigurationSection("potion-effects").getKeys(false)) {
-			PotionEffectType type = null;
-			for (PotionEffectType type1 : PotionEffectType.values())
-				if (type1 != null && type1.getName().equals(effect.toUpperCase().replace("-", "_"))) {
-					type = type1;
-					break;
-				}
+			PotionEffectType type = MMOUtils.valueOfPotionEffectType(effect);
 
 			if (type == null) {
 				item.log(Level.WARNING, "[Potion Effects] " + effect + " is not a valid potion effect name.");
@@ -179,12 +174,11 @@ public class Potion_Effects extends StringStat {
 		}
 
 		item.setData(ItemStat.POTION_EFFECTS, effects);
-		return true;
 	}
 
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		if (item.getMaterial().name().contains("POTION") || item.getMaterial() == Material.TIPPED_ARROW)
+		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			for(PotionEffectData effect : ((EffectListData) data).getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
 		return true;

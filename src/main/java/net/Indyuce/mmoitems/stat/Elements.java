@@ -99,7 +99,7 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		ElementListData elements = new ElementListData();
 
 		for (Element element : Element.values()) {
@@ -116,7 +116,6 @@ public class Elements extends ItemStat {
 		}
 
 		item.setData(ItemStat.ELEMENTS, elements);
-		return true;
 	}
 
 	@Override

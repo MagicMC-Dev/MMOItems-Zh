@@ -117,9 +117,8 @@ public class Item_Type_Restriction extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.ITEM_TYPE_RESTRICTION, new StringListData(config.getStringList(getPath())));
-		return true;
 	}
 
 	@Override

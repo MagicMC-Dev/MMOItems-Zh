@@ -28,9 +28,8 @@ public class DisableStat extends BooleanStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(this, new BooleanData(config.getBoolean("disable-" + tag.toLowerCase().replace("_", "-"))));
-		return true;
 	}
 
 	@Override

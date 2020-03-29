@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.logging.Level;
-
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -51,23 +50,17 @@ public class MaterialStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
-		MaterialData material = new MaterialData();
-
-		try {
-			material.setMaterial(Material.valueOf(config.getString("material").toUpperCase().replace("-", "_").replace(" ", "_")));
-		} catch (Exception e) {
-			material.setMaterial(VersionMaterial.NETHER_WART.toMaterial());
-			item.log(Level.WARNING, "Could not read material from item, using default");
-		}
-
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+		MaterialData material = new MaterialData(Material.valueOf(config.getString("material").toUpperCase().replace("-", "_").replace(" ", "_")));
 		item.setData(ItemStat.MATERIAL, material);
-		return true;
 	}
 
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		item.setMaterial(((MaterialData) data).getMaterial());
+		/*
+		 * material is set handled directly in the MMOBuilder constructor
+		 * therefore nothing needs to be done here
+		 */
 		return true;
 	}
 
@@ -79,15 +72,18 @@ public class MaterialStat extends StringStat {
 	public class MaterialData extends StatData {
 		private Material material;
 
-		public MaterialData() {
-		}
-
+		/*
+		 * material must not be null because it is called directly in the
+		 * MMOBuilder constructor.
+		 */
 		public MaterialData(Material material) {
+			Validate.notNull(material, "Material must not be null");
 			this.material = material;
 		}
 
-		public void setMaterial(Material value) {
-			material = value;
+		public void setMaterial(Material material) {
+			Validate.notNull(material, "Material must not be null");
+			this.material = material;
 		}
 
 		public Material getMaterial() {

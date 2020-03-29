@@ -24,9 +24,8 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		// not supported
-		return true;
 	}
 
 	@Override

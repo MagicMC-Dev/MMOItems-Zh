@@ -90,9 +90,8 @@ public class Required_Class extends StringStat implements Conditional {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.REQUIRED_CLASS, new StringListData(config.getStringList("required-class")));
-		return true;
 	}
 
 	@Override

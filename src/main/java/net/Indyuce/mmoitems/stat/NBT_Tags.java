@@ -89,9 +89,8 @@ public class NBT_Tags extends StringStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		item.setData(ItemStat.NBT_TAGS, new StringListData(config.getStringList("custom-nbt")));
-		return true;
 	}
 
 	@Override

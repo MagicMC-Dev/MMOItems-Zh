@@ -105,7 +105,7 @@ public class CustomSounds extends ItemStat {
 	}
 
 	@Override
-	public boolean whenLoaded(MMOItem item, ConfigurationSection config) {
+	public void whenLoaded(MMOItem item, ConfigurationSection config) {
 		SoundListData sounds = new SoundListData();
 
 		for (CustomSound sound : CustomSound.values()) {
@@ -121,7 +121,6 @@ public class CustomSounds extends ItemStat {
 		}
 
 		item.setData(ItemStat.CUSTOM_SOUNDS, sounds);
-		return true;
 	}
 
 	@Override

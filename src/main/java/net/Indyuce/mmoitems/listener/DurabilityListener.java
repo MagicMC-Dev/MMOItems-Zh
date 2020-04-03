@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerItemMendEvent;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.mmogroup.mmolib.MMOLib;
 
-public class NewDurabilityListener implements Listener {
+public class DurabilityListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void a(PlayerItemDamageEvent event) {
@@ -32,7 +32,7 @@ public class NewDurabilityListener implements Listener {
 			}
 
 			event.setCancelled(true);
-			event.getItem().setItemMeta(item.toItem().getItemMeta());
+			MMOLib.plugin.getVersion().getWrapper().applyDurabilityData(event.getItem(), item.toItem());
 		}
 	}
 

@@ -47,7 +47,7 @@ import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.listener.DisableInteractions;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
-import net.Indyuce.mmoitems.listener.NewDurabilityListener;
+import net.Indyuce.mmoitems.listener.DurabilityListener;
 import net.Indyuce.mmoitems.listener.PlayerListener;
 import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
 import net.Indyuce.mmoitems.manager.AbilityManager;
@@ -146,7 +146,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), this);
-		Bukkit.getPluginManager().registerEvents(new NewDurabilityListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DurabilityListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);

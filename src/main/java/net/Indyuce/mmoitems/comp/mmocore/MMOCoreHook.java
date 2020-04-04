@@ -26,7 +26,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	private static final ItemStat STAMINA_REGENERATION = new DoubleStat(VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." }, "stamina-regeneration");
 	private static final ItemStat SKILL_COOLDOWN_REDUCTION = new DoubleStat(new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." }, "skill-cooldown-reduction");
 	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat(VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." }, "additional-experience");
-	private static final ItemStat HEALTH_REGENERATION = new DoubleStat(new ItemStack(Material.BREAD), "Health Regeneration", new String[] { "Increases natural/magic health regen.", "In %." }, "health-regeneration");
+	private static final ItemStat HEALTH_REGENERATION = new DoubleStat(new ItemStack(Material.BREAD), "Health Regeneration", new String[] { "Increases MMOCore health regen.", "In %." }, "health-regeneration");
 	
 	
 	/*

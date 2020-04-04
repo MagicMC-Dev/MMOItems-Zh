@@ -20,12 +20,13 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class CraftingStation {
 	private final String id, name;
-	private StationItemOptions itemOptions;
-	private int maxQueueSize;
-	private Map<String, Recipe> recipes = new LinkedHashMap<>();
+	private final StationItemOptions itemOptions;
+	private final int maxQueueSize;
+	private final Map<String, Recipe> recipes = new LinkedHashMap<>();
 
 	public CraftingStation(String id, FileConfiguration config) {
-		this(id.toLowerCase().replace("_", "-").replace(" ", "-"), config.getString("name"));
+		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
+		this.name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
 
 		for (String key : config.getConfigurationSection("recipes").getKeys(false))
 			registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
@@ -34,12 +35,14 @@ public class CraftingStation {
 		maxQueueSize = Math.max(1, Math.min(config.getInt("max-queue-size"), 64));
 	}
 
-	public CraftingStation(String id, String name) {
+	public CraftingStation(String id, String name, StationItemOptions itemOptions, int maxQueueSize) {
 		Validate.notNull(id, "Crafting station ID must not be null");
 		Validate.notNull(name, "Crafting station name must not be null");
 
-		this.id = id;
+		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
 		this.name = ChatColor.translateAlternateColorCodes('&', name);
+		this.itemOptions = itemOptions;
+		this.maxQueueSize = maxQueueSize;
 	}
 
 	public String getId() {

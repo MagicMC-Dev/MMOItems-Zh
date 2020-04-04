@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mmocore;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmocore.MMOCore;
+import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmocore.api.droptable.condition.Condition;
 import net.Indyuce.mmocore.api.droptable.dropitem.DropItem;
 import net.Indyuce.mmocore.api.experience.Profession;
@@ -19,10 +20,11 @@ import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
+import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemsBlockType;
 import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
 import net.Indyuce.mmoitems.comp.mmocore.load.SmeltMMOItemExperienceSource;
 
-public class MMOCoreMMOLoader implements MMOLoader {
+public class MMOCoreMMOLoader extends MMOLoader {
 
 	/*
 	 * called when MMOItems loads
@@ -79,6 +81,16 @@ public class MMOCoreMMOLoader implements MMOLoader {
 		if (config.getKey().equalsIgnoreCase("smeltmmoitem"))
 			return new SmeltMMOItemExperienceSource(profession, config);
 
+		return null;
+	}
+	
+
+	@Override
+	public BlockType loadBlockType(MMOLineConfig config) {
+
+		if (config.getKey().equalsIgnoreCase("miblock") || config.getKey().equals("mmoitemsblock")|| config.getKey().equals("mmoitem")|| config.getKey().equals("mmoitems"))
+			return new MMOItemsBlockType(config);
+		
 		return null;
 	}
 }

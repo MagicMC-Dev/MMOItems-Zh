@@ -32,11 +32,7 @@ public class BlockManager {
 	}
 
 	public CustomBlock getBlock(int id) {
-		if (id > 0 && id < 161 && id != 54)
-			return customBlocks.get(id);
-
-		MMOItems.plugin.getLogger().warning("Invalid CustomBlock Id! " + id);
-		return null;
+		return id > 0 && id < 161 && id != 54 ? customBlocks.get(id) : null;
 	}
 
 	public CustomBlock getBlock(MushroomState state) {
@@ -48,7 +44,7 @@ public class BlockManager {
 		FileConfiguration config = new ConfigFile("custom-blocks").getConfig();
 
 		for (int id = 1; id < 161; id++)
-			if (id != 54)
+			if (id != 54 && config.contains("" + id))
 				try {
 					MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id), eastIds.contains(id), southIds.contains(id), northIds.contains(id));
 					customBlocks.put(id, new CustomBlock(id, state, config.getConfigurationSection("" + id)));

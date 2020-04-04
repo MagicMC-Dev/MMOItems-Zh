@@ -31,7 +31,9 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomBlockListener implements Listener {
-	Random rnd = new Random();
+
+	private static final Random random = new Random();
+	private static final List<Material> mat = Arrays.asList(Material.GRASS, Material.TALL_GRASS, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.FERN, Material.LARGE_FERN, Material.DEAD_BUSH, Material.SNOW);
 
 	public CustomBlockListener() {
 		if (MMOItems.plugin.getLanguage().replaceMushroomDrops)
@@ -54,7 +56,7 @@ public class CustomBlockListener implements Listener {
 			CustomBlock block = CustomBlock.getFromData(event.getBlock().getBlockData());
 			if (block != null) {
 				event.setDropItems(false);
-				event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower() ? block.getMaxXPDrop() == 0 && block.getMinXPDrop() == 0 ? 0 : rnd.nextInt((block.getMaxXPDrop() - block.getMinXPDrop()) + 1) + block.getMinXPDrop() : 0);
+				event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower() ? block.getMaxXPDrop() == 0 && block.getMinXPDrop() == 0 ? 0 : random.nextInt((block.getMaxXPDrop() - block.getMinXPDrop()) + 1) + block.getMinXPDrop() : 0);
 			}
 		}
 	}
@@ -69,8 +71,6 @@ public class CustomBlockListener implements Listener {
 				return;
 
 			CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(nbtItem.getInteger("MMOITEMS_BLOCK_ID"));
-
-			List<Material> mat = Arrays.asList(Material.GRASS, Material.TALL_GRASS, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.FERN, Material.LARGE_FERN, Material.DEAD_BUSH, Material.SNOW);
 
 			Block modify = mat.contains(event.getClickedBlock().getType()) ? event.getClickedBlock() : event.getClickedBlock().getRelative(event.getBlockFace());
 

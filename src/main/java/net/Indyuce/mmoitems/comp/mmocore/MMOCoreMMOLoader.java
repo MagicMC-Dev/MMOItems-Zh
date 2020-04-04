@@ -31,6 +31,7 @@ public class MMOCoreMMOLoader extends MMOLoader {
 	 */
 	public MMOCoreMMOLoader() {
 		MMOCore.plugin.loadManager.registerLoader(this);
+		MMOCore.plugin.mineManager.registerBlockType(block -> MMOItems.plugin.getCustomBlocks().isMushroomBlock(block.getType()) ? new MMOItemsBlockType(block) : null);
 
 		/*
 		 * register extra conditions for MMOItems crafting.
@@ -77,20 +78,19 @@ public class MMOCoreMMOLoader extends MMOLoader {
 
 		if (config.getKey().equals("minemiblock"))
 			return new MineMIBlockExperienceSource(profession, config);
-		
+
 		if (config.getKey().equalsIgnoreCase("smeltmmoitem"))
 			return new SmeltMMOItemExperienceSource(profession, config);
 
 		return null;
 	}
-	
 
 	@Override
 	public BlockType loadBlockType(MMOLineConfig config) {
 
-		if (config.getKey().equalsIgnoreCase("miblock") || config.getKey().equals("mmoitemsblock")|| config.getKey().equals("mmoitem")|| config.getKey().equals("mmoitems"))
+		if (config.getKey().equalsIgnoreCase("miblock") || config.getKey().equals("mmoitemsblock") || config.getKey().equals("mmoitem") || config.getKey().equals("mmoitems"))
 			return new MMOItemsBlockType(config);
-		
+
 		return null;
 	}
 }

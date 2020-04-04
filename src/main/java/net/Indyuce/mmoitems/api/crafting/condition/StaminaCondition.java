@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.MMOLineConfig;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class StaminaCondition extends Condition {
 	private final double amount;

@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.MMOLineConfig;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public abstract class Recipe {
 	private final String id;

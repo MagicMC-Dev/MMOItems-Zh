@@ -6,7 +6,7 @@ import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
-import net.Indyuce.mmoitems.api.util.MMOLineConfig;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class ExperienceCraftingTrigger extends Trigger {
 	private final Profession profession;

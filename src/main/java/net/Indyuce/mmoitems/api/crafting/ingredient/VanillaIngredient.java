@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.util.MMOLineConfig;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class VanillaIngredient extends Ingredient {
 	private final Material material;

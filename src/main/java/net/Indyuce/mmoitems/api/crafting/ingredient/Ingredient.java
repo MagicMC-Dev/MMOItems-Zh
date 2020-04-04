@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMode;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
-import net.Indyuce.mmoitems.api.util.MMOLineConfig;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public abstract class Ingredient {
 	private final String id;

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.MMOLineConfig;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class PermissionCondition extends Condition {
 	private final List<String> permissions;

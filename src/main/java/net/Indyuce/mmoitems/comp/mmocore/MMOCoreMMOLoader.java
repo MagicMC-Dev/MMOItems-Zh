@@ -8,7 +8,6 @@ import net.Indyuce.mmocore.api.droptable.condition.Condition;
 import net.Indyuce.mmocore.api.droptable.dropitem.DropItem;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.experience.source.type.ExperienceSource;
-import net.Indyuce.mmocore.api.load.MMOLineConfig;
 import net.Indyuce.mmocore.api.load.MMOLoader;
 import net.Indyuce.mmocore.api.quest.objective.Objective;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
@@ -23,6 +22,7 @@ import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemsBlockType;
 import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
 import net.Indyuce.mmoitems.comp.mmocore.load.SmeltMMOItemExperienceSource;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MMOCoreMMOLoader extends MMOLoader {
 

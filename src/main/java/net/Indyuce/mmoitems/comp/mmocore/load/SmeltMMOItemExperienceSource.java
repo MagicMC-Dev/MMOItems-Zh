@@ -11,10 +11,10 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.experience.source.type.SpecificExperienceSource;
-import net.Indyuce.mmocore.api.load.MMOLineConfig;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.manager.profession.ExperienceManager;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTItem> {

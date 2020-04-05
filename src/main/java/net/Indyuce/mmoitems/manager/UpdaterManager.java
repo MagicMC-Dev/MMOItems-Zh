@@ -30,10 +30,9 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.wrapper.VersionWrapper;
 
 public class UpdaterManager implements Listener {
-	private Map<String, UpdaterData> map = new HashMap<>();
+	private final Map<String, UpdaterData> map = new HashMap<>();
 
 	public UpdaterManager() {
-
 		FileConfiguration updater = new ConfigFile("/dynamic", "updater").getConfig();
 		for (String type : updater.getKeys(false))
 			for (String id : updater.getConfigurationSection(type).getKeys(false)) {
@@ -204,14 +203,14 @@ public class UpdaterManager implements Listener {
 	public class UpdaterData {
 
 		// itemType.name() + "." + itemId
-		private String path;
+		private final String path;
 
 		/*
 		 * two UUIDs can be found : one on the itemStack in the nbttags, and one
 		 * in the UpdaterData instance. if the two match, the item is up to
 		 * date. if they don't match, the item needs to be updated
 		 */
-		private UUID uuid;
+		private final UUID uuid;
 
 		private boolean keepLore, keepDurability, keepEnchants, keepName, keepGems, keepSoulbound;
 
@@ -299,10 +298,6 @@ public class UpdaterManager implements Listener {
 
 		public void setKeepSoulbound(boolean value) {
 			keepSoulbound = value;
-		}
-
-		public void setUUID(UUID uuid) {
-			this.uuid = uuid;
 		}
 	}
 }

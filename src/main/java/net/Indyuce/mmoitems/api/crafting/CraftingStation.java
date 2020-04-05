@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
@@ -29,7 +31,11 @@ public class CraftingStation {
 		this.name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
 
 		for (String key : config.getConfigurationSection("recipes").getKeys(false))
-			registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
+			try {
+				registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.INFO, "An issue occured registering recipe '" + key + "' from crafting station '" + id + "': " + exception.getMessage());
+			}
 
 		itemOptions = new StationItemOptions(config.getConfigurationSection("items"));
 		maxQueueSize = Math.max(1, Math.min(config.getInt("max-queue-size"), 64));

@@ -15,6 +15,8 @@ public class ConfigMMOItem {
 	private ItemStack preview;
 
 	public ConfigMMOItem(ConfigurationSection config) {
+		Validate.notNull(config, "Could not read MMOItem config");
+		
 		String typeFormat = config.getString("type"), id = config.getString("id");
 		Validate.notNull(typeFormat, "Type format must not be null");
 		Validate.notNull(id, "ID must not be null");

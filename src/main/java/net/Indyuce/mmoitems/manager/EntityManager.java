@@ -31,9 +31,9 @@ public class EntityManager implements Listener {
 	 * evoker fangs or shulker missiles. it can correspond to the damage the
 	 * entity is supposed to deal, etc
 	 */
-	private Map<Integer, Object[]> entities = new HashMap<>();
+	private final Map<Integer, Object[]> entities = new HashMap<>();
 
-	private Map<Integer, ProjectileData> projectiles = new HashMap<>();
+	private final Map<Integer, ProjectileData> projectiles = new HashMap<>();
 
 	public void registerCustomProjectile(NBTItem sourceItem, CachedStats stats, Entity entity, boolean customWeapon) {
 		registerCustomProjectile(sourceItem, stats, entity, customWeapon, 1);

@@ -61,6 +61,9 @@ public class PlayerStats {
 		return new CachedStats();
 	}
 
+	/*
+	 * TODO merge this with MMOLib CachedStatMap
+	 */
 	public class CachedStats {
 
 		/*

@@ -447,7 +447,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getTiers().reload();
 			MMOItems.plugin.getSets().reload();
 			MMOItems.plugin.getUpgrades().reload();
-			MMOItems.plugin.getCustomBlocks().reload();
+			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
+				MMOItems.plugin.getCustomBlocks().reload();
 			MMOItems.plugin.getItems().reload();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");

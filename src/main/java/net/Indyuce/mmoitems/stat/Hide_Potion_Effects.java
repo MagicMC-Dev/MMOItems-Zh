@@ -13,7 +13,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Hide_Potion_Effects extends BooleanStat {
 	public Hide_Potion_Effects() {
-		super(new ItemStack(Material.POTION), "Hide Potion Effects", new String[] { "Hides potion effects & 'No Effects'", "from your item lore." }, "hide-potion-effects", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
+		super("HIDE_POTION_EFFECTS", new ItemStack(Material.POTION), "Hide Potion Effects", new String[] { "Hides potion effects & 'No Effects'", "from your item lore." }, new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override
@@ -22,10 +22,10 @@ public class Hide_Potion_Effects extends BooleanStat {
 			item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		return true;
 	}
-	
+
 	@Override
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if(item.getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
+		if (item.getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
 			mmoitem.setData(ItemStat.HIDE_POTION_EFFECTS, new BooleanData(true));
 	}
 }

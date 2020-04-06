@@ -10,7 +10,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Inedible extends BooleanStat {
 	public Inedible() {
-		super(new ItemStack(Material.POISONOUS_POTATO), "Inedible", new String[] { "Players won't be able to", "right-click this consumable." }, "inedible", new String[] { "consumable" });
+		super("INEDIBLE", new ItemStack(Material.POISONOUS_POTATO), "Inedible", new String[] { "Players won't be able to", "right-click this consumable." }, new String[] { "consumable" });
 	}
 
 	@Override

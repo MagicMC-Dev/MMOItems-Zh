@@ -32,7 +32,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Required_Class extends StringStat implements Conditional {
 	public Required_Class() {
-		super(new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class", new String[] { "The class you need to", "profress to use your item." }, "required-class", new String[] { "all" });
+		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class", new String[] { "The class you need to", "profress to use your item." }, new String[] { "all" });
 	}
 
 	@Override

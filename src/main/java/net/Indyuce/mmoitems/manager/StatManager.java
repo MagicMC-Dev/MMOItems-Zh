@@ -15,9 +15,15 @@ import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 
 public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
+
+	/*
+	 * numeric statistics which can be mecanically updated when applying a gem
+	 * stone
+	 */
 	private final Set<DoubleStat> gem = new HashSet<>();
 	private final Set<AttributeStat> attribute = new HashSet<>();
 	private final Set<Conditional> conditionals = new HashSet<>();
@@ -50,7 +56,7 @@ public class StatManager {
 	public Set<DoubleStat> getDoubleStats() {
 		return gem;
 	}
-	
+
 	public Set<Conditional> getConditionals() {
 		return conditionals;
 	}
@@ -63,10 +69,9 @@ public class StatManager {
 		if (!stat.isEnabled())
 			return;
 
-		stat.setId(id);
 		stats.put(stat.getId(), stat);
 
-		if (isGemStoneStat(stat))
+		if (!(stat instanceof ProperStat) && stat instanceof DoubleStat && Type.GEM_STONE.canHave(stat))
 			gem.add((DoubleStat) stat);
 
 		if (stat instanceof AttributeStat)
@@ -87,9 +92,5 @@ public class StatManager {
 
 	public ItemStat get(String str) {
 		return stats.containsKey(str) ? stats.get(str) : null;
-	}
-
-	private boolean isGemStoneStat(ItemStat stat) {
-		return Type.GEM_STONE.canHave(stat) && stat != ItemStat.REQUIRED_LEVEL && stat != ItemStat.CUSTOM_MODEL_DATA && stat != ItemStat.DURABILITY && stat != ItemStat.MAX_CUSTOM_DURABILITY && stat != ItemStat.SUCCESS_RATE && stat instanceof DoubleStat;
 	}
 }

@@ -31,7 +31,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Enchants extends ItemStat {
 	public Enchants() {
-		super(new ItemStack(Material.ENCHANTED_BOOK), "Enchantments", new String[] { "The item enchants." }, "enchants", new String[] { "all" });
+		super("ENCHANTS", new ItemStack(Material.ENCHANTED_BOOK), "Enchantments", new String[] { "The item enchants." }, new String[] { "all" });
 	}
 
 	@Override

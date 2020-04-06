@@ -37,10 +37,10 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Effects extends ItemStat {
-	private DecimalFormat durationFormat = new DecimalFormat("0.#");
+	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public Effects() {
-		super(new ItemStack(Material.POTION), "Effects", new String[] { "The potion effects your", "consumable item grants." }, "effects", new String[] { "consumable" });
+		super("EFFECTS", new ItemStack(Material.POTION), "Effects", new String[] { "The potion effects your", "consumable item grants." }, new String[] { "consumable" });
 	}
 
 	@Override

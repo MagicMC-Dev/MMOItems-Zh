@@ -24,7 +24,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Staff_Spirit extends StringStat {
 	public Staff_Spirit() {
-		super(VersionMaterial.BONE_MEAL.toItem(), "Staff Spirit", new String[] { "Spirit changes the texture", "of the magic attack.", "&9Tip: /mi list spirit" }, "staff-spirit", new String[] { "staff", "wand" });
+		super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toItem(), "Staff Spirit", new String[] { "Spirit changes the texture", "of the magic attack.", "&9Tip: /mi list spirit" }, new String[] { "staff", "wand" });
 	}
 
 	@Override
@@ -66,12 +66,13 @@ public class Staff_Spirit extends StringStat {
 		XRAY_SPIRIT("X-Ray Spirit", "Fires piercing & powerful X-rays.", new XRaySpirit()),
 		THUNDER_SPIRIT("Thunder Spirit", "Fires AoE damaging thunder strikes.", new ThunderSpirit()),
 		SUNFIRE_SPIRIT("Sunfire Spirit", "Fires AoE damaging fire comets.", new SunfireSpirit()),
-		// CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a targeted cursed projectile."), new CursedSpirit()),
+		// CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a
+		// targeted cursed projectile."), new CursedSpirit()),
 		;
 
 		private final String lore;
 		private final StaffAttackHandler handler;
-		
+
 		private String name;
 
 		private StaffSpirit(String name, String lore, StaffAttackHandler handler) {
@@ -112,4 +113,3 @@ public class Staff_Spirit extends StringStat {
 		}
 	}
 }
-

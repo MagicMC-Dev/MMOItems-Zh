@@ -30,7 +30,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Compatible_Types extends StringStat {
 	public Compatible_Types() {
-		super(new ItemStack(VersionMaterial.COMMAND_BLOCK.toMaterial()), "Compatible Types", new String[] { "The item types this skin is", "compatible with." }, "compatible-types", new String[] { "skin" });
+		super("COMPATIBLE_TYPES", new ItemStack(VersionMaterial.COMMAND_BLOCK.toMaterial()), "Compatible Types", new String[] { "The item types this skin is", "compatible with." }, new String[] { "skin" });
 	}
 
 	@Override

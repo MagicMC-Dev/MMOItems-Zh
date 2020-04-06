@@ -21,7 +21,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MaterialStat extends StringStat {
 	public MaterialStat() {
-		super(new ItemStack(VersionMaterial.GRASS_BLOCK.toMaterial()), "Material", new String[] { "Your item material." }, "material", new String[] { "all" });
+		super("MATERIAL", new ItemStack(VersionMaterial.GRASS_BLOCK.toMaterial()), "Material", new String[] { "Your item material." }, new String[] { "all" });
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class Required_Attribute extends DoubleStat implements Conditional {
 	private final PlayerAttribute attribute;
 
 	public Required_Attribute(PlayerAttribute attribute) {
-		super(VersionMaterial.GRAY_DYE.toItem(), attribute.getName() + " Requirement (MMOCore)", new String[] { "Amount of " + attribute.getName() + " points the", "player needs to use the item." }, "required-" + attribute.getId());
+		super("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), VersionMaterial.GRAY_DYE.toItem(), attribute.getName() + " Requirement (MMOCore)", new String[] { "Amount of " + attribute.getName() + " points the", "player needs to use the item." });
 
 		this.attribute = attribute;
 	}

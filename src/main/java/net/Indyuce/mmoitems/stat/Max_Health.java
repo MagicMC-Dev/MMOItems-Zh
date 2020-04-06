@@ -12,7 +12,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Max_Health extends AttributeStat {
 	public Max_Health() {
-		super(new ItemStack(Material.GOLDEN_APPLE), "Max Health", new String[] { "The amount of health your", "item gives to the holder." }, "max-health", Attribute.GENERIC_MAX_HEALTH);
+		super("MAX_HEALTH", new ItemStack(Material.GOLDEN_APPLE), "Max Health", new String[] { "The amount of health your", "item gives to the holder." }, Attribute.GENERIC_MAX_HEALTH);
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Gem_Sockets extends ItemStat {
 	public Gem_Sockets() {
-		super(new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." }, "gem-sockets", new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
+		super("GEM_SOCKETS", new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." }, new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
 	}
 
 	@Override

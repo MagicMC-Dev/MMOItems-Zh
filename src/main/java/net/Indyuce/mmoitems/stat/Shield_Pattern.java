@@ -34,7 +34,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Shield_Pattern extends StringStat {
 	public Shield_Pattern() {
-		super(new ItemStack(Material.SHIELD), "Shield Pattern", new String[] { "The color & patterns", "of your shield." }, "shield-pattern", new String[] { "all" }, Material.SHIELD);
+		super("SHIELD_PATTERN", new ItemStack(Material.SHIELD), "Shield Pattern", new String[] { "The color & patterns", "of your shield." }, new String[] { "all" }, Material.SHIELD);
 	}
 
 	@Override

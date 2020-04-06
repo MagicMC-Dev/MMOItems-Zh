@@ -31,7 +31,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Permission extends ItemStat implements Conditional {
 	public Permission() {
-		super(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission", new String[] { "The permission needed to use this item." }, "permission", new String[] { "all" });
+		super("PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission", new String[] { "The permission needed to use this item." }, new String[] { "all" });
 	}
 
 	@Override

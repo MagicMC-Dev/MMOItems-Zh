@@ -11,12 +11,13 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class Maximum_Durability extends DoubleStat implements Conditional {
+public class Maximum_Durability extends DoubleStat implements Conditional, ProperStat {
 	public Maximum_Durability() {
-		super(new ItemStack(Material.SHEARS), "Maximum Durability", new String[] { "The amount of uses before your", "item becomes unusable/breaks." }, "max-durability", new String[] { "all" });
+		super("MAX_DURABILITY", new ItemStack(Material.SHEARS), "Maximum Durability", new String[] { "The amount of uses before your", "item becomes unusable/breaks." }, new String[] { "all" });
 	}
 
 	/*

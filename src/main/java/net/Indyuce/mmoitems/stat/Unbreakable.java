@@ -13,7 +13,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Unbreakable extends BooleanStat {
 	public Unbreakable() {
-		super(new ItemStack(Material.ANVIL), "Unbreakable", new String[] { "Infinite durability if set to true." }, "unbreakable", new String[] { "all" });
+		super("UNBREAKABLE", new ItemStack(Material.ANVIL), "Unbreakable", new String[] { "Infinite durability if set to true." }, new String[] { "all" });
 	}
 
 	@Override

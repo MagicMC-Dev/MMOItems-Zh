@@ -28,12 +28,6 @@ import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
 
 public class ConfigManager {
 
-	// must be updated each time a new language file is needed
-	private String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
-
-	// must be updated each time a new language is added
-	private String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
-
 	// cached config files
 	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders;
 
@@ -45,6 +39,8 @@ public class ConfigManager {
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage;
 
 	private static final Random random = new Random();
+	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
+	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
 
 	// try to setup non existing languages
 	public ConfigManager() {

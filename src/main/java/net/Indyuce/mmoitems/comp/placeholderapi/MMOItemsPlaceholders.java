@@ -10,13 +10,12 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.AltChar;
-import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
-	private DecimalFormat oneDigit = new DecimalFormat("0.#");
+	private DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
 
 	@Override
 	public String getAuthor() {
@@ -37,7 +36,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		if (identifier.startsWith("stat_")) {
 			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
 			if (stat != null)
-				return new StatFormat("##").format(PlayerData.get(player).getStats().getStat(stat));
+				return twoDigits.format(PlayerData.get(player).getStats().getStat(stat));
 		}
 
 		if (identifier.startsWith("ability_cd_"))

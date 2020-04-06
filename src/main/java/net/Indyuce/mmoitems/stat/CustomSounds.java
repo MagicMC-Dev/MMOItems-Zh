@@ -29,7 +29,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomSounds extends ItemStat {
 	public CustomSounds() {
-		super(new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." }, "sounds", new String[] { "all" });
+		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." }, new String[] { "all" });
 	}
 
 	@Override
@@ -126,11 +126,11 @@ public class CustomSounds extends ItemStat {
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		SoundListData sounds = (SoundListData) data;
-		
+
 		sounds.getCustomSounds().forEach(sound -> {
 			SoundData value = sounds.get(sound);
 			String s = sound.getName().replace(" ", "_").toUpperCase();
-			
+
 			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s, value.getSound()));
 			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_VOL", value.getVolume()));
 			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_PIT", value.getPitch()));
@@ -143,8 +143,7 @@ public class CustomSounds extends ItemStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		SoundListData sounds = new SoundListData();
 
-		for (CustomSound sound : CustomSound.values())
-		{
+		for (CustomSound sound : CustomSound.values()) {
 			String soundName = item.getString("MMOITEMS_SOUND_" + sound.name());
 			if (soundName != null && !soundName.isEmpty())
 				sounds.set(sound, soundName, item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"), item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
@@ -171,25 +170,47 @@ public class CustomSounds extends ItemStat {
 		public void set(CustomSound sound, String s, double v, double p) {
 			this.stats.put(sound, new SoundData(s, v, p));
 		}
-		
-		public int total()
-		{ return stats.size(); }
+
+		public int total() {
+			return stats.size();
+		}
 	}
-	
-	public class SoundData
-	{
+
+	public class SoundData {
 		private String sound;
 		private double volume, pitch;
-		
-		public SoundData() {}
-		public SoundData(String s, double v, double p)
-		{ this.sound = s; this.volume = v; this.pitch = p; }
-		
-		public void setSound(String value) { this.sound = value; }
-		public void setVolume(double value) { this.volume = value; }
-		public void setPitch(double value) { this.pitch = value; }
-		public String getSound() { return this.sound; }
-		public double getVolume() { return this.volume; }
-		public double getPitch() { return this.pitch; }
+
+		public SoundData() {
+		}
+
+		public SoundData(String s, double v, double p) {
+			this.sound = s;
+			this.volume = v;
+			this.pitch = p;
+		}
+
+		public void setSound(String value) {
+			this.sound = value;
+		}
+
+		public void setVolume(double value) {
+			this.volume = value;
+		}
+
+		public void setPitch(double value) {
+			this.pitch = value;
+		}
+
+		public String getSound() {
+			return this.sound;
+		}
+
+		public double getVolume() {
+			return this.volume;
+		}
+
+		public double getPitch() {
+			return this.pitch;
+		}
 	}
 }

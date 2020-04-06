@@ -19,8 +19,8 @@ public abstract class InternalStat extends ItemStat {
 	 * edited in the item edition GUI since they only exist once the item is
 	 * physically generated.
 	 */
-	public InternalStat(ItemStack item, String name, String[] lore, String path, String[] types, Material... materials) {
-		super(item, name, lore, path, types, materials);
+	public InternalStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
+		super(id, item, name, lore, types, materials);
 	}
 
 	@Override

@@ -27,7 +27,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Dye_Color extends StringStat {
 	public Dye_Color() {
-		super(VersionMaterial.RED_DYE.toItem(), "Dye Color", new String[] { "The color of your item", "(for leather armor sets).", "In RGB." }, "dye-color", new String[] { "all" }, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color", new String[] { "The color of your item", "(for leather armor sets).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 	}
 
 	@Override

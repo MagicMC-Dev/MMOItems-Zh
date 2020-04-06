@@ -31,7 +31,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Elements extends ItemStat {
 	public Elements() {
-		super(new ItemStack(Material.SLIME_BALL), "Elements", new String[] { "The elements of your item." }, "element", new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor" });
+		super("ELEMENT", new ItemStack(Material.SLIME_BALL), "Elements", new String[] { "The elements of your item." }, new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor" });
 	}
 
 	@Override

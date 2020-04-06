@@ -12,7 +12,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Knockback_Resistance extends AttributeStat {
 	public Knockback_Resistance() {
-		super(new ItemStack(Material.CHAINMAIL_CHESTPLATE), "Knockback Resistance", new String[] { "The chance of your item to block the", "knockback from explosions, creepers...", "1.0 corresponds to 100%, 0.7 to 70%..." }, "knockback-resistance", Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+		super("KNOCKBACK_RESISTANCE", new ItemStack(Material.CHAINMAIL_CHESTPLATE), "Knockback Resistance", new String[] { "The chance of your item to block the", "knockback from explosions, creepers...", "1.0 corresponds to 100%, 0.7 to 70%..." }, Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 	}
 
 	@Override

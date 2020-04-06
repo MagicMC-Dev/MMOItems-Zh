@@ -31,7 +31,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Arrow_Particles extends StringStat {
 	public Arrow_Particles() {
-		super(VersionMaterial.LIME_STAINED_GLASS.toItem(), "Arrow Particles", new String[] { "Particles that display around", "the arrows your bow fires." }, "arrow-particles", new String[] { "bow", "crossbow" });
+		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toItem(), "Arrow Particles", new String[] { "Particles that display around", "the arrows your bow fires." }, new String[] { "bow", "crossbow" });
 	}
 
 	@Override

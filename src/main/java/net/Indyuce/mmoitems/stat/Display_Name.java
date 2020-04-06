@@ -14,7 +14,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Display_Name extends StringStat {
 	public Display_Name() {
-		super(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Display Name", new String[] { "The item display name." }, "name", new String[] { "all" });
+		super("NAME", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Display Name", new String[] { "The item display name." }, new String[] { "all" });
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class Display_Name extends StringStat {
 	private String fix(String str) {
 		return str.startsWith(ChatColor.WHITE + "") ? "" + ChatColor.GREEN + ChatColor.WHITE + str : str;
 	}
-	
+
 	public String getDisplayName(StatData data) {
 		String display = data.toString();
 

@@ -19,7 +19,7 @@ public class StoredTags extends InternalStat {
 	private static final List<String> ignoreList = Arrays.asList("Unbreakable", "BlockEntityTag", "display", "Enchantments", "HideFlags", "Damage", "AttributeModifiers", "SkullOwner", "CanDestroy", "PickupDelay", "Age");
 
 	public StoredTags() {
-		super(VersionMaterial.OAK_SIGN.toItem(), "Stored Tags", new String[0], "stored-tags", new String[] { "all" });
+		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toItem(), "Stored Tags", new String[] { "You found a secret dev easter egg", "introduced during the 2020 epidemic!" }, new String[] { "all" });
 	}
 
 	@Override

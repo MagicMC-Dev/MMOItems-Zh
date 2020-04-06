@@ -28,7 +28,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Item_Type_Restriction extends StringStat {
 	public Item_Type_Restriction() {
-		super(new ItemStack(Material.EMERALD), "Item Type Restriction", new String[] { "This option defines the item types", "on which your gem can be applied." }, "item-type-restriction", new String[] { "gem_stone" });
+		super("ITEM_TYPE_RESTRICTION", new ItemStack(Material.EMERALD), "Item Type Restriction", new String[] { "This option defines the item types", "on which your gem can be applied." }, new String[] { "gem_stone" });
 	}
 
 	@Override

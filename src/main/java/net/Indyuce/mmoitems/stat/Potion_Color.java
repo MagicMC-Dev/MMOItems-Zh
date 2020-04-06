@@ -26,7 +26,7 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 
 public class Potion_Color extends StringStat {
 	public Potion_Color() {
-		super(new ItemStack(Material.POTION), "Potion Color", new String[] { "The color of your potion.", "(Doesn't impact the effects)." }, "potion-color", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
+		super("POTION_COLOR", new ItemStack(Material.POTION), "Potion Color", new String[] { "The color of your potion.", "(Doesn't impact the effects)." }, new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override

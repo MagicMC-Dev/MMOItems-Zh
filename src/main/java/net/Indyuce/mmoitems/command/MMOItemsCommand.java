@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,6 +62,16 @@ public class MMOItemsCommand implements CommandExecutor {
 
 		// ==================================================================================================================================
 		if (args.length < 1) {
+
+			for (ItemStat stat : MMOItems.plugin.getStats().getAll()) {
+
+				String id = stat.getId();
+				String path = stat.getPath().replace("-", "_").toUpperCase();
+
+				if (!id.equals(path))
+					MMOItems.plugin.getLogger().log(Level.WARNING, stat.getName()+": " + path + " -> " + id);
+			}
+
 			new PluginHelp(sender).open(1);
 			return true;
 		}

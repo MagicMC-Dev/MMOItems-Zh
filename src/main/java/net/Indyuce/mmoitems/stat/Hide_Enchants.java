@@ -13,7 +13,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Hide_Enchants extends BooleanStat {
 	public Hide_Enchants() {
-		super(new ItemStack(Material.BOOK), "Hide Enchantments", new String[] { "Enable to completely hide your item", "enchants. You can still see the glowing effect." }, "hide-enchants", new String[] { "all" });
+		super("HIDE_ENCHANTS", new ItemStack(Material.BOOK), "Hide Enchantments", new String[] { "Enable to completely hide your item", "enchants. You can still see the glowing effect." }, new String[] { "all" });
 	}
 
 	@Override
@@ -22,10 +22,10 @@ public class Hide_Enchants extends BooleanStat {
 			item.getMeta().addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		return true;
 	}
-	
+
 	@Override
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if(item.getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS))
+		if (item.getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS))
 			mmoitem.setData(ItemStat.HIDE_ENCHANTS, new BooleanData(true));
 	}
 }

@@ -23,7 +23,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Restore extends StringStat {
 	public Restore() {
-		super(VersionMaterial.RED_DYE.toItem(), "Restore", new String[] { "The amount of health/food/saturation", "your consumable item restores." }, "restore", new String[] { "consumable" });
+		super("RESTORE", VersionMaterial.RED_DYE.toItem(), "Restore", new String[] { "The amount of health/food/saturation", "your consumable item restores." }, new String[] { "consumable" });
 	}
 
 	@Override

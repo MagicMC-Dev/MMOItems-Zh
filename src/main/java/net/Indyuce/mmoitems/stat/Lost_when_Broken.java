@@ -10,7 +10,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Lost_when_Broken extends BooleanStat {
 	public Lost_when_Broken() {
-		super(new ItemStack(Material.SHEARS), "Lost when Broken?", new String[] { "If set to true, the item will be lost", "once it reaches 0 durability." }, "will-break", new String[] { "all" });
+		super("WILL_BREAK", new ItemStack(Material.SHEARS), "Lost when Broken?", new String[] { "If set to true, the item will be lost", "once it reaches 0 durability." }, new String[] { "all" });
 	}
 
 	@Override

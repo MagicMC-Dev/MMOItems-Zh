@@ -12,7 +12,9 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Craft_Permission extends StringStat {
 	public Craft_Permission() {
-		super(new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Crafting Recipe Permission", new String[] { "The permission needed to craft this item.", "Changing this value requires &o/mi reload recipes&7.", "", "NOT YET IMPLEMENTED" }, "craft-permission", new String[] { "all" });
+		super("CRAFT_PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Crafting Recipe Permission", new String[] { "The permission needed to craft this item.", "Changing this value requires &o/mi reload recipes&7." }, new String[] { "all" });
+
+		disable();
 	}
 
 	@Override

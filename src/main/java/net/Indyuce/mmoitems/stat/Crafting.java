@@ -26,7 +26,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Crafting extends ItemStat {
 	public Crafting() {
-		super(new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial()), "Crafting", new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, "crafting", new String[] { "all" });
+		super("CRAFTING", new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial()), "Crafting", new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
 	}
 
 	@Override
@@ -79,8 +79,9 @@ public class Crafting extends ItemStat {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
 				return false;
 			}
-			
-			if (!validate(inv.getPlayer(), args[0])) return false;
+
+			if (!validate(inv.getPlayer(), args[0]))
+				return false;
 			int time;
 			try {
 				time = Integer.parseInt(args[1]);

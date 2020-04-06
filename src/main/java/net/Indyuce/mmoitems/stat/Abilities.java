@@ -38,7 +38,7 @@ public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 
 	public Abilities() {
-		super(new ItemStack(Material.BLAZE_POWDER), "Item Abilities", new String[] { "Make your item cast amazing abilities", "to kill monsters or buff yourself." }, "ability", new String[] { "all" });
+		super("ABILITY", new ItemStack(Material.BLAZE_POWDER), "Item Abilities", new String[] { "Make your item cast amazing abilities", "to kill monsters or buff yourself." }, new String[] { "all" });
 	}
 
 	@Override

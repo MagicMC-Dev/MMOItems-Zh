@@ -7,14 +7,17 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class Custom_Model_Data extends DoubleStat {
+public class Custom_Model_Data extends DoubleStat implements ProperStat {
 	public Custom_Model_Data() {
-		super(new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data.", "(Only works on 1.14+)" }, "custom-model-data", new String[] { "all" });
+		super("CUSTOM_MODEL_DATA", new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data." }, new String[] { "all" });
 
-		//if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) disable();
+		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
+			disable();
 	}
 
 	@Override
@@ -29,4 +32,3 @@ public class Custom_Model_Data extends DoubleStat {
 			mmoitem.setData(this, new DoubleData(item.getDouble("CustomModelData")));
 	}
 }
-

@@ -35,7 +35,7 @@ public class Commands extends ItemStat {
 	private static final int max = 15;
 
 	public Commands() {
-		super(new ItemStack(VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial()), "Commands", new String[] { "The commands your item", "performs when right clicked." }, "commands", new String[] { "!armor", "!gem_stone", "all" });
+		super("COMMANDS", new ItemStack(VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial()), "Commands", new String[] { "The commands your item", "performs when right clicked." }, new String[] { "!armor", "!gem_stone", "all" });
 	}
 
 	@Override

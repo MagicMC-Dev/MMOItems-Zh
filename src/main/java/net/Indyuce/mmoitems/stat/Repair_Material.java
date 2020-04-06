@@ -17,7 +17,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Repair_Material extends StringStat {
 	public Repair_Material() {
-		super(new ItemStack(Material.ANVIL), "Repair Material", new String[] { "The material to be used when", "repairing this item in an anvil.", "", "Currently servers no purpose!" }, "repair-material", new String[] { "all" });
+		super("REPAIR_MATERIAL", new ItemStack(Material.ANVIL), "Repair Material", new String[] { "The material to be used when", "repairing this item in an anvil.", "", "Currently servers no purpose!" }, new String[] { "all" });
 	}
 
 	@Override

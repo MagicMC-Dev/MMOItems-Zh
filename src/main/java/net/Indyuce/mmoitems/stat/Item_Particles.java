@@ -30,7 +30,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Item_Particles extends ItemStat {
 	public Item_Particles() {
-		super(VersionMaterial.PINK_STAINED_GLASS.toItem(), "Item Particles", new String[] { "The particles displayed when", "holding/wearing your item.", "", ChatColor.BLUE + "A tutorial is available on the wiki." }, "item-particles", new String[] { "all" });
+		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toItem(), "Item Particles", new String[] { "The particles displayed when", "holding/wearing your item.", "", ChatColor.BLUE + "A tutorial is available on the wiki." }, new String[] { "all" });
 	}
 
 	@Override

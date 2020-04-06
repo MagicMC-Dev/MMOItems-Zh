@@ -30,7 +30,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Lore extends StringStat {
 	public Lore() {
-		super(new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Lore", new String[] { "The item lore." }, "lore", new String[] { "all" });
+		super("LORE", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Lore", new String[] { "The item lore." }, new String[] { "all" });
 	}
 
 	@Override

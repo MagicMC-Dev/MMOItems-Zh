@@ -30,7 +30,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class NBT_Tags extends StringStat {
 	public NBT_Tags() {
-		super(new ItemStack(Material.NAME_TAG), "NBT Tags", new String[] { "Custom NBT Tags." }, "custom-nbt", new String[] { "all" });
+		super("CUSTOM_NBT", new ItemStack(Material.NAME_TAG), "NBT Tags", new String[] { "Custom NBT Tags." }, new String[] { "all" });
 	}
 
 	@Override
@@ -58,13 +58,12 @@ public class NBT_Tags extends StringStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if(message.split("\\ ").length < 2) {
+		if (message.split("\\ ").length < 2) {
 			inv.getPlayer().sendMessage(ChatColor.RED + "Invalid format");
 			return false;
 		}
-		
-		List<String> customNbt = config.getConfig().getConfigurationSection(inv.getItemId()).contains("custom-nbt")
-			? config.getConfig().getStringList(inv.getItemId() + ".custom-nbt") : new ArrayList<>();
+
+		List<String> customNbt = config.getConfig().getConfigurationSection(inv.getItemId()).contains("custom-nbt") ? config.getConfig().getStringList(inv.getItemId() + ".custom-nbt") : new ArrayList<>();
 		customNbt.add(message);
 		config.getConfig().set(inv.getItemId() + ".custom-nbt", customNbt);
 		inv.registerItemEdition(config);
@@ -98,7 +97,7 @@ public class NBT_Tags extends StringStat {
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(tag -> {
 			array.add(tag);
-			
+
 			item.addItemTag(new ItemTag(tag.substring(0, tag.indexOf(' ')), tag.substring(tag.indexOf(' ') + 1)));
 		});
 		item.addItemTag(new ItemTag("MMOITEMS_NBTTAGS", array.toString()));

@@ -25,7 +25,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Item_Set extends StringStat {
 	public Item_Set() {
-		super(new ItemStack(Material.LEATHER_CHESTPLATE), "Item Set", new String[] { "Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear." }, "set", new String[] { "!gem_stone", "!consumable", "!material", "!miscellaneous", "all" });
+		super("SET", new ItemStack(Material.LEATHER_CHESTPLATE), "Item Set", new String[] { "Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear." }, new String[] { "!gem_stone", "!consumable", "!material", "!miscellaneous", "all" });
 	}
 
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event, Player player, Type type, String path) {

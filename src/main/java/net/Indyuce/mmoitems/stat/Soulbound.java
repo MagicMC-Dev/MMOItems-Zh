@@ -27,7 +27,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Soulbound extends InternalStat implements Conditional {
 	public Soulbound() {
-		super(new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbound", new String[0], "soulbound", new String[] { "all" });
+		super("SOULBOUND", new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbound", new String[0], new String[] { "all" });
 	}
 
 	@Override

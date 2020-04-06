@@ -26,7 +26,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Lute_Attack_Effect extends StringStat {
 	public Lute_Attack_Effect() {
-		super(new ItemStack(VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial()), "Lute Attack Effect", new String[] { "Changes how your lute behaves", "when right clicked.", "&9Tip: /mi list lute"  }, "lute-attack-effect", new String[] { "lute" });
+		super("LUTE_ATTACK_EFFECT", new ItemStack(VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial()), "Lute Attack Effect", new String[] { "Changes how your lute behaves", "when right clicked.", "&9Tip: /mi list lute"  }, new String[] { "lute" });
 	}
 
 	@Override

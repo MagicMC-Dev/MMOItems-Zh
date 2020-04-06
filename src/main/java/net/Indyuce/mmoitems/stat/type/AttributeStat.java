@@ -12,12 +12,12 @@ public abstract class AttributeStat extends DoubleStat {
 	private final double offset;
 	private final Attribute attribute;
 
-	public AttributeStat(ItemStack item, String name, String[] lore, String path, Attribute attribute) {
-		this(item, name, lore, path, attribute, 0);
+	public AttributeStat(String id, ItemStack item, String name, String[] lore, Attribute attribute) {
+		this(id, item, name, lore, attribute, 0);
 	}
 
-	public AttributeStat(ItemStack item, String name, String[] lore, String path, Attribute attribute, double offset) {
-		super(item, name, lore, path, new String[] { "!consumable", "!miscellaneous", "all" });
+	public AttributeStat(String id, ItemStack item, String name, String[] lore, Attribute attribute, double offset) {
+		super(id, item, name, lore, new String[] { "!consumable", "!miscellaneous", "all" });
 
 		this.offset = offset;
 		this.attribute = attribute;

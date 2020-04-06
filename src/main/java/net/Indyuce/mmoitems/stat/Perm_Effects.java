@@ -35,7 +35,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Perm_Effects extends ItemStat {
 	public Perm_Effects() {
-		super(new ItemStack(Material.POTION), "Permanent Effects", new String[] { "The potion effects your", "item grants to the holder." }, "perm-effects", new String[] { "!miscellaneous", "all" });
+		super("PERM_EFFECTS", new ItemStack(Material.POTION), "Permanent Effects", new String[] { "The potion effects your", "item grants to the holder." }, new String[] { "!miscellaneous", "all" });
 	}
 
 	@Override

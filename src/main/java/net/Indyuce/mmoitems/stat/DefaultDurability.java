@@ -9,11 +9,12 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class DefaultDurability extends DoubleStat {
+public class DefaultDurability extends DoubleStat implements ProperStat {
 	public DefaultDurability() {
-		super(new ItemStack(Material.FISHING_ROD), "Item Damage", new String[] { "Default item damage. This does &cNOT", "impact the item's max durability." }, "durability", new String[] { "all" });
+		super("DURABILITY", new ItemStack(Material.FISHING_ROD), "Item Damage", new String[] { "Default item damage. This does &cNOT", "impact the item's max durability." }, new String[] { "all" });
 	}
 
 	@Override

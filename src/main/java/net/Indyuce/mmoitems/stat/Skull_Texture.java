@@ -25,7 +25,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Skull_Texture extends StringStat {
 	public Skull_Texture() {
-		super(VersionMaterial.PLAYER_HEAD.toItem(), "Skull Texture", new String[] { "The head texture &nvalue&7.", "Can be found on heads databases." }, "skull-texture", new String[] { "all" }, VersionMaterial.PLAYER_HEAD.toMaterial());
+		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toItem(), "Skull Texture", new String[] { "The head texture &nvalue&7.", "Can be found on heads databases." }, new String[] { "all" }, VersionMaterial.PLAYER_HEAD.toMaterial());
 	}
 
 	@Override

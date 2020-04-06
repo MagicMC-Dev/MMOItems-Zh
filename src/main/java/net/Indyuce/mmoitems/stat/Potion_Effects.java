@@ -31,7 +31,7 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 
 public class Potion_Effects extends StringStat {
 	public Potion_Effects() {
-		super(new ItemStack(Material.POTION), "Potion Effects", new String[] { "The effects of your potion.", "(May have an impact on color)." }, "potion-effect", new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
+		super("POTION_EFFECT", new ItemStack(Material.POTION), "Potion Effects", new String[] { "The effects of your potion.", "(May have an impact on color)." }, new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override

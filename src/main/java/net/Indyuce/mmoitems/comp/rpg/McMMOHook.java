@@ -19,28 +19,28 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class McMMOHook implements RPGHandler, Listener {
-	private final ItemStat disableMcMMORepair = new DisableStat(Material.IRON_BLOCK, "mcmmo-repair", "Disable McMMO Repair", "Players can't repair this with McMMO.");
-	
+	private final ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair", "Players can't repair this with McMMO.");
+
 	public McMMOHook() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-		
+
 		MMOItems.plugin.getStats().register("DISABLE_MCMMO_REPAIR", disableMcMMORepair);
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void a(McMMOPlayerLevelUpEvent event) {
 		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void b(McMMOPlayerLevelDownEvent event) {
 		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
-	
-	@EventHandler
+
+	@EventHandler(ignoreCancelled = true)
 	public void c(McMMOPlayerRepairCheckEvent event) {
 		NBTItem nbt = NBTItem.get(event.getRepairedObject());
-		if(nbt.hasType() && nbt.getBoolean("MMOITEMS_DISABLE_MCMMO_REPAIR"))
+		if (nbt.hasType() && nbt.getBoolean("MMOITEMS_DISABLE_MCMMO_REPAIR"))
 			event.setCancelled(true);
 	}
 

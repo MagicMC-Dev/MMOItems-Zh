@@ -12,7 +12,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Attack_Speed extends AttributeStat {
 	public Attack_Speed() {
-		super(VersionMaterial.LIGHT_GRAY_DYE.toItem(), "Attack Speed", new String[] { "The speed at which your weapon strikes.", "In attacks/sec." }, "attack-speed", Attribute.GENERIC_ATTACK_SPEED, MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? 1.6 : 4);
+		super("ATTACK_SPEED", VersionMaterial.LIGHT_GRAY_DYE.toItem(), "Attack Speed", new String[] { "The speed at which your weapon strikes.", "In attacks/sec." }, Attribute.GENERIC_ATTACK_SPEED, MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? 1.6 : 4);
 	}
 
 	@Override

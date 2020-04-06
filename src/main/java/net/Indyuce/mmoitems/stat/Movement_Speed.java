@@ -12,7 +12,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Movement_Speed extends AttributeStat {
 	public Movement_Speed() {
-		super(new ItemStack(Material.LEATHER_BOOTS), "Movement Speed", new String[] { "Movement Speed increase walk speed.", "Default MC walk speed: 0.1" }, "movement-speed", Attribute.GENERIC_MOVEMENT_SPEED);
+		super("MOVEMENT_SPEED", new ItemStack(Material.LEATHER_BOOTS), "Movement Speed", new String[] { "Movement Speed increase walk speed.", "Default MC walk speed: 0.1" }, Attribute.GENERIC_MOVEMENT_SPEED);
 	}
 
 	@Override

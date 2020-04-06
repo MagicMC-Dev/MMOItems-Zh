@@ -12,7 +12,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Armor_Toughness extends AttributeStat {
 	public Armor_Toughness() {
-		super(new ItemStack(Material.DIAMOND_CHESTPLATE), "Armor Toughness", new String[] { "Armor toughness reduces damage taken." }, "armor-toughness", Attribute.GENERIC_ARMOR_TOUGHNESS);
+		super("ARMOR_TOUGHNESS", new ItemStack(Material.DIAMOND_CHESTPLATE), "Armor Toughness", new String[] { "Armor toughness reduces damage taken." }, Attribute.GENERIC_ARMOR_TOUGHNESS);
 	}
 
 	@Override

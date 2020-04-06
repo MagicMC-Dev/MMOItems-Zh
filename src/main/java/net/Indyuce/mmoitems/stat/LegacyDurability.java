@@ -8,18 +8,18 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class LegacyDurability extends DoubleStat {
+public class LegacyDurability extends DoubleStat implements ProperStat {
 	public LegacyDurability() {
-		super(new ItemStack(Material.FISHING_ROD), "Item Damage/ID", new String[] { "The durability/ID of your item. This", "does &cNOT&7 impact the item max durability." }, "durability", new String[] { "all" });
+		super("DURABILITY", new ItemStack(Material.FISHING_ROD), "Item Damage/ID", new String[] { "The durability/ID of your item. This", "does &cNOT&7 impact the item max durability." }, new String[] { "all" });
 	}
 
 	@Override
-	// @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		// item.getItemStack().setDurability((short) ((DoubleData)
-		// data).generateNewValue());
+		item.getItemStack().setDurability((short) ((DoubleData) data).generateNewValue());
 		return true;
 	}
 

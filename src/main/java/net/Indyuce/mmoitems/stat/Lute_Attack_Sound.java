@@ -10,7 +10,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Lute_Attack_Sound extends StringStat {
 	public Lute_Attack_Sound() {
-		super(new ItemStack(VersionMaterial.GOLDEN_HORSE_ARMOR.toMaterial()), "Lute Attack Sound", new String[] { "The sound played when", "basic attacking with this lute." }, "lute-attack-sound", new String[] { "lute" });
+		super("LUTE_ATTACK_SOUND", new ItemStack(VersionMaterial.GOLDEN_HORSE_ARMOR.toMaterial()), "Lute Attack Sound", new String[] { "The sound played when", "basic attacking with this lute." }, new String[] { "lute" });
 	}
 
 	@Override

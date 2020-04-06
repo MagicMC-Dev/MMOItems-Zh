@@ -11,7 +11,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Soulbound_Level extends DoubleStat {
 	public Soulbound_Level() {
-		super(new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbinding Level", new String[] { "The soulbound level defines how much", "damage players will take when trying", "to use a soulbound item. It also determines", "how hard it is to break the binding." }, "soulbound-level", new String[] { "consumable" });
+		super("SOULBOUND_LEVEL", new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbinding Level", new String[] { "The soulbound level defines how much", "damage players will take when trying", "to use a soulbound item. It also determines", "how hard it is to break the binding." }, new String[] { "consumable" });
 	}
 
 	// writes soulbound level with roman writing in lore

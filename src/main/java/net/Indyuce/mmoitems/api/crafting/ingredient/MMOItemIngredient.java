@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -26,6 +27,8 @@ public class MMOItemIngredient extends Ingredient {
 		config.validate("type", "id");
 		type = MMOItems.plugin.getTypes().get(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
 		id = config.getString("id").toUpperCase().replace("-", "_").replace(" ", "_");
+
+		Validate.isTrue(MMOItems.plugin.getItems().hasMMOItem(type, id), "Could not find MMOItem with ID '" + id + "'");
 
 		level = config.getInt("level", 0);
 		display = config.contains("display") ? config.getString("display") : findName();

@@ -16,7 +16,7 @@ public class ConfigMMOItem {
 
 	public ConfigMMOItem(ConfigurationSection config) {
 		Validate.notNull(config, "Could not read MMOItem config");
-		
+
 		String typeFormat = config.getString("type"), id = config.getString("id");
 		Validate.notNull(typeFormat, "Type format must not be null");
 		Validate.notNull(id, "ID must not be null");
@@ -24,7 +24,7 @@ public class ConfigMMOItem {
 		Type type = MMOItems.plugin.getTypes().get(format(config.getString("type")));
 		Validate.notNull(type, typeFormat + " does not correspond to any item type.");
 
-		Validate.notNull(mmoitem = MMOItems.plugin.getItems().getMMOItem(type, id), "Could not load MMOItem");
+		Validate.notNull(mmoitem = MMOItems.plugin.getItems().getMMOItem(type, id), "Could not find MMOItem with ID '" + id + "'");
 		this.amount = Math.max(1, config.getInt("amount"));
 	}
 

@@ -66,6 +66,21 @@ public class ItemManager {
 		return this.map.containsKey(type) ? (map = this.map.get(type)).containsKey(id) ? map.get(id) : null : null;
 	}
 
+	/*
+	 * warning, this method checks the entire config file and should only be
+	 * used when the plugin is loading.
+	 */
+	public boolean hasMMOItem(Type type, String id) {
+		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
+
+		// check map
+		if (map.containsKey(type) && map.containsKey(type) && map.get(type).containsKey(id))
+			return true;
+
+		// check type config file
+		return type.getConfigFile().getConfig().contains(id);
+	}
+
 	public void uncache(Type type, String id) {
 		if (map.containsKey(type))
 			map.get(type).remove(id);

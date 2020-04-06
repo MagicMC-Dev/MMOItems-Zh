@@ -34,13 +34,16 @@ public class WorldGenTemplate {
 				biomeBlacklist.add(biome.toUpperCase());
 			else
 				biomeWhitelist.add(biome.toUpperCase());
-		
+
 		chunkChance = config.getDouble("chunk-chance");
 		slimeChunk = config.getBoolean("slime-chunk", false);
 
 		String[] depth = config.getString("depth").split("\\=");
 		minDepth = Integer.parseInt(depth[0]);
 		maxDepth = Integer.parseInt(depth[1]);
+
+		Validate.isTrue(minDepth >= 0, "Min depth must be greater than 0");
+		Validate.isTrue(maxDepth < 256, "Max deapth must be at most 255");
 
 		veinSize = config.getInt("vein-size");
 		veinCount = config.getInt("vein-count");

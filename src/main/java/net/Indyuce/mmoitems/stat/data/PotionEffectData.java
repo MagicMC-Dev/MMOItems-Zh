@@ -6,7 +6,7 @@ import org.bukkit.potion.PotionEffectType;
 import net.Indyuce.mmoitems.MMOUtils;
 
 public class PotionEffectData {
-	private PotionEffect effect;
+	private final PotionEffect effect;
 
 	public PotionEffectData(PotionEffectType type, int level) {
 		effect = new PotionEffect(type, MMOUtils.getEffectDuration(type), level - 1, true, false);

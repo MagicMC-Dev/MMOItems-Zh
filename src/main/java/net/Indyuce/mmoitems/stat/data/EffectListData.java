@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EffectListData extends StatData implements Mergeable {
-	private List<PotionEffectData> effects = new ArrayList<>();
+	private final List<PotionEffectData> effects = new ArrayList<>();
 
 	public EffectListData(PotionEffectData... effects) {
 		add(effects);

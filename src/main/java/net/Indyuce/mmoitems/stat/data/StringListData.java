@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.gson.JsonArray;
 
 public class StringListData extends StatData {
-	private List<String> list;
+	private final List<String> list;
 
 	public StringListData() {
 		this(new ArrayList<>());
@@ -19,6 +19,7 @@ public class StringListData extends StatData {
 
 	public StringListData(JsonArray array) {
 		this();
+
 		array.forEach(str -> list.add(str.getAsString()));
 	}
 
@@ -28,9 +29,5 @@ public class StringListData extends StatData {
 
 	public List<String> getList() {
 		return list;
-	}
-
-	public void setList(List<String> list) {
-		this.list = list;
 	}
 }

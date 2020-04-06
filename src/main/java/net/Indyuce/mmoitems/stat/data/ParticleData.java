@@ -25,7 +25,7 @@ public class ParticleData extends StatData {
 	private final Particle particle;
 	private final Map<String, Double> modifiers = new HashMap<>();
 
-	private Color color;
+	private final Color color;
 
 	public ParticleData(JsonObject object) {
 		particle = Particle.valueOf(object.get("Particle").getAsString());
@@ -33,8 +33,9 @@ public class ParticleData extends StatData {
 
 		if (object.has("Color")) {
 			JsonObject color = object.getAsJsonObject("Color");
-			setColor(color.get("Red").getAsInt(), color.get("Green").getAsInt(), color.get("Blue").getAsInt());
-		}
+			this.color = Color.fromRGB(color.get("Red").getAsInt(), color.get("Green").getAsInt(), color.get("Blue").getAsInt());
+		} else
+			color = null;
 
 		object.getAsJsonObject("Modifiers").entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
 	}
@@ -48,17 +49,17 @@ public class ParticleData extends StatData {
 		format = config.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_");
 		particle = Particle.valueOf(format);
 
-		for (String key : config.getKeys(false)) {
-			if (key.equalsIgnoreCase("color"))
-				setColor(config.getInt("color.red"), config.getInt("color.green"), config.getInt("color.blue"));
-			else if (!key.equalsIgnoreCase("particle") && !key.equalsIgnoreCase("type"))
+		color = config.contains("color") ? Color.fromRGB(config.getInt("color.red"), config.getInt("color.green"), config.getInt("color.blue")) : null;
+
+		for (String key : config.getKeys(false))
+			if (!key.equalsIgnoreCase("particle") && !key.equalsIgnoreCase("type") && !key.equalsIgnoreCase("color"))
 				setModifier(key, config.getDouble(key));
-		}
 	}
 
 	public ParticleData(ParticleType type, Particle particle) {
 		this.type = type;
 		this.particle = particle;
+		this.color = null;
 	}
 
 	public ParticleType getType() {
@@ -79,10 +80,6 @@ public class ParticleData extends StatData {
 
 	public Set<String> getModifiers() {
 		return modifiers.keySet();
-	}
-
-	public void setColor(int red, int green, int blue) {
-		color = Color.fromRGB(red, green, blue);
 	}
 
 	public void setModifier(String path, double value) {

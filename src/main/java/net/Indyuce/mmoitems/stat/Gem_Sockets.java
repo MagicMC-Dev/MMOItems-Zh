@@ -25,7 +25,6 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.StatData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -37,7 +36,7 @@ public class Gem_Sockets extends ItemStat {
 
 	@Override
 	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new GemSocketsData(new StringListData(config.getStringList("gem-sockets"))));
+		item.setData(this, new GemSocketsData(config.getStringList("gem-sockets")));
 	}
 
 	@Override

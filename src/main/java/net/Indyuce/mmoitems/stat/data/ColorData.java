@@ -6,11 +6,12 @@ import org.bukkit.Color;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 
 public class ColorData extends StatData {
-	private int red, green, blue;
+	private final int red, green, blue;
 
 	public ColorData(MMOItem mmoitem, String string) {
 		String[] split = string.split("\\ ");
 		Validate.isTrue(split.length > 2, "Must specify 3 numbers for red, green and blue");
+
 		red = Math.min(255, Math.max(0, Integer.parseInt(split[0])));
 		green = Math.min(255, Math.max(0, Integer.parseInt(split[1])));
 		blue = Math.min(255, Math.max(0, Integer.parseInt(split[2])));
@@ -36,24 +37,6 @@ public class ColorData extends StatData {
 
 	public int getBlue() {
 		return blue;
-	}
-
-	public void setRed(int value) {
-		red = value;
-	}
-
-	public void setGreen(int value) {
-		green = value;
-	}
-
-	public void setBlue(int value) {
-		blue = value;
-	}
-
-	public void setColor(Color color) {
-		red = color.getRed();
-		green = color.getGreen();
-		blue = color.getBlue();
 	}
 
 	public Color getColor() {

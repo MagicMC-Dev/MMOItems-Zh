@@ -17,28 +17,15 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.Abilities.AbilityListData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemSocketsData extends StatData {
-	private Set<GemstoneData> gems = new HashSet<>();
-	private List<String> slots;
+	private final Set<GemstoneData> gems = new HashSet<>();
+	private final List<String> emptySlots;
 
-	/*
-	 * used when the MMOItem is generated. when the item has already been
-	 * generated, the direct item slot amount isloaded.
-	 */
-	private StringListData unloadedSlots;
-	private boolean loaded;
-
-	public GemSocketsData(List<String> slots) {
-		this.slots = slots;
-		this.loaded = true;
-	}
-
-	public GemSocketsData(StringListData unloadedSlots) {
-		this.unloadedSlots = unloadedSlots;
-		this.loaded = false;
+	public GemSocketsData(List<String> emptySlots) {
+		this.emptySlots = emptySlots;
 	}
 
 	public boolean canReceive(String gem) {
@@ -46,7 +33,7 @@ public class GemSocketsData extends StatData {
 	}
 
 	public String getEmptySocket(String gem) {
-		for (String slot : slots)
+		for (String slot : emptySlots)
 			if (gem.equals("") || slot.equals(MMOItems.plugin.getConfig().getString("gem-sockets.uncolored")) || gem.equals(slot))
 				return slot;
 		return null;
@@ -57,12 +44,12 @@ public class GemSocketsData extends StatData {
 	}
 
 	public void apply(String gem, GemstoneData gemstone) {
-		slots.remove(getEmptySocket(gem));
+		emptySlots.remove(getEmptySocket(gem));
 		gems.add(gemstone);
 	}
 
 	public List<String> getEmptySlots() {
-		return loaded ? slots : unloadedSlots.getList();
+		return emptySlots;
 	}
 
 	public Set<GemstoneData> getGemstones() {
@@ -92,11 +79,11 @@ public class GemSocketsData extends StatData {
 	}
 
 	public class GemstoneData {
-		private Set<AbilityData> abilities = new HashSet<>();
-		private List<PotionEffectData> effects = new ArrayList<>();
-		private Map<ItemStat, Double> stats = new HashMap<>();
+		private final Set<AbilityData> abilities = new HashSet<>();
+		private final List<PotionEffectData> effects = new ArrayList<>();
+		private final Map<ItemStat, Double> stats = new HashMap<>();
 		// private ParticleData particle;
-		private String name;
+		private final String name;
 
 		/*
 		 * This constructor is not really performance friendly. It should only
@@ -115,9 +102,9 @@ public class GemSocketsData extends StatData {
 
 		public GemstoneData(NBTItem nbtItem, MMOItem mmoitem) {
 			if (mmoitem.hasData(ItemStat.ABILITIES))
-				abilities = ((AbilityListData) mmoitem.getData(ItemStat.ABILITIES)).getAbilities();
+				((AbilityListData) mmoitem.getData(ItemStat.ABILITIES)).getAbilities().forEach(data -> abilities.add(data));
 			if (mmoitem.hasData(ItemStat.PERM_EFFECTS))
-				effects = ((EffectListData) mmoitem.getData(ItemStat.PERM_EFFECTS)).getEffects();
+				((EffectListData) mmoitem.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(data -> effects.add(data));
 			for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
 				if (mmoitem.hasData(stat))
 					stats.put(stat, ((DoubleData) mmoitem.getData(stat)).getMin());

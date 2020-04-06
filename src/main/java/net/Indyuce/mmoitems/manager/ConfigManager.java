@@ -265,7 +265,6 @@ public class ConfigManager {
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
-		READ_ME("read-me.txt", "language", "read-me.txt"),
 
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),

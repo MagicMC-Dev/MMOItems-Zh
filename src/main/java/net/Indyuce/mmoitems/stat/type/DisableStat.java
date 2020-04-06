@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -23,8 +23,9 @@ public class DisableStat extends BooleanStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new BooleanData(config.getBoolean(getPath())));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof Boolean, "Must specify true/false");
+		return new BooleanData((boolean) object);
 	}
 
 	@Override

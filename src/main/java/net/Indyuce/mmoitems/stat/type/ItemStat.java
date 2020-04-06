@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -195,7 +194,7 @@ public abstract class ItemStat {
 	 * reads stat data from a configuration section and applies it to the item
 	 * stack after having generated the corresponding stat data class instance
 	 */
-	public abstract void whenLoaded(MMOItem item, ConfigurationSection config);
+	public abstract StatData whenInitialized(MMOItem item, Object obj);
 
 	/*
 	 * applies a stat onto an mmoitem builder instance

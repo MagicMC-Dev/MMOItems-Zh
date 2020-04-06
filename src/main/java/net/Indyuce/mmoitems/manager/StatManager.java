@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.Generated;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 
@@ -27,6 +28,7 @@ public class StatManager {
 	private final Set<DoubleStat> gem = new HashSet<>();
 	private final Set<AttributeStat> attribute = new HashSet<>();
 	private final Set<Conditional> conditionals = new HashSet<>();
+	private final Set<Generated> generated = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -61,6 +63,10 @@ public class StatManager {
 		return conditionals;
 	}
 
+	public Set<Generated> getGenerationStats() {
+		return generated;
+	}
+
 	/*
 	 * the extra checks in that method to register stats even after the plugin
 	 * has successfully enabled otherwise the other sets would not be updated.
@@ -70,6 +76,9 @@ public class StatManager {
 			return;
 
 		stats.put(stat.getId(), stat);
+
+		if (stat instanceof Generated)
+			generated.add((Generated) stat);
 
 		if (!(stat instanceof ProperStat) && stat instanceof DoubleStat && Type.GEM_STONE.canHave(stat))
 			gem.add((DoubleStat) stat);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -99,23 +100,26 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+		
 		ElementListData elements = new ElementListData();
 
 		for (Element element : Element.values()) {
 			String path = element.name().toLowerCase();
-			if (!config.getConfigurationSection("element").contains(path))
+			if (!config.contains(path))
 				continue;
 
 			for (Element.StatType type : Element.StatType.values()) {
 				String statTypePath = type.name().toLowerCase();
-				double value = config.getDouble("element." + path + "." + statTypePath);
+				double value = config.getDouble( path + "." + statTypePath);
 				if (value != 0)
 					elements.set(element, type, value);
 			}
 		}
 
-		item.setData(ItemStat.ELEMENTS, elements);
+		return elements;
 	}
 
 	@Override
@@ -149,7 +153,7 @@ public class Elements extends ItemStat {
 			mmoitem.setData(ItemStat.ELEMENTS, elements);
 	}
 
-	public class ElementListData extends StatData {
+	public class ElementListData implements StatData {
 		private Map<Element, Map<StatType, Double>> stats = new HashMap<>();
 
 		public ElementListData() {

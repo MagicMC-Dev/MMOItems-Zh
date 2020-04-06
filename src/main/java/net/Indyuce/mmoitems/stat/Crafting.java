@@ -108,7 +108,8 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		return null;
 	}
 
 	@Override

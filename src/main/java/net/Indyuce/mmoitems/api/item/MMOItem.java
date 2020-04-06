@@ -24,7 +24,7 @@ public class MMOItem {
 	 * which stats are added is very important because the material needs to be
 	 * applied first
 	 */
-	protected Map<ItemStat, StatData> stats = new LinkedHashMap<>();
+	private final Map<ItemStat, StatData> stats = new LinkedHashMap<>();
 
 	/*
 	 * can be null if it has not been initialized in the constructor.

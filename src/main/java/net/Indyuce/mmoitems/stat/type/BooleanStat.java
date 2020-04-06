@@ -2,9 +2,9 @@ package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,8 +24,9 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new BooleanData(config.getBoolean(getPath())));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof Boolean, "Must specify true/false");
+		return new BooleanData((boolean) object);
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class BooleanStat extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to switch this value.");
 	}
 
-	public class BooleanData extends StatData {
+	public class BooleanData implements StatData {
 		private boolean state;
 
 		public BooleanData(boolean state) {

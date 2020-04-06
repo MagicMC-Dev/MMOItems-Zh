@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,7 +31,8 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Item_Particles extends ItemStat {
 	public Item_Particles() {
-		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toItem(), "Item Particles", new String[] { "The particles displayed when", "holding/wearing your item.", "", ChatColor.BLUE + "A tutorial is available on the wiki." }, new String[] { "all" });
+		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toItem(), "Item Particles", new String[] { "The particles displayed when",
+				"holding/wearing your item.", "", ChatColor.BLUE + "A tutorial is available on the wiki." }, new String[] { "all" });
 	}
 
 	@Override
@@ -40,8 +42,9 @@ public class Item_Particles extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.ITEM_PARTICLES, new ParticleData(item, config.getConfigurationSection("item-particles")));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		return new ParticleData((ConfigurationSection) object);
 	}
 
 	@Override
@@ -73,7 +76,8 @@ public class Item_Particles extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".item-particles.type", particleType.name());
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD + particleType.getDefaultName() + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD
+					+ particleType.getDefaultName() + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -96,7 +100,10 @@ public class Item_Particles extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".item-particles.color.blue", blue);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to " + ChatColor.RED + ChatColor.BOLD + red + ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green + ChatColor.GRAY + " - " + ChatColor.BLUE + ChatColor.BOLD + blue + ChatColor.GRAY + ".");
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to " + ChatColor.RED + ChatColor.BOLD + red
+							+ ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green + ChatColor.GRAY + " - " + ChatColor.BLUE
+							+ ChatColor.BOLD + blue + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -113,7 +120,8 @@ public class Item_Particles extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".item-particles.particle", particle.name());
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD
+					+ MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -128,7 +136,8 @@ public class Item_Particles extends ItemStat {
 		config.getConfig().set(inv.getItemId() + ".item-particles." + edited, value);
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY + " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
+				+ " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
 		return true;
 	}
 
@@ -136,7 +145,8 @@ public class Item_Particles extends ItemStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		if (item.hasTag("MMOITEMS_ITEM_PARTICLES"))
 			try {
-				mmoitem.setData(ItemStat.ITEM_PARTICLES, new ParticleData(new JsonParser().parse(item.getString("MMOITEMS_ITEM_PARTICLES")).getAsJsonObject()));
+				mmoitem.setData(ItemStat.ITEM_PARTICLES,
+						new ParticleData(new JsonParser().parse(item.getString("MMOITEMS_ITEM_PARTICLES")).getAsJsonObject()));
 			} catch (JsonSyntaxException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.

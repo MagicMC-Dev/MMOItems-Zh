@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,7 +39,8 @@ public class Enchants extends ItemStat {
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.ENCHANTS).enable("Write in the chat the enchant you want to add.", ChatColor.AQUA + "Format: [ENCHANT] [LEVEL]");
+			new StatEdition(inv, ItemStat.ENCHANTS).enable("Write in the chat the enchant you want to add.",
+					ChatColor.AQUA + "Format: [ENCHANT] [LEVEL]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("enchants")) {
@@ -49,7 +51,8 @@ public class Enchants extends ItemStat {
 					config.getConfig().set(inv.getItemId() + ".enchants", null);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase().replace("_", " ") + ".");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
+						+ last.substring(1).toLowerCase().replace("_", " ") + ".");
 			}
 		}
 		return true;
@@ -77,7 +80,8 @@ public class Enchants extends ItemStat {
 
 		if (enchant == null) {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid enchantment!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
+					+ "All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
 			return false;
 		}
 
@@ -116,10 +120,13 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a string list");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		EnchantListData enchants = new EnchantListData();
 
-		for (String format : config.getConfigurationSection("enchants").getKeys(false)) {
+		for (String format : config.getKeys(false)) {
 			Enchantment enchant = null;
 			for (Enchantment enchant1 : Enchantment.values())
 				if (getName(enchant1).equalsIgnoreCase(format.replace("-", "_"))) {
@@ -132,16 +139,17 @@ public class Enchants extends ItemStat {
 				continue;
 			}
 
-			enchants.addEnchant(enchant, config.getInt("enchants." + format));
+			enchants.addEnchant(enchant, config.getInt(format));
 		}
 
-		item.setData(ItemStat.ENCHANTS, enchants);
+		return enchants;
 	}
 
 	@Override
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		EnchantListData enchants = new EnchantListData();
-		item.getItem().getItemMeta().getEnchants().keySet().forEach(enchant -> enchants.addEnchant(enchant, item.getItem().getItemMeta().getEnchantLevel(enchant)));
+		item.getItem().getItemMeta().getEnchants().keySet()
+				.forEach(enchant -> enchants.addEnchant(enchant, item.getItem().getItemMeta().getEnchantLevel(enchant)));
 		if (enchants.getEnchants().size() > 0)
 			mmoitem.setData(ItemStat.ENCHANTS, enchants);
 	}
@@ -154,7 +162,7 @@ public class Enchants extends ItemStat {
 		return false;
 	}
 
-	public class EnchantListData extends StatData {
+	public class EnchantListData implements StatData {
 		private Map<Enchantment, Integer> enchants = new HashMap<>();
 
 		public EnchantListData() {

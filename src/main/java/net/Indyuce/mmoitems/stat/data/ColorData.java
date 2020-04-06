@@ -3,12 +3,10 @@ package net.Indyuce.mmoitems.stat.data;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
-
-public class ColorData extends StatData {
+public class ColorData implements StatData {
 	private final int red, green, blue;
 
-	public ColorData(MMOItem mmoitem, String string) {
+	public ColorData(String string) {
 		String[] split = string.split("\\ ");
 		Validate.isTrue(split.length > 2, "Must specify 3 numbers for red, green and blue");
 

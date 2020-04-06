@@ -26,8 +26,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 public class UseItem {
 	protected final Player player;
 	protected final PlayerData playerData;
-
-	protected MMOItem mmoitem;
+	protected final MMOItem mmoitem;
 
 	protected static final Random random = new Random();
 

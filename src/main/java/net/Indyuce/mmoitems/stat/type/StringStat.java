@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,8 +26,8 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new StringData(config.getString(getPath())));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		return new StringData(object.toString());
 	}
 
 	@Override
@@ -83,7 +82,7 @@ public class StringStat extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
 	}
 
-	public class StringData extends StatData {
+	public class StringData implements StatData {
 		protected String str;
 
 		public StringData(String str) {

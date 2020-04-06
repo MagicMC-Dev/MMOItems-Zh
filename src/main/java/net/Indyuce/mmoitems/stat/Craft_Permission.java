@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -18,7 +17,8 @@ public class Craft_Permission extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		return null;
 	}
 
 	@Override

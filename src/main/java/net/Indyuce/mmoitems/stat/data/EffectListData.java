@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.stat.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EffectListData extends StatData implements Mergeable {
+public class EffectListData implements StatData, Mergeable {
 	private final List<PotionEffectData> effects = new ArrayList<>();
 
 	public EffectListData(PotionEffectData... effects) {

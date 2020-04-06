@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,7 +20,8 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MaterialStat extends StringStat {
 	public MaterialStat() {
-		super("MATERIAL", new ItemStack(VersionMaterial.GRASS_BLOCK.toMaterial()), "Material", new String[] { "Your item material." }, new String[] { "all" });
+		super("MATERIAL", new ItemStack(VersionMaterial.GRASS_BLOCK.toMaterial()), "Material", new String[] { "Your item material." },
+				new String[] { "all" });
 	}
 
 	@Override
@@ -38,7 +38,8 @@ public class MaterialStat extends StringStat {
 			material = Material.valueOf(format);
 		} catch (Exception e1) {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid material!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "All materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
+					+ "All materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
 			return false;
 		}
 
@@ -50,9 +51,9 @@ public class MaterialStat extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		MaterialData material = new MaterialData(Material.valueOf(config.getString("material").toUpperCase().replace("-", "_").replace(" ", "_")));
-		item.setData(ItemStat.MATERIAL, material);
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof String, "Must specify material name as string");
+		return new MaterialData(Material.valueOf(((String) object).toUpperCase().replace("-", "_").replace(" ", "_")));
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class MaterialStat extends StringStat {
 		mmoitem.setData(this, new MaterialData(item.getItem().getType()));
 	}
 
-	public class MaterialData extends StatData {
+	public class MaterialData implements StatData {
 		private Material material;
 
 		/*

@@ -245,7 +245,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
 				sender.sendMessage(ChatColor.AQUA + "UUID = " + ChatColor.RESET + data.getUniqueId().toString());
 				sender.sendMessage(ChatColor.AQUA + "Keep Enchants = " + ChatColor.RESET + data.keepEnchants());
-				sender.sendMessage(ChatColor.AQUA + "Keep Lore = " + ChatColor.RESET + data.keepLore());
+				sender.sendMessage(ChatColor.AQUA + "Keep StringListStat = " + ChatColor.RESET + data.keepLore());
 				sender.sendMessage(ChatColor.AQUA + "Keep DefaultDurability = " + ChatColor.RESET + data.keepDurability());
 				sender.sendMessage(ChatColor.AQUA + "Keep Name = " + ChatColor.RESET + data.keepName());
 			} catch (Exception e) {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,7 +30,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomSounds extends ItemStat {
 	public CustomSounds() {
-		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." }, new String[] { "all" });
+		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." },
+				new String[] { "all" });
 	}
 
 	@Override
@@ -82,7 +84,8 @@ public class CustomSounds extends ItemStat {
 
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY + " successfully changed to '" + soundName + "'.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY
+				+ " successfully changed to '" + soundName + "'.");
 		return true;
 	}
 
@@ -97,7 +100,8 @@ public class CustomSounds extends ItemStat {
 		else
 			for (String s1 : config.getConfigurationSection(path + ".sounds").getKeys(false)) {
 				String sounds = MMOUtils.caseOnWords(s1.replace("-", " "));
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + sounds + ChatColor.GRAY + ": " + ChatColor.RED + config.getString(path + ".sounds." + s1 + ".sound"));
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + sounds + ChatColor.GRAY + ": " + ChatColor.RED
+						+ config.getString(path + ".sounds." + s1 + ".sound"));
 			}
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the sounds edition menu.");
@@ -105,22 +109,25 @@ public class CustomSounds extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		SoundListData sounds = new SoundListData();
 
 		for (CustomSound sound : CustomSound.values()) {
 			String path = sound.getName().replace(" ", "-").toLowerCase();
-			if (!config.getConfigurationSection("sounds").contains(path))
+			if (!config.contains(path))
 				continue;
 
-			String soundName = config.getString("sounds." + path + ".sound");
-			double vol = config.getDouble("sounds." + path + ".volume");
-			double pit = config.getDouble("sounds." + path + ".pitch");
-			if (!soundName.isEmpty() && vol != 0 && pit != 0)
+			String soundName = config.getString(path + ".sound");
+			double vol = config.getDouble(path + ".volume");
+			double pit = config.getDouble(path + ".pitch");
+			if (!soundName.isEmpty() && vol > 0)
 				sounds.set(sound, soundName, vol, pit);
 		}
 
-		item.setData(ItemStat.CUSTOM_SOUNDS, sounds);
+		return sounds;
 	}
 
 	@Override
@@ -146,18 +153,16 @@ public class CustomSounds extends ItemStat {
 		for (CustomSound sound : CustomSound.values()) {
 			String soundName = item.getString("MMOITEMS_SOUND_" + sound.name());
 			if (soundName != null && !soundName.isEmpty())
-				sounds.set(sound, soundName, item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"), item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
+				sounds.set(sound, soundName, item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"),
+						item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
 		}
 
 		if (sounds.total() > 0)
 			mmoitem.setData(ItemStat.CUSTOM_SOUNDS, sounds);
 	}
 
-	public class SoundListData extends StatData {
-		private Map<CustomSound, SoundData> stats = new HashMap<>();
-
-		public SoundListData() {
-		}
+	public class SoundListData implements StatData {
+		private final Map<CustomSound, SoundData> stats = new HashMap<>();
 
 		public Set<CustomSound> getCustomSounds() {
 			return stats.keySet();

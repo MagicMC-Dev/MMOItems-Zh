@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,14 +26,17 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Dye_Color extends StringStat {
 	public Dye_Color() {
-		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color", new String[] { "The color of your item", "(for leather armor sets).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color",
+				new String[] { "The color of your item", "(for leather armor sets).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
+				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
 	}
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.DYE_COLOR).enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
+			new StatEdition(inv, ItemStat.DYE_COLOR).enable("Write in the chat the RGB color you want.",
+					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getItemId() + ".dye-color", null);
@@ -83,8 +85,9 @@ public class Dye_Color extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.DYE_COLOR, new ColorData(item, config.getString("dye-color")));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof String, "Must specify a string");
+		return new ColorData((String) object);
 	}
 
 	@Override

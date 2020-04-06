@@ -34,7 +34,7 @@ public class StoredTags extends InternalStat {
 		mmoitem.setData(ItemStat.STORED_TAGS, new StoredTagsData(item));
 	}
 
-	public class StoredTagsData extends StatData {
+	public class StoredTagsData implements StatData {
 		private final List<ItemTag> tags = new ArrayList<>();
 
 		public StoredTagsData(ItemStack stack) {

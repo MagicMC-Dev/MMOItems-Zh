@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -42,13 +43,16 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		AbilityListData list = new AbilityListData();
 
-		for (String key : config.getConfigurationSection("ability").getKeys(false))
-			list.add(new AbilityData(config.getConfigurationSection("ability." + key)));
+		for (String key : config.getKeys(false))
+			list.add(new AbilityData(config.getConfigurationSection(key)));
 
-		item.setData(ItemStat.ABILITIES, list);
+		return list;
 	}
 
 	@Override
@@ -162,7 +166,7 @@ public class Abilities extends ItemStat {
 			}
 	}
 
-	public class AbilityListData extends StatData implements Mergeable {
+	public class AbilityListData implements StatData, Mergeable {
 		private final Set<AbilityData> abilities = new LinkedHashSet<>();
 
 		public AbilityListData(AbilityData... abilities) {

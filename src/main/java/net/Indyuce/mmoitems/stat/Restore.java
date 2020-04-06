@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -94,8 +95,10 @@ public class Restore extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.RESTORE, new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation")));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+		return new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation"));
 	}
 
 	@Override
@@ -117,7 +120,7 @@ public class Restore extends StringStat {
 		return true;
 	}
 
-	public class RestoreData extends StatData {
+	public class RestoreData implements StatData {
 		private double health, food, saturate;
 
 		public RestoreData() {

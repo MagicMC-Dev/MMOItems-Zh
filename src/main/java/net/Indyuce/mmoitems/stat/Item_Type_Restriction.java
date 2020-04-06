@@ -3,9 +3,9 @@ package net.Indyuce.mmoitems.stat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -117,8 +117,10 @@ public class Item_Type_Restriction extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.ITEM_TYPE_RESTRICTION, new StringListData(config.getStringList(getPath())));
+	@SuppressWarnings("unchecked")
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
 	}
 
 	@Override

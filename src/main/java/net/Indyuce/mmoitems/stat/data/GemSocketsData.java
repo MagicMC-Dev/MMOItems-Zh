@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class GemSocketsData extends StatData {
+public class GemSocketsData implements StatData {
 	private final Set<GemstoneData> gems = new HashSet<>();
 	private final List<String> emptySlots;
 

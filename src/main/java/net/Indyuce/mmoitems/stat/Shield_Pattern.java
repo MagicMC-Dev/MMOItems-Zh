@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -34,33 +35,34 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Shield_Pattern extends StringStat {
 	public Shield_Pattern() {
-		super("SHIELD_PATTERN", new ItemStack(Material.SHIELD), "Shield Pattern", new String[] { "The color & patterns", "of your shield." }, new String[] { "all" }, Material.SHIELD);
+		super("SHIELD_PATTERN", new ItemStack(Material.SHIELD), "Shield Pattern", new String[] { "The color & patterns", "of your shield." },
+				new String[] { "all" }, Material.SHIELD);
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		ShieldPatternData shieldPattern = new ShieldPatternData();
 
 		// dye color
-		ConfigurationSection section = config.getConfigurationSection("shield-pattern");
-		if (section.contains("color")) {
-			String format = config.getString("shield-pattern.color").toUpperCase().replace("-", "_").replace(" ", "_");
-			shieldPattern.setBaseColor(DyeColor.valueOf(format));
-		}
+		if (config.contains("color"))
+			shieldPattern.setBaseColor(DyeColor.valueOf(config.getString("color").toUpperCase().replace("-", "_").replace(" ", "_")));
 
 		// apply patterns
-		for (String key : config.getConfigurationSection("shield-pattern").getKeys(false))
+		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("color")) {
-				String format = config.getString("shield-pattern." + key + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
+				String format = config.getString(key + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
 				PatternType type = PatternType.valueOf(format);
 
-				format = config.getString("shield-pattern." + key + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
+				format = config.getString(key + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
 				DyeColor color = DyeColor.valueOf(format);
 
 				shieldPattern.add(new Pattern(color, type));
 			}
 
-		item.setData(ItemStat.SHIELD_PATTERN, shieldPattern);
+		return shieldPattern;
 	}
 
 	@Override
@@ -89,7 +91,8 @@ public class Shield_Pattern extends StringStat {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the shield color.");
 		}
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 1).enable("Write in the chat the pattern you want to add.", ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
+			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 1).enable("Write in the chat the pattern you want to add.",
+					ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
 			if (!config.getConfig().getConfigurationSection(inv.getItemId()).contains("shield-pattern"))
@@ -147,7 +150,8 @@ public class Shield_Pattern extends StringStat {
 			config.getConfig().set(inv.getItemId() + ".shield-pattern." + availableKey + ".color", dyeColor.name());
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + MMOUtils.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " successfully added.");
+			inv.getPlayer().sendMessage(
+					MMOItems.plugin.getPrefix() + MMOUtils.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " successfully added.");
 			return true;
 		}
 
@@ -192,7 +196,8 @@ public class Shield_Pattern extends StringStat {
 				String colorFormat = config.getString(path + ".shield-pattern." + s + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
 				String patternFormat = config.getString(path + ".shield-pattern." + s + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
 				try {
-					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + PatternType.valueOf(patternFormat).name() + ChatColor.GRAY + " - " + ChatColor.GREEN + DyeColor.valueOf(colorFormat).name());
+					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + PatternType.valueOf(patternFormat).name() + ChatColor.GRAY + " - "
+							+ ChatColor.GREEN + DyeColor.valueOf(colorFormat).name());
 				} catch (Exception e) {
 					lore.add(ChatColor.DARK_RED + "Wrong shield pattern.");
 				}
@@ -207,7 +212,8 @@ public class Shield_Pattern extends StringStat {
 
 	@EventHandler
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof BlockStateMeta && ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState() instanceof Banner) {
+		if (item.getItem().getItemMeta() instanceof BlockStateMeta
+				&& ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState() instanceof Banner) {
 			ShieldPatternData shieldPattern = new ShieldPatternData();
 			Banner banner = (Banner) ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState();
 			shieldPattern.setBaseColor(banner.getBaseColor());
@@ -223,7 +229,7 @@ public class Shield_Pattern extends StringStat {
 		return -1;
 	}
 
-	public class ShieldPatternData extends StatData {
+	public class ShieldPatternData implements StatData {
 		private DyeColor base;
 		private final List<Pattern> patterns = new ArrayList<>();
 

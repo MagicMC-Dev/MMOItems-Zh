@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -25,6 +25,8 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DoubleStat extends ItemStat implements Upgradable {
+	private static final Random random = new Random();
+
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
 		super(id, item, name, lore, new String[] { "!miscellaneous", "all" });
 	}
@@ -33,10 +35,12 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		super(id, item, name, lore, types, materials);
 	}
 
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new DoubleData(config.getString(getPath())));
+	@Override
+	public StatData whenInitialized(MMOItem item, Object object) {
+		return new DoubleData(object);
 	}
 
+	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag(getNBTPath(), value));
@@ -44,6 +48,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		return true;
 	}
 
+	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = inv.getItemType().getConfigFile();
@@ -53,7 +58,8 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
 			return true;
 		}
-		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.", "Or write [MIN-VALUE]=[MAX-VALUE] to make the stat random.");
+		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
+				"Or write [MIN-VALUE]=[MAX-VALUE] to make the stat random.");
 		return true;
 	}
 
@@ -85,7 +91,8 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			config.getConfig().set(inv.getItemId() + "." + getPath(), null);
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + (value1 != 0 ? "{between " + value + " and " + value1 + "}" : "" + value) + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to "
+				+ (value1 != 0 ? "{between " + value + " and " + value1 + "}" : "" + value) + ".");
 		return true;
 	}
 
@@ -158,19 +165,24 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		}
 	}
 
-	public class DoubleData extends StatData {
+	public class DoubleData implements StatData {
 		private double min, max;
 
-		public DoubleData() {
-		}
+		public DoubleData(Object object) {
+			if (object instanceof Number) {
+				min = Double.valueOf(object.toString());
+				return;
+			}
 
-		public DoubleData(String string) {
-			String[] split = string.split("\\=");
-			if (split.length == 2) {
+			if (object instanceof String) {
+				String[] split = ((String) object).split("\\=");
+				Validate.isTrue(split.length == 2, "Must specify a valid range");
 				min = Double.parseDouble(split[0]);
 				max = Double.parseDouble(split[1]);
-			} else
-				min = Double.valueOf(string);
+				return;
+			}
+
+			throw new IllegalArgumentException("Must specify a range or a number");
 		}
 
 		public DoubleData(double value) {

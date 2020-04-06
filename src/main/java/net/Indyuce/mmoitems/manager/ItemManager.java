@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class ItemManager {
@@ -35,19 +36,21 @@ public class ItemManager {
 			}
 		}
 
-		FileConfiguration items = type.getConfigFile().getConfig();
-		if (!items.contains(id))
+		FileConfiguration typeConfig = type.getConfigFile().getConfig();
+		if (!typeConfig.contains(id))
 			return null;
 
 		MMOItem mmoitem = new MMOItem(type, id);
-		ConfigurationSection section = items.getConfigurationSection(id);
+		ConfigurationSection section = typeConfig.getConfigurationSection(id);
 
 		for (ItemStat stat : type.getAvailableStats())
 			if (section.contains(stat.getPath()))
 				try {
-					stat.whenLoaded(mmoitem, section);
+					StatData data = stat.whenInitialized(mmoitem, section.get(stat.getPath()));
+					mmoitem.setData(stat, data);
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Error while generating " + type.getId() + "." + id + " (" + stat.getName() + "): " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.WARNING,
+							"Error while loading " + type.getId() + "." + id + " (" + stat.getName() + "): " + exception.getMessage());
 				}
 
 		if (useCache)

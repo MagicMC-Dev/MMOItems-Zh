@@ -35,14 +35,16 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Perm_Effects extends ItemStat {
 	public Perm_Effects() {
-		super("PERM_EFFECTS", new ItemStack(Material.POTION), "Permanent Effects", new String[] { "The potion effects your", "item grants to the holder." }, new String[] { "!miscellaneous", "all" });
+		super("PERM_EFFECTS", new ItemStack(Material.POTION), "Permanent Effects",
+				new String[] { "The potion effects your", "item grants to the holder." }, new String[] { "!miscellaneous", "all" });
 	}
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.", "Format: [POTION_EFFECT] [AMPLIFIER]");
+			new StatEdition(inv, ItemStat.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
+					"Format: [POTION_EFFECT] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("perm-effects")) {
@@ -53,7 +55,8 @@ public class Perm_Effects extends ItemStat {
 					config.getConfig().set(inv.getItemId() + ".perm-effects", null);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase() + "�7.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
+						+ last.substring(1).toLowerCase() + "�7.");
 			}
 		}
 		return true;
@@ -77,7 +80,8 @@ public class Perm_Effects extends ItemStat {
 
 		if (effect == null) {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid potion effect.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED
+					+ "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 			return false;
 		}
 
@@ -118,16 +122,19 @@ public class Perm_Effects extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		EffectListData effects = new EffectListData();
 
-		for (String effect : config.getConfigurationSection("perm-effects").getKeys(false)) {
+		for (String effect : config.getKeys(false)) {
 			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
-			effects.add(new PotionEffectData(type, config.getInt("perm-effects." + effect)));
+			Validate.notNull(type, "Could not find potion effect type named '" + effect + "'");
+			effects.add(new PotionEffectData(type, config.getInt(effect)));
 		}
 
-		item.setData(ItemStat.PERM_EFFECTS, effects);
+		return effects;
 	}
 
 	@Override
@@ -137,7 +144,8 @@ public class Perm_Effects extends ItemStat {
 
 		String permEffectFormat = ItemStat.translate("perm-effect");
 		((EffectListData) data).getEffects().forEach(effect -> {
-			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
+			lore.add(permEffectFormat.replace("#",
+					MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
 			object.addProperty(effect.getType().getName(), effect.getLevel());
 		});
 
@@ -153,7 +161,8 @@ public class Perm_Effects extends ItemStat {
 				EffectListData effects = new EffectListData();
 
 				JsonObject json = new JsonParser().parse(item.getString("MMOITEMS_PERM_EFFECTS")).getAsJsonObject();
-				json.entrySet().forEach(entry -> effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+				json.entrySet()
+						.forEach(entry -> effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 
 				mmoitem.setData(ItemStat.PERM_EFFECTS, effects);
 			} catch (JsonSyntaxException exception) {

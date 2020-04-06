@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 
-public class StringListData extends StatData {
+public class StringListData implements StatData {
 	private final List<String> list;
 
 	public StringListData() {

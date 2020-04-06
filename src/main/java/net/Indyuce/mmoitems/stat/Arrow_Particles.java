@@ -31,35 +31,30 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Arrow_Particles extends StringStat {
 	public Arrow_Particles() {
-		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toItem(), "Arrow Particles", new String[] { "Particles that display around", "the arrows your bow fires." }, new String[] { "bow", "crossbow" });
+		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toItem(), "Arrow Particles",
+				new String[] { "Particles that display around", "the arrows your bow fires." }, new String[] { "bow", "crossbow" });
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		Validate.isTrue(config.getConfigurationSection("arrow-particles").contains("particle"), "Could not find arrow particle");
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specifiy a valid config section");
+		ConfigurationSection config = (ConfigurationSection) object;
 
-		ArrowParticlesData data = new ArrowParticlesData();
-		String particleFormat = config.getString("arrow-particles.particle").toUpperCase().replace("-", "_").replace(" ", "_");
-		data.particle = Particle.valueOf(particleFormat);
+		Validate.isTrue(config.contains("particle"), "Could not find arrow particle");
 
-		data.amount = config.getInt("arrow-particles.amount");
-		data.offset = config.getDouble("arrow-particles.offset");
+		Particle particle = Particle.valueOf(config.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_"));
+		int amount = config.getInt("amount");
+		double offset = config.getDouble("offset");
 
-		if (ParticleData.isColorable(data.particle)) {
-			data.red = config.getInt("arrow-particles.color.red");
-			data.green = config.getInt("arrow-particles.color.green");
-			data.blue = config.getInt("arrow-particles.color.blue");
-			data.colored = true;
-		} else
-			data.speed = config.getDouble("arrow-particles.speed");
-
-		item.setData(ItemStat.ARROW_PARTICLES, data);
+		return ParticleData.isColorable(particle)
+				? new ArrowParticlesData(particle, amount, offset, config.getInt("color.red"), config.getInt("color.green"),
+						config.getInt("color.blue"))
+				: new ArrowParticlesData(particle, amount, offset, config.getDouble("speed"));
 	}
 
 	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		if (((ArrowParticlesData) data).isValid())
-			item.addItemTag(new ItemTag("MMOITEMS_ARROW_PARTICLES", data.toString()));
+		item.addItemTag(new ItemTag("MMOITEMS_ARROW_PARTICLES", data.toString()));
 		return true;
 	}
 
@@ -68,20 +63,16 @@ public class Arrow_Particles extends StringStat {
 		if (nbtItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
 			try {
 				JsonObject json = new JsonParser().parse(nbtItem.getString("MMOITEMS_ARROW_PARTICLES")).getAsJsonObject();
-				ArrowParticlesData data = new ArrowParticlesData();
 
-				data.particle = Particle.valueOf(json.get("Particle").getAsString());
-				data.amount = json.get("Amount").getAsInt();
-				data.offset = json.get("Offset").getAsDouble();
+				Particle particle = Particle.valueOf(json.get("Particle").getAsString());
+				int amount = json.get("Amount").getAsInt();
+				double offset = json.get("Offset").getAsDouble();
 
-				if (data.colored = json.get("Colored").getAsBoolean()) {
-					data.red = json.get("Red").getAsInt();
-					data.green = json.get("Green").getAsInt();
-					data.blue = json.get("Blue").getAsInt();
-				} else
-					data.speed = json.get("Speed").getAsDouble();
-
-				mmoitem.setData(ItemStat.ARROW_PARTICLES, data);
+				mmoitem.setData(ItemStat.ARROW_PARTICLES,
+						ParticleData.isColorable(particle)
+								? new ArrowParticlesData(particle, amount, offset, json.get("Red").getAsInt(), json.get("Green").getAsInt(),
+										json.get("Blue").getAsInt())
+								: new ArrowParticlesData(particle, amount, offset, json.get("Speed").getAsDouble()));
 			} catch (JsonSyntaxException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
@@ -117,7 +108,8 @@ public class Arrow_Particles extends StringStat {
 			config.getConfig().set(inv.getItemId() + ".arrow-particles.color.blue", blue);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to " + ChatColor.translateAlternateColorCodes('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to "
+					+ ChatColor.translateAlternateColorCodes('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
 			return true;
 		}
 
@@ -134,7 +126,8 @@ public class Arrow_Particles extends StringStat {
 			config.getConfig().set(inv.getItemId() + ".arrow-particles.particle", particle.name());
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD
+					+ MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -150,7 +143,8 @@ public class Arrow_Particles extends StringStat {
 			config.getConfig().set(inv.getItemId() + ".arrow-particles.amount", value);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + value
+					+ ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -166,7 +160,8 @@ public class Arrow_Particles extends StringStat {
 		config.getConfig().set(inv.getItemId() + ".arrow-particles." + edited, value);
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY + " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
+				+ " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
 		return true;
 	}
 
@@ -176,13 +171,15 @@ public class Arrow_Particles extends StringStat {
 		lore.add(ChatColor.GRAY + "Current Value:");
 
 		try {
-			Particle particle = Particle.valueOf(config.getString(path + ".arrow-particles.particle").toUpperCase().replace("-", "_").replace(" ", "_"));
+			Particle particle = Particle
+					.valueOf(config.getString(path + ".arrow-particles.particle").toUpperCase().replace("-", "_").replace(" ", "_"));
 			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().replace("_", " ").toLowerCase()));
 			lore.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + config.getInt(path + ".arrow-particles.amount"));
 			lore.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + config.getDouble(path + ".arrow-particles.offset"));
 			lore.add("");
 			if (ParticleData.isColorable(particle)) {
-				double red = config.getDouble(path + ".arrow-particles.red"), green = config.getDouble(path + ".arrow-particles.green"), blue = config.getDouble(path + ".arrow-particles.blue");
+				double red = config.getDouble(path + ".arrow-particles.red"), green = config.getDouble(path + ".arrow-particles.green"),
+						blue = config.getDouble(path + ".arrow-particles.blue");
 				lore.add(ChatColor.translateAlternateColorCodes('&', "&7* Color: &c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
 			} else
 				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + config.getDouble(path + ".arrow-particles.speed"));
@@ -195,14 +192,11 @@ public class Arrow_Particles extends StringStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit.");
 	}
 
-	public class ArrowParticlesData extends StatData {
-		private Particle particle;
-		private int amount, red, green, blue;
-		private double speed, offset;
-		private boolean colored = false, valid = true;
-
-		public ArrowParticlesData() {
-		}
+	public class ArrowParticlesData implements StatData {
+		private final Particle particle;
+		private final int amount, red, green, blue;
+		private final double speed, offset;
+		private final boolean colored;
 
 		public ArrowParticlesData(Particle particle, int amount, double offset, double speed) {
 			this.particle = particle;
@@ -210,6 +204,11 @@ public class Arrow_Particles extends StringStat {
 			this.offset = offset;
 
 			this.speed = speed;
+
+			this.colored = false;
+			this.red = 0;
+			this.blue = 0;
+			this.green = 0;
 		}
 
 		public ArrowParticlesData(Particle particle, int amount, double offset, int red, int green, int blue) {
@@ -217,6 +216,9 @@ public class Arrow_Particles extends StringStat {
 			this.amount = amount;
 			this.offset = offset;
 
+			this.speed = 0;
+
+			this.colored = true;
 			this.red = red;
 			this.green = green;
 			this.blue = blue;
@@ -252,10 +254,6 @@ public class Arrow_Particles extends StringStat {
 
 		public int getBlue() {
 			return blue;
-		}
-
-		public boolean isValid() {
-			return valid;
 		}
 
 		@Override

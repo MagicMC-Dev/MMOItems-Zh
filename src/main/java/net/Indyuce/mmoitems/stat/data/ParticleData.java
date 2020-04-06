@@ -14,13 +14,12 @@ import org.bukkit.util.Vector;
 import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.mmogroup.mmolib.MMOLib;
 
-public class ParticleData extends StatData {
+public class ParticleData implements StatData {
 	private final ParticleType type;
 	private final Particle particle;
 	private final Map<String, Double> modifiers = new HashMap<>();
@@ -40,7 +39,7 @@ public class ParticleData extends StatData {
 		object.getAsJsonObject("Modifiers").entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
 	}
 
-	public ParticleData(MMOItem item, ConfigurationSection config) {
+	public ParticleData(ConfigurationSection config) {
 		Validate.isTrue(config.contains("type") && config.contains("particle"), "Particle is missing type or selected particle.");
 
 		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");

@@ -47,7 +47,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		disable.setItemMeta(disableMeta);
 
 		inv.setItem(20, getBooleanItem("Name", did.keepName(), "Your item will keep its", "old display name when updated."));
-		inv.setItem(21, getBooleanItem("Lore", did.keepLore(), "Any lore starting with '&7' will be", "kept when updating your item.", ChatColor.RED + "May not support every enchant plugin."));
+		inv.setItem(21, getBooleanItem("StringListStat", did.keepLore(), "Any lore starting with '&7' will be", "kept when updating your item.", ChatColor.RED + "May not support every enchant plugin."));
 		inv.setItem(29, getBooleanItem("Gems", did.keepGems(), "Your item will keep its", "old gems when updated."));
 		inv.setItem(30, getBooleanItem("Enchants", did.keepEnchants(), "Your item will keep its", "old enchants when updated."));
 		inv.setItem(38, getBooleanItem("Soulbound", did.keepSoulbound(), "Your item will keep its", "soulbound data when updated."));
@@ -90,7 +90,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		}
 
 		UpdaterData did = MMOItems.plugin.getUpdater().getData(path);
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Keep Lore?")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Keep StringListStat?")) {
 			did.setKeepLore(!did.keepLore());
 			open();
 		}

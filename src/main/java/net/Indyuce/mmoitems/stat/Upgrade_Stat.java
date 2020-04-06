@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,12 +31,16 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Upgrade_Stat extends ItemStat {
 	public Upgrade_Stat() {
-		super("UPGRADE", new ItemStack(Material.FLINT), "Item Upgrading", new String[] { "Upgrading your item improves its", "current stats. It requires either a", "consumable or a specific crafting ", "station. Upgrading may sometimes &cfail&7..." }, new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "consumable", "accessory" });
+		super("UPGRADE", new ItemStack(Material.FLINT), "Item Upgrading",
+				new String[] { "Upgrading your item improves its", "current stats. It requires either a", "consumable or a specific crafting ",
+						"station. Upgrading may sometimes &cfail&7..." },
+				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "consumable", "accessory" });
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new UpgradeData(item, config.getConfigurationSection("upgrade")));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		return new UpgradeData((ConfigurationSection) object);
 	}
 
 	@Override
@@ -68,7 +73,8 @@ public class Upgrade_Stat extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".upgrade.reference", message);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Upgrading reference successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(
+					MMOItems.plugin.getPrefix() + "Upgrading reference successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -85,7 +91,8 @@ public class Upgrade_Stat extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".upgrade.max", i);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Max upgrades successfully set to " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + "Max upgrades successfully set to " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -102,19 +109,22 @@ public class Upgrade_Stat extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".upgrade.success", d);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Upgrading rate successfully set to " + ChatColor.GOLD + d + "%" + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(
+					MMOItems.plugin.getPrefix() + "Upgrading rate successfully set to " + ChatColor.GOLD + d + "%" + ChatColor.GRAY + ".");
 			return true;
 		}
 
 		if (!MMOItems.plugin.getUpgrades().hasTemplate(message)) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Could not find any upgrade template with ID " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(
+					MMOItems.plugin.getPrefix() + "Could not find any upgrade template with ID " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
 			return false;
 		}
 
 		config.getConfig().set(inv.getItemId() + ".upgrade.template", message);
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Upgrading template successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
+		inv.getPlayer().sendMessage(
+				MMOItems.plugin.getPrefix() + "Upgrading template successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
 		return true;
 	}
 
@@ -131,14 +141,14 @@ public class Upgrade_Stat extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
 	}
 
-	public class UpgradeData extends StatData {
+	public class UpgradeData implements StatData {
 		private final String reference, template;
 		private final boolean workbench, destroy;
 		private final double success;
 		private final int max;
 		private int level;
 
-		public UpgradeData(MMOItem mmoitem, ConfigurationSection section) {
+		public UpgradeData(ConfigurationSection section) {
 			reference = section.getString("reference");
 			template = section.getString("template");
 			workbench = section.getBoolean("workbench");
@@ -195,7 +205,8 @@ public class Upgrade_Stat extends ItemStat {
 			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
 				if (mmoitem.hasData(ItemStat.NAME)) {
 					StringData nameData = (StringData) mmoitem.getData(ItemStat.NAME);
-					nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1)) : nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
+					nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1))
+							: nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
 				} else if (mmoitem.hasData(ItemStat.LORE)) {
 					StringListData loreData = (StringListData) mmoitem.getData(ItemStat.LORE);
 					loreData.getList().forEach(line -> {

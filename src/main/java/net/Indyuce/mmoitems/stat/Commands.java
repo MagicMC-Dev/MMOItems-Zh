@@ -35,7 +35,8 @@ public class Commands extends ItemStat {
 	private static final int max = 15;
 
 	public Commands() {
-		super("COMMANDS", new ItemStack(VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial()), "Commands", new String[] { "The commands your item", "performs when right clicked." }, new String[] { "!armor", "!gem_stone", "all" });
+		super("COMMANDS", new ItemStack(VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial()), "Commands",
+				new String[] { "The commands your item", "performs when right clicked." }, new String[] { "!armor", "!gem_stone", "all" });
 	}
 
 	@Override
@@ -107,21 +108,28 @@ public class Commands extends ItemStat {
 	@Override
 	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
 		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED + (config.getConfigurationSection(path).contains("commands") ? config.getConfigurationSection(path + ".commands").getKeys(false).size() : 0));
+		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
+				+ (config.getConfigurationSection(path).contains("commands")
+						? config.getConfigurationSection(path + ".commands").getKeys(false).size()
+						: 0));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit item commands.");
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		CommandListData list = new CommandListData();
 
-		for (String key : config.getConfigurationSection("commands").getKeys(false)) {
-			ConfigurationSection section = config.getConfigurationSection("commands." + key);
-			list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"), section.getBoolean("op")));
+		for (String key : config.getKeys(false)) {
+			ConfigurationSection section = config.getConfigurationSection(key);
+			list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"),
+					section.getBoolean("op")));
 		}
 
-		item.setData(ItemStat.COMMANDS, list);
+		return list;
 	}
 
 	@Override
@@ -155,7 +163,8 @@ public class Commands extends ItemStat {
 
 				new JsonParser().parse(nbtItem.getString("MMOITEMS_COMMANDS")).getAsJsonArray().forEach(element -> {
 					JsonObject key = element.getAsJsonObject();
-					commands.add(commands.newCommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(), key.get("Console").getAsBoolean(), key.get("Op").getAsBoolean()));
+					commands.add(commands.newCommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(),
+							key.get("Console").getAsBoolean(), key.get("Op").getAsBoolean()));
 				});
 
 				mmoitem.setData(ItemStat.COMMANDS, commands);
@@ -166,11 +175,8 @@ public class Commands extends ItemStat {
 			}
 	}
 
-	public class CommandListData extends StatData {
-		private Set<CommandData> commands = new HashSet<>();
-
-		public CommandListData() {
-		}
+	public class CommandListData implements StatData {
+		private final Set<CommandData> commands = new HashSet<>();
 
 		public CommandListData(CommandData... commands) {
 			add(commands);
@@ -190,9 +196,9 @@ public class Commands extends ItemStat {
 		}
 
 		public class CommandData {
-			private String command;
-			private double delay;
-			private boolean console, op;
+			private final String command;
+			private final double delay;
+			private final boolean console, op;
 
 			private CommandData(String command, double delay, boolean console, boolean op) {
 				Validate.notNull(command, "Command cannot be null");

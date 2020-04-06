@@ -25,18 +25,23 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Skull_Texture extends StringStat {
 	public Skull_Texture() {
-		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toItem(), "Skull Texture", new String[] { "The head texture &nvalue&7.", "Can be found on heads databases." }, new String[] { "all" }, VersionMaterial.PLAYER_HEAD.toMaterial());
+		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toItem(), "Skull Texture",
+				new String[] { "The head texture &nvalue&7.", "Can be found on heads databases." }, new String[] { "all" },
+				VersionMaterial.PLAYER_HEAD.toMaterial());
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		String value = config.getString("skull-texture.value");
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		String value = config.getString("value");
 		Validate.notNull(value, "Could not load skull texture value");
 
-		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(safeParse(item, config.getString("skull-texture.uuid")), null));
+		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(safeParse(item, config.getString("uuid")), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
 
-		item.setData(ItemStat.SKULL_TEXTURE, skullTexture);
+		return skullTexture;
 	}
 
 	@Override
@@ -89,24 +94,21 @@ public class Skull_Texture extends StringStat {
 				throw new IllegalArgumentException();
 			return UUID.fromString(str);
 		} catch (IllegalArgumentException exception) {
-			item.log(Level.WARNING, "Warning: the skull texture UUID could not be loaded! You must re-enter it otherwise heads will not be able to stack.");
+			item.log(Level.WARNING,
+					"Warning: the skull texture UUID could not be loaded! You must re-enter it otherwise heads will not be able to stack.");
 			return UUID.randomUUID();
 		}
 	}
 
-	public class SkullTextureData extends StatData {
-		private GameProfile profile;
+	public class SkullTextureData implements StatData {
+		private final GameProfile profile;
 
 		public SkullTextureData(GameProfile profile) {
-			setGameProfile(profile);
+			this.profile = profile;
 		}
 
 		public GameProfile getGameProfile() {
 			return profile;
-		}
-
-		public void setGameProfile(GameProfile profile) {
-			this.profile = profile;
 		}
 	}
 }

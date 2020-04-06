@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -87,8 +87,10 @@ public class Permission extends ItemStat implements Conditional {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.PERMISSION, new StringListData(config.getStringList("permission")));
+	@SuppressWarnings("unchecked")
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
 	}
 
 	@Override

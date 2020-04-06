@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.stat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -23,12 +23,11 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Lore extends StringStat {
+public class Lore extends ItemStat {
 	public Lore() {
 		super("LORE", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Lore", new String[] { "The item lore." }, new String[] { "all" });
 	}
@@ -50,7 +49,8 @@ public class Lore extends StringStat {
 				config.getConfig().set(inv.getItemId() + ".lore", lore);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last) + ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last)
+						+ ChatColor.GRAY + "'.");
 			}
 		}
 		return true;
@@ -58,7 +58,9 @@ public class Lore extends StringStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains("lore") ? config.getConfig().getStringList(inv.getItemId() + ".lore") : new ArrayList<>();
+		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains("lore")
+				? config.getConfig().getStringList(inv.getItemId() + ".lore")
+				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getItemId() + ".lore", lore);
 		inv.registerItemEdition(config);
@@ -83,8 +85,10 @@ public class Lore extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.LORE, new StringListData(config.getStringList("lore")));
+	@SuppressWarnings("unchecked")
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
 	}
 
 	@Override

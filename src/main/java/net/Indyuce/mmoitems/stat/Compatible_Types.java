@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.stat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -83,8 +83,10 @@ public class Compatible_Types extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.COMPATIBLE_TYPES, new StringListData(config.getStringList("compatible-types")));
+	@SuppressWarnings("unchecked")
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
 	}
 
 	@Override

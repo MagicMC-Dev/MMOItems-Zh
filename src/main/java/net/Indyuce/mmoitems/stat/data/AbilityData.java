@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 
-public class AbilityData extends StatData {
+public class AbilityData implements StatData {
 	private final Ability ability;
 	private final CastingMode castMode;
 	private final Map<String, Double> modifiers = new HashMap<>();

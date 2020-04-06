@@ -3,9 +3,9 @@ package net.Indyuce.mmoitems.stat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,12 +31,15 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Gem_Sockets extends ItemStat {
 	public Gem_Sockets() {
-		super("GEM_SOCKETS", new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." }, new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
+		super("GEM_SOCKETS", new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." },
+				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(this, new GemSocketsData(config.getStringList("gem-sockets")));
+	@SuppressWarnings("unchecked")
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new GemSocketsData((List<String>) object);
 	}
 
 	@Override
@@ -94,7 +97,8 @@ public class Gem_Sockets extends ItemStat {
 				config.getConfig().set(inv.getItemId() + "." + getPath(), lore);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last) + ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last)
+						+ ChatColor.GRAY + "'.");
 			}
 		}
 		return true;
@@ -102,7 +106,9 @@ public class Gem_Sockets extends ItemStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains(getPath()) ? config.getConfig().getStringList(inv.getItemId() + "." + getPath()) : new ArrayList<>();
+		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains(getPath())
+				? config.getConfig().getStringList(inv.getItemId() + "." + getPath())
+				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getItemId() + "." + getPath(), lore);
 		inv.registerItemEdition(config);

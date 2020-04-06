@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -82,8 +81,9 @@ public class Potion_Color extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
-		item.setData(ItemStat.POTION_COLOR, new ColorData(item, config.getString("potion-color")));
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof String, "Must specify a string");
+		return new ColorData((String) object);
 	}
 
 	@Override

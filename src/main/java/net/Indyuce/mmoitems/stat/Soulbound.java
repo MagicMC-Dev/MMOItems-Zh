@@ -54,10 +54,10 @@ public class Soulbound extends InternalStat implements Conditional {
 		return new SoulboundData(uuid, name, level);
 	}
 
-	public class SoulboundData extends StatData {
-		private UUID uuid;
-		private String name;
-		private int level;
+	public class SoulboundData implements StatData {
+		private final UUID uuid;
+		private final String name;
+		private final int level;
 
 		public SoulboundData(UUID uuid, String name, int level) {
 			this.uuid = uuid;

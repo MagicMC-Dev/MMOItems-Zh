@@ -58,7 +58,7 @@ public class ItemSet {
 
 						// particle effect
 						if (key.startsWith("particle-")) {
-							bonuses.addParticle(new ParticleData(null, section.getConfigurationSection("bonuses." + j + "." + key)));
+							bonuses.addParticle(new ParticleData(section.getConfigurationSection("bonuses." + j + "." + key)));
 							continue;
 						}
 

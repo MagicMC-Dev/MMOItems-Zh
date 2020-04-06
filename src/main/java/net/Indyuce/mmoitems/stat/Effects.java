@@ -40,14 +40,16 @@ public class Effects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public Effects() {
-		super("EFFECTS", new ItemStack(Material.POTION), "Effects", new String[] { "The potion effects your", "consumable item grants." }, new String[] { "consumable" });
+		super("EFFECTS", new ItemStack(Material.POTION), "Effects", new String[] { "The potion effects your", "consumable item grants." },
+				new String[] { "consumable" });
 	}
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getItemType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.", ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
+			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
+					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("effects")) {
@@ -58,7 +60,8 @@ public class Effects extends ItemStat {
 					config.getConfig().set(inv.getItemId() + ".effects", null);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
+						+ last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
 			}
 		}
 		return true;
@@ -68,8 +71,10 @@ public class Effects extends ItemStat {
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
 		String[] split = message.split("\\ ");
 		if (split.length != 3) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER].");
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
 			return false;
 		}
 
@@ -83,7 +88,8 @@ public class Effects extends ItemStat {
 
 		if (effect == null) {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid potion effect!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
+					+ "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 			return false;
 		}
 
@@ -132,7 +138,8 @@ public class Effects extends ItemStat {
 				}
 
 				if (split.length == 1)
-					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " I " + ChatColor.GRAY + "(" + ChatColor.GREEN + durationFormat + ChatColor.GRAY + "s)");
+					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " I " + ChatColor.GRAY + "(" + ChatColor.GREEN + durationFormat
+							+ ChatColor.GRAY + "s)");
 
 				if (split.length == 2) {
 					String amplifierFormat = "";
@@ -141,7 +148,8 @@ public class Effects extends ItemStat {
 					} catch (Exception e) {
 						amplifierFormat = "?";
 					}
-					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " " + amplifierFormat + " " + ChatColor.GRAY + "(" + ChatColor.GREEN + durationFormat + ChatColor.GRAY + "s)");
+					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " " + amplifierFormat + " " + ChatColor.GRAY + "(" + ChatColor.GREEN
+							+ durationFormat + ChatColor.GRAY + "s)");
 				}
 			}
 		lore.add("");
@@ -150,21 +158,24 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem item, ConfigurationSection config) {
+	public StatData whenInitialized(MMOItem item, Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
 		EffectListData effects = new EffectListData();
 
-		for (String effect : config.getConfigurationSection("effects").getKeys(false)) {
+		for (String effect : config.getKeys(false)) {
 			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
 			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
 
-			String[] split = config.getString("effects." + effect).split("\\,");
+			String[] split = config.getString(effect).split("\\,");
 			double duration = Double.parseDouble(split[0]);
 
 			int amplifier = Integer.parseInt(split[1]);
 			effects.add(new PotionEffectData(type, duration, amplifier));
 		}
 
-		item.setData(ItemStat.EFFECTS, effects);
+		return effects;
 	}
 
 	@Override
@@ -174,7 +185,11 @@ public class Effects extends ItemStat {
 
 		String effectFormat = ItemStat.translate("effect");
 		((EffectListData) data).getEffects().forEach(effect -> {
-			lore.add(effectFormat.replace("#e", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + (effect.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(effect.getLevel()))).replace("#d", durationFormat.format(effect.getDuration())));
+			lore.add(effectFormat
+					.replace("#e",
+							MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
+									+ (effect.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(effect.getLevel())))
+					.replace("#d", durationFormat.format(effect.getDuration())));
 
 			JsonObject object = new JsonObject();
 			object.addProperty("Type", effect.getType().getName());
@@ -196,7 +211,8 @@ public class Effects extends ItemStat {
 
 				new JsonParser().parse(nbtItem.getString("MMOITEMS_EFFECTS")).getAsJsonArray().forEach(element -> {
 					JsonObject key = element.getAsJsonObject();
-					effects.add(new PotionEffectData(PotionEffectType.getByName(key.get("Type").getAsString()), key.get("Duration").getAsDouble(), key.get("Level").getAsInt()));
+					effects.add(new PotionEffectData(PotionEffectType.getByName(key.get("Type").getAsString()), key.get("Duration").getAsDouble(),
+							key.get("Level").getAsInt()));
 				});
 
 				mmoitem.setData(ItemStat.EFFECTS, effects);

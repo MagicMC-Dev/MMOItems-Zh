@@ -33,7 +33,7 @@ public class ItemGenManager {
 
 	public void reload() {
 		templates.clear();
-		for (File file : new File(MMOItems.plugin.getDataFolder() + "/generator/items").listFiles()) {
+		for (File file : new File(MMOItems.plugin.getDataFolder() + "/generator/templates").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 			for (String key : config.getKeys(false))
 				try {

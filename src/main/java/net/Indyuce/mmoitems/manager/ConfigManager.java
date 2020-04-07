@@ -57,7 +57,8 @@ public class ConfigManager {
 			dynamicFolder.mkdir();
 
 		if (!new File(MMOItems.plugin.getDataFolder() + "/generator").exists()) {
-			new File(MMOItems.plugin.getDataFolder() + "/generator/items").mkdir();
+			new File(MMOItems.plugin.getDataFolder() + "/generator").mkdir();
+			new File(MMOItems.plugin.getDataFolder() + "/generator/templates").mkdir();
 			new File(MMOItems.plugin.getDataFolder() + "/generator/modifiers").mkdir();
 		}
 
@@ -272,6 +273,10 @@ public class ConfigManager {
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
 
+		// item generator
+		EXAMPLE_GEN_TEMPLATES("generator/templates/example-templates.yml", "generator/templates", "example-templates.yml"),
+		EXAMPLE_GEN_MODIFIERS("generator/modifiers/example-modifiers.yml", "generator/modifiers", "example-modifiers.yml"),
+		
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),
 		AXE("item/axe.yml", "item", "axe.yml"),

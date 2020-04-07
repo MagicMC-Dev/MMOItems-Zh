@@ -1,0 +1,34 @@
+
+
+# Example item
+LONG_SWORD:
+
+    # Basic item information
+    type: SWORD
+    material: IRON_SWORD
+    
+    # The more weight a randomly generated item has,
+    # the more modifiers it will be able to roll
+    weight:
+        base: 3
+        scale: 1
+        relative-spread: .1
+        max-relative-spread: .3
+    
+    # Base item data
+    base:
+        name: '&fLong Sword'
+        max-durability: 300.0
+        attack-damage: 7
+
+    # Modifiers which have a chance to be rolled
+    modifiers:
+        sharp:
+            chance: 0.3
+            prefix:
+                format: '&fSharp'
+                priority : 0
+            stats:
+                attack-damage: 3
+                lore:
+                - '&7Much sharper!'

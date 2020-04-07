@@ -24,7 +24,7 @@ public abstract class HologramSupport {
 
 		if (MMOItems.plugin.getConfig().getBoolean("game-indicators.damage.enabled"))
 			Bukkit.getPluginManager().registerEvents(new Listener() {
-				@EventHandler(priority = EventPriority.HIGHEST)
+				@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 				public void a(EntityDamageEvent event) {
 					if (event.isCancelled() || event.getDamage() <= 0)
 						return;
@@ -40,13 +40,14 @@ public abstract class HologramSupport {
 					if (entity instanceof Player && isVanished((Player) entity))
 						return;
 
-					displayIndicator(entity, MMOItems.plugin.getLanguage().damageIndicatorFormat.replace("#", MMOItems.plugin.getLanguage().damageIndicatorDecimalFormat.format(event.getFinalDamage())));
+					displayIndicator(entity, MMOItems.plugin.getLanguage().damageIndicatorFormat.replace("#",
+							MMOItems.plugin.getLanguage().damageIndicatorDecimalFormat.format(event.getFinalDamage())));
 				}
 			}, MMOItems.plugin);
 
 		if (MMOItems.plugin.getConfig().getBoolean("game-indicators.heal.enabled"))
 			Bukkit.getPluginManager().registerEvents(new Listener() {
-				@EventHandler(priority = EventPriority.HIGHEST)
+				@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 				public void a(EntityRegainHealthEvent event) {
 					if (event.isCancelled() || event.getAmount() <= 0)
 						return;
@@ -62,13 +63,15 @@ public abstract class HologramSupport {
 					if (entity instanceof Player && isVanished((Player) entity))
 						return;
 
-					displayIndicator(entity, MMOItems.plugin.getLanguage().healIndicatorFormat.replace("#", MMOItems.plugin.getLanguage().healIndicatorDecimalFormat.format(event.getAmount())));
+					displayIndicator(entity, MMOItems.plugin.getLanguage().healIndicatorFormat.replace("#",
+							MMOItems.plugin.getLanguage().healIndicatorDecimalFormat.format(event.getAmount())));
 				}
 			}, MMOItems.plugin);
 	}
 
 	public void displayIndicator(Entity entity, String message) {
-		displayIndicator(entity.getLocation().add((random.nextDouble() - .5) * 1.2, entity.getHeight() * .75, (random.nextDouble() - .5) * 1.2), message, entity instanceof Player ? (Player) entity : null);
+		displayIndicator(entity.getLocation().add((random.nextDouble() - .5) * 1.2, entity.getHeight() * .75, (random.nextDouble() - .5) * 1.2),
+				message, entity instanceof Player ? (Player) entity : null);
 	}
 
 	/*

@@ -26,11 +26,9 @@ public abstract class HologramSupport {
 			Bukkit.getPluginManager().registerEvents(new Listener() {
 				@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 				public void a(EntityDamageEvent event) {
-					if (event.isCancelled() || event.getDamage() <= 0)
-						return;
 
 					Entity entity = event.getEntity();
-					if (!(entity instanceof LivingEntity) || event.getEntity() instanceof ArmorStand)
+					if (!(entity instanceof LivingEntity) || event.getEntity() instanceof ArmorStand || event.getDamage() <= 0)
 						return;
 
 					/*
@@ -49,11 +47,9 @@ public abstract class HologramSupport {
 			Bukkit.getPluginManager().registerEvents(new Listener() {
 				@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 				public void a(EntityRegainHealthEvent event) {
-					if (event.isCancelled() || event.getAmount() <= 0)
-						return;
 
 					Entity entity = event.getEntity();
-					if (!(entity instanceof LivingEntity))
+					if (!(entity instanceof LivingEntity) || event.getAmount() <= 0)
 						return;
 
 					/*

@@ -14,13 +14,15 @@ import org.bukkit.util.Vector;
 import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
 
-public class ParticleData implements StatData {
+public class ParticleData implements StatData, RandomStatData {
 	private final ParticleType type;
 	private final Particle particle;
 	private final Map<String, Double> modifiers = new HashMap<>();
@@ -140,5 +142,10 @@ public class ParticleData implements StatData {
 
 	public static boolean isColorable(Particle particle) {
 		return particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || particle == Particle.REDSTONE || particle == Particle.NOTE;
+	}
+
+	@Override
+	public StatData randomize(GeneratedItemBuilder builder) {
+		return this;
 	}
 }

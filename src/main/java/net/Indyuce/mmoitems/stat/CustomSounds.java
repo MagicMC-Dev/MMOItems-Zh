@@ -20,6 +20,8 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.SoundsEdition;
@@ -33,6 +35,33 @@ public class CustomSounds extends ItemStat {
 	public CustomSounds() {
 		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." },
 				new String[] { "all" });
+	}
+
+	@Override
+	public SoundListData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		SoundListData sounds = new SoundListData();
+
+		for (CustomSound sound : CustomSound.values()) {
+			String path = sound.getName().replace(" ", "-").toLowerCase();
+			if (!config.contains(path))
+				continue;
+
+			String soundName = config.getString(path + ".sound");
+			double vol = config.getDouble(path + ".volume");
+			double pit = config.getDouble(path + ".pitch");
+			if (!soundName.isEmpty() && vol > 0)
+				sounds.set(sound, soundName, vol, pit);
+		}
+
+		return sounds;
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return whenInitialized(object);
 	}
 
 	@Override
@@ -110,28 +139,6 @@ public class CustomSounds extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		SoundListData sounds = new SoundListData();
-
-		for (CustomSound sound : CustomSound.values()) {
-			String path = sound.getName().replace(" ", "-").toLowerCase();
-			if (!config.contains(path))
-				continue;
-
-			String soundName = config.getString(path + ".sound");
-			double vol = config.getDouble(path + ".volume");
-			double pit = config.getDouble(path + ".pitch");
-			if (!soundName.isEmpty() && vol > 0)
-				sounds.set(sound, soundName, vol, pit);
-		}
-
-		return sounds;
-	}
-
-	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		SoundListData sounds = (SoundListData) data;
 
@@ -162,7 +169,7 @@ public class CustomSounds extends ItemStat {
 			mmoitem.setData(ItemStat.CUSTOM_SOUNDS, sounds);
 	}
 
-	public class SoundListData implements StatData,Mergeable {
+	public class SoundListData implements StatData, Mergeable, RandomStatData {
 		private final Map<CustomSound, SoundData> stats = new HashMap<>();
 
 		public Set<CustomSound> getCustomSounds() {
@@ -186,6 +193,11 @@ public class CustomSounds extends ItemStat {
 			Validate.isTrue(data instanceof SoundListData, "Cannot merge two different stat data types");
 			SoundListData cast = (SoundListData) data;
 			cast.stats.keySet().forEach(key -> stats.put(key, cast.stats.get(key)));
+		}
+
+		@Override
+		public StatData randomize(GeneratedItemBuilder builder) {
+			return this;
 		}
 	}
 

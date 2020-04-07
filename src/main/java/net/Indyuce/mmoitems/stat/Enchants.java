@@ -1,14 +1,13 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -22,9 +21,11 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.EnchantListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomEnchantListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -33,6 +34,28 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 public class Enchants extends ItemStat {
 	public Enchants() {
 		super("ENCHANTS", new ItemStack(Material.ENCHANTED_BOOK), "Enchantments", new String[] { "The item enchants." }, new String[] { "all" });
+	}
+
+	@Override
+	public StatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		EnchantListData enchants = new EnchantListData();
+
+		for (String format : config.getKeys(false)) {
+			Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(format.toLowerCase().replace("-", "_")));
+			Validate.notNull(enchant, "Could not find enchant with key '" + format + "'");
+			enchants.addEnchant(enchant, config.getInt(format));
+		}
+
+		return enchants;
+	}
+	
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		return new RandomEnchantListData((ConfigurationSection) object);
 	}
 
 	@Override
@@ -120,28 +143,6 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a string list");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		EnchantListData enchants = new EnchantListData();
-
-		for (String format : config.getKeys(false)) {
-			Enchantment enchant = null;
-			for (Enchantment enchant1 : Enchantment.values())
-				if (getName(enchant1).equalsIgnoreCase(format.replace("-", "_"))) {
-					enchant = enchant1;
-					break;
-				}
-
-			Validate.notNull(enchant, "Could not find enchant with name '" + format + "'");
-			enchants.addEnchant(enchant, config.getInt(format));
-		}
-
-		return enchants;
-	}
-
-	@Override
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		EnchantListData enchants = new EnchantListData();
 		item.getItem().getItemMeta().getEnchants().keySet()
@@ -158,27 +159,4 @@ public class Enchants extends ItemStat {
 		return false;
 	}
 
-	public class EnchantListData implements StatData, Mergeable {
-		private final Map<Enchantment, Integer> enchants = new HashMap<>();
-
-		public Set<Enchantment> getEnchants() {
-			return enchants.keySet();
-		}
-
-		public int getLevel(Enchantment enchant) {
-			return enchants.get(enchant);
-		}
-
-		public void addEnchant(Enchantment enchant, int level) {
-			enchants.put(enchant, level);
-		}
-
-		@Override
-		public void merge(StatData data) {
-			Validate.isTrue(data instanceof EnchantListData, "Cannot merge two different stat data types");
-			Map<Enchantment, Integer> extra = ((EnchantListData) data).enchants;
-			for (Enchantment enchant : extra.keySet())
-				enchants.put(enchant, enchants.containsKey(enchant) ? Math.max(extra.get(enchant), enchants.get(enchant)) : extra.get(enchant));
-		}
-	}
 }

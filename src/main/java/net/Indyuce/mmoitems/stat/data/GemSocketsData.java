@@ -16,13 +16,14 @@ import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.stat.Abilities.AbilityListData;
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class GemSocketsData implements StatData, Mergeable {
+public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	private final Set<GemstoneData> gems = new HashSet<>();
 	private final List<String> emptySlots;
 
@@ -108,7 +109,7 @@ public class GemSocketsData implements StatData, Mergeable {
 			if (mmoitem.hasData(ItemStat.ABILITIES))
 				((AbilityListData) mmoitem.getData(ItemStat.ABILITIES)).getAbilities().forEach(data -> abilities.add(data));
 			if (mmoitem.hasData(ItemStat.PERM_EFFECTS))
-				((EffectListData) mmoitem.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(data -> effects.add(data));
+				((PotionEffectListData) mmoitem.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(data -> effects.add(data));
 			// TODO
 			// for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
 			// if (mmoitem.hasData(stat))
@@ -152,5 +153,10 @@ public class GemSocketsData implements StatData, Mergeable {
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof GemSocketsData, "Cannot merge two different stat data types");
 		emptySlots.addAll(((GemSocketsData) data).emptySlots);
+	}
+
+	@Override
+	public StatData randomize(GeneratedItemBuilder builder) {
+		return this;
 	}
 }

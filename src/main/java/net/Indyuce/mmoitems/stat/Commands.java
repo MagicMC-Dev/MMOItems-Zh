@@ -22,6 +22,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -38,6 +40,27 @@ public class Commands extends ItemStat {
 	public Commands() {
 		super("COMMANDS", new ItemStack(VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial()), "Commands",
 				new String[] { "The commands your item", "performs when right clicked." }, new String[] { "!armor", "!gem_stone", "all" });
+	}
+
+	@Override
+	public CommandListData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		CommandListData list = new CommandListData();
+
+		for (String key : config.getKeys(false)) {
+			ConfigurationSection section = config.getConfigurationSection(key);
+			list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"),
+					section.getBoolean("op")));
+		}
+
+		return list;
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return whenInitialized(object);
 	}
 
 	@Override
@@ -118,22 +141,6 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		CommandListData list = new CommandListData();
-
-		for (String key : config.getKeys(false)) {
-			ConfigurationSection section = config.getConfigurationSection(key);
-			list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"),
-					section.getBoolean("op")));
-		}
-
-		return list;
-	}
-
-	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		JsonArray array = new JsonArray();
 		List<String> lore = new ArrayList<>();
@@ -176,7 +183,7 @@ public class Commands extends ItemStat {
 			}
 	}
 
-	public class CommandListData implements StatData,Mergeable {
+	public class CommandListData implements StatData, Mergeable, RandomStatData {
 		private final Set<CommandData> commands = new HashSet<>();
 
 		public CommandListData(CommandData... commands) {
@@ -239,6 +246,11 @@ public class Commands extends ItemStat {
 		public void merge(StatData data) {
 			Validate.isTrue(data instanceof CommandListData, "Cannot merge two different stat data types");
 			commands.addAll(((CommandListData) data).commands);
+		}
+
+		@Override
+		public StatData randomize(GeneratedItemBuilder builder) {
+			return this;
 		}
 	}
 }

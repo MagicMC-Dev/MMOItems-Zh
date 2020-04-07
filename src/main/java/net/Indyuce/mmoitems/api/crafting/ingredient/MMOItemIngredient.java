@@ -9,7 +9,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.mmogroup.mmolib.api.MMOLineConfig;
-import net.Indyuce.mmoitems.stat.Display_Name;
+import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.MaterialStat.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -72,7 +72,7 @@ public class MMOItemIngredient extends Ingredient {
 	private String findName() {
 		MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(type, id);
 		if (mmoitem.hasData(ItemStat.NAME))
-			return ((Display_Name) ItemStat.NAME).getDisplayName(mmoitem.getData(ItemStat.NAME));
+			return ((DisplayName) ItemStat.NAME).getDisplayName(mmoitem.getData(ItemStat.NAME));
 		if (mmoitem.hasData(ItemStat.MATERIAL))
 			return MMOUtils.caseOnWords(((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 		return "Unrecognized Item";

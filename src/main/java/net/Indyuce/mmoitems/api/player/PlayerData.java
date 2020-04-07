@@ -39,9 +39,9 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory.EquippedItem;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
-import net.Indyuce.mmoitems.stat.Abilities.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.EffectListData;
+import net.Indyuce.mmoitems.stat.data.AbilityListData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -223,7 +223,7 @@ public class PlayerData {
 			 * apply permanent potion effects
 			 */
 			if (item.hasData(ItemStat.PERM_EFFECTS))
-				((EffectListData) item.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(effect -> {
+				((PotionEffectListData) item.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(effect -> {
 					if (getPermanentPotionEffectAmplifier(effect.getType()) < effect.getLevel() - 1)
 						permanentEffects.put(effect.getType(), effect.toEffect());
 				});

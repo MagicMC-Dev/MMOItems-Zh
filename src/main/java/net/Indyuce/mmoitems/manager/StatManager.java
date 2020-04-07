@@ -13,7 +13,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemGenerationStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
@@ -28,7 +27,6 @@ public class StatManager {
 
 	private final Set<AttributeStat> attributeBased = new HashSet<>();
 	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
-	private final Set<ItemGenerationStat> itemGeneration = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -63,10 +61,6 @@ public class StatManager {
 		return itemRestriction;
 	}
 
-	public Set<ItemGenerationStat> getGenerationStats() {
-		return itemGeneration;
-	}
-
 	public boolean has(String id) {
 		return stats.containsKey(id);
 	}
@@ -80,9 +74,6 @@ public class StatManager {
 			return;
 
 		stats.put(stat.getId(), stat);
-
-		if (stat instanceof ItemGenerationStat)
-			itemGeneration.add((ItemGenerationStat) stat);
 
 		if (stat instanceof DoubleStat && !(stat instanceof ProperStat) && Type.GEM_STONE.canHave(stat))
 			numeric.add((DoubleStat) stat);

@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.GaussianLinearValue;
+import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
@@ -27,7 +27,7 @@ import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class DoubleStat extends ItemStat implements Upgradable, ItemGenerationStat {
+public class DoubleStat extends ItemStat implements Upgradable {
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
 		super(id, item, name, lore, new String[] { "!miscellaneous", "all" });
 	}
@@ -39,6 +39,18 @@ public class DoubleStat extends ItemStat implements Upgradable, ItemGenerationSt
 	@Override
 	public StatData whenInitialized(Object object) {
 		return new DoubleData(object);
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+
+		if (object instanceof Number)
+			return new NumericStatFormula(Double.valueOf(object.toString()), 0, 0, 0);
+		
+		if (object instanceof ConfigurationSection) 
+			return new NumericStatFormula((ConfigurationSection) object);
+		
+		throw new IllegalArgumentException("Must specify a number or a config section");
 	}
 
 	@Override
@@ -164,17 +176,5 @@ public class DoubleStat extends ItemStat implements Upgradable, ItemGenerationSt
 		public boolean isRelative() {
 			return relative;
 		}
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-
-		if (object instanceof Number)
-			return new GaussianLinearValue(Double.valueOf(object.toString()), 0, 0, 0);
-		
-		if (object instanceof ConfigurationSection) 
-			return new GaussianLinearValue((ConfigurationSection) object);
-		
-		throw new IllegalArgumentException("Must specify a number or a config section");
 	}
 }

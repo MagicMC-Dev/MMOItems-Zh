@@ -2,9 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -25,11 +23,14 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.AbilityListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomAbilityData;
+import net.Indyuce.mmoitems.stat.data.random.RandomAbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -52,6 +53,19 @@ public class Abilities extends ItemStat {
 
 		for (String key : config.getKeys(false))
 			list.add(new AbilityData(config.getConfigurationSection(key)));
+
+		return list;
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		RandomAbilityListData list = new RandomAbilityListData();
+
+		for (String key : config.getKeys(false))
+			list.add(new RandomAbilityData(config.getConfigurationSection(key)));
 
 		return list;
 	}
@@ -176,28 +190,5 @@ public class Abilities extends ItemStat {
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
-	}
-
-	public class AbilityListData implements StatData, Mergeable {
-		private final Set<AbilityData> abilities = new LinkedHashSet<>();
-
-		public AbilityListData(AbilityData... abilities) {
-			add(abilities);
-		}
-
-		public void add(AbilityData... abilities) {
-			for (AbilityData ability : abilities)
-				this.abilities.add(ability);
-		}
-
-		public Set<AbilityData> getAbilities() {
-			return abilities;
-		}
-
-		@Override
-		public void merge(StatData data) {
-			Validate.isTrue(data instanceof AbilityListData, "Cannot merge two different stat data types");
-			abilities.addAll(((AbilityListData) data).abilities);
-		}
 	}
 }

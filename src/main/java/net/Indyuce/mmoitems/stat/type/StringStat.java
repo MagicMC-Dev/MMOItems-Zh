@@ -22,7 +22,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class StringStat extends ItemStat implements ItemGenerationStat {
+public class StringStat extends ItemStat {
 	public StringStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
 		super(id, item, name, lore, types, materials);
 	}

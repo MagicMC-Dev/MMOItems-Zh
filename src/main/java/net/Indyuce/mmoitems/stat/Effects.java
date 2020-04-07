@@ -27,10 +27,12 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.EffectListData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -42,6 +44,33 @@ public class Effects extends ItemStat {
 	public Effects() {
 		super("EFFECTS", new ItemStack(Material.POTION), "Effects", new String[] { "The potion effects your", "consumable item grants." },
 				new String[] { "consumable" });
+	}
+
+	@Override
+	public StatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		PotionEffectListData effects = new PotionEffectListData();
+
+		for (String effect : config.getKeys(false)) {
+			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
+			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
+
+			String[] split = config.getString(effect).split("\\,");
+			double duration = Double.parseDouble(split[0]);
+
+			int amplifier = Integer.parseInt(split[1]);
+			effects.add(new PotionEffectData(type, duration, amplifier));
+		}
+
+		return effects;
+	}
+	
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
 
 	@Override
@@ -158,33 +187,12 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		EffectListData effects = new EffectListData();
-
-		for (String effect : config.getKeys(false)) {
-			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
-
-			String[] split = config.getString(effect).split("\\,");
-			double duration = Double.parseDouble(split[0]);
-
-			int amplifier = Integer.parseInt(split[1]);
-			effects.add(new PotionEffectData(type, duration, amplifier));
-		}
-
-		return effects;
-	}
-
-	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		List<String> lore = new ArrayList<>();
 		JsonArray array = new JsonArray();
 
 		String effectFormat = ItemStat.translate("effect");
-		((EffectListData) data).getEffects().forEach(effect -> {
+		((PotionEffectListData) data).getEffects().forEach(effect -> {
 			lore.add(effectFormat
 					.replace("#e",
 							MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
@@ -207,7 +215,7 @@ public class Effects extends ItemStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem nbtItem) {
 		if (nbtItem.hasTag(getNBTPath()))
 			try {
-				EffectListData effects = new EffectListData();
+				PotionEffectListData effects = new PotionEffectListData();
 
 				new JsonParser().parse(nbtItem.getString("MMOITEMS_EFFECTS")).getAsJsonArray().forEach(element -> {
 					JsonObject key = element.getAsJsonObject();

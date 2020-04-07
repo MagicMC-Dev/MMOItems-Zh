@@ -11,14 +11,13 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.stat.type.ItemGenerationStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class GenerationTemplate {
 	private final String id;
 	private final Type type;
 
-	private final GaussianLinearValue weight;
+	private final NumericStatFormula weight;
 
 	// base item data
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
@@ -28,7 +27,7 @@ public class GenerationTemplate {
 	public GenerationTemplate(ConfigurationSection config) {
 		Validate.notNull(config, "Could not load item gen template config");
 
-		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
+		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_"); 
 
 		Validate.isTrue(config.contains("type"), "Could not find item gen type");
 		String typeFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
@@ -36,7 +35,7 @@ public class GenerationTemplate {
 		type = MMOItems.plugin.getTypes().get(typeFormat);
 
 		Validate.notNull(config.getConfigurationSection("weight"), "Could not find item gen weight");
-		weight = new GaussianLinearValue(config.getConfigurationSection("weight"));
+		weight = new NumericStatFormula(config.getConfigurationSection("weight"));
 
 		for (String key : config.getConfigurationSection("modifiers").getKeys(false))
 			modifiers.add(new GenerationModifier(config.getConfigurationSection("modifiers." + key)));
@@ -48,9 +47,7 @@ public class GenerationTemplate {
 				Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
-				Validate.isTrue(stat instanceof ItemGenerationStat, "Stat " + stat.getId() + " does not support item gen!");
-
-				base.put(stat, ((ItemGenerationStat) stat).whenInitializedGeneration(config.get("base." + key)));
+				base.put(stat, stat.whenInitializedGeneration(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.INFO,
 						"An error occured loading base item data '" + key + "' from item gen template '" + id + "': " + exception.getMessage());

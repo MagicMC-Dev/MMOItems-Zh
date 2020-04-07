@@ -11,14 +11,25 @@ public class NameModifier {
 	private final String format;
 	private final int priority;
 
-	public NameModifier(ConfigurationSection config) {
-		Validate.notNull(config, "Prefix/suffix config cannot be null");
-		type = ModifierType.valueOf(config.getName().toUpperCase());
+	public NameModifier(ModifierType type, Object object) {
+		Validate.notNull(object, "Object cannot be null");
+		this.type = type;
 
-		Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " format cannot be null");
-		format = ChatColor.translateAlternateColorCodes('&', config.get("format").toString());
+		if (object instanceof String) {
+			format = (String) object;
+			priority = 0;
+			return;
+		}
 
-		priority = config.getInt("priority");
+		if (object instanceof ConfigurationSection) {
+			ConfigurationSection config = (ConfigurationSection) object;
+			Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " format cannot be null");
+			format = ChatColor.translateAlternateColorCodes('&', config.get("format").toString());
+			priority = config.getInt("priority");
+			return;
+		}
+
+		throw new IllegalArgumentException("Must specify a string or a config section");
 	}
 
 	public NameModifier(ModifierType type, String format, int priority) {

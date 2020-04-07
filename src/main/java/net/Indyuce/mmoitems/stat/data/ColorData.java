@@ -3,9 +3,11 @@ package net.Indyuce.mmoitems.stat.data;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class ColorData implements StatData {
+public class ColorData implements StatData, RandomStatData {
 	private final int red, green, blue;
 
 	public ColorData(String string) {
@@ -41,5 +43,10 @@ public class ColorData implements StatData {
 
 	public Color getColor() {
 		return Color.fromRGB(red, green, blue);
+	}
+
+	@Override
+	public StatData randomize(GeneratedItemBuilder builder) {
+		return this;
 	}
 }

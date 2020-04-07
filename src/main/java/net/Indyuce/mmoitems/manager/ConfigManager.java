@@ -23,8 +23,8 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.Lute_Attack_Effect.LuteAttackEffect;
-import net.Indyuce.mmoitems.stat.Staff_Spirit.StaffSpirit;
+import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 
 public class ConfigManager {
 

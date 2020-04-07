@@ -35,26 +35,29 @@ public enum Element {
 		}
 	}),
 
-	ICE(VersionMaterial.SNOWBALL.toMaterial(), "Ice", ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			new BukkitRunnable() {
-				double y = 0;
-				Location loc = target.getLocation();
+	ICE(VersionMaterial.SNOWBALL.toMaterial(), "Ice", ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE),
+			new ElementHandler() {
+				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+					new BukkitRunnable() {
+						double y = 0;
+						Location loc = target.getLocation();
 
-				public void run() {
-					for (int j = 0; j < 3; j++) {
-						if ((y += .07) >= 3)
-							cancel();
-						for (double k = 0; k < Math.PI * 2; k += Math.PI * 2 / 3)
-							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5, y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5), Color.WHITE);
-					}
+						public void run() {
+							for (int j = 0; j < 3; j++) {
+								if ((y += .07) >= 3)
+									cancel();
+								for (double k = 0; k < Math.PI * 2; k += Math.PI * 2 / 3)
+									MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone()
+											.add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5, y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5),
+											Color.WHITE);
+							}
+						}
+					}.runTaskTimer(MMOItems.plugin, 0, 1);
+					target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GLASS_BREAK, 2, 0);
+					target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (attack * 1.5), 5));
+					result.addDamage(absolute);
 				}
-			}.runTaskTimer(MMOItems.plugin, 0, 1);
-			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GLASS_BREAK, 2, 0);
-			target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (attack * 1.5), 5));
-			result.addDamage(absolute);
-		}
-	}),
+			}),
 
 	WIND(Material.FEATHER, "Wind", ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), new ElementHandler() {
 		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
@@ -68,59 +71,67 @@ public enum Element {
 				}
 			result.addDamage(absolute);
 			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
-				target.getWorld().spawnParticle(Particle.CLOUD, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01, Math.sin(k), .15);
+				target.getWorld().spawnParticle(Particle.CLOUD, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
+						Math.sin(k), .15);
 		}
 	}),
 
-	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), "Earth", ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
-			MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1, 0, Material.DIRT);
-			result.addDamage(absolute);
+	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), "Earth", ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT),
+			new ElementHandler() {
+				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+					target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
+					MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1, 0,
+							Material.DIRT);
+					result.addDamage(absolute);
 
-			target.setVelocity(new Vector(0, 1, 0));
-			for (Entity entity : target.getNearbyEntities(3, 1, 3))
-				if (MMOUtils.canDamage(stats.getPlayer(), entity))
-					entity.setVelocity(new Vector(0, 1, 0));
-		}
-	}),
-
-	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), "Thunder", ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
-			for (Entity entity : target.getNearbyEntities(3, 2, 3))
-				if (MMOUtils.canDamage(stats.getPlayer(), entity))
-					new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(), (LivingEntity) entity);
-
-			result.addDamage(absolute);
-			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
-				target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01, Math.sin(k), .18);
-		}
-	}),
-
-	WATER(VersionMaterial.LILY_PAD.toMaterial(), "Water", ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			ElementListener.weaken(target);
-			new BukkitRunnable() {
-				double step = Math.PI / 2;
-				Location loc = target.getLocation();
-
-				public void run() {
-					if ((step -= Math.PI / 30) <= 0)
-						cancel();
-
-					for (double i = 0; i < Math.PI * 2; i += Math.PI / 16)
-						loc.getWorld().spawnParticle(Particle.WATER_DROP, loc.clone().add(Math.cos(i) * Math.sin(step) * 2, Math.cos(step) * 2, 2 * Math.sin(i) * Math.sin(step)), 0);
+					target.setVelocity(new Vector(0, 1, 0));
+					for (Entity entity : target.getNearbyEntities(3, 1, 3))
+						if (MMOUtils.canDamage(stats.getPlayer(), entity))
+							entity.setVelocity(new Vector(0, 1, 0));
 				}
-			}.runTaskTimer(MMOItems.plugin, 0, 1);
-		}
-	});
+			}),
 
-	private ItemStack item;
-	private String name;
-	private ChatColor color;
-	private ElementParticle particle;
-	private ElementHandler handler;
+	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), "Thunder", ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8),
+			new ElementHandler() {
+				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+					target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
+					for (Entity entity : target.getNearbyEntities(3, 2, 3))
+						if (MMOUtils.canDamage(stats.getPlayer(), entity))
+							new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(),
+									(LivingEntity) entity);
+
+					result.addDamage(absolute);
+					for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
+						target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0,
+								Math.cos(k), .01, Math.sin(k), .18);
+				}
+			}),
+
+	WATER(VersionMaterial.LILY_PAD.toMaterial(), "Water", ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER),
+			new ElementHandler() {
+				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+					ElementListener.weaken(target);
+					new BukkitRunnable() {
+						double step = Math.PI / 2;
+						Location loc = target.getLocation();
+
+						public void run() {
+							if ((step -= Math.PI / 30) <= 0)
+								cancel();
+
+							for (double i = 0; i < Math.PI * 2; i += Math.PI / 16)
+								loc.getWorld().spawnParticle(Particle.WATER_DROP,
+										loc.clone().add(Math.cos(i) * Math.sin(step) * 2, Math.cos(step) * 2, 2 * Math.sin(i) * Math.sin(step)), 0);
+						}
+					}.runTaskTimer(MMOItems.plugin, 0, 1);
+				}
+			});
+
+	private final ItemStack item;
+	private final String name;
+	private final ChatColor color;
+	private final ElementParticle particle;
+	private final ElementHandler handler;
 
 	private Element(Material material, String name, ChatColor color, ElementParticle particle, ElementHandler handler) {
 		this.item = new ItemStack(material);
@@ -150,12 +161,7 @@ public enum Element {
 		return handler;
 	}
 
-	public enum StatType {
-		DAMAGE,
-		DEFENSE;
-	}
-
-	public interface ElementHandler {
+	public static interface ElementHandler {
 		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute);
 	}
 
@@ -163,11 +169,13 @@ public enum Element {
 		public final Consumer<Entity> display;
 
 		public ElementParticle(Particle particle, double speed, int amount) {
-			display = (entity) -> entity.getWorld().spawnParticle(particle, entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0, speed);
+			display = (entity) -> entity.getWorld().spawnParticle(particle, entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0,
+					speed);
 		}
 
 		public ElementParticle(Particle particle, float speed, int amount, Material material) {
-			display = (entity) -> MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0, speed, material);
+			display = (entity) -> MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle,
+					entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0, speed, material);
 		}
 
 		public void displayParticle(Entity entity) {

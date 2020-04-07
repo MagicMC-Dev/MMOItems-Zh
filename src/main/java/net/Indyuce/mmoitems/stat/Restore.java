@@ -13,6 +13,9 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -27,6 +30,19 @@ public class Restore extends ItemStat {
 	public Restore() {
 		super("RESTORE", VersionMaterial.RED_DYE.toItem(), "Restore",
 				new String[] { "The amount of health/food/saturation", "your consumable item restores." }, new String[] { "consumable" });
+	}
+
+	@Override
+	public StatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+		return new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation"));
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		return new RandomRestoreData((ConfigurationSection) object);
 	}
 
 	@Override
@@ -98,13 +114,6 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-		return new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation"));
-	}
-
-	@Override
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		double health = item.getDouble("MMOITEMS_RESTORE_HEALTH");
 		double food = item.getDouble("MMOITEMS_RESTORE_FOOD");
@@ -133,6 +142,36 @@ public class Restore extends ItemStat {
 					ItemStat.translate("restore-saturation").replace("#", new StatFormat("##").format(restore.getSaturation())));
 		}
 		return true;
+	}
+
+	public class RandomRestoreData implements RandomStatData {
+		private final NumericStatFormula health, food, saturation;
+
+		public RandomRestoreData(ConfigurationSection config) {
+			Validate.notNull(config, "Could not load restore config");
+
+			health = config.contains("health") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
+			food = config.contains("food") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
+			saturation = config.contains("saturation") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
+		}
+
+		public NumericStatFormula getHealth() {
+			return health;
+		}
+
+		public NumericStatFormula getFood() {
+			return food;
+		}
+
+		public NumericStatFormula getSaturation() {
+			return saturation;
+		}
+
+		@Override
+		public StatData randomize(GeneratedItemBuilder builder) {
+			return new RestoreData(health.calculate(builder.getLevel()), food.calculate(builder.getLevel()),
+					saturation.calculate(builder.getLevel()));
+		}
 	}
 
 	public class RestoreData implements StatData, Mergeable {

@@ -21,7 +21,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class BooleanStat extends ItemStat implements ItemGenerationStat {
+public class BooleanStat extends ItemStat {
 	private static final Random random = new Random();
 
 	public BooleanStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {

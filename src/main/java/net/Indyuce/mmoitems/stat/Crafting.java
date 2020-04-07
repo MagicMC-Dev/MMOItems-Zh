@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.CraftingEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -26,7 +27,8 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Crafting extends ItemStat {
 	public Crafting() {
-		super("CRAFTING", new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial()), "Crafting", new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
+		super("CRAFTING", new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial()), "Crafting",
+				new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
 	}
 
 	@Override
@@ -39,7 +41,9 @@ public class Crafting extends ItemStat {
 			if (section.contains("crafting")) {
 				section.set("crafting", null);
 				inv.registerItemEdition(config);
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using " + ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
+				inv.getPlayer()
+						.sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using "
+								+ ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
 			}
 		}
 		return true;
@@ -113,6 +117,11 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return null;
+	}
+
+	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		return true;
 	}
@@ -129,13 +138,15 @@ public class Crafting extends ItemStat {
 				return false;
 			}
 			if (!Type.isValid(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"))) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + typeid[0].toUpperCase().replace("-", "_").replace(" ", "_") + "' isn't a valid item type.");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + typeid[0].toUpperCase().replace("-", "_").replace(" ", "_")
+						+ "' isn't a valid item type.");
 				return false;
 			}
 
 			Type type = Type.get(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"));
 			if (MMOItems.plugin.getItems().getItem(type, typeid[1]) == null) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Could not find item with ID '" + typeid[1].toUpperCase().replace("-", "_").replace(" ", "_") + "'.");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Could not find item with ID '"
+						+ typeid[1].toUpperCase().replace("-", "_").replace(" ", "_") + "'.");
 				return false;
 			}
 

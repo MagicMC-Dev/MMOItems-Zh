@@ -6,29 +6,33 @@ import org.bukkit.potion.PotionEffectType;
 import net.Indyuce.mmoitems.MMOUtils;
 
 public class PotionEffectData {
-	private final PotionEffect effect;
+	private final PotionEffectType type;
+	private final double duration;
+	private final int level;
 
 	public PotionEffectData(PotionEffectType type, int level) {
-		effect = new PotionEffect(type, MMOUtils.getEffectDuration(type), level - 1, true, false);
+		this(type, (double) MMOUtils.getEffectDuration(type) / 20d, level);
 	}
 
 	public PotionEffectData(PotionEffectType type, double duration, int level) {
-		effect = new PotionEffect(type, (int) (duration * 20), level - 1, true, false);
-	}
-
-	public double getDuration() {
-		return (double) effect.getDuration() / 20;
-	}
-
-	public int getLevel() {
-		return effect.getAmplifier() + 1;
+		this.type = type;
+		this.duration = duration;
+		this.level = level;
 	}
 
 	public PotionEffectType getType() {
-		return effect.getType();
+		return type;
+	}
+
+	public double getDuration() {
+		return duration;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 
 	public PotionEffect toEffect() {
-		return effect;
+		return new PotionEffect(type, (int) (duration * 20), level - 1);
 	}
 }

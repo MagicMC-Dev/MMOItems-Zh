@@ -19,9 +19,9 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import net.Indyuce.mmoitems.stat.Soulbound.SoulboundData;
-import net.Indyuce.mmoitems.stat.Upgrade_Stat.UpgradeData;
-import net.Indyuce.mmoitems.stat.data.EffectListData;
+import net.Indyuce.mmoitems.stat.UpgradeStat.UpgradeData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -250,7 +250,7 @@ public class Consumable extends UseItem {
 
 		// potion effects
 		if (mmoitem.hasData(ItemStat.EFFECTS))
-			((EffectListData) mmoitem.getData(ItemStat.EFFECTS)).getEffects().forEach(effect -> {
+			((PotionEffectListData) mmoitem.getData(ItemStat.EFFECTS)).getEffects().forEach(effect -> {
 				player.removePotionEffect(effect.getType());
 				player.addPotionEffect(effect.toEffect());
 			});

@@ -23,15 +23,26 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemGenerationStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Lore extends ItemStat implements ItemGenerationStat {
+public class Lore extends ItemStat {
 	public Lore() {
 		super("LORE", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Lore", new String[] { "The item lore." }, new String[] { "all" });
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public StringListData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return whenInitialized(object);
 	}
 
 	@Override
@@ -84,20 +95,6 @@ public class Lore extends ItemStat implements ItemGenerationStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a line.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last line.");
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
-		return new StringListData((List<String>) object);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public RandomStatData whenInitializedGeneration(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
-		return new StringListData((List<String>) object);
 	}
 
 	@Override

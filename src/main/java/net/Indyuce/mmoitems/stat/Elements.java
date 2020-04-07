@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -18,14 +15,15 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
-import net.Indyuce.mmoitems.api.Element.StatType;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.ElementListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -35,6 +33,27 @@ public class Elements extends ItemStat {
 	public Elements() {
 		super("ELEMENT", new ItemStack(Material.SLIME_BALL), "Elements", new String[] { "The elements of your item." },
 				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor" });
+	}
+
+	@Override
+	public StatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		ConfigurationSection config = (ConfigurationSection) object;
+
+		ElementListData elements = new ElementListData();
+
+		for (Element element : Element.values()) {
+			elements.setDamage(element, config.getDouble(element.name().toLowerCase() + ".damage"));
+			elements.setDefense(element, config.getDouble(element.name().toLowerCase() + ".damage"));
+		}
+
+		return elements;
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		return new RandomElementListData((ConfigurationSection) object);
 	}
 
 	@Override
@@ -105,41 +124,24 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		ElementListData elements = new ElementListData();
-
-		for (Element element : Element.values()) {
-			String path = element.name().toLowerCase();
-			if (!config.contains(path))
-				continue;
-
-			for (Element.StatType type : Element.StatType.values()) {
-				String statTypePath = type.name().toLowerCase();
-				double value = config.getDouble(path + "." + statTypePath);
-				if (value != 0)
-					elements.set(element, type, value);
-			}
-		}
-
-		return elements;
-	}
-
-	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		ElementListData elements = (ElementListData) data;
 
-		elements.getElements().forEach(element -> {
-			for (StatType type : elements.getStatTypes(element)) {
-				String path = element.name().toLowerCase() + "-" + type.name().toLowerCase();
-				double value = elements.get(element, type);
+		for (Element element : elements.getDamageElements()) {
+			String path = element.name().toLowerCase() + "-damage";
+			double value = elements.getDamage(element);
 
-				item.addItemTag(new ItemTag("MMOITEMS_" + element.name() + "_" + type.name(), value));
-				item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value)));
-			}
-		});
+			item.addItemTag(new ItemTag("MMOITEMS_" + element.name() + "_DAMAGE", value));
+			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value)));
+		}
+
+		for (Element element : elements.getDefenseElements()) {
+			String path = element.name().toLowerCase() + "-defense";
+			double value = elements.getDefense(element);
+
+			item.addItemTag(new ItemTag("MMOITEMS_" + element.name() + "_DEFENSE", value));
+			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value)));
+		}
 
 		return true;
 	}
@@ -148,58 +150,12 @@ public class Elements extends ItemStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		ElementListData elements = new ElementListData();
 
-		double value;
-		for (Element element : Element.values())
-			for (StatType type : StatType.values())
-				if ((value = item.getDouble("MMOITEMS_" + element.name() + "_" + type.name())) != 0)
-					elements.set(element, type, value);
+		for (Element element : Element.values()) {
+			elements.setDefense(element, item.getDouble("MMOITEMS_" + element.name() + "_DEFENSE"));
+			elements.setDamage(element, item.getDouble("MMOITEMS_" + element.name() + "_DAMAGE"));
+		}
 
 		if (elements.total() > 0)
 			mmoitem.setData(ItemStat.ELEMENTS, elements);
-	}
-
-	public class ElementListData implements StatData, Mergeable {
-		private final Map<Element, Map<StatType, Double>> stats = new HashMap<>();
-
-		public Set<Element> getElements() {
-			return stats.keySet();
-		}
-
-		public Set<StatType> getStatTypes(Element element) {
-			return stats.get(element).keySet();
-		}
-
-		public double get(Element element, StatType type) {
-			return stats.get(element).get(type);
-		}
-
-		public void set(Element element, StatType type, double value) {
-			if (!this.stats.containsKey(element))
-				this.stats.put(element, new HashMap<>());
-			this.stats.get(element).put(type, value);
-		}
-
-		public int total() {
-			int t = 0;
-			for (Element element : stats.keySet())
-				t += stats.get(element).size();
-			return t;
-		}
-
-		@Override
-		public void merge(StatData data) {
-			Validate.isTrue(data instanceof ElementListData, "Cannot merge two different stat data types");
-			ElementListData elements = (ElementListData) data;
-
-			for (Element element : elements.stats.keySet()) {
-				if (!stats.containsKey(element))
-					stats.put(element, new HashMap<>());
-
-				Map<StatType, Double> values1 = stats.get(element);
-				Map<StatType, Double> values2 = elements.stats.get(element);
-
-				values2.keySet().forEach(key -> values1.put(key, values1.containsKey(key) ? values1.get(key) + values2.get(key) : values2.get(key)));
-			}
-		}
 	}
 }

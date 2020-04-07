@@ -9,7 +9,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.stat.type.ItemGenerationStat;
+import net.Indyuce.mmoitems.api.itemgen.NameModifier.ModifierType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class GenerationModifier {
@@ -22,7 +22,7 @@ public class GenerationModifier {
 
 	private final double chance;
 	private final Map<ItemStat, RandomStatData> data = new HashMap<>();
-	private final NameModifier nameMod;
+	private final NameModifier nameModifier;
 
 	private static final Random random = new Random();
 
@@ -31,10 +31,10 @@ public class GenerationModifier {
 		id = config.getName().toLowerCase().replace("_", "-");
 
 		this.chance = config.getDouble("chance");
-		
+
 		Validate.isTrue(chance > 0, "Chance must be greater than 0 otherwise useless");
-		this.nameMod = config.contains("suffix") ? new NameModifier(config.getConfigurationSection("suffix"))
-				: config.contains("prefix") ? new NameModifier(config.getConfigurationSection("prefix")) : null;
+		this.nameModifier = config.contains("suffix") ? new NameModifier(ModifierType.SUFFIX, config.get("suffix"))
+				: config.contains("prefix") ? new NameModifier(ModifierType.PREFIX, config.get("prefix")) : null;
 
 		Validate.notNull(config.getConfigurationSection("stats"), "Could not find base item data");
 		for (String key : config.getConfigurationSection("stats").getKeys(false))
@@ -43,9 +43,7 @@ public class GenerationModifier {
 				Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
-				Validate.isTrue(stat instanceof ItemGenerationStat, "Stat " + stat.getId() + " does not support item gem!");
-
-				data.put(stat, ((ItemGenerationStat) stat).whenInitializedGeneration(config.get("stats." + key)));
+				data.put(stat, stat.whenInitializedGeneration(config.get("stats." + key)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured loading item gen modifier " + id + ": " + exception.getMessage());
 			}
@@ -56,11 +54,11 @@ public class GenerationModifier {
 	}
 
 	public NameModifier getNameModifier() {
-		return nameMod;
+		return nameModifier;
 	}
 
 	public boolean hasNameModifier() {
-		return nameMod != null;
+		return nameModifier != null;
 	}
 
 	// TODO implement weight system.

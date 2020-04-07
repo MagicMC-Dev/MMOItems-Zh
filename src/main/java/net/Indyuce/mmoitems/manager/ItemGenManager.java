@@ -40,7 +40,6 @@ public class ItemGenManager {
 					GenerationTemplate template = new GenerationTemplate(config.getConfigurationSection(key));
 					templates.put(template.getId(), template);
 				} catch (IllegalArgumentException exception) {
-					exception.printStackTrace();
 					MMOItems.plugin.getLogger().log(Level.INFO,
 							"An error occured loading item gen template '" + key + "': " + exception.getMessage());
 				}

@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -31,7 +32,20 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Permission extends ItemStat implements ItemRestriction {
 	public Permission() {
-		super("PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission", new String[] { "The permission needed to use this item." }, new String[] { "all" });
+		super("PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission",
+				new String[] { "The permission needed to use this item." }, new String[] { "all" });
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public StringListData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return whenInitialized(object);
 	}
 
 	@Override
@@ -63,7 +77,9 @@ public class Permission extends ItemStat implements ItemRestriction {
 			return false;
 		}
 
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains("permission") ? config.getConfig().getStringList(inv.getItemId() + ".permission") : new ArrayList<>();
+		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains("permission")
+				? config.getConfig().getStringList(inv.getItemId() + ".permission")
+				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getItemId() + ".permission", lore);
 		inv.registerItemEdition(config);
@@ -87,13 +103,6 @@ public class Permission extends ItemStat implements ItemRestriction {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
-		return new StringListData((List<String>) object);
-	}
-
-	@Override
 	public boolean whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_PERMISSION", String.join("|", ((StringListData) data).getList())));
 		return true;
@@ -108,7 +117,8 @@ public class Permission extends ItemStat implements ItemRestriction {
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 		String perm = item.getString("MMOITEMS_PERMISSION");
-		if (!perm.equals("") && !player.getPlayer().hasPermission("mmoitems.bypass.item") && MMOItems.plugin.getConfig().getBoolean("permissions.items")) {
+		if (!perm.equals("") && !player.getPlayer().hasPermission("mmoitems.bypass.item")
+				&& MMOItems.plugin.getConfig().getBoolean("permissions.items")) {
 			String[] split = perm.split("\\|");
 			for (String s : split)
 				if (!player.getPlayer().hasPermission(s)) {

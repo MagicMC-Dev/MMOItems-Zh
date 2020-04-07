@@ -23,7 +23,8 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.SoundsEdition;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -109,7 +110,7 @@ public class CustomSounds extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -161,7 +162,7 @@ public class CustomSounds extends ItemStat {
 			mmoitem.setData(ItemStat.CUSTOM_SOUNDS, sounds);
 	}
 
-	public class SoundListData implements StatData {
+	public class SoundListData implements StatData,Mergeable {
 		private final Map<CustomSound, SoundData> stats = new HashMap<>();
 
 		public Set<CustomSound> getCustomSounds() {
@@ -178,6 +179,13 @@ public class CustomSounds extends ItemStat {
 
 		public int total() {
 			return stats.size();
+		}
+
+		@Override
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof SoundListData, "Cannot merge two different stat data types");
+			SoundListData cast = (SoundListData) data;
+			cast.stats.keySet().forEach(key -> stats.put(key, cast.stats.get(key)));
 		}
 	}
 

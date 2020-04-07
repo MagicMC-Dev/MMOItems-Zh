@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.potion.PotionEffectType;
 
 import com.google.gson.JsonArray;
@@ -16,11 +17,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.Abilities.AbilityListData;
-import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class GemSocketsData implements StatData {
+public class GemSocketsData implements StatData, Mergeable {
 	private final Set<GemstoneData> gems = new HashSet<>();
 	private final List<String> emptySlots;
 
@@ -90,9 +92,11 @@ public class GemSocketsData implements StatData {
 		 * be used when applying gem stones to keep max performance.
 		 */
 		public GemstoneData(JsonObject object) {
-			object.getAsJsonObject("Stats").entrySet().forEach(entry -> this.stats.put(MMOItems.plugin.getStats().get(entry.getKey()), entry.getValue().getAsDouble()));
+			object.getAsJsonObject("Stats").entrySet()
+					.forEach(entry -> this.stats.put(MMOItems.plugin.getStats().get(entry.getKey()), entry.getValue().getAsDouble()));
 			object.getAsJsonArray("Abilities").forEach(element -> this.abilities.add(new AbilityData(element.getAsJsonObject())));
-			object.getAsJsonObject("Effects").entrySet().forEach(entry -> this.effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+			object.getAsJsonObject("Effects").entrySet().forEach(
+					entry -> this.effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 			name = object.get("Name").getAsString();
 
 			// if (object.has("Particles"))
@@ -105,9 +109,10 @@ public class GemSocketsData implements StatData {
 				((AbilityListData) mmoitem.getData(ItemStat.ABILITIES)).getAbilities().forEach(data -> abilities.add(data));
 			if (mmoitem.hasData(ItemStat.PERM_EFFECTS))
 				((EffectListData) mmoitem.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(data -> effects.add(data));
-			for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
-				if (mmoitem.hasData(stat))
-					stats.put(stat, ((DoubleData) mmoitem.getData(stat)).getMin());
+			// TODO
+			// for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
+			// if (mmoitem.hasData(stat))
+			// stats.put(stat, ((DoubleData) mmoitem.getData(stat)).getMin());
 			name = MMOUtils.getDisplayName(nbtItem.getItem());
 		}
 
@@ -141,5 +146,11 @@ public class GemSocketsData implements StatData {
 
 			return object;
 		}
+	}
+
+	@Override
+	public void merge(StatData data) {
+		Validate.isTrue(data instanceof GemSocketsData, "Cannot merge two different stat data types");
+		emptySlots.addAll(((GemSocketsData) data).emptySlots);
 	}
 }

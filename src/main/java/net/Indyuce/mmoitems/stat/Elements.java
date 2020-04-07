@@ -25,14 +25,16 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Elements extends ItemStat {
 	public Elements() {
-		super("ELEMENT", new ItemStack(Material.SLIME_BALL), "Elements", new String[] { "The elements of your item." }, new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor" });
+		super("ELEMENT", new ItemStack(Material.SLIME_BALL), "Elements", new String[] { "The elements of your item." },
+				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor" });
 	}
 
 	@Override
@@ -77,7 +79,8 @@ public class Elements extends ItemStat {
 
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY + " successfully changed to " + value + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
+				+ " successfully changed to " + value + ".");
 		return true;
 	}
 
@@ -92,7 +95,9 @@ public class Elements extends ItemStat {
 		else
 			for (String s1 : config.getConfigurationSection(path + ".element").getKeys(false)) {
 				String element = s1.substring(0, 1).toUpperCase() + s1.substring(1);
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + element + ChatColor.GRAY + ": " + ChatColor.RED + "" + ChatColor.BOLD + config.getDouble(path + ".element." + s1 + ".damage") + "%" + ChatColor.GRAY + " | " + ChatColor.WHITE + "" + ChatColor.BOLD + config.getDouble(path + ".element." + s1 + ".defense") + "%");
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + element + ChatColor.GRAY + ": " + ChatColor.RED + "" + ChatColor.BOLD
+						+ config.getDouble(path + ".element." + s1 + ".damage") + "%" + ChatColor.GRAY + " | " + ChatColor.WHITE + "" + ChatColor.BOLD
+						+ config.getDouble(path + ".element." + s1 + ".defense") + "%");
 			}
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the elements edition menu.");
@@ -100,10 +105,10 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
-		
+
 		ElementListData elements = new ElementListData();
 
 		for (Element element : Element.values()) {
@@ -113,7 +118,7 @@ public class Elements extends ItemStat {
 
 			for (Element.StatType type : Element.StatType.values()) {
 				String statTypePath = type.name().toLowerCase();
-				double value = config.getDouble( path + "." + statTypePath);
+				double value = config.getDouble(path + "." + statTypePath);
 				if (value != 0)
 					elements.set(element, type, value);
 			}
@@ -153,11 +158,8 @@ public class Elements extends ItemStat {
 			mmoitem.setData(ItemStat.ELEMENTS, elements);
 	}
 
-	public class ElementListData implements StatData {
-		private Map<Element, Map<StatType, Double>> stats = new HashMap<>();
-
-		public ElementListData() {
-		}
+	public class ElementListData implements StatData, Mergeable {
+		private final Map<Element, Map<StatType, Double>> stats = new HashMap<>();
 
 		public Set<Element> getElements() {
 			return stats.keySet();
@@ -182,6 +184,22 @@ public class Elements extends ItemStat {
 			for (Element element : stats.keySet())
 				t += stats.get(element).size();
 			return t;
+		}
+
+		@Override
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof ElementListData, "Cannot merge two different stat data types");
+			ElementListData elements = (ElementListData) data;
+
+			for (Element element : elements.stats.keySet()) {
+				if (!stats.containsKey(element))
+					stats.put(element, new HashMap<>());
+
+				Map<StatType, Double> values1 = stats.get(element);
+				Map<StatType, Double> values2 = elements.stats.get(element);
+
+				values2.keySet().forEach(key -> values1.put(key, values1.containsKey(key) ? values1.get(key) + values2.get(key) : values2.get(key)));
+			}
 		}
 	}
 }

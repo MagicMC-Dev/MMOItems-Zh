@@ -21,14 +21,13 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class NBT_Tags extends StringStat {
+public class NBT_Tags extends ItemStat {
 	public NBT_Tags() {
 		super("CUSTOM_NBT", new ItemStack(Material.NAME_TAG), "NBT Tags", new String[] { "Custom NBT Tags." }, new String[] { "all" });
 	}
@@ -89,7 +88,7 @@ public class NBT_Tags extends StringStat {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
 	}

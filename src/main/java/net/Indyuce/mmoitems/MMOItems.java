@@ -45,9 +45,9 @@ import net.Indyuce.mmoitems.gui.listener.GuiListener;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.listener.DisableInteractions;
+import net.Indyuce.mmoitems.listener.DurabilityListener;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
-import net.Indyuce.mmoitems.listener.DurabilityListener;
 import net.Indyuce.mmoitems.listener.PlayerListener;
 import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
 import net.Indyuce.mmoitems.manager.AbilityManager;
@@ -56,6 +56,7 @@ import net.Indyuce.mmoitems.manager.ConfigManager;
 import net.Indyuce.mmoitems.manager.CraftingManager;
 import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
+import net.Indyuce.mmoitems.manager.ItemGenManager;
 import net.Indyuce.mmoitems.manager.ItemManager;
 import net.Indyuce.mmoitems.manager.PluginUpdateManager;
 import net.Indyuce.mmoitems.manager.SetManager;
@@ -87,6 +88,7 @@ public class MMOItems extends JavaPlugin {
 	private UpgradeManager upgradeManager;
 	private WorldGenManager worldGenManager;
 	private BlockManager blockManager;
+	private ItemGenManager itemGenerator;
 	private AbilityManager abilityManager = new AbilityManager();
 	private CraftingManager stationRecipeManager = new CraftingManager();
 	private PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
@@ -132,6 +134,7 @@ public class MMOItems extends JavaPlugin {
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
+		itemGenerator = new ItemGenManager();
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			worldGenManager = new WorldGenManager();
 			blockManager = new BlockManager();
@@ -168,7 +171,8 @@ public class MMOItems extends JavaPlugin {
 		 * allows now to use a glitchy itemEquipEvent. must be called after
 		 * loading the config since it checks for a config option
 		 */
-		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).checkForInventoryUpdate()), 100, getConfig().getInt("inventory-update-delay"));
+		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).checkForInventoryUpdate()),
+				100, getConfig().getInt("inventory-update-delay"));
 
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
 			flagPlugin = new ResidenceFlags();
@@ -287,6 +291,10 @@ public class MMOItems extends JavaPlugin {
 
 	public FlagPlugin getFlags() {
 		return flagPlugin;
+	}
+
+	public ItemGenManager getItemGenerator() {
+		return itemGenerator;
 	}
 
 	public void setFlags(FlagPlugin value) {

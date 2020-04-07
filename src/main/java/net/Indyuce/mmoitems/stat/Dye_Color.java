@@ -18,13 +18,12 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ColorData;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Dye_Color extends StringStat {
+public class Dye_Color extends ItemStat {
 	public Dye_Color() {
 		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color",
 				new String[] { "The color of your item", "(for leather armor sets).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
@@ -85,7 +84,7 @@ public class Dye_Color extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof String, "Must specify a string");
 		return new ColorData((String) object);
 	}

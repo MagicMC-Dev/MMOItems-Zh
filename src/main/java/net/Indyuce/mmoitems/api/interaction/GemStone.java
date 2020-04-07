@@ -5,16 +5,16 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData.GemstoneData;
-import net.Indyuce.mmoitems.stat.data.Mergeable;
-import net.Indyuce.mmoitems.stat.type.DoubleStat.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemStone extends UseItem {
@@ -43,7 +43,8 @@ public class GemStone extends UseItem {
 		 * weapon
 		 */
 		String appliableTypes = getNBTItem().getString("MMOITEMS_ITEM_TYPE_RESTRICTION");
-		if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON")) && !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
+		if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON"))
+				&& !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
 			return new ApplyResult(ResultType.NONE);
 
 		// check for success rate
@@ -51,7 +52,9 @@ public class GemStone extends UseItem {
 		if (successRate != 0)
 			if (random.nextDouble() < 1 - successRate / 100) {
 				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-				Message.GEM_STONE_BROKE.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
+				Message.GEM_STONE_BROKE
+						.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))
+						.send(player);
 				return new ApplyResult(ResultType.FAILURE);
 			}
 
@@ -63,31 +66,31 @@ public class GemStone extends UseItem {
 		GemstoneData gemData = sockets.newGemstone(mmoitem.getNBTItem(), mmoitem);
 		sockets.apply(gemType, gemData);
 
-		for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
-			if (mmoitem.hasData(stat)) {
-				if (targetMMO.hasData(stat))
-					((DoubleData) targetMMO.getData(stat)).add(((DoubleData) mmoitem.getData(stat)).getMin());
-				else
-					targetMMO.setData(stat, mmoitem.getData(stat));
-			}
-
-		for (ItemStat stat : new ItemStat[] { ItemStat.ABILITIES, ItemStat.PERM_EFFECTS })
-			if (mmoitem.hasData(stat)) {
-				if (targetMMO.hasData(stat))
-					((Mergeable) targetMMO.getData(stat)).merge((Mergeable) mmoitem.getData(stat));
-				else
-					targetMMO.setData(stat, mmoitem.getData(stat));
+		/*
+		 * only applies NON PROPER and MERGEABLE item stats
+		 */
+		for (ItemStat stat : mmoitem.getStats())
+			if (!(stat instanceof ProperStat)) {
+				StatData data = mmoitem.getData(stat);
+				if (data instanceof Mergeable) {
+					if (targetMMO.hasData(stat))
+						((Mergeable) targetMMO.getData(stat)).merge(mmoitem.getData(stat));
+					else
+						targetMMO.setData(stat, mmoitem.getData(stat));
+				}
 			}
 
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-		Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
+		Message.GEM_STONE_APPLIED
+				.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))
+				.send(player);
 
 		return new ApplyResult(targetMMO.newBuilder().build());
 	}
 
 	public class ApplyResult {
-		private ResultType type;
-		private ItemStack result;
+		private final ResultType type;
+		private final ItemStack result;
 
 		public ApplyResult(ResultType type) {
 			this(null, type);

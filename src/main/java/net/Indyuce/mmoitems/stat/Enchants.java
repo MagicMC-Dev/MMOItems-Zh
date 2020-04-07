@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -25,7 +24,8 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -120,7 +120,7 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a string list");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -134,11 +134,7 @@ public class Enchants extends ItemStat {
 					break;
 				}
 
-			if (enchant == null) {
-				item.log(Level.WARNING, "[Enchantments] " + format + " is not a valid enchantment name.");
-				continue;
-			}
-
+			Validate.notNull(enchant, "Could not find enchant with name '" + format + "'");
 			enchants.addEnchant(enchant, config.getInt(format));
 		}
 
@@ -162,11 +158,8 @@ public class Enchants extends ItemStat {
 		return false;
 	}
 
-	public class EnchantListData implements StatData {
-		private Map<Enchantment, Integer> enchants = new HashMap<>();
-
-		public EnchantListData() {
-		}
+	public class EnchantListData implements StatData, Mergeable {
+		private final Map<Enchantment, Integer> enchants = new HashMap<>();
 
 		public Set<Enchantment> getEnchants() {
 			return enchants.keySet();
@@ -178,6 +171,14 @@ public class Enchants extends ItemStat {
 
 		public void addEnchant(Enchantment enchant, int level) {
 			enchants.put(enchant, level);
+		}
+
+		@Override
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof EnchantListData, "Cannot merge two different stat data types");
+			Map<Enchantment, Integer> extra = ((EnchantListData) data).enchants;
+			for (Enchantment enchant : extra.keySet())
+				enchants.put(enchant, enchants.containsKey(enchant) ? Math.max(extra.get(enchant), enchants.get(enchant)) : extra.get(enchant));
 		}
 	}
 }

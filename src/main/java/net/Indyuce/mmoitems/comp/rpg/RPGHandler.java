@@ -35,7 +35,8 @@ public interface RPGHandler {
 			try {
 				return pluginClass.newInstance();
 			} catch (InstantiationException | IllegalAccessException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load compatibility for " + name);
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						"Could not initialize RPG plugin compatibility with " + name + ": " + exception.getMessage());
 				return new DefaultHook();
 			}
 		}

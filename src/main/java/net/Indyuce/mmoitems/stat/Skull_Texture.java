@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -31,14 +31,17 @@ public class Skull_Texture extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		String value = config.getString("value");
 		Validate.notNull(value, "Could not load skull texture value");
 
-		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(safeParse(item, config.getString("uuid")), null));
+		String format = config.getString("uuid");
+		Validate.notNull(format, "Could not find skull texture UUID: re-enter your skull texture value and one will be selected randomly.");
+		
+		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
 
 		return skullTexture;
@@ -80,23 +83,6 @@ public class Skull_Texture extends StringStat {
 			profileField.setAccessible(true);
 			mmoitem.setData(ItemStat.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(item.getItem().getItemMeta())));
 		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-		}
-	}
-
-	/*
-	 * this either parses the UUID from the string or returns a random one,
-	 * which is not saved for the config item, the items will thus NOT stack! An
-	 * error message must be sent on the logs.
-	 */
-	private UUID safeParse(MMOItem item, String str) {
-		try {
-			if (str == null)
-				throw new IllegalArgumentException();
-			return UUID.fromString(str);
-		} catch (IllegalArgumentException exception) {
-			item.log(Level.WARNING,
-					"Warning: the skull texture UUID could not be loaded! You must re-enter it otherwise heads will not be able to stack.");
-			return UUID.randomUUID();
 		}
 	}
 

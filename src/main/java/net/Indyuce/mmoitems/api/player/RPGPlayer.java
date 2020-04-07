@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.type.Conditional;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public abstract class RPGPlayer {
@@ -63,7 +63,7 @@ public abstract class RPGPlayer {
 			return false;
 		}
 
-		for (Conditional condition : MMOItems.plugin.getStats().getConditionals())
+		for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats())
 			if (!condition.canUse(this, item, message))
 				return false;
 

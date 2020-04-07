@@ -32,6 +32,7 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.drop.DropItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
+import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AmountReader;
@@ -79,6 +80,25 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			new PluginHelp(sender).open(page);
+		}
+		// ==================================================================================================================================
+		else if (args[0].equalsIgnoreCase("generate")) {
+			
+
+			
+			
+			Player player = (Player)sender;
+			
+			
+			GenerationTemplate template = MMOItems.plugin.getItemGenerator().getTemplate(args[1]);
+			ItemStack item = template.newBuilder(PlayerData.get(player).getRPG().getLevel(), 3).build().newBuilder().build();
+			
+			
+			player.getInventory().addItem(item);
+			
+			
+			
+			
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("browse")) {
@@ -447,6 +467,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getTiers().reload();
 			MMOItems.plugin.getSets().reload();
 			MMOItems.plugin.getUpgrades().reload();
+			MMOItems.plugin.getItemGenerator().reload();
 			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
 				MMOItems.plugin.getCustomBlocks().reload();
 			MMOItems.plugin.getItems().reload();

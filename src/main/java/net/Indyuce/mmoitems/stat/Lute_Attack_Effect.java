@@ -18,7 +18,8 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SlashLuteAtta
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.WaveLuteAttack;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;

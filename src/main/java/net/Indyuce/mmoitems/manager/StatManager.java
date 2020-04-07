@@ -12,9 +12,9 @@ import java.util.logging.Level;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
-import net.Indyuce.mmoitems.stat.type.Conditional;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.Generated;
+import net.Indyuce.mmoitems.stat.type.ItemGenerationStat;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 
@@ -22,13 +22,13 @@ public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
 
 	/*
-	 * numeric statistics which can be mecanically updated when applying a gem
-	 * stone
+	 * numeric statistics handled by MMOLib
 	 */
-	private final Set<DoubleStat> gem = new HashSet<>();
-	private final Set<AttributeStat> attribute = new HashSet<>();
-	private final Set<Conditional> conditionals = new HashSet<>();
-	private final Set<Generated> generated = new HashSet<>();
+	private final Set<DoubleStat> numeric = new HashSet<>();
+
+	private final Set<AttributeStat> attributeBased = new HashSet<>();
+	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
+	private final Set<ItemGenerationStat> itemGeneration = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -52,19 +52,23 @@ public class StatManager {
 	 * cache specific stats for better performance using these extra sets
 	 */
 	public Set<AttributeStat> getAttributeStats() {
-		return attribute;
+		return attributeBased;
 	}
 
-	public Set<DoubleStat> getDoubleStats() {
-		return gem;
+	public Set<DoubleStat> getNumericStats() {
+		return numeric;
 	}
 
-	public Set<Conditional> getConditionals() {
-		return conditionals;
+	public Set<ItemRestriction> getItemRestrictionStats() {
+		return itemRestriction;
 	}
 
-	public Set<Generated> getGenerationStats() {
-		return generated;
+	public Set<ItemGenerationStat> getGenerationStats() {
+		return itemGeneration;
+	}
+
+	public boolean has(String id) {
+		return stats.containsKey(id);
 	}
 
 	/*
@@ -77,17 +81,17 @@ public class StatManager {
 
 		stats.put(stat.getId(), stat);
 
-		if (stat instanceof Generated)
-			generated.add((Generated) stat);
+		if (stat instanceof ItemGenerationStat)
+			itemGeneration.add((ItemGenerationStat) stat);
 
-		if (!(stat instanceof ProperStat) && stat instanceof DoubleStat && Type.GEM_STONE.canHave(stat))
-			gem.add((DoubleStat) stat);
+		if (stat instanceof DoubleStat && !(stat instanceof ProperStat) && Type.GEM_STONE.canHave(stat))
+			numeric.add((DoubleStat) stat);
 
 		if (stat instanceof AttributeStat)
-			attribute.add((AttributeStat) stat);
+			attributeBased.add((AttributeStat) stat);
 
-		if (stat instanceof Conditional)
-			conditionals.add((Conditional) stat);
+		if (stat instanceof ItemRestriction)
+			itemRestriction.add((ItemRestriction) stat);
 
 		/*
 		 * cache stat for every type which may have this stat. really important

@@ -17,13 +17,13 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
 
 public class ParticleData implements StatData {
 	private final ParticleType type;
 	private final Particle particle;
 	private final Map<String, Double> modifiers = new HashMap<>();
-
 	private final Color color;
 
 	public ParticleData(JsonObject object) {
@@ -48,7 +48,8 @@ public class ParticleData implements StatData {
 		format = config.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_");
 		particle = Particle.valueOf(format);
 
-		color = config.contains("color") ? Color.fromRGB(config.getInt("color.red"), config.getInt("color.green"), config.getInt("color.blue")) : null;
+		color = config.contains("color") ? Color.fromRGB(config.getInt("color.red"), config.getInt("color.green"), config.getInt("color.blue"))
+				: null;
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("particle") && !key.equalsIgnoreCase("type") && !key.equalsIgnoreCase("color"))
@@ -106,7 +107,8 @@ public class ParticleData implements StatData {
 
 	public void display(Location location, Vector direction, float speed) {
 		if (isColored())
-			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed, 1, color);
+			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed,
+					1, color);
 		else
 			location.getWorld().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed);
 	}

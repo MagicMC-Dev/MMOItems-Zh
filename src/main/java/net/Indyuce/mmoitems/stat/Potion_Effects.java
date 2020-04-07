@@ -25,11 +25,12 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.EffectListData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class Potion_Effects extends StringStat {
+public class Potion_Effects extends ItemStat {
 	public Potion_Effects() {
 		super("POTION_EFFECT", new ItemStack(Material.POTION), "Potion Effects",
 				new String[] { "The effects of your potion.", "(May have an impact on color)." }, new String[] { "all" }, Material.POTION,
@@ -150,7 +151,7 @@ public class Potion_Effects extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -176,5 +177,11 @@ public class Potion_Effects extends StringStat {
 			for (PotionEffectData effect : ((EffectListData) data).getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
 		return true;
+	}
+
+	@Override
+	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+		if (item.hasTag(getNBTPath()))
+			mmoitem.setData(this, new StringData(item.getString(getNBTPath())));
 	}
 }

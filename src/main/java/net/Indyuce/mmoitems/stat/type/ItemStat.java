@@ -67,10 +67,11 @@ import net.Indyuce.mmoitems.stat.Soulbound;
 import net.Indyuce.mmoitems.stat.Soulbound_Level;
 import net.Indyuce.mmoitems.stat.Staff_Spirit;
 import net.Indyuce.mmoitems.stat.StoredTags;
+import net.Indyuce.mmoitems.stat.SuccessRate;
 import net.Indyuce.mmoitems.stat.Unbreakable;
 import net.Indyuce.mmoitems.stat.Upgrade_Stat;
 import net.Indyuce.mmoitems.stat.Vanilla_Eating_Animation;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
@@ -141,7 +142,7 @@ public abstract class ItemStat {
 	public static final ItemStat VANILLA_EATING_ANIMATION = new Vanilla_Eating_Animation(), INEDIBLE = new Inedible(), GEM_COLOR = new Gem_Color(), ITEM_TYPE_RESTRICTION = new Item_Type_Restriction();
 	public static final ItemStat MAX_CONSUME = new DoubleStat("MAX_CONSUME", new ItemStack(Material.BLAZE_POWDER), "Max Consume", new String[] { "Max amount of usage before", "item disappears." }, new String[] { "consumable" });
 
-	public static final ItemStat SUCCESS_RATE = new DoubleStat("SUCCESS_RATE", new ItemStack(Material.EMERALD), "Success Rate", new String[] { "The chance of your gem to successfully", "apply onto an item. This value is 100%", "by default. If it is not successfully", "applied, the gem stone will be lost." }, new String[] { "gem_stone", "skin" });
+	public static final ItemStat SUCCESS_RATE = new SuccessRate();
 	public static final ItemStat COMPATIBLE_TYPES = new Compatible_Types();
 
 	public static final ItemStat CRAFTING = new Crafting(), CRAFT_PERMISSION = new Craft_Permission();
@@ -194,7 +195,7 @@ public abstract class ItemStat {
 	 * reads stat data from a configuration section and applies it to the item
 	 * stack after having generated the corresponding stat data class instance
 	 */
-	public abstract StatData whenInitialized(MMOItem item, Object obj);
+	public abstract StatData whenInitialized(Object object);
 
 	/*
 	 * applies a stat onto an mmoitem builder instance

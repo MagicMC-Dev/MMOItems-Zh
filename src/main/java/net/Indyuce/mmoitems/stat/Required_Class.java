@@ -21,15 +21,15 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.type.Conditional;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Required_Class extends ItemStat implements Conditional {
+public class Required_Class extends ItemStat implements ItemRestriction {
 	public Required_Class() {
 		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class", new String[] { "The class you need to", "profress to use your item." }, new String[] { "all" });
 	}
@@ -90,7 +90,7 @@ public class Required_Class extends ItemStat implements Conditional {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
 	}

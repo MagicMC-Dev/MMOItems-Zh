@@ -4,9 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class DisableStat extends BooleanStat {
@@ -23,7 +22,7 @@ public class DisableStat extends BooleanStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof Boolean, "Must specify true/false");
 		return new BooleanData((boolean) object);
 	}

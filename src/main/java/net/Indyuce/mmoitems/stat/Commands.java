@@ -25,7 +25,8 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -117,7 +118,7 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -175,7 +176,7 @@ public class Commands extends ItemStat {
 			}
 	}
 
-	public class CommandListData implements StatData {
+	public class CommandListData implements StatData,Mergeable {
 		private final Set<CommandData> commands = new HashSet<>();
 
 		public CommandListData(CommandData... commands) {
@@ -232,6 +233,12 @@ public class Commands extends ItemStat {
 			public String getParsed(Player player) {
 				return MMOItems.plugin.getPlaceholderParser().parse(player, command);
 			}
+		}
+
+		@Override
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof CommandListData, "Cannot merge two different stat data types");
+			commands.addAll(((CommandListData) data).commands);
 		}
 	}
 }

@@ -3,6 +3,8 @@ package net.Indyuce.mmoitems.stat.data;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+
 public class ColorData implements StatData {
 	private final int red, green, blue;
 

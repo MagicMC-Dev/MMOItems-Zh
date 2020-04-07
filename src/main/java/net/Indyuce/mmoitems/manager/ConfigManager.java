@@ -56,6 +56,11 @@ public class ConfigManager {
 		if (!dynamicFolder.exists())
 			dynamicFolder.mkdir();
 
+		if (!new File(MMOItems.plugin.getDataFolder() + "/generator").exists()) {
+			new File(MMOItems.plugin.getDataFolder() + "/generator/items").mkdir();
+			new File(MMOItems.plugin.getDataFolder() + "/generator/modifiers").mkdir();
+		}
+
 		File craftingStationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
 		if (!craftingStationsFolder.exists()) {
 			craftingStationsFolder.mkdir();
@@ -63,7 +68,8 @@ public class ConfigManager {
 				for (Enumeration<JarEntry> entries = new JarFile(MMOItems.plugin.getJarFile()).entries(); entries.hasMoreElements();) {
 					String name = entries.nextElement().getName();
 					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
-						Files.copy(MMOItems.plugin.getResource(name), new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
+						Files.copy(MMOItems.plugin.getResource(name),
+								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
 				}
 			} catch (IOException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
@@ -78,7 +84,9 @@ public class ConfigManager {
 			for (String fileName : fileNames)
 				if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
 					try {
-						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"), new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
+								new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(),
+								StandardCopyOption.REPLACE_EXISTING);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -232,11 +240,13 @@ public class ConfigManager {
 	}
 
 	public String getLuteAttackEffectName(LuteAttackEffect effect) {
-		return ChatColor.translateAlternateColorCodes('&', attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-")));
+		return ChatColor.translateAlternateColorCodes('&',
+				attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-")));
 	}
 
 	public String getStaffSpiritName(StaffSpirit spirit) {
-		return ChatColor.translateAlternateColorCodes('&', attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-")));
+		return ChatColor.translateAlternateColorCodes('&',
+				attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-")));
 	}
 
 	/*

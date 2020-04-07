@@ -21,15 +21,15 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.type.Conditional;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Permission extends ItemStat implements Conditional {
+public class Permission extends ItemStat implements ItemRestriction {
 	public Permission() {
 		super("PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission", new String[] { "The permission needed to use this item." }, new String[] { "all" });
 	}
@@ -88,7 +88,7 @@ public class Permission extends ItemStat implements Conditional {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
 	}

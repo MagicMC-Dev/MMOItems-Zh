@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -16,10 +18,12 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class StoredTags extends InternalStat {
-	private static final List<String> ignoreList = Arrays.asList("Unbreakable", "BlockEntityTag", "display", "Enchantments", "HideFlags", "Damage", "AttributeModifiers", "SkullOwner", "CanDestroy", "PickupDelay", "Age");
+	private static final List<String> ignoreList = Arrays.asList("Unbreakable", "BlockEntityTag", "display", "Enchantments", "HideFlags", "Damage",
+			"AttributeModifiers", "SkullOwner", "CanDestroy", "PickupDelay", "Age");
 
 	public StoredTags() {
-		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toItem(), "Stored Tags", new String[] { "You found a secret dev easter egg", "introduced during the 2020 epidemic!" }, new String[] { "all" });
+		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toItem(), "Stored Tags",
+				new String[] { "You found a secret dev easter egg", "introduced during the 2020 epidemic!" }, new String[] { "all" });
 	}
 
 	@Override
@@ -34,7 +38,7 @@ public class StoredTags extends InternalStat {
 		mmoitem.setData(ItemStat.STORED_TAGS, new StoredTagsData(item));
 	}
 
-	public class StoredTagsData implements StatData {
+	public class StoredTagsData implements StatData, Mergeable {
 		private final List<ItemTag> tags = new ArrayList<>();
 
 		public StoredTagsData(ItemStack stack) {
@@ -101,6 +105,12 @@ public class StoredTags extends InternalStat {
 			default:
 				return "unknown";
 			}
+		}
+
+		@Override
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof StoredTagsData, "Cannot merge two different stat data types");
+			tags.addAll(((StoredTagsData) data).tags);
 		}
 	}
 }

@@ -38,7 +38,7 @@ public class PlayerStats {
 			for (Entry<ItemStat, Double> entry : playerData.getSetBonuses().getStats())
 				getInstance(entry.getKey()).addModifier("fullSetBonus", entry.getValue());
 
-		for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats()) {
+		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
 			double t = 0;
 
 			for (MMOItem item : playerData.getMMOItems())

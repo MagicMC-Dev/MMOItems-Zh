@@ -7,15 +7,16 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.data.StatData;
-import net.Indyuce.mmoitems.stat.type.Conditional;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Required_Level extends DoubleStat implements Conditional, ProperStat {
+public class Required_Level extends DoubleStat implements ItemRestriction, ProperStat {
 	public Required_Level() {
 		super("REQUIRED_LEVEL", new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial()), "Required Level", new String[] { "The level your item needs", "in order to be used." }, new String[] { "all" });
 	}

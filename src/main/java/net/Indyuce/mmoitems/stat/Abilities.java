@@ -29,8 +29,8 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.Mergeable;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -39,11 +39,12 @@ public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 
 	public Abilities() {
-		super("ABILITY", new ItemStack(Material.BLAZE_POWDER), "Item Abilities", new String[] { "Make your item cast amazing abilities", "to kill monsters or buff yourself." }, new String[] { "all" });
+		super("ABILITY", new ItemStack(Material.BLAZE_POWDER), "Item Abilities",
+				new String[] { "Make your item cast amazing abilities", "to kill monsters or buff yourself." }, new String[] { "all" });
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -63,10 +64,13 @@ public class Abilities extends ItemStat {
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
 		JsonArray jsonArray = new JsonArray();
 		((AbilityListData) data).getAbilities().forEach(ability -> {
-			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getCastingMode())).replace("#a", MMOItems.plugin.getLanguage().getAbilityName(ability.getAbility())));
+			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getCastingMode())).replace("#a",
+					MMOItems.plugin.getLanguage().getAbilityName(ability.getAbility())));
 
 			jsonArray.add(ability.toJson());
-			ability.getModifiers().forEach(modifier -> abilityLore.add(modifierFormat.replace("#m", MMOItems.plugin.getLanguage().getModifierName(modifier)).replace("#v", this.modifierFormat.format(ability.getModifier(modifier)))));
+			ability.getModifiers()
+					.forEach(modifier -> abilityLore.add(modifierFormat.replace("#m", MMOItems.plugin.getLanguage().getModifierName(modifier))
+							.replace("#v", this.modifierFormat.format(ability.getModifier(modifier)))));
 
 			if (splitter)
 				abilityLore.add(MMOItems.plugin.getLanguage().abilitySplitter);
@@ -105,7 +109,8 @@ public class Abilities extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".ability." + configKey + ".type", format);
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(
+					MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -116,7 +121,9 @@ public class Abilities extends ItemStat {
 				return false;
 			}
 
-			Ability ability = MMOItems.plugin.getAbilities().getAbility(config.getConfig().getString(inv.getItemId() + ".ability." + configKey + ".type").toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
+			Ability ability = MMOItems.plugin.getAbilities()
+					.getAbility(config.getConfig().getString(inv.getItemId() + ".ability." + configKey + ".type").toUpperCase().replace("-", "_")
+							.replace(" ", "_").replaceAll("[^A-Z_]", ""));
 			if (!ability.isAllowedMode(castMode)) {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "This ability does not support this casting mode.");
 				return false;
@@ -125,7 +132,8 @@ public class Abilities extends ItemStat {
 			config.getConfig().set(inv.getItemId() + ".ability." + configKey + ".mode", castMode.name());
 			inv.registerItemEdition(config);
 			inv.open();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName() + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
+					+ ChatColor.GRAY + ".");
 			return true;
 		}
 
@@ -140,14 +148,17 @@ public class Abilities extends ItemStat {
 		config.getConfig().set(inv.getItemId() + ".ability." + configKey + "." + edited, value);
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY + " successfully added.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
+				+ " successfully added.");
 		return true;
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
 		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GREEN + (config.getConfigurationSection(id).contains("ability") ? config.getConfigurationSection(id + ".ability").getKeys(false).size() : 0));
+		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GREEN
+				+ (config.getConfigurationSection(id).contains("ability") ? config.getConfigurationSection(id + ".ability").getKeys(false).size()
+						: 0));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}
@@ -157,7 +168,8 @@ public class Abilities extends ItemStat {
 		if (nbtItem.hasTag("MMOITEMS_ABILITIES"))
 			try {
 				AbilityListData list = new AbilityListData();
-				new JsonParser().parse(nbtItem.getString("MMOITEMS_ABILITIES")).getAsJsonArray().forEach(obj -> list.add(new AbilityData(obj.getAsJsonObject())));
+				new JsonParser().parse(nbtItem.getString("MMOITEMS_ABILITIES")).getAsJsonArray()
+						.forEach(obj -> list.add(new AbilityData(obj.getAsJsonObject())));
 				mmoitem.setData(ItemStat.ABILITIES, list);
 			} catch (JsonSyntaxException | IllegalStateException exception) {
 				/*
@@ -183,8 +195,9 @@ public class Abilities extends ItemStat {
 		}
 
 		@Override
-		public void merge(Mergeable stat) {
-			abilities.addAll(((AbilityListData) stat).abilities);
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof AbilityListData, "Cannot merge two different stat data types");
+			abilities.addAll(((AbilityListData) data).abilities);
 		}
 	}
 }

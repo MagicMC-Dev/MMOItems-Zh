@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.stat.data.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class ItemManager {
@@ -46,8 +45,7 @@ public class ItemManager {
 		for (ItemStat stat : type.getAvailableStats())
 			if (section.contains(stat.getPath()))
 				try {
-					StatData data = stat.whenInitialized(mmoitem, section.get(stat.getPath()));
-					mmoitem.setData(stat, data);
+					mmoitem.setData(stat, stat.whenInitialized(section.get(stat.getPath())));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING,
 							"Error while loading " + type.getId() + "." + id + " (" + stat.getName() + "): " + exception.getMessage());

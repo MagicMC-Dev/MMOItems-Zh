@@ -14,19 +14,21 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class StringStat extends ItemStat {
+public class StringStat extends ItemStat implements ItemGenerationStat {
 	public StringStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
 		super(id, item, name, lore, types, materials);
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		return new StringData(object.toString());
 	}
 
@@ -82,20 +84,8 @@ public class StringStat extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
 	}
 
-	public class StringData implements StatData {
-		protected String str;
-
-		public StringData(String str) {
-			this.str = str;
-		}
-
-		public void setString(String str) {
-			this.str = str;
-		}
-
-		@Override
-		public String toString() {
-			return str;
-		}
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return new StringData(object.toString());
 	}
 }

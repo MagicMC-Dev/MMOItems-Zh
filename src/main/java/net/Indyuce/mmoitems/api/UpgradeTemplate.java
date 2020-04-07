@@ -10,13 +10,13 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.stat.data.upgrade.UpgradeInfo;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
 
 public class UpgradeTemplate {
 	private final String id;
-	private Map<ItemStat, UpgradeInfo> stats = new HashMap<>();
+	private final Map<ItemStat, UpgradeInfo> stats = new HashMap<>();
 
 	public UpgradeTemplate(ConfigurationSection config) {
 		Validate.notNull(config, "You must specify a config section.");
@@ -28,23 +28,15 @@ public class UpgradeTemplate {
 
 			ItemStat stat = MMOItems.plugin.getStats().get(statFormat);
 			Validate.notNull(stat, "Could not read stat ID " + statFormat);
-
-			if (!(stat instanceof Upgradable)) {
-				log("Stat " + stat.getId() + " is not upgradable.");
-				continue;
-			}
+			Validate.isTrue(stat instanceof Upgradable, "Stat " + stat.getId() + " us not upgradable.");
 
 			try {
 				stats.put(stat, ((Upgradable) stat).loadUpgradeInfo(config.get(key)));
 			} catch (IllegalArgumentException exception) {
-				log("Could not load stat " + stat.getId() + ": " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						"An error occured loading stat '" + key + "' from upgrade template '" + id + "': " + exception.getMessage());
 			}
 		}
-	}
-
-	public void log(String... message) {
-		for (String line : message)
-			MMOItems.plugin.getLogger().log(Level.WARNING, "[Upgrade template] " + id + ": " + line);
 	}
 
 	public String getId() {

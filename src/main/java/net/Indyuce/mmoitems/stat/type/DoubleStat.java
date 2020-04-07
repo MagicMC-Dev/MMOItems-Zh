@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,17 +16,18 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.GaussianLinearValue;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
-import net.Indyuce.mmoitems.stat.data.upgrade.UpgradeInfo;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class DoubleStat extends ItemStat implements Upgradable {
-	private static final Random random = new Random();
-
+public class DoubleStat extends ItemStat implements Upgradable, ItemGenerationStat {
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
 		super(id, item, name, lore, new String[] { "!miscellaneous", "all" });
 	}
@@ -36,7 +37,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		return new DoubleData(object);
 	}
 
@@ -165,65 +166,15 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		}
 	}
 
-	public class DoubleData implements StatData {
-		private double min, max;
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
 
-		public DoubleData(Object object) {
-			if (object instanceof Number) {
-				min = Double.valueOf(object.toString());
-				return;
-			}
-
-			if (object instanceof String) {
-				String[] split = ((String) object).split("\\=");
-				Validate.isTrue(split.length == 2, "Must specify a valid range");
-				min = Double.parseDouble(split[0]);
-				max = Double.parseDouble(split[1]);
-				return;
-			}
-
-			throw new IllegalArgumentException("Must specify a range or a number");
-		}
-
-		public DoubleData(double value) {
-			this(value, 0);
-		}
-
-		private DoubleData(double min, double max) {
-			this.min = min;
-			this.max = max;
-		}
-
-		public boolean hasMax() {
-			return max > min && max != 0;
-		}
-
-		public double getMin() {
-			return min;
-		}
-
-		public double getMax() {
-			return max;
-		}
-
-		public void setMax(double value) {
-			max = value;
-		}
-
-		public void setMin(double value) {
-			min = value;
-		}
-
-		public void add(double value) {
-			min = min + value;
-		}
-
-		public void addRelative(double value) {
-			min *= 1 + value;
-		}
-
-		public double generateNewValue() {
-			return hasMax() ? min + random.nextDouble() * (max - min) : min;
-		}
+		if (object instanceof Number)
+			return new GaussianLinearValue(Double.valueOf(object.toString()), 0, 0, 0);
+		
+		if (object instanceof ConfigurationSection) 
+			return new GaussianLinearValue((ConfigurationSection) object);
+		
+		throw new IllegalArgumentException("Must specify a number or a config section");
 	}
 }

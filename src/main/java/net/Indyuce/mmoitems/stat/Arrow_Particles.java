@@ -22,21 +22,20 @@ import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.ArrowParticlesEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Arrow_Particles extends StringStat {
+public class Arrow_Particles extends ItemStat {
 	public Arrow_Particles() {
 		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toItem(), "Arrow Particles",
 				new String[] { "Particles that display around", "the arrows your bow fires." }, new String[] { "bow", "crossbow" });
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specifiy a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 

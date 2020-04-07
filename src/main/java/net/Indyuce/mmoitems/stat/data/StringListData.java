@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
+
 import com.google.gson.JsonArray;
 
-public class StringListData implements StatData {
+import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+
+public class StringListData implements StatData, RandomStatData, Mergeable {
 	private final List<String> list;
 
 	public StringListData() {
@@ -29,5 +36,16 @@ public class StringListData implements StatData {
 
 	public List<String> getList() {
 		return list;
+	}
+
+	@Override
+	public StatData randomize(GeneratedItemBuilder builder) {
+		return this;
+	}
+
+	@Override
+	public void merge(StatData data) {
+		Validate.isTrue(data instanceof StringListData, "Cannot merge two different stat data types");
+		list.addAll(((StringListData) data).list);
 	}
 }

@@ -3,6 +3,11 @@ package net.Indyuce.mmoitems.stat.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
+
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+
 public class EffectListData implements StatData, Mergeable {
 	private final List<PotionEffectData> effects = new ArrayList<>();
 
@@ -20,7 +25,8 @@ public class EffectListData implements StatData, Mergeable {
 	}
 
 	@Override
-	public void merge(Mergeable stat) {
-		effects.addAll(((EffectListData) stat).effects);
+	public void merge(StatData data) {
+		Validate.isTrue(data instanceof EffectListData, "Cannot merge two different stat data types");
+		effects.addAll(((EffectListData) data).effects);
 	}
 }

@@ -16,20 +16,23 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Restore extends StringStat {
+public class Restore extends ItemStat {
 	public Restore() {
-		super("RESTORE", VersionMaterial.RED_DYE.toItem(), "Restore", new String[] { "The amount of health/food/saturation", "your consumable item restores." }, new String[] { "consumable" });
+		super("RESTORE", VersionMaterial.RED_DYE.toItem(), "Restore",
+				new String[] { "The amount of health/food/saturation", "your consumable item restores." }, new String[] { "consumable" });
 	}
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new StatEdition(inv, ItemStat.RESTORE).enable("Write in the chat the values you want.", ChatColor.AQUA + "Format: [HEALTH] [FOOD] [SATURATION]");
+		new StatEdition(inv, ItemStat.RESTORE).enable("Write in the chat the values you want.",
+				ChatColor.AQUA + "Format: [HEALTH] [FOOD] [SATURATION]");
 		return true;
 	}
 
@@ -95,10 +98,20 @@ public class Restore extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(MMOItem item, Object object) {
+	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 		return new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation"));
+	}
+
+	@Override
+	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+		double health = item.getDouble("MMOITEMS_RESTORE_HEALTH");
+		double food = item.getDouble("MMOITEMS_RESTORE_FOOD");
+		double saturation = item.getDouble("MMOITEMS_RESTORE_SATURATION");
+
+		if (health > 0 || food > 0 || saturation > 0)
+			mmoitem.setData(this, new RestoreData(health, food, saturation));
 	}
 
 	@Override
@@ -107,7 +120,8 @@ public class Restore extends StringStat {
 
 		if (restore.getHealth() != 0) {
 			item.addItemTag(new ItemTag("MMOITEMS_RESTORE_HEALTH", restore.getHealth()));
-			item.getLore().insert("restore-health", ItemStat.translate("restore-health").replace("#", new StatFormat("##").format(restore.getHealth())));
+			item.getLore().insert("restore-health",
+					ItemStat.translate("restore-health").replace("#", new StatFormat("##").format(restore.getHealth())));
 		}
 		if (restore.getFood() != 0) {
 			item.addItemTag(new ItemTag("MMOITEMS_RESTORE_FOOD", restore.getFood()));
@@ -115,21 +129,19 @@ public class Restore extends StringStat {
 		}
 		if (restore.getSaturation() != 0) {
 			item.addItemTag(new ItemTag("MMOITEMS_RESTORE_SATURATION", restore.getSaturation()));
-			item.getLore().insert("restore-saturation", ItemStat.translate("restore-saturation").replace("#", new StatFormat("##").format(restore.getSaturation())));
+			item.getLore().insert("restore-saturation",
+					ItemStat.translate("restore-saturation").replace("#", new StatFormat("##").format(restore.getSaturation())));
 		}
 		return true;
 	}
 
-	public class RestoreData implements StatData {
-		private double health, food, saturate;
+	public class RestoreData implements StatData, Mergeable {
+		private double health, food, saturation;
 
-		public RestoreData() {
-		}
-
-		public RestoreData(double health, double food, double saturate) {
+		public RestoreData(double health, double food, double saturation) {
 			this.health = health;
 			this.food = food;
-			this.saturate = saturate;
+			this.saturation = saturation;
 		}
 
 		public double getHealth() {
@@ -141,7 +153,7 @@ public class Restore extends StringStat {
 		}
 
 		public double getSaturation() {
-			return saturate;
+			return saturation;
 		}
 
 		public void setHealth(double value) {
@@ -153,7 +165,15 @@ public class Restore extends StringStat {
 		}
 
 		public void setSaturation(double value) {
-			saturate = value;
+			saturation = value;
+		}
+
+		@Override
+		public void merge(StatData data) {
+			Validate.isTrue(data instanceof RestoreData, "Cannot merge two different stat data types");
+			health += ((RestoreData) data).health;
+			food += ((RestoreData) data).food;
+			saturation += ((RestoreData) data).saturation;
 		}
 	}
 }

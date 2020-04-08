@@ -45,10 +45,6 @@ public class ItemGenManager {
 
 	private static final Random random = new Random();
 
-	public ItemGenManager() {
-		reload();
-	}
-
 	public Collection<GenerationTemplate> getTemplates() {
 		return templates.values();
 	}

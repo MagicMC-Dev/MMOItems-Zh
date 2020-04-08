@@ -78,6 +78,7 @@ public class MMOItems extends JavaPlugin {
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
 	private final AbilityManager abilityManager = new AbilityManager();
+	private final ItemGenManager itemGenerator = new ItemGenManager();
 	private final EntityManager entityManager = new EntityManager();
 	private final TypeManager typeManager = new TypeManager();
 
@@ -85,7 +86,6 @@ public class MMOItems extends JavaPlugin {
 	private WorldGenManager worldGenManager;
 	private UpgradeManager upgradeManager;
 	private UpdaterManager dynamicUpdater;
-	private ItemGenManager itemGenerator;
 	private ConfigManager configManager;
 	private RecipeManager recipeManager;
 	private BlockManager blockManager;
@@ -131,9 +131,9 @@ public class MMOItems extends JavaPlugin {
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
-		itemGenerator = new ItemGenManager();
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();
+		itemGenerator.reload();
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			worldGenManager = new WorldGenManager();
 			blockManager = new BlockManager();

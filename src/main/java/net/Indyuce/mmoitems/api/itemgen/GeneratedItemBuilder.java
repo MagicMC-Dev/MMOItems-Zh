@@ -1,10 +1,8 @@
 package net.Indyuce.mmoitems.api.itemgen;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.itemgen.NameModifier.ModifierType;
 import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
@@ -29,21 +27,18 @@ public class GeneratedItemBuilder {
 	 */
 	private final Set<NameModifier> nameModifiers = new HashSet<>();
 
-	private static final Random random = new Random();
-
 	/*
 	 * instance is created everytime an item is being randomly generated.
 	 */
-	public GeneratedItemBuilder(GenerationTemplate template, int level, double spread) {
-		this.level = rollLevel(level, spread);
+	public GeneratedItemBuilder(GenerationTemplate template, int level, RolledTier tier) {
+		this.level = level;
+		this.tier = tier;
+		this.capacity = tier.getCapacity();
 		this.mmoitem = new MMOItem(template.getType(), template.getId());
 
 		// apply base item data
 		template.getBaseItemData().entrySet().forEach(entry -> applyData(entry.getKey(), entry.getValue().randomize(this)));
 
-		// calculate item tier and capacity
-		tier = MMOItems.plugin.getItemGenerator().rollTier(this);
-		capacity = tier.getCapacity();
 		if (!tier.isDefault())
 			mmoitem.setData(ItemStat.TIER, new StringData(tier.getTier().getId()));
 
@@ -63,6 +58,21 @@ public class GeneratedItemBuilder {
 				addModifier(modifier.getNameModifier());
 			modifier.getItemData().forEach((stat, data) -> applyData(stat, data.randomize(this)));
 		}
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public double getRemainingCapacity() {
+		return capacity;
+	}
+
+	public RolledTier getTier() {
+		return tier;
+	}
+
+	public MMOItem build() {
 
 		/*
 		 * calculate new display name with suffixes and prefixes if display name
@@ -80,21 +90,7 @@ public class GeneratedItemBuilder {
 
 			mmoitem.setData(ItemStat.NAME, new StringData(displayName));
 		}
-	}
 
-	public int getLevel() {
-		return level;
-	}
-
-	public double getRemainingCapacity() {
-		return capacity;
-	}
-
-	public RolledTier getTier() {
-		return tier;
-	}
-
-	public MMOItem build() {
 		return mmoitem;
 	}
 
@@ -109,19 +105,5 @@ public class GeneratedItemBuilder {
 		// clean less-priority name modifiers w/ same type only
 		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
 		nameModifiers.add(modifier);
-	}
-
-	/*
-	 * formula to generate the item level. input is the player level and the
-	 * level spread which corresponds to the standard deviation of a gaussian
-	 * distribution centered on the player level
-	 */
-	private int rollLevel(int level, double s) {
-		double found = random.nextGaussian() * s + level;
-
-		// cannot be more than 2x the level and must be higher than 1
-		found = Math.max(Math.min(2 * level, found), 1);
-
-		return (int) found;
 	}
 }

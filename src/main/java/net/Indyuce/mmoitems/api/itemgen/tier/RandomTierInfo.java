@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
 
 public class RandomTierInfo {
@@ -56,7 +55,7 @@ public class RandomTierInfo {
 		return chance;
 	}
 
-	public RolledTier roll(GeneratedItemBuilder builder) {
-		return new RolledTier(this, builder);
+	public RolledTier roll(int itemLevel) {
+		return new RolledTier(this, itemLevel);
 	}
 }

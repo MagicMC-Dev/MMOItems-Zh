@@ -3,10 +3,9 @@ package net.Indyuce.mmoitems.manager;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.itemgen.GenerationModifier;
 import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
 import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
@@ -35,15 +34,21 @@ public class ItemGenManager {
 	 * capacity an item has. plugin has a default capacity calculator in case
 	 * none is specified by the user but it's best to configure it
 	 */
-	private final Set<RandomTierInfo> itemGenTiers = new LinkedHashSet<>();
+	private final Map<ItemTier, RandomTierInfo> itemGenTiers = new LinkedHashMap<>();
 	private RandomTierInfo defaultTier;
+
+	/*
+	 * config options that must be updated and that are cached here for easier
+	 * calculations
+	 */
+	private double levelSpread;
 
 	private static final Random random = new Random();
 
 	public ItemGenManager() {
 		reload();
 	}
-	
+
 	public Collection<GenerationTemplate> getTemplates() {
 		return templates.values();
 	}
@@ -66,6 +71,10 @@ public class ItemGenManager {
 
 	public GenerationModifier getModifier(String id) {
 		return modifiers.get(id);
+	}
+
+	public RandomTierInfo getTierInfo(ItemTier tier) {
+		return itemGenTiers.getOrDefault(tier, defaultTier);
 	}
 
 	public void reload() {
@@ -98,11 +107,14 @@ public class ItemGenManager {
 		}
 
 		FileConfiguration config = new ConfigFile("/generator", "config").getConfig();
+
+		levelSpread = config.getDouble("item-level-spread");
+
 		for (String key : config.getConfigurationSection("tiers").getKeys(false))
 			if (!key.equalsIgnoreCase("default"))
 				try {
-					RandomTierInfo tier = new RandomTierInfo(config.getConfigurationSection("tiers." + key));
-					itemGenTiers.add(tier);
+					RandomTierInfo info = new RandomTierInfo(config.getConfigurationSection("tiers." + key));
+					itemGenTiers.put(info.getTier(), info);
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO,
 							"An error occured while trying to load item gen tier capacity formula which ID '" + key + "': " + exception.getMessage());
@@ -118,17 +130,31 @@ public class ItemGenManager {
 		}
 	}
 
-	public RolledTier rollTier(GeneratedItemBuilder builder) {
+	public RolledTier rollTier(int itemLevel) {
 
 		double s = 0;
-		for (RandomTierInfo tier : itemGenTiers) {
+		for (RandomTierInfo tier : itemGenTiers.values()) {
 			if (random.nextDouble() < tier.getChance() / (1 - s))
-				return tier.roll(builder);
+				return tier.roll(itemLevel);
 
 			s += tier.getChance();
 		}
 
 		// default tier
-		return defaultTier.roll(builder);
+		return defaultTier.roll(itemLevel);
+	}
+
+	/*
+	 * formula to generate the item level. input is the player level and the
+	 * level spread which corresponds to the standard deviation of a gaussian
+	 * distribution centered on the player level
+	 */
+	public int rollLevel(int playerLevel) {
+		double found = random.nextGaussian() * levelSpread + playerLevel;
+
+		// cannot be more than 2x the level and must be higher than 1
+		found = Math.max(Math.min(2 * playerLevel, found), 1);
+
+		return (int) found;
 	}
 }

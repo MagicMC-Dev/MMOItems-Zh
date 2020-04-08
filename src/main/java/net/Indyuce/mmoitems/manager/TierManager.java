@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -36,6 +38,11 @@ public class TierManager {
 
 	public boolean has(String id) {
 		return tiers.containsKey(id);
+	}
+
+	public ItemTier getOrThrow(String id) {
+		Validate.isTrue(tiers.containsKey(id), "Could not find tier with ID '" + id + "'");
+		return tiers.get(id);
 	}
 
 	public ItemTier get(String id) {

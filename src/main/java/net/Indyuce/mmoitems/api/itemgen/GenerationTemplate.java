@@ -11,6 +11,8 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class GenerationTemplate {
@@ -35,9 +37,9 @@ public class GenerationTemplate {
 		for (String key : config.getConfigurationSection("modifiers").getKeys(false))
 			try {
 				modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(), config.getConfigurationSection("modifiers." + key)));
-			} catch(IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO,
-						"An error occured while trying to load modifier '" + key + "' from item gen template '" + id + "': " + exception.getMessage());
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key + "' from item gen template '"
+						+ id + "': " + exception.getMessage());
 			}
 
 		Validate.notNull(config.getConfigurationSection("base"), "Could not find base item data");
@@ -49,8 +51,8 @@ public class GenerationTemplate {
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				base.put(stat, stat.whenInitializedGeneration(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO,
-						"An error occured while trying to load base item data '" + key + "' from item gen template '" + id + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '" + key
+						+ "' from item gen template '" + id + "': " + exception.getMessage());
 			}
 	}
 
@@ -70,17 +72,13 @@ public class GenerationTemplate {
 		return id;
 	}
 
-	/*
-	 * TODO can be used by lootchests and commands to only generate items which
-	 * match the player class
-	 */
-	public boolean acceptsClass(String profess) {
-		return true;
-		// return !base.containsKey(ItemStat.REQUIRED_CLASS) ||
-		// ((ListStringData) base.get(ItemStat.REQUIRED_CLASS));
+	public GeneratedItemBuilder newBuilder(RPGPlayer player) {
+		int itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(player.getLevel());
+		RolledTier itemTier = MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
+		return newBuilder(itemLevel, itemTier);
 	}
 
-	public GeneratedItemBuilder newBuilder(int playerLevel, double sd) {
-		return new GeneratedItemBuilder(this, playerLevel, sd);
+	public GeneratedItemBuilder newBuilder(int itemLevel, RolledTier itemTier) {
+		return new GeneratedItemBuilder(this, itemLevel, itemTier);
 	}
 }

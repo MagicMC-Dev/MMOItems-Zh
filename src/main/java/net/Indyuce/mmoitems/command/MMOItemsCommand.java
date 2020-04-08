@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,8 +32,13 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.drop.DropItem;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
+import net.Indyuce.mmoitems.api.itemgen.loot.LootBuilder;
+import net.Indyuce.mmoitems.api.itemgen.loot.restriction.ClassFilter;
+import net.Indyuce.mmoitems.api.itemgen.loot.restriction.TypeFilter;
+import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.AmountReader;
@@ -49,6 +55,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class MMOItemsCommand implements CommandExecutor {
 	private static final Random random = new Random();
@@ -72,27 +79,79 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 
-			int page = 0;
 			try {
-				page = Integer.parseInt(args[1]);
-			} catch (Exception e) {
+				new PluginHelp(sender).open(Integer.parseInt(args[1]));
+			} catch (NumberFormatException exception) {
 				sender.sendMessage(ChatColor.RED + args[1] + " is not a valid number.");
 			}
-
-			new PluginHelp(sender).open(page);
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("generate")) {
-
-			Player player = (Player) sender;
-
-			for (int j = 0; j < Integer.valueOf(args[2]); j++) {
-				GenerationTemplate template = MMOItems.plugin.getItemGenerator().getTemplate(args[1]);
-				ItemStack item = template.newBuilder(PlayerData.get(player).getRPG().getLevel(), 3).build().newBuilder().build();
-
-				player.getInventory().addItem(item);
+			if (args.length < 2) {
+				sender.sendMessage(ChatColor.RED + "Usage: /mi generate <player> (extra-args)");
+				sender.sendMessage(ChatColor.RED + "Possible extra arguments:");
+				sender.sendMessage(ChatColor.RED + "-matchlevel " + ChatColor.GRAY + "the loot item's level matches the player level");
+				sender.sendMessage(ChatColor.RED + "-matchclass " + ChatColor.GRAY + "the item's class matches the player class");
+				sender.sendMessage(ChatColor.RED + "-gimme " + ChatColor.GRAY + "gives the item to you instead");
+				sender.sendMessage(ChatColor.RED + "-class:<class-name> " + ChatColor.GRAY + "finds an item with a specific class");
+				sender.sendMessage(ChatColor.RED + "-level:<level> " + ChatColor.GRAY + "uses a specific item level");
+				sender.sendMessage(ChatColor.RED + "-tier:<tier> " + ChatColor.GRAY + "uses a specific item tier");
+				sender.sendMessage(ChatColor.RED + "-type:<type> " + ChatColor.GRAY + "finds an item with a specific item type");
+				sender.sendMessage(ChatColor.RED + "-id:<id> " + ChatColor.GRAY + "finds a specific item");
+				return true;
 			}
 
+			try {
+				final Player target = Bukkit.getPlayer(args[1]);
+				Validate.notNull(target, "Could not find player called " + args[1] + ".");
+
+				GenerateCommandHandler handler = new GenerateCommandHandler(args);
+
+				final Player give = handler.hasArgument("gimme") || handler.hasArgument("giveme")
+						? (sender instanceof Player ? (Player) sender : null)
+						: target;
+				Validate.notNull(give, "You cannot use -gimme");
+
+				RPGPlayer rpgPlayer = PlayerData.get(target).getRPG();
+				final int itemLevel = handler.hasArgument("level") ? Integer.parseInt(handler.getValue("level"))
+						: (handler.hasArgument("matchlevel") ? MMOItems.plugin.getItemGenerator().rollLevel(rpgPlayer.getLevel())
+								: 1 + random.nextInt(100));
+				final RolledTier itemTier = handler.hasArgument("tier") ? MMOItems.plugin.getItemGenerator()
+						.getTierInfo(MMOItems.plugin.getTiers().getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_"))).roll(itemLevel)
+						: MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
+
+				// no need to use a LootBuilder
+				if (handler.hasArgument("id")) {
+					String id = handler.getValue("id").toUpperCase().replace("-", "_");
+					Validate.isTrue(MMOItems.plugin.getItemGenerator().hasTemplate(id), "Could not find gen item with ID '" + id + "'");
+					GenerationTemplate template = MMOItems.plugin.getItemGenerator().getTemplate(id);
+					ItemStack item = template.newBuilder(itemLevel, itemTier).build().newBuilder().build();
+					Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate gen item with ID '" + id + "'");
+					new SmartGive(give).give(item);
+					return true;
+				}
+
+				LootBuilder builder = new LootBuilder(itemLevel, itemTier);
+				if (handler.hasArgument("matchclass"))
+					builder.applyFilter(new ClassFilter(rpgPlayer));
+				if (handler.hasArgument("class"))
+					builder.applyFilter(new ClassFilter(handler.getValue("class").replace("-", " ").replace("_", " ")));
+				if (handler.hasArgument("type")) {
+					String format = handler.getValue("type");
+					Validate.isTrue(Type.isValid(format), "Could not find type with ID '" + format + "'");
+					builder.applyFilter(new TypeFilter(Type.get(format)));
+				}
+
+				MMOItem mmoitem = builder.rollLoot();
+				Validate.notNull(mmoitem, "No item matched your criterias.");
+
+				ItemStack item = mmoitem.newBuilder().build();
+				Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate item with ID '" + mmoitem.getId() + "'");
+				new SmartGive(give).give(item);
+
+			} catch (IllegalArgumentException exception) {
+				sender.sendMessage(ChatColor.RED + exception.getMessage());
+			}
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("browse")) {

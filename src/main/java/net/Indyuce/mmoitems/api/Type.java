@@ -38,9 +38,9 @@ public class Type {
 	public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, false, true, EquipmentSlot.BOTH_HANDS);
 	public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, false, true, EquipmentSlot.OFF_HAND);
 
-	//any
+	// any
 	public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, false, true, EquipmentSlot.ANY);
-	
+
 	// extra
 	public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, false, true, EquipmentSlot.ARMOR);
 	public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, false, true, EquipmentSlot.MAIN_HAND);
@@ -49,7 +49,7 @@ public class Type {
 	public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, false, true, EquipmentSlot.OTHER);
 	public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, false, true, EquipmentSlot.OTHER);
 	public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, false, true, EquipmentSlot.ACCESSORY);
-	
+
 	private final String id;
 	private String name;
 	private TypeSet set;
@@ -203,7 +203,7 @@ public class Type {
 
 	@Override
 	public boolean equals(Object object) {
-		return object instanceof Type && ((Type) object).id.equals(id);
+		return object != null && object instanceof Type && ((Type) object).id.equals(id);
 	}
 
 	private ItemStack read(String str) {
@@ -224,11 +224,11 @@ public class Type {
 	 * the typeManager instance, therefore no need to replace _ for " "
 	 */
 	public static Type get(String id) {
-		return MMOItems.plugin.getTypes().get(id.toUpperCase().replace("-", "_"));
+		return MMOItems.plugin.getTypes().get(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}
 
 	public static boolean isValid(String id) {
-		return MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_"));
+		return MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}
 
 	public enum EquipmentSlot {

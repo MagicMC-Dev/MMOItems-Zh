@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.command.PluginHelp;
 
 public class MMOItemsCompletion implements TabCompleter {
 	@Override
@@ -30,6 +29,7 @@ public class MMOItemsCompletion implements TabCompleter {
 			list.add("load");
 			list.add("copy");
 			list.add("drop");
+			list.add("generate");
 			list.add("itemlist");
 			list.add("reload");
 			list.add("list");
@@ -47,11 +47,7 @@ public class MMOItemsCompletion implements TabCompleter {
 			list.add("giveall");
 
 		} else if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("help"))
-				for (int j = 1; j <= PluginHelp.getMaxPage(); j++)
-					list.add("" + j);
-
-			else if (args[0].equalsIgnoreCase("ability"))
+			if (args[0].equalsIgnoreCase("ability"))
 				list.addAll(MMOItems.plugin.getAbilities().getAbilityKeys());
 
 			else if (args[0].equalsIgnoreCase("update")) {
@@ -74,14 +70,20 @@ public class MMOItemsCompletion implements TabCompleter {
 				list.add("ability");
 			}
 
-			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("giveall"))
+			if (args[0].equalsIgnoreCase("generate"))
+				Bukkit.getOnlinePlayers().forEach(online -> list.add(online.getName()));
+
+			else if (args[0].equalsIgnoreCase("browse") || args[0].equalsIgnoreCase("itemlist") || args[0].equalsIgnoreCase("drop")
+					|| args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")
+					|| args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("load")
+					|| args[0].equalsIgnoreCase("giveall"))
 				for (Type type : MMOItems.plugin.getTypes().getAll())
 					list.add(type.getId());
-			if(args[0].equalsIgnoreCase("browse"))
+			if (args[0].equalsIgnoreCase("browse"))
 				list.add("BLOCKS");
 
 			else if (Type.isValid(args[0]))
-				MMOItems.plugin.getTypes().get(args[0].toUpperCase().replace("-", "_")).getConfigFile().getConfig().getKeys(false).forEach(key -> list.add(key.toUpperCase()));
+				Type.get(args[0]).getConfigFile().getConfig().getKeys(false).forEach(key -> list.add(key.toUpperCase()));
 
 		} else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("ability") || Type.isValid(args[0]))
@@ -93,7 +95,8 @@ public class MMOItemsCompletion implements TabCompleter {
 			else if (args[0].equalsIgnoreCase("stations") && args[1].equalsIgnoreCase("open"))
 				MMOItems.plugin.getCrafting().getAll().forEach(station -> list.add(station.getId()));
 
-			else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("giveall"))
+			else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")
+					|| args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("drop") || args[0].equalsIgnoreCase("giveall"))
 				if (Type.isValid(args[1]))
 					Type.get(args[1]).getConfigFile().getConfig().getKeys(false).forEach(key -> list.add(key.toUpperCase()));
 
@@ -126,7 +129,7 @@ public class MMOItemsCompletion implements TabCompleter {
 			String path = args[1].toUpperCase().replace("-", "_");
 			if (MMOItems.plugin.getAbilities().hasAbility(path)) {
 				Ability ability = MMOItems.plugin.getAbilities().getAbility(path);
-				if (Math.floorMod(args.length, 2) == 0)
+				if (args.length % 2 == 0)
 					list.addAll(ability.getModifiers());
 				else
 					for (int j = 0; j < 10; j++)
@@ -150,7 +153,18 @@ public class MMOItemsCompletion implements TabCompleter {
 					list.add("" + j);
 		}
 
-		return args[args.length - 1].isEmpty() ? list : list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
+		if (args.length > 2 && args[0].equalsIgnoreCase("generate")) {
+			list.add("-matchlevel");
+			list.add("-matchclass");
+			list.add("-level:");
+			list.add("-class:");
+			list.add("-type:");
+			list.add("-id:");
+			list.add("-tier:");
+			list.add("-gimme");
+		}
+
+		return args[args.length - 1].isEmpty() ? list
+				: list.stream().filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
 	}
 }
-

@@ -6,10 +6,10 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
-import net.Indyuce.mmocore.api.util.item.SmartGive;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.mmogroup.mmolib.api.MMOLineConfig;
+import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class MMOItemTrigger extends Trigger {
 	private final Type type;

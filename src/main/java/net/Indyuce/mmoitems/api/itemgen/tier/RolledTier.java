@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.api.itemgen.tier;
 
 import net.Indyuce.mmoitems.api.ItemTier;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 
 public class RolledTier {
 	private final ItemTier tier;
 	private final double capacity;
 
-	public RolledTier(RandomTierInfo info, GeneratedItemBuilder builder) {
+	public RolledTier(RandomTierInfo info, int itemLevel) {
 		this.tier = info.getTier();
-		this.capacity = info.getCapacity().calculate(builder.getLevel());
+		this.capacity = info.getCapacity().calculate(itemLevel);
 	}
 
 	public boolean isDefault() {

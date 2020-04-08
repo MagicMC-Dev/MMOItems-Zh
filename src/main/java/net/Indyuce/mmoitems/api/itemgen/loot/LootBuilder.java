@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
 import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
@@ -19,10 +20,16 @@ public class LootBuilder {
 	private final Collection<GenerationTemplate> all;
 
 	/*
-	 * extra options
+	 * options required to generate random loot
 	 */
 	private final RolledTier itemTier;
 	private final int itemLevel;
+
+	public LootBuilder(RPGPlayer player, ItemTier itemTier) {
+		itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(player.getLevel());
+		this.itemTier = MMOItems.plugin.getItemGenerator().getTierInfo(itemTier).roll(itemLevel);
+		all = MMOItems.plugin.getItemGenerator().getTemplates();
+	}
 
 	public LootBuilder(RPGPlayer player) {
 		itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(player.getLevel());
@@ -49,14 +56,6 @@ public class LootBuilder {
 		Optional<GenerationTemplate> found = all.stream().findAny();
 		return found.isPresent() ? found.get().newBuilder(itemLevel, itemTier).build() : null;
 	}
-
-	// private boolean hasOption(LootBuilderOption[] options, LootBuilderOption
-	// option) {
-	// for (LootBuilderOption checked : options)
-	// if (checked == option)
-	// return true;
-	// return false;
-	// }
 
 	private <T> Predicate<T> not(Predicate<T> predicate) {
 		return t -> !predicate.test(t);

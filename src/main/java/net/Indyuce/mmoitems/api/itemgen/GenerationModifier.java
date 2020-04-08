@@ -20,7 +20,7 @@ public class GenerationModifier {
 	 */
 	private final String id;
 
-	private final double chance;
+	private final double chance, weight;
 	private final Map<ItemStat, RandomStatData> data = new HashMap<>();
 	private final NameModifier nameModifier;
 
@@ -30,7 +30,8 @@ public class GenerationModifier {
 		Validate.notNull(config, "Could not read config");
 		id = config.getName().toLowerCase().replace("_", "-");
 
-		this.chance = config.getDouble("chance");
+		this.chance = Math.max(Math.min(config.getDouble("chance", 1), 1), 0);
+		this.weight = config.getDouble("weight");
 
 		Validate.isTrue(chance > 0, "Chance must be greater than 0 otherwise useless");
 		this.nameModifier = config.contains("suffix") ? new NameModifier(ModifierType.SUFFIX, config.get("suffix"))
@@ -49,6 +50,10 @@ public class GenerationModifier {
 			}
 	}
 
+	public double getWeight() {
+		return weight;
+	}
+
 	public Map<ItemStat, RandomStatData> getItemData() {
 		return data;
 	}
@@ -61,7 +66,6 @@ public class GenerationModifier {
 		return nameModifier != null;
 	}
 
-	// TODO implement weight system.
 	public boolean rollChance() {
 		return random.nextDouble() < chance;
 	}

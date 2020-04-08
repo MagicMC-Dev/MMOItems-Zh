@@ -1,6 +1,9 @@
 package net.Indyuce.mmoitems.api.itemgen;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -41,17 +44,23 @@ public class GeneratedItemBuilder {
 		template.getBaseItemData().entrySet().forEach(entry -> applyData(entry.getKey(), entry.getValue().randomize(this)));
 
 		// roll item gen modifiers
-		// TODO stack?
-		// TODO improve chance system
-		template.getModifiers().forEach(mod -> {
+		List<GenerationModifier> lookUpOrder = new ArrayList<>(template.getModifiers());
+		Collections.shuffle(lookUpOrder);
+		for (GenerationModifier modifier : lookUpOrder) {
 
-			if (mod.rollChance()) {
-				if (mod.hasNameModifier())
-					addModifier(mod.getNameModifier());
+			// roll modifier change
+			if (!modifier.rollChance())
+				continue;
 
-				mod.getItemData().entrySet().forEach(entry -> applyData(entry.getKey(), entry.getValue().randomize(this)));
-			}
-		});
+			// only apply if enough item weight
+			if (modifier.getWeight() > weight)
+				continue;
+
+			weight -= modifier.getWeight();
+			if (modifier.hasNameModifier())
+				addModifier(modifier.getNameModifier());
+			modifier.getItemData().forEach((stat, data) -> applyData(stat, data.randomize(this)));
+		}
 
 		/*
 		 * calculate new display name with suffixes and prefixes if display name

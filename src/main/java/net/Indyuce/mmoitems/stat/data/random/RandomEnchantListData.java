@@ -43,7 +43,7 @@ public class RandomEnchantListData implements RandomStatData {
 	@Override
 	public StatData randomize(GeneratedItemBuilder builder) {
 		EnchantListData list = new EnchantListData();
-		enchants.forEach((enchant, formula) -> list.addEnchant(enchant, (int) formula.calculate(builder.getLevel())));
+		enchants.forEach((enchant, formula) -> list.addEnchant(enchant, (int) Math.max(formula.calculate(builder.getLevel()), enchant.getStartLevel())));
 		return list;
 	}
 }

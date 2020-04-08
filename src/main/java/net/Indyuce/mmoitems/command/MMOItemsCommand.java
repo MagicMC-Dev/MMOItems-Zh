@@ -83,22 +83,16 @@ public class MMOItemsCommand implements CommandExecutor {
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("generate")) {
-			
 
-			
-			
-			Player player = (Player)sender;
-			
-			
-			GenerationTemplate template = MMOItems.plugin.getItemGenerator().getTemplate(args[1]);
-			ItemStack item = template.newBuilder(PlayerData.get(player).getRPG().getLevel(), 3).build().newBuilder().build();
-			
-			
-			player.getInventory().addItem(item);
-			
-			
-			
-			
+			Player player = (Player) sender;
+
+			for (int j = 0; j < Integer.valueOf(args[2]); j++) {
+				GenerationTemplate template = MMOItems.plugin.getItemGenerator().getTemplate(args[1]);
+				ItemStack item = template.newBuilder(PlayerData.get(player).getRPG().getLevel(), 3).build().newBuilder().build();
+
+				player.getInventory().addItem(item);
+			}
+
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("browse")) {
@@ -129,9 +123,11 @@ public class MMOItemsCommand implements CommandExecutor {
 		else if (args[0].equalsIgnoreCase("update")) {
 			if (args.length < 2) {
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.GRAY + "Sometimes updates happen to break config files due to a change in data storage. Applying a plugin config update using /mi update allows to instantly fix these issues.");
+				sender.sendMessage(ChatColor.GRAY
+						+ "Sometimes updates happen to break config files due to a change in data storage. Applying a plugin config update using /mi update allows to instantly fix these issues.");
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.RED + "Make sure you only apply required updates! You may also consider backing up your data before applying any update.");
+				sender.sendMessage(ChatColor.RED
+						+ "Make sure you only apply required updates! You may also consider backing up your data before applying any update.");
 				sender.sendMessage("");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi update list" + ChatColor.WHITE + " lists available config updates.");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi update info <id>" + ChatColor.WHITE + " displays info about an update.");
@@ -169,7 +165,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				}
 
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GOLD + "/mi update apply " + update.getId() + ChatColor.YELLOW + " to apply this config update.");
+				sender.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GOLD + "/mi update apply " + update.getId() + ChatColor.YELLOW
+						+ " to apply this config update.");
 			}
 
 			if (args[1].equalsIgnoreCase("list")) {
@@ -196,7 +193,8 @@ public class MMOItemsCommand implements CommandExecutor {
 					if (id != Integer.parseInt(args[3]))
 						throw new NumberFormatException();
 				} catch (NumberFormatException exception) {
-					sender.sendMessage(ChatColor.RED + "Update IDs do not match. Make sure you enter twice the same ID to confirm you want to apply this update.");
+					sender.sendMessage(ChatColor.RED
+							+ "Update IDs do not match. Make sure you enter twice the same ID to confirm you want to apply this update.");
 					return true;
 				}
 
@@ -208,7 +206,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				PluginUpdate update = MMOItems.plugin.getUpdates().get(id);
 				sender.sendMessage(ChatColor.YELLOW + "Applying config update " + id + "...");
 				update.apply(sender);
-				sender.sendMessage(ChatColor.YELLOW + "Config update " + id + " was successfully applied. Check the console for potential update error logs.");
+				sender.sendMessage(
+						ChatColor.YELLOW + "Config update " + id + " was successfully applied. Check the console for potential update error logs.");
 			}
 		}
 		// ==================================================================================================================================
@@ -245,7 +244,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.AQUA + "Base Value = " + ChatColor.RESET + att.getBaseValue());
 				sender.sendMessage(ChatColor.AQUA + "Value = " + ChatColor.RESET + att.getValue());
 				for (AttributeModifier mod : att.getModifiers())
-					sender.sendMessage(mod.getName() + " " + new DecimalFormat("0.####").format(mod.getAmount()) + " " + mod.getOperation() + " " + mod.getSlot());
+					sender.sendMessage(mod.getName() + " " + new DecimalFormat("0.####").format(mod.getAmount()) + " " + mod.getOperation() + " "
+							+ mod.getSlot());
 			} catch (IllegalArgumentException exception) {
 				player.sendMessage("Couldn't find attribute.");
 			} catch (NoSuchMethodError error) {
@@ -257,7 +257,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (args.length < 2) {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
 				for (String s : MMOItems.plugin.getUpdater().getItemPaths())
-					sender.sendMessage(ChatColor.RED + s + ChatColor.WHITE + " - " + ChatColor.RED + MMOItems.plugin.getUpdater().getData(s).getUniqueId().toString());
+					sender.sendMessage(ChatColor.RED + s + ChatColor.WHITE + " - " + ChatColor.RED
+							+ MMOItems.plugin.getUpdater().getData(s).getUniqueId().toString());
 				return true;
 			}
 			try {
@@ -297,9 +298,12 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 			player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-			player.sendMessage(ChatColor.AQUA + "Boolean = " + ChatColor.RESET + item.getBoolean("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
-			player.sendMessage(ChatColor.AQUA + "Double = " + ChatColor.RESET + item.getDouble("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
-			player.sendMessage(ChatColor.AQUA + "String = " + ChatColor.RESET + item.getString("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
+			player.sendMessage(
+					ChatColor.AQUA + "Boolean = " + ChatColor.RESET + item.getBoolean("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
+			player.sendMessage(
+					ChatColor.AQUA + "Double = " + ChatColor.RESET + item.getDouble("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
+			player.sendMessage(
+					ChatColor.AQUA + "String = " + ChatColor.RESET + item.getString("MMOITEMS_" + args[1].toUpperCase().replace("-", "_")));
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("settag")) {
@@ -312,7 +316,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (args.length < 3)
 				return true;
 			try {
-				player.getInventory().setItemInMainHand(MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).addTag(new ItemTag(args[1].toUpperCase().replace("-", "_"), args[2].replace("%%", " "))).toItem());
+				player.getInventory().setItemInMainHand(MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand())
+						.addTag(new ItemTag(args[1].toUpperCase().replace("-", "_"), args[2].replace("%%", " "))).toItem());
 				player.sendMessage("Successfully set tag.");
 
 			} catch (Exception e) {
@@ -366,14 +371,16 @@ public class MMOItemsCommand implements CommandExecutor {
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("stations")) {
 			if (args.length < 2) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Crafting Stations " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
+						+ " Crafting Stations " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi stations list" + ChatColor.WHITE + " shows available crafting stations.");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi stations open <station> (player)" + ChatColor.WHITE + " opens a station.");
 				return true;
 			}
 
 			if (args[1].equalsIgnoreCase("list")) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Crafting Stations " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
+						+ " Crafting Stations " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				for (CraftingStation station : MMOItems.plugin.getCrafting().getAll())
 					sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.WHITE + station.getId());
 			}
@@ -407,7 +414,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			RPGPlayer rpg = PlayerData.get(player).getRPG();
-			sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Player Information " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+			sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
+					+ " Player Information " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 			sender.sendMessage(ChatColor.WHITE + "Information about " + ChatColor.LIGHT_PURPLE + player.getName());
 			sender.sendMessage("");
 			sender.sendMessage(ChatColor.WHITE + "Player Class: " + ChatColor.LIGHT_PURPLE + rpg.getClassName());
@@ -427,7 +435,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			player.setFoodLevel(20);
 			player.setFireTicks(0);
 			player.setSaturation(12);
-			for (PotionEffectType pe : new PotionEffectType[] { PotionEffectType.POISON, PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.HUNGER, PotionEffectType.WEAKNESS, PotionEffectType.SLOW, PotionEffectType.SLOW_DIGGING })
+			for (PotionEffectType pe : new PotionEffectType[] { PotionEffectType.POISON, PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION,
+					PotionEffectType.HUNGER, PotionEffectType.WEAKNESS, PotionEffectType.SLOW, PotionEffectType.SLOW_DIGGING })
 				player.removePotionEffect(pe);
 		}
 		// ==================================================================================================================================
@@ -437,8 +446,10 @@ public class MMOItemsCommand implements CommandExecutor {
 					Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
 						MMOItems.plugin.getCrafting().reload();
 						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().getAll().size() + ChatColor.GRAY + " Crafting Stations");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().countRecipes() + ChatColor.GRAY + " Recipes");
+						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().getAll().size()
+								+ ChatColor.GRAY + " Crafting Stations");
+						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().countRecipes()
+								+ ChatColor.GRAY + " Recipes");
 					});
 				}
 
@@ -454,7 +465,8 @@ public class MMOItemsCommand implements CommandExecutor {
 								Bukkit.getOnlinePlayers().forEach(online -> online.discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys()));
 
 							sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
-							sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getRecipes().getLoadedRecipes().size() + ChatColor.GRAY + " Recipes");
+							sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
+									+ MMOItems.plugin.getRecipes().getLoadedRecipes().size() + ChatColor.GRAY + " Recipes");
 						});
 					});
 				}
@@ -471,10 +483,14 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
 				MMOItems.plugin.getCustomBlocks().reload();
 			MMOItems.plugin.getItems().reload();
-			sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("copy")) {
@@ -484,8 +500,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY + "to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called "
+						+ args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY
+						+ "to see all the available item types.");
 				return true;
 			}
 
@@ -516,7 +534,12 @@ public class MMOItemsCommand implements CommandExecutor {
 			for (Type type : MMOItems.plugin.getTypes().getAll()) {
 				FileConfiguration config = type.getConfigFile().getConfig();
 				for (String s : config.getKeys(false))
-					sender.sendMessage("* " + ChatColor.GREEN + s + (config.getConfigurationSection(s).contains("name") ? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")) + ChatColor.WHITE + ")" : ""));
+					sender.sendMessage(
+							"* " + ChatColor.GREEN + s
+									+ (config.getConfigurationSection(s).contains("name")
+											? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name"))
+													+ ChatColor.WHITE + ")"
+											: ""));
 			}
 		}
 		// ==================================================================================================================================
@@ -527,8 +550,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_"));
-				sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY + "to see all the available item types.");
+				sender.sendMessage(
+						MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_"));
+				sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY
+						+ "to see all the available item types.");
 				return true;
 			}
 
@@ -538,18 +563,29 @@ public class MMOItemsCommand implements CommandExecutor {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			if (!(sender instanceof Player)) {
 				for (String s : config.getKeys(false))
-					sender.sendMessage("* " + ChatColor.GREEN + s + (config.getConfigurationSection(s).contains("name") ? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")) + ChatColor.WHITE + ")" : ""));
+					sender.sendMessage(
+							"* " + ChatColor.GREEN + s
+									+ (config.getConfigurationSection(s).contains("name")
+											? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name"))
+													+ ChatColor.WHITE + ")"
+											: ""));
 				return true;
 			}
 			for (String s : config.getKeys(false)) {
-				String nameFormat = config.getConfigurationSection(s).contains("name") ? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")) + ChatColor.WHITE + ")" : "";
-				MMOLib.plugin.getNMS().sendJson((Player) sender, "{\"text\":\"* " + ChatColor.GREEN + s + nameFormat + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit " + type.getId() + " " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit " + (nameFormat.equals("") ? s : ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name"))) + ChatColor.WHITE + ".\",\"color\":\"white\"}}}");
+				String nameFormat = config.getConfigurationSection(s).contains("name") ? " " + ChatColor.WHITE + "("
+						+ ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")) + ChatColor.WHITE + ")" : "";
+				MMOLib.plugin.getNMS().sendJson((Player) sender,
+						"{\"text\":\"* " + ChatColor.GREEN + s + nameFormat + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit "
+								+ type.getId() + " " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit "
+								+ (nameFormat.equals("") ? s : ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")))
+								+ ChatColor.WHITE + ".\",\"color\":\"white\"}}}");
 			}
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("list")) {
 			if (args.length < 2) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " MMOItems: lists " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
+						+ " MMOItems: lists " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list type " + ChatColor.WHITE + "shows all item types (sword, axe...)");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list spirit " + ChatColor.WHITE + "shows all available staff spirits");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list lute " + ChatColor.WHITE + "shows all available lute attack effects");
@@ -557,8 +593,24 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (sender instanceof Player) {
 					sender.sendMessage("");
 					sender.sendMessage("Spigot Javadoc Links:");
-					MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN + "Materials/Blocks\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN + "Potion Effects\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN + "Sounds\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.GREEN + "Click to open webpage.\"}]}}}]");
-					MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN + "Entities/Mobs\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN + "Enchantments\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN + "Particles\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particles.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + ChatColor.GREEN + "Click to open webpage.\"}]}}}]");
+					MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
+							+ "Materials/Blocks\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
+							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\""
+							+ ChatColor.UNDERLINE + ChatColor.GREEN
+							+ "Potion Effects\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
+							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\""
+							+ ChatColor.UNDERLINE + ChatColor.GREEN
+							+ "Sounds\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
+							+ ChatColor.GREEN + "Click to open webpage.\"}]}}}]");
+					MMOLib.plugin.getNMS().sendJson((Player) sender, "[{\"text\":\"" + ChatColor.UNDERLINE + ChatColor.GREEN
+							+ "Entities/Mobs\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
+							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\""
+							+ ChatColor.UNDERLINE + ChatColor.GREEN
+							+ "Enchantments\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
+							+ ChatColor.GREEN + "Click to open webpage.\"}]}}},{\"text\":\" " + ChatColor.LIGHT_PURPLE + "- \"},{\"text\":\""
+							+ ChatColor.UNDERLINE + ChatColor.GREEN
+							+ "Particles\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particles.html\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\""
+							+ ChatColor.GREEN + "Click to open webpage.\"}]}}}]");
 				}
 
 				return true;
@@ -566,9 +618,11 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			// ability list
 			if (args[1].equalsIgnoreCase("ability")) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Abilities " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Abilities "
+						+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				sender.sendMessage(ChatColor.WHITE + "Here are all the abilities you can bind to items.");
-				sender.sendMessage(ChatColor.WHITE + "The values inside brackets are " + ChatColor.UNDERLINE + "modifiers" + ChatColor.WHITE + " which allow you to change the ability values (cooldown, damage...)");
+				sender.sendMessage(ChatColor.WHITE + "The values inside brackets are " + ChatColor.UNDERLINE + "modifiers" + ChatColor.WHITE
+						+ " which allow you to change the ability values (cooldown, damage...)");
 				for (Ability a : MMOItems.plugin.getAbilities().getAll()) {
 					String modFormat = ChatColor.GRAY + String.join(ChatColor.WHITE + ", " + ChatColor.GRAY, a.getModifiers());
 					modFormat = ChatColor.WHITE + "(" + modFormat + ChatColor.WHITE + ")";
@@ -578,14 +632,16 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			// item type list
 			if (args[1].equalsIgnoreCase("type")) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Item Types " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Item Types "
+						+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				for (Type t : MMOItems.plugin.getTypes().getAll())
 					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + t.getName());
 			}
 
 			// staff spirit list
 			if (args[1].equalsIgnoreCase("spirit")) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Staff Spirits " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
+						+ " Staff Spirits " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				for (StaffSpirit ss : StaffSpirit.values()) {
 					String lore = !ss.hasLore() ? " " + ChatColor.WHITE + ">> " + ChatColor.GRAY + "" + ChatColor.ITALIC + ss.getLore() : "";
 					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + ss.getName() + lore);
@@ -594,7 +650,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			// lute attack effect list
 			if (args[1].equalsIgnoreCase("lute")) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Lute Attack Effects " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
+						+ " Lute Attack Effects " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 				for (LuteAttackEffect lae : LuteAttackEffect.values())
 					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + lae.getName());
 			}
@@ -612,8 +669,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called "
+						+ args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
+						+ " to see all the available item types.");
 				return true;
 			}
 
@@ -652,7 +711,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (MMOLib.plugin.getNMS().getNBTItem(item).getBoolean("Unbreakable"))
 					config.getConfig().set(name + ".unbreakable", true);
 				for (Enchantment enchant : item.getEnchantments().keySet())
-					config.getConfig().set(name + ".enchants." + MMOLib.plugin.getVersion().getWrapper().getName(enchant), item.getEnchantmentLevel(enchant));
+					config.getConfig().set(name + ".enchants." + MMOLib.plugin.getVersion().getWrapper().getName(enchant),
+							item.getEnchantmentLevel(enchant));
 			}
 			config.getConfig().set(name + ".material", args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());
 
@@ -664,13 +724,16 @@ public class MMOItemsCommand implements CommandExecutor {
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("drop")) {
 			if (args.length != 10) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + "Usage: /mi drop <type> <item-id> <world-name> <x> <y> <z> <drop-chance> <[min]-[max]> <unidentified-chance>");
+				sender.sendMessage(MMOItems.plugin.getPrefix()
+						+ "Usage: /mi drop <type> <item-id> <world-name> <x> <y> <z> <drop-chance> <[min]-[max]> <unidentified-chance>");
 				return true;
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.RED + "to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called "
+						+ args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.RED
+						+ "to see all the available item types.");
 				return true;
 			}
 
@@ -749,7 +812,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			ItemStack item = new DropItem(type, name, 0, dropChance / 100, unidentifiedChance / 100, min, max).getItem();
 			if (item == null || item.getType() == Material.AIR) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
+				sender.sendMessage(
+						MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 				return true;
 			}
@@ -764,8 +828,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called "
+						+ args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
+						+ " to see all the available item types.");
 				return true;
 			}
 
@@ -803,8 +869,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called "
+						+ args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
+						+ " to see all the available item types.");
 				return true;
 			}
 
@@ -818,7 +886,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
 			if (item == null || item.getType() == Material.AIR) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + args[2].toUpperCase() + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called "
+						+ args[2].toUpperCase() + ".");
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 				return true;
 			}
@@ -826,7 +895,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			long old = System.currentTimeMillis();
 			new ItemEdition((Player) sender, type, args[2], item).open();
 			long ms = System.currentTimeMillis() - old;
-			MMOLib.plugin.getNMS().sendActionBar((Player) sender, ChatColor.YELLOW + "Took " + ms + "ms (" + new DecimalFormat("#.##").format(ms / 50.) + "tick" + (ms > 99 ? "s" : "") + ") to open the menu.");
+			MMOLib.plugin.getNMS().sendActionBar((Player) sender, ChatColor.YELLOW + "Took " + ms + "ms ("
+					+ new DecimalFormat("#.##").format(ms / 50.) + "tick" + (ms > 99 ? "s" : "") + ") to open the menu.");
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("ability")) {
@@ -836,7 +906,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (args.length < 2) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi ability <ability> (player) (modifier1) (value1) (modifier2) (value2)...");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED
+						+ "Usage: /mi ability <ability> (player) (modifier1) (value1) (modifier2) (value2)...");
 				return false;
 			}
 
@@ -878,8 +949,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			if (!Type.isValid(args[1])) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.RED + "to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called "
+						+ args[1].toUpperCase().replace("-", "_") + ".");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.RED
+						+ "to see all the available item types.");
 				return true;
 			}
 
@@ -929,7 +1002,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			ItemStack item = new DropItem(type, name, 0, 1, unidentifiedChance / 100, min, max).getItem();
 			if (item == null || item.getType() == Material.AIR) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
+				sender.sendMessage(
+						MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 				return true;
 			}
@@ -952,7 +1026,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			// type
 			if (!Type.isValid(args[0])) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[0] + ".");
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
+						+ " to see all the available item types.");
 				return true;
 			}
 
@@ -960,7 +1035,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			Type type = Type.get(args[0]);
 			ItemStack item = MMOItems.plugin.getItems().getItem(type, args[1]);
 			if (item == null || item.getType() == Material.AIR) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find/generate the item called " + args[1].toUpperCase() + ".");
+				sender.sendMessage(
+						MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find/generate the item called " + args[1].toUpperCase() + ".");
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Check your console for potential item generation errors.");
 				return true;
 			}
@@ -1014,8 +1090,11 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			// message
 			if (sender != target)
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "Successfully gave " + ChatColor.GOLD + MMOUtils.getDisplayName(item) + (item.getAmount() > 1 ? " x" + item.getAmount() : "") + ChatColor.YELLOW + " to " + ChatColor.GOLD + target.getName() + ChatColor.YELLOW + ".");
-			Message.RECEIVED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item), "#amount#", (item.getAmount() > 1 ? " x" + item.getAmount() : "")).send(target);
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "Successfully gave " + ChatColor.GOLD
+						+ MMOUtils.getDisplayName(item) + (item.getAmount() > 1 ? " x" + item.getAmount() : "") + ChatColor.YELLOW + " to "
+						+ ChatColor.GOLD + target.getName() + ChatColor.YELLOW + ".");
+			Message.RECEIVED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item), "#amount#",
+					(item.getAmount() > 1 ? " x" + item.getAmount() : "")).send(target);
 
 			// item
 			if (target.getInventory().firstEmpty() == -1) {

@@ -75,29 +75,30 @@ import net.mmogroup.mmolib.version.SpigotPlugin;
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
 
-	private RecipeManager recipeManager;
-	private ConfigManager configManager;
-	private StatManager statManager;
-	private EntityManager entityManager;
+	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
+	private final AbilityManager abilityManager = new AbilityManager();
+	private final EntityManager entityManager = new EntityManager();
+	private final TypeManager typeManager = new TypeManager();
+
+	private CraftingManager stationRecipeManager;
 	private DropTableManager dropTableManager;
-	private UpdaterManager itemUpdaterManager;
-	private TypeManager typeManager;
+	private WorldGenManager worldGenManager;
+	private UpgradeManager upgradeManager;
+	private UpdaterManager dynamicUpdater;
+	private ItemGenManager itemGenerator;
+	private ConfigManager configManager;
+	private RecipeManager recipeManager;
+	private BlockManager blockManager;
 	private TierManager tierManager;
+	private StatManager statManager;
 	private ItemManager itemManager;
 	private SetManager setManager;
-	private UpgradeManager upgradeManager;
-	private WorldGenManager worldGenManager;
-	private BlockManager blockManager;
-	private ItemGenManager itemGenerator;
-	private AbilityManager abilityManager = new AbilityManager();
-	private CraftingManager stationRecipeManager = new CraftingManager();
-	private PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 
-	private RPGHandler rpgPlugin;
 	private PlaceholderParser placeholderParser = new DefaultParser();
-	private HologramSupport hologramSupport;
-	private FlagPlugin flagPlugin = new DefaultFlags();
 	private PlayerInventory inventory = new DefaultPlayerInventory();
+	private FlagPlugin flagPlugin = new DefaultFlags();
+	private HologramSupport hologramSupport;
+	private RPGHandler rpgPlugin;
 
 	public void onLoad() {
 		plugin = this;
@@ -116,7 +117,7 @@ public class MMOItems extends JavaPlugin {
 
 		saveDefaultConfig();
 		statManager = new StatManager();
-		typeManager = new TypeManager();
+		typeManager.reload();
 	}
 
 	public void onEnable() {
@@ -124,28 +125,26 @@ public class MMOItems extends JavaPlugin {
 
 		new MMOItemsMetrics();
 
-		if (!getDataFolder().exists())
-			getDataFolder().mkdir();
-
-		abilityManager.registerDefaultAbilities();
-
+		abilityManager.initialize();
 		configManager = new ConfigManager();
-		itemManager = new ItemManager(getConfig().getBoolean("use-item-caching"));
+		itemManager = new ItemManager();
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
 		itemGenerator = new ItemGenManager();
+		dropTableManager = new DropTableManager();
+		dynamicUpdater = new UpdaterManager();
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			worldGenManager = new WorldGenManager();
 			blockManager = new BlockManager();
 		}
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
-		stationRecipeManager.reload();
+		stationRecipeManager = new CraftingManager();
 
-		Bukkit.getPluginManager().registerEvents(entityManager = new EntityManager(), this);
-		Bukkit.getPluginManager().registerEvents(dropTableManager = new DropTableManager(), this);
-		Bukkit.getPluginManager().registerEvents(itemUpdaterManager = new UpdaterManager(), this);
+		Bukkit.getPluginManager().registerEvents(entityManager, this);
+		Bukkit.getPluginManager().registerEvents(dropTableManager, this);
+		Bukkit.getPluginManager().registerEvents(dynamicUpdater, this);
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), this);
@@ -257,7 +256,7 @@ public class MMOItems extends JavaPlugin {
 		// save item updater data
 		ConfigFile updater = new ConfigFile("/dynamic", "updater");
 		updater.getConfig().getKeys(false).forEach(key -> updater.getConfig().set(key, null));
-		itemUpdaterManager.getDatas().forEach(data -> data.save(updater.getConfig()));
+		dynamicUpdater.getDatas().forEach(data -> data.save(updater.getConfig()));
 		updater.save();
 
 		// drop abandonned soulbound items
@@ -282,7 +281,7 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public UpdaterManager getUpdater() {
-		return itemUpdaterManager;
+		return dynamicUpdater;
 	}
 
 	public SetManager getSets() {

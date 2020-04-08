@@ -15,15 +15,11 @@ import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
 public class TypeManager {
 	private final Map<String, Type> map = new LinkedHashMap<>();
 
-	public TypeManager() {
-		reload();
-	}
-
 	public void reload() {
 		map.clear();
-		addAll(Type.ACCESSORY, Type.ARMOR, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER,
-			Type.GAUNTLET,Type.GEM_STONE, Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST,
-			Type.ORNAMENT, Type.SPEAR, Type.STAFF, Type.SWORD, Type.TOOL, Type.WHIP);
+		addAll(Type.ACCESSORY, Type.ARMOR, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET, Type.GEM_STONE,
+				Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST, Type.ORNAMENT, Type.SPEAR, Type.STAFF,
+				Type.SWORD, Type.TOOL, Type.WHIP);
 
 		/*
 		 * register all other types. important: check if the map already

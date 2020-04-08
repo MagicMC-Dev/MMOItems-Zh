@@ -196,7 +196,8 @@ public class UpdaterManager implements Listener {
 		return new UpdaterData(path, config);
 	}
 
-	public UpdaterData newUpdaterData(String path, UUID uuid, boolean keepLore, boolean keepEnchants, boolean keepDurability, boolean keepName, boolean keepGems, boolean keepSoulbound) {
+	public UpdaterData newUpdaterData(String path, UUID uuid, boolean keepLore, boolean keepEnchants, boolean keepDurability, boolean keepName,
+			boolean keepGems, boolean keepSoulbound) {
 		return new UpdaterData(path, uuid, keepLore, keepEnchants, keepDurability, keepName, keepGems, keepSoulbound);
 	}
 
@@ -215,14 +216,17 @@ public class UpdaterManager implements Listener {
 		private boolean keepLore, keepDurability, keepEnchants, keepName, keepGems, keepSoulbound;
 
 		public UpdaterData(String path, FileConfiguration config) {
-			this(path, UUID.fromString(config.getString(path + ".uuid")), config.getBoolean(path + ".lore"), config.getBoolean(path + ".enchants"), config.getBoolean(path + ".durability"), config.getBoolean(path + ".name"), config.getBoolean(path + ".gems"), config.getBoolean(path + ".soulbound"));
+			this(path, UUID.fromString(config.getString(path + ".uuid")), config.getBoolean(path + ".lore"), config.getBoolean(path + ".enchants"),
+					config.getBoolean(path + ".durability"), config.getBoolean(path + ".name"), config.getBoolean(path + ".gems"),
+					config.getBoolean(path + ".soulbound"));
 		}
 
 		public UpdaterData(String path, UUID uuid) {
 			this(path, uuid, false, false, false, false, false, false);
 		}
 
-		public UpdaterData(String path, UUID uuid, boolean keepLore, boolean keepEnchants, boolean keepDurability, boolean keepName, boolean keepGems, boolean keepSoulbound) {
+		public UpdaterData(String path, UUID uuid, boolean keepLore, boolean keepEnchants, boolean keepDurability, boolean keepName, boolean keepGems,
+				boolean keepSoulbound) {
 			this.uuid = uuid;
 			this.path = path;
 

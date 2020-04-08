@@ -17,7 +17,7 @@ public class UpgradeManager {
 	public UpgradeManager() {
 		reload();
 	}
-
+	
 	public void reload() {
 		templates.clear();
 

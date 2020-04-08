@@ -12,7 +12,7 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class TierManager {
-	private Map<String, ItemTier> tiers = new HashMap<>();
+	private final Map<String, ItemTier> tiers = new HashMap<>();
 
 	public TierManager() {
 		reload();

@@ -1,0 +1,64 @@
+
+# Item Generator Config
+
+# Specify how rare certain tiers are and how much
+# modifier capacity they should have.
+tiers:
+    uncommon:
+        chance: 0.15
+        capacity:
+            base: 6
+            
+            # Scales on the item level
+            scale: .1
+            
+            spread: .1
+            max-spread: .3
+    rare:
+        chance: 0.06
+        capacity:
+            base: 9
+            scale: .15
+            spread: .1
+            max-spread: .3
+    legendary:
+        chance: 0.01
+        capacity:
+            base: 12
+            scale: .2
+            spread: .1
+            max-spread: .3
+    mythical:
+        chance: 0.003
+        capacity:
+            base: 15
+            scale: .3
+            spread: .1
+            max-spread: .3
+    default:
+        capacity:
+            base: 3
+            
+            # Scales on the item level
+            scale: 0.06
+            
+            spread: .1
+            max-spread: .3
+
+# When generating an item, the item gen must
+# choose an item level which coincides with
+# the player's level (otherwise unplayable).
+#
+# The item level is modeled by a gaussian
+# random variable which mean is the player level.
+# You can edit the standard deviation here.
+#
+# Leave it like this if don't you know
+# what it does, default value is fine.
+item-level-spread: 2
+
+
+
+
+
+

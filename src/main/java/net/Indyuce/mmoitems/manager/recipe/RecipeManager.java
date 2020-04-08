@@ -28,12 +28,7 @@ public abstract class RecipeManager {
 	 */
 	private final Set<LoadedRecipe> loadedRecipes = new HashSet<>();
 
-	public RecipeManager() {
-		if (!MMOItems.plugin.getConfig().getBoolean("disable-craftings"))
-			load();
-	}
-
-	public abstract void load();
+	public abstract void reload();
 
 	public abstract void registerFurnaceRecipe(Type type, String id, BurningRecipeInformation info, String number);
 
@@ -82,7 +77,7 @@ public abstract class RecipeManager {
 			}
 
 			loadedRecipes.clear();
-			load();
+			reload();
 		});
 	}
 

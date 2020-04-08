@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.itemgen;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -17,28 +17,28 @@ public class GenerationTemplate {
 	private final String id;
 	private final Type type;
 
-	private final NumericStatFormula weight;
-
 	// base item data
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
 
-	private final Set<GenerationModifier> modifiers = new HashSet<>();
+	private final Set<GenerationModifier> modifiers = new LinkedHashSet<>();
 
 	public GenerationTemplate(ConfigurationSection config) {
 		Validate.notNull(config, "Could not load item gen template config");
 
-		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_"); 
+		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
 
 		Validate.isTrue(config.contains("type"), "Could not find item gen type");
 		String typeFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
 		Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat));
 		type = MMOItems.plugin.getTypes().get(typeFormat);
 
-		Validate.notNull(config.getConfigurationSection("weight"), "Could not find item gen weight");
-		weight = new NumericStatFormula(config.getConfigurationSection("weight"));
-
 		for (String key : config.getConfigurationSection("modifiers").getKeys(false))
-			modifiers.add(new GenerationModifier(config.getConfigurationSection("modifiers." + key)));
+			try {
+				modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(), config.getConfigurationSection("modifiers." + key)));
+			} catch(IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.INFO,
+						"An error occured while trying to load modifier '" + key + "' from item gen template '" + id + "': " + exception.getMessage());
+			}
 
 		Validate.notNull(config.getConfigurationSection("base"), "Could not find base item data");
 		for (String key : config.getConfigurationSection("base").getKeys(false))
@@ -50,7 +50,7 @@ public class GenerationTemplate {
 				base.put(stat, stat.whenInitializedGeneration(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.INFO,
-						"An error occured loading base item data '" + key + "' from item gen template '" + id + "': " + exception.getMessage());
+						"An error occured while trying to load base item data '" + key + "' from item gen template '" + id + "': " + exception.getMessage());
 			}
 	}
 
@@ -78,10 +78,6 @@ public class GenerationTemplate {
 		return true;
 		// return !base.containsKey(ItemStat.REQUIRED_CLASS) ||
 		// ((ListStringData) base.get(ItemStat.REQUIRED_CLASS));
-	}
-
-	public double calculateWeight(int level) {
-		return weight.calculate(level);
 	}
 
 	public GeneratedItemBuilder newBuilder(int playerLevel, double sd) {

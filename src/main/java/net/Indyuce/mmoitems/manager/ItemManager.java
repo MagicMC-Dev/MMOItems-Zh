@@ -1,38 +1,34 @@
 package net.Indyuce.mmoitems.manager;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
-public class ItemManager {
-	private final Map<Type, Map<String, LoadedItem>> map = new HashMap<>();
-	private final boolean useCache;
+public class ItemManager extends BukkitRunnable {
+	private final Map<Type, CachedItems> cache = new HashMap<>();
 
-	public ItemManager(boolean useCache) {
-		if (this.useCache = useCache)
-			Bukkit.getScheduler().runTaskTimerAsynchronously(MMOItems.plugin, () -> clearCache(), 60 * 20, 2 * 60 * 20);
+	public ItemManager() {
+		runTaskTimerAsynchronously(MMOItems.plugin, 60 * 20, 2 * 60 * 20);
 	}
 
 	public MMOItem getMMOItem(Type type, String id) {
 		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
 
-		if (useCache) {
-			LoadedItem cached = getCachedMMOItem(type, id);
-			if (cached != null) {
-				cached.refresh();
-				return cached.getItem();
-			}
+		LoadedItem cached = getCachedMMOItem(type, id);
+		if (cached != null) {
+			cached.refresh();
+			return cached.getItem();
 		}
 
 		FileConfiguration typeConfig = type.getConfigFile().getConfig();
@@ -51,9 +47,7 @@ public class ItemManager {
 							"Error while loading " + type.getId() + "." + id + " (" + stat.getName() + "): " + exception.getMessage());
 				}
 
-		if (useCache)
-			cache(mmoitem);
-
+		cache(mmoitem);
 		return mmoitem;
 	}
 
@@ -63,8 +57,8 @@ public class ItemManager {
 	}
 
 	public LoadedItem getCachedMMOItem(Type type, String id) {
-		Map<String, LoadedItem> map;
-		return this.map.containsKey(type) ? (map = this.map.get(type)).containsKey(id) ? map.get(id) : null : null;
+		CachedItems cached;
+		return this.cache.containsKey(type) ? (cached = cache.get(type)).isCached(id) ? cached.getCached(id) : null : null;
 	}
 
 	/*
@@ -74,8 +68,8 @@ public class ItemManager {
 	public boolean hasMMOItem(Type type, String id) {
 		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
 
-		// check map
-		if (map.containsKey(type) && map.containsKey(type) && map.get(type).containsKey(id))
+		// check cache
+		if (cache.containsKey(type) && cache.get(type).isCached(id))
 			return true;
 
 		// check type config file
@@ -83,28 +77,46 @@ public class ItemManager {
 	}
 
 	public void uncache(Type type, String id) {
-		if (map.containsKey(type))
-			map.get(type).remove(id);
+		if (cache.containsKey(type))
+			cache.get(type).emptyCache(id);
 	}
 
 	private void cache(MMOItem item) {
-		if (!map.containsKey(item.getType()))
-			map.put(item.getType(), new HashMap<>());
-		map.get(item.getType()).put(item.getId(), new LoadedItem(item));
+		if (!cache.containsKey(item.getType()))
+			cache.put(item.getType(), new CachedItems());
+		cache.get(item.getType()).cache(item.getId(), item);
 	}
 
 	/*
 	 * every two minutes, loops through any loaded item and uncaches any if they
 	 * have not been generated for more than 5 minutes.
 	 */
-	private void clearCache() {
-		for (Type type : map.keySet()) {
-			Map<String, LoadedItem> map = this.map.get(type);
-			for (String id : new HashSet<>(map.keySet())) {
-				LoadedItem item = map.get(id);
-				if (item.isTimedOut())
-					map.remove(id);
-			}
+	@Override
+	public void run() {
+		cache.values().forEach(cached -> cached.removeIf(loaded -> loaded.isTimedOut()));
+	}
+
+	public class CachedItems {
+		private final Map<String, LoadedItem> cache = new HashMap<>();
+
+		public LoadedItem getCached(String id) {
+			return cache.get(id);
+		}
+
+		public boolean isCached(String id) {
+			return cache.containsKey(id);
+		}
+
+		public void emptyCache(String id) {
+			cache.remove(id);
+		}
+
+		public void cache(String id, MMOItem item) {
+			cache.put(id, new LoadedItem(item));
+		}
+
+		public void removeIf(Predicate<LoadedItem> filter) {
+			cache.values().removeIf(filter);
 		}
 	}
 
@@ -131,6 +143,6 @@ public class ItemManager {
 	}
 
 	public void reload() {
-		map.clear();
+		cache.clear();
 	}
 }

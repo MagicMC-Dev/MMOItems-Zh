@@ -1,2 +1,18 @@
+sharp:
+    chance: 0.3
+    prefix: '&fSharp'
+    stats:
+        attack-damage: 3
+        lore:
+        - '&7Much sharper!'
 
-
+fiery:
+    chance: 0.1
+    prefix:
+        format: '&cFiery'
+        priority: 1
+    stats:
+        ability:
+            on-hit:
+                type: burn
+                mode: on_hit

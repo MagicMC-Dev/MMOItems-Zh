@@ -34,7 +34,7 @@ public class UpgradeTemplate {
 				stats.put(stat, ((Upgradable) stat).loadUpgradeInfo(config.get(key)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"An error occured loading stat '" + key + "' from upgrade template '" + id + "': " + exception.getMessage());
+						"An error occured while trying to load stat '" + key + "' from upgrade template '" + id + "': " + exception.getMessage());
 			}
 		}
 	}

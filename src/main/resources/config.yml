@@ -9,12 +9,6 @@
 # Requires /reload when changed.
 update-notify: true
 
-# The plugin takes a few milliseconds to read the item data from the item
-# config and a few hundred MICROseconds to actually generate it. Caching the
-# item allows to skip the first step which reduces ~6 times the delay needed
-# to generate any mmoitem. Takes up more RAM.
-use-item-caching: true
-
 # Enable/disable the plugin iterating over the whole player inventory
 # instead of just the players armor and held items.
 # This option is required for the Ornament item type, however

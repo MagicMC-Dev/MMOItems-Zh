@@ -41,7 +41,8 @@ public class AbilityManager {
 
 	public void registerAbility(Ability ability) {
 		if (!registration) {
-			MMOItems.plugin.getLogger().log(Level.INFO, "Failed attempt to register ability " + ability.getID() + ". Make sure abilities are registered when MI is loading.");
+			MMOItems.plugin.getLogger().log(Level.INFO,
+					"Failed attempt to register ability " + ability.getID() + ". Make sure abilities are registered when MI is loading.");
 			return;
 		}
 
@@ -55,7 +56,7 @@ public class AbilityManager {
 		abilities.put(ability.getID(), ability);
 	}
 
-	public void registerDefaultAbilities() {
+	public void initialize() {
 		try {
 			JarFile file = new JarFile(MMOItems.plugin.getJarFile());
 			for (Enumeration<JarEntry> enu = file.entries(); enu.hasMoreElements();) {
@@ -82,7 +83,8 @@ public class AbilityManager {
 			int count = 0;
 			for (File file : mythicMobs.listFiles()) {
 				try {
-					registerAbility(new MythicMobsAbility(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file)));
+					registerAbility(new MythicMobsAbility(file.getName().substring(0, file.getName().length() - 4),
+							YamlConfiguration.loadConfiguration(file)));
 					count++;
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load ability from " + file.getName() + ": " + exception.getMessage());

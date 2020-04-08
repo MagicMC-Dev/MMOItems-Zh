@@ -17,15 +17,23 @@ public class SetManager {
 	}
 
 	public void reload() {
-		ConfigFile config = new ConfigFile("item-sets");
-
 		itemSets.clear();
+
+		ConfigFile config = new ConfigFile("item-sets");
 		for (String id : config.getConfig().getKeys(false))
 			try {
 				itemSets.put(id, new ItemSet(config.getConfig().getConfigurationSection(id)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load item set '" + id + "': " + exception.getMessage());
 			}
+	}
+
+	public void register(ItemSet set) {
+		itemSets.put(set.getId(), set);
+	}
+
+	public boolean has(String id) {
+		return itemSets.containsKey(id);
 	}
 
 	public Collection<ItemSet> getAll() {

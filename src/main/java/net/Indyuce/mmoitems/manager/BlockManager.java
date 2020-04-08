@@ -39,22 +39,6 @@ public class BlockManager {
 		return customBlocks.get(mushroomStateValue.get(state.getUniqueId()));
 	}
 
-	public void reload() {
-		customBlocks.clear();
-		FileConfiguration config = new ConfigFile("custom-blocks").getConfig();
-
-		for (int id = 1; id < 161; id++)
-			if (id != 54 && config.contains("" + id))
-				try {
-					MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id), eastIds.contains(id), southIds.contains(id), northIds.contains(id));
-					customBlocks.put(id, new CustomBlock(id, state, config.getConfigurationSection("" + id)));
-					mushroomStateValue.put(state.getUniqueId(), id);
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block " + id + ": " + exception.getMessage());
-				}
-
-	}
-
 	public Collection<CustomBlock> getAll() {
 		return customBlocks.values();
 	}
@@ -73,5 +57,22 @@ public class BlockManager {
 
 	public Material getType(int id) {
 		return id < 54 ? Material.BROWN_MUSHROOM_BLOCK : id > 99 ? Material.MUSHROOM_STEM : Material.RED_MUSHROOM_BLOCK;
+	}
+
+	public void reload() {
+		customBlocks.clear();
+		FileConfiguration config = new ConfigFile("custom-blocks").getConfig();
+
+		for (int id = 1; id < 161; id++)
+			if (id != 54 && config.contains("" + id))
+				try {
+					MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id),
+							eastIds.contains(id), southIds.contains(id), northIds.contains(id));
+					customBlocks.put(id, new CustomBlock(id, state, config.getConfigurationSection("" + id)));
+					mushroomStateValue.put(state.getUniqueId(), id);
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block " + id + ": " + exception.getMessage());
+				}
+
 	}
 }

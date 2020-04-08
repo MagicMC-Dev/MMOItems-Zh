@@ -276,7 +276,8 @@ public class ConfigManager {
 		// item generator
 		EXAMPLE_GEN_TEMPLATES("generator/templates/example-templates.yml", "generator/templates", "example-templates.yml"),
 		EXAMPLE_GEN_MODIFIERS("generator/modifiers/example-modifiers.yml", "generator/modifiers", "example-modifiers.yml"),
-		
+		ITEM_GEN_CONFIG("generator/config.yml", "generator", "config.yml"),
+
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),
 		AXE("item/axe.yml", "item", "axe.yml"),

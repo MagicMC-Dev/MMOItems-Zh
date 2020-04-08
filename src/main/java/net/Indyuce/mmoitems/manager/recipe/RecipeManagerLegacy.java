@@ -23,7 +23,7 @@ public class RecipeManagerLegacy extends RecipeManager {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void load() {
+	public void reload() {
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 

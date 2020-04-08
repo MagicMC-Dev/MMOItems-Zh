@@ -31,21 +31,20 @@ import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import net.mmogroup.mmolib.MMOLib;
 
 public class DropTableManager implements Listener {
-	private Map<EntityType, DropTable> monsters = new HashMap<>();
-	private Map<Material, DropTable> blocks = new HashMap<>();
-	private Map<Integer, DropTable> customBlocks = new HashMap<>();
+	private final Map<EntityType, DropTable> monsters = new HashMap<>();
+	private final Map<Material, DropTable> blocks = new HashMap<>();
+	private final Map<Integer, DropTable> customBlocks = new HashMap<>();
 
 	public DropTableManager() {
 		reload();
 	}
 
 	public void reload() {
-		FileConfiguration config = new ConfigFile("drops").getConfig();
-
 		monsters.clear();
 		blocks.clear();
 		customBlocks.clear();
 
+		FileConfiguration config = new ConfigFile("drops").getConfig();
 		if (config.contains("monsters"))
 			for (String key : config.getConfigurationSection("monsters").getKeys(false))
 				try {
@@ -63,7 +62,7 @@ public class DropTableManager implements Listener {
 				} catch (Exception e) {
 					MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't read the drop table material " + key);
 				}
-		
+
 		if (config.contains("customblocks"))
 			for (String key : config.getConfigurationSection("customblocks").getKeys(false))
 				try {
@@ -94,21 +93,20 @@ public class DropTableManager implements Listener {
 		final Material type = block.getType();
 
 		CustomBlock custom = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ? CustomBlock.getFromData(block.getBlockData()) : null;
-		if(custom != null) {
+		if (custom != null) {
 			if (customBlocks.containsKey(custom.getId()))
 				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-					if(CustomBlockListener.getPickaxePower(player) >= custom.getRequiredPower())
-					for (ItemStack drop : customBlocks.get(custom.getId()).read(hasSilkTouchTool(player))) {
-						CustomBlockDropEvent called = new CustomBlockDropEvent(player, custom, drop);
-						Bukkit.getPluginManager().callEvent(called);
-						if (called.isCancelled())
-							return;
-						Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), called.getDrop());
-						item.setVelocity(item.getVelocity().multiply(0.5f));
-					}
+					if (CustomBlockListener.getPickaxePower(player) >= custom.getRequiredPower())
+						for (ItemStack drop : customBlocks.get(custom.getId()).read(hasSilkTouchTool(player))) {
+							CustomBlockDropEvent called = new CustomBlockDropEvent(player, custom, drop);
+							Bukkit.getPluginManager().callEvent(called);
+							if (called.isCancelled())
+								return;
+							Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), called.getDrop());
+							item.setVelocity(item.getVelocity().multiply(0.5f));
+						}
 				}, 2);
-		}
-		else {
+		} else {
 			if (blocks.containsKey(type))
 				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
 					for (ItemStack drop : blocks.get(type).read(hasSilkTouchTool(player))) {
@@ -123,14 +121,14 @@ public class DropTableManager implements Listener {
 		final Material type = block.getType();
 
 		CustomBlock custom = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ? CustomBlock.getFromData(block.getBlockData()) : null;
-		if(custom != null) {
-			if(customBlocks.containsKey(custom.getId())) {
-				if(CustomBlockListener.getPickaxePower(player) >= custom.getRequiredPower()) {
+		if (custom != null) {
+			if (customBlocks.containsKey(custom.getId())) {
+				if (CustomBlockListener.getPickaxePower(player) >= custom.getRequiredPower()) {
 					return customBlocks.get(custom.getId()).read(hasSilkTouchTool(player));
 				}
 			}
 		} else {
-			if(blocks.containsKey(type)) {
+			if (blocks.containsKey(type)) {
 				return blocks.get(type).read(hasSilkTouchTool(player));
 			}
 		}

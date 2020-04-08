@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.itemgen.NameModifier.ModifierType;
+import net.Indyuce.mmoitems.manager.ItemGenManager;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class GenerationModifier {
@@ -21,15 +22,36 @@ public class GenerationModifier {
 	private final String id;
 
 	private final double chance, weight;
-	private final Map<ItemStat, RandomStatData> data = new HashMap<>();
+	private final Map<ItemStat, RandomStatData> data;
 	private final NameModifier nameModifier;
 
 	private static final Random random = new Random();
 
 	public GenerationModifier(ConfigurationSection config) {
+		this(null, config);
+	}
+
+	public GenerationModifier(ItemGenManager manager, ConfigurationSection config) {
 		Validate.notNull(config, "Could not read config");
 		id = config.getName().toLowerCase().replace("_", "-");
 
+		/*
+		 * when providing a non-null itemGenManager, it indicates that public
+		 * modifiers were loaded and that the constructor can them
+		 */
+		if (manager != null && config.contains("parent")) {
+			String parentFormat = config.get("parent").toString().toLowerCase().replace("_", "-").replace(" ", "_");
+			Validate.isTrue(manager.hasModifier(parentFormat), "Could not find public modifier with ID '" + parentFormat + "'");
+			GenerationModifier parent = manager.getModifier(parentFormat);
+
+			chance = Math.max(Math.min(config.getDouble("chance", parent.chance), 1), 0);
+			weight = config.getDouble("weight", parent.weight);
+			nameModifier = parent.nameModifier;
+			data = parent.data;
+			return;
+		}
+
+		this.data = new HashMap<>();
 		this.chance = Math.max(Math.min(config.getDouble("chance", 1), 1), 0);
 		this.weight = config.getDouble("weight");
 
@@ -46,8 +68,13 @@ public class GenerationModifier {
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				data.put(stat, stat.whenInitializedGeneration(config.get("stats." + key)));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured loading item gen modifier " + id + ": " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.INFO,
+						"An error occured while trying to load item gen modifier " + id + ": " + exception.getMessage());
 			}
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public double getWeight() {

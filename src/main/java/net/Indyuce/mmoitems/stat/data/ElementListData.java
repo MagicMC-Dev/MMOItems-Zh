@@ -31,16 +31,16 @@ public class ElementListData implements StatData, Mergeable {
 
 	public void setDamage(Element element, double value) {
 		if (value == 0)
-			damage.put(element, value);
-		else
 			damage.remove(element);
+		else
+			damage.put(element, value);
 	}
 
 	public void setDefense(Element element, double value) {
 		if (value == 0)
-			defense.put(element, value);
-		else
 			defense.remove(element);
+		else
+			defense.put(element, value);
 	}
 
 	public int total() {

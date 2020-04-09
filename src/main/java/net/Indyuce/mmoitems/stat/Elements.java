@@ -44,7 +44,7 @@ public class Elements extends ItemStat {
 
 		for (Element element : Element.values()) {
 			elements.setDamage(element, config.getDouble(element.name().toLowerCase() + ".damage"));
-			elements.setDefense(element, config.getDouble(element.name().toLowerCase() + ".damage"));
+			elements.setDefense(element, config.getDouble(element.name().toLowerCase() + ".defense"));
 		}
 
 		return elements;

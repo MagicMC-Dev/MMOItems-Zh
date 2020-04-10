@@ -33,12 +33,11 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled()) {
 			item.addItemTag(new ItemTag(getNBTPath(), true));
 			item.getLore().insert(getPath(), translate());
 		}
-		return true;
 	}
 
 	@Override

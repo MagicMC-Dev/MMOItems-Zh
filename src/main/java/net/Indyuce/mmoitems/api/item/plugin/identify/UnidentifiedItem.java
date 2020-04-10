@@ -18,6 +18,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -58,7 +59,7 @@ public class UnidentifiedItem extends ConfigItem {
 			/*
 			 * load item data
 			 */
-			MMOItem mmoitem = new MMOItem(item, false);
+			MMOItem mmoitem = new VolatileMMOItem(item);
 			ItemTier tier = MMOItems.plugin.getTiers().findTier(mmoitem);
 			int level = mmoitem.hasData(ItemStat.REQUIRED_LEVEL) ? (int) ((DoubleData) mmoitem.getData(ItemStat.REQUIRED_LEVEL)).getMin() : -1;
 

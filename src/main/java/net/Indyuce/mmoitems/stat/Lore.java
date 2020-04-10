@@ -98,7 +98,7 @@ public class Lore extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		List<String> lore = new ArrayList<>();
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(line -> {
@@ -108,7 +108,6 @@ public class Lore extends ItemStat {
 		});
 		item.getLore().insert("lore", lore);
 		item.addItemTag(new ItemTag("MMOITEMS_LORE", array.toString()));
-		return true;
 	}
 
 	@Override

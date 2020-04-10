@@ -46,17 +46,8 @@ public class RepairMaterial extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		String path = data.toString().toUpperCase().replace("-", "_").replace(" ", "_");
-		Material material = null;
-		try {
-			material = Material.valueOf(path);
-		} catch (Exception e1) {
-			MMOItems.plugin.getLogger().warning(MMOItems.plugin.getPrefix() + ChatColor.RED + path + " is not a valid material!");
-			return false;
-		}
-
-		item.addItemTag(new ItemTag("MMOITEMS_REPAIR_MATERIAL", material.name()));
-		return true;
+		item.addItemTag(new ItemTag("MMOITEMS_REPAIR_MATERIAL", Material.valueOf(path).name()));
 	}
 }

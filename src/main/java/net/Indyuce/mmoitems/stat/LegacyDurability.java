@@ -19,9 +19,8 @@ public class LegacyDurability extends DoubleStat implements ProperStat {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.getItemStack().setDurability((short) ((DoubleData) data).generateNewValue());
-		return true;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.item.build;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -30,12 +31,14 @@ public class MMOItemBuilder {
 	private final MMOItemLore lore = new MMOItemLore();
 	private final List<ItemTag> tags = new ArrayList<>();
 
-	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "generic.attackSpeed", 0, Operation.ADD_NUMBER);
+	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
+			"generic.attackSpeed", 0, Operation.ADD_NUMBER);
 
 	public MMOItemBuilder(MMOItem mmoitem) {
 		this.mmoitem = mmoitem;
 
-		item = new ItemStack(mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
+		item = new ItemStack(
+				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
 		meta = item.getItemMeta();
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
@@ -71,12 +74,20 @@ public class MMOItemBuilder {
 	public ItemStack build() {
 
 		for (ItemStat stat : mmoitem.getStats())
-			stat.whenApplied(this, mmoitem.getData(stat));
+			try {
+				stat.whenApplied(this, mmoitem.getData(stat));
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occured while trying to generate item '" + mmoitem.getId() + "' with stat '"
+						+ stat.getId() + "': " + exception.getMessage());
+			}
 
 		// lore
 		if (mmoitem.getType() == Type.GEM_STONE)
 			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
-		lore.insert("item-type", ItemStat.translate("item-type").replace("#", mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE) ? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString() : mmoitem.getType().getName()));
+		lore.insert("item-type",
+				ItemStat.translate("item-type").replace("#",
+						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE) ? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
+								: mmoitem.getType().getName()));
 
 		meta.setLore(lore.build().toStringList());
 

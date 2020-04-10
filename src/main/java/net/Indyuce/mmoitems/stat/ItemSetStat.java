@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.logging.Level;
-
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +25,9 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {
-		super("SET", new ItemStack(Material.LEATHER_CHESTPLATE), "Item Set", new String[] { "Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear." }, new String[] { "!gem_stone", "!consumable", "!material", "!miscellaneous", "all" });
+		super("SET", new ItemStack(Material.LEATHER_CHESTPLATE), "Item Set",
+				new String[] { "Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear." },
+				new String[] { "!gem_stone", "!consumable", "!material", "!miscellaneous", "all" });
 	}
 
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event, Player player, Type type, String path) {
@@ -34,7 +35,8 @@ public class ItemSetStat extends StringStat {
 			new StatEdition(inv, ItemStat.SET).enable("Write in the chat the item set ID.");
 			player.sendMessage("");
 			for (ItemSet set : MMOItems.plugin.getSets().getAll())
-				player.sendMessage(ChatColor.GRAY + "* " + ChatColor.GREEN + set.getId() + ChatColor.GRAY + " (" + set.getName() + ChatColor.GRAY + ")");
+				player.sendMessage(
+						ChatColor.GRAY + "* " + ChatColor.GREEN + set.getId() + ChatColor.GRAY + " (" + set.getName() + ChatColor.GRAY + ")");
 			return true;
 		}
 
@@ -42,20 +44,14 @@ public class ItemSetStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		String path = data.toString();
 
-		// do not send an error otherwise previously
-		// generated items will break
 		ItemSet set = MMOItems.plugin.getSets().get(path);
-		if (set == null) {
-			item.getMMOItem().log(Level.WARNING, "[Item Set] Couldn't find the item set named " + path + ".");
-			return false;
-		}
+		Validate.notNull(set, "Could not find item set with ID '" + path + "'");
 
 		item.addItemTag(new ItemTag("MMOITEMS_ITEM_SET", path));
 		item.getLore().insert("set", set.getLoreTag());
-		return true;
 	}
 
 	@Override

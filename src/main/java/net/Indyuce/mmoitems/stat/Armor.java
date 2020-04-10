@@ -17,12 +17,11 @@ public class Armor extends AttributeStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		// for (String slot : item.getMMOItem().getType().getSlots())
 		// item.addItemAttribute(new Attribute("armor", value, slot));
 		item.addItemTag(new ItemTag("MMOITEMS_ARMOR", value));
 		item.getLore().insert("armor", format(value, "#", new StatFormat("##").format(value)));
-		return true;
 	}
 }

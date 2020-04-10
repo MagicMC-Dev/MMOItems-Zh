@@ -17,12 +17,11 @@ public class MovementSpeed extends AttributeStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		// for (String slot : item.getMMOItem().getType().getSlots())
 		// item.addItemAttribute(new Attribute("movementSpeed", value, slot));
 		item.addItemTag(new ItemTag("MMOITEMS_MOVEMENT_SPEED", value));
 		item.getLore().insert("movement-speed", format(value, "#", new StatFormat("####").format(value)));
-		return true;
 	}
 }

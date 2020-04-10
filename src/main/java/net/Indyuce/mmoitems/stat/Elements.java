@@ -124,7 +124,7 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		ElementListData elements = (ElementListData) data;
 
 		for (Element element : elements.getDamageElements()) {
@@ -142,8 +142,6 @@ public class Elements extends ItemStat {
 			item.addItemTag(new ItemTag("MMOITEMS_" + element.name() + "_DEFENSE", value));
 			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value)));
 		}
-
-		return true;
 	}
 
 	@Override

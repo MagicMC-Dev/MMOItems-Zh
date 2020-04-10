@@ -136,7 +136,7 @@ public class CustomSounds extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		SoundListData sounds = (SoundListData) data;
 
 		sounds.getCustomSounds().forEach(sound -> {
@@ -147,8 +147,6 @@ public class CustomSounds extends ItemStat {
 			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_VOL", value.getVolume()));
 			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_PIT", value.getPitch()));
 		});
-
-		return true;
 	}
 
 	@Override

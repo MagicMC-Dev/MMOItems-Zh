@@ -19,10 +19,9 @@ public class DefaultDurability extends DoubleStat implements ProperStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getMeta() instanceof Damageable)
 			((Damageable) item.getMeta()).setDamage((int) ((DoubleData) data).generateNewValue());
-		return true;
 	}
 
 	@Override

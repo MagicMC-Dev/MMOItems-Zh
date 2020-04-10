@@ -17,10 +17,9 @@ public class AttackSpeed extends AttributeStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag("MMOITEMS_ATTACK_SPEED", value));
 		item.getLore().insert("attack-speed", format(value, "#", new StatFormat("##").format(value)));
-		return true;
 	}
 }

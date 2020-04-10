@@ -157,7 +157,7 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		JsonObject object = new JsonObject();
 		List<String> lore = new ArrayList<>();
 
@@ -170,7 +170,6 @@ public class PermanentEffects extends ItemStat {
 
 		item.getLore().insert("perm-effects", lore);
 		item.addItemTag(new ItemTag("MMOITEMS_PERM_EFFECTS", object.toString()));
-		return false;
 	}
 
 	@Override

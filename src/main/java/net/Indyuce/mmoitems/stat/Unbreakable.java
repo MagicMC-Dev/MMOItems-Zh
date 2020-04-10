@@ -18,12 +18,11 @@ public class Unbreakable extends BooleanStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled()) {
 			item.addItemTag(new ItemTag("Unbreakable", true));
 			item.getMeta().addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 		}
-		return true;
 	}
 
 	@Override

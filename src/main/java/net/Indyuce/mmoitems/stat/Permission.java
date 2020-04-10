@@ -103,9 +103,8 @@ public class Permission extends ItemStat implements ItemRestriction {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_PERMISSION", String.join("|", ((StringListData) data).getList())));
-		return true;
 	}
 
 	@Override

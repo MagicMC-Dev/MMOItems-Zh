@@ -12,8 +12,7 @@ public class GemColor extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
-		return true;
 	}
 }

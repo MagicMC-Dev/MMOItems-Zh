@@ -31,12 +31,11 @@ public class Soulbound extends InternalStat implements ItemRestriction {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_SOULBOUND", ((SoulboundData) data).toJson().toString()));
 		String formattedLoreTag = Message.SOULBOUND_ITEM_LORE.getUpdated().replace("#player#", ((SoulboundData) data).getName()).replace("#level#",
 				MMOUtils.intToRoman(((SoulboundData) data).getLevel()));
 		item.getLore().insert("soulbound", formattedLoreTag.split(Pattern.quote("//")));
-		return true;
 	}
 
 	@Override

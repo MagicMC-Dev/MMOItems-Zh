@@ -15,8 +15,7 @@ public class LuteAttackSoundStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_SOUND", ((StringData) data).toString().toUpperCase().replace("-", "_").replace(" ", "_")));
-		return true;
 	}
 }

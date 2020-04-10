@@ -25,10 +25,9 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Pr
 	 * initializes the custom durability mecanism on an item.
 	 */
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag("MMOITEMS_MAX_DURABILITY", value), new ItemTag("MMOITEMS_DURABILITY", value));
-		return true;
 	}
 
 	@Override

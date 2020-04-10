@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.logging.Level;
-
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,7 +25,8 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class LuteAttackEffectStat extends StringStat {
 	public LuteAttackEffectStat() {
-		super("LUTE_ATTACK_EFFECT", new ItemStack(VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial()), "Lute Attack Effect", new String[] { "Changes how your lute behaves", "when right clicked.", "&9Tip: /mi list lute"  }, new String[] { "lute" });
+		super("LUTE_ATTACK_EFFECT", new ItemStack(VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial()), "Lute Attack Effect",
+				new String[] { "Changes how your lute behaves", "when right clicked.", "&9Tip: /mi list lute" }, new String[] { "lute" });
 	}
 
 	@Override
@@ -65,15 +64,10 @@ public class LuteAttackEffectStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		try {
-			LuteAttackEffect effect = LuteAttackEffect.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
-			item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
-			item.getLore().insert("lute-attack-effect", effect.getName());
-		} catch (Exception e) {
-			item.getMMOItem().log(Level.WARNING, "Couldn't read lute attack effect from " + ((StringData) data).toString());
-		}
-		return true;
+	public void whenApplied(MMOItemBuilder item, StatData data) {
+		LuteAttackEffect effect = LuteAttackEffect.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
+		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
+		item.getLore().insert("lute-attack-effect", effect.getName());
 	}
 
 	public enum LuteAttackEffect {
@@ -110,4 +104,3 @@ public class LuteAttackEffectStat extends StringStat {
 		}
 	}
 }
-

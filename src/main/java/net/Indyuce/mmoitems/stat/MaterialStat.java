@@ -67,12 +67,11 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		/*
 		 * material is set handled directly in the MMOBuilder constructor
 		 * therefore nothing needs to be done here
 		 */
-		return true;
 	}
 
 	@Override

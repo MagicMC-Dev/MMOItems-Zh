@@ -187,7 +187,7 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		List<String> lore = new ArrayList<>();
 		JsonArray array = new JsonArray();
 
@@ -208,7 +208,6 @@ public class Effects extends ItemStat {
 
 		item.getLore().insert("effects", lore);
 		item.addItemTag(new ItemTag("MMOITEMS_EFFECTS", array.toString()));
-		return false;
 	}
 
 	@Override

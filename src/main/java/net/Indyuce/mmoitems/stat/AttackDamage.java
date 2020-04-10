@@ -17,10 +17,9 @@ public class AttackDamage extends AttributeStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag("MMOITEMS_ATTACK_DAMAGE", value));
 		item.getLore().insert("attack-damage", format(value, "#", new StatFormat("##").format(value)));
-		return true;
 	}
 }

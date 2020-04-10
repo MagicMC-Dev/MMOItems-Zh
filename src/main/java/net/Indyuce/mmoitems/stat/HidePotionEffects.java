@@ -18,10 +18,9 @@ public class HidePotionEffects extends BooleanStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled())
 			item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-		return true;
 	}
 
 	@Override

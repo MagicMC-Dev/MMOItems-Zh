@@ -24,6 +24,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -134,7 +135,7 @@ public class UpdaterManager implements Listener {
 		 * apply older gem stones, using a light MMOItem so the item does not
 		 * calculate every stat data from the older item.
 		 */
-		MMOItem itemMMO = new MMOItem(item, false);
+		MMOItem itemMMO = new VolatileMMOItem(item);
 		if (did.keepGems() && itemMMO.hasData(ItemStat.GEM_SOCKETS))
 			newItemMMO.setData(ItemStat.GEM_SOCKETS, itemMMO.getData(ItemStat.GEM_SOCKETS));
 

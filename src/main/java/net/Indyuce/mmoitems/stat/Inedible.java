@@ -15,9 +15,8 @@ public class Inedible extends BooleanStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled())
 			item.addItemTag(new ItemTag("MMOITEMS_INEDIBLE", true));
-		return true;
 	}
 }

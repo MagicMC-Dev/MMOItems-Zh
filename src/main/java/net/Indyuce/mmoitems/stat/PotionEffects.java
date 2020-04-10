@@ -180,11 +180,10 @@ public class PotionEffects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			for (PotionEffectData effect : ((PotionEffectListData) data).getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
-		return true;
 	}
 
 	@Override

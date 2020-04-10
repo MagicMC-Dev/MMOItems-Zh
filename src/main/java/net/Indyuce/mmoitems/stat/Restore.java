@@ -123,7 +123,7 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		RestoreData restore = (RestoreData) data;
 
 		if (restore.getHealth() != 0) {
@@ -140,6 +140,5 @@ public class Restore extends ItemStat {
 			item.getLore().insert("restore-saturation",
 					ItemStat.translate("restore-saturation").replace("#", new StatFormat("##").format(restore.getSaturation())));
 		}
-		return true;
 	}
 }

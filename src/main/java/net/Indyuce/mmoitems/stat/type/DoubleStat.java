@@ -54,11 +54,10 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag(getNBTPath(), value));
 		item.getLore().insert(getPath(), format(value, "#", new StatFormat("##").format(value)));
-		return true;
 	}
 
 	@Override

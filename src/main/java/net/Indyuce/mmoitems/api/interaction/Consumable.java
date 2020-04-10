@@ -15,7 +15,9 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import net.Indyuce.mmoitems.api.item.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
@@ -91,7 +93,7 @@ public class Consumable extends UseItem {
 				return false;
 			}
 
-			MMOItem targetMMO = new MMOItem(target);
+			MMOItem targetMMO = new LiveMMOItem(target);
 			UpgradeData targetSharpening = (UpgradeData) targetMMO.getData(ItemStat.UPGRADE);
 			if (!targetSharpening.canLevelUp()) {
 				Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
@@ -132,7 +134,7 @@ public class Consumable extends UseItem {
 				return false;
 			}
 
-			MMOItem targetMMO = new MMOItem(target, false);
+			MMOItem targetMMO = new VolatileMMOItem(target);
 			if (targetMMO.hasData(ItemStat.SOULBOUND)) {
 				SoulboundData data = (SoulboundData) targetMMO.getData(ItemStat.SOULBOUND);
 				Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player, "soulbound");
@@ -141,7 +143,7 @@ public class Consumable extends UseItem {
 
 			if (random.nextDouble() < soulbindingChance / 100) {
 				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStat.SOULBOUND_LEVEL));
-				(targetMMO = new MMOItem(target)).setData(ItemStat.SOULBOUND, ItemStat.SOULBOUND.newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
+				(targetMMO = new LiveMMOItem(target)).setData(ItemStat.SOULBOUND, ItemStat.SOULBOUND.newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
 				Message.SUCCESSFULLY_BIND_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#level#", MMOUtils.intToRoman(soulboundLevel)).send(player, "soulbound");
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
@@ -161,7 +163,7 @@ public class Consumable extends UseItem {
 		 */
 		double soulboundBreakChance = getNBTItem().getStat(ItemStat.SOULBOUND_BREAK_CHANCE);
 		if (soulboundBreakChance > 0) {
-			MMOItem targetMMO = new MMOItem(target, false);
+			MMOItem targetMMO = new VolatileMMOItem(target);
 			if (!targetMMO.hasData(ItemStat.SOULBOUND)) {
 				Message.NO_SOULBOUND.format(ChatColor.RED).send(player, "soulbound");
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
@@ -177,7 +179,7 @@ public class Consumable extends UseItem {
 			}
 
 			if (random.nextDouble() < soulboundBreakChance / 100) {
-				(targetMMO = new MMOItem(target)).removeData(ItemStat.SOULBOUND);
+				(targetMMO = new LiveMMOItem(target)).removeData(ItemStat.SOULBOUND);
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
 				Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player, "soulbound");
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);

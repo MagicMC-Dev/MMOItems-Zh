@@ -102,11 +102,10 @@ public class RequiredClass extends ItemStat implements ItemRestriction {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		String joined = String.join(", ", ((StringListData) data).getList());
 		item.getLore().insert("required-class", translate().replace("#", joined));
 		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_CLASS", joined));
-		return true;
 	}
 
 	@Override

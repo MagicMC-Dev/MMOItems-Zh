@@ -59,9 +59,8 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_ARROW_PARTICLES", data.toString()));
-		return true;
 	}
 
 	@Override

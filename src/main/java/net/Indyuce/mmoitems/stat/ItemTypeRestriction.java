@@ -123,7 +123,7 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		// List<String> displayedTypes = new ArrayList<String>();
 		//
 		// for (String typeId : (List<String>) values[0])
@@ -135,7 +135,6 @@ public class ItemTypeRestriction extends StringStat {
 		// String joined = String.join(", ", displayedTypes);
 		// item.getLore().insert(getPath(), translate().replace("#", joined));
 		item.addItemTag(new ItemTag("MMOITEMS_ITEM_TYPE_RESTRICTION", String.join(",", ((StringListData) data).getList())));
-		return true;
 	}
 
 	private boolean isValid(String format) {

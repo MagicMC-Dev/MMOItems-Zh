@@ -17,10 +17,9 @@ public class ArmorToughness extends AttributeStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag("MMOITEMS_ARMOR_TOUGHNESS", value));
 		item.getLore().insert("armor-toughness", format(value, "#", new StatFormat("##").format(value)));
-		return true;
 	}
 }

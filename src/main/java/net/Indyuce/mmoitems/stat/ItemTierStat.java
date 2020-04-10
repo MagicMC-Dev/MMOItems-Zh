@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,22 +16,19 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class ItemTierStat extends StringStat {
 	public ItemTierStat() {
-		super("TIER", new ItemStack(Material.DIAMOND), "Item Tier", new String[] { "The tier defines how rare your item is", "and what item is dropped when your", "item is deconstructed.", "&9Tiers can be configured in the tiers.yml file" }, new String[] { "all" });
+		super("TIER", new ItemStack(Material.DIAMOND), "Item Tier", new String[] { "The tier defines how rare your item is",
+				"and what item is dropped when your", "item is deconstructed.", "&9Tiers can be configured in the tiers.yml file" },
+				new String[] { "all" });
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		String path = data.toString().toUpperCase().replace("-", "_").replace(" ", "_");
-
-		// do not send an error otherwise previously
-		// generated items will break
-		if (!MMOItems.plugin.getTiers().has(path))
-			return true;
+		Validate.isTrue(MMOItems.plugin.getTiers().has(path), "Could not find item tier with ID '" + path + "'");
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(path);
 		item.addItemTag(new ItemTag("MMOITEMS_TIER", path));
 		item.getLore().insert("tier", translate().replace("#", tier.getName()));
-		return true;
 	}
 
 	@Override

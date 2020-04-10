@@ -138,7 +138,7 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		JsonArray array = new JsonArray();
 		List<String> lore = new ArrayList<>();
 
@@ -157,7 +157,6 @@ public class Commands extends ItemStat {
 
 		item.getLore().insert("commands", lore);
 		item.addItemTag(new ItemTag("MMOITEMS_COMMANDS", array.toString()));
-		return true;
 	}
 
 	@Override

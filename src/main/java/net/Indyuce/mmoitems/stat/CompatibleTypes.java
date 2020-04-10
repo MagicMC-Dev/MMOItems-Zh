@@ -100,7 +100,7 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		List<String> compatibleTypes = new ArrayList<>();
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(line -> {
@@ -110,7 +110,6 @@ public class CompatibleTypes extends ItemStat {
 		});
 		item.getLore().insert("compatible-types", compatibleTypes);
 		item.addItemTag(new ItemTag("MMOITEMS_COMPATIBLE_TYPES", array.toString()));
-		return true;
 	}
 
 	@Override

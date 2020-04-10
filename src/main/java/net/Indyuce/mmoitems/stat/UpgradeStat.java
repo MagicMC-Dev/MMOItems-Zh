@@ -47,9 +47,8 @@ public class UpgradeStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_UPGRADE", data.toString()));
-		return true;
 	}
 
 	@Override

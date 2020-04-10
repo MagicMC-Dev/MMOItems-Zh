@@ -19,9 +19,8 @@ public class DisplayName extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.getMeta().setDisplayName(fix(ChatColor.translateAlternateColorCodes('&', getDisplayName(data))));
-		return true;
 	}
 
 	@Override

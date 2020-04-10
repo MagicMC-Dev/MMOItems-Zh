@@ -152,11 +152,9 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		EnchantListData enchants = (EnchantListData) data;
 		for (Enchantment enchant : enchants.getEnchants())
 			item.getMeta().addEnchant(enchant, enchants.getLevel(enchant), true);
-		return false;
 	}
-
 }

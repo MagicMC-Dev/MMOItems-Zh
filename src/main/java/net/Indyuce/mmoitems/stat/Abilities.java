@@ -71,7 +71,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		List<String> abilityLore = new ArrayList<>();
 		boolean splitter = !MMOItems.plugin.getLanguage().abilitySplitter.equals("");
 
@@ -95,7 +95,6 @@ public class Abilities extends ItemStat {
 
 		item.getLore().insert("abilities", abilityLore);
 		item.addItemTag(new ItemTag("MMOITEMS_ABILITIES", jsonArray.toString()));
-		return true;
 	}
 
 	@Override

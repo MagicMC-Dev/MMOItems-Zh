@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMod
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -71,7 +71,7 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new MMOItem(MMOLib.plugin.getNMS().getNBTItem(upgraded.getFirstItem()))).hasData(ItemStat.UPGRADE))
+		if (!(recipe.mmoitem = new LiveMMOItem(MMOLib.plugin.getNMS().getNBTItem(upgraded.getFirstItem()))).hasData(ItemStat.UPGRADE))
 			return false;
 
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStat.UPGRADE)).canLevelUp()) {
@@ -104,7 +104,7 @@ public class UpgradingRecipe extends Recipe {
 	}
 
 	public class UpgradingRecipeInfo extends RecipeInfo {
-		private MMOItem mmoitem;
+		private LiveMMOItem mmoitem;
 		private UpgradeData upgradeData;
 
 		public UpgradingRecipeInfo(Recipe recipe, PlayerData data, IngredientInventory inv) {
@@ -115,12 +115,12 @@ public class UpgradingRecipe extends Recipe {
 			return upgradeData;
 		}
 
-		public MMOItem getMMOItem() {
+		public LiveMMOItem getMMOItem() {
 			return mmoitem;
 		}
 
 		public ItemStack getUpgraded() {
-			return mmoitem.getNBTItem().getItem();
+			return mmoitem.getItem().getItem();
 		}
 	}
 }

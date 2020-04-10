@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -57,18 +56,17 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getItemStack().getType() != VersionMaterial.PLAYER_HEAD.toMaterial())
-			return true;
+			return;
 
 		try {
 			Field profileField = item.getMeta().getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
 			profileField.set(item.getMeta(), ((SkullTextureData) data).getGameProfile());
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
-			item.getMMOItem().log(Level.WARNING, "Could not read skull texture: " + exception.getMessage());
+		} catch (NoSuchFieldException | IllegalAccessException exception) {
+			throw new IllegalArgumentException(exception.getMessage());
 		}
-		return true;
 	}
 
 	@Override

@@ -64,7 +64,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		BlockStateMeta meta = (BlockStateMeta) item.getMeta();
 		Banner banner = (Banner) meta.getBlockState();
 		ShieldPatternData pattern = (ShieldPatternData) data;
@@ -72,7 +72,6 @@ public class ShieldPatternStat extends StringStat {
 		banner.setPatterns(pattern.getPatterns());
 		((BlockStateMeta) item.getMeta()).setBlockState(banner);
 		item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-		return true;
 	}
 
 	@Override

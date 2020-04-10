@@ -25,7 +25,7 @@ public class IngredientInventory {
 	 * for faster map check ups and fixes the >64 amount and ingredient
 	 * splitting glitches
 	 */
-	private Map<String, PlayerIngredient> ingredients = new HashMap<>();
+	private final Map<String, PlayerIngredient> ingredients = new HashMap<>();
 
 	public IngredientInventory(Player player) {
 		this(player.getInventory());

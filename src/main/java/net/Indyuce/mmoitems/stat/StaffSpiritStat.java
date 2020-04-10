@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.logging.Level;
-
 import org.bukkit.ChatColor;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -25,7 +23,8 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class StaffSpiritStat extends StringStat {
 	public StaffSpiritStat() {
-		super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toItem(), "Staff Spirit", new String[] { "Spirit changes the texture", "of the magic attack.", "&9Tip: /mi list spirit" }, new String[] { "staff", "wand" });
+		super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toItem(), "Staff Spirit",
+				new String[] { "Spirit changes the texture", "of the magic attack.", "&9Tip: /mi list spirit" }, new String[] { "staff", "wand" });
 	}
 
 	@Override
@@ -48,15 +47,10 @@ public class StaffSpiritStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		try {
-			StaffSpirit staffSpirit = StaffSpirit.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
-			item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
-			item.getLore().insert("staff-spirit", staffSpirit.getName());
-		} catch (Exception e) {
-			item.getMMOItem().log(Level.WARNING, "Couldn't read staff spirit from " + ((StringData) data).toString());
-		}
-		return true;
+	public void whenApplied(MMOItemBuilder item, StatData data) {
+		StaffSpirit staffSpirit = StaffSpirit.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
+		item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
+		item.getLore().insert("staff-spirit", staffSpirit.getName());
 	}
 
 	public enum StaffSpirit {

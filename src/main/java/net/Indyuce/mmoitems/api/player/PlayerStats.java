@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.player.MMOData;
@@ -41,8 +41,8 @@ public class PlayerStats {
 		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
 			double t = 0;
 
-			for (MMOItem item : playerData.getMMOItems())
-				t += item.getNBTItem().getStat(stat.getId());
+			for (VolatileMMOItem item : playerData.getMMOItems())
+				t += item.getItem().getStat(stat.getId());
 
 			if (t != 0)
 				getInstance(stat).addModifier("item", t - (stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0));

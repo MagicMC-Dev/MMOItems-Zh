@@ -18,10 +18,9 @@ public class HideEnchants extends BooleanStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled())
 			item.getMeta().addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		return true;
 	}
 
 	@Override

@@ -102,9 +102,8 @@ public class DyeColor extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getMeta() instanceof LeatherArmorMeta)
 			((LeatherArmorMeta) item.getMeta()).setColor(((ColorData) data).getColor());
-		return true;
 	}
 }

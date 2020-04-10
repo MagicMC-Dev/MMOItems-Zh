@@ -17,10 +17,9 @@ public class StoredTags extends InternalStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		for (ItemTag tag : ((StoredTagsData) data).getTags())
 			item.addItemTag(tag);
-		return false;
 	}
 
 	@Override

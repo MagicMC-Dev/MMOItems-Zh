@@ -50,7 +50,7 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		GemSocketsData sockets = (GemSocketsData) data;
 		item.addItemTag(new ItemTag("MMOITEMS_GEM_STONES", sockets.toJson().toString()));
 
@@ -59,8 +59,6 @@ public class GemSockets extends ItemStat {
 		sockets.getGemstones().forEach(gem -> lore.add(filled.replace("#", gem.getName())));
 		sockets.getEmptySlots().forEach(slot -> lore.add(empty.replace("#", slot)));
 		item.getLore().insert("gem-stones", lore);
-
-		return true;
 	}
 
 	@Override

@@ -26,7 +26,6 @@ public class CraftingPermission extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		return true;
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 	}
 }

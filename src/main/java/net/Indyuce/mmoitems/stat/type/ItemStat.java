@@ -290,7 +290,7 @@ public abstract class ItemStat {
 	/*
 	 * applies a stat onto an mmoitem builder instance
 	 */
-	public abstract boolean whenApplied(MMOItemBuilder item, StatData data);
+	public abstract void whenApplied(MMOItemBuilder item, StatData data);
 
 	/*
 	 * when the stat item is clicked in the item edition menu

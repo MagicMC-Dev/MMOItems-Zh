@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Lute;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Whip;
+import net.Indyuce.mmoitems.api.item.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
@@ -26,7 +27,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 public class UseItem {
 	protected final Player player;
 	protected final PlayerData playerData;
-	protected final MMOItem mmoitem;
+	protected final LiveMMOItem mmoitem;
 
 	protected static final Random random = new Random();
 
@@ -37,8 +38,7 @@ public class UseItem {
 	public UseItem(PlayerData playerData, NBTItem nbtItem, Type type) {
 		this.player = playerData.getPlayer();
 		this.playerData = playerData;
-
-		(mmoitem = new MMOItem(nbtItem)).setItemInfo(type, nbtItem.getString("MMOITEMS_ITEM_ID"));
+		this.mmoitem = new LiveMMOItem(nbtItem);
 	}
 
 	public Player getPlayer() {
@@ -54,15 +54,15 @@ public class UseItem {
 	}
 
 	public NBTItem getNBTItem() {
-		return mmoitem.getNBTItem();
+		return mmoitem.getItem();
 	}
 
 	public ItemStack getItem() {
-		return mmoitem.getNBTItem().getItem();
+		return mmoitem.getItem().getItem();
 	}
 
 	public boolean canBeUsed() {
-		return playerData.getRPG().canUse(mmoitem.getNBTItem(), true);
+		return playerData.getRPG().canUse(mmoitem.getItem(), true);
 	}
 
 	public void executeCommands() {

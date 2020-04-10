@@ -86,9 +86,8 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			((PotionMeta) item.getMeta()).setColor(((ColorData) data).getColor());
-		return true;
 	}
 }

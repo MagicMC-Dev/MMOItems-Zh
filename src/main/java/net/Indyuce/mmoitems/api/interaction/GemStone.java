@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
@@ -28,7 +29,7 @@ public class GemStone extends UseItem {
 		/*
 		 * loads all stats and calculates EVERY piece of the lore again.
 		 */
-		MMOItem targetMMO = new MMOItem(target);
+		MMOItem targetMMO = new LiveMMOItem(target);
 		if (!targetMMO.hasData(ItemStat.GEM_SOCKETS))
 			return new ApplyResult(ResultType.NONE);
 
@@ -63,7 +64,7 @@ public class GemStone extends UseItem {
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
-		GemstoneData gemData = new GemstoneData(mmoitem.getNBTItem(), mmoitem);
+		GemstoneData gemData = new GemstoneData(mmoitem.getItem(), mmoitem);
 		sockets.apply(gemType, gemData);
 
 		/*

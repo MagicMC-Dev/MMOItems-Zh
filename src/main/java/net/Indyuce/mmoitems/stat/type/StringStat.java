@@ -33,10 +33,9 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
 		item.getLore().insert(getPath(), data.toString());
-		return true;
 	}
 
 	@Override

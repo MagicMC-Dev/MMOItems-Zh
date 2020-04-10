@@ -29,9 +29,8 @@ public class DisableStat extends BooleanStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled())
 			item.addItemTag(new ItemTag("MMOITEMS_" + getId(), true));
-		return true;
 	}
 }

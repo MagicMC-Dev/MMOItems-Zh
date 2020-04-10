@@ -15,11 +15,10 @@ public class PickaxePower extends DoubleStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		int pickPower = (int) ((DoubleData) data).generateNewValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", pickPower));
 		item.getLore().insert("pickaxe-power", format(pickPower, "#", "" + pickPower));
-		return true;
 	}
 }

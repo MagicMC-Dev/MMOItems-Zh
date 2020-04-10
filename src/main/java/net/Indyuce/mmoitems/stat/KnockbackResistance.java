@@ -17,10 +17,9 @@ public class KnockbackResistance extends AttributeStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag("MMOITEMS_KNOCKBACK_RESISTANCE", value));
 		item.getLore().insert("knockback-resistance", format(value, "#", new StatFormat("#").format(value * 100)));
-		return true;
 	}
 }

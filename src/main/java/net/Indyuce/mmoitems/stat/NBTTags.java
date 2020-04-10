@@ -104,7 +104,7 @@ public class NBTTags extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(tag -> {
 			array.add(tag);
@@ -112,7 +112,6 @@ public class NBTTags extends ItemStat {
 			item.addItemTag(new ItemTag(tag.substring(0, tag.indexOf(' ')), tag.substring(tag.indexOf(' ') + 1)));
 		});
 		item.addItemTag(new ItemTag("MMOITEMS_NBTTAGS", array.toString()));
-		return true;
 	}
 
 	@Override

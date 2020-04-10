@@ -34,15 +34,15 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory.EquippedItem;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
-import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
@@ -56,7 +56,7 @@ public class PlayerData {
 	 * is just cached at the beginning
 	 */
 	private Player player;
-	private final OfflinePlayer offline;
+	private final UUID uuid;
 
 	/*
 	 * reloaded everytime the player reconnects in case of major change.
@@ -69,7 +69,7 @@ public class PlayerData {
 	 * inventory
 	 */
 	private ItemStack helmet = null, chestplate = null, leggings = null, boots = null, hand = null, offhand = null;
-	private List<MMOItem> playerInventory = new ArrayList<>();
+	private List<VolatileMMOItem> playerInventory = new ArrayList<>();
 
 	private CraftingStatus craftingStatus = new CraftingStatus();
 	private PlayerAbilityData playerAbilityData = new PlayerAbilityData();
@@ -93,7 +93,7 @@ public class PlayerData {
 	private static Map<UUID, PlayerData> playerDatas = new HashMap<>();
 
 	private PlayerData(Player player) {
-		this.offline = player;
+		this.uuid = player.getUniqueId();
 		setPlayer(player);
 		stats = new PlayerStats(this);
 
@@ -114,9 +114,7 @@ public class PlayerData {
 		craftingStatus.save(config.getConfig().getConfigurationSection("crafting-queue"));
 		config.save();
 
-		/*
-		 * memory leaks
-		 */
+		// memory leaks
 		player = null;
 	}
 
@@ -126,7 +124,7 @@ public class PlayerData {
 	}
 
 	public UUID getUniqueId() {
-		return offline.getUniqueId();
+		return uuid;
 	}
 
 	public Player getPlayer() {
@@ -142,13 +140,14 @@ public class PlayerData {
 	 * to calculate stats. this list updates each time a player equips a new
 	 * item.
 	 */
-	public List<MMOItem> getMMOItems() {
+	public List<VolatileMMOItem> getMMOItems() {
 		return playerInventory;
 	}
 
 	public void checkForInventoryUpdate() {
 		PlayerInventory inv = player.getInventory();
-		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings()) || !equals(boots, inv.getBoots()) || !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
+		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings())
+				|| !equals(boots, inv.getBoots()) || !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
 			updateInventory();
 	}
 
@@ -173,7 +172,8 @@ public class PlayerData {
 	public boolean areHandsFull() {
 		NBTItem main = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
 		NBTItem off = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
-		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR)) || (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
+		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
+				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
 
 	public void updateInventory() {
@@ -214,10 +214,10 @@ public class PlayerData {
 			if (!getRPG().canUse(nbtItem, false))
 				continue;
 
-			playerInventory.add(new MMOItem(nbtItem, false));
+			playerInventory.add(new VolatileMMOItem(nbtItem));
 		}
 
-		for (MMOItem item : getMMOItems()) {
+		for (VolatileMMOItem item : getMMOItems()) {
 
 			/*
 			 * apply permanent potion effects
@@ -248,7 +248,8 @@ public class PlayerData {
 				// if the item with the abilities is in the players offhand AND
 				// its disabled in the config then just move on, else add the
 				// ability
-				if (item.getNBTItem().getItem().equals(player.getInventory().getItemInOffHand()) && MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
+				if (item.getItem().getItem().equals(player.getInventory().getItemInOffHand())
+						&& MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
 					continue;
 				} else
 					((AbilityListData) item.getData(ItemStat.ABILITIES)).getAbilities().forEach(ability -> itemAbilities.add(ability));
@@ -262,8 +263,8 @@ public class PlayerData {
 		int max = 0;
 		ItemSet set = null;
 		Map<ItemSet, Integer> sets = new HashMap<>();
-		for (MMOItem item : getMMOItems()) {
-			String tag = item.getNBTItem().getString("MMOITEMS_ITEM_SET");
+		for (VolatileMMOItem item : getMMOItems()) {
+			String tag = item.getItem().getString("MMOITEMS_ITEM_SET");
 			ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
 			if (itemSet == null)
 				continue;
@@ -319,7 +320,7 @@ public class PlayerData {
 		// two handed
 		if (fullHands) {
 			player.removePotionEffect(PotionEffectType.SLOW);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 3, true, false));
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
 		}
 	}
 

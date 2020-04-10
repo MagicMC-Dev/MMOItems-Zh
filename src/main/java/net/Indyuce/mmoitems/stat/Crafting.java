@@ -122,8 +122,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
-		return true;
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 	}
 
 	@Override

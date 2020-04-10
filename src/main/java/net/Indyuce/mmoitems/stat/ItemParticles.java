@@ -54,9 +54,8 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public boolean whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(MMOItemBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", ((ParticleData) data).toJson().toString()));
-		return true;
 	}
 
 	@Override

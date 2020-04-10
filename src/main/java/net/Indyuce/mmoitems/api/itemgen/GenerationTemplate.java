@@ -34,13 +34,14 @@ public class GenerationTemplate {
 		Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat));
 		type = MMOItems.plugin.getTypes().get(typeFormat);
 
-		for (String key : config.getConfigurationSection("modifiers").getKeys(false))
-			try {
-				modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(), config.getConfigurationSection("modifiers." + key)));
-			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key + "' from item gen template '"
-						+ id + "': " + exception.getMessage());
-			}
+		if (config.contains("modifiers"))
+			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
+				try {
+					modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(), config.getConfigurationSection("modifiers." + key)));
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key
+							+ "' from item gen template '" + id + "': " + exception.getMessage());
+				}
 
 		Validate.notNull(config.getConfigurationSection("base"), "Could not find base item data");
 		for (String key : config.getConfigurationSection("base").getKeys(false))

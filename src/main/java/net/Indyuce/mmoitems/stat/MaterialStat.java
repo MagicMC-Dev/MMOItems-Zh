@@ -14,16 +14,16 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class MaterialStat extends ItemStat  {
+public class MaterialStat extends ItemStat {
 	public MaterialStat() {
 		super("MATERIAL", new ItemStack(VersionMaterial.GRASS_BLOCK.toMaterial()), "Material", new String[] { "Your item material." },
 				new String[] { "all" });
@@ -94,32 +94,5 @@ public class MaterialStat extends ItemStat  {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
-	}
-
-	public class MaterialData implements StatData, RandomStatData {
-		private Material material;
-
-		/*
-		 * material must not be null because it is called directly in the
-		 * MMOBuilder constructor.
-		 */
-		public MaterialData(Material material) {
-			Validate.notNull(material, "Material must not be null");
-			this.material = material;
-		}
-
-		public void setMaterial(Material material) {
-			Validate.notNull(material, "Material must not be null");
-			this.material = material;
-		}
-
-		public Material getMaterial() {
-			return material;
-		}
-
-		@Override
-		public StatData randomize(GeneratedItemBuilder builder) {
-			return this;
-		}
 	}
 }

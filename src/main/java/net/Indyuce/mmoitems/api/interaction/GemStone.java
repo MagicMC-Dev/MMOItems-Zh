@@ -10,7 +10,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
-import net.Indyuce.mmoitems.stat.data.GemSocketsData.GemstoneData;
+import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -63,7 +63,7 @@ public class GemStone extends UseItem {
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
-		GemstoneData gemData = sockets.newGemstone(mmoitem.getNBTItem(), mmoitem);
+		GemstoneData gemData = new GemstoneData(mmoitem.getNBTItem(), mmoitem);
 		sockets.apply(gemType, gemData);
 
 		/*

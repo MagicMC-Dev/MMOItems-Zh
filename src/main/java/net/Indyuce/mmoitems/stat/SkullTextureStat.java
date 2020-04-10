@@ -1,13 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -17,6 +15,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -40,15 +39,11 @@ public class SkullTextureStat extends StringStat {
 
 		String format = config.getString("uuid");
 		Validate.notNull(format, "Could not find skull texture UUID: re-enter your skull texture value and one will be selected randomly.");
-		
+
 		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
 
 		return skullTexture;
-	}
-
-	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
 	}
 
 	@Override
@@ -70,8 +65,8 @@ public class SkullTextureStat extends StringStat {
 			Field profileField = item.getMeta().getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
 			profileField.set(item.getMeta(), ((SkullTextureData) data).getGameProfile());
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-			item.getMMOItem().log(Level.WARNING, "Could not read skull texture");
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
+			item.getMMOItem().log(Level.WARNING, "Could not read skull texture: " + exception.getMessage());
 		}
 		return true;
 	}
@@ -82,19 +77,7 @@ public class SkullTextureStat extends StringStat {
 			Field profileField = item.getItem().getItemMeta().getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
 			mmoitem.setData(ItemStat.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(item.getItem().getItemMeta())));
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-		}
-	}
-
-	public class SkullTextureData implements StatData {
-		private final GameProfile profile;
-
-		public SkullTextureData(GameProfile profile) {
-			this.profile = profile;
-		}
-
-		public GameProfile getGameProfile() {
-			return profile;
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
 		}
 	}
 }

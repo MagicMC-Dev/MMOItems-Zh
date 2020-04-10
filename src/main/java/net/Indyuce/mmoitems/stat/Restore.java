@@ -13,13 +13,12 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.RestoreData;
+import net.Indyuce.mmoitems.stat.data.random.RandomRestoreData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -142,77 +141,5 @@ public class Restore extends ItemStat {
 					ItemStat.translate("restore-saturation").replace("#", new StatFormat("##").format(restore.getSaturation())));
 		}
 		return true;
-	}
-
-	public class RandomRestoreData implements RandomStatData {
-		private final NumericStatFormula health, food, saturation;
-
-		public RandomRestoreData(ConfigurationSection config) {
-			Validate.notNull(config, "Could not load restore config");
-
-			health = config.contains("health") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
-			food = config.contains("food") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
-			saturation = config.contains("saturation") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
-		}
-
-		public NumericStatFormula getHealth() {
-			return health;
-		}
-
-		public NumericStatFormula getFood() {
-			return food;
-		}
-
-		public NumericStatFormula getSaturation() {
-			return saturation;
-		}
-
-		@Override
-		public StatData randomize(GeneratedItemBuilder builder) {
-			return new RestoreData(health.calculate(builder.getLevel()), food.calculate(builder.getLevel()),
-					saturation.calculate(builder.getLevel()));
-		}
-	}
-
-	public class RestoreData implements StatData, Mergeable {
-		private double health, food, saturation;
-
-		public RestoreData(double health, double food, double saturation) {
-			this.health = health;
-			this.food = food;
-			this.saturation = saturation;
-		}
-
-		public double getHealth() {
-			return health;
-		}
-
-		public double getFood() {
-			return food;
-		}
-
-		public double getSaturation() {
-			return saturation;
-		}
-
-		public void setHealth(double value) {
-			health = value;
-		}
-
-		public void setFood(double value) {
-			food = value;
-		}
-
-		public void setSaturation(double value) {
-			saturation = value;
-		}
-
-		@Override
-		public void merge(StatData data) {
-			Validate.isTrue(data instanceof RestoreData, "Cannot merge two different stat data types");
-			health += ((RestoreData) data).health;
-			food += ((RestoreData) data).food;
-			saturation += ((RestoreData) data).saturation;
-		}
 	}
 }

@@ -28,6 +28,7 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.ShieldPatternData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -44,11 +45,8 @@ public class ShieldPatternStat extends StringStat {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
-		ShieldPatternData shieldPattern = new ShieldPatternData();
-
-		// dye color
-		if (config.contains("color"))
-			shieldPattern.setBaseColor(DyeColor.valueOf(config.getString("color").toUpperCase().replace("-", "_").replace(" ", "_")));
+		ShieldPatternData shieldPattern = new ShieldPatternData(
+				config.contains("color") ? DyeColor.valueOf(config.getString("color").toUpperCase().replace("-", "_").replace(" ", "_")) : null);
 
 		// apply patterns
 		for (String key : config.getKeys(false))
@@ -214,9 +212,8 @@ public class ShieldPatternStat extends StringStat {
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
 		if (item.getItem().getItemMeta() instanceof BlockStateMeta
 				&& ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState() instanceof Banner) {
-			ShieldPatternData shieldPattern = new ShieldPatternData();
 			Banner banner = (Banner) ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState();
-			shieldPattern.setBaseColor(banner.getBaseColor());
+			ShieldPatternData shieldPattern = new ShieldPatternData(banner.getBaseColor());
 			shieldPattern.addAll(banner.getPatterns());
 			mmoitem.setData(ItemStat.SHIELD_PATTERN, shieldPattern);
 		}
@@ -227,39 +224,5 @@ public class ShieldPatternStat extends StringStat {
 			if (!section.contains("" + j))
 				return j;
 		return -1;
-	}
-
-	public class ShieldPatternData implements StatData {
-		private DyeColor base;
-		private final List<Pattern> patterns = new ArrayList<>();
-
-		public ShieldPatternData() {
-		}
-
-		public ShieldPatternData(DyeColor base, Pattern... patterns) {
-			this.base = base;
-			for (Pattern pattern : patterns)
-				this.patterns.add(pattern);
-		}
-
-		public DyeColor getBaseColor() {
-			return base;
-		}
-
-		public List<Pattern> getPatterns() {
-			return patterns;
-		}
-
-		public void setBaseColor(DyeColor color) {
-			this.base = color;
-		}
-
-		public void add(Pattern pattern) {
-			patterns.add(pattern);
-		}
-
-		public void addAll(List<Pattern> patterns) {
-			patterns.addAll(patterns);
-		}
 	}
 }

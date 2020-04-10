@@ -8,10 +8,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.Indyuce.mmoitems.stat.DisplayName;
-import net.Indyuce.mmoitems.stat.MaterialStat.MaterialData;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MMOItemIngredient extends Ingredient {
 	private final Type type;

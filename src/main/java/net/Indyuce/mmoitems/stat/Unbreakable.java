@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.api.item.ItemTag;

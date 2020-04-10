@@ -25,6 +25,7 @@ import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
+import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -70,7 +71,7 @@ public class GemSockets extends ItemStat {
 				GemSocketsData sockets = new GemSocketsData(toList(object.getAsJsonArray("EmptySlots")));
 
 				JsonArray array = object.getAsJsonArray("Gemstones");
-				array.forEach(element -> sockets.add(sockets.newGemstone(element.getAsJsonObject())));
+				array.forEach(element -> sockets.add(new GemstoneData(element.getAsJsonObject())));
 
 				mmoitem.setData(this, sockets);
 			} catch (JsonSyntaxException exception) {

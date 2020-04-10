@@ -1,15 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,12 +19,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.CommandData;
+import net.Indyuce.mmoitems.stat.data.CommandListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -51,7 +48,7 @@ public class Commands extends ItemStat {
 
 		for (String key : config.getKeys(false)) {
 			ConfigurationSection section = config.getConfigurationSection(key);
-			list.add(list.newCommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"),
+			list.add(new CommandData(section.getString("format"), section.getDouble("delay"), section.getBoolean("console"),
 					section.getBoolean("op")));
 		}
 
@@ -171,8 +168,8 @@ public class Commands extends ItemStat {
 
 				new JsonParser().parse(nbtItem.getString("MMOITEMS_COMMANDS")).getAsJsonArray().forEach(element -> {
 					JsonObject key = element.getAsJsonObject();
-					commands.add(commands.newCommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(),
-							key.get("Console").getAsBoolean(), key.get("Op").getAsBoolean()));
+					commands.add(new CommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(), key.get("Console").getAsBoolean(),
+							key.get("Op").getAsBoolean()));
 				});
 
 				mmoitem.setData(ItemStat.COMMANDS, commands);
@@ -181,76 +178,5 @@ public class Commands extends ItemStat {
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
-	}
-
-	public class CommandListData implements StatData, Mergeable, RandomStatData {
-		private final Set<CommandData> commands = new HashSet<>();
-
-		public CommandListData(CommandData... commands) {
-			add(commands);
-		}
-
-		public void add(CommandData... commands) {
-			for (CommandData command : commands)
-				this.commands.add(command);
-		}
-
-		public Set<CommandData> getCommands() {
-			return commands;
-		}
-
-		public CommandData newCommandData(String command, double delay, boolean console, boolean op) {
-			return new CommandData(command, delay, console, op);
-		}
-
-		public class CommandData {
-			private final String command;
-			private final double delay;
-			private final boolean console, op;
-
-			private CommandData(String command, double delay, boolean console, boolean op) {
-				Validate.notNull(command, "Command cannot be null");
-
-				this.command = command;
-				this.delay = delay;
-				this.console = console;
-				this.op = op;
-			}
-
-			public String getCommand() {
-				return command;
-			}
-
-			public double getDelay() {
-				return delay;
-			}
-
-			public boolean hasDelay() {
-				return delay > 0;
-			}
-
-			public boolean isConsoleCommand() {
-				return console;
-			}
-
-			public boolean hasOpPerms() {
-				return op;
-			}
-
-			public String getParsed(Player player) {
-				return MMOItems.plugin.getPlaceholderParser().parse(player, command);
-			}
-		}
-
-		@Override
-		public void merge(StatData data) {
-			Validate.isTrue(data instanceof CommandListData, "Cannot merge two different stat data types");
-			commands.addAll(((CommandListData) data).commands);
-		}
-
-		@Override
-		public StatData randomize(GeneratedItemBuilder builder) {
-			return this;
-		}
 	}
 }

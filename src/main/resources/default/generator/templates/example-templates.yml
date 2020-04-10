@@ -6,14 +6,6 @@ LONG_SWORD:
     # Basic item information
     type: SWORD
     
-    # The more weight a randomly generated item has,
-    # the more modifiers it will be able to roll
-    weight:
-        base: 3
-        scale: 1
-        relative-spread: .1
-        max-relative-spread: .3
-    
     # Base item data
     base:
         material: IRON_SWORD
@@ -22,28 +14,47 @@ LONG_SWORD:
         attack-damage:
             base: 6
             scale: 1.2
-            relative-spread: .1
-            max-relative-spread: .3
+            spread: .1
+            max-spread: .3
         required-level:
             base: 0
             scale: 1
+        element:
+            fire:
+                damage: 10
 
     # Modifiers which have a chance to be rolled
     modifiers:
         sharp:
-            chance: 0.3
-            prefix: '&fSharp'
-            stats:
-                attack-damage: 3
-                lore:
-                - '&7Much sharper!'
+            chance: 0.5
+            parent: sharp
         fiery:
-            chance: 0.1
-            prefix:
-                format: '&cFiery'
-                priority: 1
-            stats:
-                ability:
-                    on-hit:
-                        type: burn
-                        mode: on_hit
+            chance: 0.5
+            parent: fiery
+
+
+COMPOSITE_BOW:
+    type: BOW
+    base:
+        material: BOW
+        name: '&fComposite Bow'
+        critical-strike-chance: 30.0
+        attack-damage:
+            base: 7
+            scale: 0.3
+            spread: .1
+            max-spread: .3
+        required-level:
+            base: 0
+            scale: 1
+    modifiers:
+        swiftness:
+            weight: 3
+            parent: swiftness
+        heavy:
+            chance: 0.05
+            weight: 3
+            parent: heavy
+        doom:
+            weight: 5
+            parent: impending-doom

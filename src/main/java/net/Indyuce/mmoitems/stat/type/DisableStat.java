@@ -5,6 +5,7 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
 

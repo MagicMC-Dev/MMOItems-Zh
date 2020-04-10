@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -20,12 +17,12 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.SoundsEdition;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.SoundData;
+import net.Indyuce.mmoitems.stat.data.SoundListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -167,75 +164,5 @@ public class CustomSounds extends ItemStat {
 
 		if (sounds.total() > 0)
 			mmoitem.setData(ItemStat.CUSTOM_SOUNDS, sounds);
-	}
-
-	public class SoundListData implements StatData, Mergeable, RandomStatData {
-		private final Map<CustomSound, SoundData> stats = new HashMap<>();
-
-		public Set<CustomSound> getCustomSounds() {
-			return stats.keySet();
-		}
-
-		public SoundData get(CustomSound sound) {
-			return stats.get(sound);
-		}
-
-		public void set(CustomSound sound, String s, double v, double p) {
-			this.stats.put(sound, new SoundData(s, v, p));
-		}
-
-		public int total() {
-			return stats.size();
-		}
-
-		@Override
-		public void merge(StatData data) {
-			Validate.isTrue(data instanceof SoundListData, "Cannot merge two different stat data types");
-			SoundListData cast = (SoundListData) data;
-			cast.stats.keySet().forEach(key -> stats.put(key, cast.stats.get(key)));
-		}
-
-		@Override
-		public StatData randomize(GeneratedItemBuilder builder) {
-			return this;
-		}
-	}
-
-	public class SoundData {
-		private String sound;
-		private double volume, pitch;
-
-		public SoundData() {
-		}
-
-		public SoundData(String s, double v, double p) {
-			this.sound = s;
-			this.volume = v;
-			this.pitch = p;
-		}
-
-		public void setSound(String value) {
-			this.sound = value;
-		}
-
-		public void setVolume(double value) {
-			this.volume = value;
-		}
-
-		public void setPitch(double value) {
-			this.pitch = value;
-		}
-
-		public String getSound() {
-			return this.sound;
-		}
-
-		public double getVolume() {
-			return this.volume;
-		}
-
-		public double getPitch() {
-			return this.pitch;
-		}
 	}
 }

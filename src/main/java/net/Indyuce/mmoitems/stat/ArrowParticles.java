@@ -18,11 +18,11 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.ArrowParticlesEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.ArrowParticlesData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -196,92 +196,5 @@ public class ArrowParticles extends ItemStat {
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit.");
-	}
-
-	public class ArrowParticlesData implements StatData, RandomStatData {
-		private final Particle particle;
-		private final int amount, red, green, blue;
-		private final double speed, offset;
-		private final boolean colored;
-
-		public ArrowParticlesData(Particle particle, int amount, double offset, double speed) {
-			this.particle = particle;
-			this.amount = amount;
-			this.offset = offset;
-
-			this.speed = speed;
-
-			this.colored = false;
-			this.red = 0;
-			this.blue = 0;
-			this.green = 0;
-		}
-
-		public ArrowParticlesData(Particle particle, int amount, double offset, int red, int green, int blue) {
-			this.particle = particle;
-			this.amount = amount;
-			this.offset = offset;
-
-			this.speed = 0;
-
-			this.colored = true;
-			this.red = red;
-			this.green = green;
-			this.blue = blue;
-		}
-
-		public Particle getParticle() {
-			return particle;
-		}
-
-		public boolean isColored() {
-			return colored;
-		}
-
-		public int getAmount() {
-			return amount;
-		}
-
-		public double getOffset() {
-			return offset;
-		}
-
-		public double getSpeed() {
-			return speed;
-		}
-
-		public int getRed() {
-			return red;
-		}
-
-		public int getGreen() {
-			return green;
-		}
-
-		public int getBlue() {
-			return blue;
-		}
-
-		@Override
-		public String toString() {
-			JsonObject object = new JsonObject();
-			object.addProperty("Particle", particle.name());
-			object.addProperty("Amount", amount);
-			object.addProperty("Offset", offset);
-			object.addProperty("Colored", colored);
-			if (colored) {
-				object.addProperty("Red", red);
-				object.addProperty("Green", green);
-				object.addProperty("Blue", blue);
-			} else
-				object.addProperty("Speed", speed);
-
-			return object.toString();
-		}
-
-		@Override
-		public StatData randomize(GeneratedItemBuilder builder) {
-			return this;
-		}
 	}
 }

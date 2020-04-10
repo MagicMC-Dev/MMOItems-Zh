@@ -23,8 +23,8 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 		return stats.get(sound);
 	}
 
-	public void set(CustomSound sound, String s, double v, double p) {
-		this.stats.put(sound, new SoundData(s, v, p));
+	public void set(CustomSound type, String sound, double volume, double pitch) {
+		this.stats.put(type, new SoundData(sound, volume, pitch));
 	}
 
 	public int total() {

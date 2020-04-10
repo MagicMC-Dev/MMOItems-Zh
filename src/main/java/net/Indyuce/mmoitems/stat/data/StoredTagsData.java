@@ -49,6 +49,10 @@ public class StoredTagsData implements StatData, Mergeable {
 			}
 		}
 	}
+	
+	public void addTag(ItemTag tag) {
+		tags.add(tag);
+	}
 
 	public List<ItemTag> getTags() {
 		return tags;

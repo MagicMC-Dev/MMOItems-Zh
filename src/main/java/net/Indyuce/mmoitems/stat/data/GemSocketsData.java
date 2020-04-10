@@ -42,6 +42,10 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 		emptySlots.remove(getEmptySocket(gem));
 		gems.add(gemstone);
 	}
+	
+	public void addEmptySlot(String slot) {
+		emptySlots.add(slot);
+	}
 
 	public List<String> getEmptySlots() {
 		return emptySlots;

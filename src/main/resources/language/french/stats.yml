@@ -52,16 +52,19 @@ magic-damage-reduction: '&7■ Réduction de dégats magiques: &f<plus>#%'
 projectile-damage-reduction: '&7■ Réduction de dégats des projectiles: &f<plus>#%'
 physical-damage-reduction: '&7■ Réduction de dégats physiques: &f<plus>#%'
 
-# Extra Options
+# RPG Stats
+health-regeneration: '&7■ Régénération de vie: &f<plus>#'
 max-mana: '&7■ Mana Max: &f<plus>#'
-mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
-max-stamina: '&7■ Max Stamina: &f<plus>#'
-stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
+mana-regeneration: '&7■ Régénération de mana: &f<plus>#'
+max-stamina: '&7■ Stamina Max: &f<plus>#'
+stamina-regeneration: '&7■ Régénération d''énergie: &f<plus>#'
+skill-cooldown-reduction: '&7■ Réduction des délais de récup.: &f<plus>#%'
+additional-experience: '&7■ Expérience supplémentaire: &f<plus>#%'
+
+# Extra Options
 perm-effect: '&7■ &f# &7 permanent'
 command: '&7■ Commande: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7s de récupération'
-skill-cooldown-reduction: '&7■ Réduction de délais de récup.: &f<plus>#%'
-additional-experience: '&7■ Expérience supplémentaire: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ Restaure &f# &7Health'
@@ -74,6 +77,7 @@ repair: '&7■ Répare &f# &7utilisations'
 can-identify: '&7■ Peut identifier des objets.'
 can-deconstruct: '&7■ Peut décomposer des objets.'
 success-rate: '&7■ Chance de réussite: &a&l#%'
+max-consume: '&7■ Max Consume: &f# &7uses'
 
 # Gem Stones
 empty-gem-socket: '&a◆ Emplacement de gemme # vide'

@@ -52,16 +52,19 @@ magic-damage-reduction: '&7■ 魔法伤害减免: &f<plus>#%'
 projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
-# Extra Options
+# RPG Stats
+health-regeneration: '&7■ Health Regeneration: &f<plus>#'
 max-mana: '&7■ 最大法力值加成: &f<plus>#'
 mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-stamina: '&7■ Max Stamina: &f<plus>#'
 stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
+skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
+additional-experience: '&7■ Additional Experience: &f<plus>#%'
+
+# Extra Options
 perm-effect: '&7■ 效果 &f#'
 command: '&7■ 指令: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7 秒 冷却'
-skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
-additional-experience: '&7■ Additional Experience: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ 恢复 &f# &7生命值'
@@ -74,6 +77,7 @@ repair: '&7■ 修复: &f#'
 can-identify: '&7■ 可识别'
 can-deconstruct: '&7■ 可分解'
 success-rate: '&7■ 成功概率: &a&l#%'
+max-consume: '&7■ Max Consume: &f# &7uses'
 
 # Gem Stones
 empty-gem-socket: '&a◆ Empty # Gem Socket'

@@ -52,16 +52,19 @@ magic-damage-reduction: '&7■ Reducción de daño mágico: &f<plus>#%'
 projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
-# Extra Options
+# RPG Stats
+health-regeneration: '&7■ Health Regeneration: &f<plus>#'
 max-mana: '&7■ Mana máximo: &f<plus>#'
 mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-stamina: '&7■ Max Stamina: &f<plus>#'
 stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
+skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
+additional-experience: '&7■ Additional Experience: &f<plus>#%'
+
+# Extra Options
 perm-effect: '&7■ Permanente &f#'
 command: '&7■ Comando: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &7Se puede usar cada #&7s'
-skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
-additional-experience: '&7■ Additional Experience: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ Restaura &f# &7de vida'
@@ -74,6 +77,7 @@ repair: '&7■ Repara: &f#'
 can-identify: '&7■ Puede identificar objetos.'
 can-deconstruct: '&7■ Puede destruir objetos usados.'
 success-rate: '&7■ Indice de éxito: &a&l#%'
+max-consume: '&7■ Max Consume: &f# &7uses'
 
 # Gem Stones
 empty-gem-socket: '&a◆ Espacio para # gema'

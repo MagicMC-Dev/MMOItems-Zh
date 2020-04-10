@@ -52,16 +52,19 @@ magic-damage-reduction: '&7■ Zmniejszenie Obrazen Magicznych: &f<plus>#%'
 projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Zmniejszenie Obrazen Psychicznych: &f<plus>#%'
 
-# Extra Options
+# RPG Stats
+health-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-mana: '&7■ Maksymalna Mana: &f<plus>#'
 mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-stamina: '&7■ Max Stamina: &f<plus>#'
 stamina-regeneration: '&7■ Stamina Regeneration: &f<plus>#'
+skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
+additional-experience: '&7■ Additional Experience: &f<plus>#%'
+
+# Extra Options
 perm-effect: '&7■ Staly &f#'
 command: '&7■ Komenda: &f#c &7(&f#cd&7s)'
 item-cooldown: '&7■ &f#&7s Czas Odnowienia'
-skill-cooldown-reduction: '&7■ Skill Cooldown Reduction: &f<plus>#%'
-additional-experience: '&7■ Additional Experience: &f<plus>#%'
 
 # Consumables
 restore-health: '&7■ Odnawia &f# &7Zdrowia'
@@ -74,6 +77,7 @@ repair: '&7■ Napraw: &f#'
 can-identify: '&7■ Moze identyfikowac przedmioty.'
 can-deconstruct: '&7■ Moze rozkladac wielopoziomowe przedmioty.'
 success-rate: '&7■ Szansa na sukces: &a&l#%'
+max-consume: '&7■ Max Consume: &f# &7uses'
 
 # Gem Stones
 empty-gem-socket: '&a◆ Puste Miejsce Na Klejnot'

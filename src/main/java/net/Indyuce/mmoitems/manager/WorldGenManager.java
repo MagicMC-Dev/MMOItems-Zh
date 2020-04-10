@@ -26,11 +26,12 @@ public class WorldGenManager implements Listener {
 	private static final Random random = new Random();
 
 	public WorldGenManager() {
+		if (!MMOItems.plugin.getLanguage().worldGenEnabled)
+			return;
+
 		FileConfiguration config = new ConfigFile("gen-templates").getConfig();
 		config.getKeys(false).forEach(e -> templates.put(e, new WorldGenTemplate(config.getConfigurationSection(e))));
-
-		if (MMOItems.plugin.getLanguage().worldGenEnabled)
-			Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
 
 	public void register(CustomBlock block) {

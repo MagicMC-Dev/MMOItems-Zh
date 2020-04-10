@@ -7,9 +7,6 @@ depend: [MMOLib]
 softdepend: [WorldGuard,Holograms,Residence,BossShopPro,SkillAPI,MMOCore,MythicMobs,MMOInventory,PlaceholderAPI]
 api-version: 1.13
 commands:
-    advancedworkbench:
-        description: Opens the advanced workbench.
-        aliases: [advancedwb,awb]
     mmoitems:
         description: MMOItems main command.
         aliases: [mi]
@@ -19,9 +16,6 @@ commands:
 permissions:
     mmoitems.admin:
         description: Access to admin commands.
-        default: op
-    mmoitems.awb:
-        description: Access to /advancedworkbench.
         default: op
     mmoitems.update:
         description: Access to /updateitem.

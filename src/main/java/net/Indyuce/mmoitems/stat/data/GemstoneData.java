@@ -26,15 +26,15 @@ public class GemstoneData {
 	private final String name;
 
 	/*
-	 * This constructor is not really performance friendly. It should only
-	 * be used when applying gem stones to keep max performance.
+	 * This constructor is not really performance friendly. It should only be
+	 * used when applying gem stones to keep max performance.
 	 */
 	public GemstoneData(JsonObject object) {
 		object.getAsJsonObject("Stats").entrySet()
 				.forEach(entry -> this.stats.put(MMOItems.plugin.getStats().get(entry.getKey()), entry.getValue().getAsDouble()));
 		object.getAsJsonArray("Abilities").forEach(element -> this.abilities.add(new AbilityData(element.getAsJsonObject())));
-		object.getAsJsonObject("Effects").entrySet().forEach(
-				entry -> this.effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+		object.getAsJsonObject("Effects").entrySet()
+				.forEach(entry -> this.effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 		name = object.get("Name").getAsString();
 
 		// if (object.has("Particles"))
@@ -52,6 +52,18 @@ public class GemstoneData {
 		// if (mmoitem.hasData(stat))
 		// stats.put(stat, ((DoubleData) mmoitem.getData(stat)).getMin());
 		name = MMOUtils.getDisplayName(nbtItem.getItem());
+	}
+
+	public void addAbility(AbilityData ability) {
+		abilities.add(ability);
+	}
+
+	public void addPermanentEffect(PotionEffectData effect) {
+		effects.add(effect);
+	}
+
+	public void setStat(ItemStat stat, double value) {
+		stats.put(stat, value);
 	}
 
 	// public boolean hasParticle() {

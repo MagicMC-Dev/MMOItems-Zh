@@ -42,8 +42,10 @@ default:
 item-glow: true
 
 item-upgrading:
+
     # Display name suffix for upgraded items.
     name-suffix: '&f &a+#lvl#'
+    
     # Whether to display in Item Name or Lore
     # Disable if item renaming is available to players.
     # If set to 'false', remember to include
@@ -85,16 +87,19 @@ item-ability:
         cooldown: 4
 
 gem-sockets:
+
     # Define the text you need to enter in the
     # item gem sockets if you want to create an
     # uncolored gem socket i.e a socket for any type of gem.
     uncolored: 'Uncolored'
 
 custom-blocks:
+
     # Whether or not custom blocks should
     # generate in the world according to
     # their generation template.
     enable-world-gen: false
+    
     # Whether or not to remove mushroom block drops
     # from the droplist when mining a mushroom block
     # with silk-touch.

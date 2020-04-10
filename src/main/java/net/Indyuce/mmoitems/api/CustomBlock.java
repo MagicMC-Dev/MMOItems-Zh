@@ -17,23 +17,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MushroomState;
+import net.Indyuce.mmoitems.api.worldgen.WorldGenTemplate;
 import net.Indyuce.mmoitems.manager.BlockManager;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class CustomBlock {
+	private final int id;
 	private final MushroomState state;
 
-	private final int id;
 	private final String blockName;
-	private final String templateName;
-	private final List<String> lore = new ArrayList<String>();
-	private final int minExp;
-	private final int maxExp;
-	private final int requiredPower;
+	private final WorldGenTemplate template;
+	private final List<String> lore = new ArrayList<>();
+	private final int minExp, maxExp, requiredPower;
 
-	public CustomBlock(int id, MushroomState state, ConfigurationSection config) {
-		this.id = id;
+	public CustomBlock(MushroomState state, ConfigurationSection config) {
+		this.id = Integer.valueOf(config.getName());
 		this.state = state;
 
 		Validate.notNull(config, "Could not read custom block config");
@@ -45,9 +44,7 @@ public class CustomBlock {
 		minExp = config.getInt("min-xp", 0);
 		maxExp = config.getInt("max-xp", 0);
 		requiredPower = config.getInt("required-power", 0);
-		templateName = config.getString("gen-template", "");
-
-		MMOItems.plugin.getWorldGen().register(this);
+		template = config.contains("gen-template") ? MMOItems.plugin.getWorldGen().getOrThrow(config.get("gen-template").toString()) : null;
 	}
 
 	public int getId() {
@@ -58,45 +55,32 @@ public class CustomBlock {
 		return blockName;
 	}
 
-	public String getTemplateName() {
-		return templateName;
+	public MushroomState getState() {
+		return state;
+	}
+
+	public boolean hasGenTemplate() {
+		return template != null;
+	}
+
+	public WorldGenTemplate getGenTemplate() {
+		return template;
 	}
 
 	public List<String> getLore() {
 		return lore;
 	}
 
-	public int getMinXPDrop() {
+	public int getMinExpDrop() {
 		return minExp;
 	}
 
-	public int getMaxXPDrop() {
+	public int getMaxExpDrop() {
 		return maxExp;
 	}
 
 	public int getRequiredPower() {
 		return requiredPower;
-	}
-
-	// Depending on the id, return the mushroom type this block
-	// is supposed to feature.
-	public Material getType() {
-		return MMOItems.plugin.getCustomBlocks().getType(id);
-	}
-
-	// From the Id, check which sides to apply data to.
-	// This will return the blockstate of the blocks id.
-	public BlockData getBlockData() {
-		MultipleFacing mfData = (MultipleFacing) getType().createBlockData();
-
-		mfData.setFace(BlockFace.UP, state.up);
-		mfData.setFace(BlockFace.DOWN, state.down);
-		mfData.setFace(BlockFace.NORTH, state.north);
-		mfData.setFace(BlockFace.SOUTH, state.south);
-		mfData.setFace(BlockFace.EAST, state.east);
-		mfData.setFace(BlockFace.WEST, state.west);
-
-		return mfData;
 	}
 
 	// Convert block data into Item
@@ -113,7 +97,11 @@ public class CustomBlock {
 
 		item.setItemMeta(meta);
 
-		return MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("MMOITEMS_DISABLE_CRAFTING", true), new ItemTag("MMOITEMS_DISABLE_SMITHING", true), new ItemTag("MMOITEMS_DISABLE_ENCHANTING", true), new ItemTag("MMOITEMS_DISABLE_REPAIRING", true), new ItemTag("MMOITEMS_BLOCK_ID", id), new ItemTag("CustomModelData", id + 1000)).toItem();
+		return MMOLib.plugin.getNMS().getNBTItem(item)
+				.addTag(new ItemTag("MMOITEMS_DISABLE_CRAFTING", true), new ItemTag("MMOITEMS_DISABLE_SMITHING", true),
+						new ItemTag("MMOITEMS_DISABLE_ENCHANTING", true), new ItemTag("MMOITEMS_DISABLE_REPAIRING", true),
+						new ItemTag("MMOITEMS_BLOCK_ID", id), new ItemTag("CustomModelData", id + 1000))
+				.toItem();
 	}
 
 	// Gets a new CustomBlock instance from a mushroom blockstate.
@@ -123,7 +111,8 @@ public class CustomBlock {
 		if (!(data instanceof MultipleFacing))
 			return null;
 		MultipleFacing mfData = (MultipleFacing) data;
-		MushroomState state = new MushroomState(data.getMaterial(), mfData.hasFace(BlockFace.UP), mfData.hasFace(BlockFace.DOWN), mfData.hasFace(BlockFace.WEST), mfData.hasFace(BlockFace.EAST), mfData.hasFace(BlockFace.SOUTH), mfData.hasFace(BlockFace.NORTH));
+		MushroomState state = new MushroomState(data.getMaterial(), mfData.hasFace(BlockFace.UP), mfData.hasFace(BlockFace.DOWN),
+				mfData.hasFace(BlockFace.WEST), mfData.hasFace(BlockFace.EAST), mfData.hasFace(BlockFace.SOUTH), mfData.hasFace(BlockFace.NORTH));
 
 		BlockManager manager = MMOItems.plugin.getCustomBlocks();
 		return manager.isVanilla(state) ? null : manager.getBlock(state);

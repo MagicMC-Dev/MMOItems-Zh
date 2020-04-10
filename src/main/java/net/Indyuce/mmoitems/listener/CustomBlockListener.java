@@ -56,7 +56,7 @@ public class CustomBlockListener implements Listener {
 			CustomBlock block = CustomBlock.getFromData(event.getBlock().getBlockData());
 			if (block != null) {
 				event.setDropItems(false);
-				event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower() ? block.getMaxXPDrop() == 0 && block.getMinXPDrop() == 0 ? 0 : random.nextInt((block.getMaxXPDrop() - block.getMinXPDrop()) + 1) + block.getMinXPDrop() : 0);
+				event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower() ? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0 : random.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop() : 0);
 			}
 		}
 	}
@@ -90,8 +90,8 @@ public class CustomBlockListener implements Listener {
 			Block oldState = modify;
 			Material cachedType = modify.getType();
 			BlockData cachedData = modify.getBlockData();
-			modify.setType(block.getType(), false);
-			modify.setBlockData(block.getBlockData(), false);
+			modify.setType(block.getState().getType(), false);
+			modify.setBlockData(block.getState().getBlockData(), false);
 
 			MMOLib.plugin.getNMS().playArmAnimation(event.getPlayer());
 			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOLib.plugin.getNMS().getBlockPlaceSound(modify), 0.8f, 1.0f);

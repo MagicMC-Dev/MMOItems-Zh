@@ -3,7 +3,9 @@ package net.Indyuce.mmoitems.manager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -20,7 +22,13 @@ import net.Indyuce.mmoitems.api.worldgen.WorldGenTemplate;
 
 public class WorldGenManager implements Listener {
 	private final Map<String, WorldGenTemplate> templates = new HashMap<>();
-	private final Map<Integer, String> assigned = new HashMap<>();
+
+	/*
+	 * maps a custom block to the world generator template so that it is later
+	 * easier to access all the blocks which must be placed when generating a
+	 * world.
+	 */
+	private final Map<CustomBlock, WorldGenTemplate> assigned = new HashMap<>();
 
 	private static final BlockFace[] faces = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST, BlockFace.DOWN, BlockFace.UP };
 	private static final Random random = new Random();
@@ -29,13 +37,22 @@ public class WorldGenManager implements Listener {
 		if (!MMOItems.plugin.getLanguage().worldGenEnabled)
 			return;
 
-		FileConfiguration config = new ConfigFile("gen-templates").getConfig();
-		config.getKeys(false).forEach(e -> templates.put(e, new WorldGenTemplate(config.getConfigurationSection(e))));
+		reload();
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
 
-	public void register(CustomBlock block) {
-		assigned.put(block.getId(), block.getTemplateName());
+	public WorldGenTemplate getOrThrow(String id) {
+		Validate.isTrue(templates.containsKey(id), "Could not find gen template with ID '" + id + "'");
+		return templates.get(id);
+	}
+
+	/*
+	 * it is mandatory to call this function after registering the custom block
+	 * if you want the custom block to be
+	 */
+	public void assign(CustomBlock block, WorldGenTemplate template) {
+		Validate.notNull(template, "Cannot assign a null template to a custom block");
+		assigned.put(block, template);
 	}
 
 	@EventHandler
@@ -43,21 +60,19 @@ public class WorldGenManager implements Listener {
 		if (!event.isNewChunk())
 			return;
 
-		for (int blocks : assigned.keySet()) {
-			WorldGenTemplate wgt = templates.get(assigned.get(blocks));
-
-			if (random.nextDouble() < wgt.chunkChance)
-				for (int i = 0; i < wgt.veinCount; i++) {
-					int y = random.nextInt((wgt.maxDepth - wgt.minDepth) + 1) + wgt.minDepth;
+		assigned.forEach((block, template) -> {
+			if (random.nextDouble() < template.getChunkChance())
+				for (int i = 0; i < template.getVeinCount(); i++) {
+					int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();
 					Location generatePoint = event.getChunk().getBlock(random.nextInt(16), y, random.nextInt(16)).getLocation();
-					if (wgt.canGenerate(generatePoint)) {
-						CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(blocks);
+
+					if (template.canGenerate(generatePoint)) {
 						Block modify = event.getWorld().getBlockAt(generatePoint);
 
-						for (int j = 0; j < wgt.veinSize; j++) {
-							if (wgt.canReplace(modify.getType())) {
-								modify.setType(block.getType(), false);
-								modify.setBlockData(block.getBlockData(), false);
+						for (int j = 0; j < template.getVeinSize(); j++) {
+							if (template.canReplace(modify.getType())) {
+								modify.setType(block.getState().getType(), false);
+								modify.setBlockData(block.getState().getBlockData(), false);
 							}
 
 							BlockFace nextFace = faces[random.nextInt(faces.length)];
@@ -65,6 +80,19 @@ public class WorldGenManager implements Listener {
 						}
 					}
 				}
-		}
+		});
+	}
+
+	public void reload() {
+		templates.clear();
+
+		FileConfiguration config = new ConfigFile("gen-templates").getConfig();
+		for (String key : config.getKeys(false))
+			try {
+				templates.put(key, new WorldGenTemplate(config.getConfigurationSection(key)));
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occured when loading gen template '" + key + "': " + exception.getMessage());
+			}
+
 	}
 }

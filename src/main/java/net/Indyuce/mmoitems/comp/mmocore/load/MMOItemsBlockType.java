@@ -30,9 +30,9 @@ public class MMOItemsBlockType implements BlockType {
 	@Override
 	public void place(Location loc, RegeneratingBlock regenerating) {
 		CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(id);
-		loc.getBlock().setType(block.getType());
+		loc.getBlock().setType(block.getState().getType());
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
-			loc.getBlock().setBlockData(block.getBlockData());
+			loc.getBlock().setBlockData(block.getState().getBlockData());
 	}
 
 	public static boolean matches(Block block) {

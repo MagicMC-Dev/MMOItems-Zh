@@ -22,9 +22,9 @@ slime-chunks-only:
     replace: [STONE]
     
     # Use this option to only enable this template in slime chunks
-    chunk-chance: 0.6
-    
     slime-chunk: true
+    
+    chunk-chance: 0.6
     depth: 0=100
     vein-size: 1
     vein-count: 4

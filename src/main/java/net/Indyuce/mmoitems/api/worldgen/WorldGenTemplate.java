@@ -10,8 +10,8 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class WorldGenTemplate {
-	public final double chunkChance;
-	public final int minDepth, maxDepth, veinSize, veinCount;
+	private final double chunkChance;
+	private final int minDepth, maxDepth, veinSize, veinCount;
 
 	private final List<Material> replaceable = new ArrayList<>();
 	private final List<String> worldWhitelist = new ArrayList<>(), worldBlacklist = new ArrayList<>();
@@ -24,16 +24,10 @@ public class WorldGenTemplate {
 		config.getStringList("replace").forEach(str -> replaceable.add(Material.valueOf(str.toUpperCase().replace("-", "_").replace(" ", "_"))));
 
 		for (String world : config.getStringList("worlds"))
-			if (world.contains("!"))
-				worldBlacklist.add(world.toUpperCase());
-			else
-				worldWhitelist.add(world.toUpperCase());
+			(world.contains("!") ? worldBlacklist : worldWhitelist).add(world.toLowerCase());
 
 		for (String biome : config.getStringList("biomes"))
-			if (biome.contains("!"))
-				biomeBlacklist.add(biome.toUpperCase());
-			else
-				biomeWhitelist.add(biome.toUpperCase());
+			(biome.contains("!") ? biomeBlacklist : biomeWhitelist).add(biome.toUpperCase().replace("-", "_").replace(" ", "_"));
 
 		chunkChance = config.getDouble("chunk-chance");
 		slimeChunk = config.getBoolean("slime-chunk", false);
@@ -47,6 +41,26 @@ public class WorldGenTemplate {
 
 		veinSize = config.getInt("vein-size");
 		veinCount = config.getInt("vein-count");
+	}
+
+	public double getChunkChance() {
+		return chunkChance;
+	}
+
+	public int getVeinSize() {
+		return veinSize;
+	}
+
+	public int getVeinCount() {
+		return veinCount;
+	}
+
+	public int getMinDepth() {
+		return minDepth;
+	}
+
+	public int getMaxDepth() {
+		return maxDepth;
 	}
 
 	public boolean canGenerate(Location pos) {

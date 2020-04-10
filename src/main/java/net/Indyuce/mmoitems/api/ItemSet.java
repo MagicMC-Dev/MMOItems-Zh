@@ -26,56 +26,60 @@ public class ItemSet {
 	private final List<String> loreTag;
 	private final String name, id;
 
-	public ItemSet(ConfigurationSection section) {
-		this.id = section.getName().toUpperCase().replace("-", "_");
-		this.loreTag = section.getStringList("lore-tag");
-		this.name = ChatColor.translateAlternateColorCodes('&', section.getString("name"));
+	private static final int itemLimit = 10;
 
-		if (section.contains("bonuses"))
-			for (int j = 2; j < 7; j++) {
-				if (!section.getConfigurationSection("bonuses").contains("" + j))
-					continue;
+	public ItemSet(ConfigurationSection config) {
+		this.id = config.getName().toUpperCase().replace("-", "_");
+		this.loreTag = config.getStringList("lore-tag");
+		this.name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
 
-				SetBonuses bonuses = new SetBonuses();
+		Validate.isTrue(config.contains("bonuses"), "Could not find item set bonuses");
 
-				for (String key : section.getConfigurationSection("bonuses." + j).getKeys(false))
-					try {
-						String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
+		for (int j = 2; j <= itemLimit; j++) {
+			if (!config.getConfigurationSection("bonuses").contains("" + j))
+				continue;
 
-						// ability
-						if (key.startsWith("ability-")) {
-							bonuses.addAbility(new AbilityData(section.getConfigurationSection("bonuses." + j + "." + key)));
-							continue;
-						}
+			SetBonuses bonuses = new SetBonuses();
 
-						// potion effect
-						if (key.startsWith("potion-")) {
-							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
-							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt("bonuses." + j + "." + key) - 1, true, false));
-							continue;
-						}
+			for (String key : config.getConfigurationSection("bonuses." + j).getKeys(false))
+				try {
+					String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
 
-						// particle effect
-						if (key.startsWith("particle-")) {
-							bonuses.addParticle(new ParticleData(section.getConfigurationSection("bonuses." + j + "." + key)));
-							continue;
-						}
-
-						// stat
-						ItemStat stat = MMOItems.plugin.getStats().get(format);
-						if (stat != null) {
-							bonuses.addStat(stat, section.getDouble("bonuses." + j + "." + key));
-							continue;
-						}
-
-						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "'.");
-					} catch (IllegalArgumentException exception) {
-						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "': " + exception.getMessage());
+					// ability
+					if (key.startsWith("ability-")) {
+						bonuses.addAbility(new AbilityData(config.getConfigurationSection("bonuses." + j + "." + key)));
+						continue;
 					}
 
-				this.bonuses.put(j, bonuses);
-			}
+					// potion effect
+					if (key.startsWith("potion-")) {
+						PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
+						Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
+						bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
+								config.getInt("bonuses." + j + "." + key) - 1, true, false));
+						continue;
+					}
+
+					// particle effect
+					if (key.startsWith("particle-")) {
+						bonuses.addParticle(new ParticleData(config.getConfigurationSection("bonuses." + j + "." + key)));
+						continue;
+					}
+
+					// stat
+					ItemStat stat = MMOItems.plugin.getStats().get(format);
+					if (stat != null) {
+						bonuses.addStat(stat, config.getDouble("bonuses." + j + "." + key));
+						continue;
+					}
+
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "'.");
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "': " + exception.getMessage());
+				}
+
+			this.bonuses.put(j, bonuses);
+		}
 	}
 
 	public String getName() {
@@ -88,9 +92,9 @@ public class ItemSet {
 
 	public SetBonuses getBonuses(int items) {
 		SetBonuses bonuses = new SetBonuses();
-		for (int j = 2; j <= Math.min(items, 6); j++)
+		for (int j = 2; j <= Math.min(items, itemLimit); j++)
 			if (this.bonuses.containsKey(j))
-				bonuses.add(this.bonuses.get(j));
+				bonuses.merge(this.bonuses.get(j));
 		return bonuses;
 	}
 
@@ -99,12 +103,16 @@ public class ItemSet {
 	}
 
 	public class SetBonuses {
-		private Map<ItemStat, Double> stats = new HashMap<>();
-		private Map<PotionEffectType, PotionEffect> permEffects = new HashMap<>();
-		private Set<AbilityData> abilities = new HashSet<>();
-		private Set<ParticleData> particles = new HashSet<>();
+		private final Map<ItemStat, Double> stats;
+		private final Map<PotionEffectType, PotionEffect> permEffects;
+		private final Set<AbilityData> abilities;
+		private final Set<ParticleData> particles;
 
 		public SetBonuses() {
+			stats = new HashMap<>();
+			permEffects = new HashMap<>();
+			abilities = new HashSet<>();
+			particles = new HashSet<>();
 		}
 
 		public SetBonuses(SetBonuses bonuses) {
@@ -146,8 +154,9 @@ public class ItemSet {
 			return abilities;
 		}
 
-		public void add(SetBonuses bonuses) {
-			bonuses.getStats().forEach(stat -> stats.put(stat.getKey(), (stats.containsKey(stat.getKey()) ? stats.get(stat.getKey()) : 0) + stat.getValue()));
+		public void merge(SetBonuses bonuses) {
+			bonuses.getStats()
+					.forEach(stat -> stats.put(stat.getKey(), (stats.containsKey(stat.getKey()) ? stats.get(stat.getKey()) : 0) + stat.getValue()));
 
 			for (PotionEffect effect : bonuses.getPotionEffects())
 				if (!permEffects.containsKey(effect.getType()) || permEffects.get(effect.getType()).getAmplifier() < effect.getAmplifier())

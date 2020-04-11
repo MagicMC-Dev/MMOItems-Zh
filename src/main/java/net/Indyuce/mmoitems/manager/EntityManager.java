@@ -54,11 +54,8 @@ public class EntityManager implements Listener {
 		 * arrow particles. currently projectiles are only arrows so there is no
 		 * problem with other projectiles like snowballs etc.
 		 */
-		if (entity instanceof Arrow) {
-			ArrowParticles particles = new ArrowParticles((Arrow) entity).load(sourceItem);
-			if (particles.isValid())
-				particles.runTaskTimer(MMOItems.plugin, 0, 1);
-		}
+		if (entity instanceof Arrow && sourceItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
+			new ArrowParticles((Arrow) entity, sourceItem);
 
 		projectiles.put(entity.getEntityId(), new ProjectileData(sourceItem, stats, customWeapon));
 	}
@@ -125,6 +122,5 @@ public class EntityManager implements Listener {
 
 		event.setDamage(result.getDamage());
 		unregisterCustomProjectile(projectile);
-		return;
 	}
 }

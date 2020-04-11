@@ -91,7 +91,7 @@ public class EntityManager implements Listener {
 		entities.remove(entity.getEntityId());
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void a(EntityDeathEvent event) {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
 	}
@@ -101,15 +101,16 @@ public class EntityManager implements Listener {
 		if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
 			return;
 
-		Projectile arrow = (Projectile) event.getDamager();
-		if (!isCustomProjectile(arrow))
+		Projectile projectile = (Projectile) event.getDamager();
+		if (!isCustomProjectile(projectile))
 			return;
 
-		ProjectileData data = getProjectileData(arrow);
+		ProjectileData data = getProjectileData(projectile);
 		LivingEntity target = (LivingEntity) event.getEntity();
 		CachedStats stats = data.getPlayerStats();
 
-		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(), DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
+		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(),
+				DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
 
 		/*
 		 * only modify the damage when the bow used is a custom weapon.
@@ -117,13 +118,13 @@ public class EntityManager implements Listener {
 		if (data.isCustomWeapon()) {
 			result.applyElementalEffects(stats, data.getSourceItem(), target);
 
-			if (data.getSourceItem().getItem().hasItemMeta())
-				if (data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
-					result.multiplyDamage(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
+			if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()
+					&& data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
+				result.multiplyDamage(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
 		}
 
 		event.setDamage(result.getDamage());
-		unregisterCustomProjectile(arrow);
+		unregisterCustomProjectile(projectile);
 		return;
 	}
 }

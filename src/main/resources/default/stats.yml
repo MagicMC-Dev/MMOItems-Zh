@@ -42,7 +42,6 @@ armor-toughness: '&7✠ Armor Toughness: &f<plus>#'
 knockback-resistance: '&7✠ Knockback Resistance: &f<plus>#%'
 max-health: '&c❤ Health: <plus>#'
 movement-speed: '&7■ Movement Speed: &f<plus>#'
-regeneration: '&7■ Health Regeneration: &f<plus>#%'
 
 # Damage Reduction
 damage-reduction: '&7■ Damage Reduction: &f<plus>#%'

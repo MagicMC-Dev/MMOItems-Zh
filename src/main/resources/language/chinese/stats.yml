@@ -42,7 +42,6 @@ armor-toughness: '&7✠ 护甲[A]: &f<plus>#'
 knockback-resistance: '&7✠ 击退保护: &f<plus>#%'
 max-health: '&c❤ 生命值: <plus>#'
 movement-speed: '&7■ 移动速度: &f<plus>#'
-regeneration: '&7■ 生命恢复: &f<plus>#%'
 
 # Damage Reduction
 damage-reduction: '&7■ 伤害减免: &f<plus>#%'

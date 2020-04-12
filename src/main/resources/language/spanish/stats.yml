@@ -42,7 +42,6 @@ armor-toughness: '&7✠ Resistencia de armadura: &f<plus>#'
 knockback-resistance: '&7✠ Resistencia al empuje: &f<plus>#%'
 max-health: '&c❤ Vida máxima: <plus>#'
 movement-speed: '&7■ Velocidad: &f<plus>#'
-regeneration: '&7■ Regeneración de vida: &f<plus>#%'
 
 # Damage Reduction
 damage-reduction: '&7■ Reducción de daño: &f<plus>#%'
@@ -53,7 +52,7 @@ projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Physical Damage Reduction: &f<plus>#%'
 
 # RPG Stats
-health-regeneration: '&7■ Health Regeneration: &f<plus>#'
+health-regeneration: '&7■ Regeneración de vida: &f<plus>#%'
 max-mana: '&7■ Mana máximo: &f<plus>#'
 mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-stamina: '&7■ Max Stamina: &f<plus>#'

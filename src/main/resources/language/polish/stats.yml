@@ -42,7 +42,6 @@ armor-toughness: '&7✠ Wytrzymalosc Pancerza: &f<plus>#'
 knockback-resistance: '&7✠ Odpornosc Na Odepchniecie: &f<plus>#%'
 max-health: '&c❤ Zdrowie: <plus>#'
 movement-speed: '&7■ Szybkosc Ruchu: &f<plus>#'
-regeneration: '&7■ Regeneracja Zdrowia: &f<plus>#%'
 
 # Damage Reduction
 damage-reduction: '&7■ Zmniejszenie Obrazen: &f<plus>#%'
@@ -53,7 +52,7 @@ projectile-damage-reduction: '&7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&7■ Zmniejszenie Obrazen Psychicznych: &f<plus>#%'
 
 # RPG Stats
-health-regeneration: '&7■ Mana Regeneration: &f<plus>#'
+health-regeneration: '&7■ Regeneracja Zdrowia: &f<plus>#%'
 max-mana: '&7■ Maksymalna Mana: &f<plus>#'
 mana-regeneration: '&7■ Mana Regeneration: &f<plus>#'
 max-stamina: '&7■ Max Stamina: &f<plus>#'

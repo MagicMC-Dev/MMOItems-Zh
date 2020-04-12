@@ -35,7 +35,7 @@ public class Restore extends ItemStat {
 	public StatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
-		return new RestoreData(config.getDouble("restore.health"), config.getDouble("restore.food"), config.getDouble("restore.saturation"));
+		return new RestoreData(config.getDouble("health"), config.getDouble("food"), config.getDouble("saturation"));
 	}
 
 	@Override

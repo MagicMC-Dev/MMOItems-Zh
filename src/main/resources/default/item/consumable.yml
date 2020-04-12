@@ -28,7 +28,7 @@ ROCK:
 SCROLL_OF_IDENTIFICATION:
   material: PAPER
   name: '&fScroll of Identification'
-  tier: '&8Uncommon'
+  tier: 'UNCOMMON'
   can-identify: true
   crafting:
     shaped:

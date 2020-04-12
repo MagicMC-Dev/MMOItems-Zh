@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -26,7 +27,10 @@ public class CraftingStatus {
 
 		for (String stationId : config.getKeys(false)) {
 			if (!MMOItems.plugin.getCrafting().hasStation(stationId)) {
-				data.log("Could not find crafting station ID " + stationId + ", not loading started recipes.", "Make sure you backup that player data file before the user logs off.");
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						"An error occured while trying to load crafting station recipe data of '" + data.getPlayer().getName() + "': "
+								+ "could not find crafting station with ID '" + stationId
+								+ "', make sure you backup that player data file before the user logs off.");
 				continue;
 			}
 
@@ -37,17 +41,22 @@ public class CraftingStatus {
 			for (String recipeConfigId : config.getConfigurationSection(stationId).getKeys(false)) {
 				String recipeId = config.getString(stationId + "." + recipeConfigId + ".recipe");
 				if (recipeId == null || !station.hasRecipe(recipeId)) {
-					data.log("Could not find recipe ID '" + recipeId + "', not loading this recipe.", "Make sure you backup that player data file before the user logs off.");
+					MMOItems.plugin.getLogger().log(Level.WARNING,
+							"An error occured while trying to load crafting station recipe data of '" + data.getPlayer().getName() + "': "
+									+ "could not find recipe with ID '" + recipeId
+									+ "', make sure you backup that player data file before the user logs off.");
 					continue;
 				}
 
 				Recipe recipe = station.getRecipe(recipeId);
 				if (!(recipe instanceof CraftingRecipe)) {
-					data.log("Could not load recipe " + recipeId + ", it is not a CRAFTING recipe!?");
+					MMOItems.plugin.getLogger().log(Level.WARNING, "An error occured while trying to load crafting station recipe data of '"
+							+ data.getPlayer().getName() + "': " + "recipe '" + recipe.getId() + "' is not a CRAFTING recipe.");
 					continue;
 				}
 
-				queue.add((CraftingRecipe) recipe, config.getLong(stationId + "." + recipeConfigId + ".started"), config.getLong(stationId + "." + recipeConfigId + ".delay"));
+				queue.add((CraftingRecipe) recipe, config.getLong(stationId + "." + recipeConfigId + ".started"),
+						config.getLong(stationId + "." + recipeConfigId + ".delay"));
 			}
 		}
 	}
@@ -103,10 +112,11 @@ public class CraftingStatus {
 
 		/*
 		 * when adding a crafting recipe, the delay is the actual crafting time
-		 * PLUS the delay of the previous item since it's a queue.
+		 * PLUS the delay left for the previous item since it's a queue.
 		 */
 		public void add(CraftingRecipe recipe) {
-			add(recipe, System.currentTimeMillis(), (crafts.size() == 0 ? 0 : crafts.get(crafts.size() - 1).getLeft()) + (long) recipe.getCraftingTime() * 1000);
+			add(recipe, System.currentTimeMillis(),
+					(crafts.size() == 0 ? 0 : crafts.get(crafts.size() - 1).getLeft()) + (long) recipe.getCraftingTime() * 1000);
 		}
 
 		private void add(CraftingRecipe recipe, long started, long delay) {

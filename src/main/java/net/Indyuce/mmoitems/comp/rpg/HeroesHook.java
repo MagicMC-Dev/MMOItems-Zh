@@ -6,14 +6,12 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.SkillUseInfo;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
-import com.herocraftonline.heroes.api.events.SkillDamageEvent;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.skill.SkillType;
 
@@ -70,27 +68,27 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 		PlayerData.get(event.getHero().getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 
-	@EventHandler
-	public void b(SkillDamageEvent event) {
-
-		/*
-		 * apply the 'Magic Damage' and 'Magic Damage Reduction' item option to
-		 * Heroes skills
-		 */
-		if (event.getSkill().isType(SkillType.ABILITY_PROPERTY_MAGICAL)) {
-			if (event.getDamager().getEntity() instanceof Player)
-				event.setDamage(event.getDamage() * (1 + PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));
-			if (event.getEntity() instanceof Player)
-				event.setDamage(event.getDamage() * (1 - PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
-		}
-
-		/*
-		 * apply 'Physical Damage Reduction' to physical skills
-		 */
-		if (event.getSkill().isType(SkillType.ABILITY_PROPERTY_PHYSICAL))
-			if (event.getEntity() instanceof Player)
-				event.setDamage(event.getDamage() * (1 - PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
-	}
+//	@EventHandler
+//	public void b(SkillDamageEvent event) {
+//
+//		/*
+//		 * apply the 'Magic Damage' and 'Magic Damage Reduction' item option to
+//		 * Heroes skills
+//		 */
+//		if (event.getSkill().isType(SkillType.ABILITY_PROPERTY_MAGICAL)) {
+//			if (event.getDamager().getEntity() instanceof Player)
+//				event.setDamage(event.getDamage() * (1 + PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));
+//			if (event.getEntity() instanceof Player)
+//				event.setDamage(event.getDamage() * (1 - PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.MAGIC_DAMAGE_REDUCTION) / 100));
+//		}
+//
+//		/*
+//		 * apply 'Physical Damage Reduction' to physical skills
+//		 */
+//		if (event.getSkill().isType(SkillType.ABILITY_PROPERTY_PHYSICAL))
+//			if (event.getEntity() instanceof Player)
+//				event.setDamage(event.getDamage() * (1 - PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
+//	}
 
 	public class HeroesPlayer extends RPGPlayer {
 		private final Hero hero;

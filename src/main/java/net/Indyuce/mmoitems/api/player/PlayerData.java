@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -66,7 +65,7 @@ public class PlayerData {
 	/*
 	 * the inventory is all the items the player can actually use. items are
 	 * cached here to check if the player's items changed, if so just update
-	 * inventory
+	 * inventory TODO improve player inventory checkup method
 	 */
 	private ItemStack helmet = null, chestplate = null, leggings = null, boots = null, hand = null, offhand = null;
 	private List<VolatileMMOItem> playerInventory = new ArrayList<>();
@@ -78,7 +77,8 @@ public class PlayerData {
 	private Map<CooldownType, Long> extraCooldowns = new HashMap<>();
 
 	/*
-	 * specific stat calculation
+	 * specific stat calculation TODO compress it in Map<ItemStat,
+	 * DynamicStatData>
 	 */
 	private Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
 	private Set<ParticleRunnable> itemParticles = new HashSet<>();
@@ -425,11 +425,6 @@ public class PlayerData {
 		 * Sparkle can trigger deadly crash loops
 		 */
 		ability.getAbility().whenCast(stats, abilityResult, attack);
-	}
-
-	public void log(String... lines) {
-		for (String line : lines)
-			MMOItems.plugin.getLogger().log(Level.WARNING, "[Data] " + player.getName() + ": " + line);
 	}
 
 	public boolean isOnCooldown(CooldownType type) {

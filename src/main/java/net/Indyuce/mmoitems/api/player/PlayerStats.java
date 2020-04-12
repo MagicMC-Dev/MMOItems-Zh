@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.api.player;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 
@@ -35,8 +34,7 @@ public class PlayerStats {
 		});
 
 		if (playerData.hasSetBonuses())
-			for (Entry<ItemStat, Double> entry : playerData.getSetBonuses().getStats())
-				getInstance(entry.getKey()).addModifier("fullSetBonus", entry.getValue());
+			playerData.getSetBonuses().getStats().forEach((stat, value) -> getInstance(stat).addModifier("fullSetBonus", value));
 
 		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
 			double t = 0;

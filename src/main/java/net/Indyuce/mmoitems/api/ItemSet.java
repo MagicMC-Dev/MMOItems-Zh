@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -142,8 +141,8 @@ public class ItemSet {
 			return stats.containsKey(stat) ? stats.get(stat) : 0;
 		}
 
-		public Set<Entry<ItemStat, Double>> getStats() {
-			return stats.entrySet();
+		public Map<ItemStat, Double> getStats() {
+			return stats;
 		}
 
 		public Collection<PotionEffect> getPotionEffects() {
@@ -155,8 +154,7 @@ public class ItemSet {
 		}
 
 		public void merge(SetBonuses bonuses) {
-			bonuses.getStats()
-					.forEach(stat -> stats.put(stat.getKey(), (stats.containsKey(stat.getKey()) ? stats.get(stat.getKey()) : 0) + stat.getValue()));
+			bonuses.getStats().forEach((stat, value) -> stats.put(stat, (stats.containsKey(stat) ? stats.get(stat) : 0) + value));
 
 			for (PotionEffect effect : bonuses.getPotionEffects())
 				if (!permEffects.containsKey(effect.getType()) || permEffects.get(effect.getType()).getAmplifier() < effect.getAmplifier())

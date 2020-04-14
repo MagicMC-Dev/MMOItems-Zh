@@ -15,7 +15,7 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
-	private DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
+	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
 
 	@Override
 	public String getAuthor() {
@@ -39,8 +39,11 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 				return twoDigits.format(PlayerData.get(player).getStats().getStat(stat));
 		}
 
-		if (identifier.startsWith("ability_cd_"))
-			PlayerData.get(player).getRemainingAbilityCooldown(identifier.substring(11));
+		if (identifier.startsWith("ability_cd_")) {
+			PlayerData data = PlayerData.get(player);
+			return data.hasCooldownInfo(identifier.substring(11)) ? oneDigit.format(data.getCooldownInfo(identifier.substring(11)).getRemaining())
+					: "0";
+		}
 
 		if (identifier.equals("durability"))
 			return "" + (int) MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand()).getDouble("MMOITEMS_DURABILITY");

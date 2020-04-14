@@ -71,22 +71,27 @@ public abstract class RPGPlayer {
 	}
 
 	public boolean canCast(AbilityData data, boolean message) {
-		double remaining = playerData.getRemainingAbilityCooldown(data.getAbility());
-		if (remaining > 0) {
-			if (message) {
-				String progressBar = ChatColor.YELLOW + "";
-				double cooldown = data.getModifier("cooldown");
-				double progress = (cooldown - remaining) / cooldown * 10.;
 
-				String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
-				for (int j = 0; j < 10; j++)
-					progressBar += (progress >= j ? ChatColor.GREEN : ChatColor.WHITE) + barChar;
-				Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(remaining), "#progress#", progressBar, "#s#", (remaining >= 2 ? "s" : "")).send(player, "ability-cooldown");
+		if (playerData.hasCooldownInfo(data.getAbility())) {
+			CooldownInformation info = playerData.getCooldownInfo(data.getAbility());
+			if (!info.hasCooledDown()) {
+				if (message) {
+					String progressBar = ChatColor.YELLOW + "";
+					double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
+
+					String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
+					for (int j = 0; j < 10; j++)
+						progressBar += (progress >= j ? ChatColor.GREEN : ChatColor.WHITE) + barChar;
+					Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(info.getRemaining()), "#progress#",
+							progressBar, "#s#", (info.getRemaining() >= 2 ? "s" : "")).send(player, "ability-cooldown");
+				}
+				return false;
 			}
-			return false;
 		}
 
-		if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities") && !player.hasPermission("mmoitems.ability." + data.getAbility().getLowerCaseID()) && !player.hasPermission("mmoitems.bypass.ability"))
+		if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities")
+				&& !player.hasPermission("mmoitems.ability." + data.getAbility().getLowerCaseID())
+				&& !player.hasPermission("mmoitems.bypass.ability"))
 			return false;
 
 		if (data.hasModifier("mana") && getMana() < data.getModifier("mana")) {

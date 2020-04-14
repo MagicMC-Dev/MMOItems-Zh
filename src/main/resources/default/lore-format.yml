@@ -81,7 +81,7 @@ lore-format:
 - '#repair#'
 - '#item-cooldown#'
 - '#additional-experience#'
-- '#skill-cooldown-reduction#'
+- '#cooldown-reduction#'
 - '#mana-cost#'
 - '#stamina-cost#'
 - '#max-consume#'

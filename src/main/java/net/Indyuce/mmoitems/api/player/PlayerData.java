@@ -72,7 +72,7 @@ public class PlayerData {
 
 	private CraftingStatus craftingStatus = new CraftingStatus();
 	private PlayerAbilityData playerAbilityData = new PlayerAbilityData();
-	private Map<String, Long> abilityCooldowns = new HashMap<>();
+	private Map<String, CooldownInformation> abilityCooldowns = new HashMap<>();
 	private Map<String, Long> itemCooldowns = new HashMap<>();
 	private Map<CooldownType, Long> extraCooldowns = new HashMap<>();
 
@@ -416,6 +416,10 @@ public class PlayerData {
 			rpgPlayer.giveStamina(-ability.getModifier("stamina"));
 
 		double cooldown = ability.getModifier("cooldown");
+
+		// apply cooldown reduction
+		cooldown *= 1 - Math.max(.8, stats.getStat(ItemStat.COOLDOWN_REDUCTION) / 100);
+
 		if (cooldown > 0)
 			applyAbilityCooldown(ability.getAbility(), cooldown);
 
@@ -453,15 +457,23 @@ public class PlayerData {
 	}
 
 	public void applyAbilityCooldown(String id, double value) {
-		abilityCooldowns.put(id, (long) (System.currentTimeMillis() + value * 1000));
+		abilityCooldowns.put(id, new CooldownInformation(value));
 	}
 
-	public double getRemainingAbilityCooldown(Ability ability) {
-		return getRemainingAbilityCooldown(ability.getID());
+	public boolean hasCooldownInfo(Ability ability) {
+		return hasCooldownInfo(ability.getID());
 	}
 
-	public double getRemainingAbilityCooldown(String id) {
-		return Math.max((abilityCooldowns.containsKey(id) ? abilityCooldowns.get(id) : 0) - System.currentTimeMillis(), 0) / 1000.;
+	public boolean hasCooldownInfo(String id) {
+		return abilityCooldowns.containsKey(id);
+	}
+
+	public CooldownInformation getCooldownInfo(Ability ability) {
+		return getCooldownInfo(ability.getID());
+	}
+
+	public CooldownInformation getCooldownInfo(String id) {
+		return abilityCooldowns.get(id);
 	}
 
 	public double getItemCooldown(String id) {

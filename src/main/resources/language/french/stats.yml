@@ -57,7 +57,7 @@ max-mana: '&7■ Mana Max: &f<plus>#'
 mana-regeneration: '&7■ Régénération de mana: &f<plus>#'
 max-stamina: '&7■ Stamina Max: &f<plus>#'
 stamina-regeneration: '&7■ Régénération d''énergie: &f<plus>#'
-skill-cooldown-reduction: '&7■ Réduction des délais de récup.: &f<plus>#%'
+cooldown-reduction: '&7■ Réduction des délais de récup.: &f<plus>#%'
 additional-experience: '&7■ Expérience supplémentaire: &f<plus>#%'
 
 # Extra Options

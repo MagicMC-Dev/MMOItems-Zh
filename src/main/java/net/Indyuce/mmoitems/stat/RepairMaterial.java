@@ -17,7 +17,9 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class RepairMaterial extends StringStat {
 	public RepairMaterial() {
-		super("REPAIR_MATERIAL", new ItemStack(Material.ANVIL), "Repair Material", new String[] { "The material to be used when", "repairing this item in an anvil.", "", "Currently servers no purpose!" }, new String[] { "all" });
+		super("REPAIR_MATERIAL", new ItemStack(Material.ANVIL), "Repair Material",
+				new String[] { "The material to be used when", "repairing this item in an anvil.", "", "Currently serves no purpose!" },
+				new String[] { "all" });
 	}
 
 	@Override
@@ -34,7 +36,8 @@ public class RepairMaterial extends StringStat {
 			material = Material.valueOf(format);
 		} catch (Exception e1) {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid material!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "All materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
+					+ "All materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
 			return false;
 		}
 

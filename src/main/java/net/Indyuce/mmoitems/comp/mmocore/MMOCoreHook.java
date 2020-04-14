@@ -24,7 +24,6 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration", new String[] { "Increases mana regen." });
 	private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." });
 	private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." });
-	private static final ItemStat SKILL_COOLDOWN_REDUCTION = new DoubleStat("SKILL_COOLDOWN_REDUCTION", new ItemStack(Material.BOOK), "Skill Cooldown Reduction", new String[] { "Reduces cooldowns of MMOCore skills (%)." });
 	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." });
 	private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", new ItemStack(Material.BREAD), "Health Regeneration", new String[] { "Increases MMOCore health regen.", "In %." });
 
@@ -39,7 +38,6 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		MMOItems.plugin.getStats().register("MANA_REGENERATION", MANA_REGENERATION);
 		MMOItems.plugin.getStats().register("MAX_STAMINA", MAX_STAMINA);
 		MMOItems.plugin.getStats().register("STAMINA_REGENERATION", STAMINA_REGENERATION);
-		MMOItems.plugin.getStats().register("SKILL_COOLDOWN_REDUCTION", SKILL_COOLDOWN_REDUCTION);
 		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", ADDITIONAL_EXPERIENCE);
 
 		/*

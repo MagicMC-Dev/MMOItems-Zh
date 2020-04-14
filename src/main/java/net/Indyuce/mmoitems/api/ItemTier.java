@@ -11,7 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.drop.DropTable;
+import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
 
 public class ItemTier {

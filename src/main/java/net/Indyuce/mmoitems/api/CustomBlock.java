@@ -6,9 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MushroomState;
 import net.Indyuce.mmoitems.api.worldgen.WorldGenTemplate;
-import net.Indyuce.mmoitems.manager.BlockManager;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -102,19 +98,5 @@ public class CustomBlock {
 						new ItemTag("MMOITEMS_DISABLE_ENCHANTING", true), new ItemTag("MMOITEMS_DISABLE_REPAIRING", true),
 						new ItemTag("MMOITEMS_BLOCK_ID", id), new ItemTag("CustomModelData", id + 1000))
 				.toItem();
-	}
-
-	// Gets a new CustomBlock instance from a mushroom blockstate.
-	public static CustomBlock getFromData(BlockData data) {
-		if (!MMOItems.plugin.getCustomBlocks().isMushroomBlock(data.getMaterial()))
-			return null;
-		if (!(data instanceof MultipleFacing))
-			return null;
-		MultipleFacing mfData = (MultipleFacing) data;
-		MushroomState state = new MushroomState(data.getMaterial(), mfData.hasFace(BlockFace.UP), mfData.hasFace(BlockFace.DOWN),
-				mfData.hasFace(BlockFace.WEST), mfData.hasFace(BlockFace.EAST), mfData.hasFace(BlockFace.SOUTH), mfData.hasFace(BlockFace.NORTH));
-
-		BlockManager manager = MMOItems.plugin.getCustomBlocks();
-		return manager.isVanilla(state) ? null : manager.getBlock(state);
 	}
 }

@@ -20,7 +20,8 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.drop.DropItem;
+import net.Indyuce.mmoitems.api.droptable.DropItem;
+import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class MythicMobsHook implements Listener {
@@ -30,7 +31,8 @@ public class MythicMobsHook implements Listener {
 	 * MythicMobs abilities and therefore must be enabled after MythicMobs
 	 */
 	public MythicMobsHook() {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String
+				.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
 
@@ -49,7 +51,8 @@ public class MythicMobsHook implements Listener {
 	 */
 	@EventHandler
 	public void b(MythicReloadedEvent event) {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String
+				.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 	}
 
 	public class MMOItemsDrop extends Drop implements IMultiDrop {
@@ -71,7 +74,7 @@ public class MythicMobsHook implements Listener {
 
 				Validate.notNull(id, "MMOItems ID cannot be null");
 
-				dropItem = new DropItem(type, id, 0, 1, config.getDouble("unidentified", 0), 1, 1);
+				dropItem = new MMOItemDropItem(type, id, 1, config.getDouble("unidentified", 0), 1, 1);
 
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load drop item: " + exception.getMessage());

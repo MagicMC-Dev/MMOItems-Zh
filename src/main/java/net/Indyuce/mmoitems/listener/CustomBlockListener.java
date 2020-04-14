@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.listener;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -33,7 +34,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 public class CustomBlockListener implements Listener {
 
 	private static final Random random = new Random();
-	private static final List<Material> mat = Arrays.asList(Material.GRASS, Material.TALL_GRASS, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.FERN, Material.LARGE_FERN, Material.DEAD_BUSH, Material.SNOW);
+	private static final List<Material> mat = Arrays.asList(Material.GRASS, Material.TALL_GRASS, Material.SEAGRASS, Material.TALL_SEAGRASS,
+			Material.FERN, Material.LARGE_FERN, Material.DEAD_BUSH, Material.SNOW);
 
 	public CustomBlockListener() {
 		if (MMOItems.plugin.getLanguage().replaceMushroomDrops)
@@ -50,20 +52,23 @@ public class CustomBlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void b(BlockBreakEvent event) {
-		Material type = event.getBlock().getType();
+		Optional<CustomBlock> opt = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
+		if (!opt.isPresent())
+			return;
 
-		if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(type)) {
-			CustomBlock block = CustomBlock.getFromData(event.getBlock().getBlockData());
-			if (block != null) {
-				event.setDropItems(false);
-				event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower() ? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0 : random.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop() : 0);
-			}
-		}
+		CustomBlock block = opt.get();
+		event.setDropItems(false);
+		event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0
+				: CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower()
+						? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0
+								: random.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
+						: 0);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void c(PlayerInteractEvent event) {
-		if (!event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND || event.getClickedBlock().getType().isInteractable())
+		if (!event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND
+				|| event.getClickedBlock().getType().isInteractable())
 			return;
 		if (event.getItem().getType() == Material.CLAY_BALL) {
 			NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(event.getItem());
@@ -72,7 +77,8 @@ public class CustomBlockListener implements Listener {
 
 			CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(nbtItem.getInteger("MMOITEMS_BLOCK_ID"));
 
-			Block modify = mat.contains(event.getClickedBlock().getType()) ? event.getClickedBlock() : event.getClickedBlock().getRelative(event.getBlockFace());
+			Block modify = mat.contains(event.getClickedBlock().getType()) ? event.getClickedBlock()
+					: event.getClickedBlock().getRelative(event.getBlockFace());
 
 			if (isStandingInside(event.getPlayer().getLocation(), modify.getLocation()))
 				return;
@@ -96,7 +102,8 @@ public class CustomBlockListener implements Listener {
 			MMOLib.plugin.getNMS().playArmAnimation(event.getPlayer());
 			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOLib.plugin.getNMS().getBlockPlaceSound(modify), 0.8f, 1.0f);
 
-			BlockPlaceEvent bpe = new BlockPlaceEvent(modify, oldState.getState(), event.getClickedBlock(), event.getItem(), event.getPlayer(), true, EquipmentSlot.HAND);
+			BlockPlaceEvent bpe = new BlockPlaceEvent(modify, oldState.getState(), event.getClickedBlock(), event.getItem(), event.getPlayer(), true,
+					EquipmentSlot.HAND);
 			Bukkit.getServer().getPluginManager().callEvent(bpe);
 			if (bpe.isCancelled()) {
 				modify.setType(cachedType);
@@ -135,13 +142,14 @@ public class CustomBlockListener implements Listener {
 		if (event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.SPREAD) {
 			BlockFace[] faces = { BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST };
 			for (BlockFace face : faces)
-				if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getRelative(face).getType()) && CustomBlock.getFromData(event.getBlock().getRelative(face).getBlockData()) != null)
+				if (MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getRelative(face).getBlockData()) != null)
 					event.setCancelled(true);
 		}
 	}
 
 	private boolean isStandingInside(Location p, Location b) {
-		return (p.getBlockX() == b.getBlockX() && (p.getBlockY() == b.getBlockY() || p.getBlockY() + 1 == b.getBlockY()) && p.getBlockZ() == b.getBlockZ());
+		return (p.getBlockX() == b.getBlockX() && (p.getBlockY() == b.getBlockY() || p.getBlockY() + 1 == b.getBlockY())
+				&& p.getBlockZ() == b.getBlockZ());
 	}
 
 	public static int getPickaxePower(Player player) {
@@ -158,7 +166,8 @@ public class CustomBlockListener implements Listener {
 	public class MushroomReplacer implements Listener {
 		@EventHandler(ignoreCancelled = true)
 		public void d(BlockBreakEvent event) {
-			if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getType()) && MMOItems.plugin.getDropTables().hasSilkTouchTool(event.getPlayer()))
+			if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getType())
+					&& MMOItems.plugin.getDropTables().hasSilkTouchTool(event.getPlayer()))
 				event.setDropItems(false);
 		}
 	}

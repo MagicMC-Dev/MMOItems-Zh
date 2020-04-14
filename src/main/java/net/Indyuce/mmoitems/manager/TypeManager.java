@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
@@ -79,6 +81,11 @@ public class TypeManager {
 	 */
 	public Type get(String id) {
 		return map.get(id);
+	}
+
+	public Type getOrThrow(String id) {
+		Validate.isTrue(map.containsKey(id), "Could not find item type with ID '" + id + "'");
+		return get(id);
 	}
 
 	public boolean has(String id) {

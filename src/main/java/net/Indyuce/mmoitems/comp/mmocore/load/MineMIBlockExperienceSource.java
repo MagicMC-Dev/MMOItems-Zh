@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
+import java.util.Optional;
+
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -16,7 +18,7 @@ import net.Indyuce.mmoitems.api.CustomBlock;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MineMIBlockExperienceSource extends SpecificExperienceSource<Integer> {
-	public final int id;
+	private final int id;
 	private final boolean silkTouch;
 	private final boolean playerPlaced;
 
@@ -33,22 +35,22 @@ public class MineMIBlockExperienceSource extends SpecificExperienceSource<Intege
 	public ExperienceManager<MineMIBlockExperienceSource> newManager() {
 		return new ExperienceManager<MineMIBlockExperienceSource>() {
 
-			@EventHandler(priority = EventPriority.HIGHEST)
+			@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 			public void a(BlockBreakEvent event) {
-				if (event.isCancelled() || event.getPlayer().getGameMode() != GameMode.SURVIVAL)
+				if (event.getPlayer().getGameMode() != GameMode.SURVIVAL)
 					return;
+
 				PlayerData data = PlayerData.get(event.getPlayer());
-				
-				for (MineMIBlockExperienceSource source : getSources())
-				{
-					if (!MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getType()))
-						continue;
-					if (source.silkTouch && hasSilkTouch(event.getPlayer().getInventory().getItemInMainHand()))
-						continue;
-					if ((!source.playerPlaced) && event.getBlock().hasMetadata("player_placed"))
+				Optional<CustomBlock> customBlock = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
+				if (!customBlock.isPresent())
+					return;
+
+				for (MineMIBlockExperienceSource source : getSources()) {
+					if (source.silkTouch && hasSilkTouch(event.getPlayer().getInventory().getItemInMainHand())
+							|| (!source.playerPlaced) && event.getBlock().hasMetadata("player_placed"))
 						continue;
 
-					if (source.matches(data, CustomBlock.getFromData(event.getBlock().getBlockData()).getId()))
+					if (source.matches(data, customBlock.get().getId()))
 						source.giveExperience(data, event.getBlock().getLocation());
 				}
 			}

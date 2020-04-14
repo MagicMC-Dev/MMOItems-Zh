@@ -31,7 +31,7 @@ import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
-import net.Indyuce.mmoitems.api.drop.DropItem;
+import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
@@ -869,7 +869,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 
-			ItemStack item = new DropItem(type, name, 0, dropChance / 100, unidentifiedChance / 100, min, max).getItem();
+			ItemStack item = new MMOItemDropItem(type, name, dropChance / 100, unidentifiedChance / 100, min, max).getItem();
 			if (item == null || item.getType() == Material.AIR) {
 				sender.sendMessage(
 						MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
@@ -1059,7 +1059,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				}
 			}
 
-			ItemStack item = new DropItem(type, name, 0, 1, unidentifiedChance / 100, min, max).getItem();
+			ItemStack item = new MMOItemDropItem(type, name, 1, unidentifiedChance / 100, min, max).getItem();
 			if (item == null || item.getType() == Material.AIR) {
 				sender.sendMessage(
 						MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");

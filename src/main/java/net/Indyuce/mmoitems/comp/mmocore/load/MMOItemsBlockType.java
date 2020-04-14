@@ -19,8 +19,8 @@ public class MMOItemsBlockType implements BlockType {
 		id = config.getInt("id");
 	}
 
-	public MMOItemsBlockType(Block block) {
-		id = CustomBlock.getFromData(block.getBlockData()).getId();
+	public MMOItemsBlockType(CustomBlock block) {
+		id = block.getId();
 	}
 
 	public int getBlockId() {

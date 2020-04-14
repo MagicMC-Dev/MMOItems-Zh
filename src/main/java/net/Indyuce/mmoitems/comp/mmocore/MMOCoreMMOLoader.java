@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
+import java.util.Optional;
+
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmocore.MMOCore;
@@ -12,6 +14,7 @@ import net.Indyuce.mmocore.api.load.MMOLoader;
 import net.Indyuce.mmocore.api.quest.objective.Objective;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.CustomBlock;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.util.AltChar;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ExperienceCraftingTrigger;
@@ -31,12 +34,17 @@ public class MMOCoreMMOLoader extends MMOLoader {
 	 */
 	public MMOCoreMMOLoader() {
 		MMOCore.plugin.loadManager.registerLoader(this);
-		MMOCore.plugin.mineManager.registerBlockType(block -> MMOItems.plugin.getCustomBlocks().isMushroomBlock(block.getType()) ? new MMOItemsBlockType(block) : null);
+		MMOCore.plugin.mineManager.registerBlockType(
+				block -> {
+					Optional<CustomBlock> customBlock = MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData());
+					return customBlock.isPresent() ? Optional.of(new MMOItemsBlockType(customBlock.get())) : Optional.empty();
+				});
 
 		/*
 		 * register extra conditions for MMOItems crafting.
 		 */
-		MMOItems.plugin.getCrafting().registerCondition("profession", config -> new ProfessionCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.cross + " Requires #level# in #profession#"));
+		MMOItems.plugin.getCrafting().registerCondition("profession", config -> new ProfessionCondition(config), new ConditionalDisplay(
+				"&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.cross + " Requires #level# in #profession#"));
 		MMOItems.plugin.getCrafting().registerTrigger("exp", config -> new ExperienceCraftingTrigger(config));
 	}
 
@@ -88,7 +96,8 @@ public class MMOCoreMMOLoader extends MMOLoader {
 	@Override
 	public BlockType loadBlockType(MMOLineConfig config) {
 
-		if (config.getKey().equalsIgnoreCase("miblock") || config.getKey().equals("mmoitemsblock") || config.getKey().equals("mmoitem") || config.getKey().equals("mmoitems"))
+		if (config.getKey().equalsIgnoreCase("miblock") || config.getKey().equals("mmoitemsblock") || config.getKey().equals("mmoitem")
+				|| config.getKey().equals("mmoitems"))
 			return new MMOItemsBlockType(config);
 
 		return null;

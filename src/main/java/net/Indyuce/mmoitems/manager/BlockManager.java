@@ -5,10 +5,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -68,7 +72,19 @@ public class BlockManager {
 	}
 
 	public CustomBlock getBlock(MushroomState state) {
-		return customBlocks.get(state.getUniqueId());
+		return mushroomStateValue.get(state.getUniqueId());
+	}
+
+	// Gets a CustomBlock instance from a mushroom blockstate.
+	public Optional<CustomBlock> getFromBlock(BlockData data) {
+		if (!isMushroomBlock(data.getMaterial()) || !(data instanceof MultipleFacing))
+			return Optional.empty();
+
+		MultipleFacing mfData = (MultipleFacing) data;
+		MushroomState state = new MushroomState(data.getMaterial(), mfData.hasFace(BlockFace.UP), mfData.hasFace(BlockFace.DOWN),
+				mfData.hasFace(BlockFace.WEST), mfData.hasFace(BlockFace.EAST), mfData.hasFace(BlockFace.SOUTH), mfData.hasFace(BlockFace.NORTH));
+
+		return isVanilla(state) ? Optional.empty() : Optional.of(getBlock(state));
 	}
 
 	public Collection<CustomBlock> getAll() {

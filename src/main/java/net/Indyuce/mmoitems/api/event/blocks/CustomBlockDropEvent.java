@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.api.event.blocks;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -9,13 +11,26 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.CustomBlock;
 
 public class CustomBlockDropEvent extends PlayerEvent implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
-	private boolean cancelled;
-	private final CustomBlock custom;
-	private final ItemStack drop;
+	private final CustomBlock block;
+	private final List<ItemStack> drops;
 
-	public CustomBlockDropEvent(Player p, CustomBlock c, ItemStack d) {
-		super(p); custom = c; drop = d;
+	private boolean cancelled;
+
+	private static final HandlerList handlers = new HandlerList();
+
+	public CustomBlockDropEvent(Player player, CustomBlock block, List<ItemStack> drops) {
+		super(player);
+
+		this.block = block;
+		this.drops = drops;
+	}
+
+	public CustomBlock getCustomBlock() {
+		return block;
+	}
+
+	public List<ItemStack> getDrops() {
+		return drops;
 	}
 
 	@Override
@@ -27,15 +42,7 @@ public class CustomBlockDropEvent extends PlayerEvent implements Cancellable {
 	public void setCancelled(boolean value) {
 		cancelled = value;
 	}
-	
-	public CustomBlock getCustomBlock() {
-		return custom;
-	}
 
-	public ItemStack getDrop() {
-		return drop;
-	}
-	
 	@Override
 	public HandlerList getHandlers() {
 		return handlers;

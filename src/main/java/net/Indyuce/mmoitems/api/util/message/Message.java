@@ -21,16 +21,16 @@ public enum Message {
 
 	// item restrictions
 	NOT_ENOUGH_LEVELS("You don't have enough levels to use this item!"),
-	NOT_ENOUGH_ATTRIBUTE("You don't have enough attributes to use this item!"),
 	SOULBOUND_RESTRICTION("This item is linked to another player, you can't use it!"),
 	NOT_ENOUGH_PERMS("You don't have enough permissions to use this."),
 	WRONG_CLASS("You don't have the right class!"),
 	NOT_ENOUGH_MANA("You don't have enough mana!"),
 	NOT_ENOUGH_STAMINA("You don't have enough stamina!"),
+	NOT_ENOUGH_ATTRIBUTE("You don't have enough #attribute#!"),
 	UNIDENTIFIED_ITEM("You can't use an unidentified item!"),
 
 	// custom durability
-//	ITEM_BROKE("Your #item#&c broke."),
+	// ITEM_BROKE("Your #item#&c broke."),
 	ZERO_DURABILITY("This item is broken, you first need to repair it."),
 
 	// consumables & gem stones

@@ -188,6 +188,8 @@ public class UpdaterManager implements Listener {
 		if (did.hasOption(KeepOption.KEEP_SOULBOUND) && itemMMO.hasData(ItemStat.SOULBOUND))
 			newItemMMO.setData(ItemStat.SOULBOUND, itemMMO.getData(ItemStat.SOULBOUND));
 
+		// if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
+
 		// apply amount
 		ItemStack newItem = newItemMMO.newBuilder().build();
 		newItem.setAmount(item.getItem().getAmount());
@@ -247,7 +249,9 @@ public class UpdaterManager implements Listener {
 		KEEP_NAME("The item keeps its display name."),
 		KEEP_GEMS("The item keeps its empty gem", "sockets and applied gems."),
 		KEEP_SOULBOUND("The item keeps its soulbound data."),
-		KEEP_SKIN("Keep the item applied skins.");
+		// KEEP_SKIN("Keep the item applied skins."),
+
+		;
 
 		private final List<String> lore;
 

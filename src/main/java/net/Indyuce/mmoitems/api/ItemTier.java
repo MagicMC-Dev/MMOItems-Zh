@@ -3,29 +3,26 @@ package net.Indyuce.mmoitems.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
 
 public class ItemTier {
 	private final String name, id;
 	private final UnidentificationInfo unidentificationInfo;
+	private final DropTable deconstruct;
 
 	/*
 	 * item glow. color is an object because we cant let this class import the
 	 * GlowAPI.Color enum since plugin is not a hard dependency.
 	 */
-	private TierColor color;
-	private boolean hint;
-
-	private DropTable deconstruct;
+	private final TierColor color;
+	private final boolean hint;
 
 	private static final Random random = new Random();
 	private static final boolean glow = Bukkit.getPluginManager().getPlugin("GlowAPI") != null;
@@ -33,17 +30,15 @@ public class ItemTier {
 	public ItemTier(ConfigurationSection config) {
 		id = config.getName().toUpperCase().replace("-", "_");
 		name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
-		if (config.contains("deconstruct-item"))
-			deconstruct = new DropTable(config.getConfigurationSection("deconstruct-item"));
+		deconstruct = config.contains("deconstruct-item") ? new DropTable(config.getConfigurationSection("deconstruct-item")) : null;
 		unidentificationInfo = new UnidentificationInfo(config.getConfigurationSection("unidentification"));
 
-		if (config.contains("item-glow"))
-			try {
-				hint = config.getBoolean("item-glow.hint");
-				color = new TierColor(config.getString("item-glow.color"), glow);
-			} catch (NoClassDefFoundError | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load tier color from '" + config.getString("item-glow.color") + "'");
-			}
+		try {
+			hint = config.contains("item-glow") && config.getBoolean("item-glow.hint");
+			color = config.contains("item-glow") ? new TierColor(config.getString("item-glow.color"), glow) : null;
+		} catch (NoClassDefFoundError | IllegalAccessException | NoSuchFieldException | SecurityException exception) {
+			throw new IllegalArgumentException("Could not load tier color: " + exception.getMessage());
+		}
 	}
 
 	public String getId() {

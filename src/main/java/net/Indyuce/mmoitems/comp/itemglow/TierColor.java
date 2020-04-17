@@ -9,6 +9,7 @@ public class TierColor {
 
 	public TierColor(String format, boolean glow) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Validate.notNull(format, "String must not be null");
+
 		bukkit = (Color) Color.class.getField(format.toUpperCase().replace("-", "_").replace(" ", "_")).get(Color.class);
 		this.glow = glow ? new GlowColor(bukkit) : null;
 	}

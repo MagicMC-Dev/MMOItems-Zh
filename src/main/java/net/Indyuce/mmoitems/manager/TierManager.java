@@ -27,8 +27,8 @@ public class TierManager {
 		for (String key : config.getConfig().getKeys(false))
 			try {
 				register(new ItemTier(config.getConfig().getConfigurationSection(key)));
-			} catch (Exception exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load item tier " + key);
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load item tier '" + key + "': " + exception.getMessage());
 			}
 	}
 

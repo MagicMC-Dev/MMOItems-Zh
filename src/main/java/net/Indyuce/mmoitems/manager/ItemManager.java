@@ -71,7 +71,7 @@ public class ItemManager extends BukkitRunnable {
 		// check cache
 		if (cache.containsKey(type) && cache.get(type).isCached(id))
 			return true;
-
+		
 		// check type config file
 		return type.getConfigFile().getConfig().contains(id);
 	}

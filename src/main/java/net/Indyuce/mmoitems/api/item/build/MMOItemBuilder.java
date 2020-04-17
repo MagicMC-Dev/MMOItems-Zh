@@ -45,9 +45,8 @@ public class MMOItemBuilder {
 		tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoitem.getType().getId()));
 		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
 
-		String path = mmoitem.getType().getId() + "." + mmoitem.getId();
-		if (MMOItems.plugin.getUpdater().hasData(path))
-			tags.add(new ItemTag("MMOITEMS_ITEM_UUID", MMOItems.plugin.getUpdater().getData(path).getUniqueId().toString()));
+		if (MMOItems.plugin.getUpdater().hasData(mmoitem))
+			tags.add(new ItemTag("MMOITEMS_ITEM_UUID", MMOItems.plugin.getUpdater().getData(mmoitem).getUniqueId().toString()));
 	}
 
 	public MMOItemLore getLore() {

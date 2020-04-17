@@ -1,11 +1,12 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,6 +24,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpdaterData;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -34,40 +36,84 @@ public class UpdaterManager implements Listener {
 	private final Map<String, UpdaterData> map = new HashMap<>();
 
 	public UpdaterManager() {
-		FileConfiguration updater = new ConfigFile("/dynamic", "updater").getConfig();
-		for (String type : updater.getKeys(false))
-			for (String id : updater.getConfigurationSection(type).getKeys(false)) {
-				String path = type + "." + id;
-				enable(new UpdaterData(path, updater));
+		FileConfiguration config = new ConfigFile("/dynamic", "updater").getConfig();
+		for (String typeFormat : config.getKeys(false))
+			try {
+				MMOItems.plugin.getLogger().log(Level.INFO, "Checking " + typeFormat);
+				Type type = MMOItems.plugin.getTypes().getOrThrow(typeFormat);
+				for (String id : config.getConfigurationSection(typeFormat).getKeys(false)) {
+					MMOItems.plugin.getLogger().log(Level.INFO, "Loading " + id);
+					enable(new UpdaterData(type, id, config.getConfigurationSection(typeFormat + "." + id)));
+				}
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						"An issue occured while trying to load dynamic updater data: " + exception.getMessage());
 			}
 	}
 
+	public UpdaterData getData(MMOItem mmoitem) {
+		return getData(mmoitem.getType(), mmoitem.getId());
+	}
+
+	public UpdaterData getData(Type type, String id) {
+		return map.get(toPath(type, id));
+	}
+
+	@Deprecated
 	public UpdaterData getData(String path) {
 		return map.get(path);
 	}
 
+	public boolean hasData(MMOItem mmoitem) {
+		return hasData(mmoitem.getType(), mmoitem.getId());
+	}
+
+	public boolean hasData(Type type, String id) {
+		return map.containsKey(toPath(type, id));
+	}
+
+	@Deprecated
 	public boolean hasData(String path) {
 		return map.containsKey(path);
 	}
 
-	public Collection<UpdaterData> getDatas() {
+	public Collection<UpdaterData> getActive() {
 		return map.values();
 	}
 
-	public Set<String> getItemPaths() {
-		return map.keySet();
+	public void disable(Type type, String id) {
+		map.remove(toPath(type, id));
 	}
 
+	@Deprecated
 	public void disable(String path) {
 		map.remove(path);
 	}
 
+	public void enable(MMOItem mmoitem) {
+		enable(mmoitem.getType(), mmoitem.getId());
+	}
+
+	public void enable(Type type, String id) {
+		enable(new UpdaterData(type, id, UUID.randomUUID()));
+	}
+
+	@Deprecated
 	public void enable(String path) {
-		enable(new UpdaterData(path, UUID.randomUUID()));
+		String[] split = path.split("\\.");
+		Type type = MMOItems.plugin.getTypes().getOrThrow(split[0]);
+		enable(type, split[1]);
 	}
 
 	public void enable(UpdaterData data) {
-		map.put(data.path, data);
+		map.put(data.getPath(), data);
+	}
+
+	/*
+	 * these keys are used to easily save updater data instances
+	 */
+	private String toPath(Type type, String id) {
+		return type.getId() + "." + id;
 	}
 
 	/*
@@ -136,10 +182,10 @@ public class UpdaterManager implements Listener {
 		 * calculate every stat data from the older item.
 		 */
 		MMOItem itemMMO = new VolatileMMOItem(item);
-		if (did.keepGems() && itemMMO.hasData(ItemStat.GEM_SOCKETS))
+		if (did.hasOption(KeepOption.KEEP_GEMS) && itemMMO.hasData(ItemStat.GEM_SOCKETS))
 			newItemMMO.setData(ItemStat.GEM_SOCKETS, itemMMO.getData(ItemStat.GEM_SOCKETS));
 
-		if (did.keepSoulbound() && itemMMO.hasData(ItemStat.SOULBOUND))
+		if (did.hasOption(KeepOption.KEEP_SOULBOUND) && itemMMO.hasData(ItemStat.SOULBOUND))
 			newItemMMO.setData(ItemStat.SOULBOUND, itemMMO.getData(ItemStat.SOULBOUND));
 
 		// apply amount
@@ -154,7 +200,7 @@ public class UpdaterManager implements Listener {
 		 * remember of ANY enchant on the old item, even the enchants that were
 		 * removed!
 		 */
-		if (did.keepEnchants()) {
+		if (did.hasOption(KeepOption.KEEP_ENCHANTS)) {
 			Map<Enchantment, Integer> enchants = item.getItem().getItemMeta().getEnchants();
 			for (Enchantment enchant : enchants.keySet())
 				newItemMeta.addEnchant(enchant, enchants.get(enchant), true);
@@ -164,7 +210,7 @@ public class UpdaterManager implements Listener {
 		 * keepLore is used to save enchants from custom enchants plugins that
 		 * only use lore to save enchant data
 		 */
-		if (did.keepLore()) {
+		if (did.hasOption(KeepOption.KEEP_LORE)) {
 			int n = 0;
 			for (String s : item.getItem().getItemMeta().getLore()) {
 				if (!s.startsWith(ChatColor.GRAY + ""))
@@ -178,14 +224,14 @@ public class UpdaterManager implements Listener {
 		 * users do not get extra durability when the item is updated
 		 */
 		VersionWrapper wrapper = MMOLib.plugin.getVersion().getWrapper();
-		if (did.keepDurability() && wrapper.isDamageable(item.getItem()) && wrapper.isDamageable(newItem))
+		if (did.hasOption(KeepOption.KEEP_DURABILITY) && wrapper.isDamageable(item.getItem()) && wrapper.isDamageable(newItem))
 			wrapper.applyDurability(newItem, newItemMeta, wrapper.getDurability(item.getItem(), item.getItem().getItemMeta()));
 
 		/*
 		 * keep name so players who renamed the item in the anvil does not have
 		 * to rename it again
 		 */
-		if (did.keepName() && item.getItem().getItemMeta().hasDisplayName())
+		if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
 			newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
 
 		newItemMeta.setLore(lore);
@@ -193,116 +239,28 @@ public class UpdaterManager implements Listener {
 		return newItem;
 	}
 
-	public UpdaterData newUpdaterData(String path, FileConfiguration config) {
-		return new UpdaterData(path, config);
-	}
+	public enum KeepOption {
+		KEEP_LORE("Any lore line starting with '&7' will be", "kept when updating your item.", "", "This option is supposed to keep",
+				"the item custom enchants.", ChatColor.RED + "May not support every enchant plugin."),
+		KEEP_ENCHANTS("The item keeps its old enchantments."),
+		KEEP_DURABILITY("The item keeps its durability.", "Don't use this option if you", "are using texture-by-durability!"),
+		KEEP_NAME("The item keeps its display name."),
+		KEEP_GEMS("The item keeps its empty gem", "sockets and applied gems."),
+		KEEP_SOULBOUND("The item keeps its soulbound data."),
+		KEEP_SKIN("Keep the item applied skins.");
 
-	public UpdaterData newUpdaterData(String path, UUID uuid, boolean keepLore, boolean keepEnchants, boolean keepDurability, boolean keepName,
-			boolean keepGems, boolean keepSoulbound) {
-		return new UpdaterData(path, uuid, keepLore, keepEnchants, keepDurability, keepName, keepGems, keepSoulbound);
-	}
+		private final List<String> lore;
 
-	public class UpdaterData {
-
-		// itemType.name() + "." + itemId
-		private final String path;
-
-		/*
-		 * two UUIDs can be found : one on the itemStack in the nbttags, and one
-		 * in the UpdaterData instance. if the two match, the item is up to
-		 * date. if they don't match, the item needs to be updated
-		 */
-		private final UUID uuid;
-
-		private boolean keepLore, keepDurability, keepEnchants, keepName, keepGems, keepSoulbound;
-
-		public UpdaterData(String path, FileConfiguration config) {
-			this(path, UUID.fromString(config.getString(path + ".uuid")), config.getBoolean(path + ".lore"), config.getBoolean(path + ".enchants"),
-					config.getBoolean(path + ".durability"), config.getBoolean(path + ".name"), config.getBoolean(path + ".gems"),
-					config.getBoolean(path + ".soulbound"));
+		private KeepOption(String... lore) {
+			this.lore = Arrays.asList(lore);
 		}
 
-		public UpdaterData(String path, UUID uuid) {
-			this(path, uuid, false, false, false, false, false, false);
+		public List<String> getLore() {
+			return lore;
 		}
 
-		public UpdaterData(String path, UUID uuid, boolean keepLore, boolean keepEnchants, boolean keepDurability, boolean keepName, boolean keepGems,
-				boolean keepSoulbound) {
-			this.uuid = uuid;
-			this.path = path;
-
-			this.keepLore = keepLore;
-			this.keepEnchants = keepEnchants;
-			this.keepDurability = keepDurability;
-			this.keepName = keepName;
-			this.keepGems = keepGems;
-			this.keepSoulbound = keepSoulbound;
-		}
-
-		public void save(FileConfiguration config) {
-			config.set(path + ".lore", keepLore);
-			config.set(path + ".enchants", keepEnchants);
-			config.set(path + ".durability", keepDurability);
-			config.set(path + ".name", keepName);
-			config.set(path + ".gems", keepGems);
-			config.set(path + ".soulbound", keepSoulbound);
-			config.set(path + ".uuid", uuid.toString());
-		}
-
-		public UUID getUniqueId() {
-			return uuid;
-		}
-
-		public boolean matches(NBTItem item) {
-			return uuid.toString().equals(item.getString("MMOITEMS_ITEM_UUID"));
-		}
-
-		public boolean keepLore() {
-			return keepLore;
-		}
-
-		public boolean keepDurability() {
-			return keepDurability;
-		}
-
-		public boolean keepEnchants() {
-			return keepEnchants;
-		}
-
-		public boolean keepName() {
-			return keepName;
-		}
-
-		public boolean keepGems() {
-			return keepGems;
-		}
-
-		public boolean keepSoulbound() {
-			return keepSoulbound;
-		}
-
-		public void setKeepLore(boolean value) {
-			keepLore = value;
-		}
-
-		public void setKeepDurability(boolean value) {
-			keepDurability = value;
-		}
-
-		public void setKeepEnchants(boolean value) {
-			keepEnchants = value;
-		}
-
-		public void setKeepName(boolean value) {
-			keepName = value;
-		}
-
-		public void setKeepGems(boolean value) {
-			keepGems = value;
-		}
-
-		public void setKeepSoulbound(boolean value) {
-			keepSoulbound = value;
+		public String getPath() {
+			return name().toLowerCase().replace("_", "-").substring(5);
 		}
 	}
 }

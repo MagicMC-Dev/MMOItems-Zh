@@ -256,7 +256,10 @@ public class MMOItems extends JavaPlugin {
 		// save item updater data
 		ConfigFile updater = new ConfigFile("/dynamic", "updater");
 		updater.getConfig().getKeys(false).forEach(key -> updater.getConfig().set(key, null));
-		dynamicUpdater.getDatas().forEach(data -> data.save(updater.getConfig()));
+		dynamicUpdater.getActive().forEach(data -> {
+			updater.getConfig().createSection(data.getPath());
+			data.save(updater.getConfig().getConfigurationSection(data.getPath()));
+		});
 		updater.save();
 
 		// drop abandonned soulbound items

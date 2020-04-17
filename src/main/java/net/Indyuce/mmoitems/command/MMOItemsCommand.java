@@ -29,6 +29,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpdaterData;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
@@ -47,7 +48,7 @@ import net.Indyuce.mmoitems.gui.BlockBrowser;
 import net.Indyuce.mmoitems.gui.CraftingStationView;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.Indyuce.mmoitems.manager.UpdaterManager.UpdaterData;
+import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -315,19 +316,18 @@ public class MMOItemsCommand implements CommandExecutor {
 		else if (args[0].equalsIgnoreCase("checkupdater")) {
 			if (args.length < 2) {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-				for (String s : MMOItems.plugin.getUpdater().getItemPaths())
-					sender.sendMessage(ChatColor.RED + s + ChatColor.WHITE + " - " + ChatColor.RED
-							+ MMOItems.plugin.getUpdater().getData(s).getUniqueId().toString());
+				for (UpdaterData data : MMOItems.plugin.getUpdater().getActive())
+					sender.sendMessage(ChatColor.RED + data.getPath() + ChatColor.WHITE + " - " + ChatColor.RED + data.getUniqueId().toString());
 				return true;
 			}
 			try {
+				@SuppressWarnings("deprecation")
 				UpdaterData data = MMOItems.plugin.getUpdater().getData(args[1].toUpperCase().replace("-", "_"));
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
 				sender.sendMessage(ChatColor.AQUA + "UUID = " + ChatColor.RESET + data.getUniqueId().toString());
-				sender.sendMessage(ChatColor.AQUA + "Keep Enchants = " + ChatColor.RESET + data.keepEnchants());
-				sender.sendMessage(ChatColor.AQUA + "Keep StringListStat = " + ChatColor.RESET + data.keepLore());
-				sender.sendMessage(ChatColor.AQUA + "Keep DefaultDurability = " + ChatColor.RESET + data.keepDurability());
-				sender.sendMessage(ChatColor.AQUA + "Keep Name = " + ChatColor.RESET + data.keepName());
+				for (KeepOption option : KeepOption.values())
+					sender.sendMessage(ChatColor.AQUA + MMOUtils.caseOnWords(option.name().replace("_", " ").toLowerCase()) + " = " + ChatColor.RESET
+							+ data.hasOption(option));
 			} catch (Exception e) {
 				sender.sendMessage("Couldn't find updater data.");
 			}
@@ -910,8 +910,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			 * prevent other severe issues from happening that could potentially
 			 * spam your console
 			 */
-			String path = type.getId() + "." + id;
-			MMOItems.plugin.getUpdater().disable(path);
+			MMOItems.plugin.getUpdater().disable(type, id);
 
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully deleted " + id + ".");
 		}

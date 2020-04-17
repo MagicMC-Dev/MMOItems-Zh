@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpdaterData;
 
 public class PluginUpdateManager {
 
@@ -25,7 +26,7 @@ public class PluginUpdateManager {
 	 * the integer as key is used as reference in order to apply an update using
 	 * the update command.
 	 */
-	private Map<Integer, PluginUpdate> updates = new HashMap<>();
+	private final Map<Integer, PluginUpdate> updates = new HashMap<>();
 
 	public PluginUpdateManager() {
 		register(new PluginUpdate(1, new String[] { "Applies a fix for skull textures values in 4.7.1.", "Texture values data storage changed in 4.7.1 due to the UUID change." }, sender -> {
@@ -123,13 +124,12 @@ public class PluginUpdateManager {
 			}
 		}));
 
-		register(new PluginUpdate(2, new String[] { "Enables the item updater for every item.", "&cNot recommended unless you know what you are doing." }, sender -> {
-			for (Type type : MMOItems.plugin.getTypes().getAll())
-				for (String id : type.getConfigFile().getConfig().getKeys(false)) {
-					String itemPath = type.getId() + "." + id;
-					MMOItems.plugin.getUpdater().enable(MMOItems.plugin.getUpdater().newUpdaterData(itemPath, UUID.randomUUID(), true, true, true, true, true, true));
-				}
-		}));
+		register(new PluginUpdate(2,
+				new String[] { "Enables the item updater for every item.", "&cNot recommended unless you know what you are doing." }, sender -> {
+					for (Type type : MMOItems.plugin.getTypes().getAll())
+						for (String id : type.getConfigFile().getConfig().getKeys(false))
+							MMOItems.plugin.getUpdater().enable(new UpdaterData(type, id, UUID.randomUUID(), true));
+				}));
 	}
 
 	public void register(PluginUpdate update) {

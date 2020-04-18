@@ -11,8 +11,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 
 public abstract class PluginInventory implements InventoryHolder {
+	protected final Player player;
+
 	protected int page = 1;
-	protected Player player;
 
 	public PluginInventory(Player player) {
 		this(player, null, null, null);

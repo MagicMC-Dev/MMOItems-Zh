@@ -39,7 +39,8 @@ public class CraftingStationView extends PluginInventory {
 	private int queueOffset;
 
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25 }, queueSlots = { 38, 39, 40, 41, 42 };
-	private static final int[] fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 28, 29, 30, 31, 32, 33, 34 };
+	private static final int[] fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 28, 29,
+			30, 31, 32, 33, 34 };
 
 	public CraftingStationView(Player player, CraftingStation station) {
 		this(player, station, 1);
@@ -55,7 +56,11 @@ public class CraftingStationView extends PluginInventory {
 		updateData();
 	}
 
-	private void updateData() {
+	public CraftingStation getStation() {
+		return station;
+	}
+
+	void updateData() {
 		ingredients = new IngredientInventory(player);
 		recipes = station.getAvailableRecipes(data, ingredients);
 	}
@@ -114,7 +119,8 @@ public class CraftingStationView extends PluginInventory {
 
 				for (int j = queueOffset; j < queueOffset + queueSlots.length; j++)
 					if (j >= queue.getCrafts().size())
-						inv.setItem(queueSlots[j - queueOffset], station.getItemOptions().hasNoQueueItem() ? station.getItemOptions().getNoQueueItem() : null);
+						inv.setItem(queueSlots[j - queueOffset],
+								station.getItemOptions().hasNoQueueItem() ? station.getItemOptions().getNoQueueItem() : null);
 					else
 						inv.setItem(queueSlots[j - queueOffset], ConfigItem.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(j), j + 1).build());
 			}
@@ -160,13 +166,11 @@ public class CraftingStationView extends PluginInventory {
 		if (!tag.equals("")) {
 			RecipeInfo recipe = getRecipe(tag);
 			if (event.isRightClick()) {
-				new CraftingStationPreview(player, station, recipe, page).open();
+				new CraftingStationPreview(this, recipe).open();
 				return;
 			}
 
 			processRecipe(recipe);
-
-			updateData();
 			open();
 		}
 
@@ -191,7 +195,6 @@ public class CraftingStationView extends PluginInventory {
 			open();
 		}
 	}
-	
 
 	public void processRecipe(RecipeInfo recipe) {
 		if (!recipe.areConditionsMet()) {
@@ -217,6 +220,8 @@ public class CraftingStationView extends PluginInventory {
 		recipe.getRecipe().whenUsed(data, ingredients, recipe, station);
 		recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
 		recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(data));
+
+		updateData();
 	}
 
 	private RecipeInfo getRecipe(String id) {

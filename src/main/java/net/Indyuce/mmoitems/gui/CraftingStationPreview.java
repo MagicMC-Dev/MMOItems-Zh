@@ -4,37 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.md_5.bungee.api.ChatColor;
 
 public class CraftingStationPreview extends PluginInventory {
-	private final int previousPage;
-	private final CraftingStation station;
+	private final CraftingStationView previous;
 	private final RecipeInfo recipe;
 
-	private List<CheckedIngredient> ingredients = new ArrayList<>();
+	private final List<CheckedIngredient> ingredients = new ArrayList<>();
 
-	private static final int[] slots = { 12, 13, 14, 21, 22, 23, 30, 31, 32 }, fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 17, 18, 19, 25, 26, 27, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
+	private static final int[] slots = { 12, 13, 14, 21, 22, 23, 30, 31, 32 },
+			fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 17, 18, 19, 25, 26, 27, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
 
-	public CraftingStationPreview(Player player, CraftingStation station, RecipeInfo recipe, int previousPage) {
-		super(player);
+	public CraftingStationPreview(CraftingStationView previous, RecipeInfo recipe) {
+		super(previous.getPlayer());
 
-		this.previousPage = previousPage;
-		this.station = station;
+		this.previous = previous;
 		this.recipe = recipe;
 	}
 
@@ -47,7 +44,7 @@ public class CraftingStationPreview extends PluginInventory {
 		int min = (page - 1) * slots.length, max = page * slots.length;
 		for (int j = min; j < max; j++) {
 			if (j >= ingredients.size()) {
-				if (station.getItemOptions().hasNoRecipe())
+				if (previous.getStation().getItemOptions().hasNoRecipe())
 					inv.setItem(slots[j - min], null);
 				continue;
 			}
@@ -99,9 +96,8 @@ public class CraftingStationPreview extends PluginInventory {
 			return;
 
 		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.CONFIRM.getItem())) {
-			CraftingStationView csv = new CraftingStationView(player, station, previousPage);
-			csv.processRecipe(recipe);
-			csv.open();
+			previous.processRecipe(recipe);
+			previous.open();
 			return;
 		}
 
@@ -117,9 +113,7 @@ public class CraftingStationPreview extends PluginInventory {
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.BACK.getItem())) {
-			new CraftingStationView(player, station, previousPage).open();
-			return;
-		}
+		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.BACK.getItem()))
+			previous.open();
 	}
 }

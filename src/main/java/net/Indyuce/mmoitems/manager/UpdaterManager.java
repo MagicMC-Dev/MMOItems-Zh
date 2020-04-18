@@ -39,12 +39,9 @@ public class UpdaterManager implements Listener {
 		FileConfiguration config = new ConfigFile("/dynamic", "updater").getConfig();
 		for (String typeFormat : config.getKeys(false))
 			try {
-				MMOItems.plugin.getLogger().log(Level.INFO, "Checking " + typeFormat);
 				Type type = MMOItems.plugin.getTypes().getOrThrow(typeFormat);
-				for (String id : config.getConfigurationSection(typeFormat).getKeys(false)) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Loading " + id);
+				for (String id : config.getConfigurationSection(typeFormat).getKeys(false))
 					enable(new UpdaterData(type, id, config.getConfigurationSection(typeFormat + "." + id)));
-				}
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						"An issue occured while trying to load dynamic updater data: " + exception.getMessage());

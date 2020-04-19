@@ -1,7 +1,7 @@
 BUTCHER_AXE:
   material: IRON_AXE
   name: '&cButcher&f''s Axe'
-  tier: '&8Uncommon'
+  tier: UNCOMMON
   critical-strike-chance: 5.0
   critical-strike-power: 248.0
   attack-damage: 6.0

@@ -43,7 +43,7 @@ EARTH_STAFF:
   lore:
   - '&7An extremely powerful weapon.'
   - '&7Use it &f&nwisely&7.'
-  tier: '&eVery Rare'
+  tier: VERY_RARE
   disable-crafting: true
   disable-smelting: true
   disable-interaction: true

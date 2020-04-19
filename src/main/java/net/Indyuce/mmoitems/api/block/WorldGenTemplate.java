@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.worldgen;
+package net.Indyuce.mmoitems.api.block;
 
 import java.util.ArrayList;
 import java.util.List;

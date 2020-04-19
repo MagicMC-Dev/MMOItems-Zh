@@ -17,8 +17,8 @@ import org.bukkit.event.world.ChunkLoadEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.CustomBlock;
-import net.Indyuce.mmoitems.api.worldgen.WorldGenTemplate;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.Indyuce.mmoitems.api.block.WorldGenTemplate;
 
 public class WorldGenManager implements Listener {
 	private final Map<String, WorldGenTemplate> templates = new HashMap<>();

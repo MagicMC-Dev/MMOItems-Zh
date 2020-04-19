@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api;
+package net.Indyuce.mmoitems.api.block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MushroomState;
-import net.Indyuce.mmoitems.api.worldgen.WorldGenTemplate;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 

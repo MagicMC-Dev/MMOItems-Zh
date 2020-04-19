@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.CustomBlock;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
 
 public class CustomBlockDropEvent extends PlayerEvent implements Cancellable {
 	private final CustomBlock block;

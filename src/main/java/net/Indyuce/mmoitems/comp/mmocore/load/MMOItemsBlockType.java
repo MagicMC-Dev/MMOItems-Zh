@@ -6,7 +6,7 @@ import org.bukkit.block.Block;
 import net.Indyuce.mmocore.api.block.BlockInfo.RegeneratingBlock;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.CustomBlock;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 

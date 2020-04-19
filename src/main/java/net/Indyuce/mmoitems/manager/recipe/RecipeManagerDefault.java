@@ -26,6 +26,10 @@ import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
 
 public class RecipeManagerDefault extends RecipeManager {
 
+	public RecipeManagerDefault() {
+		reload();
+	}
+
 	@Override
 	@SuppressWarnings("deprecation")
 	public void reload() {
@@ -41,17 +45,23 @@ public class RecipeManagerDefault extends RecipeManager {
 						ConfigurationSection section = config.getConfigurationSection(id + ".crafting");
 
 						if (section.contains("shaped"))
-							section.getConfigurationSection("shaped").getKeys(false).forEach(recipe -> registerShapedRecipe(type, id, section.getStringList("shaped." + recipe), recipe));
+							section.getConfigurationSection("shaped").getKeys(false)
+									.forEach(recipe -> registerShapedRecipe(type, id, section.getStringList("shaped." + recipe), recipe));
 						if (section.contains("shapeless"))
-							section.getConfigurationSection("shapeless").getKeys(false).forEach(recipe -> registerShapelessRecipe(type, id, section.getConfigurationSection("shapeless." + recipe), recipe));
+							section.getConfigurationSection("shapeless").getKeys(false).forEach(
+									recipe -> registerShapelessRecipe(type, id, section.getConfigurationSection("shapeless." + recipe), recipe));
 						if (section.contains("furnace"))
-							section.getConfigurationSection("furnace").getKeys(false).forEach(recipe -> registerFurnaceRecipe(type, id, new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
+							section.getConfigurationSection("furnace").getKeys(false).forEach(recipe -> registerFurnaceRecipe(type, id,
+									new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
 						if (section.contains("blast"))
-							section.getConfigurationSection("blast").getKeys(false).forEach(recipe -> registerBlastRecipe(type, id, new BurningRecipeInformation(section.getConfigurationSection("blast." + recipe)), recipe));
+							section.getConfigurationSection("blast").getKeys(false).forEach(recipe -> registerBlastRecipe(type, id,
+									new BurningRecipeInformation(section.getConfigurationSection("blast." + recipe)), recipe));
 						if (section.contains("smoker"))
-							section.getConfigurationSection("smoker").getKeys(false).forEach(recipe -> registerSmokerRecipe(type, id, new BurningRecipeInformation(section.getConfigurationSection("smoker." + recipe)), recipe));
+							section.getConfigurationSection("smoker").getKeys(false).forEach(recipe -> registerSmokerRecipe(type, id,
+									new BurningRecipeInformation(section.getConfigurationSection("smoker." + recipe)), recipe));
 						if (section.contains("campfire"))
-							section.getConfigurationSection("campfire").getKeys(false).forEach(recipe -> registerCampfireRecipe(type, id, new BurningRecipeInformation(section.getConfigurationSection("campfire." + recipe)), recipe));
+							section.getConfigurationSection("campfire").getKeys(false).forEach(recipe -> registerCampfireRecipe(type, id,
+									new BurningRecipeInformation(section.getConfigurationSection("campfire." + recipe)), recipe));
 					}
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load recipe of " + id + ": " + exception.getMessage());
@@ -69,25 +79,29 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	public void registerFurnaceRecipe(Type type, String id, BurningRecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(), info.getBurnTime());
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
 
 	public void registerBlastRecipe(Type type, String id, BurningRecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "blast", number);
-		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(), info.getBurnTime());
+		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
 
 	public void registerSmokerRecipe(Type type, String id, BurningRecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "smoker", number);
-		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(), info.getBurnTime());
+		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
 
 	public void registerCampfireRecipe(Type type, String id, BurningRecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "campfire", number);
-		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(), info.getBurnTime());
+		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
 
@@ -179,6 +193,7 @@ public class RecipeManagerDefault extends RecipeManager {
 
 	@SuppressWarnings("deprecation")
 	public RecipeChoice toBukkit(MMORecipeChoice choice) {
-		return choice.getMaterial() != null ? new RecipeChoice.MaterialChoice(choice.getMaterial()) : new RecipeChoice.ExactChoice(MMOItems.plugin.getItems().getItem(choice.getType(), choice.getId()));
+		return choice.getMaterial() != null ? new RecipeChoice.MaterialChoice(choice.getMaterial())
+				: new RecipeChoice.ExactChoice(MMOItems.plugin.getItems().getItem(choice.getType(), choice.getId()));
 	}
 }

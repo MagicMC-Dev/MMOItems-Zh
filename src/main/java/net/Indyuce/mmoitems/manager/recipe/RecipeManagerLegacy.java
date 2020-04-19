@@ -21,6 +21,10 @@ import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
 /** One day I'll get rid of 1.12 for real >:) */
 public class RecipeManagerLegacy extends RecipeManager {
 
+	public RecipeManagerLegacy() {
+		reload();
+	}
+
 	@Override
 	@SuppressWarnings("deprecation")
 	public void reload() {
@@ -36,11 +40,14 @@ public class RecipeManagerLegacy extends RecipeManager {
 						ConfigurationSection section = config.getConfigurationSection(id + ".crafting");
 
 						if (section.contains("shaped"))
-							section.getConfigurationSection("shaped").getKeys(false).forEach(recipe -> registerShapedRecipe(type, id, section.getStringList("shaped." + recipe), recipe));
+							section.getConfigurationSection("shaped").getKeys(false)
+									.forEach(recipe -> registerShapedRecipe(type, id, section.getStringList("shaped." + recipe), recipe));
 						if (section.contains("shapeless"))
-							section.getConfigurationSection("shapeless").getKeys(false).forEach(recipe -> registerShapelessRecipe(type, id, section.getConfigurationSection("shapeless." + recipe), recipe));
+							section.getConfigurationSection("shapeless").getKeys(false).forEach(
+									recipe -> registerShapelessRecipe(type, id, section.getConfigurationSection("shapeless." + recipe), recipe));
 						if (section.contains("furnace"))
-							section.getConfigurationSection("furnace").getKeys(false).forEach(recipe -> registerFurnaceRecipe(type, id, new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
+							section.getConfigurationSection("furnace").getKeys(false).forEach(recipe -> registerFurnaceRecipe(type, id,
+									new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
 					}
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load recipe of " + id + ": " + exception.getMessage());
@@ -60,7 +67,8 @@ public class RecipeManagerLegacy extends RecipeManager {
 	@Override
 	public void registerFurnaceRecipe(Type type, String id, BurningRecipeInformation info, String number) {
 		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.getChoice().getMaterial(), info.getExp(), info.getBurnTime());
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), info.getChoice().getMaterial(), info.getExp(),
+				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
 

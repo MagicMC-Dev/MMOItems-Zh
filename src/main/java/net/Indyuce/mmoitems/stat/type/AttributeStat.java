@@ -23,9 +23,9 @@ public abstract class AttributeStat extends DoubleStat {
 		this.attribute = attribute;
 	}
 
-	public boolean isWeaponSpecific() {
-		return offset > 0;
-	}
+//	public boolean isWeaponSpecific() {
+//		return offset > 0;
+//	}
 
 	public Attribute getAttribute() {
 		return attribute;

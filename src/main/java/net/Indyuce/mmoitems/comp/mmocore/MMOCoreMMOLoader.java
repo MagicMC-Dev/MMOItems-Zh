@@ -16,7 +16,7 @@ import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ExperienceCraftingTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;

@@ -25,10 +25,10 @@ public enum TypeSet {
 	 * target, which makes it a deadly AoE weapon for warriors
 	 */
 	SLASHING((stats, target, weapon, result) -> {
-		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.slashing.enabled") || stats.getPlayerData().isOnCooldown(CooldownType.SET_TYPE_ATTACK))
+		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.slashing.enabled") || stats.getData().isOnCooldown(CooldownType.SET_TYPE_ATTACK))
 			return;
 
-		stats.getPlayerData().applyCooldown(CooldownType.SET_TYPE_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.slashing.cooldown"));
+		stats.getData().applyCooldown(CooldownType.SET_TYPE_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.slashing.cooldown"));
 		Location loc = stats.getPlayer().getLocation().clone().add(0, 1.3, 0);
 
 		final double a1 = (loc.getYaw() + 90) / 180 * Math.PI, p = -loc.getPitch() / 180 * Math.PI;
@@ -48,10 +48,10 @@ public enum TypeSet {
 	 * assassins
 	 */
 	PIERCING((stats, target, weapon, result) -> {
-		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.piercing.enabled") || stats.getPlayerData().isOnCooldown(CooldownType.SET_TYPE_ATTACK))
+		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.piercing.enabled") || stats.getData().isOnCooldown(CooldownType.SET_TYPE_ATTACK))
 			return;
 
-		stats.getPlayerData().applyCooldown(CooldownType.SET_TYPE_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.piercing.cooldown"));
+		stats.getData().applyCooldown(CooldownType.SET_TYPE_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.piercing.cooldown"));
 		Location loc = stats.getPlayer().getLocation().clone().add(0, 1.3, 0);
 
 		final double a1 = (loc.getYaw() + 90) / 180 * Math.PI, p = -loc.getPitch() / 180 * Math.PI;
@@ -71,8 +71,8 @@ public enum TypeSet {
 	BLUNT((stats, target, weapon, result) -> {
 		final Random random = new Random();
 
-		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.aoe.enabled") && !stats.getPlayerData().isOnCooldown(CooldownType.SPECIAL_ATTACK)) {
-			stats.getPlayerData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.aoe.cooldown"));
+		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.aoe.enabled") && !stats.getData().isOnCooldown(CooldownType.SPECIAL_ATTACK)) {
+			stats.getData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.aoe.cooldown"));
 			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
 			target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 			double bluntPower = stats.getStat(ItemStat.BLUNT_POWER);
@@ -84,8 +84,8 @@ public enum TypeSet {
 			}
 		}
 
-		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.stun.enabled") && !stats.getPlayerData().isOnCooldown(CooldownType.SPECIAL_ATTACK) && random.nextDouble() < MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.chance") / 100) {
-			stats.getPlayerData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.cooldown"));
+		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.stun.enabled") && !stats.getData().isOnCooldown(CooldownType.SPECIAL_ATTACK) && random.nextDouble() < MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.chance") / 100) {
+			stats.getData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.cooldown"));
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR.toSound(), 1, 2);
 			target.removePotionEffect(PotionEffectType.SLOW);
 			target.removePotionEffect(PotionEffectType.BLINDNESS);

@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.MMOLib;
 
 public class PluginHelp {

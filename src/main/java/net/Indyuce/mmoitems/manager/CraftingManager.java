@@ -32,7 +32,7 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.VanillaIngredient;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
-import net.Indyuce.mmoitems.api.util.AltChar;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.item.NBTItem;
 

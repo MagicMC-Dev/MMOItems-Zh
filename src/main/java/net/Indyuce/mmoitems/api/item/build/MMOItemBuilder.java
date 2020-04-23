@@ -32,7 +32,7 @@ public class MMOItemBuilder {
 	private final List<ItemTag> tags = new ArrayList<>();
 
 	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
-			"generic.attackSpeed", 0, Operation.ADD_NUMBER);
+			"mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
 	public MMOItemBuilder(MMOItem mmoitem) {
 		this.mmoitem = mmoitem;

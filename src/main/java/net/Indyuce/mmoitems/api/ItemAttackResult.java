@@ -63,7 +63,7 @@ public class ItemAttackResult extends AttackResult {
 	 * non-weapon specific effects like critical strikes and extra stat damage
 	 */
 	public ItemAttackResult applyOnHitEffects(CachedStats stats, LivingEntity target) {
-		stats.getPlayerData().castAbilities(stats, target, this, CastingMode.ON_HIT);
+		stats.getData().castAbilities(stats, target, this, CastingMode.ON_HIT);
 		return this;
 	}
 }

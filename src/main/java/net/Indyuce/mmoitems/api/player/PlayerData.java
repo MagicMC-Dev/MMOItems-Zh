@@ -288,7 +288,7 @@ public class PlayerData {
 		/*
 		 * calculate all stats.
 		 */
-		stats.update();
+		stats.updateStats();
 
 		/*
 		 * update stuff from the external MMOCore plugins. the 'max mana' stat

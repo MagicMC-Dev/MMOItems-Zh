@@ -23,11 +23,27 @@ public class PlayerStats {
 		map = MMOData.get(playerData.getPlayer()).setMMOItems(playerData).getStatMap();
 	}
 
-	public PlayerData getPlayerData() {
+	public PlayerData getData() {
 		return playerData;
 	}
 
-	public void update() {
+	public StatMap getMap() {
+		return map;
+	}
+
+	public double getStat(ItemStat stat) {
+		return getInstance(stat).getTotal();
+	}
+
+	public StatInstance getInstance(ItemStat stat) {
+		return map.getInstance(stat.getId());
+	}
+
+	public CachedStats newTemporary() {
+		return new CachedStats();
+	}
+
+	public void updateStats() {
 		map.getInstances().forEach(ins -> {
 			ins.remove("item");
 			ins.remove("fullSetBonus");
@@ -47,21 +63,6 @@ public class PlayerStats {
 		}
 	}
 
-	public double getStat(ItemStat stat) {
-		return getInstance(stat).getTotal();
-	}
-
-	public StatInstance getInstance(ItemStat stat) {
-		return map.getInstance(stat.getId());
-	}
-
-	public CachedStats newTemporary() {
-		return new CachedStats();
-	}
-
-	/*
-	 * TODO merge this with MMOLib CachedStatMap
-	 */
 	public class CachedStats {
 
 		/*
@@ -79,7 +80,7 @@ public class PlayerStats {
 				this.stats.put(ins.getStat(), ins.getTotal());
 		}
 
-		public PlayerData getPlayerData() {
+		public PlayerData getData() {
 			return playerData;
 		}
 

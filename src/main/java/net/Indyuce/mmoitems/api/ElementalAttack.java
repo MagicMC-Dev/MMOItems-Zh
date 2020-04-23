@@ -57,11 +57,11 @@ public class ElementalAttack {
 
 		// elemental attacks
 		double p = 1;
-		if (!stats.getPlayerData().isOnCooldown(CooldownType.ELEMENTAL_ATTACK))
+		if (!stats.getData().isOnCooldown(CooldownType.ELEMENTAL_ATTACK))
 			for (Element element : relative.keySet()) {
 				double damage = relative.get(element);
 				if (random.nextDouble() < (damage / 100 / p)) {
-					stats.getPlayerData().applyCooldown(CooldownType.ELEMENTAL_ATTACK, 2);
+					stats.getData().applyCooldown(CooldownType.ELEMENTAL_ATTACK, 2);
 					element.getHandler().elementAttack(stats, result, target, damage, absolute.get(element));
 					break;
 				}

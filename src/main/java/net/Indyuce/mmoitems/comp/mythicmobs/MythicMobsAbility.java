@@ -56,7 +56,7 @@ public class MythicMobsAbility extends Ability {
 		 * cache placeholders so they can be retrieved later by MythicMobs math
 		 * formulas
 		 */
-		stats.getPlayerData().getAbilityData().cacheModifiers(this, ability.getAbility());
+		stats.getData().getAbilityData().cacheModifiers(this, ability.getAbility());
 
 		if (!MythicMobs.inst().getAPIHelper().castSkill(stats.getPlayer(), skill.getInternalName(), stats.getPlayer(), stats.getPlayer().getEyeLocation(), targets, null, 1))
 			result.setSuccessful(false);

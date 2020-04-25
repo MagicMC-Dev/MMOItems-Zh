@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
+import net.Indyuce.mmocore.api.event.PlayerDataLoadEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
@@ -21,11 +22,16 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOCoreHook implements RPGHandler, Listener {
 
-	private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration", new String[] { "Increases mana regen." });
-	private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina", new String[] { "Adds stamina to your max stamina bar." });
-	private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Stamina Regeneration", new String[] { "Increases stamina regen." });
-	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Additional Experience", new String[] { "Additional MMOCore main class experience in %." });
-	private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", new ItemStack(Material.BREAD), "Health Regeneration", new String[] { "Increases MMOCore health regen.", "In %." });
+	private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration",
+			new String[] { "Increases mana regen." });
+	private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina",
+			new String[] { "Adds stamina to your max stamina bar." });
+	private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toItem(),
+			"Stamina Regeneration", new String[] { "Increases stamina regen." });
+	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toItem(),
+			"Additional Experience", new String[] { "Additional MMOCore main class experience in %." });
+	private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", new ItemStack(Material.BREAD), "Health Regeneration",
+			new String[] { "Increases MMOCore health regen.", "In %." });
 
 	/*
 	 * called when MMOItems enables
@@ -60,12 +66,17 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	}
 
 	@EventHandler
-	public void a(PlayerLevelUpEvent event) {
+	public void updateInventoryOnLevelUp(PlayerLevelUpEvent event) {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 
 	@EventHandler
-	public void b(PlayerChangeClassEvent event) {
+	public void updateInventoryOnClassChange(PlayerChangeClassEvent event) {
+		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+	}
+
+	@EventHandler
+	public void updateInventoryOnPlayerDataLoad(PlayerDataLoadEvent event) {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 

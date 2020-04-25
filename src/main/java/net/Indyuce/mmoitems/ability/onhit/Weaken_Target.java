@@ -115,8 +115,8 @@ public class Weaken_Target extends Ability implements Listener {
 	}
 
 	public class WeakenedInfo {
-		private long date = System.currentTimeMillis();
-		private double extraDamage;
+		private final long date = System.currentTimeMillis();
+		private final double extraDamage;
 
 		public WeakenedInfo(double extraDamage) {
 			this.extraDamage = extraDamage / 100;

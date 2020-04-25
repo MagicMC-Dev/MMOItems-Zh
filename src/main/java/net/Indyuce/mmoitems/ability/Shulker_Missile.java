@@ -30,7 +30,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Shulker_Missile extends Ability implements Listener {
 	public Shulker_Missile() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("cooldown", 12);
 		addModifier("damage", 5);
@@ -53,16 +54,19 @@ public class Shulker_Missile extends Ability implements Listener {
 			double n = 0;
 
 			public void run() {
-				n++;
-				if (n > 3) {
+				if (n++ > 3) {
 					cancel();
 					return;
 				}
+
 				Vector vec = ((VectorAbilityResult) ability).getTarget();
 				stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
-				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0), EntityType.SHULKER_BULLET);
+				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0),
+						EntityType.SHULKER_BULLET);
 				shulkerBullet.setShooter(stats.getPlayer());
-				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), ability.getModifier("effect-duration"));
+				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet,
+						new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE),
+						ability.getModifier("effect-duration"));
 				new BukkitRunnable() {
 					double ti = 0;
 
@@ -117,7 +121,8 @@ public class Shulker_Missile extends Ability implements Listener {
 						y += .04;
 						for (int j = 0; j < 2; j++) {
 							double xz = y * Math.PI * 1.3 + (j * Math.PI);
-							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)), Color.MAROON);
+							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)),
+									Color.MAROON);
 						}
 					}
 					if (y >= 2)

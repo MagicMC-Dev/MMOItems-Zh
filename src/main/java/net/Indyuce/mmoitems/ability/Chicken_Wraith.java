@@ -1,11 +1,14 @@
 package net.Indyuce.mmoitems.ability;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,11 +18,13 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
-public class Chicken_Wraith extends Ability implements Listener {
+public class Chicken_Wraith extends Ability {
 	public Chicken_Wraith() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("duration", 2.5);
 		addModifier("damage", 2);
@@ -43,32 +48,42 @@ public class Chicken_Wraith extends Ability implements Listener {
 
 		new BukkitRunnable() {
 			int j = 0;
-			double damage = ability.getModifier("damage");
+			EggHandler handler = new EggHandler(ability.getModifier("damage"));
 
 			public void run() {
-				j++;
-				if (j > duration)
+				if (j++ > duration) {
+					handler.close(5 * 20);
 					cancel();
+					return;
+				}
 
 				Location loc = stats.getPlayer().getEyeLocation();
 				loc.setPitch((float) (loc.getPitch() + (random.nextDouble() - .5) * inaccuracy));
 				loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * inaccuracy));
 
 				loc.getWorld().playSound(loc, Sound.ENTITY_CHICKEN_EGG, 1, 1);
-				Egg snowball = stats.getPlayer().launchProjectile(Egg.class);
-				snowball.setVelocity(loc.getDirection().multiply(1.3 * force));
-				MMOItems.plugin.getEntities().registerCustomEntity(snowball, damage);
+				Egg egg = stats.getPlayer().launchProjectile(Egg.class);
+				egg.setVelocity(loc.getDirection().multiply(1.3 * force));
+
+				handler.entities.add(egg.getEntityId());
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 2);
 	}
 
-	@EventHandler
-	public void a(EntityDamageByEntityEvent event) {
-		if (!(event.getDamager() instanceof Egg))
-			return;
+	public class EggHandler extends TemporaryListener {
+		private final List<Integer> entities = new ArrayList<>();
+		private final double damage;
 
-		Egg egg = (Egg) event.getDamager();
-		if (MMOItems.plugin.getEntities().isCustomEntity(egg))
-			event.setDamage((double) MMOItems.plugin.getEntities().getEntityData(egg)[0]);
+		public EggHandler(double damage) {
+			super(EntityDamageByEntityEvent.getHandlerList());
+
+			this.damage = damage;
+		}
+
+		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+		public void a(EntityDamageByEntityEvent event) {
+			if (entities.contains(event.getDamager().getEntityId()))
+				event.setDamage(damage);
+		}
 	}
 }

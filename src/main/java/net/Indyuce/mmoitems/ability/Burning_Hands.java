@@ -5,7 +5,6 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -20,9 +19,10 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 
-public class Burning_Hands extends Ability implements Listener {
+public class Burning_Hands extends Ability {
 	public Burning_Hands() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("duration", 3);
 		addModifier("damage", 2);
@@ -45,8 +45,7 @@ public class Burning_Hands extends Ability implements Listener {
 			int j = 0;
 
 			public void run() {
-				j++;
-				if (j > duration)
+				if (j++ > duration)
 					cancel();
 
 				Location loc = stats.getPlayer().getLocation().add(0, 1.2, 0);
@@ -63,7 +62,10 @@ public class Burning_Hands extends Ability implements Listener {
 
 				if (j % 5 == 0)
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-						if (entity.getLocation().distanceSquared(loc) < 60 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canDamage(stats.getPlayer(), entity))
+						if (entity.getLocation().distanceSquared(loc) < 60
+								&& stats.getPlayer().getEyeLocation().getDirection()
+										.angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 6
+								&& MMOUtils.canDamage(stats.getPlayer(), entity))
 							new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) entity);
 
 			}

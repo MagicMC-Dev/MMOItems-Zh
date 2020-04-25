@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.SkillUseInfo;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
+import com.herocraftonline.heroes.api.events.ClassChangeEvent;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.skill.SkillType;
 
@@ -44,7 +45,8 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	@Override
 	public AttackResult getDamage(Entity entity) {
 		SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-		return new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type)).collect(Collectors.toSet()));
+		return new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type))
+				.collect(Collectors.toSet()));
 	}
 
 	@Override
@@ -65,6 +67,11 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	 */
 	@EventHandler
 	public void a(HeroChangeLevelEvent event) {
+		PlayerData.get(event.getHero().getPlayer()).scheduleDelayedInventoryUpdate();
+	}
+
+	@EventHandler
+	public void b(ClassChangeEvent event) {
 		PlayerData.get(event.getHero().getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 

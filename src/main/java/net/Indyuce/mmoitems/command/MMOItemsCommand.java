@@ -693,8 +693,8 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (args[1].equalsIgnoreCase("type")) {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Item Types "
 						+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
-				for (Type t : MMOItems.plugin.getTypes().getAll())
-					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + t.getName());
+				for (Type type : MMOItems.plugin.getTypes().getAll())
+					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + type.getName() + " (" + type.getId() + ")");
 			}
 
 			// staff spirit list

@@ -36,7 +36,7 @@ public class ParticleData implements StatData, RandomStatData {
 			JsonObject color = object.getAsJsonObject("Color");
 			this.color = Color.fromRGB(color.get("Red").getAsInt(), color.get("Green").getAsInt(), color.get("Blue").getAsInt());
 		} else
-			color = null;
+			color = Color.fromRGB(255, 0, 0);
 
 		object.getAsJsonObject("Modifiers").entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
 	}
@@ -51,7 +51,7 @@ public class ParticleData implements StatData, RandomStatData {
 		particle = Particle.valueOf(format);
 
 		color = config.contains("color") ? Color.fromRGB(config.getInt("color.red"), config.getInt("color.green"), config.getInt("color.blue"))
-				: null;
+				: Color.fromRGB(255, 0, 0);
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("particle") && !key.equalsIgnoreCase("type") && !key.equalsIgnoreCase("color"))
@@ -61,7 +61,7 @@ public class ParticleData implements StatData, RandomStatData {
 	public ParticleData(ParticleType type, Particle particle) {
 		this.type = type;
 		this.particle = particle;
-		this.color = null;
+		this.color = Color.fromRGB(255, 0, 0);
 	}
 
 	public ParticleType getType() {
@@ -88,10 +88,6 @@ public class ParticleData implements StatData, RandomStatData {
 		modifiers.put(path, value);
 	}
 
-	public boolean isColored() {
-		return color != null;
-	}
-
 	/*
 	 * depending on if the particle is colorable or not, display with colors or
 	 * not
@@ -101,14 +97,14 @@ public class ParticleData implements StatData, RandomStatData {
 	}
 
 	public void display(Location location, int amount, float offsetX, float offsetY, float offsetZ, float speed) {
-		if (isColored())
+		if (isColorable(particle))
 			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, 1, color);
 		else
 			location.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed);
 	}
 
 	public void display(Location location, Vector direction, float speed) {
-		if (isColored())
+		if (isColorable(particle))
 			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed,
 					1, color);
 		else
@@ -126,7 +122,7 @@ public class ParticleData implements StatData, RandomStatData {
 		object.addProperty("Particle", getParticle().name());
 		object.addProperty("Type", getType().name());
 
-		if (isColored()) {
+		if (isColorable(particle)) {
 			JsonObject color = new JsonObject();
 			color.addProperty("Red", getColor().getRed());
 			color.addProperty("Green", getColor().getGreen());
@@ -140,8 +136,10 @@ public class ParticleData implements StatData, RandomStatData {
 		return object;
 	}
 
+	// TODO change this after 1.12 not supported
 	public static boolean isColorable(Particle particle) {
-		return particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || particle == Particle.REDSTONE || particle == Particle.NOTE;
+		// || particle == Particle.NOTE
+		return particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || particle == Particle.REDSTONE;
 	}
 
 	@Override

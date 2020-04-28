@@ -46,7 +46,7 @@ public class GemSockets extends ItemStat {
 
 	@Override
 	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(this);
+		return whenInitialized(object);
 	}
 
 	@Override

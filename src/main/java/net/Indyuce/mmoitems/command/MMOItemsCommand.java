@@ -539,8 +539,10 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getSets().reload();
 			MMOItems.plugin.getUpgrades().reload();
 			MMOItems.plugin.getItemGenerator().reload();
-			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
+			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
+				MMOItems.plugin.getWorldGen().reload();
 				MMOItems.plugin.getCustomBlocks().reload();
+			}
 			MMOItems.plugin.getItems().reload();
 			sender.sendMessage(
 					MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");

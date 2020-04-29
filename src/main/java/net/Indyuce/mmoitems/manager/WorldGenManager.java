@@ -82,6 +82,7 @@ public class WorldGenManager implements Listener {
 	}
 
 	public void reload() {
+		assigned.clear();
 		templates.clear();
 
 		FileConfiguration config = new ConfigFile("gen-templates").getConfig();

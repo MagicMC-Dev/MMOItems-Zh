@@ -105,8 +105,9 @@ public class BlockManager {
 
 	public void reload() {
 		customBlocks.clear();
-		FileConfiguration config = new ConfigFile("custom-blocks").getConfig();
+		mushroomStateValue.clear();
 
+		FileConfiguration config = new ConfigFile("custom-blocks").getConfig();
 		for (int id = 1; id < 161; id++)
 			if (id != 54 && config.contains("" + id))
 				try {

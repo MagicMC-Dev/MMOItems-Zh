@@ -57,30 +57,28 @@ public class WorldGenManager implements Listener {
 
 	@EventHandler
 	public void a(ChunkLoadEvent event) {
-		if (!event.isNewChunk())
-			return;
+		if (event.isNewChunk())
+			assigned.forEach((block, template) -> {
+				if (random.nextDouble() < template.getChunkChance())
+					for (int i = 0; i < template.getVeinCount(); i++) {
+						int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();
+						Location generatePoint = event.getChunk().getBlock(random.nextInt(16), y, random.nextInt(16)).getLocation();
 
-		assigned.forEach((block, template) -> {
-			if (random.nextDouble() < template.getChunkChance())
-				for (int i = 0; i < template.getVeinCount(); i++) {
-					int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();
-					Location generatePoint = event.getChunk().getBlock(random.nextInt(16), y, random.nextInt(16)).getLocation();
+						if (template.canGenerate(generatePoint)) {
+							Block modify = event.getWorld().getBlockAt(generatePoint);
 
-					if (template.canGenerate(generatePoint)) {
-						Block modify = event.getWorld().getBlockAt(generatePoint);
+							for (int j = 0; j < template.getVeinSize(); j++) {
+								if (template.canReplace(modify.getType())) {
+									modify.setType(block.getState().getType(), false);
+									modify.setBlockData(block.getState().getBlockData(), false);
+								}
 
-						for (int j = 0; j < template.getVeinSize(); j++) {
-							if (template.canReplace(modify.getType())) {
-								modify.setType(block.getState().getType(), false);
-								modify.setBlockData(block.getState().getBlockData(), false);
+								BlockFace nextFace = faces[random.nextInt(faces.length)];
+								modify = modify.getRelative(nextFace);
 							}
-
-							BlockFace nextFace = faces[random.nextInt(faces.length)];
-							modify = modify.getRelative(nextFace);
 						}
 					}
-				}
-		});
+			});
 	}
 
 	public void reload() {
@@ -89,10 +87,10 @@ public class WorldGenManager implements Listener {
 		FileConfiguration config = new ConfigFile("gen-templates").getConfig();
 		for (String key : config.getKeys(false))
 			try {
-				templates.put(key, new WorldGenTemplate(config.getConfigurationSection(key)));
+				WorldGenTemplate template = new WorldGenTemplate(config.getConfigurationSection(key));
+				templates.put(template.getId(), template);
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occured when loading gen template '" + key + "': " + exception.getMessage());
 			}
-
 	}
 }

@@ -10,6 +10,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class WorldGenTemplate {
+	private final String id;
 	private final double chunkChance;
 	private final int minDepth, maxDepth, veinSize, veinCount;
 
@@ -21,6 +22,7 @@ public class WorldGenTemplate {
 	public WorldGenTemplate(ConfigurationSection config) {
 		Validate.notNull(config, "Could not read gen template config");
 
+		id = config.getName().toLowerCase().replace(" ", "-").replace("_", "-");
 		config.getStringList("replace").forEach(str -> replaceable.add(Material.valueOf(str.toUpperCase().replace("-", "_").replace(" ", "_"))));
 
 		for (String world : config.getStringList("worlds"))
@@ -41,6 +43,10 @@ public class WorldGenTemplate {
 
 		veinSize = config.getInt("vein-size");
 		veinCount = config.getInt("vein-count");
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public double getChunkChance() {

@@ -26,7 +26,7 @@ import net.mmogroup.mmolib.api.DamageType;
 
 public class PlayerListener implements Listener {
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler
 	public void loadPlayerData(PlayerJoinEvent event) {
 		PlayerData.load(event.getPlayer());
 	}

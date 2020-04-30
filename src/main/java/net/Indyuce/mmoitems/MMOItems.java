@@ -236,7 +236,7 @@ public class MMOItems extends JavaPlugin {
 		findRpgPlugin();
 
 		// compatibility with /reload
-		Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player));
+		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player)));
 
 		// advanced recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
@@ -314,11 +314,11 @@ public class MMOItems extends JavaPlugin {
 		Validate.notNull(handler, "RPGHandler cannot be null");
 
 		// unregister events from current rpgPlugin instance
-		if (rpgPlugin != null && rpgPlugin instanceof Listener)
+		if (rpgPlugin != null && rpgPlugin instanceof Listener && isEnabled())
 			HandlerList.unregisterAll((Listener) rpgPlugin);
 
 		rpgPlugin = handler;
-		if (handler instanceof Listener)
+		if (handler instanceof Listener && isEnabled())
 			Bukkit.getPluginManager().registerEvents((Listener) handler, this);
 	}
 

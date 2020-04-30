@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,8 +36,6 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	 * called when MMOItems enables
 	 */
 	public MMOCoreHook() {
-
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 
 		MMOItems.plugin.getStats().register("HEALTH_REGENERATION", HEALTH_REGENERATION);
 		MMOItems.plugin.getStats().register("MANA_REGENERATION", MANA_REGENERATION);

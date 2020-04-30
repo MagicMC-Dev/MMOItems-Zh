@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.comp.rpg;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +15,6 @@ import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -25,10 +23,9 @@ import net.mmogroup.mmolib.api.DamageHandler;
 import net.mmogroup.mmolib.api.DamageType;
 
 public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
-	private Map<Integer, AttackResult> damageInfo = new HashMap<>();
+	private final Map<Integer, AttackResult> damageInfo = new HashMap<>();
 
 	public SkillAPIHook() {
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 		MMOLib.plugin.getDamage().registerHandler(this);
 	}
 

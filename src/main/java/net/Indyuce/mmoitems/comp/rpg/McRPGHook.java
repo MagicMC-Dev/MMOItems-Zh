@@ -1,19 +1,14 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import us.eunoians.mcrpg.api.events.mcrpg.McRPGPlayerLevelChangeEvent;
 import us.eunoians.mcrpg.players.PlayerManager;
 
 public class McRPGHook implements RPGHandler, Listener {
-	public McRPGHook() {
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-	}
 
 	@EventHandler
 	public void a(McRPGPlayerLevelChangeEvent event) {

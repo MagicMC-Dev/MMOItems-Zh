@@ -3,10 +3,13 @@ package net.Indyuce.mmoitems;
 import java.io.File;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -308,7 +311,15 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public void setRPG(RPGHandler handler) {
+		Validate.notNull(handler, "RPGHandler cannot be null");
+
+		// unregister events from current rpgPlugin instance
+		if (rpgPlugin != null && rpgPlugin instanceof Listener)
+			HandlerList.unregisterAll((Listener) rpgPlugin);
+
 		rpgPlugin = handler;
+		if (handler instanceof Listener)
+			Bukkit.getPluginManager().registerEvents((Listener) handler, this);
 	}
 
 	public PluginUpdateManager getUpdates() {

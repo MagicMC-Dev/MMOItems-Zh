@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,8 +21,6 @@ public class McMMOHook implements RPGHandler, Listener {
 	private final ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair", "Players can't repair this with McMMO.");
 
 	public McMMOHook() {
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-
 		MMOItems.plugin.getStats().register("DISABLE_MCMMO_REPAIR", disableMcMMORepair);
 	}
 

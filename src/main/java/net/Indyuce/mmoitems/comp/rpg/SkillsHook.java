@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,14 +8,10 @@ import me.leothepro555.skills.database.managers.PlayerInfo;
 import me.leothepro555.skills.events.SkillLevelUpEvent;
 import me.leothepro555.skills.main.Skills;
 import me.leothepro555.skilltype.ScalingType;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 
 public class SkillsHook implements RPGHandler, Listener {
-	public SkillsHook() {
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-	}
 
 	@EventHandler
 	public void a(SkillLevelUpEvent event) {
@@ -35,7 +30,7 @@ public class SkillsHook implements RPGHandler, Listener {
 	}
 
 	public class SkillsPlayer extends RPGPlayer {
-		private PlayerInfo info;
+		private final PlayerInfo info;
 
 		public SkillsPlayer(PlayerData playerData) {
 			super(playerData);

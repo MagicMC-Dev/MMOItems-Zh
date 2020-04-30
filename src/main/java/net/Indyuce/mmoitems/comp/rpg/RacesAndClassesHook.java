@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -8,15 +7,11 @@ import de.tobiyas.racesandclasses.eventprocessing.events.leveling.LevelDownEvent
 import de.tobiyas.racesandclasses.eventprocessing.events.leveling.LevelUpEvent;
 import de.tobiyas.racesandclasses.playermanagement.player.RaCPlayer;
 import de.tobiyas.racesandclasses.playermanagement.player.RaCPlayerManager;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class RacesAndClassesHook implements RPGHandler, Listener {
-	public RacesAndClassesHook() {
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-	}
 
 	@Override
 	public void refreshStats(PlayerData data) {
@@ -31,8 +26,8 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
 	}
 
 	/*
-	 * update the player's inventory whenever he levels up since it could change its
-	 * current stat requirements
+	 * update the player's inventory whenever he levels up since it could change
+	 * its current stat requirements
 	 */
 	@EventHandler
 	public void a(LevelUpEvent event) {

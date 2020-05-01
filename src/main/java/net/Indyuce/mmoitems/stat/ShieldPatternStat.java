@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -26,13 +27,13 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ShieldPatternData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class ShieldPatternStat extends StringStat {
 	public ShieldPatternStat() {
@@ -209,10 +210,12 @@ public class ShieldPatternStat extends StringStat {
 
 	@EventHandler
 	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof BlockStateMeta
+		if (item.getItem().getItemMeta() instanceof BlockStateMeta && ((BlockStateMeta) item.getItem().getItemMeta()).hasBlockState()
 				&& ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState() instanceof Banner) {
 			Banner banner = (Banner) ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState();
+
 			ShieldPatternData shieldPattern = new ShieldPatternData(banner.getBaseColor());
+			Bukkit.broadcastMessage("" + banner.getBaseColor());
 			shieldPattern.addAll(banner.getPatterns());
 			mmoitem.setData(ItemStat.SHIELD_PATTERN, shieldPattern);
 		}

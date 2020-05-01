@@ -418,7 +418,7 @@ public class PlayerData {
 		double cooldown = ability.getModifier("cooldown");
 
 		// apply cooldown reduction
-		cooldown *= 1 - Math.max(.8, stats.getStat(ItemStat.COOLDOWN_REDUCTION) / 100);
+		cooldown *= 1 - Math.min(.8, stats.getStat(ItemStat.COOLDOWN_REDUCTION) / 100);
 
 		if (cooldown > 0)
 			applyAbilityCooldown(ability.getAbility(), cooldown);

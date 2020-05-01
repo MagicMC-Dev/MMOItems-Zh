@@ -25,10 +25,11 @@ import net.Indyuce.mmoitems.stat.data.SoundData;
 import net.Indyuce.mmoitems.stat.data.SoundListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
-public class CustomSounds extends ItemStat {
+public class CustomSounds extends ItemStat implements ProperStat {
 	public CustomSounds() {
 		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." },
 				new String[] { "all" });

@@ -26,13 +26,15 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class RequiredClass extends ItemStat implements ItemRestriction {
+public class RequiredClass extends ItemStat implements ItemRestriction, ProperStat {
 	public RequiredClass() {
-		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class", new String[] { "The class you need to", "profress to use your item." }, new String[] { "all" });
+		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class",
+				new String[] { "The class you need to", "profress to use your item." }, new String[] { "all" });
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class RequiredClass extends ItemStat implements ItemRestriction {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
 	}
-	
+
 	@Override
 	public RandomStatData whenInitializedGeneration(Object object) {
 		return whenInitialized(object);
@@ -72,7 +74,9 @@ public class RequiredClass extends ItemStat implements ItemRestriction {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = (config.getConfig().getConfigurationSection(inv.getItemId()).getKeys(false).contains("required-class") ? config.getConfig().getStringList(inv.getItemId() + ".required-class") : new ArrayList<>());
+		List<String> lore = (config.getConfig().getConfigurationSection(inv.getItemId()).getKeys(false).contains("required-class")
+				? config.getConfig().getStringList(inv.getItemId() + ".required-class")
+				: new ArrayList<>());
 		lore.add(message);
 		config.getConfig().set(inv.getItemId() + ".required-class", lore);
 		inv.registerItemEdition(config);

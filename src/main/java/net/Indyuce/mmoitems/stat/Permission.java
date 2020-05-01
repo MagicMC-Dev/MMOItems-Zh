@@ -26,11 +26,12 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Permission extends ItemStat implements ItemRestriction {
+public class Permission extends ItemStat implements ItemRestriction, ProperStat {
 	public Permission() {
 		super("PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission",
 				new String[] { "The permission needed to use this item." }, new String[] { "all" });

@@ -108,6 +108,20 @@ public class Consumable extends UseItem {
 				return false;
 			}
 
+			targetSharpening.upgrade(targetMMO);
+			NBTItem result = targetMMO.newBuilder().buildNBT();
+
+			/*
+			 * safe check, if the specs the item has after ugprade are too high
+			 * for the player, then cancel upgrading because the player would
+			 * not be able to use it.
+			 */
+			if (MMOItems.plugin.getLanguage().upgradeRequirementsCheck && !playerData.getRPG().canUse(result, false)) {
+				Message.UPGRADE_REQUIREMENT_SAFE_CHECK.format(ChatColor.RED).send(player);
+				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+				return true;
+			}
+
 			if (random.nextDouble() > consumableSharpening.getSuccess() * targetSharpening.getSuccess()) {
 				Message.UPGRADE_FAIL.format(ChatColor.RED).send(player);
 				if (targetSharpening.destroysOnFail())
@@ -116,9 +130,8 @@ public class Consumable extends UseItem {
 				return true;
 			}
 
-			targetSharpening.upgrade(targetMMO);
 			Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
-			event.getCurrentItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
+			event.getCurrentItem().setItemMeta(result.toItem().getItemMeta());
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			return true;
 		}
@@ -137,15 +150,19 @@ public class Consumable extends UseItem {
 			MMOItem targetMMO = new VolatileMMOItem(target);
 			if (targetMMO.hasData(ItemStat.SOULBOUND)) {
 				SoulboundData data = (SoulboundData) targetMMO.getData(ItemStat.SOULBOUND);
-				Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player, "soulbound");
+				Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player,
+						"soulbound");
 				return false;
 			}
 
 			if (random.nextDouble() < soulbindingChance / 100) {
 				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStat.SOULBOUND_LEVEL));
-				(targetMMO = new LiveMMOItem(target)).setData(ItemStat.SOULBOUND, ItemStat.SOULBOUND.newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
+				(targetMMO = new LiveMMOItem(target)).setData(ItemStat.SOULBOUND,
+						ItemStat.SOULBOUND.newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
-				Message.SUCCESSFULLY_BIND_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#level#", MMOUtils.intToRoman(soulboundLevel)).send(player, "soulbound");
+				Message.SUCCESSFULLY_BIND_ITEM
+						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#level#", MMOUtils.intToRoman(soulboundLevel))
+						.send(player, "soulbound");
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				return true;
 			}
@@ -181,7 +198,8 @@ public class Consumable extends UseItem {
 			if (random.nextDouble() < soulboundBreakChance / 100) {
 				(targetMMO = new LiveMMOItem(target)).removeData(ItemStat.SOULBOUND);
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
-				Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player, "soulbound");
+				Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player,
+						"soulbound");
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
 			} else {
 				Message.UNSUCCESSFUL_SOULBOUND_BREAK.format(ChatColor.RED).send(player, "soulbound");
@@ -203,15 +221,18 @@ public class Consumable extends UseItem {
 				DurabilityItem durItem = new DurabilityItem(player, target);
 				if (durItem.getDurability() < durItem.getMaxDurability()) {
 					target.getItem().setItemMeta(durItem.addDurability(repairPower).toItem().getItemMeta());
-					Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower).send(player);
+					Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower)
+							.send(player);
 				}
 				return true;
 			}
 
 			// vanilla durability
-			if (!target.getBoolean("Unbreakable") && MMOLib.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
+			if (!target.getBoolean("Unbreakable")
+					&& MMOLib.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
 				MMOLib.plugin.getVersion().getWrapper().repair(target.getItem(), repairPower);
-				Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower).send(player);
+				Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower)
+						.send(player);
 				return true;
 			}
 		}
@@ -258,7 +279,8 @@ public class Consumable extends UseItem {
 			});
 
 		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME"))
-			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
+			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"),
+					(float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
 		else
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
 
@@ -306,6 +328,7 @@ public class Consumable extends UseItem {
 	}
 
 	public boolean hasVanillaEating() {
-		return (getItem().getType().isEdible() || getItem().getType() == Material.POTION || getItem().getType() == Material.MILK_BUCKET) && getNBTItem().hasTag("MMOITEMS_VANILLA_EATING");
+		return (getItem().getType().isEdible() || getItem().getType() == Material.POTION || getItem().getType() == Material.MILK_BUCKET)
+				&& getNBTItem().hasTag("MMOITEMS_VANILLA_EATING");
 	}
 }

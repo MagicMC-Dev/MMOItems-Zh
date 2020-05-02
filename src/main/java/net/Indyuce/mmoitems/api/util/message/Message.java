@@ -70,6 +70,7 @@ public enum Message {
 	WRONG_UPGRADE_REFERENCE("You cannot upgrade this item with this consumable."),
 	UPGRADE_SUCCESS("You successfully upgraded your &6#item#&e!"),
 	NOT_HAVE_ITEM_UPGRADE("You don't have the item to upgrade!"),
+	UPGRADE_REQUIREMENT_SAFE_CHECK("You would not meet the upgraded item requirements."),
 
 	// crafting messages
 	NOT_ENOUGH_MATERIALS("You do not have enough materials to craft this item."),

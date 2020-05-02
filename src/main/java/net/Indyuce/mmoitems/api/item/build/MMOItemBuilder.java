@@ -70,8 +70,7 @@ public class MMOItemBuilder {
 			tags.add(itemTag);
 	}
 
-	public ItemStack build() {
-
+	public NBTItem buildNBT() {
 		for (ItemStat stat : mmoitem.getStats())
 			try {
 				stat.whenApplied(this, mmoitem.getData(stat));
@@ -99,7 +98,7 @@ public class MMOItemBuilder {
 
 			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 			item.setItemMeta(meta);
-			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags).toItem();
+			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags);
 
 			/*
 			 * on legacy spigot, it is not required to add a fake modifier to
@@ -110,7 +109,11 @@ public class MMOItemBuilder {
 			item.setItemMeta(meta);
 			@SuppressWarnings("deprecation")
 			NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item).cancelVanillaAttributeModifiers();
-			return nbt.addTag(tags).toItem();
+			return nbt.addTag(tags);
 		}
+	}
+
+	public ItemStack build() {
+		return buildNBT().toItem();
 	}
 }

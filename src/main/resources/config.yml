@@ -113,6 +113,11 @@ custom-blocks:
 # of using the chat.
 anvil-text-input: false
 
+# When set to true, players CANNOT upgrade an item if the
+# specs (level, profession requirements) the item WOULD
+# have if it were upgraded are too high for the player.
+item-upgrade-requirements-check: true
+
 # Players can't use their weapon/abilities when holding
 # two-handed item and one other item simultaneously.
 # When toggled off, players still receive slow 4.

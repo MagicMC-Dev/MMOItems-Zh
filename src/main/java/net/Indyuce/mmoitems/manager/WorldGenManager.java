@@ -34,11 +34,16 @@ public class WorldGenManager implements Listener {
 	private static final Random random = new Random();
 
 	public WorldGenManager() {
-		if (!MMOItems.plugin.getLanguage().worldGenEnabled)
-			return;
 
+		/*
+		 * load the worldGenManager even if world gen is not enabled so that if
+		 * admins temporarily disable it, there is no console error spam saying
+		 * MI could not find corresponding gen template in config
+		 */
 		reload();
-		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+
+		if (MMOItems.plugin.getLanguage().worldGenEnabled)
+			Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
 
 	public WorldGenTemplate getOrThrow(String id) {

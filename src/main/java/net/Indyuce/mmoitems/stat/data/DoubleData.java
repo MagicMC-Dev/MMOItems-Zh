@@ -29,11 +29,7 @@ public class DoubleData implements StatData, Mergeable {
 		throw new IllegalArgumentException("Must specify a range or a number");
 	}
 
-	public DoubleData(double value) {
-		this(value, 0);
-	}
-
-	private DoubleData(double min, double max) {
+	public DoubleData(double min, double max) {
 		this.min = min;
 		this.max = max;
 	}

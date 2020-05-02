@@ -4,21 +4,31 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
+import net.Indyuce.mmoitems.stat.data.random.RandomRequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class RequiredLevel extends DoubleStat implements ItemRestriction, ProperStat {
+public class RequiredLevel extends DoubleStat implements ItemRestriction {
+
+	/*
+	 * stat that uses a custom DoubleStatData because the merge algorithm is
+	 * slightly different. when merging two "required level", MMOItems should
+	 * only keep the highest levels of the two and not sum the two values
+	 */
 	public RequiredLevel() {
-		super("REQUIRED_LEVEL", new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial()), "Required Level", new String[] { "The level your item needs", "in order to be used." }, new String[] { "all" });
+		super("REQUIRED_LEVEL", new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial()), "Required Level",
+				new String[] { "The level your item needs", "in order to be used." }, new String[] { "all" });
 	}
 
 	@Override
@@ -27,6 +37,22 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction, Proper
 
 		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_LEVEL", lvl));
 		item.getLore().insert("required-level", format(lvl, "#", "" + lvl));
+	}
+
+	@Override
+	public StatData whenInitialized(Object object) {
+		return new RequiredLevelData(object);
+	}
+
+	@Override
+	public RandomStatData whenInitializedGeneration(Object object) {
+		return new RandomRequiredLevelData(object);
+	}
+
+	@Override
+	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+		if (item.hasTag(getNBTPath()))
+			mmoitem.setData(this, new RequiredLevelData(item.getDouble(getNBTPath())));
 	}
 
 	@Override

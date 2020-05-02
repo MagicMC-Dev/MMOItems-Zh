@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;

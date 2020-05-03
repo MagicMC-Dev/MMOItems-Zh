@@ -64,7 +64,7 @@ public class GemStone extends UseItem {
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
-		GemstoneData gemData = new GemstoneData(mmoitem.getItem(), mmoitem);
+		GemstoneData gemData = new GemstoneData(mmoitem);
 		sockets.apply(gemType, gemData);
 
 		/*

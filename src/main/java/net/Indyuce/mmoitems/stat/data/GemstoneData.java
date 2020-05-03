@@ -14,9 +14,8 @@ import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.LiveMMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemstoneData {
 	private final Set<AbilityData> abilities = new HashSet<>();
@@ -42,7 +41,7 @@ public class GemstoneData {
 		// ParticleData(object.getAsJsonObject("Particles")).toEffect();
 	}
 
-	public GemstoneData(NBTItem nbtItem, MMOItem mmoitem) {
+	public GemstoneData(LiveMMOItem mmoitem) {
 		if (mmoitem.hasData(ItemStat.ABILITIES))
 			((AbilityListData) mmoitem.getData(ItemStat.ABILITIES)).getAbilities().forEach(data -> abilities.add(data));
 		if (mmoitem.hasData(ItemStat.PERM_EFFECTS))
@@ -51,7 +50,11 @@ public class GemstoneData {
 		// for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
 		// if (mmoitem.hasData(stat))
 		// stats.put(stat, ((DoubleData) mmoitem.getData(stat)).getMin());
-		name = MMOUtils.getDisplayName(nbtItem.getItem());
+		name = MMOUtils.getDisplayName(mmoitem.getItem().getItem());
+	}
+
+	public GemstoneData(String name) {
+		this.name = name;
 	}
 
 	public void addAbility(AbilityData ability) {

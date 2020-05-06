@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -215,7 +214,6 @@ public class ShieldPatternStat extends StringStat {
 			Banner banner = (Banner) ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState();
 
 			ShieldPatternData shieldPattern = new ShieldPatternData(banner.getBaseColor());
-			Bukkit.broadcastMessage("" + banner.getBaseColor());
 			shieldPattern.addAll(banner.getPatterns());
 			mmoitem.setData(ItemStat.SHIELD_PATTERN, shieldPattern);
 		}

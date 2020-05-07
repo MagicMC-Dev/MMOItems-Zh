@@ -16,7 +16,7 @@ public class SoulboundInfo {
 	/*
 	 * items that need to be given to the player whenever he respawns.
 	 */
-	private List<ItemStack> items = new ArrayList<>();
+	private final List<ItemStack> items = new ArrayList<>();
 
 	/*
 	 * if the player leaves the server before removing, the cached items will be

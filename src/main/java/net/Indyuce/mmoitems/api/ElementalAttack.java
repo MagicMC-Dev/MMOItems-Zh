@@ -13,15 +13,16 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ElementalAttack {
-	private Map<Element, Double> relative = new HashMap<>();
-	private Map<Element, Double> absolute = new HashMap<>();
-	private ItemAttackResult result;
-	private LivingEntity target;
+	private final Map<Element, Double> relative = new HashMap<>();
+	private final Map<Element, Double> absolute = new HashMap<>();
+	private final ItemAttackResult result;
+	private final LivingEntity target;
 
 	private static final Random random = new Random();
 
-	public ElementalAttack(NBTItem item, ItemAttackResult result) {
+	public ElementalAttack(NBTItem item, ItemAttackResult result, LivingEntity target) {
 		this.result = result;
+		this.target = target;
 
 		for (Element element : Element.values()) {
 			double damage = item.getStat(element.name() + "_DAMAGE");
@@ -35,9 +36,9 @@ public class ElementalAttack {
 		}
 	}
 
-	public ElementalAttack applyElementalArmor(LivingEntity target) {
-		this.target = target;
+	public void apply(CachedStats stats) {
 
+		// elemental defense
 		for (ItemStack equip : target.getEquipment().getArmorContents()) {
 			NBTItem nbtEquip = MMOLib.plugin.getNMS().getNBTItem(equip);
 			if (nbtEquip.getType() != null)
@@ -49,11 +50,6 @@ public class ElementalAttack {
 					}
 				}
 		}
-
-		return this;
-	}
-
-	public void apply(CachedStats stats) {
 
 		// elemental attacks
 		double p = 1;

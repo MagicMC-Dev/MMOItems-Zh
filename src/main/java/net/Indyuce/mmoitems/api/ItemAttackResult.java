@@ -54,7 +54,7 @@ public class ItemAttackResult extends AttackResult {
 	}
 
 	public ItemAttackResult applyElementalEffects(CachedStats stats, NBTItem item, LivingEntity target) {
-		new ElementalAttack(item, this).applyElementalArmor(target).apply(stats);
+		new ElementalAttack(item, this, target).apply(stats);
 		return this;
 	}
 

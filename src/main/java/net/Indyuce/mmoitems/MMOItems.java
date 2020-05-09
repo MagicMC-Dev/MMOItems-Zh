@@ -222,15 +222,8 @@ public class MMOItems extends JavaPlugin {
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
-
-			/*
-			 * runs async because of plugin loading order issues, this way it
-			 * only registers after BossShop is initialized
-			 */
-			Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-				new MMOItemsRewardTypes().register();
-				getLogger().log(Level.INFO, "Hooked onto BossShopPro (async)");
-			});
+			new MMOItemsRewardTypes().register();
+			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
 		}
 
 		findRpgPlugin();

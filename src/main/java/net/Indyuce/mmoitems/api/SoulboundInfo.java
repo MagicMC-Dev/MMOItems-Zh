@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class SoulboundInfo {
-	
+
 	/*
 	 * items that need to be given to the player whenever he respawns.
 	 */
@@ -38,10 +38,9 @@ public class SoulboundInfo {
 	}
 
 	public void setup() {
-		if (hasItems())
-			info.put(player.getUniqueId(), this);
+		info.put(player.getUniqueId(), this);
 	}
-	
+
 	public static Collection<SoulboundInfo> getAbandonnedInfo() {
 		return info.values();
 	}

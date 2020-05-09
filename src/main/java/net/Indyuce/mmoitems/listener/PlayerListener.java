@@ -23,6 +23,7 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class PlayerListener implements Listener {
 
@@ -56,7 +57,9 @@ public class PlayerListener implements Listener {
 
 		Player player = event.getPlayer();
 		boolean left = event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK;
-		PlayerData.get(player).castAbilities(null, new ItemAttackResult(true, DamageType.SKILL), player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
+		PlayerData.get(player).castAbilities(null, new ItemAttackResult(true, DamageType.SKILL),
+				player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK)
+						: (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
 	}
 
 	/*
@@ -73,15 +76,24 @@ public class PlayerListener implements Listener {
 		Player player = event.getEntity();
 		SoulboundInfo soulboundInfo = new SoulboundInfo(player);
 
-		ItemStack item;
 		Iterator<ItemStack> iterator = event.getDrops().iterator();
-		while (iterator.hasNext())
-			if (MMOLib.plugin.getNMS().getNBTItem(item = iterator.next()).getString("MMOITEMS_SOULBOUND").equals(player.getUniqueId().toString())) {
+		while (iterator.hasNext()) {
+			ItemStack item = iterator.next();
+			NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item);
+
+			/*
+			 * not a perfect check but it's very sufficient and so we avoid
+			 * using a JsonParser followed by map checkups in the SoulboundData
+			 * constructor
+			 */
+			if (nbt.hasTag("MMOITEMS_SOULBOUND") && nbt.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString())) {
 				iterator.remove();
 				soulboundInfo.add(item);
 			}
+		}
 
-		soulboundInfo.setup();
+		if (soulboundInfo.hasItems())
+			soulboundInfo.setup();
 	}
 
 	@EventHandler

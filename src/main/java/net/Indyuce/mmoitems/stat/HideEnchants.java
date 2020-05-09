@@ -4,13 +4,12 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class HideEnchants extends BooleanStat {
 	public HideEnchants() {
@@ -24,8 +23,8 @@ public class HideEnchants extends BooleanStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS))
 			mmoitem.setData(ItemStat.HIDE_ENCHANTS, new BooleanData(true));
 	}
 }

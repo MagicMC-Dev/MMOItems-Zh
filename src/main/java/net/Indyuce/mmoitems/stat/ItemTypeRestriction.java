@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,26 +15,29 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class ItemTypeRestriction extends StringStat {
 	public ItemTypeRestriction() {
-		super("ITEM_TYPE_RESTRICTION", new ItemStack(Material.EMERALD), "Item Type Restriction", new String[] { "This option defines the item types", "on which your gem can be applied." }, new String[] { "gem_stone" });
+		super("ITEM_TYPE_RESTRICTION", new ItemStack(Material.EMERALD), "Item Type Restriction",
+				new String[] { "This option defines the item types", "on which your gem can be applied." }, new String[] { "gem_stone" });
 	}
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.ITEM_TYPE_RESTRICTION).enable("Write in the chat the item type you want your gem to support.", "Supported formats: WEAPON or BLUNT, PIERCING, SLASHING, OFFHAND, EXTRA.");
+			new StatEdition(inv, ItemStat.ITEM_TYPE_RESTRICTION).enable("Write in the chat the item type you want your gem to support.",
+					"Supported formats: WEAPON or BLUNT, PIERCING, SLASHING, OFFHAND, EXTRA.");
 
 		// if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 		// StatEdition.put(player, new StatEdition(type, path,
@@ -58,14 +60,14 @@ public class ItemTypeRestriction extends StringStat {
 		// }
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains(getPath())) {
-				List<String> list = config.getConfig().getStringList(inv.getItemId() + "." + getPath());
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())) {
+				List<String> list = config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath());
 				if (list.size() < 1)
 					return true;
 
 				String last = list.get(list.size() - 1);
 				list.remove(last);
-				config.getConfig().set(inv.getItemId() + "." + getPath(), list.size() == 0 ? null : list);
+				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list.size() == 0 ? null : list);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
@@ -92,9 +94,11 @@ public class ItemTypeRestriction extends StringStat {
 			return false;
 		}
 
-		List<String> list = config.getConfig().getConfigurationSection(inv.getItemId()).contains(getPath()) ? config.getConfig().getStringList(inv.getItemId() + "." + getPath()) : new ArrayList<>();
+		List<String> list = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())
+				? config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath())
+				: new ArrayList<>();
 		list.add(format);
-		config.getConfig().set(inv.getItemId() + "." + getPath(), list);
+		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your gem now supports " + format + ".");
@@ -102,14 +106,16 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains(getPath()))
-			lore.add(ChatColor.RED + "Your gem supports any item type.");
-		else
-			for (String s : config.getStringList(path + "." + getPath()))
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + s);
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			StringListData data = (StringListData) mmoitem.getData(this);
+			data.getList().forEach(el -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + el));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any type.");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a supported item type/set.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last element.");

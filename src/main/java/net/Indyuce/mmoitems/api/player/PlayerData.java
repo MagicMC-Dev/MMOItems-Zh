@@ -247,7 +247,7 @@ public class PlayerData {
 				// if the item with the abilities is in the players offhand AND
 				// its disabled in the config then just move on, else add the
 				// ability
-				if (item.getItem().getItem().equals(player.getInventory().getItemInOffHand())
+				if (item.getNBT().getItem().equals(player.getInventory().getItemInOffHand())
 						&& MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
 					continue;
 				} else
@@ -263,7 +263,7 @@ public class PlayerData {
 		ItemSet set = null;
 		Map<ItemSet, Integer> sets = new HashMap<>();
 		for (VolatileMMOItem item : getMMOItems()) {
-			String tag = item.getItem().getString("MMOITEMS_ITEM_SET");
+			String tag = item.getNBT().getString("MMOITEMS_ITEM_SET");
 			ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
 			if (itemSet == null)
 				continue;

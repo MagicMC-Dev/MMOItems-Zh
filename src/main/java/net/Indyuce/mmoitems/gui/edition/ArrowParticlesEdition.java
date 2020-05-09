@@ -19,26 +19,26 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ArrowParticlesEdition extends EditionInventory {
-	public ArrowParticlesEdition(Player player, Type type, String id) {
-		super(player, type, id);
+	public ArrowParticlesEdition(Player player, MMOItem mmoitem) {
+		super(player, mmoitem);
 	}
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Arrow Particles: " + id);
-		FileConfiguration config = type.getConfigFile().getConfig();
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Arrow Particles: " + mmoitem.getId());
+		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
 
 		Particle particle = null;
 		try {
-			particle = Particle.valueOf(config.getString(id + ".arrow-particles.particle"));
+			particle = Particle.valueOf(config.getString(mmoitem.getId() + ".arrow-particles.particle"));
 		} catch (Exception e) {
 		}
 
@@ -49,7 +49,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 		particleItemLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The particle which is displayed around the");
 		particleItemLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "arrow. Fades away when the arrow lands.");
 		particleItemLore.add("");
-		particleItemLore.add(ChatColor.GRAY + "Current Value: " + (particle == null ? ChatColor.RED + "No particle selected." : ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
+		particleItemLore.add(ChatColor.GRAY + "Current Value: " + (particle == null ? ChatColor.RED + "No particle selected."
+				: ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
 		particleItemLore.add("");
 		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -61,7 +62,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		amountMeta.setDisplayName(ChatColor.GREEN + "Amount");
 		List<String> amountLore = new ArrayList<>();
 		amountLore.add("");
-		amountLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getInt(id + ".arrow-particles.amount"));
+		amountLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getInt(mmoitem.getId() + ".arrow-particles.amount"));
 		amountLore.add("");
 		amountLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		amountLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -73,7 +74,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		offsetMeta.setDisplayName(ChatColor.GREEN + "Offset");
 		List<String> offsetLore = new ArrayList<>();
 		offsetLore.add("");
-		offsetLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getDouble(id + ".arrow-particles.offset"));
+		offsetLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getDouble(mmoitem.getId() + ".arrow-particles.offset"));
 		offsetLore.add("");
 		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -81,7 +82,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		offset.setItemMeta(offsetMeta);
 
 		if (particle != null) {
-			ConfigurationSection section = config.getConfigurationSection(id + ".arrow-particles");
+			ConfigurationSection section = config.getConfigurationSection(mmoitem.getId() + ".arrow-particles");
 			if (ParticleData.isColorable(particle)) {
 				int red = section.getInt("color.red");
 				int green = section.getInt("color.green");
@@ -93,7 +94,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 				List<String> speedLore = new ArrayList<>();
 				speedLore.add("");
 				speedLore.add(ChatColor.GRAY + "Current Value (R-G-B):");
-				speedLore.add("" + ChatColor.RED + ChatColor.BOLD + red + ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green + ChatColor.GRAY + " - " + ChatColor.BLUE + ChatColor.BOLD + blue);
+				speedLore.add("" + ChatColor.RED + ChatColor.BOLD + red + ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green
+						+ ChatColor.GRAY + " - " + ChatColor.BLUE + ChatColor.BOLD + blue);
 				speedLore.add("");
 				speedLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 				speedLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -141,9 +143,10 @@ public class ArrowParticlesEdition extends EditionInventory {
 				new StatEdition(this, ItemStat.ARROW_PARTICLES, "particle").enable("Write in the chat the particle you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = type.getConfigFile();
-				if (config.getConfig().getConfigurationSection(id).contains("arrow-particles") && config.getConfig().getConfigurationSection(id + ".arrow-particles").contains("particle")) {
-					config.getConfig().set(id + ".arrow-particles", null);
+				ConfigFile config = mmoitem.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
+						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains("particle")) {
+					config.getConfig().set(mmoitem.getId() + ".arrow-particles", null);
 					registerItemEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
@@ -153,12 +156,14 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Color")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.ARROW_PARTICLES, "color").enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
+				new StatEdition(this, ItemStat.ARROW_PARTICLES, "color").enable("Write in the chat the RGB color you want.",
+						ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = type.getConfigFile();
-				if (config.getConfig().getConfigurationSection(id).contains("arrow-particles") && config.getConfig().getConfigurationSection(id + ".arrow-particles").contains("color")) {
-					config.getConfig().set(id + ".arrow-particles.color", null);
+				ConfigFile config = mmoitem.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
+						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains("color")) {
+					config.getConfig().set(mmoitem.getId() + ".arrow-particles.color", null);
 					registerItemEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
@@ -172,9 +177,10 @@ public class ArrowParticlesEdition extends EditionInventory {
 					new StatEdition(this, ItemStat.ARROW_PARTICLES, string).enable("Write in the chat the " + string + " you want.");
 
 				if (event.getAction() == InventoryAction.PICKUP_HALF) {
-					ConfigFile config = type.getConfigFile();
-					if (config.getConfig().getConfigurationSection(id).contains("arrow-particles") && config.getConfig().getConfigurationSection(id + ".arrow-particles").contains(string)) {
-						config.getConfig().set(id + ".arrow-particles." + string, null);
+					ConfigFile config = mmoitem.getType().getConfigFile();
+					if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
+							&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains(string)) {
+						config.getConfig().set(mmoitem.getId() + ".arrow-particles." + string, null);
 						registerItemEdition(config);
 						open();
 						player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the " + string + ".");

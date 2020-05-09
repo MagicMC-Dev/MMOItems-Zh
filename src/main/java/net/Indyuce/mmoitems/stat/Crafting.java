@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,14 +14,14 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.CraftingEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Crafting extends ItemStat {
@@ -34,10 +33,10 @@ public class Crafting extends ItemStat {
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new CraftingEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+			new CraftingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = inv.getItemType().getConfigFile();
-			ConfigurationSection section = config.getConfig().getConfigurationSection(inv.getItemId());
+			ConfigFile config = inv.getEdited().getType().getConfigFile();
+			ConfigurationSection section = config.getConfig().getConfigurationSection(inv.getEdited().getId());
 			if (section.contains("crafting")) {
 				section.set("crafting", null);
 				inv.registerItemEdition(config);
@@ -50,8 +49,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the crafting edition menu.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all crafting recipes.");
 	}
@@ -65,15 +63,15 @@ public class Crafting extends ItemStat {
 
 			if (validate(inv.getPlayer(), message)) {
 				if (((String) info[1]).equals("shaped")) {
-					List<String> newList = config.getConfig().getStringList(inv.getItemId() + ".crafting.shaped.1");
+					List<String> newList = config.getConfig().getStringList(inv.getEdited().getId() + ".crafting.shaped.1");
 					String[] newArray = newList.get((int) Math.floor(slot / 3)).split("\\ ");
 					newArray[slot % 3] = message;
 					newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
-					config.getConfig().set(inv.getItemId() + ".crafting.shaped.1", newList);
+					config.getConfig().set(inv.getEdited().getId() + ".crafting.shaped.1", newList);
 					inv.registerItemEdition(config);
 				} else {
-					config.getConfig().set(inv.getItemId() + ".crafting.shapeless.1.item" + (slot + 1), message);
+					config.getConfig().set(inv.getEdited().getId() + ".crafting.shapeless.1.item" + (slot + 1), message);
 					inv.registerItemEdition(config);
 				}
 			}
@@ -101,9 +99,9 @@ public class Crafting extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.item", args[0]);
-			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.time", time);
-			config.getConfig().set(inv.getItemId() + ".crafting." + info[1] + ".1.experience", exp);
+			config.getConfig().set(inv.getEdited().getId() + ".crafting." + info[1] + ".1.item", args[0]);
+			config.getConfig().set(inv.getEdited().getId() + ".crafting." + info[1] + ".1.time", time);
+			config.getConfig().set(inv.getEdited().getId() + ".crafting." + info[1] + ".1.experience", exp);
 			inv.registerItemEdition(config);
 		} else
 			MMOItems.plugin.getLogger().warning("Something went wrong!");
@@ -126,7 +124,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+	public void whenLoaded(ReadMMOItem mmoitem) {
 	}
 
 	private boolean validate(Player player, String input) {

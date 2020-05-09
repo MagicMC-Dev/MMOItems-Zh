@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
@@ -21,7 +21,6 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {
@@ -55,9 +54,9 @@ public class ItemSetStat extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("MMOITEMS_ITEM_SET"))
-			mmoitem.setData(this, new StringData(item.getString("MMOITEMS_ITEM_SET")));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_ITEM_SET"))
+			mmoitem.setData(this, new StringData(mmoitem.getNBT().getString("MMOITEMS_ITEM_SET")));
 	}
 
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
@@ -69,7 +68,7 @@ public class ItemSetStat extends StringStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".set", format);
+		config.getConfig().set(inv.getEdited().getId() + ".set", format);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Set successfully changed to " + set.getName() + ChatColor.GRAY + ".");

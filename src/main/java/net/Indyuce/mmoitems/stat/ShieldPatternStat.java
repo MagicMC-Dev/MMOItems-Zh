@@ -12,7 +12,6 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -25,13 +24,13 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ShieldPatternData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class ShieldPatternStat extends StringStat {
@@ -76,12 +75,12 @@ public class ShieldPatternStat extends StringStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-			config.getConfig().set(inv.getItemId() + ".shield-pattern.color", null);
+			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern.color", null);
 
 			inv.registerItemEdition(config);
 			inv.open();
@@ -92,15 +91,15 @@ public class ShieldPatternStat extends StringStat {
 					ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
-			if (!config.getConfig().getConfigurationSection(inv.getItemId()).contains("shield-pattern"))
+			if (!config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("shield-pattern"))
 				return false;
 
-			Set<String> set = config.getConfig().getConfigurationSection(inv.getItemId() + ".shield-pattern").getKeys(false);
+			Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".shield-pattern").getKeys(false);
 			String last = new ArrayList<String>(set).get(set.size() - 1);
 			if (last.equalsIgnoreCase("color"))
 				return false;
 
-			config.getConfig().set(inv.getItemId() + ".shield-pattern." + last, null);
+			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + last, null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
@@ -137,14 +136,14 @@ public class ShieldPatternStat extends StringStat {
 				return false;
 			}
 
-			int availableKey = getNextAvailableKey(config.getConfig().getConfigurationSection(inv.getItemId() + ".shield-pattern"));
+			int availableKey = getNextAvailableKey(config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".shield-pattern"));
 			if (availableKey < 0) {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "You can have more than 100 shield patterns on a single item.");
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".shield-pattern." + availableKey + ".pattern", patternType.name());
-			config.getConfig().set(inv.getItemId() + ".shield-pattern." + availableKey + ".color", dyeColor.name());
+			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + availableKey + ".pattern", patternType.name());
+			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + availableKey + ".color", dyeColor.name());
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -160,7 +159,7 @@ public class ShieldPatternStat extends StringStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".shield-pattern.color", color.name());
+		config.getConfig().set(inv.getEdited().getId() + ".shield-pattern.color", color.name());
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");
@@ -168,38 +167,21 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("shield-pattern"))
-			lore.add(ChatColor.RED + "No shield pattern.");
-		else {
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 
-			// display shield base color
-			if (config.getConfigurationSection(path + ".shield-pattern").contains("color")) {
-				String format = config.getString(path + ".shield-pattern.color").toUpperCase().replace("-", "_").replace(" ", "_");
-				try {
-					lore.add(ChatColor.GRAY + "* Shield Base Color: " + ChatColor.GREEN + DyeColor.valueOf(format).name());
-				} catch (Exception e) {
-					lore.add(ChatColor.DARK_RED + "Wrong base color.");
-				}
-			}
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			ShieldPatternData data = (ShieldPatternData) mmoitem.getData(this);
+			lore.add(ChatColor.GRAY + "* Base Color: "
+					+ (data.getBaseColor() != null
+							? ChatColor.GREEN + MMOUtils.caseOnWords(data.getBaseColor().name().toLowerCase().replace("_", " "))
+							: ChatColor.RED + "None"));
+			data.getPatterns().forEach(pattern -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + pattern.getPattern().name() + ChatColor.GRAY
+					+ " - " + ChatColor.GREEN + pattern.getColor().name()));
 
-			// display patterns
-			for (String s : config.getConfigurationSection(path + ".shield-pattern").getKeys(false)) {
-				if (s.equalsIgnoreCase("color"))
-					continue;
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
-				String colorFormat = config.getString(path + ".shield-pattern." + s + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
-				String patternFormat = config.getString(path + ".shield-pattern." + s + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
-				try {
-					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + PatternType.valueOf(patternFormat).name() + ChatColor.GRAY + " - "
-							+ ChatColor.GREEN + DyeColor.valueOf(colorFormat).name());
-				} catch (Exception e) {
-					lore.add(ChatColor.DARK_RED + "Wrong shield pattern.");
-				}
-			}
-		}
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left Click to change the shield color.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Shift Left Click to reset the shield color.");
@@ -208,10 +190,11 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@EventHandler
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof BlockStateMeta && ((BlockStateMeta) item.getItem().getItemMeta()).hasBlockState()
-				&& ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState() instanceof Banner) {
-			Banner banner = (Banner) ((BlockStateMeta) item.getItem().getItemMeta()).getBlockState();
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().getItem().getItemMeta() instanceof BlockStateMeta
+				&& ((BlockStateMeta) mmoitem.getNBT().getItem().getItemMeta()).hasBlockState()
+				&& ((BlockStateMeta) mmoitem.getNBT().getItem().getItemMeta()).getBlockState() instanceof Banner) {
+			Banner banner = (Banner) ((BlockStateMeta) mmoitem.getNBT().getItem().getItemMeta()).getBlockState();
 
 			ShieldPatternData shieldPattern = new ShieldPatternData(banner.getBaseColor());
 			shieldPattern.addAll(banner.getPatterns());

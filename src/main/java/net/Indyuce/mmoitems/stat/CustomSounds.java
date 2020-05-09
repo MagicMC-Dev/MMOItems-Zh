@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,9 +15,9 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.SoundsEdition;
 import net.Indyuce.mmoitems.stat.data.SoundData;
@@ -27,7 +26,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class CustomSounds extends ItemStat implements ProperStat {
 	public CustomSounds() {
@@ -64,13 +63,13 @@ public class CustomSounds extends ItemStat implements ProperStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new SoundsEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+			new SoundsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("sounds")) {
-				config.getConfig().set(inv.getItemId() + ".sounds", null);
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("sounds")) {
+				config.getConfig().set(inv.getEdited().getId() + ".sounds", null);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
@@ -106,9 +105,9 @@ public class CustomSounds extends ItemStat implements ProperStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".sounds." + soundsPath + ".sound", soundName);
-		config.getConfig().set(inv.getItemId() + ".sounds." + soundsPath + ".volume", volume);
-		config.getConfig().set(inv.getItemId() + ".sounds." + soundsPath + ".pitch", pitch);
+		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".sound", soundName);
+		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".volume", volume);
+		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".pitch", pitch);
 
 		inv.registerItemEdition(config);
 		inv.open();
@@ -118,19 +117,19 @@ public class CustomSounds extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Values:");
-		if (!config.getConfigurationSection(path).contains("sounds"))
-			lore.add(ChatColor.RED + "No custom sounds.");
-		else if (config.getConfigurationSection(path + ".sounds").getKeys(false).isEmpty())
-			lore.add(ChatColor.RED + "No custom sounds.");
-		else
-			for (String s1 : config.getConfigurationSection(path + ".sounds").getKeys(false)) {
-				String sounds = MMOUtils.caseOnWords(s1.replace("-", " "));
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + sounds + ChatColor.GRAY + ": " + ChatColor.RED
-						+ config.getString(path + ".sounds." + s1 + ".sound"));
-			}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			SoundListData data = (SoundListData) mmoitem.getData(this);
+			data.mapData()
+					.forEach((sound,
+							soundData) -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN
+									+ MMOUtils.caseOnWords(sound.getName().toLowerCase().replace("-", " ").replace("_", " ")) + ChatColor.GRAY + ": "
+									+ ChatColor.RED + soundData.getVolume() + " " + soundData.getPitch()));
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the sounds edition menu.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all custom sounds.");
@@ -151,14 +150,14 @@ public class CustomSounds extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+	public void whenLoaded(ReadMMOItem mmoitem) {
 		SoundListData sounds = new SoundListData();
 
 		for (CustomSound sound : CustomSound.values()) {
-			String soundName = item.getString("MMOITEMS_SOUND_" + sound.name());
+			String soundName = mmoitem.getNBT().getString("MMOITEMS_SOUND_" + sound.name());
 			if (soundName != null && !soundName.isEmpty())
-				sounds.set(sound, soundName, item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"),
-						item.getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
+				sounds.set(sound, soundName, mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"),
+						mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
 		}
 
 		if (sounds.total() > 0)

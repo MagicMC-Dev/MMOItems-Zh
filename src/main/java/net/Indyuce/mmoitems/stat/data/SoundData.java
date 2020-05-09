@@ -4,6 +4,10 @@ public class SoundData {
 	private final String sound;
 	private final double volume, pitch;
 
+	/*
+	 * using string for sound names so it supports custom sounds from resource
+	 * packs
+	 */
 	public SoundData(String sound, double volume, double pitch) {
 		this.sound = sound;
 		this.volume = volume;

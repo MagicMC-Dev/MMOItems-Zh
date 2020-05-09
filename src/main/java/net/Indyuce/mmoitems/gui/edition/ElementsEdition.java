@@ -19,16 +19,16 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class ElementsEdition extends EditionInventory {
 	public static Map<Integer, String> correspondingSlot = new HashMap<>();
 
-	public ElementsEdition(Player player, Type type, String id) {
-		super(player, type, id);
+	public ElementsEdition(Player player, MMOItem mmoitem) {
+		super(player, mmoitem);
 		
 		if (correspondingSlot.isEmpty()) {
 			correspondingSlot.put(19, "fire.damage");
@@ -48,17 +48,17 @@ public class ElementsEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Elements E.: " + id);
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Elements E.: " + mmoitem.getId());
 		int[] slots = { 19, 25, 20, 24, 28, 34, 29, 33, 30, 32, 37, 43, 38, 42, 39, 41 };
 		int n = 0;
 
-		FileConfiguration config = type.getConfigFile().getConfig();
+		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
 		for (Element element : Element.values()) {
 			ItemStack attack = element.getItem().clone();
 			ItemMeta attackMeta = attack.getItemMeta();
 			attackMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Damage");
 			List<String> attackLore = new ArrayList<String>();
-			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(id + ".element." + element.getName().toLowerCase() + ".damage"));
+			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(mmoitem.getId() + ".element." + element.getName().toLowerCase() + ".damage"));
 			attackLore.add("");
 			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
@@ -69,7 +69,7 @@ public class ElementsEdition extends EditionInventory {
 			ItemMeta defenseMeta = defense.getItemMeta();
 			defenseMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Defense");
 			List<String> defenseLore = new ArrayList<String>();
-			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(id + ".element." + element.getName().toLowerCase() + ".defense"));
+			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(mmoitem.getId() + ".element." + element.getName().toLowerCase() + ".defense"));
 			defenseLore.add("");
 			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
@@ -99,22 +99,22 @@ public class ElementsEdition extends EditionInventory {
 				new StatEdition(this, ItemStat.ELEMENTS, event.getSlot()).enable("Write in the value you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = type.getConfigFile();
+				ConfigFile config = mmoitem.getType().getConfigFile();
 				String elementPath = correspondingSlot.get(event.getSlot());
-				config.getConfig().set(id + ".element." + elementPath, null);
+				config.getConfig().set(mmoitem.getId() + ".element." + elementPath, null);
 
 				// clear element config section
 				String elementName = elementPath.split("\\.")[0];
-				if (config.getConfig().getConfigurationSection(id).contains("element")) {
-					if (config.getConfig().getConfigurationSection(id + ".element").contains(elementName))
-						if (config.getConfig().getConfigurationSection(id + ".element." + elementName).getKeys(false).isEmpty())
-							config.getConfig().set(id + ".element." + elementName, null);
-					if (config.getConfig().getConfigurationSection(id + ".element").getKeys(false).isEmpty())
-						config.getConfig().set(id + ".element", null);
+				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("element")) {
+					if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".element").contains(elementName))
+						if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".element." + elementName).getKeys(false).isEmpty())
+							config.getConfig().set(mmoitem.getId() + ".element." + elementName, null);
+					if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".element").getKeys(false).isEmpty())
+						config.getConfig().set(mmoitem.getId() + ".element", null);
 				}
 
 				registerItemEdition(config);
-				new ElementsEdition(player, type, id).open(getPreviousPage());
+				new ElementsEdition(player, mmoitem).open(getPreviousPage());
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY + " successfully removed.");
 			}
 		}

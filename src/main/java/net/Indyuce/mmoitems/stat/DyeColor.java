@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -14,14 +13,14 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ColorData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class DyeColor extends ItemStat {
@@ -44,13 +43,13 @@ public class DyeColor extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.DYE_COLOR).enable("Write in the chat the RGB color you want.",
 					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getItemId() + ".dye-color", null);
+			config.getConfig().set(inv.getEdited().getId() + ".dye-color", null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Dye Color.");
@@ -75,7 +74,7 @@ public class DyeColor extends ItemStat {
 				return false;
 			}
 
-		config.getConfig().set(inv.getItemId() + ".dye-color", message);
+		config.getConfig().set(inv.getEdited().getId() + ".dye-color", message);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Dye Color successfully changed to " + message + ".");
@@ -83,22 +82,17 @@ public class DyeColor extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		if (!config.getConfigurationSection(path).contains("dye-color")) {
-			lore.add(ChatColor.GRAY + "Current Value:");
-			lore.add(ChatColor.RED + "No value.");
-		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getString(path + ".dye-color"));
-		lore.add("");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+		lore.add(ChatColor.GRAY + "Current Value: "
+				+ (mmoitem.hasData(this) ? ChatColor.GREEN + mmoitem.getData(this).toString() : ChatColor.RED + "None"));
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the dye color.");
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof LeatherArmorMeta)
-			mmoitem.setData(ItemStat.DYE_COLOR, new ColorData(((LeatherArmorMeta) item.getItem().getItemMeta()).getColor()));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().getItem().getItemMeta() instanceof LeatherArmorMeta)
+			mmoitem.setData(ItemStat.DYE_COLOR, new ColorData(((LeatherArmorMeta) mmoitem.getNBT().getItem().getItemMeta()).getColor()));
 	}
 
 	@Override

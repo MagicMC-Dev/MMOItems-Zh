@@ -37,18 +37,18 @@ public class MMOCoreHook implements RPGHandler, Listener {
 	 */
 	public MMOCoreHook() {
 
-		MMOItems.plugin.getStats().register("HEALTH_REGENERATION", HEALTH_REGENERATION);
-		MMOItems.plugin.getStats().register("MANA_REGENERATION", MANA_REGENERATION);
-		MMOItems.plugin.getStats().register("MAX_STAMINA", MAX_STAMINA);
-		MMOItems.plugin.getStats().register("STAMINA_REGENERATION", STAMINA_REGENERATION);
-		MMOItems.plugin.getStats().register("ADDITIONAL_EXPERIENCE", ADDITIONAL_EXPERIENCE);
+		MMOItems.plugin.getStats().register(HEALTH_REGENERATION);
+		MMOItems.plugin.getStats().register( MANA_REGENERATION);
+		MMOItems.plugin.getStats().register( MAX_STAMINA);
+		MMOItems.plugin.getStats().register( STAMINA_REGENERATION);
+		MMOItems.plugin.getStats().register( ADDITIONAL_EXPERIENCE);
 
 		/*
 		 * only works when the server is reloaded. needs /reload when changing
 		 * attributes to refresh MMOItems stats
 		 */
 		for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
-			MMOItems.plugin.getStats().register("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), new Required_Attribute(attribute));
+			MMOItems.plugin.getStats().register(new Required_Attribute(attribute));
 	}
 
 	@Override

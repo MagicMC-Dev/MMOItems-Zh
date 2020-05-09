@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +9,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -20,9 +20,9 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
@@ -30,9 +30,11 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class PotionEffects extends ItemStat {
+	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
+
 	public PotionEffects() {
 		super("POTION_EFFECT", new ItemStack(Material.POTION), "Potion Effects",
 				new String[] { "The effects of your potion.", "(May have an impact on color)." }, new String[] { "all" }, Material.POTION,
@@ -68,18 +70,18 @@ public class PotionEffects extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.POTION_EFFECTS).enable("Write in the chat the potion effect you want to add.",
 					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("potion-effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getItemId() + ".potion-effects").getKeys(false);
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("potion-effects")) {
+				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".potion-effects").getKeys(false);
 				String last = Arrays.asList(set.toArray(new String[0])).get(set.size() - 1);
-				config.getConfig().set(inv.getItemId() + ".potion-effects." + last, null);
+				config.getConfig().set(inv.getEdited().getId() + ".potion-effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getItemId() + ".potion-effects", null);
+					config.getConfig().set(inv.getEdited().getId() + ".potion-effects", null);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
@@ -131,7 +133,7 @@ public class PotionEffects extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".potion-effects." + effect.getName(), duration + "," + amplifier);
+		config.getConfig().set(inv.getEdited().getId() + ".potion-effects." + effect.getName(), duration + "," + amplifier);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
@@ -139,41 +141,18 @@ public class PotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("potion-effects"))
-			lore.add(ChatColor.RED + "No effect.");
-		else if (config.getConfigurationSection(path + ".potion-effects").getKeys(false).isEmpty())
-			lore.add(ChatColor.RED + "No effect.");
-		else
-			for (String s1 : config.getConfigurationSection(path + ".potion-effects").getKeys(false)) {
-				String effect = s1;
-				effect = effect.replace("-", " ").replace("_", " ");
-				effect = effect.substring(0, 1).toUpperCase() + effect.substring(1).toLowerCase();
-				String[] split = config.getString(path + ".potion-effects." + s1).split("\\,");
-				String durationFormat = "";
-				try {
-					durationFormat = "" + Double.parseDouble(split[0]);
-				} catch (Exception e) {
-					durationFormat = "?";
-				}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 
-				if (split.length == 1)
-					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " I " + ChatColor.GRAY + "(" + ChatColor.GREEN + durationFormat
-							+ ChatColor.GRAY + "s)");
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			PotionEffectListData data = (PotionEffectListData) mmoitem.getData(this);
+			for (PotionEffectData effect : data.getEffects())
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
+						+ " " + MMOUtils.intToRoman(effect.getLevel()) + " " + ChatColor.GRAY + "(" + ChatColor.GREEN
+						+ durationFormat.format(effect.getDuration()) + ChatColor.GRAY + "s)");
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
-				if (split.length == 2) {
-					String amplifierFormat = "";
-					try {
-						amplifierFormat = "" + MMOUtils.intToRoman(Integer.parseInt(split[1]));
-					} catch (Exception e) {
-						amplifierFormat = "?";
-					}
-					lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " " + amplifierFormat + " " + ChatColor.GRAY + "(" + ChatColor.GREEN
-							+ durationFormat + ChatColor.GRAY + "s)");
-				}
-			}
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add an effect.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
@@ -187,8 +166,8 @@ public class PotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag(getNBTPath()))
-			mmoitem.setData(this, new StringData(item.getString(getNBTPath())));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			mmoitem.setData(this, new StringData(mmoitem.getNBT().getString(getNBTPath())));
 	}
 }

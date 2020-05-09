@@ -36,7 +36,7 @@ public class StatManager {
 		for (Field field : ItemStat.class.getFields())
 			try {
 				if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
-					register(field.getName(), (ItemStat) field.get(null));
+					register((ItemStat) field.get(null));
 			} catch (IllegalArgumentException | IllegalAccessException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register stat called " + field.getName());
 			}
@@ -65,11 +65,18 @@ public class StatManager {
 		return stats.containsKey(id);
 	}
 
+	@Deprecated
+	public void register(String id, ItemStat stat) {
+		MMOItems.plugin.getLogger().log(Level.WARNING,
+				"Stat IDs are now stored in the stat instance directly. You must now use StatManager#register(ItemStat)");
+		register(stat);
+	}
+
 	/*
 	 * the extra checks in that method to register stats even after the plugin
 	 * has successfully enabled otherwise the other sets would not be updated.
 	 */
-	public void register(String id, ItemStat stat) {
+	public void register(ItemStat stat) {
 		if (!stat.isEnabled())
 			return;
 

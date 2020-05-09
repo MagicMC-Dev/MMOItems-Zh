@@ -3,11 +3,11 @@ package net.Indyuce.mmoitems.stat.type;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -48,7 +48,7 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 		// not supported
 	}
 }

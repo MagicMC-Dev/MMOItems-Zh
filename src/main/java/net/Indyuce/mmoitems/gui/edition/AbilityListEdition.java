@@ -18,19 +18,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AbilityListEdition extends EditionInventory {
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 
-	public AbilityListEdition(Player player, Type type, String id) {
-		super(player, type, id);
+	public AbilityListEdition(Player player, MMOItem mmoitem) {
+		super(player, mmoitem);
 	}
 
 	@Override
@@ -39,28 +39,33 @@ public class AbilityListEdition extends EditionInventory {
 		int[] slots = { 19, 20, 21, 22, 23, 24, 25 };
 		int n = 0;
 
-		FileConfiguration config = type.getConfigFile().getConfig();
+		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
 
-		if (config.getConfigurationSection(id).contains("ability"))
-			for (String key : config.getConfigurationSection(id + ".ability").getKeys(false)) {
-				String abilityFormat = config.getString(id + ".ability." + key + ".type");
-				Ability ability = abilityFormat != null && MMOItems.plugin.getAbilities().hasAbility(abilityFormat = abilityFormat.toUpperCase().replace(" ", "_").replace("-", "_")) ? MMOItems.plugin.getAbilities().getAbility(abilityFormat) : null;
+		if (config.getConfigurationSection(mmoitem.getId()).contains("ability"))
+			for (String key : config.getConfigurationSection(mmoitem.getId() + ".ability").getKeys(false)) {
+				String abilityFormat = config.getString(mmoitem.getId() + ".ability." + key + ".type");
+				Ability ability = abilityFormat != null
+						&& MMOItems.plugin.getAbilities().hasAbility(abilityFormat = abilityFormat.toUpperCase().replace(" ", "_").replace("-", "_"))
+								? MMOItems.plugin.getAbilities().getAbility(abilityFormat)
+								: null;
 
-				CastingMode castMode = CastingMode.safeValueOf(config.getString(id + ".ability." + key + ".mode"));
+				CastingMode castMode = CastingMode.safeValueOf(config.getString(mmoitem.getId() + ".ability." + key + ".mode"));
 
 				ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 				ItemMeta abilityItemMeta = abilityItem.getItemMeta();
 				abilityItemMeta.setDisplayName(ability != null ? ChatColor.GREEN + ability.getName() : ChatColor.RED + "! No Ability Selected !");
 				List<String> abilityItemLore = new ArrayList<>();
 				abilityItemLore.add("");
-				abilityItemLore.add(ChatColor.GRAY + "Cast Mode: " + (castMode != null ? ChatColor.GOLD + castMode.getName() : ChatColor.RED + "Not Selected"));
+				abilityItemLore.add(
+						ChatColor.GRAY + "Cast Mode: " + (castMode != null ? ChatColor.GOLD + castMode.getName() : ChatColor.RED + "Not Selected"));
 				abilityItemLore.add("");
 
 				boolean check = false;
 				if (ability != null)
-					for (String modifier : config.getConfigurationSection(id + ".ability." + key).getKeys(false))
+					for (String modifier : config.getConfigurationSection(mmoitem.getId() + ".ability." + key).getKeys(false))
 						if (!modifier.equals("type") && !modifier.equals("mode") && ability.getModifiers().contains(modifier)) {
-							abilityItemLore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD + modifierFormat.format(config.getDouble(id + ".ability." + key + "." + modifier)));
+							abilityItemLore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": "
+									+ ChatColor.GOLD + modifierFormat.format(config.getDouble(mmoitem.getId() + ".ability." + key + "." + modifier)));
 							check = true;
 						}
 				if (check)
@@ -103,24 +108,24 @@ public class AbilityListEdition extends EditionInventory {
 			return;
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Add an ability...")) {
-			ConfigFile config = type.getConfigFile();
-			if (!config.getConfig().getConfigurationSection(id).contains("ability")) {
-				config.getConfig().createSection(id + ".ability.ability1");
+			ConfigFile config = mmoitem.getType().getConfigFile();
+			if (!config.getConfig().getConfigurationSection(mmoitem.getId()).contains("ability")) {
+				config.getConfig().createSection(mmoitem.getId() + ".ability.ability1");
 				registerItemEdition(config);
-				new AbilityEdition(player, type, id, "ability1").open(getPreviousPage());
+				new AbilityEdition(player, mmoitem, "ability1").open(getPreviousPage());
 				return;
 			}
 
-			if (config.getConfig().getConfigurationSection(id + ".ability").getKeys(false).size() > 6) {
+			if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".ability").getKeys(false).size() > 6) {
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "You've hit the 7 abilities/item limit.");
 				return;
 			}
 
 			for (int j = 1; j < 8; j++)
-				if (!config.getConfig().getConfigurationSection(id + ".ability").contains("ability" + j)) {
-					config.getConfig().createSection(id + ".ability.ability" + j);
+				if (!config.getConfig().getConfigurationSection(mmoitem.getId() + ".ability").contains("ability" + j)) {
+					config.getConfig().createSection(mmoitem.getId() + ".ability.ability" + j);
 					registerItemEdition(config);
-					new AbilityEdition(player, type, id, "ability" + j).open(getPreviousPage());
+					new AbilityEdition(player, mmoitem, "ability" + j).open(getPreviousPage());
 					break;
 				}
 		}
@@ -130,15 +135,17 @@ public class AbilityListEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new AbilityEdition(player, type, id, tag).open(getPreviousPage());
+			new AbilityEdition(player, mmoitem, tag).open(getPreviousPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = type.getConfigFile();
-			if (config.getConfig().getConfigurationSection(id).contains("ability") && config.getConfig().getConfigurationSection(id + ".ability").contains(tag)) {
-				config.getConfig().set(id + ".ability." + tag, null);
+			ConfigFile config = mmoitem.getType().getConfigFile();
+			if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("ability")
+					&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".ability").contains(tag)) {
+				config.getConfig().set(mmoitem.getId() + ".ability." + tag, null);
 				registerItemEdition(config);
 				open();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY + " (Internal ID)" + ChatColor.GRAY + ".");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
+						+ " (Internal ID)" + ChatColor.GRAY + ".");
 			}
 		}
 	}

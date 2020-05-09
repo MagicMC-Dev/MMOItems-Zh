@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -20,16 +19,16 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class GemSockets extends ItemStat {
 	public GemSockets() {
@@ -62,10 +61,10 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("MMOITEMS_GEM_STONES"))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_GEM_STONES"))
 			try {
-				JsonObject object = new JsonParser().parse(item.getString("MMOITEMS_GEM_STONES")).getAsJsonObject();
+				JsonObject object = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_GEM_STONES")).getAsJsonObject();
 				GemSocketsData sockets = new GemSocketsData(toList(object.getAsJsonArray("EmptySlots")));
 
 				JsonArray array = object.getAsJsonArray("Gemstones");
@@ -87,19 +86,19 @@ public class GemSockets extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.GEM_SOCKETS).enable("Write in the chat the COLOR of the gem socket you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains(getPath())) {
-				List<String> lore = config.getConfig().getStringList(inv.getItemId() + "." + getPath());
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())) {
+				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath());
 				if (lore.size() < 1)
 					return true;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
-				config.getConfig().set(inv.getItemId() + "." + getPath(), lore);
+				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last)
@@ -111,11 +110,11 @@ public class GemSockets extends ItemStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains(getPath())
-				? config.getConfig().getStringList(inv.getItemId() + "." + getPath())
+		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())
+				? config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath())
 				: new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set(inv.getItemId() + "." + getPath(), lore);
+		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + message + " successfully added.");
@@ -123,16 +122,16 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("gem-sockets"))
-			lore.add(ChatColor.RED + "No sockets.");
-		else if (config.getStringList(path + ".gem-sockets").isEmpty())
-			lore.add(ChatColor.RED + "No sockets.");
-		else
-			for (String s1 : config.getStringList(path + ".gem-sockets"))
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + s1 + " Gem Socket");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			GemSocketsData data = (GemSocketsData) mmoitem.getData(this);
+			data.getEmptySlots().forEach(socket -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + socket + " Gem Socket"));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "No Sockets");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a gem socket.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the socket.");

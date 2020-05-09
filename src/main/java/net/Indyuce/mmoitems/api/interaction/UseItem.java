@@ -54,15 +54,15 @@ public class UseItem {
 	}
 
 	public NBTItem getNBTItem() {
-		return mmoitem.getItem();
+		return mmoitem.getNBT();
 	}
 
 	public ItemStack getItem() {
-		return mmoitem.getItem().getItem();
+		return mmoitem.getNBT().getItem();
 	}
 
 	public boolean canBeUsed() {
-		return playerData.getRPG().canUse(mmoitem.getItem(), true);
+		return playerData.getRPG().canUse(mmoitem.getNBT(), true);
 	}
 
 	public void executeCommands() {

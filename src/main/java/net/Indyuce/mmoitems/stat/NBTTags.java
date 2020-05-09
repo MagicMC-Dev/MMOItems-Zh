@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,15 +17,15 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class NBTTags extends ItemStat {
 	public NBTTags() {
@@ -47,20 +46,20 @@ public class NBTTags extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.",
 					ChatColor.AQUA + "Format: [TAG_NAME] [TAG_VALUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("custom-nbt")) {
-				List<String> nbtTags = config.getConfig().getStringList(inv.getItemId() + ".custom-nbt");
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("custom-nbt")) {
+				List<String> nbtTags = config.getConfig().getStringList(inv.getEdited().getId() + ".custom-nbt");
 				if (nbtTags.size() < 1)
 					return true;
 
 				String last = nbtTags.get(nbtTags.size() - 1);
 				nbtTags.remove(last);
-				config.getConfig().set(inv.getItemId() + ".custom-nbt", nbtTags);
+				config.getConfig().set(inv.getEdited().getId() + ".custom-nbt", nbtTags);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last)
@@ -77,11 +76,11 @@ public class NBTTags extends ItemStat {
 			return false;
 		}
 
-		List<String> customNbt = config.getConfig().getConfigurationSection(inv.getItemId()).contains("custom-nbt")
-				? config.getConfig().getStringList(inv.getItemId() + ".custom-nbt")
+		List<String> customNbt = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("custom-nbt")
+				? config.getConfig().getStringList(inv.getEdited().getId() + ".custom-nbt")
 				: new ArrayList<>();
 		customNbt.add(message);
-		config.getConfig().set(inv.getItemId() + ".custom-nbt", customNbt);
+		config.getConfig().set(inv.getEdited().getId() + ".custom-nbt", customNbt);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat successfully added.");
@@ -89,15 +88,16 @@ public class NBTTags extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("custom-nbt"))
-			lore.add(ChatColor.RED + "No NBT Tags.");
-		else if (config.getStringList(path + ".custom-nbt").isEmpty())
-			lore.add(ChatColor.RED + "No NBT Tags.");
-		else
-			config.getStringList(path + ".custom-nbt").forEach(str -> lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', str)));
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			StringListData data = (StringListData) mmoitem.getData(this);
+			data.getList().forEach(str -> lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', str)));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a tag.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last tag.");
@@ -115,8 +115,9 @@ public class NBTTags extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("MMOITEMS_NBTTAGS"))
-			mmoitem.setData(ItemStat.NBT_TAGS, new StringListData(new JsonParser().parse(item.getString("MMOITEMS_NBTTAGS")).getAsJsonArray()));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_NBTTAGS"))
+			mmoitem.setData(ItemStat.NBT_TAGS,
+					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_NBTTAGS")).getAsJsonArray()));
 	}
 }

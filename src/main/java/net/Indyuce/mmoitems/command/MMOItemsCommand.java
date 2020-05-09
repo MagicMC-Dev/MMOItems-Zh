@@ -571,7 +571,7 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			Type type = Type.get(args[1]);
 			ConfigFile config = type.getConfigFile();
-			String id1 = args[2].toUpperCase();
+			String id1 = args[2].toUpperCase().replace("-", "_");
 			if (!config.getConfig().contains(id1)) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + id1 + ".");
 				return true;
@@ -586,7 +586,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			config.getConfig().set(id2, config.getConfig().getConfigurationSection(id1));
 			config.registerItemEdition(type, id2);
 			if (sender instanceof Player)
-				new ItemEdition((Player) sender, type, id2).open();
+				new ItemEdition((Player) sender, MMOItems.plugin.getItems().getMMOItem(type, id2)).open();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + id1 + " to " + id2 + "!");
 		}
 		// ==================================================================================================================================
@@ -780,7 +780,7 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			config.registerItemEdition(type, name);
 			if (sender instanceof Player)
-				new ItemEdition((Player) sender, type, name).open();
+				new ItemEdition((Player) sender, MMOItems.plugin.getItems().getMMOItem(type, name)).open();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully " + args[0].replace("d", "de") + "d " + name + "!");
 		}
 		// ==================================================================================================================================
@@ -945,8 +945,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 
-			ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
-			if (item == null || item.getType() == Material.AIR) {
+			MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(type, id);
+			if (mmoitem == null) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called "
 						+ args[2].toUpperCase() + ".");
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
@@ -954,7 +954,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			long old = System.currentTimeMillis();
-			new ItemEdition((Player) sender, type, args[2], item).open();
+			new ItemEdition((Player) sender, mmoitem).open();
 			long ms = System.currentTimeMillis() - old;
 			MMOLib.plugin.getNMS().sendActionBar((Player) sender, ChatColor.YELLOW + "Took " + ms + "ms ("
 					+ new DecimalFormat("#.##").format(ms / 50.) + "tick" + (ms > 99 ? "s" : "") + ") to open the menu.");

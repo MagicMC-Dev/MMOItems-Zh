@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -73,7 +73,6 @@ import net.Indyuce.mmoitems.stat.UpgradeStat;
 import net.Indyuce.mmoitems.stat.VanillaEatingAnimation;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class ItemStat {
@@ -127,7 +126,8 @@ public abstract class ItemStat {
 			new String[] { "!miscellaneous", "all" });
 	public static final ItemStat PARRY_COOLDOWN_REDUCTION = new DoubleStat("PARRY_COOLDOWN_REDUCTION", new ItemStack(Material.BUCKET),
 			"Parry Cooldown Reduction", new String[] { "Reduces the parrying cooldown (%)." }, new String[] { "!miscellaneous", "all" });
-	public static final ItemStat COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", new ItemStack(Material.BOOK), "Cooldown Reduction", new String[] { "Reduces cooldowns of item skills (%)." });
+	public static final ItemStat COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", new ItemStack(Material.BOOK), "Cooldown Reduction",
+			new String[] { "Reduces cooldowns of item skills (%)." });
 	public static final ItemStat RANGE = new DoubleStat("RANGE", new ItemStack(Material.STICK), "Range",
 			new String[] { "The range of your item attacks." }, new String[] { "staff", "whip", "wand", "musket" });
 	public static final ItemStat MANA_COST = new DoubleStat("MANA_COST", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Cost",
@@ -236,7 +236,7 @@ public abstract class ItemStat {
 	public static final ItemStat GEM_SOCKETS = new GemSockets();
 	public static final ItemStat REPAIR = new DoubleStat("REPAIR", new ItemStack(Material.ANVIL), "Repair",
 			new String[] { "The amount of durability your item", "can repair when set an item." }, new String[] { "consumable" });
-//	public static final ItemStat REPAIR_MATERIAL = new RepairMaterial();
+	// public static final ItemStat REPAIR_MATERIAL = new RepairMaterial();
 
 	public static final ItemStat KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toItem(), "Knockback",
 			new String[] { "Using this musket will knock", "the user back if positive." }, new String[] { "musket" });
@@ -306,15 +306,13 @@ public abstract class ItemStat {
 	/*
 	 * when loading mmoitem data from an ItemStack
 	 */
-	public abstract void whenLoaded(MMOItem mmoitem, NBTItem item);
+	public abstract void whenLoaded(ReadMMOItem mmoitem);
 
 	/*
 	 * displays the current stat state/value in the item edition GUI, the lore
 	 * corresponds to the GUI stat item
 	 */
-	// TODO change it to List<String> lore, MMOItem mmoitem, makes no sense to
-	// check config.
-	public abstract void whenDisplayed(List<String> lore, FileConfiguration config, String id);
+	public abstract void whenDisplayed(List<String> lore, MMOItem mmoitem);
 
 	public String getName() {
 		return name;

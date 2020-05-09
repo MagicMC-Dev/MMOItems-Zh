@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,17 +14,17 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class DoubleStat extends ItemStat implements Upgradable {
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
@@ -46,10 +45,10 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 		if (object instanceof Number)
 			return new NumericStatFormula(Double.valueOf(object.toString()), 0, 0, 0);
-		
-		if (object instanceof ConfigurationSection) 
+
+		if (object instanceof ConfigurationSection)
 			return new NumericStatFormula((ConfigurationSection) object);
-		
+
 		throw new IllegalArgumentException("Must specify a number or a config section");
 	}
 
@@ -63,8 +62,8 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = inv.getItemType().getConfigFile();
-			config.getConfig().set(inv.getItemId() + "." + getPath(), null);
+			ConfigFile config = inv.getEdited().getType().getConfigFile();
+			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
@@ -98,9 +97,9 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 		// STRING if length == 2
 		// DOUBLE if length == 1
-		config.getConfig().set(inv.getItemId() + "." + getPath(), split.length > 1 ? value + "=" + value1 : value);
+		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), split.length > 1 ? value + "=" + value1 : value);
 		if (value == 0 && value1 == 0)
-			config.getConfig().set(inv.getItemId() + "." + getPath(), null);
+			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to "
@@ -109,30 +108,23 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag(getNBTPath()))
-			mmoitem.setData(this, new DoubleData(item.getDouble(getNBTPath())));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			mmoitem.setData(this, new DoubleData(mmoitem.getNBT().getDouble(getNBTPath())));
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
-		lore.add("");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 
-		String[] split = config.contains(id + "." + getPath()) ? config.getString(id + "." + getPath()).split("\\=") : new String[] { "0" };
-		String format = split.length > 1 ? tryParse(split[0]) + " -> " + tryParse(split[1]) : "" + config.getDouble(id + "." + getPath());
+		DoubleData data;
+		String format = mmoitem.hasData(this)
+				? ((data = (DoubleData) mmoitem.getData(this)).hasMax() ? data.getMin() + " -> " + data.getMax() : "" + data.getMin())
+				: "0";
 
 		lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + format);
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
-	}
-
-	private double tryParse(String input) {
-		try {
-			return Double.parseDouble(input);
-		} catch (NumberFormatException exception) {
-			return 0;
-		}
 	}
 
 	@Override

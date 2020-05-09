@@ -8,7 +8,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,9 +21,9 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -34,7 +33,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomAbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.###");
@@ -99,7 +98,7 @@ public class Abilities extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new AbilityListEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+		new AbilityListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 		return true;
 	}
 
@@ -118,8 +117,8 @@ public class Abilities extends ItemStat {
 
 			Ability ability = MMOItems.plugin.getAbilities().getAbility(format);
 
-			config.getConfig().set(inv.getItemId() + ".ability." + configKey, null);
-			config.getConfig().set(inv.getItemId() + ".ability." + configKey + ".type", format);
+			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey, null);
+			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".type", format);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -135,14 +134,14 @@ public class Abilities extends ItemStat {
 			}
 
 			Ability ability = MMOItems.plugin.getAbilities()
-					.getAbility(config.getConfig().getString(inv.getItemId() + ".ability." + configKey + ".type").toUpperCase().replace("-", "_")
-							.replace(" ", "_").replaceAll("[^A-Z_]", ""));
+					.getAbility(config.getConfig().getString(inv.getEdited().getId() + ".ability." + configKey + ".type").toUpperCase()
+							.replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
 			if (!ability.isAllowedMode(castMode)) {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "This ability does not support this casting mode.");
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".ability." + configKey + ".mode", castMode.name());
+			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".mode", castMode.name());
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
@@ -158,7 +157,7 @@ public class Abilities extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".ability." + configKey + "." + edited, value);
+		config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + "." + edited, value);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
@@ -167,21 +166,19 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
-		lore.add("");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GREEN
-				+ (config.getConfigurationSection(id).contains("ability") ? config.getConfigurationSection(id + ".ability").getKeys(false).size()
-						: 0));
+				+ (mmoitem.hasData(this) ? ((AbilityListData) mmoitem.getData(this)).getAbilities().size() : "0"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem nbtItem) {
-		if (nbtItem.hasTag("MMOITEMS_ABILITIES"))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_ABILITIES"))
 			try {
 				AbilityListData list = new AbilityListData();
-				new JsonParser().parse(nbtItem.getString("MMOITEMS_ABILITIES")).getAsJsonArray()
+				new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ABILITIES")).getAsJsonArray()
 						.forEach(obj -> list.add(new AbilityData(obj.getAsJsonObject())));
 				mmoitem.setData(ItemStat.ABILITIES, list);
 			} catch (JsonSyntaxException | IllegalStateException exception) {

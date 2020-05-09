@@ -26,7 +26,7 @@ public class Tool extends UseItem {
 	}
 
 	public boolean miningEffects(Block block) {
-		if (mmoitem.getItem().getBoolean("MMOITEMS_AUTOSMELT"))
+		if (mmoitem.getNBT().getBoolean("MMOITEMS_AUTOSMELT"))
 			if (block.getType() == Material.IRON_ORE || block.getType() == Material.GOLD_ORE) {
 				ItemStack item = new ItemStack(Material.valueOf(block.getType().name().replace("_ORE", "") + "_INGOT"));
 
@@ -37,7 +37,7 @@ public class Tool extends UseItem {
 				return true;
 			}
 
-		if (mmoitem.getItem().getBoolean("MMOITEMS_BOUNCING_CRACK"))
+		if (mmoitem.getNBT().getBoolean("MMOITEMS_BOUNCING_CRACK"))
 			new BukkitRunnable() {
 				Vector v = player.getEyeLocation().getDirection().multiply(.5);
 				Location loc = block.getLocation().clone().add(.5, .5, .5);

@@ -5,10 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
 
 public abstract class PluginInventory implements InventoryHolder {
 	protected final Player player;
@@ -16,14 +14,6 @@ public abstract class PluginInventory implements InventoryHolder {
 	protected int page = 1;
 
 	public PluginInventory(Player player) {
-		this(player, null, null, null);
-	}
-
-	public PluginInventory(Player player, Type type, String id) {
-		this(player, type, id, null);
-	}
-
-	public PluginInventory(Player player, Type type, String id, ItemStack cached) {
 		this.player = player;
 	}
 

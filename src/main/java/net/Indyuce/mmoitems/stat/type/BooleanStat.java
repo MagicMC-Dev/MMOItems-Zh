@@ -5,21 +5,20 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.random.RandomBooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class BooleanStat extends ItemStat {
 	public BooleanStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
@@ -42,8 +41,8 @@ public class BooleanStat extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
-		config.getConfig().set(inv.getItemId() + "." + getPath(), !config.getConfig().getBoolean(inv.getItemId() + "." + getPath()));
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
+		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), !config.getConfig().getBoolean(inv.getEdited().getId() + "." + getPath()));
 		inv.registerItemEdition(config);
 		inv.open();
 		return true;
@@ -55,15 +54,15 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag(getNBTPath()))
-			mmoitem.setData(this, new BooleanData(item.getBoolean(getNBTPath())));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			mmoitem.setData(this, new BooleanData(mmoitem.getNBT().getBoolean(getNBTPath())));
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value: " + (config.getBoolean(id + "." + getPath()) ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+		lore.add(ChatColor.GRAY + "Current Value: "
+				+ (mmoitem.hasData(this) && ((BooleanData) mmoitem.getData(this)).isEnabled() ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to switch this value.");
 	}

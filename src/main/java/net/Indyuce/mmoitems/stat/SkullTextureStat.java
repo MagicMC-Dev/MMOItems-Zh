@@ -11,14 +11,13 @@ import com.mojang.authlib.properties.Property;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class SkullTextureStat extends StringStat {
@@ -47,8 +46,8 @@ public class SkullTextureStat extends StringStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		config.getConfig().set(inv.getItemId() + ".skull-texture.value", message);
-		config.getConfig().set(inv.getItemId() + ".skull-texture.uuid", UUID.randomUUID().toString());
+		config.getConfig().set(inv.getEdited().getId() + ".skull-texture.value", message);
+		config.getConfig().set(inv.getEdited().getId() + ".skull-texture.uuid", UUID.randomUUID().toString());
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ".");
@@ -70,11 +69,11 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+	public void whenLoaded(ReadMMOItem mmoitem) {
 		try {
-			Field profileField = item.getItem().getItemMeta().getClass().getDeclaredField("profile");
+			Field profileField = mmoitem.getNBT().getItem().getItemMeta().getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
-			mmoitem.setData(ItemStat.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(item.getItem().getItemMeta())));
+			mmoitem.setData(ItemStat.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(mmoitem.getNBT().getItem().getItemMeta())));
 		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
 		}
 	}

@@ -12,7 +12,7 @@ import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -39,11 +39,11 @@ public class Soulbound extends InternalStat implements ItemRestriction {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("MMOITEMS_SOULBOUND"))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_SOULBOUND"))
 			try {
 				mmoitem.setData(ItemStat.SOULBOUND,
-						new SoulboundData(new JsonParser().parse(item.getString("MMOITEMS_SOULBOUND")).getAsJsonObject()));
+						new SoulboundData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_SOULBOUND")).getAsJsonObject()));
 			} catch (JsonSyntaxException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.

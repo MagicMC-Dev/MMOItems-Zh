@@ -4,13 +4,12 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Unbreakable extends BooleanStat {
 	public Unbreakable() {
@@ -26,8 +25,8 @@ public class Unbreakable extends BooleanStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("Unbreakable"))
-			mmoitem.setData(this, new BooleanData(item.getBoolean("Unbreakable")));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("Unbreakable"))
+			mmoitem.setData(this, new BooleanData(mmoitem.getNBT().getBoolean("Unbreakable")));
 	}
 }

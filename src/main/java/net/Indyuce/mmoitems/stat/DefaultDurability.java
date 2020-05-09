@@ -4,14 +4,13 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DefaultDurability extends DoubleStat implements ProperStat {
 	public DefaultDurability() {
@@ -25,8 +24,8 @@ public class DefaultDurability extends DoubleStat implements ProperStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta() instanceof Damageable)
-			mmoitem.setData(ItemStat.DURABILITY, new DoubleData(((Damageable) item.getItem().getItemMeta()).getDamage()));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().getItem().getItemMeta() instanceof Damageable)
+			mmoitem.setData(ItemStat.DURABILITY, new DoubleData(((Damageable) mmoitem.getNBT().getItem().getItemMeta()).getDamage()));
 	}
 }

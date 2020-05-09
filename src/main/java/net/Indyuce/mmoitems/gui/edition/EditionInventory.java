@@ -13,51 +13,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.gui.PluginInventory;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public abstract class EditionInventory extends PluginInventory {
-	protected final Type type;
-	protected final String id;
-
-	private int prevPage;
+	protected MMOItem mmoitem;
 	private ItemStack cached;
+	private int prevPage;
 
-	public EditionInventory(Player player, Type type, String id) {
-		this(player, type, id, null);
+	public EditionInventory(Player player, MMOItem mmoitem) {
+		this(player, mmoitem, null);
 	}
 
-	public EditionInventory(Player player, Type type, String id, ItemStack cached) {
+	public EditionInventory(Player player, MMOItem mmoitem, ItemStack cached) {
 		super(player);
 
-		this.type = type;
-		this.id = id == null ? null : id.toUpperCase().replace("-", "_").replace(" ", "_");
-		this.cached = player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory ? ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cached : cached;
+		this.mmoitem = mmoitem;
+		this.cached = player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory
+				? ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cached
+				: cached;
 	}
 
-	public Type getItemType() {
-		return type;
+	public MMOItem getEdited() {
+		return mmoitem;
 	}
 
-	public String getItemId() {
-		return id;
-	}
-
-	public boolean hasCachedItem() {
-		return cached != null;
-	}
-
-	/*
-	 * the item is cached in the inventory class to allow GUIs not to generate
-	 * the item each time the user goes to another GUI or page
-	 */
 	public ItemStack getCachedItem() {
-		return cached != null ? cached : (cached = MMOItems.plugin.getItems().getItem(type, id));
-	}
-
-	public void flushItem() {
-		cached = null;
+		return cached != null ? cached : (cached = mmoitem.newBuilder().build());
 	}
 
 	public void registerItemEdition(ConfigFile config) {
@@ -70,8 +53,14 @@ public abstract class EditionInventory extends PluginInventory {
 		 * cached item needs to be flushed otherwise modifications applied
 		 * cannot display on the edition GUI
 		 */
-		flushItem();
-		config.registerItemEdition(getItemType(), uuid ? id : null);
+		config.registerItemEdition(mmoitem.getType(), uuid ? mmoitem.getId() : null);
+
+		/*
+		 * update edited mmoitem after registering the item edition and
+		 * refreshes the displayed item.
+		 */
+		mmoitem = MMOItems.plugin.getItems().getMMOItem(mmoitem.getType(), mmoitem.getId());
+		cached = mmoitem.newBuilder().build();
 	}
 
 	public void addEditionInventoryItems(Inventory inv, boolean backBool) {
@@ -80,7 +69,7 @@ public abstract class EditionInventory extends PluginInventory {
 		getMeta.addItemFlags(ItemFlag.values());
 		getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub);
 		List<String> getLore = new ArrayList<>();
-		getLore.add(ChatColor.GRAY + "You can also use /mi " + type.getId() + " " + id + " (player) (amount).");
+		getLore.add(ChatColor.GRAY + "You can also use /mi " + mmoitem.getType().getId() + " " + mmoitem.getId() + " (player) (amount).");
 		getMeta.setLore(getLore);
 		get.setItemMeta(getMeta);
 

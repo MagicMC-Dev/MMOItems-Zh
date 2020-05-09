@@ -16,20 +16,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class CommandListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25, 28, 29, 33, 34, 37, 38, 42, 43 };
 
-	public CommandListEdition(Player player, Type type, String id) {
-		super(player, type, id);
+	public CommandListEdition(Player player, MMOItem mmoitem) {
+		super(player, mmoitem);
 	}
 
 	@Override
@@ -37,14 +37,15 @@ public class CommandListEdition extends EditionInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Command List");
 		int n = 0;
 
-		FileConfiguration config = type.getConfigFile().getConfig();
+		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
 
-		if (config.getConfigurationSection(id).contains("commands"))
-			for (String key : config.getConfigurationSection(id + ".commands").getKeys(false)) {
+		if (config.getConfigurationSection(mmoitem.getId()).contains("commands"))
+			for (String key : config.getConfigurationSection(mmoitem.getId() + ".commands").getKeys(false)) {
 
-				String format = config.getString(id + ".commands." + key + ".format");
-				double delay = config.getDouble(id + ".commands." + key + ".delay");
-				boolean console = config.getBoolean(id + ".commands." + key + ".console"), op = config.getBoolean(id + ".commands." + key + ".op");
+				String format = config.getString(mmoitem.getId() + ".commands." + key + ".format");
+				double delay = config.getDouble(mmoitem.getId() + ".commands." + key + ".delay");
+				boolean console = config.getBoolean(mmoitem.getId() + ".commands." + key + ".console"),
+						op = config.getBoolean(mmoitem.getId() + ".commands." + key + ".op");
 
 				ItemStack item = new ItemStack(VersionMaterial.COMPARATOR.toMaterial());
 				ItemMeta itemMeta = item.getItemMeta();
@@ -89,7 +90,9 @@ public class CommandListEdition extends EditionInventory {
 			return;
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Register a command...")) {
-			new StatEdition(this, ItemStat.COMMANDS).enable("Write in the chat the command you want to add.", "", "To add a delay, use &c-d:<delay>", "To make the command cast itself w/ console, use &c-c", "To make the command cast w/ OP perms, use &c-op", "", "&eEx: -d:10.3 -op bc Hello, this is a test command.");
+			new StatEdition(this, ItemStat.COMMANDS).enable("Write in the chat the command you want to add.", "", "To add a delay, use &c-d:<delay>",
+					"To make the command cast itself w/ console, use &c-c", "To make the command cast w/ OP perms, use &c-op", "",
+					"&eEx: -d:10.3 -op bc Hello, this is a test command.");
 			return;
 		}
 
@@ -98,12 +101,14 @@ public class CommandListEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = type.getConfigFile();
-			if (config.getConfig().getConfigurationSection(id).contains("commands") && config.getConfig().getConfigurationSection(id + ".commands").contains(tag)) {
-				config.getConfig().set(id + ".commands." + tag, null);
+			ConfigFile config = mmoitem.getType().getConfigFile();
+			if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("commands")
+					&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".commands").contains(tag)) {
+				config.getConfig().set(mmoitem.getId() + ".commands." + tag, null);
 				registerItemEdition(config);
 				open();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY + " (Internal ID)" + ChatColor.GRAY + ".");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
+						+ " (Internal ID)" + ChatColor.GRAY + ".");
 			}
 		}
 	}

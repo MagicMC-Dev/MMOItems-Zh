@@ -21,7 +21,7 @@ public class McMMOHook implements RPGHandler, Listener {
 	private final ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair", "Players can't repair this with McMMO.");
 
 	public McMMOHook() {
-		MMOItems.plugin.getStats().register("DISABLE_MCMMO_REPAIR", disableMcMMORepair);
+		MMOItems.plugin.getStats().register(disableMcMMORepair);
 	}
 
 	@EventHandler(ignoreCancelled = true)

@@ -56,7 +56,7 @@ public class PlayerStats {
 			double t = 0;
 
 			for (VolatileMMOItem item : playerData.getMMOItems())
-				t += item.getItem().getStat(stat.getId());
+				t += item.getNBT().getStat(stat.getId());
 
 			if (t != 0)
 				getInstance(stat).addModifier("item", t - (stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0));

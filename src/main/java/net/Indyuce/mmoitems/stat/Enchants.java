@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,16 +19,16 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomEnchantListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class Enchants extends ItemStat {
 	public Enchants() {
@@ -51,7 +50,7 @@ public class Enchants extends ItemStat {
 
 		return enchants;
 	}
-	
+
 	@Override
 	public RandomStatData whenInitializedGeneration(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
@@ -60,18 +59,18 @@ public class Enchants extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.ENCHANTS).enable("Write in the chat the enchant you want to add.",
 					ChatColor.AQUA + "Format: [ENCHANT] [LEVEL]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("enchants")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getItemId() + ".enchants").getKeys(false);
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("enchants")) {
+				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".enchants").getKeys(false);
 				String last = Arrays.asList(set.toArray(new String[0])).get(set.size() - 1);
-				config.getConfig().set(inv.getItemId() + ".enchants." + last, null);
+				config.getConfig().set(inv.getEdited().getId() + ".enchants." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getItemId() + ".enchants", null);
+					config.getConfig().set(inv.getEdited().getId() + ".enchants", null);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
@@ -116,7 +115,7 @@ public class Enchants extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".enchants." + getName(enchant), level);
+		config.getConfig().set(inv.getEdited().getId() + ".enchants." + getName(enchant), level);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName(enchant) + " " + MMOUtils.intToRoman(level) + " successfully added.");
@@ -124,29 +123,27 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("enchants"))
-			lore.add(ChatColor.RED + "No enchantment.");
-		else if (config.getConfigurationSection(path + ".enchants").getKeys(false).isEmpty())
-			lore.add(ChatColor.RED + "No enchantment.");
-		else
-			for (String s1 : config.getConfigurationSection(path + ".enchants").getKeys(false)) {
-				String enchant = MMOUtils.caseOnWords(s1.toLowerCase().replace("_", " ").replace("-", " "));
-				String level = MMOUtils.intToRoman(config.getInt(path + ".enchants." + s1));
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + enchant + " " + level);
-			}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			EnchantListData data = (EnchantListData) mmoitem.getData(this);
+			data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(enchant.getKey().getKey().replace("_", " "))
+					+ " " + MMOUtils.intToRoman(data.getLevel(enchant))));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add an enchant.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last enchant.");
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+	public void whenLoaded(ReadMMOItem mmoitem) {
 		EnchantListData enchants = new EnchantListData();
-		item.getItem().getItemMeta().getEnchants().keySet()
-				.forEach(enchant -> enchants.addEnchant(enchant, item.getItem().getItemMeta().getEnchantLevel(enchant)));
+		mmoitem.getNBT().getItem().getItemMeta().getEnchants().keySet()
+				.forEach(enchant -> enchants.addEnchant(enchant, mmoitem.getNBT().getItem().getItemMeta().getEnchantLevel(enchant)));
 		if (enchants.getEnchants().size() > 0)
 			mmoitem.setData(ItemStat.ENCHANTS, enchants);
 	}

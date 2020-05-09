@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -50,9 +50,9 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag(getNBTPath()))
-			mmoitem.setData(this, new RequiredLevelData(item.getDouble(getNBTPath())));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			mmoitem.setData(this, new RequiredLevelData(mmoitem.getNBT().getDouble(getNBTPath())));
 	}
 
 	@Override

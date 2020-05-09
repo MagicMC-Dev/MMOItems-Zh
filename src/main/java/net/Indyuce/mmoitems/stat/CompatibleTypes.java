@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,15 +16,15 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class CompatibleTypes extends ItemStat {
@@ -48,19 +47,19 @@ public class CompatibleTypes extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("compatible-types")) {
-				List<String> lore = config.getConfig().getStringList(inv.getItemId() + ".compatible-types");
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("compatible-types")) {
+				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + ".compatible-types");
 				if (lore.size() < 1)
 					return true;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
-				config.getConfig().set(inv.getItemId() + ".compatible-types", lore);
+				config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last)
@@ -72,11 +71,11 @@ public class CompatibleTypes extends ItemStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getItemId()).contains("compatible-types")
-				? config.getConfig().getStringList(inv.getItemId() + ".compatible-types")
+		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("compatible-types")
+				? config.getConfig().getStringList(inv.getEdited().getId() + ".compatible-types")
 				: new ArrayList<>();
 		lore.add(message.toUpperCase());
-		config.getConfig().set(inv.getItemId() + ".compatible-types", lore);
+		config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Compatible Types successfully added.");
@@ -84,16 +83,16 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("compatible-types"))
-			lore.add(ChatColor.RED + "No compatible types.");
-		else if (config.getStringList(path + ".compatible-types").isEmpty())
-			lore.add(ChatColor.RED + "No compatible types.");
-		else
-			config.getStringList(path + ".compatible-types")
-					.forEach(str -> lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', str)));
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			StringListData data = (StringListData) mmoitem.getData(this);
+			data.getList().forEach(str -> lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', str)));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a new type.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last type.");
@@ -113,9 +112,9 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("MMOITEMS_COMPATIBLE_TYPES"))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_COMPATIBLE_TYPES"))
 			mmoitem.setData(ItemStat.COMPATIBLE_TYPES,
-					new StringListData(new JsonParser().parse(item.getString("MMOITEMS_COMPATIBLE_TYPES")).getAsJsonArray()));
+					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_COMPATIBLE_TYPES")).getAsJsonArray()));
 	}
 }

@@ -120,7 +120,7 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		public ItemStack getUpgraded() {
-			return mmoitem.getItem().getItem();
+			return mmoitem.getNBT().getItem();
 		}
 	}
 }

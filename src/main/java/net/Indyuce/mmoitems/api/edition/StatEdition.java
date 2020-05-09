@@ -60,7 +60,7 @@ public class StatEdition implements Edition {
 
 	@Override
 	public boolean output(String input) {
-		return input.equals("cancel") || stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getItemType().getConfigFile(), input, info);
+		return input.equals("cancel") || stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getEdited().getType().getConfigFile(), input, info);
 	}
 
 	@Override

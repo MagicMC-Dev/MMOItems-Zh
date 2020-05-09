@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -11,7 +11,6 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomModelData extends DoubleStat implements ProperStat {
 	public CustomModelData() {
@@ -27,8 +26,8 @@ public class CustomModelData extends DoubleStat implements ProperStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("CustomModelData"))
-			mmoitem.setData(this, new DoubleData(item.getDouble("CustomModelData")));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("CustomModelData"))
+			mmoitem.setData(this, new DoubleData(mmoitem.getNBT().getDouble("CustomModelData")));
 	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -13,14 +12,14 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class StringStat extends ItemStat {
 	public StringStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
@@ -40,9 +39,9 @@ public class StringStat extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getItemId() + "." + getPath(), null);
+			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
@@ -54,7 +53,7 @@ public class StringStat extends ItemStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		config.getConfig().set(inv.getItemId() + "." + getPath(), message);
+		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), message);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ".");
@@ -62,22 +61,22 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag(getNBTPath()))
-			mmoitem.setData(this, new StringData(item.getString(getNBTPath())));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			mmoitem.setData(this, new StringData(mmoitem.getNBT().getString(getNBTPath())));
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
-		lore.add("");
-		if (!config.getConfigurationSection(id).contains(getPath())) {
-			lore.add(ChatColor.GRAY + "Current Value:");
-			lore.add(ChatColor.RED + "No value.");
-		} else {
-			String value = ChatColor.translateAlternateColorCodes('&', config.getString(id + "." + getPath()));
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			String value = ChatColor.translateAlternateColorCodes('&', mmoitem.getData(this).toString());
 			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
-		}
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + " None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");

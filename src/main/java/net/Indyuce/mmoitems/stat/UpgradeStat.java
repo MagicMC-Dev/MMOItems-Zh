@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +15,7 @@ import com.google.gson.JsonParser;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class UpgradeStat extends ItemStat {
@@ -54,12 +53,12 @@ public class UpgradeStat extends ItemStat {
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new UpgradingEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+			new UpgradingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = inv.getItemType().getConfigFile();
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("upgrade")) {
-				config.getConfig().set(inv.getItemId() + ".upgrade", null);
+			ConfigFile config = inv.getEdited().getType().getConfigFile();
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("upgrade")) {
+				config.getConfig().set(inv.getEdited().getId() + ".upgrade", null);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
@@ -72,7 +71,7 @@ public class UpgradeStat extends ItemStat {
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
 
 		if (info[0].equals("ref")) {
-			config.getConfig().set(inv.getItemId() + ".upgrade.reference", message);
+			config.getConfig().set(inv.getEdited().getId() + ".upgrade.reference", message);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -90,7 +89,7 @@ public class UpgradeStat extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".upgrade.max", i);
+			config.getConfig().set(inv.getEdited().getId() + ".upgrade.max", i);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer()
@@ -108,7 +107,7 @@ public class UpgradeStat extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".upgrade.success", d);
+			config.getConfig().set(inv.getEdited().getId() + ".upgrade.success", d);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -122,7 +121,7 @@ public class UpgradeStat extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".upgrade.template", message);
+		config.getConfig().set(inv.getEdited().getId() + ".upgrade.template", message);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(
@@ -131,13 +130,13 @@ public class UpgradeStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag("MMOITEMS_UPGRADE"))
-			mmoitem.setData(this, new UpgradeData(new JsonParser().parse(item.getString("MMOITEMS_UPGRADE")).getAsJsonObject()));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_UPGRADE"))
+			mmoitem.setData(this, new UpgradeData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_UPGRADE")).getAsJsonObject()));
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup upgrading.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");

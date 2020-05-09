@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.google.gson.JsonObject;
@@ -17,9 +16,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.ArrowParticlesEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ArrowParticlesData;
@@ -27,7 +26,7 @@ import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ArrowParticles extends ItemStat {
@@ -64,10 +63,10 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem nbtItem) {
-		if (nbtItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_ARROW_PARTICLES"))
 			try {
-				JsonObject json = new JsonParser().parse(nbtItem.getString("MMOITEMS_ARROW_PARTICLES")).getAsJsonObject();
+				JsonObject json = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ARROW_PARTICLES")).getAsJsonObject();
 
 				Particle particle = Particle.valueOf(json.get("Particle").getAsString());
 				int amount = json.get("Amount").getAsInt();
@@ -87,7 +86,7 @@ public class ArrowParticles extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new ArrowParticlesEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+		new ArrowParticlesEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 		return true;
 	}
 
@@ -108,9 +107,9 @@ public class ArrowParticles extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".arrow-particles.color.red", red);
-			config.getConfig().set(inv.getItemId() + ".arrow-particles.color.green", green);
-			config.getConfig().set(inv.getItemId() + ".arrow-particles.color.blue", blue);
+			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.red", red);
+			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.green", green);
+			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.blue", blue);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to "
@@ -128,7 +127,7 @@ public class ArrowParticles extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".arrow-particles.particle", particle.name());
+			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.particle", particle.name());
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD
@@ -145,7 +144,7 @@ public class ArrowParticles extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getItemId() + ".arrow-particles.amount", value);
+			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.amount", value);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + value
@@ -162,7 +161,7 @@ public class ArrowParticles extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".arrow-particles." + edited, value);
+		config.getConfig().set(inv.getEdited().getId() + ".arrow-particles." + edited, value);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
@@ -171,26 +170,26 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 
-		try {
-			Particle particle = Particle
-					.valueOf(config.getString(path + ".arrow-particles.particle").toUpperCase().replace("-", "_").replace(" ", "_"));
-			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().replace("_", " ").toLowerCase()));
-			lore.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + config.getInt(path + ".arrow-particles.amount"));
-			lore.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + config.getDouble(path + ".arrow-particles.offset"));
+		if (!mmoitem.hasData(this))
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
+		else {
+			ArrowParticlesData data = (ArrowParticlesData) mmoitem.getData(this);
+			lore.add(ChatColor.GRAY + "Current Value:");
+
+			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD
+					+ MMOUtils.caseOnWords(data.getParticle().name().replace("_", " ").toLowerCase()));
+			lore.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + data.getAmount());
+			lore.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + data.getOffset());
 			lore.add("");
-			if (ParticleData.isColorable(particle)) {
-				double red = config.getDouble(path + ".arrow-particles.red"), green = config.getDouble(path + ".arrow-particles.green"),
-						blue = config.getDouble(path + ".arrow-particles.blue");
-				lore.add(ChatColor.translateAlternateColorCodes('&', "&7* Color: &c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
-			} else
-				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + config.getDouble(path + ".arrow-particles.speed"));
-		} catch (Exception e) {
-			lore.add(ChatColor.RED + "No particle selected.");
-			lore.add(ChatColor.RED + "Click to setup.");
+
+			if (ParticleData.isColorable(data.getParticle()))
+				lore.add(ChatColor.translateAlternateColorCodes('&',
+						"&7* Color: &c&l" + data.getRed() + "&7 - &a&l" + data.getGreen() + "&7 - &9&l" + data.getBlue()));
+			else
+				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + data.getSpeed());
 		}
 
 		lore.add("");

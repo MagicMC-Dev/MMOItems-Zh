@@ -5,16 +5,15 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.RestoreData;
@@ -22,7 +21,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomRestoreData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Restore extends ItemStat {
@@ -69,9 +68,9 @@ public class Restore extends ItemStat {
 		double food = Double.parseDouble(split[1]);
 		double saturation = Double.parseDouble(split[2]);
 
-		config.getConfig().set(inv.getItemId() + ".restore.health", (health <= 0 ? null : health));
-		config.getConfig().set(inv.getItemId() + ".restore.food", (food <= 0 ? null : food));
-		config.getConfig().set(inv.getItemId() + ".restore.saturation", (saturation <= 0 ? null : saturation));
+		config.getConfig().set(inv.getEdited().getId() + ".restore.health", (health <= 0 ? null : health));
+		config.getConfig().set(inv.getEdited().getId() + ".restore.food", (food <= 0 ? null : food));
+		config.getConfig().set(inv.getEdited().getId() + ".restore.saturation", (saturation <= 0 ? null : saturation));
 
 		inv.registerItemEdition(config);
 		inv.open();
@@ -80,43 +79,26 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		if (!config.getConfigurationSection(path).contains("restore"))
-			lore.add(ChatColor.RED + "No restore stat.");
-		else if (config.getConfigurationSection(path + ".restore").getKeys(false).size() <= 0)
-			lore.add(ChatColor.RED + "No restore stat.");
-		else {
-			ConfigurationSection restore = config.getConfigurationSection(path + ".restore");
-			lore.add(ChatColor.GRAY + "Current Value:");
-			if (restore.contains("health")) {
-				if (restore.getDouble("health") <= 0)
-					config.set(path + ".restore.health", null);
-				else
-					lore.add(ChatColor.GRAY + "* Health: " + ChatColor.GREEN + config.getDouble(path + ".restore.health"));
-			}
-			if (restore.contains("food")) {
-				if (restore.getDouble("food") <= 0)
-					config.set(path + ".restore.food", null);
-				else
-					lore.add(ChatColor.GRAY + "* Food: " + ChatColor.GREEN + config.getDouble(path + ".restore.food"));
-			}
-			if (restore.contains("saturation")) {
-				if (restore.getDouble("saturation") <= 0)
-					config.set(path + ".restore.saturation", null);
-				else
-					lore.add(ChatColor.GRAY + "* Saturation: " + ChatColor.GREEN + config.getDouble(path + ".restore.saturation"));
-			}
-		}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			RestoreData data = (RestoreData) mmoitem.getData(this);
+			lore.add(ChatColor.GRAY + "* Restore Health: " + ChatColor.GREEN + data.getHealth());
+			lore.add(ChatColor.GRAY + "* Restore Food: " + ChatColor.GREEN + data.getFood());
+			lore.add(ChatColor.GRAY + "* Restore Saturation: " + ChatColor.GREEN + data.getSaturation());
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click change these values.");
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		double health = item.getDouble("MMOITEMS_RESTORE_HEALTH");
-		double food = item.getDouble("MMOITEMS_RESTORE_FOOD");
-		double saturation = item.getDouble("MMOITEMS_RESTORE_SATURATION");
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		double health = mmoitem.getNBT().getDouble("MMOITEMS_RESTORE_HEALTH");
+		double food = mmoitem.getNBT().getDouble("MMOITEMS_RESTORE_FOOD");
+		double saturation = mmoitem.getNBT().getDouble("MMOITEMS_RESTORE_SATURATION");
 
 		if (health > 0 || food > 0 || saturation > 0)
 			mmoitem.setData(this, new RestoreData(health, food, saturation));

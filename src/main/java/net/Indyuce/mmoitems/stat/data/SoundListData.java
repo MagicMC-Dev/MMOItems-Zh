@@ -19,6 +19,10 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 		return stats.keySet();
 	}
 
+	public Map<CustomSound, SoundData> mapData() {
+		return stats;
+	}
+
 	public SoundData get(CustomSound sound) {
 		return stats.get(sound);
 	}

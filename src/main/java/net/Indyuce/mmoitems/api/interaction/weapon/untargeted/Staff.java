@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
-import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -34,11 +33,8 @@ public class Staff extends UntargetedWeapon {
 	public void untargetedAttack(EquipmentSlot slot) {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
-		
-		
-		Bukkit.broadcastMessage(stats.getStat(ItemStat.ATTACK_SPEED)+" " +( getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"))));
-		
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")), CooldownType.ATTACK, false))
+		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+				CooldownType.ATTACK, false))
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
@@ -57,10 +53,13 @@ public class Staff extends UntargetedWeapon {
 		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range, entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
+		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
+				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
 		if (trace.hasHit())
-			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
-		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2, (tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
+			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC).applyEffectsAndDamage(stats, getNBTItem(),
+					trace.getHit());
+		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,
+				(tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 	}
 
@@ -72,7 +71,8 @@ public class Staff extends UntargetedWeapon {
 			return;
 
 		double power = MMOItems.plugin.getConfig().getDouble("item-ability.staff.power");
-		Vector vec = target.getLocation().toVector().subtract(getPlayer().getLocation().toVector()).setY(0).normalize().multiply(1.75 * power).setY(.65 * power);
+		Vector vec = target.getLocation().toVector().subtract(getPlayer().getLocation().toVector()).setY(0).normalize().multiply(1.75 * power)
+				.setY(.65 * power);
 		target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 		target.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, target.getLocation().add(0, 1, 0), 16, 0, 0, 0, .1);
 		target.setVelocity(vec);

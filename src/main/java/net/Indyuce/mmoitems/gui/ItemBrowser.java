@@ -22,16 +22,16 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
-	
+
 	private Type type;
 	private boolean deleteMode;
 
@@ -69,7 +69,9 @@ public class ItemBrowser extends PluginInventory {
 				meta.setDisplayName(ChatColor.GREEN + type.getName() + ChatColor.DARK_GRAY + " (Click to browse)");
 				meta.addItemFlags(ItemFlag.values());
 				List<String> lore = new ArrayList<>();
-				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "There " + (items != 1 ? "are" : "is") + " " + (items < 1 ? "" + ChatColor.RED + ChatColor.ITALIC + "no" : "" + ChatColor.GOLD + ChatColor.ITALIC + items) + ChatColor.GRAY + ChatColor.ITALIC + " item" + (items != 1 ? "s" : "") + " in that type.");
+				lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "There " + (items != 1 ? "are" : "is") + " "
+						+ (items < 1 ? "" + ChatColor.RED + ChatColor.ITALIC + "no" : "" + ChatColor.GOLD + ChatColor.ITALIC + items) + ChatColor.GRAY
+						+ ChatColor.ITALIC + " item" + (items != 1 ? "s" : "") + " in that type.");
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 
@@ -95,23 +97,23 @@ public class ItemBrowser extends PluginInventory {
 			ItemMeta switchMeta = switchBrowse.getItemMeta();
 			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
 
-			if(!MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
+			if (!MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 				List<String> lore = new ArrayList<String>();
 				lore.add("");
 				lore.add("&cThis feature is disabled.");
 				lore.add("&cUpdating to 1.13+ is recommended.");
 				switchMeta.setLore(lore);
 			}
-			
+
 			switchBrowse.setItemMeta(switchMeta);
-			
+
 			while (n < slots.length)
 				inv.setItem(slots[n++], glass);
 			inv.setItem(18, page > 1 ? previous : null);
 			inv.setItem(26, max >= MMOItems.plugin.getTypes().getAll().size() ? null : next);
 
 			inv.setItem(53, switchBrowse);
-			
+
 			return inv;
 		}
 
@@ -130,7 +132,8 @@ public class ItemBrowser extends PluginInventory {
 		 * displays every item in a specific type. items are cached inside the
 		 * map at the top to reduce performance impact and are directly rendered
 		 */
-		Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? (ChatColor.UNDERLINE + "DELETE MODE: ") : (ChatColor.UNDERLINE + "Item Explorer: ")) + type.getName());
+		Inventory inv = Bukkit.createInventory(this, 54,
+				(deleteMode ? (ChatColor.UNDERLINE + "DELETE MODE: ") : (ChatColor.UNDERLINE + "Item Explorer: ")) + type.getName());
 		for (int j = min; j < Math.min(max, itemIds.size()); j++) {
 			String id = itemIds.get(j);
 			if (!cached.containsKey(id)) {
@@ -227,12 +230,12 @@ public class ItemBrowser extends PluginInventory {
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(player).open();
-			
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
 				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
 					new BlockBrowser(player).open();
-				else player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
+				else
+					player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return;
 			}
 
@@ -265,7 +268,7 @@ public class ItemBrowser extends PluginInventory {
 			config.save();
 			deleteMode = false;
 			open();
-			
+
 		} else {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				player.getInventory().addItem(removeLastLoreLines(item, 3));
@@ -273,7 +276,7 @@ public class ItemBrowser extends PluginInventory {
 			}
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF)
-				new ItemEdition(player, type, id, removeLastLoreLines(item, 3)).open();
+				new ItemEdition(player, MMOItems.plugin.getItems().getMMOItem(type, id), removeLastLoreLines(item, 3)).open();
 		}
 	}
 

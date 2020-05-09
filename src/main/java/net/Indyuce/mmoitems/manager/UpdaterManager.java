@@ -78,6 +78,10 @@ public class UpdaterManager implements Listener {
 		return map.values();
 	}
 
+	public void disable(MMOItem mmoitem) {
+		disable(mmoitem.getType(), mmoitem.getId());
+	}
+
 	public void disable(Type type, String id) {
 		map.remove(toPath(type, id));
 	}

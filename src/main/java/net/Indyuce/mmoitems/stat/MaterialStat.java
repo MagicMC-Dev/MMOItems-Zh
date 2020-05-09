@@ -5,22 +5,22 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MaterialStat extends ItemStat {
@@ -59,7 +59,7 @@ public class MaterialStat extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".material", material.name());
+		config.getConfig().set(inv.getEdited().getId() + ".material", material.name());
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + material.name() + ".");
@@ -75,21 +75,19 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		mmoitem.setData(this, new MaterialData(item.getItem().getType()));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		mmoitem.setData(this, new MaterialData(mmoitem.getNBT().getItem().getType()));
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String id) {
-		lore.add("");
-		if (!config.getConfigurationSection(id).contains(getPath())) {
-			lore.add(ChatColor.GRAY + "Current Value:");
-			lore.add(ChatColor.RED + "No value.");
-		} else {
-			String value = ChatColor.translateAlternateColorCodes('&', config.getString(id + "." + getPath()));
-			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
-		}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		lore.add(ChatColor.GRAY + "Current Value: "
+				+ (mmoitem.hasData(this)
+						? ChatColor.GREEN
+								+ MMOUtils.caseOnWords(((MaterialData) mmoitem.getData(this)).getMaterial().name().toLowerCase().replace("_", " "))
+						: ChatColor.RED + "None"));
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");

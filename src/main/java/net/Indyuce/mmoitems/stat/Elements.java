@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,9 +15,9 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
@@ -27,7 +26,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class Elements extends ItemStat {
 	public Elements() {
@@ -58,13 +57,13 @@ public class Elements extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new ElementsEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+			new ElementsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("element")) {
-				config.getConfig().set(inv.getItemId() + ".element", null);
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("element")) {
+				config.getConfig().set(inv.getEdited().getId() + ".element", null);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
@@ -82,18 +81,18 @@ public class Elements extends ItemStat {
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
 			return false;
 		}
-		config.getConfig().set(inv.getItemId() + ".element." + elementPath, value);
+		config.getConfig().set(inv.getEdited().getId() + ".element." + elementPath, value);
 		if (value == 0)
-			config.getConfig().set(inv.getItemId() + ".element." + elementPath, null);
+			config.getConfig().set(inv.getEdited().getId() + ".element." + elementPath, null);
 
 		// clear element config section
 		String elementName = elementPath.split("\\.")[0];
-		if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("element")) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId() + ".element").contains(elementName))
-				if (config.getConfig().getConfigurationSection(inv.getItemId() + ".element." + elementName).getKeys(false).isEmpty())
-					config.getConfig().set(inv.getItemId() + ".element." + elementName, null);
-			if (config.getConfig().getConfigurationSection(inv.getItemId() + ".element").getKeys(false).isEmpty())
-				config.getConfig().set(inv.getItemId() + ".element", null);
+		if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("element")) {
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".element").contains(elementName))
+				if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".element." + elementName).getKeys(false).isEmpty())
+					config.getConfig().set(inv.getEdited().getId() + ".element." + elementName, null);
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".element").getKeys(false).isEmpty())
+				config.getConfig().set(inv.getEdited().getId() + ".element", null);
 		}
 
 		inv.registerItemEdition(config);
@@ -104,20 +103,19 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("element"))
-			lore.add(ChatColor.RED + "No element.");
-		else if (config.getConfigurationSection(path + ".element").getKeys(false).isEmpty())
-			lore.add(ChatColor.RED + "No element.");
-		else
-			for (String s1 : config.getConfigurationSection(path + ".element").getKeys(false)) {
-				String element = s1.substring(0, 1).toUpperCase() + s1.substring(1);
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + element + ChatColor.GRAY + ": " + ChatColor.RED + "" + ChatColor.BOLD
-						+ config.getDouble(path + ".element." + s1 + ".damage") + "%" + ChatColor.GRAY + " | " + ChatColor.WHITE + "" + ChatColor.BOLD
-						+ config.getDouble(path + ".element." + s1 + ".defense") + "%");
-			}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			ElementListData data = (ElementListData) mmoitem.getData(this);
+			data.getDamageElements()
+					.forEach(element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + data.getDamage(element) + "%"));
+			data.getDefenseElements()
+					.forEach(element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + data.getDefense(element) + "%"));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the elements edition menu.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all the elements.");
@@ -145,12 +143,12 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
+	public void whenLoaded(ReadMMOItem mmoitem) {
 		ElementListData elements = new ElementListData();
 
 		for (Element element : Element.values()) {
-			elements.setDefense(element, item.getDouble("MMOITEMS_" + element.name() + "_DEFENSE"));
-			elements.setDamage(element, item.getDouble("MMOITEMS_" + element.name() + "_DAMAGE"));
+			elements.setDefense(element, mmoitem.getNBT().getDouble("MMOITEMS_" + element.name() + "_DEFENSE"));
+			elements.setDamage(element, mmoitem.getNBT().getDouble("MMOITEMS_" + element.name() + "_DAMAGE"));
 		}
 
 		if (elements.total() > 0)

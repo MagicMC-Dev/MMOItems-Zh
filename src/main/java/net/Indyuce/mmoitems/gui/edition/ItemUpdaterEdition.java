@@ -13,30 +13,30 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpdaterData;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemUpdaterEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 28, 29, 30, 37, 38, 39 };
 
-	public ItemUpdaterEdition(Player player, Type type, String id) {
-		super(player, type, id);
+	public ItemUpdaterEdition(Player player, MMOItem mmoitem) {
+		super(player, mmoitem);
 	}
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Updater: " + id);
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Updater: " + mmoitem.getId());
 
 		// setup if not in map
-		if (!MMOItems.plugin.getUpdater().hasData(type, id)) {
-			MMOItems.plugin.getUpdater().enable(type, id);
-			player.sendMessage(ChatColor.YELLOW + "Successfully enabled the item updater for " + id + ".");
+		if (!MMOItems.plugin.getUpdater().hasData(mmoitem)) {
+			MMOItems.plugin.getUpdater().enable(mmoitem);
+			player.sendMessage(ChatColor.YELLOW + "Successfully enabled the item updater for " + mmoitem.getId() + ".");
 		}
 
-		UpdaterData did = MMOItems.plugin.getUpdater().getData(type, id);
+		UpdaterData did = MMOItems.plugin.getUpdater().getData(mmoitem);
 
 		ItemStack disable = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 		ItemMeta disableMeta = disable.getItemMeta();
@@ -82,15 +82,15 @@ public class ItemUpdaterEdition extends EditionInventory {
 			return;
 
 		// safe check
-		if (!MMOItems.plugin.getUpdater().hasData(type, id)) {
+		if (!MMOItems.plugin.getUpdater().hasData(mmoitem)) {
 			player.closeInventory();
 			return;
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Disable")) {
-			MMOItems.plugin.getUpdater().disable(type, id);
+			MMOItems.plugin.getUpdater().disable(mmoitem);
 			player.closeInventory();
-			player.sendMessage(ChatColor.YELLOW + "Successfully disabled the item updater for " + id + ".");
+			player.sendMessage(ChatColor.YELLOW + "Successfully disabled the item updater for " + mmoitem.getId() + ".");
 			return;
 		}
 
@@ -102,7 +102,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		if (!format.startsWith(ChatColor.GREEN + "Keep "))
 			return;
 
-		UpdaterData did = MMOItems.plugin.getUpdater().getData(type, id);
+		UpdaterData did = MMOItems.plugin.getUpdater().getData(mmoitem);
 		KeepOption option = KeepOption.valueOf(format.substring(2, format.length() - 1).replace(" ", "_").toUpperCase());
 		if (did.hasOption(option))
 			did.removeOption(option);

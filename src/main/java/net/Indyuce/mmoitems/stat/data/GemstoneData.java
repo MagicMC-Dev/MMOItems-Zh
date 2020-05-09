@@ -50,7 +50,7 @@ public class GemstoneData {
 		// for (ItemStat stat : MMOItems.plugin.getStats().getDoubleStats())
 		// if (mmoitem.hasData(stat))
 		// stats.put(stat, ((DoubleData) mmoitem.getData(stat)).getMin());
-		name = MMOUtils.getDisplayName(mmoitem.getItem().getItem());
+		name = MMOUtils.getDisplayName(mmoitem.getNBT().getItem());
 	}
 
 	public GemstoneData(String name) {

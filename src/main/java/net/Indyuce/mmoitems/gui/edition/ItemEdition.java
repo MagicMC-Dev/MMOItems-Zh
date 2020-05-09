@@ -16,8 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -27,15 +26,15 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 public class ItemEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43 };
 
-	public ItemEdition(Player player, Type type, String id) {
-		super(player, type, id);
+	public ItemEdition(Player player, MMOItem mmoitem) {
+		super(player, mmoitem);
 	}
 
 	/*
 	 * used in the item brower and when using the /mi edit command.
 	 */
-	public ItemEdition(Player player, Type type, String id, ItemStack cached) {
-		super(player, type, id, cached);
+	public ItemEdition(Player player, MMOItem mmoitem, ItemStack cached) {
+		super(player, mmoitem, cached);
 	}
 
 	@Override
@@ -48,10 +47,10 @@ public class ItemEdition extends EditionInventory {
 		 * it has to determin what stats can be applied first because otherwise
 		 * the for loop will just let some slots empty
 		 */
-		List<ItemStat> appliable = new ArrayList<>(type.getAvailableStats()).stream().filter(stat -> stat.hasValidMaterial(getCachedItem()) && !stat.isInternal()).collect(Collectors.toList());
+		List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
+				.filter(stat -> stat.hasValidMaterial(getCachedItem()) && !stat.isInternal()).collect(Collectors.toList());
 
-		ConfigFile config = type.getConfigFile();
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Edition: " + id);
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Edition: " + getEdited().getId());
 		for (int j = min; j < Math.min(appliable.size(), max); j++) {
 			ItemStat stat = appliable.get(j);
 			ItemStack item = stat.getItem();
@@ -61,8 +60,9 @@ public class ItemEdition extends EditionInventory {
 			List<String> lore = new ArrayList<>();
 			for (String s1 : stat.getLore())
 				lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', s1));
+			lore.add("");
 
-			stat.whenDisplayed(lore, config.getConfig(), id);
+			stat.whenDisplayed(lore, mmoitem);
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);
@@ -119,6 +119,8 @@ public class ItemEdition extends EditionInventory {
 			MMOItems.plugin.getStats().get(tag).whenClicked(this, event);
 	}
 
-	public ItemEdition onPage(int value)
-	{ page = value; return this; }
+	public ItemEdition onPage(int value) {
+		page = value;
+		return this;
+	}
 }

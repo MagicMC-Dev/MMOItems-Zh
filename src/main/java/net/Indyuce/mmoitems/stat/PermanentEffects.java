@@ -8,7 +8,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,10 +21,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
@@ -34,7 +33,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class PermanentEffects extends ItemStat {
 	public PermanentEffects() {
@@ -76,18 +75,18 @@ public class PermanentEffects extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getItemType().getConfigFile();
+		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
 					"Format: [POTION_EFFECT] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("perm-effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getItemId() + ".perm-effects").getKeys(false);
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("perm-effects")) {
+				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".perm-effects").getKeys(false);
 				String last = new ArrayList<>(set).get(set.size() - 1);
-				config.getConfig().set(inv.getItemId() + ".perm-effects." + last, null);
+				config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getItemId() + ".perm-effects", null);
+					config.getConfig().set(inv.getEdited().getId() + ".perm-effects", null);
 				inv.registerItemEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
@@ -128,7 +127,7 @@ public class PermanentEffects extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getItemId() + ".perm-effects." + effect.getName(), amplifier);
+		config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + effect.getName(), amplifier);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
@@ -136,21 +135,18 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Current Value:");
-		if (!config.getConfigurationSection(path).contains("perm-effects"))
-			lore.add(ChatColor.RED + "No permanent effect.");
-		else if (config.getConfigurationSection(path + ".perm-effects").getKeys(false).isEmpty())
-			lore.add(ChatColor.RED + "No permanent effect.");
-		else
-			for (String s1 : config.getConfigurationSection(path + ".perm-effects").getKeys(false)) {
-				String effect = s1;
-				effect = effect.replace("-", " ").replace("_", " ");
-				effect = effect.substring(0, 1).toUpperCase() + effect.substring(1).toLowerCase();
-				String level = MMOUtils.intToRoman(config.getInt(path + ".perm-effects." + s1));
-				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + effect + " " + level);
-			}
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+
+		if (mmoitem.hasData(this)) {
+			lore.add(ChatColor.GRAY + "Current Value:");
+			PotionEffectListData data = (PotionEffectListData) mmoitem.getData(this);
+			for (PotionEffectData effect : data.getEffects())
+				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
+						+ " " + MMOUtils.intToRoman(effect.getLevel()));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add an effect.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
@@ -173,11 +169,11 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.hasTag(getNBTPath())) {
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag(getNBTPath())) {
 			PotionEffectListData effects = new PotionEffectListData();
 
-			JsonObject json = new JsonParser().parse(item.getString("MMOITEMS_PERM_EFFECTS")).getAsJsonObject();
+			JsonObject json = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_PERM_EFFECTS")).getAsJsonObject();
 			json.entrySet()
 					.forEach(entry -> effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 

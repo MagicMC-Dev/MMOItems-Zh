@@ -5,12 +5,12 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class DisplayName extends StringStat {
@@ -24,9 +24,9 @@ public class DisplayName extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem item) {
-		if (item.getItem().getItemMeta().hasDisplayName())
-			((MMOItem) mmoitem).setData(ItemStat.NAME, new StringData(item.getItem().getItemMeta().getDisplayName()));
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().getItem().getItemMeta().hasDisplayName())
+			((MMOItem) mmoitem).setData(ItemStat.NAME, new StringData(mmoitem.getNBT().getItem().getItemMeta().getDisplayName()));
 	}
 
 	/*

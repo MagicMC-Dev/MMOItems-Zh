@@ -46,6 +46,11 @@ public class ColorData implements StatData, RandomStatData {
 	}
 
 	@Override
+	public String toString() {
+		return "{red=" + red + ",green=" + green + ",blue=" + blue + "}";
+	}
+
+	@Override
 	public StatData randomize(GeneratedItemBuilder builder) {
 		return this;
 	}

@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,9 +17,9 @@ import com.google.gson.JsonSyntaxException;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.CommandData;
@@ -28,7 +27,7 @@ import net.Indyuce.mmoitems.stat.data.CommandListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Commands extends ItemStat {
@@ -62,14 +61,14 @@ public class Commands extends ItemStat {
 
 	@Override
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new CommandListEdition(inv.getPlayer(), inv.getItemType(), inv.getItemId()).open(inv.getPage());
+		new CommandListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 		return true;
 	}
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if (config.getConfig().getConfigurationSection(inv.getItemId()).contains("commands"))
-			if (config.getConfig().getConfigurationSection(inv.getItemId() + ".commands").getKeys(false).size() >= max) {
+		if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("commands"))
+			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".commands").getKeys(false).size() >= max) {
 				// max command number = 8
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your item has reached the " + max + " commands limit.");
@@ -105,7 +104,7 @@ public class Commands extends ItemStat {
 		 * determine the command ID based on the command IDs which have been
 		 * registered before.
 		 */
-		ConfigurationSection commands = config.getConfig().getConfigurationSection(inv.getItemId() + ".commands");
+		ConfigurationSection commands = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".commands");
 		String path = "cmd" + (max + 1);
 		if (commands == null)
 			path = "cmd0";
@@ -116,10 +115,10 @@ public class Commands extends ItemStat {
 					break;
 				}
 
-		config.getConfig().set(inv.getItemId() + ".commands." + path + ".format", message);
-		config.getConfig().set(inv.getItemId() + ".commands." + path + ".delay", delay);
-		config.getConfig().set(inv.getItemId() + ".commands." + path + ".console", console ? console : null);
-		config.getConfig().set(inv.getItemId() + ".commands." + path + ".op", op ? op : null);
+		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".format", message);
+		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".delay", delay);
+		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".console", console ? console : null);
+		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".op", op ? op : null);
 		inv.registerItemEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
@@ -127,12 +126,9 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, FileConfiguration config, String path) {
-		lore.add("");
+	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
-				+ (config.getConfigurationSection(path).contains("commands")
-						? config.getConfigurationSection(path + ".commands").getKeys(false).size()
-						: 0));
+				+ (mmoitem.hasData(this) ? ((CommandListData) mmoitem.getData(this)).getCommands().size() : "0"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit item commands.");
 	}
@@ -160,12 +156,12 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(MMOItem mmoitem, NBTItem nbtItem) {
-		if (nbtItem.hasTag("MMOITEMS_COMMANDS"))
+	public void whenLoaded(ReadMMOItem mmoitem) {
+		if (mmoitem.getNBT().hasTag("MMOITEMS_COMMANDS"))
 			try {
 				CommandListData commands = new CommandListData();
 
-				new JsonParser().parse(nbtItem.getString("MMOITEMS_COMMANDS")).getAsJsonArray().forEach(element -> {
+				new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_COMMANDS")).getAsJsonArray().forEach(element -> {
 					JsonObject key = element.getAsJsonObject();
 					commands.add(new CommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(), key.get("Console").getAsBoolean(),
 							key.get("Op").getAsBoolean()));

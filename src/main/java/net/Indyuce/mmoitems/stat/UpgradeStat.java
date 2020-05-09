@@ -137,7 +137,6 @@ public class UpgradeStat extends ItemStat {
 
 	@Override
 	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
-		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup upgrading.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
 	}

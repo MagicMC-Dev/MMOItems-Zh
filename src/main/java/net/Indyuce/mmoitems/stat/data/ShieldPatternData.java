@@ -31,6 +31,6 @@ public class ShieldPatternData implements StatData {
 	}
 
 	public void addAll(List<Pattern> patterns) {
-		patterns.addAll(patterns);
+		this.patterns.addAll(patterns);
 	}
 }

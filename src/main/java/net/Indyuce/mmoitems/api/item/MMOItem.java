@@ -57,4 +57,10 @@ public class MMOItem {
 	public MMOItemBuilder newBuilder() {
 		return new MMOItemBuilder(this);
 	}
+
+	public MMOItem clone() {
+		MMOItem clone = new MMOItem(type, id);
+		stats.forEach((stat, data) -> clone.stats.put(stat, data));
+		return clone;
+	}
 }

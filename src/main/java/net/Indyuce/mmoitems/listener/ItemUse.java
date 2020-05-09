@@ -79,7 +79,9 @@ public class ItemUse implements Listener {
 		// commands & consummables
 		if (event.getAction().name().contains("RIGHT_CLICK")) {
 			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
-				Message.ITEM_ON_COOLDOWN.format(ChatColor.RED, "#left#", digit.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId()))).send(player, "item-cooldown");
+				Message.ITEM_ON_COOLDOWN
+						.format(ChatColor.RED, "#left#", digit.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
+						.send(player, "item-cooldown");
 				event.setCancelled(true);
 				return;
 			}
@@ -96,7 +98,8 @@ public class ItemUse implements Listener {
 
 		if (useItem instanceof UntargetedWeapon) {
 			UntargetedWeapon weapon = (UntargetedWeapon) useItem;
-			if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK) || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK))
+			if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK)
+					|| (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK))
 				weapon.untargetedAttack(EquipmentSlot.HAND);
 		}
 	}
@@ -108,7 +111,8 @@ public class ItemUse implements Listener {
 		 * Citizens and Sentinels NPC support; damage = 0 check to ignore safety
 		 * checks; check for entity attack
 		 */
-		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity) || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
+				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
 			return;
 
 		// custom damage check
@@ -292,7 +296,8 @@ public class ItemUse implements Listener {
 		Arrow arrow = (Arrow) event.getProjectile();
 		if (!(item.getStat(ItemStat.ARROW_VELOCITY) <= 0))
 			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStat.ARROW_VELOCITY) / 2)));
-		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), (Arrow) event.getProjectile(), type != null, event.getForce());
+		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), (Arrow) event.getProjectile(),
+				type != null, event.getForce());
 	}
 
 	@EventHandler

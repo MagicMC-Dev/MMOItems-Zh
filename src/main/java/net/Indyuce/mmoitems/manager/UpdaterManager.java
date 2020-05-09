@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -176,7 +175,8 @@ public class UpdaterManager implements Listener {
 		if (did.matches(item))
 			return item.getItem();
 
-		MMOItem newItemMMO = MMOItems.plugin.getItems().getMMOItem(type, id);
+		// (funny bug fix) CLONE THE MMOITEM
+		MMOItem newItemMMO = MMOItems.plugin.getItems().getMMOItem(type, id).clone();
 
 		/*
 		 * apply older gem stones, using a light MMOItem so the item does not
@@ -203,11 +203,8 @@ public class UpdaterManager implements Listener {
 		 * remember of ANY enchant on the old item, even the enchants that were
 		 * removed!
 		 */
-		if (did.hasOption(KeepOption.KEEP_ENCHANTS)) {
-			Map<Enchantment, Integer> enchants = item.getItem().getItemMeta().getEnchants();
-			for (Enchantment enchant : enchants.keySet())
-				newItemMeta.addEnchant(enchant, enchants.get(enchant), true);
-		}
+		if (did.hasOption(KeepOption.KEEP_ENCHANTS))
+			item.getItem().getItemMeta().getEnchants().forEach((enchant, level) -> newItemMeta.addEnchant(enchant, level, true));
 
 		/*
 		 * keepLore is used to save enchants from custom enchants plugins that

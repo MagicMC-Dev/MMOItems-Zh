@@ -70,12 +70,12 @@ public abstract class RPGPlayer {
 		return true;
 	}
 
-	public boolean canCast(AbilityData data, boolean message) {
+	public boolean canCast(AbilityData data) {
 
 		if (playerData.hasCooldownInfo(data.getAbility())) {
 			CooldownInformation info = playerData.getCooldownInfo(data.getAbility());
 			if (!info.hasCooledDown()) {
-				if (message) {
+				if (data.getCastingMode().displaysMessage()) {
 					String progressBar = ChatColor.YELLOW + "";
 					double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
 

@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -33,6 +34,10 @@ public class Staff extends UntargetedWeapon {
 	public void untargetedAttack(EquipmentSlot slot) {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
+		
+		
+		Bukkit.broadcastMessage(stats.getStat(ItemStat.ATTACK_SPEED)+" " +( getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"))));
+		
 		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")), CooldownType.ATTACK, false))
 			return;
 

@@ -5,7 +5,6 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
@@ -13,6 +12,7 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
@@ -53,7 +53,7 @@ public class CraftingRecipe extends Recipe {
 		 * directly add the ingredients to the player inventory
 		 */
 		if (isInstant()) {
-			MMOUtils.giveOrDrop(data.getPlayer(), getOutput().generate());
+			new SmartGive(data.getPlayer()).give(getOutput().generate());
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 
 			/*

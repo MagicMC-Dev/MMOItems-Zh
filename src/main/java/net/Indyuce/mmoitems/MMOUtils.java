@@ -57,17 +57,12 @@ public class MMOUtils {
 		return bar.substring(0, (int) (ratio * n)) + ChatColor.WHITE + bar.substring((int) (ratio * n));
 	}
 
-	public static void giveOrDrop(Player player, ItemStack item) {
-		for (ItemStack drop : player.getInventory().addItem(item).values())
-			player.getWorld().dropItem(player.getLocation(), drop);
-	}
-
-//	public static PotionEffectType valueOfPotionEffectType(String effect) {
-//		for (PotionEffectType checked : PotionEffectType.values())
-//			if (checked.getName().equals(effect.toUpperCase().replace("-", "_")))
-//				return checked;
-//		return null;
-//	}
+	// public static PotionEffectType valueOfPotionEffectType(String effect) {
+	// for (PotionEffectType checked : PotionEffectType.values())
+	// if (checked.getName().equals(effect.toUpperCase().replace("-", "_")))
+	// return checked;
+	// return null;
+	// }
 
 	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
 
@@ -115,20 +110,20 @@ public class MMOUtils {
 	}
 
 	public static String getDisplayName(ItemStack item) {
-		if (!item.hasItemMeta())
-			return MMOUtils.caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
-		return item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : MMOUtils.caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+		return item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName()
+				: MMOUtils.caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
 	}
 
 	public static boolean twoHandedCase(Player player) {
-		int normal = 0;
-		int twoHanded = 0;
-		for (ItemStack item : new ItemStack[] { player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() }) {
-			if (item.getType() != Material.AIR)
+		int normal = 0, twoHanded = 0;
+
+		for (ItemStack item : new ItemStack[] { player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() })
+			if (item.getType() != Material.AIR) {
 				normal++;
-			if (MMOLib.plugin.getNMS().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
-				twoHanded++;
-		}
+				if (MMOLib.plugin.getNMS().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
+					twoHanded++;
+			}
+
 		return twoHanded > 0 && normal > 1;
 	}
 
@@ -140,16 +135,15 @@ public class MMOUtils {
 			if (isLastSpace && ch >= 'a' && ch <= 'z') {
 				builder.setCharAt(i, (char) (ch + ('A' - 'a')));
 				isLastSpace = false;
-			} else if (ch != ' ')
-				isLastSpace = false;
-			else
-				isLastSpace = true;
+			} else
+				isLastSpace = ch == ' ';
 		}
 		return builder.toString();
 	}
 
 	public static boolean isMetaItem(ItemStack item, boolean lore) {
-		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null && (!lore || item.getItemMeta().getLore() != null);
+		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null
+				&& (!lore || item.getItemMeta().getLore() != null);
 	}
 
 	public static void saturate(Player player, double saturation) {
@@ -183,21 +177,22 @@ public class MMOUtils {
 		 * if the entity is dead since a dying entity (dying effect takes some
 		 * time) can still be targeted but we dont want that
 		 */
-		if (target.equals(player) || !(target instanceof LivingEntity) || target instanceof ArmorStand || target.isDead())
+		if (target.equals(player) || target.isDead() || !(target instanceof LivingEntity) || target instanceof ArmorStand)
 			return false;
 
 		/*
-		 * can spam your console - an error message is sent each time an NPC
-		 * gets damaged since it is considered as a player.
+		 * extra plugin compatibility, everything is handled via MMOLib because
+		 * the same system is used by MMOCore
 		 */
-		if (target.hasMetadata("NPC"))
+		if (MMOLib.plugin.getEntities().findCustom(target))
 			return false;
 
 		/*
 		 * the ability player damage option is cached for quicker access in the
 		 * config manager instance since it is used in runnables
 		 */
-		if (target instanceof Player && (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
+		if (target instanceof Player
+				&& (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
 			return false;
 
 		return loc == null ? true : MMOLib.plugin.getNMS().isInBoundingBox(target, loc);

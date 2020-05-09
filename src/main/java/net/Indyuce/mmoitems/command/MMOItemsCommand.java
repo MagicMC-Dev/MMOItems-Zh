@@ -31,6 +31,7 @@ import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpdaterData;
 import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.item.MMOItem;
@@ -986,7 +987,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			// modifiers
-			AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key), null);
+			AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key), CastingMode.RIGHT_CLICK);
 			for (int j = 3; j < args.length - 1; j += 2) {
 				String name = args[j];
 				String value = args[j + 1];

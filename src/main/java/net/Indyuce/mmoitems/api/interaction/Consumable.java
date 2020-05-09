@@ -28,6 +28,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item, Type type) {
@@ -318,7 +319,7 @@ public class Consumable extends UseItem {
 
 			if (item.getAmount() > 1) {
 				item.setAmount(item.getAmount() - 1);
-				MMOUtils.giveOrDrop(player, item);
+				new SmartGive(player).give(item);
 			}
 
 			return false;

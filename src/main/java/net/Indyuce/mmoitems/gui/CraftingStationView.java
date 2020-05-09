@@ -28,6 +28,7 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class CraftingStationView extends PluginInventory {
 	private final CraftingStation station;
@@ -186,10 +187,10 @@ public class CraftingStationView extends PluginInventory {
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 				ItemStack craftedItem = recipe.getOutput().generate();
 				CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
-				MMOUtils.giveOrDrop(data.getPlayer(), craftedItem);
+				new SmartGive(data.getPlayer()).give(craftedItem);
 			} else
 				for (Ingredient ingredient : craft.getRecipe().getIngredients())
-					MMOUtils.giveOrDrop(player, ingredient.generateItemStack());
+					new SmartGive(data.getPlayer()).give(ingredient.generateItemStack());
 
 			updateData();
 			open();

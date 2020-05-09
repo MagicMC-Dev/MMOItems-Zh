@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -352,27 +351,40 @@ public class PlayerData {
 		return stats;
 	}
 
-	public Set<AbilityData> getItemAbilities(CastingMode castMode) {
-		return itemAbilities.stream().filter(abilityData -> abilityData.getCastingMode() == castMode).collect(Collectors.toSet());
+	public Set<AbilityData> getItemAbilities() {
+		return itemAbilities;
+	}
+
+	private boolean hasAbility(CastingMode castMode) {
+		for (AbilityData ability : itemAbilities)
+			if (ability.getCastingMode() == castMode)
+				return true;
+		return false;
 	}
 
 	public ItemAttackResult castAbilities(LivingEntity target, ItemAttackResult result, CastingMode castMode) {
+
+		/*
+		 * performance improvement, do not cache the player stats into a
+		 * CachedStats if the player has no ability on that cast mode
+		 */
+		if (!hasAbility(castMode))
+			return result;
+
 		return castAbilities(getStats().newTemporary(), target, result, castMode);
 	}
 
 	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
-		if (target == null) {
-			if (!MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES))
-				return result.setSuccessful(false);
-		} else if (!MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES))
+		if ((target == null && !MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES))
+				|| !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES))
 			return result.setSuccessful(false);
 
 		if (target != null && !MMOUtils.canDamage(player, target))
 			return result.setSuccessful(false);
 
-		boolean message = castMode.displaysMessage();
-		for (AbilityData ability : getItemAbilities(castMode))
-			cast(stats, target, result, ability, message);
+		for (AbilityData ability : itemAbilities)
+			if (ability.getCastingMode() == castMode)
+				cast(stats, target, result, ability);
 
 		return result;
 	}
@@ -382,21 +394,22 @@ public class PlayerData {
 	 * also requires the initial damage value and a target to be successfully
 	 * cast
 	 */
+	@Deprecated
 	public void cast(Ability ability) {
-		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), new AbilityData(ability, null), true);
+		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), new AbilityData(ability, CastingMode.RIGHT_CLICK));
 	}
 
 	public void cast(AbilityData data) {
-		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), data, true);
+		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), data);
 	}
 
-	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability, boolean message) {
+	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability) {
 		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			return;
 
-		if (!rpgPlayer.canCast(ability, message))
+		if (!rpgPlayer.canCast(ability))
 			return;
 
 		/*

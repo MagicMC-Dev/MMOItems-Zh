@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -67,6 +68,12 @@ public class ConfigFile {
 		 * case the same inventory is opened again.
 		 */
 		MMOItems.plugin.getItems().uncache(type, id);
+
+		/*
+		 * update the database UUID for the dynamic item updater
+		 */
+		if (MMOItems.plugin.getUpdater().hasData(type, id))
+			MMOItems.plugin.getUpdater().getData(type, id).setUniqueId(UUID.randomUUID());
 
 		/*
 		 * finally saves the changes

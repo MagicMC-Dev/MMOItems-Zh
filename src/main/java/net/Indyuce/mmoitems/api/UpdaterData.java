@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
@@ -18,9 +19,10 @@ public class UpdaterData {
 	/*
 	 * two UUIDs can be found : one on the itemStack in the nbttags, and one in
 	 * the UpdaterData instance. if the two match, the item is up to date. if
-	 * they don't match, the item needs to be updated
+	 * they don't match, the item needs to be updated. UUID not final because it
+	 * must be changed
 	 */
-	private final UUID uuid;
+	private UUID uuid;
 
 	private final Set<KeepOption> options = new HashSet<>();
 
@@ -59,6 +61,17 @@ public class UpdaterData {
 
 	public UUID getUniqueId() {
 		return uuid;
+	}
+
+	/*
+	 * used everytime a change is applied to one item. the database uuid is
+	 * randomized so that any item with different UUIDs have to be dynamically
+	 * updated
+	 */
+	public void setUniqueId(UUID uuid) {
+		Validate.notNull(uuid, "UUID cannot be null");
+
+		this.uuid = uuid;
 	}
 
 	public boolean matches(NBTItem item) {

@@ -375,12 +375,15 @@ public class PlayerData {
 	}
 
 	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
-		if ((target == null && !MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES))
-				|| !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES))
-			return result.setSuccessful(false);
+		if(target != null) {
+			if(!MMOItems.plugin.getFlags().isFlagAllowed(player,CustomFlag.MI_ABILITIES)
+					|| !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
+					|| !MMOUtils.canDamage(player, target)) {
+				return result.setSuccessful(false);
+			}
+		}
 
-		if (target != null && !MMOUtils.canDamage(player, target))
-			return result.setSuccessful(false);
+
 
 		for (AbilityData ability : itemAbilities)
 			if (ability.getCastingMode() == castMode)

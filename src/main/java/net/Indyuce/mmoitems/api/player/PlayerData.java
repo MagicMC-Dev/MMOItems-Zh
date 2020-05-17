@@ -374,16 +374,18 @@ public class PlayerData {
 		return castAbilities(getStats().newTemporary(), target, result, castMode);
 	}
 
-	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
-		if(target != null) {
-			if(!MMOItems.plugin.getFlags().isFlagAllowed(player,CustomFlag.MI_ABILITIES)
-					|| !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
-					|| !MMOUtils.canDamage(player, target)) {
-				return result.setSuccessful(false);
-			}
-		}
+	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result,
+			CastingMode castMode) {
 
-
+		/*
+		 * if ability has target, check for ability flag at location of target and make
+		 * sure player can attack target. if ability has no target, check for WG flag at
+		 * the caster location
+		 */
+		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES)
+				: !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
+						|| !MMOUtils.canDamage(player, target))
+			return result.setSuccessful(false);
 
 		for (AbilityData ability : itemAbilities)
 			if (ability.getCastingMode() == castMode)

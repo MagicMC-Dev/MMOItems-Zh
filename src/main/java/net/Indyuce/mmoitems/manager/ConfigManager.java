@@ -66,12 +66,14 @@ public class ConfigManager {
 		if (!craftingStationsFolder.exists()) {
 			craftingStationsFolder.mkdir();
 			try {
-				for (Enumeration<JarEntry> entries = new JarFile(MMOItems.plugin.getJarFile()).entries(); entries.hasMoreElements();) {
+				JarFile jarFile = new JarFile(MMOItems.plugin.getJarFile());
+				for (Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
 					String name = entries.nextElement().getName();
 					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
 						Files.copy(MMOItems.plugin.getResource(name),
 								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
 				}
+				jarFile.close();
 			} catch (IOException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
 			}

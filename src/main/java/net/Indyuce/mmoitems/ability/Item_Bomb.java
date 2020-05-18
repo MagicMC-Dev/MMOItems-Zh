@@ -42,6 +42,7 @@ public class Item_Bomb extends Ability implements Listener {
 		return new VectorAbilityResult(ability, stats.getPlayer(), target);
 	}
 
+	// TODO getItemInMainHand? Breaks the ability when used in the offhand.
 	@Override
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		ItemStack itemStack = stats.getPlayer().getInventory().getItemInMainHand().clone();

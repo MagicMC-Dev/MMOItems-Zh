@@ -33,6 +33,6 @@ public class PotionEffectData {
 	}
 
 	public PotionEffect toEffect() {
-		return new PotionEffect(type, (int) (duration * 20), level - 1);
+		return new PotionEffect(type, (int) (duration * 20), level - 1, true, false);
 	}
 }

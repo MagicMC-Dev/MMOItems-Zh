@@ -1,9 +1,14 @@
 package net.Indyuce.mmoitems.api.itemgen;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate.TemplateOption;
 import net.Indyuce.mmoitems.api.itemgen.NameModifier.ModifierType;
 import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
 import net.Indyuce.mmoitems.stat.data.StringData;
@@ -43,7 +48,7 @@ public class GeneratedItemBuilder {
 			mmoitem.setData(ItemStat.TIER, new StringData(tier.getTier().getId()));
 
 		// roll item gen modifiers
-		for (GenerationModifier modifier : template.getModifiers()) {
+		for (GenerationModifier modifier : rollModifiers(template)) {
 
 			// roll modifier change
 			if (!modifier.rollChance())
@@ -105,5 +110,14 @@ public class GeneratedItemBuilder {
 		// clean less-priority name modifiers w/ same type only
 		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
 		nameModifiers.add(modifier);
+	}
+	
+	private Collection<GenerationModifier> rollModifiers(GenerationTemplate template) {
+		if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
+			return template.getModifiers();
+		
+		List<GenerationModifier> modifiers = new ArrayList<>(template.getModifiers());
+		Collections.shuffle(modifiers);
+		return modifiers;
 	}
 }

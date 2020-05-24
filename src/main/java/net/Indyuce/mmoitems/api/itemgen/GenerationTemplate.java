@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.itemgen;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,7 @@ public class GenerationTemplate {
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
 
 	private final Set<GenerationModifier> modifiers = new LinkedHashSet<>();
+	private final Set<TemplateOption> options = new HashSet<>();
 
 	public GenerationTemplate(ConfigurationSection config) {
 		Validate.notNull(config, "Could not load item gen template config");
@@ -34,10 +36,18 @@ public class GenerationTemplate {
 		Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat));
 		type = MMOItems.plugin.getTypes().get(typeFormat);
 
+		if (config.contains("option"))
+			for (String key : config.getConfigurationSection("option").getKeys(false)) {
+				TemplateOption opt = TemplateOption.valueOf(key.toUpperCase().replace("-", "_").replace(" ", "_"));
+				if (config.getBoolean("option." + key))
+					options.add(opt);
+			}
+
 		if (config.contains("modifiers"))
 			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
 				try {
-					modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(), config.getConfigurationSection("modifiers." + key)));
+					modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(),
+							config.getConfigurationSection("modifiers." + key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key
 							+ "' from item gen template '" + id + "': " + exception.getMessage());
@@ -52,8 +62,8 @@ public class GenerationTemplate {
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				base.put(stat, stat.whenInitializedGeneration(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '" + key
-						+ "' from item gen template '" + id + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '"
+						+ key + "' from item gen template '" + id + "': " + exception.getMessage());
 			}
 	}
 
@@ -73,6 +83,10 @@ public class GenerationTemplate {
 		return id;
 	}
 
+	public boolean hasOption(TemplateOption option) {
+		return options.contains(option);
+	}
+
 	public GeneratedItemBuilder newBuilder(RPGPlayer player) {
 		int itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(player.getLevel());
 		RolledTier itemTier = MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
@@ -81,5 +95,14 @@ public class GenerationTemplate {
 
 	public GeneratedItemBuilder newBuilder(int itemLevel, RolledTier itemTier) {
 		return new GeneratedItemBuilder(this, itemLevel, itemTier);
+	}
+
+	public enum TemplateOption {
+
+		/*
+		 * when the item is being generated, modifiers are rolled in a random order so
+		 * you never the same modifiers again and again
+		 */
+		ROLL_MODIFIER_CHECK_ORDER;
 	}
 }

@@ -23,7 +23,7 @@ public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
 	private final RecipeInfo recipe;
 
-	private final List<CheckedIngredient> ingredients = new ArrayList<>();
+	private final List<ItemStack> ingredients = new ArrayList<>();
 
 	private static final int[] slots = { 12, 13, 14, 21, 22, 23, 30, 31, 32 },
 			fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 17, 18, 19, 25, 26, 27, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
@@ -39,17 +39,32 @@ public class CraftingStationPreview extends PluginInventory {
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 45, "Recipe Preview");
 		ingredients.clear();
-		ingredients.addAll(recipe.getIngredients());
+		for(CheckedIngredient ing : recipe.getIngredients()) {
+			if(ing.getIngredient().getAmount() > 64) {
+				ItemStack sample = ing.getIngredient().generateItemStack();
+				sample.setAmount(64);
+				int amount = ing.getIngredient().getAmount();
+				//calculate how many full stacks there are
+				int stacks = (int) Math.floor(amount / 64);
+				//check for remainders
+				if((stacks % 64) == 0)
+					//simply add the desired amount of ingredients
+					for(int i = 0; i < stacks; i++)
+						ingredients.add(sample.clone());
+				else
+					//iterate stacks + 1 for the final one
+					for(int i = 0; i < (stacks + 1); i++) {
+						if(i == stacks) sample.setAmount(amount - (stacks * 64));
+						ingredients.add(sample.clone());
+					}
+			}
+			else ingredients.add(ing.getIngredient().generateItemStack());
+		}
 
 		int min = (page - 1) * slots.length, max = page * slots.length;
 		for (int j = min; j < max; j++) {
-			if (j >= ingredients.size()) {
-				if (previous.getStation().getItemOptions().hasNoRecipe())
-					inv.setItem(slots[j - min], null);
-				continue;
-			}
-
-			inv.setItem(slots[j - min], ingredients.get(j).getIngredient().generateItemStack());
+			if (j >= ingredients.size()) break;
+			inv.setItem(slots[j - min], ingredients.get(j));
 		}
 
 		for (int slot : fill)

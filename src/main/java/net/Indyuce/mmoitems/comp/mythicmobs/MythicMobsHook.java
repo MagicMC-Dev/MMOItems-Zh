@@ -20,9 +20,11 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.droptable.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class MythicMobsHook implements Listener {
 
@@ -34,6 +36,9 @@ public class MythicMobsHook implements Listener {
 		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String
 				.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+		MMOItems.plugin.getCrafting().registerIngredient("mythicitem", config -> new MythicItemIngredient(config),
+				new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
+				nbt -> nbt.hasTag("MYTHIC_TYPE"), nbt -> nbt.getString("MYTHIC_TYPE").toLowerCase());
 	}
 
 	/*

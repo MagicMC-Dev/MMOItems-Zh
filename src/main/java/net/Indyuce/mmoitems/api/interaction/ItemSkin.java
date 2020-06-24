@@ -13,7 +13,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -76,10 +75,11 @@ public class ItemSkin extends UseItem {
 			item.setType(getNBTItem().getItem().getType());
 
 		ItemMeta meta = item.getItemMeta();
-		if (((BooleanData) getMMOItem().getData(ItemStat.UNBREAKABLE)).isEnabled()) {
+		ItemMeta skinMeta = getNBTItem().getItem().getItemMeta();
+		if (skinMeta.isUnbreakable()) {
 			meta.setUnbreakable(true);
-			if (meta instanceof Damageable && getNBTItem().getItem().getItemMeta() instanceof Damageable)
-				((Damageable) meta).setDamage(((Damageable) getNBTItem().getItem().getItemMeta()).getDamage());
+			if (meta instanceof Damageable && skinMeta instanceof Damageable)
+				((Damageable) meta).setDamage(((Damageable) skinMeta).getDamage());
 		}
 		if (getMMOItem().hasData(ItemStat.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
 				&& getNBTItem().getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {

@@ -78,7 +78,7 @@ public class WorldGenTemplate {
 			return false;
 
 		// check biome list
-		Biome biome = pos.getWorld().getBiome(pos.getBlockX(), pos.getBlockZ());
+		Biome biome = pos.getWorld().getBiome(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
 		if (!biomeWhitelist.isEmpty() && !biomeWhitelist.contains(biome.name()))
 			return false;
 		if (!biomeBlacklist.isEmpty() && biomeBlacklist.contains(biome.name()))

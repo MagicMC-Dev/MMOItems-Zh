@@ -1,32 +1,34 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
 	<version>5.5.1</version>
 	<name>MMOItems</name>
 	<description>A great item solution for your RPG server.</description>
-	
+
 	<properties>
-    	<downloadSources>false</downloadSources>
+		<downloadSources>false</downloadSources>
 		<downloadJavadocs>false</downloadJavadocs>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	 
+
 	<distributionManagement>
 		<repository>
-	    	<id>nexus</id>
-	    	<name>Lumine Releases</name>
-	        <url>http://mvn.lumine.io/repository/maven-releases/</url>
-	  	</repository>
-	  	<snapshotRepository>
-	    	<id>nexus</id>  
-	    	<name>Lumine Snapshots</name>
-	        <url>http://mvn.lumine.io/repository/maven-snapshots/</url>
-	  	</snapshotRepository>
+			<id>nexus</id>
+			<name>Lumine Releases</name>
+			<url>http://mvn.lumine.io/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus</id>
+			<name>Lumine Snapshots</name>
+			<url>http://mvn.lumine.io/repository/maven-snapshots/</url>
+		</snapshotRepository>
 	</distributionManagement>
-	 
-	<build> 
+
+	<build>
 		<finalName>${project.name}-${project.version}</finalName>
 		<resources>
 			<resource>
@@ -82,9 +84,9 @@
 			<artifactId>MMOLib</artifactId>
 			<version>1.0.7</version>
 			<scope>system</scope>
-        	<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
+			<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -243,7 +245,7 @@
 			<version>2.0.25-SNAPSHOT</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/Citizens.jar</systemPath>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.inventivetalent</groupId>
 			<artifactId>glowapi</artifactId>

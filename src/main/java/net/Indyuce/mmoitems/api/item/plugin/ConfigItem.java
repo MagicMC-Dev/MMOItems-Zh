@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.api.item.plugin.crafting.CraftingRecipeDisplay;
 import net.Indyuce.mmoitems.api.item.plugin.crafting.QueueItemDisplay;
 import net.Indyuce.mmoitems.api.item.plugin.crafting.UpgradingRecipeDisplay;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ConfigItem {
@@ -94,12 +95,12 @@ public class ConfigItem {
 			return;
 
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
+		meta.setDisplayName(new ColorParse('&', getName()).toChatColor());
 		meta.addItemFlags(ItemFlag.values());
 
 		if (hasLore()) {
 			List<String> lore = new ArrayList<>();
-			getLore().forEach(str -> lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', str)));
+			getLore().forEach(str -> lore.add(ChatColor.GRAY + new ColorParse('&', str).toChatColor()));
 			meta.setLore(lore);
 		}
 

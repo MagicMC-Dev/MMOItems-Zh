@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class DisplayName extends StringStat {
@@ -20,7 +21,7 @@ public class DisplayName extends StringStat {
 
 	@Override
 	public void whenApplied(MMOItemBuilder item, StatData data) {
-		item.getMeta().setDisplayName(fix(ChatColor.translateAlternateColorCodes('&', getDisplayName(data))));
+		item.getMeta().setDisplayName(fix(new ColorParse('&', getDisplayName(data)).toChatColor()));
 	}
 
 	@Override

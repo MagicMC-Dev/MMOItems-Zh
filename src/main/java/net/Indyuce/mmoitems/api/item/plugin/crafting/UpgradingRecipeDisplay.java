@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +17,7 @@ import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -85,12 +85,12 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, ChatColor.translateAlternateColorCodes('&', lore.get(n)));
+				lore.set(n, new ColorParse('&', lore.get(n)).toChatColor());
 
 			ItemStack item = upgradingRecipe.getItem().getPreview();
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name.replace("#name#", MMOUtils.getDisplayName(item))));
+			meta.setDisplayName(new ColorParse('&', name.replace("#name#", MMOUtils.getDisplayName(item))).toChatColor());
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 

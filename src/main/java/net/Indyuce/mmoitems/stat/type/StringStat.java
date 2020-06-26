@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
@@ -70,7 +71,7 @@ public class StringStat extends ItemStat {
 	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
 
 		if (mmoitem.hasData(this)) {
-			String value = ChatColor.translateAlternateColorCodes('&', mmoitem.getData(this).toString());
+			String value = new ColorParse('&', mmoitem.getData(this).toString()).toChatColor();
 			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
 

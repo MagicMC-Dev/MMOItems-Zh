@@ -22,9 +22,10 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.edition.BlockChatEdition;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.gui.BlockBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
+import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class BlockEdition extends PluginInventory {
 	private final ConfigFile config = new ConfigFile("custom-blocks");
@@ -60,9 +61,17 @@ public class BlockEdition extends PluginInventory {
 				if (loreList.isEmpty())
 					eventLore.add(ChatColor.RED + "No lore.");
 				for (String lore : loreList)
-					eventLore.add(ChatColor.GREEN + ChatColor.translateAlternateColorCodes('&', lore));
+					eventLore.add(ChatColor.GREEN + new ColorParse('&', lore).toChatColor());
 			} else
-				eventLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + (configOptions.format.equals("int") ? config.getConfig().contains(block.getId() + "." + configOptions.path) ? ChatColor.GREEN + config.getConfig().getString(block.getId() + "." + configOptions.path) : ChatColor.RED + "0" : ChatColor.translateAlternateColorCodes('&', config.getConfig().getString(block.getId() + "." + configOptions.path, ChatColor.RED + "Default"))));
+				eventLore
+						.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
+								+ (configOptions.format.equals("int")
+										? config.getConfig().contains(block.getId() + "." + configOptions.path)
+												? ChatColor.GREEN + config.getConfig()
+														.getString(block.getId() + "." + configOptions.path)
+												: ChatColor.RED + "0"
+										: new ColorParse('&', config.getConfig().getString(
+												block.getId() + "." + configOptions.path, ChatColor.RED + "Default")).toChatColor()));
 
 			eventLore.add("");
 			eventLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -103,14 +112,15 @@ public class BlockEdition extends PluginInventory {
 				MMOItems.plugin.getCustomBlocks().reload();
 
 				new BlockEdition(player, block).open();
-				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(path.replace("-", " ")) + " Value" + ChatColor.GRAY + " successfully removed.");
+				player.sendMessage(
+						MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(path.replace("-", " "))
+								+ " Value" + ChatColor.GRAY + " successfully removed.");
 			}
 		}
 	}
 
 	public enum ConfigOptions {
-		DISPLAY_NAME("display-name", Material.WRITABLE_BOOK, 11, "string"),
-		LORE("lore", Material.MAP, 13, "line"),
+		DISPLAY_NAME("display-name", Material.WRITABLE_BOOK, 11, "string"), LORE("lore", Material.MAP, 13, "line"),
 		REQUIRED_PICKAXE_POWER("required-power", Material.IRON_PICKAXE, 15, "int"),
 		MIN_XP("min-xp", Material.EXPERIENCE_BOTTLE, 21, "int"),
 		MAX_XP("max-xp", Material.EXPERIENCE_BOTTLE, 23, "int"),
@@ -145,39 +155,44 @@ public class BlockEdition extends PluginInventory {
 
 		public String getChatFormat() {
 			switch (format) {
-			case "int":
-				return "desired number for this field.";
-			case "line":
-				return "new line to add.";
-			default:
-				return "new value.";
+				case "int":
+					return "desired number for this field.";
+				case "line":
+					return "new line to add.";
+				default:
+					return "new value.";
 			}
 		}
 
 		public boolean whenInput(PluginInventory inv, String message, String path) {
 			switch (format) {
-			case "int":
-				int value = 0;
-				try {
-					value = Integer.parseInt(message);
-				} catch (Exception e1) {
-					inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-					return false;
-				}
-				setConfigValue(new ConfigFile("custom-blocks"), path, value);
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + name().replace("_", " ") + " successfully changed to " + value + ".");
-				break;
-			case "line":
-				ConfigFile config = new ConfigFile("custom-blocks");
-				List<String> lore = config.getConfig().contains(path) ? config.getConfig().getStringList(path) : new ArrayList<>();
-				lore.add(message);
-				setConfigValue(config, path, lore);
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully added to " + message + " to block lore.");
-				break;
-			default:
-				setConfigValue(new ConfigFile("custom-blocks"), path, message);
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully changed value to " + message + ".");
-				break;
+				case "int":
+					int value = 0;
+					try {
+						value = Integer.parseInt(message);
+					} catch (Exception e1) {
+						inv.getPlayer().sendMessage(
+								MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
+						return false;
+					}
+					setConfigValue(new ConfigFile("custom-blocks"), path, value);
+					inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + name().replace("_", " ")
+							+ " successfully changed to " + value + ".");
+					break;
+				case "line":
+					ConfigFile config = new ConfigFile("custom-blocks");
+					List<String> lore = config.getConfig().contains(path) ? config.getConfig().getStringList(path)
+							: new ArrayList<>();
+					lore.add(message);
+					setConfigValue(config, path, lore);
+					inv.getPlayer().sendMessage(
+							MMOItems.plugin.getPrefix() + "Successfully added to " + message + " to block lore.");
+					break;
+				default:
+					setConfigValue(new ConfigFile("custom-blocks"), path, message);
+					inv.getPlayer().sendMessage(
+							MMOItems.plugin.getPrefix() + "Successfully changed value to " + message + ".");
+					break;
 			}
 
 			return true;

@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.BlockEdition.ConfigOptions;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 
 public class BlockChatEdition implements Edition {
@@ -35,7 +36,7 @@ public class BlockChatEdition implements Edition {
 
 		inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
 		for (String line : message)
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', line));
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + new ColorParse('&', line).toChatColor());
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
 
 		/*

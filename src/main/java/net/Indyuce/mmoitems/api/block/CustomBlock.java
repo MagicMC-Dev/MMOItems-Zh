@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MushroomState;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -32,10 +33,10 @@ public class CustomBlock {
 
 		Validate.notNull(config, "Could not read custom block config");
 
-		blockName = ChatColor.translateAlternateColorCodes('&', config.getString("display-name", ChatColor.RESET + "Custom Block"));
+		blockName = new ColorParse('&', config.getString("display-name", ChatColor.RESET + "Custom Block")).toChatColor();
 		if (config.contains("lore"))
 			for (String s : config.getStringList("lore"))
-				lore.add(ChatColor.translateAlternateColorCodes('&', s));
+				lore.add(new ColorParse('&', s).toChatColor());
 		minExp = config.getInt("min-xp", 0);
 		maxExp = config.getInt("max-xp", 0);
 		requiredPower = config.getInt("required-power", 0);

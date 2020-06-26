@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api.itemgen;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOUtils;
+import net.asangarin.hexcolors.ColorParse;
 
 public class NameModifier {
 	private final ModifierType type;
@@ -24,7 +24,7 @@ public class NameModifier {
 		if (object instanceof ConfigurationSection) {
 			ConfigurationSection config = (ConfigurationSection) object;
 			Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " format cannot be null");
-			format = ChatColor.translateAlternateColorCodes('&', config.get("format").toString());
+			format = new ColorParse('&', config.get("format").toString()).toChatColor();
 			priority = config.getInt("priority");
 			return;
 		}
@@ -35,7 +35,7 @@ public class NameModifier {
 	public NameModifier(ModifierType type, String format, int priority) {
 		Validate.notNull(format, "Format cannot be null");
 		this.type = type;
-		this.format = ChatColor.translateAlternateColorCodes('&', format);
+		this.format = new ColorParse('&', format).toChatColor();
 		this.priority = priority;
 
 		Validate.notNull(type, "Type cannot be null");

@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -77,13 +77,13 @@ public class QueueItemDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, ChatColor.translateAlternateColorCodes('&', lore.get(n)));
+				lore.set(n, new ColorParse('&', lore.get(n)).toChatColor());
 
 			ItemStack item = ((CraftingRecipe) crafting.getRecipe()).getOutput().getPreview();
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name.replace("#name#", meta.getDisplayName())));
+			meta.setDisplayName(new ColorParse('&', name.replace("#name#", meta.getDisplayName())).toChatColor());
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 

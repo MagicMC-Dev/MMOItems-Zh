@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,6 +17,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.asangarin.hexcolors.ColorParse;
 
 public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
@@ -78,7 +78,7 @@ public class CraftingStationPreview extends PluginInventory {
 		if (recipe.getRecipe() instanceof UpgradingRecipe) {
 			ItemStack stack = ((UpgradingRecipe) recipe.getRecipe()).getItem().getPreview();
 			ItemMeta meta = stack.getItemMeta();
-			meta.setDisplayName(meta.getDisplayName() + ChatColor.translateAlternateColorCodes('&', " &a+1!"));
+			meta.setDisplayName(meta.getDisplayName() + new ColorParse('&', " &a+1!").toChatColor());
 			stack.setItemMeta(meta);
 			inv.setItem(16, stack);
 		}

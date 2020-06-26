@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
+import net.asangarin.hexcolors.ColorParse;
 
 public class ItemTier {
 	private final String name, id;
@@ -29,7 +29,7 @@ public class ItemTier {
 
 	public ItemTier(ConfigurationSection config) {
 		id = config.getName().toUpperCase().replace("-", "_");
-		name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+		name = new ColorParse('&', config.getString("name")).toChatColor();
 		deconstruct = config.contains("deconstruct-item") ? new DropTable(config.getConfigurationSection("deconstruct-item")) : null;
 		unidentificationInfo = new UnidentificationInfo(config.getConfigurationSection("unidentification"));
 
@@ -109,6 +109,6 @@ public class ItemTier {
 	}
 
 	private String color(String str) {
-		return ChatColor.translateAlternateColorCodes('&', str);
+		return new ColorParse('&', str).toChatColor();
 	}
 }

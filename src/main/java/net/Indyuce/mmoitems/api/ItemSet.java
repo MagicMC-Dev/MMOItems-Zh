@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -19,6 +18,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.asangarin.hexcolors.ColorParse;
 
 public class ItemSet {
 	private final Map<Integer, SetBonuses> bonuses = new HashMap<>();
@@ -30,7 +30,7 @@ public class ItemSet {
 	public ItemSet(ConfigurationSection config) {
 		this.id = config.getName().toUpperCase().replace("-", "_");
 		this.loreTag = config.getStringList("lore-tag");
-		this.name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+		this.name = new ColorParse('&', config.getString("name")).toChatColor();
 
 		Validate.isTrue(config.contains("bonuses"), "Could not find item set bonuses");
 

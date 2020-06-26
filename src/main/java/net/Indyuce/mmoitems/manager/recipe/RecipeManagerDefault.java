@@ -5,7 +5,6 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
+import net.asangarin.hexcolors.ColorParse;
 
 public class RecipeManagerDefault extends RecipeManager {
 
@@ -183,7 +183,7 @@ public class RecipeManagerDefault extends RecipeManager {
 				item.setAmount(amount);
 				if (!name.isEmpty()) {
 					ItemMeta meta = item.getItemMeta();
-					meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+					meta.setDisplayName(new ColorParse('&', name).toChatColor());
 					item.setItemMeta(meta);
 				}
 				recipe.setIngredient(character, new RecipeChoice.ExactChoice(item));

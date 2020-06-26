@@ -4,8 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class PluginHelp {
 	private static final int commandsPerPage = 8;
@@ -102,7 +103,7 @@ public class PluginHelp {
 
 		private PluginCommand(String usage, String help) {
 			this.usage = usage;
-			this.help = help == null ? null : ChatColor.translateAlternateColorCodes('&', help);
+			this.help = help == null ? null : new ColorParse('&', help).toChatColor();
 		}
 
 		private boolean isCommand() {

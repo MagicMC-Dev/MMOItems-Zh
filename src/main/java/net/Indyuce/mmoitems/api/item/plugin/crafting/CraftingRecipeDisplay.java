@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -108,7 +109,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, ChatColor.translateAlternateColorCodes('&', lore.get(n)));
+				lore.set(n, new ColorParse('&', lore.get(n)).toChatColor());
 
 			ItemStack item = craftingRecipe.getOutput().getPreview();
 			int amount = craftingRecipe.getOutput().getAmount();
@@ -120,7 +121,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
+			meta.setDisplayName(new ColorParse('&', name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))).toChatColor());
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 

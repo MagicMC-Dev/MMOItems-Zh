@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,6 +18,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.asangarin.hexcolors.ColorParse;
 
 public class CraftingStation {
 	private final String id, name;
@@ -28,7 +28,7 @@ public class CraftingStation {
 
 	public CraftingStation(String id, FileConfiguration config) {
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+		this.name = new ColorParse('&', config.getString("name")).toChatColor();
 
 		for (String key : config.getConfigurationSection("recipes").getKeys(false))
 			try {
@@ -46,7 +46,7 @@ public class CraftingStation {
 		Validate.notNull(name, "Crafting station name must not be null");
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = ChatColor.translateAlternateColorCodes('&', name);
+		this.name = new ColorParse('&', name).toChatColor();
 		this.itemOptions = itemOptions;
 		this.maxQueueSize = maxQueueSize;
 	}

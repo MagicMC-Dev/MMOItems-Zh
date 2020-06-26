@@ -12,7 +12,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -21,10 +20,11 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.mmogroup.mmolib.api.util.AltChar;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
+import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class ConfigManager {
 
@@ -32,14 +32,16 @@ public class ConfigManager {
 	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders;
 
 	// cached config options
-	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
+	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled,
+			upgradeRequirementsCheck;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage;
 
 	private static final Random random = new Random();
-	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
+	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items",
+			"attack-effects" };
 	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
 
 	// try to setup non existing languages
@@ -69,9 +71,11 @@ public class ConfigManager {
 				JarFile jarFile = new JarFile(MMOItems.plugin.getJarFile());
 				for (Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
 					String name = entries.nextElement().getName();
-					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
+					if (name.startsWith("default/crafting-stations/")
+							&& name.length() > "default/crafting-stations/".length())
 						Files.copy(MMOItems.plugin.getResource(name),
-								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
+								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2])
+										.toPath());
 				}
 				jarFile.close();
 			} catch (IOException exception) {
@@ -88,7 +92,8 @@ public class ConfigManager {
 				if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
 					try {
 						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
-								new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(),
+								new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml")
+										.getAbsoluteFile().toPath(),
 								StandardCopyOption.REPLACE_EXISTING);
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -102,8 +107,8 @@ public class ConfigManager {
 				file.checkFile();
 
 		/*
-		 * setup /item files after generating the default /item files otherwise
-		 * they will be empty!
+		 * setup /item files after generating the default /item files otherwise they
+		 * will be empty!
 		 */
 		MMOItems.plugin.getTypes().getAll().forEach(type -> type.getConfigFile().setup());
 
@@ -147,7 +152,8 @@ public class ConfigManager {
 
 			String path = effect.getName().toLowerCase().replace("_", "-");
 			if (!potionEffects.getConfig().contains(path))
-				potionEffects.getConfig().set(path, MMOUtils.caseOnWords(effect.getName().toLowerCase().replace("_", " ")));
+				potionEffects.getConfig().set(path,
+						MMOUtils.caseOnWords(effect.getName().toLowerCase().replace("_", " ")));
 		}
 		potionEffects.save();
 
@@ -155,19 +161,21 @@ public class ConfigManager {
 		for (StaffSpirit spirit : StaffSpirit.values()) {
 			String path = spirit.name().toLowerCase().replace("_", "-");
 			if (!attackEffects.getConfig().contains("staff-spirit." + path))
-				attackEffects.getConfig().set("staff-spirit." + path, "&7" + AltChar.listSquare + " " + spirit.getDefaultName());
+				attackEffects.getConfig().set("staff-spirit." + path,
+						"&7" + AltChar.listSquare + " " + spirit.getDefaultName());
 		}
 		for (LuteAttackEffect effect : LuteAttackEffect.values()) {
 			String path = effect.name().toLowerCase().replace("_", "-");
 			if (!attackEffects.getConfig().contains("lute-attack." + path))
-				attackEffects.getConfig().set("lute-attack." + path, "&7" + AltChar.listSquare + " " + effect.getDefaultName() + " Attacks");
+				attackEffects.getConfig().set("lute-attack." + path,
+						"&7" + AltChar.listSquare + " " + effect.getDefaultName() + " Attacks");
 		}
 		attackEffects.save();
 
 		/*
-		 * only load config files after they have been initialized (above) so
-		 * they do not crash the first time they generate and so we do not have
-		 * to restart the server
+		 * only load config files after they have been initialized (above) so they do
+		 * not crash the first time they generate and so we do not have to restart the
+		 * server
 		 */
 		reload();
 	}
@@ -185,16 +193,20 @@ public class ConfigManager {
 		namePlaceholders = new ConfigFile("name-placeholders");
 
 		/*
-		 * reload cached config options for quicker access - these options are
-		 * used in runnables, it is thus better to cache them
+		 * reload cached config options for quicker access - these options are used in
+		 * runnables, it is thus better to cache them
 		 */
 		replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
 		worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
-		healIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
-		damageIndicatorFormat = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));
-		healIndicatorDecimalFormat = new DecimalFormat(MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format"));
-		damageIndicatorDecimalFormat = new DecimalFormat(MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format"));
+		healIndicatorFormat = new ColorParse('&', MMOItems.plugin.getConfig().getString("game-indicators.heal.format"))
+				.toChatColor();
+		damageIndicatorFormat = new ColorParse('&',
+				MMOItems.plugin.getConfig().getString("game-indicators.damage.format")).toChatColor();
+		healIndicatorDecimalFormat = new DecimalFormat(
+				MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format"));
+		damageIndicatorDecimalFormat = new DecimalFormat(
+				MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format"));
 		abilitySplitter = getStatFormat("ability-splitter");
 		dodgeKnockbackForce = MMOItems.plugin.getConfig().getDouble("mitigation.dodge.knockback.force");
 		dodgeKnockbackEnabled = MMOItems.plugin.getConfig().getBoolean("mitigation.dodge.knockback.enabled");
@@ -212,7 +224,7 @@ public class ConfigManager {
 
 	public String getMessage(String path) {
 		String found = messages.getConfig().getString(path);
-		return ChatColor.translateAlternateColorCodes('&', found == null ? "<MessageNotFound:" + path + ">" : found);
+		return new ColorParse('&', found == null ? "<MessageNotFound:" + path + ">" : found).toChatColor();
 	}
 
 	public String getAbilityName(Ability ability) {
@@ -244,27 +256,27 @@ public class ConfigManager {
 	}
 
 	public String getLuteAttackEffectName(LuteAttackEffect effect) {
-		return ChatColor.translateAlternateColorCodes('&',
-				attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-")));
+		return new ColorParse('&',
+				attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-")))
+						.toChatColor();
 	}
 
 	public String getStaffSpiritName(StaffSpirit spirit) {
-		return ChatColor.translateAlternateColorCodes('&',
-				attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-")));
+		return new ColorParse('&',
+				attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-")))
+						.toChatColor();
 	}
 
 	/*
-	 * all config files that have a default configuration are stored here, they
-	 * get copied into the plugin folder when the plugin enables
+	 * all config files that have a default configuration are stored here, they get
+	 * copied into the plugin folder when the plugin enables
 	 */
 	public enum DefaultFile {
 
 		// default general config files -> /MMOItems
-		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
-		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
+		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"), ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
 		CUSTOM_BLOCKS("custom-blocks.yml", "", "custom-blocks.yml"),
-		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
-		DROPS("drops.yml", "", "drops.yml"),
+		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"), DROPS("drops.yml", "", "drops.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
 		NAME_PLACEHOLDERS("name-placeholders.yml", "", "name-placeholders.yml"),
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
@@ -273,41 +285,34 @@ public class ConfigManager {
 		// Not included in the jar anymore
 
 		// default language files -> /MMOItems/language
-		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
-		STATS("stats.yml", "language", "stats.yml"),
+		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"), STATS("stats.yml", "language", "stats.yml"),
 
 		// item generator
-		EXAMPLE_GEN_TEMPLATES("generator/templates/example-templates.yml", "generator/templates", "example-templates.yml"),
-		EXAMPLE_GEN_MODIFIERS("generator/modifiers/example-modifiers.yml", "generator/modifiers", "example-modifiers.yml"),
+		EXAMPLE_GEN_TEMPLATES("generator/templates/example-templates.yml", "generator/templates",
+				"example-templates.yml"),
+		EXAMPLE_GEN_MODIFIERS("generator/modifiers/example-modifiers.yml", "generator/modifiers",
+				"example-modifiers.yml"),
 		ITEM_GEN_CONFIG("generator/config.yml", "generator", "config.yml"),
 
 		// default item config files -> /MMOItems/item
-		ARMOR("item/armor.yml", "item", "armor.yml"),
-		AXE("item/axe.yml", "item", "axe.yml"),
-		BOW("item/bow.yml", "item", "bow.yml"),
-		CATALYST("item/catalyst.yml", "item", "catalyst.yml"),
-		CONSUMABLE("item/consumable.yml", "item", "consumable.yml"),
-		DAGGER("item/dagger.yml", "item", "dagger.yml"),
+		ARMOR("item/armor.yml", "item", "armor.yml"), AXE("item/axe.yml", "item", "axe.yml"),
+		BOW("item/bow.yml", "item", "bow.yml"), CATALYST("item/catalyst.yml", "item", "catalyst.yml"),
+		CONSUMABLE("item/consumable.yml", "item", "consumable.yml"), DAGGER("item/dagger.yml", "item", "dagger.yml"),
 		GEM_STONE("item/gem_stone.yml", "item", "gem_stone.yml"),
 		GREATSTAFF("item/greatstaff.yml", "item", "greatstaff.yml"),
-		GREATSWORD("item/greatsword.yml", "item", "greatsword.yml"),
-		HALBERD("item/halberd.yml", "item", "halberd.yml"),
-		HAMMER("item/hammer.yml", "item", "hammer.yml"),
-		LANCE("item/lance.yml", "item", "lance.yml"),
+		GREATSWORD("item/greatsword.yml", "item", "greatsword.yml"), HALBERD("item/halberd.yml", "item", "halberd.yml"),
+		HAMMER("item/hammer.yml", "item", "hammer.yml"), LANCE("item/lance.yml", "item", "lance.yml"),
 		MATERIAL("item/material.yml", "item", "material.yml"),
 		MISCELLANEOUS("item/miscellaneous.yml", "item", "miscellaneous.yml"),
-		SHIELD("item/shield.yml", "item", "shield.yml"),
-		STAFF("item/staff.yml", "item", "staff.yml"),
-		SWORD("item/sword.yml", "item", "sword.yml"),
-		TOME("item/tome.yml", "item", "tome.yml"),
-		TOOL("item/tool.yml", "item", "tool.yml"),
-		WAND("item/wand.yml", "item", "wand.yml");
+		SHIELD("item/shield.yml", "item", "shield.yml"), STAFF("item/staff.yml", "item", "staff.yml"),
+		SWORD("item/sword.yml", "item", "sword.yml"), TOME("item/tome.yml", "item", "tome.yml"),
+		TOOL("item/tool.yml", "item", "tool.yml"), WAND("item/wand.yml", "item", "wand.yml");
 
 		private final String folderPath, fileName, resourceName;
 
 		/*
-		 * allows to use the checkFile() method while not loading it
-		 * automatically e.g item-types.yml
+		 * allows to use the checkFile() method while not loading it automatically e.g
+		 * item-types.yml
 		 */
 		private final boolean manual;
 
@@ -327,7 +332,8 @@ public class ConfigManager {
 		}
 
 		public File getFile() {
-			return new File(MMOItems.plugin.getDataFolder() + (folderPath.equals("") ? "" : "/" + folderPath), fileName);
+			return new File(MMOItems.plugin.getDataFolder() + (folderPath.equals("") ? "" : "/" + folderPath),
+					fileName);
 		}
 
 		public void checkFile() {

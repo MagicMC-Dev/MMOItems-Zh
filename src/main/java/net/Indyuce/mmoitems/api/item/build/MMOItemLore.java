@@ -2,11 +2,10 @@ package net.Indyuce.mmoitems.api.item.build;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 import com.google.common.collect.Lists;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.asangarin.hexcolors.ColorParse;
 
 public class MMOItemLore {
 	private final List<String> lore = MMOItems.plugin.getLanguage().getDefaultLoreFormat();
@@ -60,7 +59,7 @@ public class MMOItemLore {
 		 * successfully calculated
 		 */
 		for (int n = 0; n < lore.size(); n++)
-			lore.set(n, ChatColor.translateAlternateColorCodes('&', lore.get(n).replace("{bar}", "").replace("{sbar}", "")));
+			lore.set(n, new ColorParse('&', lore.get(n).replace("{bar}", "").replace("{sbar}", "")).toChatColor());
 
 		return this;
 	}

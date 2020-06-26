@@ -54,6 +54,7 @@ import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -222,7 +223,7 @@ public class MMOItemsCommand implements CommandExecutor {
 					sender.sendMessage("");
 					sender.sendMessage(ChatColor.DARK_GRAY + "Description:");
 					for (String line : update.getDescription())
-						sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.translateAlternateColorCodes('&', line));
+						sender.sendMessage(ChatColor.GRAY + "- " + new ColorParse('&', line).toChatColor());
 				}
 
 				sender.sendMessage("");
@@ -599,7 +600,7 @@ public class MMOItemsCommand implements CommandExecutor {
 					sender.sendMessage(
 							"* " + ChatColor.GREEN + s
 									+ (config.getConfigurationSection(s).contains("name")
-											? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name"))
+											? " " + ChatColor.WHITE + "(" + new ColorParse('&', config.getString(s + ".name")).toChatColor()
 													+ ChatColor.WHITE + ")"
 											: ""));
 			}
@@ -628,18 +629,18 @@ public class MMOItemsCommand implements CommandExecutor {
 					sender.sendMessage(
 							"* " + ChatColor.GREEN + s
 									+ (config.getConfigurationSection(s).contains("name")
-											? " " + ChatColor.WHITE + "(" + ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name"))
+											? " " + ChatColor.WHITE + "(" + new ColorParse('&', config.getString(s + ".name")).toChatColor()
 													+ ChatColor.WHITE + ")"
 											: ""));
 				return true;
 			}
 			for (String s : config.getKeys(false)) {
 				String nameFormat = config.getConfigurationSection(s).contains("name") ? " " + ChatColor.WHITE + "("
-						+ ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")) + ChatColor.WHITE + ")" : "";
+						+ new ColorParse('&', config.getString(s + ".name")).toChatColor() + ChatColor.WHITE + ")" : "";
 				MMOLib.plugin.getNMS().sendJson((Player) sender,
 						"{\"text\":\"* " + ChatColor.GREEN + s + nameFormat + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit "
 								+ type.getId() + " " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit "
-								+ (nameFormat.equals("") ? s : ChatColor.translateAlternateColorCodes('&', config.getString(s + ".name")))
+								+ (nameFormat.equals("") ? s : new ColorParse('&', config.getString(s + ".name")).toChatColor())
 								+ ChatColor.WHITE + ".\",\"color\":\"white\"}}}");
 			}
 		}

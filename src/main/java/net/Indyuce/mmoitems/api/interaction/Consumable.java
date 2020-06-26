@@ -25,6 +25,7 @@ import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -288,7 +289,7 @@ public class Consumable extends UseItem {
 		int maxConsume = (int) nbtItem.getStat("MAX_CONSUME");
 		if (maxConsume > 1) {
 			ItemStack item = nbtItem.toItem().clone();
-			String configMaxConsumeLore = ChatColor.translateAlternateColorCodes('&', MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
+			String configMaxConsumeLore = new ColorParse('&', MMOItems.plugin.getLanguage().getStatFormat("max-consume")).toChatColor();
 			String maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
 
 			maxConsume -= 1;

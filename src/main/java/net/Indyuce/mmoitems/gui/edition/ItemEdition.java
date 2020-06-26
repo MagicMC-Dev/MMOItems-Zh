@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -59,7 +60,7 @@ public class ItemEdition extends EditionInventory {
 			meta.setDisplayName(ChatColor.GREEN + stat.getName());
 			List<String> lore = new ArrayList<>();
 			for (String s1 : stat.getLore())
-				lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', s1));
+				lore.add(ChatColor.GRAY + new ColorParse('&', s1).toChatColor());
 			lore.add("");
 
 			stat.whenDisplayed(lore, mmoitem);

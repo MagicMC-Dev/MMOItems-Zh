@@ -24,6 +24,7 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
@@ -62,7 +63,7 @@ public class Lore extends ItemStat implements ProperStat {
 				config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + ChatColor.translateAlternateColorCodes('&', last)
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor()
 						+ ChatColor.GRAY + "'.");
 			}
 		}
@@ -88,7 +89,7 @@ public class Lore extends ItemStat implements ProperStat {
 		if (mmoitem.hasData(this)) {
 			lore.add(ChatColor.GRAY + "Current Value:");
 			StringListData data = (StringListData) mmoitem.getData(this);
-			data.getList().forEach(el -> lore.add(ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', el)));
+			data.getList().forEach(el -> lore.add(ChatColor.GRAY + new ColorParse('&', el).toChatColor()));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
@@ -103,7 +104,7 @@ public class Lore extends ItemStat implements ProperStat {
 		List<String> lore = new ArrayList<>();
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(line -> {
-			line = ChatColor.translateAlternateColorCodes('&', line);
+			line = new ColorParse('&', line).toChatColor();
 			array.add(line);
 			lore.add(line);
 		});

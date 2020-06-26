@@ -37,24 +37,39 @@ public class DisableInteractions implements Listener {
 			event.setCancelled(true);
 	}
 
-	// grindstone
-	@EventHandler
-	public void b(InventoryClickEvent event) {
-		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
-			return;
+        // grindstone
+        @EventHandler
+        public void b(InventoryClickEvent event) {
+                if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
+                        return;
 
-		Inventory inv = event.getClickedInventory();
-		if (inv == null || inv.getType() != InventoryType.GRINDSTONE || event.getSlot() != 2)
-			return;
+                Inventory inv = event.getClickedInventory();
+                if (inv == null || inv.getType() != InventoryType.GRINDSTONE || event.getSlot() != 2)
+                        return;
 
-		NBTItem item = NBTItem.get(event.getCurrentItem());
-		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.repair") || item.getBoolean("MMOITEMS_DISABLE_REPAIRING")))
-			event.setCancelled(true);
-	}
+                NBTItem item = NBTItem.get(event.getCurrentItem());
+                if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.repair") || item.getBoolean("MMOITEMS_DISABLE_REPAIRING")))
+                        event.setCancelled(true);
+        }
+
+        // smithing table
+        @EventHandler
+        public void c(InventoryClickEvent event) {
+                if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 15))
+                        return;
+
+                Inventory inv = event.getClickedInventory();
+                if (inv == null || inv.getType() != InventoryType.SMITHING || event.getSlot() != 2)
+                        return;
+
+                NBTItem item = NBTItem.get(event.getCurrentItem());
+                if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smithing") || item.getBoolean("MMOITEMS_DISABLE_SMITHING")))
+                        event.setCancelled(true);
+        }
 
 	// enchanting tables
 	@EventHandler
-	public void c(EnchantItemEvent event) {
+	public void d(EnchantItemEvent event) {
 		NBTItem item = NBTItem.get(event.getItem());
 		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.enchant") || item.getBoolean("MMOITEMS_DISABLE_ENCHANTING")))
 			event.setCancelled(true);
@@ -62,7 +77,7 @@ public class DisableInteractions implements Listener {
 
 	// smelting
 	@EventHandler
-	public void d(FurnaceSmeltEvent event) {
+	public void e(FurnaceSmeltEvent event) {
 		NBTItem item = NBTItem.get(event.getSource());
 		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smelt") || item.getBoolean("MMOITEMS_DISABLE_SMELTING")))
 			event.setCancelled(true);
@@ -70,7 +85,7 @@ public class DisableInteractions implements Listener {
 
 	// interaction
 	@EventHandler
-	public void e(PlayerInteractEvent event) {
+	public void f(PlayerInteractEvent event) {
 		if (!event.hasItem())
 			return;
 
@@ -79,24 +94,24 @@ public class DisableInteractions implements Listener {
 			event.setCancelled(true);
 	}
 
-    // interaction (entity)
-    @EventHandler
-    public void f(PlayerInteractEntityEvent event) {
-            if (event.getRightClicked() instanceof ArmorStand)
-                    return;
-
-            NBTItem item = NBTItem.get(event.getHand() == EquipmentSlot.OFF_HAND ? event.getPlayer().getInventory().getItemInOffHand() : event.getPlayer().getInventory().getItemInMainHand());
+        // interaction (entity)
+        @EventHandler
+        public void g(PlayerInteractEntityEvent event) {
+                if (event.getRightClicked() instanceof ArmorStand)
+                        return;
+    
+                NBTItem item = NBTItem.get(event.getHand() == EquipmentSlot.OFF_HAND ? event.getPlayer().getInventory().getItemInOffHand() : event.getPlayer().getInventory().getItemInMainHand());
+                if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
+                        event.setCancelled(true);
+        }
+    
+        // interaction (consume)
+        @EventHandler
+        public void h(PlayerItemConsumeEvent event) {
+            NBTItem item = NBTItem.get(event.getItem());
             if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
                     event.setCancelled(true);
-    }
-
-    // interaction (consume)
-    @EventHandler
-    public void g(PlayerItemConsumeEvent event) {
-        NBTItem item = NBTItem.get(event.getItem());
-        if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
-                event.setCancelled(true);
-    }
+        }
 
 	// workbench
 	@EventHandler
@@ -136,24 +151,8 @@ public class DisableInteractions implements Listener {
 			event.setCancelled(true);
 	}
 
-	private int firstArrow(Player player) {
-
-		// check offhand first
-		if (player.getInventory().getItemInOffHand() != null && player.getInventory().getItemInOffHand().getType().name().contains("ARROW"))
-			return 40;
-
-		// check for every slot
-		ItemStack[] storage = player.getInventory().getStorageContents();
-		for (int j = 0; j < storage.length; j++) {
-			ItemStack item = storage[j];
-			if (item != null && item.getType().name().contains("ARROW"))
-				return j;
-		}
-		return -1;
-	}
-
 	@EventHandler
-	public void projectileLaunchCheck(ProjectileLaunchEvent event) {
+	public void k(ProjectileLaunchEvent event) {
 		if(!(event.getEntity().getShooter() instanceof Player))
 			return;
 
@@ -165,4 +164,20 @@ public class DisableInteractions implements Listener {
 			item2.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
 			event.setCancelled(true);
 	}
+
+        private int firstArrow(Player player) {
+
+                // check offhand first
+                if (player.getInventory().getItemInOffHand() != null && player.getInventory().getItemInOffHand().getType().name().contains("ARROW"))
+                        return 40;
+
+                // check for every slot
+                ItemStack[] storage = player.getInventory().getStorageContents();
+                for (int j = 0; j < storage.length; j++) {
+                        ItemStack item = storage[j];
+                        if (item != null && item.getType().name().contains("ARROW"))
+                                return j;
+                }
+                return -1;
+        }
 }

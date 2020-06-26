@@ -89,8 +89,10 @@ public abstract class ItemStat {
 			"Disable any unwanted interaction:", "block placement, item use...");
 	public static final ItemStat DISABLE_CRAFTING = new DisableStat("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "Disable Crafting",
 			"Players can't use this item while crafting.");
-	public static final ItemStat DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "Disable Smelting",
-			"Players can't use this item in furnaces.");
+        public static final ItemStat DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "Disable Smelting",
+                "Players can't use this item in furnaces.");
+        public static final ItemStat DISABLE_SMITHING = new DisableStat("SMITHING", Material.DAMAGED_ANVIL, "Disable Smithing",
+                "Players can't smith this item in smithing tables.");
 	public static final ItemStat DISABLE_ENCHANTING = new DisableStat("ENCHANTING", VersionMaterial.ENCHANTING_TABLE.toMaterial(),
 			"Disable Enchanting", "Players can't enchant this item."), DISABLE_ADVANCED_ENCHANTS = new DisableAdvancedEnchantments();
 	public static final ItemStat DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "Disable Repairing",

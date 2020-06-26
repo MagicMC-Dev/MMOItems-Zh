@@ -176,6 +176,7 @@ disable-interactions:
     repair: false
     enchant: false
     smelt: false
+    smith: false
     craft: false
     arrow-shooting: false
 

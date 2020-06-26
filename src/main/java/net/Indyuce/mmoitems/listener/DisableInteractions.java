@@ -63,7 +63,7 @@ public class DisableInteractions implements Listener {
                         return;
 
                 NBTItem item = NBTItem.get(event.getCurrentItem());
-                if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smithing") || item.getBoolean("MMOITEMS_DISABLE_SMITHING")))
+                if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smith") || item.getBoolean("MMOITEMS_DISABLE_SMITHING")))
                         event.setCancelled(true);
         }
 

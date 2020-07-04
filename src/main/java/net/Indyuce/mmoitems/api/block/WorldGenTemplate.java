@@ -39,10 +39,12 @@ public class WorldGenTemplate {
 		maxDepth = Integer.parseInt(depth[1]);
 
 		Validate.isTrue(minDepth >= 0, "Min depth must be greater than 0");
-		Validate.isTrue(maxDepth < 256, "Max deapth must be at most 255");
+		Validate.isTrue(maxDepth < 256, "Max depth must be at most 255");
 
 		veinSize = config.getInt("vein-size");
 		veinCount = config.getInt("vein-count");
+
+		Validate.isTrue(veinSize > 0 && veinCount > 0, "Vein size and count must be at least 1");
 	}
 
 	public String getId() {

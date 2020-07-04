@@ -48,15 +48,17 @@ public class WorldGenManager implements Listener {
 
 	public WorldGenTemplate getOrThrow(String id) {
 		Validate.isTrue(templates.containsKey(id), "Could not find gen template with ID '" + id + "'");
+
 		return templates.get(id);
 	}
 
 	/*
 	 * it is mandatory to call this function after registering the custom block
-	 * if you want the custom block to be
+	 * if you want the custom block to be spawning in the worlds
 	 */
 	public void assign(CustomBlock block, WorldGenTemplate template) {
 		Validate.notNull(template, "Cannot assign a null template to a custom block");
+
 		assigned.put(block, template);
 	}
 

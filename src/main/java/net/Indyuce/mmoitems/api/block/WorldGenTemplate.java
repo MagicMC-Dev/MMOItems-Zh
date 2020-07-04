@@ -26,10 +26,10 @@ public class WorldGenTemplate {
 		config.getStringList("replace").forEach(str -> replaceable.add(Material.valueOf(str.toUpperCase().replace("-", "_").replace(" ", "_"))));
 
 		for (String world : config.getStringList("worlds"))
-			(world.contains("!") ? worldBlacklist : worldWhitelist).add(world.toLowerCase());
+			(world.startsWith("!") ? worldBlacklist : worldWhitelist).add(world.toLowerCase().replace("_", "-"));
 
 		for (String biome : config.getStringList("biomes"))
-			(biome.contains("!") ? biomeBlacklist : biomeWhitelist).add(biome.toUpperCase().replace("-", "_").replace(" ", "_"));
+			(biome.startsWith("!") ? biomeBlacklist : biomeWhitelist).add(biome.toUpperCase().replace("-", "_").replace(" ", "_"));
 
 		chunkChance = config.getDouble("chunk-chance");
 		slimeChunk = config.getBoolean("slime-chunk", false);
@@ -74,9 +74,10 @@ public class WorldGenTemplate {
 	public boolean canGenerate(Location pos) {
 
 		// check world list
-		if (!worldWhitelist.isEmpty() && !worldWhitelist.contains(pos.getWorld().getName().toUpperCase()))
+		String world = pos.getWorld().getName().toLowerCase().replace("_", "-");
+		if (!worldWhitelist.isEmpty() && !worldWhitelist.contains(world))
 			return false;
-		if (!worldBlacklist.isEmpty() && worldBlacklist.contains(pos.getWorld().getName().toUpperCase()))
+		if (!worldBlacklist.isEmpty() && worldBlacklist.contains(world))
 			return false;
 
 		// check biome list

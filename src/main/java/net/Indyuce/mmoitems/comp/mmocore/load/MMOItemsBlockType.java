@@ -43,4 +43,9 @@ public class MMOItemsBlockType implements BlockType {
 	public String generateKey() {
 		return "mmoitems-custom-block-" + id;
 	}
+	
+	@Override
+	public boolean breakRestrictions(Block block) {
+		return true;
+	}
 }

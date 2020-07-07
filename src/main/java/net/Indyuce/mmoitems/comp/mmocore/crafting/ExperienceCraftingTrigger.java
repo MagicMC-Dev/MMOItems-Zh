@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mmocore.crafting;
 import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmocore.MMOCore;
+import net.Indyuce.mmocore.api.experience.EXPSource;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
@@ -30,8 +31,8 @@ public class ExperienceCraftingTrigger extends Trigger {
 	@Override
 	public void whenCrafting(net.Indyuce.mmoitems.api.player.PlayerData data) {
 		if (profession == null)
-			PlayerData.get(data.getUniqueId()).giveExperience(amount);
+			PlayerData.get(data.getUniqueId()).giveExperience(amount, EXPSource.SOURCE);
 		else
-			PlayerData.get(data.getUniqueId()).getCollectionSkills().giveExperience(profession, amount);
+			PlayerData.get(data.getUniqueId()).getCollectionSkills().giveExperience(profession, amount, EXPSource.SOURCE);
 	}
 }

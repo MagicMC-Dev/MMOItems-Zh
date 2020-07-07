@@ -27,8 +27,7 @@ public class NetherSpirit implements StaffAttackHandler {
 			int ti = 0;
 
 			public void run() {
-				ti++;
-				if (ti % 2 == 0)
+				if (ti++ % 2 == 0)
 					loc.getWorld().playSound(loc, Sound.BLOCK_FIRE_AMBIENT, 2, 2);
 				List<Entity> targets = MMOUtils.getNearbyChunkEntities(loc);
 				for (int j = 0; j < 3; j++) {

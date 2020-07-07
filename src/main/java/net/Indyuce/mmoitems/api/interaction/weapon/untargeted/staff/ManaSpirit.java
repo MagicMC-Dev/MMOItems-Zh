@@ -30,8 +30,7 @@ public class ManaSpirit implements StaffAttackHandler {
 			double r = .2;
 
 			public void run() {
-				ti++;
-				if (ti > range)
+				if (ti++ > range)
 					cancel();
 
 				if (ti % 2 == 0)

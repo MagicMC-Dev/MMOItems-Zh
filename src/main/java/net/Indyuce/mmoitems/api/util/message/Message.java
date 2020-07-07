@@ -44,13 +44,6 @@ public enum Message {
 	SKIN_REJECTED("A skin has already been applied onto your &6#item#&c!"),
 	SKIN_INCOMPATIBLE("This skin is not compatible with your &6#item#&c!"),
 
-	// advanced workbennch
-	ADVANCED_WORKBENCH("Advanced Workbench"),
-	EMPTY_WORKBENCH_FIRST("Please empty the workbench first."),
-	NOT_ENOUGH_PERMS_CRAFT("You don't have enough permissions to craft this item."),
-	ADVANCED_RECIPES("Advanced Recipes"),
-	CLICK_ADVANCED_RECIPE("#d Click to see its recipe."),
-
 	// soulbound
 	CANT_BIND_ITEM("This item is currently linked to #player# by a Lvl #level# soulbound. You will have to break this soulbound first."),
 	NO_SOULBOUND("This item is not bound to anyone."),
@@ -78,6 +71,7 @@ public enum Message {
 	CRAFTING_CANCELED("You cancelled a crafting recipe."),
 	CRAFTING_QUEUE_FULL("The crafting queue is currently full."),
 	STATION_BIG_STACK("Amount Crafted: #size#"),
+	RECIPE_PREVIEW("Recipe Preview"),
 	// ALREADY_CRAFTING("You are already crafting something else."),
 	// ALREADY_CRAFTING_STATION("You are already crafting something else in that
 	// station."),

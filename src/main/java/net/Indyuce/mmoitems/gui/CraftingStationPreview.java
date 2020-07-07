@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,6 +18,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.asangarin.hexcolors.ColorParse;
 
 public class CraftingStationPreview extends PluginInventory {
@@ -37,7 +39,7 @@ public class CraftingStationPreview extends PluginInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 45, "Recipe Preview");
+		Inventory inv = Bukkit.createInventory(this, 45, Message.RECIPE_PREVIEW.formatRaw(ChatColor.RESET));
 		ingredients.clear();
 		for(CheckedIngredient ing : recipe.getIngredients()) {
 			if(ing.getIngredient().getAmount() > 64) {

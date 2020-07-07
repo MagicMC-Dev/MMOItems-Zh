@@ -68,7 +68,7 @@ public class PlayerListener implements Listener {
 	 * respawn. if he does not respawn the items are dropped on the ground, this
 	 * way there don't get lost
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void applySoulbound(PlayerDeathEvent event) {
 		if (event.getKeepInventory())
 			return;

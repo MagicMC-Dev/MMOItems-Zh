@@ -24,7 +24,7 @@ public abstract class HologramSupport {
 
 		if (MMOItems.plugin.getConfig().getBoolean("game-indicators.damage.enabled"))
 			Bukkit.getPluginManager().registerEvents(new Listener() {
-				@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+				@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 				public void a(EntityDamageEvent event) {
 
 					Entity entity = event.getEntity();
@@ -45,7 +45,7 @@ public abstract class HologramSupport {
 
 		if (MMOItems.plugin.getConfig().getBoolean("game-indicators.heal.enabled"))
 			Bukkit.getPluginManager().registerEvents(new Listener() {
-				@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+				@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 				public void a(EntityRegainHealthEvent event) {
 
 					Entity entity = event.getEntity();

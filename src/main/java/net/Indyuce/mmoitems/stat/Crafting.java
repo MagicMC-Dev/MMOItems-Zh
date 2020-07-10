@@ -71,7 +71,9 @@ public class Crafting extends ItemStat {
 					config.getConfig().set(inv.getEdited().getId() + ".crafting.shaped.1", newList);
 					inv.registerItemEdition(config);
 				} else {
-					config.getConfig().set(inv.getEdited().getId() + ".crafting.shapeless.1.item" + (slot + 1), message);
+					List<String> newList = config.getConfig().getStringList(inv.getEdited().getId() + ".crafting.shapeless.1");
+					newList.set(slot, message);
+					config.getConfig().set(inv.getEdited().getId() + ".crafting.shapeless.1", newList);
 					inv.registerItemEdition(config);
 				}
 			}
@@ -128,6 +130,23 @@ public class Crafting extends ItemStat {
 	}
 
 	private boolean validate(Player player, String input) {
+		if (input.contains(":")) {
+			String[] count = input.split("\\:");
+			
+			if (count.length != 2) {
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
+				return false;
+			}
+			
+			try {
+				Integer.parseInt(count[1]);
+			} catch (NumberFormatException exception) {
+				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + count[1] + "' isn't a valid number.");
+				return false;
+			}
+			
+			input = count[0];
+		}
 		if (input.contains(".")) {
 			String[] typeid = input.split("\\.");
 			if (typeid.length != 2) {
@@ -144,27 +163,6 @@ public class Crafting extends ItemStat {
 			if (MMOItems.plugin.getItems().getItem(type, typeid[1]) == null) {
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Could not find item with ID '"
 						+ typeid[1].toUpperCase().replace("-", "_").replace(" ", "_") + "'.");
-				return false;
-			}
-
-			return true;
-		}
-		if (input.contains(":")) {
-			String[] matmeta = input.split("\\:");
-			if (matmeta.length != 2) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
-				return false;
-			}
-			try {
-				Material.valueOf(matmeta[0].toUpperCase().replace("-", "_"));
-			} catch (IllegalArgumentException exception) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + matmeta[0].toUpperCase().replace("-", "_") + "' isn't a valid material.");
-				return false;
-			}
-			try {
-				Integer.parseInt(matmeta[1]);
-			} catch (NumberFormatException exception) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + matmeta[1] + "' isn't a valid number.");
 				return false;
 			}
 

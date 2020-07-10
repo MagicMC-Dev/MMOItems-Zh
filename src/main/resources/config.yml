@@ -130,10 +130,6 @@ cooldown-progress-bar-char: █
 # When toggled off, players can't damage each other using item abilities.
 ability-player-damage: true
 
-# When enabled, all custom recipes will be in the recipe book on join.
-# If toggled off they will have to use to recipe once to add it to their book.
-auto-recipe-book: true
-
 # Displays a message on the action bar instead of on the chat.
 # Can be used to reduce chat spam.
 # Might interfere with other action bar plugins.

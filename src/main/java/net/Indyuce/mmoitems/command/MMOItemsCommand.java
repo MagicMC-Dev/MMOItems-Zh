@@ -522,12 +522,10 @@ public class MMOItemsCommand implements CommandExecutor {
 						 * discoverRecipes must be called on the main thread.
 						 */
 						Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-							if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) && MMOItems.plugin.getConfig().getBoolean("auto-recipe-book"))
-								Bukkit.getOnlinePlayers().forEach(online -> online.discoverRecipes(MMOItems.plugin.getRecipes().getNamespacedKeys()));
-
 							sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
 							sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-									+ MMOItems.plugin.getRecipes().getLoadedRecipes().size() + ChatColor.GRAY + " Recipes");
+									+ (MMOItems.plugin.getRecipes().getLoadedRecipes().size()
+									+ MMOItems.plugin.getRecipes().getCustomRecipes().size()) + ChatColor.GRAY + " Recipes");
 						});
 					});
 				}

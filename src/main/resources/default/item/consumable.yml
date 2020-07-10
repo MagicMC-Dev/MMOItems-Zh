@@ -299,15 +299,15 @@ EGGNOG:
   crafting:
     shapeless:
       '1':
-        item1: EGG
-        item2: SUGAR
-        item3: AIR
-        item4: AIR
-        item5: AIR
-        item6: AIR
-        item7: AIR
-        item8: AIR
-        item9: AIR
+        - EGG
+        - SUGAR
+        - AIR
+        - AIR
+        - AIR
+        - AIR
+        - AIR
+        - AIR
+        - AIR
 MANGO:
   material: PLAYER_HEAD
   name: '&fMango'

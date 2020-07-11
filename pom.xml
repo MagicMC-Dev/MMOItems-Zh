@@ -15,7 +15,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-	<distributionManagement>
+	<distributionManagement> 
 		<repository>
 			<id>nexus</id>
 			<name>Lumine Releases</name>

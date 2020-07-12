@@ -21,9 +21,10 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageHandler;
 import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.RegisteredAttack;
 
 public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
-	private final Map<Integer, AttackResult> damageInfo = new HashMap<>();
+	private final Map<Integer, RegisteredAttack> damageInfo = new HashMap<>();
 
 	public SkillAPIHook() {
 		MMOLib.plugin.getDamage().registerHandler(this);
@@ -35,7 +36,7 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
 	}
 
 	@Override
-	public AttackResult getDamage(Entity entity) {
+	public RegisteredAttack getDamage(Entity entity) {
 		return damageInfo.get(entity.getEntityId());
 	}
 
@@ -46,7 +47,7 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void a(SkillDamageEvent event) {
-		damageInfo.put(event.getTarget().getEntityId(), new AttackResult(event.getDamage(), DamageType.SKILL));
+		damageInfo.put(event.getTarget().getEntityId(), new RegisteredAttack(new AttackResult(event.getDamage(), DamageType.SKILL), event.getDamager()));
 
 		if (event.getDamager() instanceof Player)
 			event.setDamage(event.getDamage() * (1 + net.Indyuce.mmoitems.api.player.PlayerData.get((Player) event.getDamager()).getStats().getStat(ItemStat.MAGIC_DAMAGE) / 100));

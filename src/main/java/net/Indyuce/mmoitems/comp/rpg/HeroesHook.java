@@ -22,6 +22,7 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageHandler;
 import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.RegisteredAttack;
 
 public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<SkillType, DamageType> damages = new HashMap<>();
@@ -40,10 +41,10 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	}
 
 	@Override
-	public AttackResult getDamage(Entity entity) {
+	public RegisteredAttack getDamage(Entity entity) {
 		SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-		return new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type)).map(type -> damages.get(type))
-				.collect(Collectors.toSet()));
+		return new RegisteredAttack(new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type))
+				.map(type -> damages.get(type)).collect(Collectors.toSet())), info.getCharacter().getEntity());
 	}
 
 	@Override

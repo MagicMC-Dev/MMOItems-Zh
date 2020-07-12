@@ -31,8 +31,8 @@ public interface PlayerInventory {
 		}
 
 		public boolean matches(Type type) {
-			return slot == EquipmentSlot.ANY
-					|| (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS ? slot.isHand() : slot == EquipmentSlot.BOTH_HANDS ? type.getEquipmentType().isHand() : slot == type.getEquipmentType());
+			return slot == EquipmentSlot.ANY || (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS ? slot.isHand()
+					: slot == EquipmentSlot.BOTH_HANDS ? type.getEquipmentType().isHand() : slot == type.getEquipmentType());
 		}
 	}
 }

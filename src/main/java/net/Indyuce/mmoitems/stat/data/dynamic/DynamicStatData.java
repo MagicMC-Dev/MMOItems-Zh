@@ -7,4 +7,5 @@ public interface DynamicStatData {
 	 * inventory and when MMOItems calculates all passive effects which the
 	 * items must apply on the player
 	 */
+	// TODO
 }

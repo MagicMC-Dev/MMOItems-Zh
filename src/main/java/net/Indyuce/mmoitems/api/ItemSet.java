@@ -25,6 +25,12 @@ public class ItemSet {
 	private final List<String> loreTag;
 	private final String name, id;
 
+	/*
+	 * arbitrary constant that only determines the maximum amount of items in a
+	 * set e.g if set to 11 you can't create buffs that apply when a player
+	 * wears at least 11 items of the same set. has to be higher than 5 for
+	 * CUSTOM INVENTORY plugins
+	 */
 	private static final int itemLimit = 10;
 
 	public ItemSet(ConfigurationSection config) {
@@ -34,51 +40,50 @@ public class ItemSet {
 
 		Validate.isTrue(config.contains("bonuses"), "Could not find item set bonuses");
 
-		for (int j = 2; j <= itemLimit; j++) {
-			if (!config.getConfigurationSection("bonuses").contains("" + j))
-				continue;
+		for (int j = 2; j <= itemLimit; j++)
+			if (config.getConfigurationSection("bonuses").contains("" + j)) {
+				SetBonuses bonuses = new SetBonuses();
 
-			SetBonuses bonuses = new SetBonuses();
+				for (String key : config.getConfigurationSection("bonuses." + j).getKeys(false))
+					try {
+						String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
 
-			for (String key : config.getConfigurationSection("bonuses." + j).getKeys(false))
-				try {
-					String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
+						// ability
+						if (key.startsWith("ability-")) {
+							bonuses.addAbility(new AbilityData(config.getConfigurationSection("bonuses." + j + "." + key)));
+							continue;
+						}
 
-					// ability
-					if (key.startsWith("ability-")) {
-						bonuses.addAbility(new AbilityData(config.getConfigurationSection("bonuses." + j + "." + key)));
-						continue;
+						// potion effect
+						if (key.startsWith("potion-")) {
+							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
+							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
+							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
+									config.getInt("bonuses." + j + "." + key) - 1, true, false));
+							continue;
+						}
+
+						// particle effect
+						if (key.startsWith("particle-")) {
+							bonuses.addParticle(new ParticleData(config.getConfigurationSection("bonuses." + j + "." + key)));
+							continue;
+						}
+
+						// stat
+						ItemStat stat = MMOItems.plugin.getStats().get(format);
+						if (stat != null) {
+							bonuses.addStat(stat, config.getDouble("bonuses." + j + "." + key));
+							continue;
+						}
+
+						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not match set bonus '" + key + "' from set '" + id + "'.");
+					} catch (IllegalArgumentException exception) {
+						MMOItems.plugin.getLogger().log(Level.WARNING,
+								"Could not load set bonus '" + key + "' from set '" + id + "': " + exception.getMessage());
 					}
 
-					// potion effect
-					if (key.startsWith("potion-")) {
-						PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-						Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
-						bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
-								config.getInt("bonuses." + j + "." + key) - 1, true, false));
-						continue;
-					}
-
-					// particle effect
-					if (key.startsWith("particle-")) {
-						bonuses.addParticle(new ParticleData(config.getConfigurationSection("bonuses." + j + "." + key)));
-						continue;
-					}
-
-					// stat
-					ItemStat stat = MMOItems.plugin.getStats().get(format);
-					if (stat != null) {
-						bonuses.addStat(stat, config.getDouble("bonuses." + j + "." + key));
-						continue;
-					}
-
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "'.");
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load set bonus '" + id + "." + key + "': " + exception.getMessage());
-				}
-
-			this.bonuses.put(j, bonuses);
-		}
+				this.bonuses.put(j, bonuses);
+			}
 	}
 
 	public String getName() {

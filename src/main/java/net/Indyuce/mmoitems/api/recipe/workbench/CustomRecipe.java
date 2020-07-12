@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,6 +28,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			this.output.setAmount(output.getInteger("MMOITEMS_CRAFTED_AMOUNT"));
 		
 		if (shapeless) {
+			Validate.isTrue(recipe.size() >= 9, "Recipe does not contain 9 ingredients");
 			for (int i = 0; i < 9; i++) {
 				ItemStack stack = MMOItems.plugin.parseStack(recipe.get(i));
 				if (stack == null || stack.getType() == Material.AIR)

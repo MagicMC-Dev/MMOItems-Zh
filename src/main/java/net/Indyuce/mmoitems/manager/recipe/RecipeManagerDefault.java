@@ -26,21 +26,21 @@ public class RecipeManagerDefault extends RecipeManager {
 	@Override
 	public void reload() {
 		clearCustomRecipes();
-		
+
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 
 			for (String id : config.getKeys(false))
-				try {
-					if (config.getConfigurationSection(id).contains("crafting")) {
+				if (config.getConfigurationSection(id).contains("crafting"))
+					try {
 						ConfigurationSection section = config.getConfigurationSection(id + ".crafting");
 
 						if (section.contains("shaped"))
 							section.getConfigurationSection("shaped").getKeys(false)
 									.forEach(recipe -> registerShapedRecipe(type, id, section.getStringList("shaped." + recipe)));
 						if (section.contains("shapeless"))
-							section.getConfigurationSection("shapeless").getKeys(false).forEach(
-									recipe -> registerShapelessRecipe(type, id, section.getStringList("shapeless." + recipe)));
+							section.getConfigurationSection("shapeless").getKeys(false)
+									.forEach(recipe -> registerShapelessRecipe(type, id, section.getStringList("shapeless." + recipe)));
 						if (section.contains("furnace"))
 							section.getConfigurationSection("furnace").getKeys(false).forEach(recipe -> registerFurnaceRecipe(type, id,
 									new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
@@ -53,20 +53,20 @@ public class RecipeManagerDefault extends RecipeManager {
 						if (section.contains("campfire"))
 							section.getConfigurationSection("campfire").getKeys(false).forEach(recipe -> registerCampfireRecipe(type, id,
 									new BurningRecipeInformation(section.getConfigurationSection("campfire." + recipe)), recipe));
+					} catch (IllegalArgumentException exception) {
+						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load recipe of '" + id + "': " + exception.getMessage());
 					}
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load recipe of " + id + ": " + exception.getMessage());
-				}
 		}
 
-		sortRecipes();		
-		Bukkit.getScheduler().runTask(MMOItems.plugin,
-				() -> getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe.getRecipe())));
+		sortRecipes();
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () ->
+
+		getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe.getRecipe())));
 	}
 
 	@Override
 	public void registerFurnaceRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if(!info.getChoice().isValid()) {
+		if (!info.getChoice().isValid()) {
 			MMOItems.plugin.getLogger().warning("Couldn't load furnace recipe for '" + type.getId() + "." + id + "'");
 			return;
 		}
@@ -77,7 +77,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	}
 
 	public void registerBlastRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if(!info.getChoice().isValid()) {
+		if (!info.getChoice().isValid()) {
 			MMOItems.plugin.getLogger().warning("Couldn't load blast furnace recipe for '" + type.getId() + "." + id + "'");
 			return;
 		}
@@ -88,7 +88,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	}
 
 	public void registerSmokerRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if(!info.getChoice().isValid()) {
+		if (!info.getChoice().isValid()) {
 			MMOItems.plugin.getLogger().warning("Couldn't load smoker recipe for '" + type.getId() + "." + id + "'");
 			return;
 		}
@@ -99,7 +99,7 @@ public class RecipeManagerDefault extends RecipeManager {
 	}
 
 	public void registerCampfireRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if(!info.getChoice().isValid()) {
+		if (!info.getChoice().isValid()) {
 			MMOItems.plugin.getLogger().warning("Couldn't load campfire recipe for '" + type.getId() + "." + id + "'");
 			return;
 		}
@@ -122,11 +122,11 @@ public class RecipeManagerDefault extends RecipeManager {
 	/*
 	 * TODO When Bukkit changes their 'RecipeChoice.ExactChoice' API we can
 	 * remove the suppressed warnings, but right now it works despite being
-	 * marked as deprecated. It is just draft API and probably subject to change.
+	 * marked as deprecated. It is just draft API and probably subject to
+	 * change.
 	 */
 	@SuppressWarnings("deprecation")
 	public RecipeChoice toBukkit(MMORecipeChoice choice) {
-		return choice.isVanilla() ? new RecipeChoice.MaterialChoice(choice.getItem().getType())
-				: new RecipeChoice.ExactChoice(choice.getItem());
+		return choice.isVanilla() ? new RecipeChoice.MaterialChoice(choice.getItem().getType()) : new RecipeChoice.ExactChoice(choice.getItem());
 	}
 }

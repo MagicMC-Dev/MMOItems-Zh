@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,9 +39,22 @@ public class GuiListener implements Listener {
 			if (!item.getItemMeta().getDisplayName().startsWith(ChatColor.GREEN + ""))
 				return;
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub))
-				for (ItemStack drop : player.getInventory().addItem(event.getInventory().getItem(4)).values())
-					player.getWorld().dropItemNaturally(player.getLocation(), drop);
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub)) {
+
+				// simply give the item if left click
+				if (event.getAction() == InventoryAction.PICKUP_ALL)
+					for (ItemStack drop : player.getInventory().addItem(event.getInventory().getItem(4)).values())
+						player.getWorld().dropItemNaturally(player.getLocation(), drop);
+
+				// reroll stats if right click
+				else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+					for (ItemStack drop : player.getInventory().addItem(event.getInventory().getItem(4)).values())
+						player.getWorld().dropItemNaturally(player.getLocation(), drop);
+
+					((EditionInventory) inventory).updateCachedItem();
+					event.getInventory().setItem(4, ((EditionInventory) inventory).getCachedItem());
+				}
+			}
 
 			MMOItem mmoitem = ((EditionInventory) inventory).getEdited();
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back")) {

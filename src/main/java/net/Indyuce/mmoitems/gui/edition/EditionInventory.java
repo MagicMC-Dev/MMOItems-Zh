@@ -60,6 +60,14 @@ public abstract class EditionInventory extends PluginInventory {
 		 * refreshes the displayed item.
 		 */
 		mmoitem = MMOItems.plugin.getItems().getMMOItem(mmoitem.getType(), mmoitem.getId());
+		updateCachedItem();
+	}
+
+	/*
+	 * method made public so that when generating the item using the chest item,
+	 * the player can reroll the item stats if needed
+	 */
+	public void updateCachedItem() {
 		cached = mmoitem.newBuilder().build();
 	}
 
@@ -69,7 +77,11 @@ public abstract class EditionInventory extends PluginInventory {
 		getMeta.addItemFlags(ItemFlag.values());
 		getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub);
 		List<String> getLore = new ArrayList<>();
-		getLore.add(ChatColor.GRAY + "You can also use /mi " + mmoitem.getType().getId() + " " + mmoitem.getId() + " (player) (amount).");
+		getLore.add(ChatColor.GRAY + "");
+		getLore.add(ChatColor.GRAY + "You may also use /mi " + mmoitem.getType().getId() + " " + mmoitem.getId());
+		getLore.add(ChatColor.GRAY + "");
+		getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to get the item.");
+		getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to get it & reroll its stats.");
 		getMeta.setLore(getLore);
 		get.setItemMeta(getMeta);
 

@@ -115,12 +115,16 @@ public class MMOItems extends JavaPlugin {
 			getLogger().log(Level.WARNING, "Could not initialize support with WorldGuard 7+");
 		}
 
-		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
-			new MMOCoreMMOLoader();
-
+		/*
+		 * stat manager must be initialized before MMOCore compatibility
+		 * initializes so that MMOCore can register its stats
+		 */
 		saveDefaultConfig();
 		statManager = new StatManager();
 		typeManager.reload();
+
+		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
+			new MMOCoreMMOLoader();
 	}
 
 	public void onEnable() {

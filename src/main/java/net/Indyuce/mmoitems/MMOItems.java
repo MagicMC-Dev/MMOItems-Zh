@@ -10,10 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.command.MMOItemsCommand;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
@@ -45,6 +47,7 @@ import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
+import net.Indyuce.mmoitems.listener.CraftingListener;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.listener.DisableInteractions;
@@ -159,6 +162,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
+		Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
@@ -405,6 +409,45 @@ public class MMOItems extends JavaPlugin {
 		return getConfig().getStringList("block-blacklist").contains(material.name());
 	}
 
+	/***
+	 * Parses an ItemStack from a string.
+	 * Can be used to both get a vanilla material or
+	 * an MMOItem. Used by the recipe manager.
+	 */
+	public ItemStack parseStack(String parse) {
+		ItemStack stack = null;
+		String[] split = parse.split("\\:");
+		String input = split[0];
+		
+		if (input.contains(".")) {
+			String[] typeId = input.split("\\.");
+			String typeFormat = typeId[0].toUpperCase().replace("-", "_").replace(" ", "_");
+			Validate.isTrue(getTypes().has(typeFormat), "Could not find type " + typeFormat);
+
+			MMOItem mmo = getItems().getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
+			if(mmo != null) stack = mmo.newBuilder().build();
+		}
+		else {
+			Material mat = Material.AIR;
+			try {
+				mat = Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_"));
+			} catch (IllegalArgumentException e) {
+				getLogger().warning("Couldn't parse material from '" + parse + "'!");
+			}
+			
+			if(mat != Material.AIR) stack = new ItemStack(mat);
+		}
+		
+		try {
+			if(stack != null && split.length > 1)
+				stack.setAmount(Integer.parseInt(split[1]));
+		} catch (NumberFormatException e) {
+			getLogger().warning("Couldn't parse amount from '" + parse + "'!");
+		}
+		
+		return stack;
+	}
+	
 	public void debug(Object... message) {
 		if (!getConfig().getBoolean("debug"))
 			return;

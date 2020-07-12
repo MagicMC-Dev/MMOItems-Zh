@@ -13,6 +13,8 @@ commands:
     updateitem:
         description: Update the item you are holding.
         aliases: [upitem,itemup]
+    recipes:
+        description: Opens the recipe book for viewing all custom recipes.
 permissions:
     mmoitems.admin:
         description: Access to admin commands.
@@ -41,3 +43,6 @@ permissions:
     mmoitems.soulbound:
         description: Allows to use /soulbound.
         default: op
+    mmoitems.recipes:
+        description: Allows to use /recipes.
+        default: true

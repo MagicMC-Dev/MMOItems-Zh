@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
-	<version>5.5.1</version>
+	<version>5.5.3-SNAPSHOT</version>
 	<name>MMOItems</name>
 	<description>A great item solution for your RPG server.</description>
 
@@ -14,9 +14,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-
-	<distributionManagement>
-		<repository>
+  
+	<distributionManagement> 
+		<repository> 
 			<id>nexus</id>
 			<name>Lumine Releases</name>
 			<url>http://mvn.lumine.io/repository/maven-releases/</url>

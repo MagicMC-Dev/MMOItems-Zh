@@ -33,6 +33,7 @@ import net.Indyuce.mmoitems.comp.holograms.CMIPlugin;
 import net.Indyuce.mmoitems.comp.holograms.HologramSupport;
 import net.Indyuce.mmoitems.comp.holograms.HologramsPlugin;
 import net.Indyuce.mmoitems.comp.holograms.HolographicDisplaysPlugin;
+import net.Indyuce.mmoitems.comp.holograms.TrHologramPlugin;
 import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
@@ -210,6 +211,9 @@ public class MMOItems extends JavaPlugin {
 		} else if (Bukkit.getPluginManager().getPlugin("Holograms") != null) {
 			hologramSupport = new HologramsPlugin();
 			getLogger().log(Level.INFO, "Hooked onto Holograms");
+		} else if (Bukkit.getPluginManager().getPlugin("TrHologram") != null) {
+			hologramSupport = new TrHologramPlugin();
+			getLogger().log(Level.INFO, "Hooked onto TrHologram");
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {

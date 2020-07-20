@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>mmocore</artifactId>
-			<version>1.1.2</version>
+			<version>1.4.2</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/MMOCore.jar</systemPath>
 		</dependency>
@@ -189,6 +189,13 @@
 			<version>1.1.12</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/RealDualWield.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>me.arasple.mc</groupId>
+			<artifactId>TrHologram</artifactId>
+			<version>1.11</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/TrHologram.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.gmail.filoghost</groupId>

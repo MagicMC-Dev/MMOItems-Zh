@@ -55,7 +55,7 @@ public class CraftingListener implements Listener {
 			}
 			CachedRecipe cached = cachedRecipe.get(e.getWhoClicked().getUniqueId());
 			cachedRecipe.remove(e.getWhoClicked().getUniqueId());
-			if (!cached.isValid(inv.getMatrix())) {
+			if (!cached.isValid(inv.getMatrix()) || !e.getCurrentItem().isSimilar(cached.getResult())) {
 				e.setCancelled(true);
 				return;
 			}

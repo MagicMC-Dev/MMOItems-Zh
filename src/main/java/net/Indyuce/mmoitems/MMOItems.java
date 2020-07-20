@@ -76,6 +76,7 @@ import net.Indyuce.mmoitems.manager.recipe.RecipeManager;
 import net.Indyuce.mmoitems.manager.recipe.RecipeManagerDefault;
 import net.Indyuce.mmoitems.manager.recipe.RecipeManagerLegacy;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
 
 public class MMOItems extends JavaPlugin {
@@ -255,7 +256,7 @@ public class MMOItems extends JavaPlugin {
 	public void onDisable() {
 
 		// save player data
-		PlayerData.getLoaded().forEach(data -> data.save());
+		MMOPlayerData.getLoaded().stream().filter(data -> data.getMMOItems() != null).forEach(data -> data.getMMOItems().save());
 
 		// save item updater data
 		ConfigFile updater = new ConfigFile("/dynamic", "updater");

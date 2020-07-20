@@ -9,18 +9,14 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.player.MMOData;
 import net.mmogroup.mmolib.api.stat.StatInstance;
 import net.mmogroup.mmolib.api.stat.StatMap;
 
 public class PlayerStats {
 	private final PlayerData playerData;
-	private final StatMap map;
 
 	public PlayerStats(PlayerData playerData) {
 		this.playerData = playerData;
-
-		map = MMOData.get(playerData.getPlayer()).setMMOItems(playerData).getStatMap();
 	}
 
 	public PlayerData getData() {
@@ -28,7 +24,7 @@ public class PlayerStats {
 	}
 
 	public StatMap getMap() {
-		return map;
+		return playerData.getMMOPlayerData().getStatMap();
 	}
 
 	public double getStat(ItemStat stat) {
@@ -36,7 +32,7 @@ public class PlayerStats {
 	}
 
 	public StatInstance getInstance(ItemStat stat) {
-		return map.getInstance(stat.getId());
+		return getMap().getInstance(stat.getId());
 	}
 
 	public CachedStats newTemporary() {
@@ -44,7 +40,7 @@ public class PlayerStats {
 	}
 
 	public void updateStats() {
-		map.getInstances().forEach(ins -> {
+		getMap().getInstances().forEach(ins -> {
 			ins.remove("item");
 			ins.remove("fullSetBonus");
 		});
@@ -76,7 +72,7 @@ public class PlayerStats {
 
 		public CachedStats() {
 			player = playerData.getPlayer();
-			for (StatInstance ins : map.getInstances())
+			for (StatInstance ins : getMap().getInstances())
 				this.stats.put(ins.getStat(), ins.getTotal());
 		}
 

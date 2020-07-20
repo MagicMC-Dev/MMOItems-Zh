@@ -45,16 +45,11 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.player.MMOPlayerData;
 
 public class PlayerData {
 
-	/*
-	 * refreshes the player instance if the player has gone offline since or
-	 * else just return it. the offline player does not have to be refreshed, it
-	 * is just cached at the beginning
-	 */
-	private Player player;
-	private final UUID uuid;
+	private final MMOPlayerData mmoData;
 
 	/*
 	 * reloaded everytime the player reconnects in case of major change.
@@ -83,18 +78,16 @@ public class PlayerData {
 	private Set<ParticleRunnable> itemParticles = new HashSet<>();
 	private ParticleRunnable overridingItemParticles = null;
 	private Set<AbilityData> itemAbilities = new HashSet<>();
-
+	private boolean fullHands = false;
 	private SetBonuses setBonuses = null;
 	private final PlayerStats stats;
 
-	private boolean fullHands = false;
+	private PlayerData(MMOPlayerData mmoData) {
+		mmoData.setMMOItems(this);
 
-	private static Map<UUID, PlayerData> playerDatas = new HashMap<>();
-
-	private PlayerData(Player player) {
-		this.uuid = player.getUniqueId();
-		setPlayer(player);
-		stats = new PlayerStats(this);
+		this.mmoData = mmoData;
+		this.rpgPlayer = MMOItems.plugin.getRPG().getInfo(this);
+		this.stats = new PlayerStats(this);
 
 		load(new ConfigFile("/userdata", getUniqueId().toString()).getConfig());
 		updateInventory();
@@ -112,22 +105,18 @@ public class PlayerData {
 		config.getConfig().createSection("crafting-queue");
 		craftingStatus.save(config.getConfig().getConfigurationSection("crafting-queue"));
 		config.save();
-
-		// memory leaks
-		player = null;
 	}
 
-	private void setPlayer(Player player) {
-		this.player = player;
-		this.rpgPlayer = MMOItems.plugin.getRPG().getInfo(this);
+	public MMOPlayerData getMMOPlayerData() {
+		return mmoData;
 	}
-
+	
 	public UUID getUniqueId() {
-		return uuid;
+		return mmoData.getUniqueId();
 	}
 
 	public Player getPlayer() {
-		return player;
+		return mmoData.getPlayer();
 	}
 
 	public RPGPlayer getRPG() {
@@ -144,7 +133,7 @@ public class PlayerData {
 	}
 
 	public void checkForInventoryUpdate() {
-		PlayerInventory inv = player.getInventory();
+		PlayerInventory inv = getPlayer().getInventory();
 		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings())
 				|| !equals(boots, inv.getBoots()) || !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
 			updateInventory();
@@ -169,8 +158,8 @@ public class PlayerData {
 	 * one two handed item and one other item at the same time. this will
 	 */
 	public boolean areHandsFull() {
-		NBTItem main = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
-		NBTItem off = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
+		NBTItem main = MMOLib.plugin.getNMS().getNBTItem(getPlayer().getInventory().getItemInMainHand());
+		NBTItem off = MMOLib.plugin.getNMS().getNBTItem(getPlayer().getInventory().getItemInOffHand());
 		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
 				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
@@ -195,7 +184,7 @@ public class PlayerData {
 		fullHands = areHandsFull();
 
 		// find all the items the player can actually use.
-		for (EquippedItem item : MMOItems.plugin.getInventory().getInventory(player)) {
+		for (EquippedItem item : MMOItems.plugin.getInventory().getInventory(getPlayer())) {
 			NBTItem nbtItem = item.newNBTItem();
 
 			Type type = nbtItem.getType();
@@ -247,7 +236,7 @@ public class PlayerData {
 				// if the item with the abilities is in the players offhand AND
 				// its disabled in the config then just move on, else add the
 				// ability
-				if (item.getNBT().getItem().equals(player.getInventory().getItemInOffHand())
+				if (item.getNBT().getItem().equals(getPlayer().getInventory().getItemInOffHand())
 						&& MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
 					continue;
 				} else
@@ -300,26 +289,26 @@ public class PlayerData {
 		 * actually update the player inventory so the task doesn't infinitely
 		 * loop on updating
 		 */
-		helmet = player.getInventory().getHelmet();
-		chestplate = player.getInventory().getChestplate();
-		leggings = player.getInventory().getLeggings();
-		boots = player.getInventory().getBoots();
-		hand = player.getInventory().getItemInMainHand();
-		offhand = player.getInventory().getItemInOffHand();
+		helmet = getPlayer().getInventory().getHelmet();
+		chestplate = getPlayer().getInventory().getChestplate();
+		leggings = getPlayer().getInventory().getLeggings();
+		boots = getPlayer().getInventory().getBoots();
+		hand = getPlayer().getInventory().getItemInMainHand();
+		offhand = getPlayer().getInventory().getItemInOffHand();
 	}
 
 	public void updateEffects() {
 
 		// perm effects
 		permanentEffects.keySet().forEach(effect -> {
-			player.removePotionEffect(effect);
-			player.addPotionEffect(permanentEffects.get(effect));
+			getPlayer().removePotionEffect(effect);
+			getPlayer().addPotionEffect(permanentEffects.get(effect));
 		});
 
 		// two handed
 		if (fullHands) {
-			player.removePotionEffect(PotionEffectType.SLOW);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
+			getPlayer().removePotionEffect(PotionEffectType.SLOW);
+			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
 		}
 	}
 
@@ -374,17 +363,16 @@ public class PlayerData {
 		return castAbilities(getStats().newTemporary(), target, result, castMode);
 	}
 
-	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result,
-			CastingMode castMode) {
+	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
 
 		/*
-		 * if ability has target, check for ability flag at location of target and make
-		 * sure player can attack target. if ability has no target, check for WG flag at
-		 * the caster location
+		 * if ability has target, check for ability flag at location of target
+		 * and make sure player can attack target. if ability has no target,
+		 * check for WG flag at the caster location
 		 */
-		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_ABILITIES)
+		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_ABILITIES)
 				: !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
-						|| !MMOUtils.canDamage(player, target))
+						|| !MMOUtils.canDamage(getPlayer(), target))
 			return result.setSuccessful(false);
 
 		for (AbilityData ability : itemAbilities)
@@ -503,27 +491,29 @@ public class PlayerData {
 	}
 
 	public static PlayerData get(UUID uuid) {
-		return playerDatas.get(uuid);
+		return MMOPlayerData.get(uuid).getMMOItems();
 	}
 
+	/*
+	 * method called when the corresponding MMOPlayerData has already been
+	 * initialized
+	 */
 	public static void load(Player player) {
 
-		/*
-		 * if the player data is not loaded yet, load it.
-		 */
-		if (!playerDatas.containsKey(player.getUniqueId()))
-			playerDatas.put(player.getUniqueId(), new PlayerData(player));
+		MMOPlayerData mmoData = MMOPlayerData.get(player.getUniqueId());
 
 		/*
-		 * otherwise it is already loaded and the player variable must be
-		 * refreshed since the player logged out and in again.
+		 * if no mmoitems data could be found, it must be initialized
+		 */
+		if (mmoData.getMMOItems() == null)
+			mmoData.setMMOItems(new PlayerData(mmoData));
+
+		/*
+		 * otherwise just update the cached RPGPlayer in case of any major
+		 * change in the player data of other rpg plugins
 		 */
 		else
-			get(player).setPlayer(player);
-	}
-
-	public static Collection<PlayerData> getLoaded() {
-		return playerDatas.values();
+			mmoData.getMMOItems().rpgPlayer = MMOItems.plugin.getRPG().getInfo(mmoData.getMMOItems());
 	}
 
 	public enum CooldownType {

@@ -79,6 +79,10 @@ public class ItemTier {
 	public List<ItemStack> generateDeconstructedItem() {
 		return hasDropTable() ? deconstruct.read(false) : new ArrayList<>();
 	}
+	
+//	public RolledTier roll() {
+//		return new RolledTier(info, itemLevel)
+//	}
 
 	public class UnidentificationInfo {
 		private final String name, prefix;

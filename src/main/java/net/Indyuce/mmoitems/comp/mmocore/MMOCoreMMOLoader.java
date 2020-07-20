@@ -18,19 +18,21 @@ import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ExperienceCraftingTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;
+import net.Indyuce.mmoitems.comp.mmocore.load.ItemTemplateDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemsBlockType;
 import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
+import net.Indyuce.mmoitems.comp.mmocore.load.RandomItemDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.SmeltMMOItemExperienceSource;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class MMOCoreMMOLoader extends MMOLoader {
 
@@ -89,6 +91,12 @@ public class MMOCoreMMOLoader extends MMOLoader {
 
 		if (config.getKey().equals("mmoitem"))
 			return new MMOItemDropItem(config);
+
+		if (config.getKey().equals("mitemplate"))
+			return new ItemTemplateDropItem(config);
+
+		if (config.getKey().equals("mirandomitem") || config.getKey().equals("miri"))
+			return new RandomItemDropItem(config);
 
 		return null;
 	}

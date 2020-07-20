@@ -92,10 +92,10 @@ public class MMOCoreMMOLoader extends MMOLoader {
 		if (config.getKey().equals("mmoitem"))
 			return new MMOItemDropItem(config);
 
-		if (config.getKey().equals("mitemplate"))
+		if (config.getKey().equals("gentemplate"))
 			return new ItemTemplateDropItem(config);
 
-		if (config.getKey().equals("mirandomitem") || config.getKey().equals("miri"))
+		if (config.getKey().equals("miloot"))
 			return new RandomItemDropItem(config);
 
 		return null;

@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
@@ -41,9 +43,11 @@ import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
-import net.Indyuce.mmoitems.comp.placeholderapi.DefaultParser;
-import net.Indyuce.mmoitems.comp.placeholderapi.PlaceholderAPIParser;
-import net.Indyuce.mmoitems.comp.placeholderapi.PlaceholderParser;
+import net.Indyuce.mmoitems.comp.parse.IridescentParser;
+import net.Indyuce.mmoitems.comp.parse.StringInputParser;
+import net.Indyuce.mmoitems.comp.parse.placeholders.DefaultPlaceholderParser;
+import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderAPIParser;
+import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderParser;
 import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
@@ -102,9 +106,10 @@ public class MMOItems extends JavaPlugin {
 	private ItemManager itemManager;
 	private SetManager setManager;
 
-	private PlaceholderParser placeholderParser = new DefaultParser();
+	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
 	private PlayerInventory inventory = new DefaultPlayerInventory();
 	private FlagPlugin flagPlugin = new DefaultFlags();
+	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private HologramSupport hologramSupport;
 	private RPGHandler rpgPlugin;
 
@@ -200,6 +205,11 @@ public class MMOItems extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
 			Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this);
 			getLogger().log(Level.INFO, "Hooked onto AdvancedEnchantments");
+		}
+
+		if (Bukkit.getPluginManager().getPlugin("Iridescent") != null) {
+			stringInputParsers.add(new IridescentParser());
+			getLogger().log(Level.INFO, "Hooked onto Iridescent");
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("HolographicDisplays") != null) {
@@ -396,6 +406,10 @@ public class MMOItems extends JavaPlugin {
 		return itemManager;
 	}
 
+	public List<StringInputParser> getStringInputParsers() {
+		return stringInputParsers;
+	}
+
 	public void findRpgPlugin() {
 		if (rpgPlugin != null)
 			return;
@@ -415,44 +429,44 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	/***
-	 * Parses an ItemStack from a string.
-	 * Can be used to both get a vanilla material or
-	 * an MMOItem. Used by the recipe manager.
+	 * Parses an ItemStack from a string. Can be used to both get a vanilla
+	 * material or an MMOItem. Used by the recipe manager.
 	 */
 	public ItemStack parseStack(String parse) {
 		ItemStack stack = null;
 		String[] split = parse.split("\\:");
 		String input = split[0];
-		
+
 		if (input.contains(".")) {
 			String[] typeId = input.split("\\.");
 			String typeFormat = typeId[0].toUpperCase().replace("-", "_").replace(" ", "_");
 			Validate.isTrue(getTypes().has(typeFormat), "Could not find type " + typeFormat);
 
 			MMOItem mmo = getItems().getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
-			if(mmo != null) stack = mmo.newBuilder().build();
-		}
-		else {
+			if (mmo != null)
+				stack = mmo.newBuilder().build();
+		} else {
 			Material mat = Material.AIR;
 			try {
 				mat = Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_"));
 			} catch (IllegalArgumentException e) {
 				getLogger().warning("Couldn't parse material from '" + parse + "'!");
 			}
-			
-			if(mat != Material.AIR) stack = new ItemStack(mat);
+
+			if (mat != Material.AIR)
+				stack = new ItemStack(mat);
 		}
-		
+
 		try {
-			if(stack != null && split.length > 1)
+			if (stack != null && split.length > 1)
 				stack.setAmount(Integer.parseInt(split[1]));
 		} catch (NumberFormatException e) {
 			getLogger().warning("Couldn't parse amount from '" + parse + "'!");
 		}
-		
+
 		return stack;
 	}
-	
+
 	public void debug(Object... message) {
 		if (!getConfig().getBoolean("debug"))
 			return;

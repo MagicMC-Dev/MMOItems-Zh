@@ -57,7 +57,7 @@ public class StringStat extends ItemStat {
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), message);
 		inv.registerItemEdition(config);
 		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ChatColor.GRAY + ".");
 		return true;
 	}
 

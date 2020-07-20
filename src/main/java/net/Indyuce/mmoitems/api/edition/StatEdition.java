@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
+import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.asangarin.hexcolors.ColorParse;
@@ -61,7 +62,13 @@ public class StatEdition implements Edition {
 
 	@Override
 	public boolean output(String input) {
-		return input.equals("cancel") || stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getEdited().getType().getConfigFile(), input, info);
+
+		// apply string input parsers
+		for (StringInputParser parser : MMOItems.plugin.getStringInputParsers())
+			input = parser.parseInput(inv.getPlayer(), input);
+
+		return input.equals("cancel")
+				|| stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getEdited().getType().getConfigFile(), input, info);
 	}
 
 	@Override

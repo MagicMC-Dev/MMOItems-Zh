@@ -21,7 +21,8 @@ public abstract class EditionProcess {
 
 	public void input(String input) {
 		if (edition.output(input)) {
-			if(edition.shouldGoBack()) inv.open();
+			if (edition.shouldGoBack())
+				inv.open();
 			close();
 		}
 	}

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.comp.placeholderapi;
+package net.Indyuce.mmoitems.comp.parse.placeholders;
 
 import org.bukkit.OfflinePlayer;
 

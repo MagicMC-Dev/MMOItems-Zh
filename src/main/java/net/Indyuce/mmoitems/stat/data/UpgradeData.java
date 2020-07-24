@@ -72,6 +72,11 @@ public class UpgradeData implements StatData, RandomStatData {
 	}
 
 	public void upgrade(MMOItem mmoitem) {
+		if(!MMOItems.plugin.getUpgrades().hasTemplate(template)) {
+			MMOItems.plugin.getLogger().warning("Couldn't find upgrade template '" + template + "'. Does it exist?");
+			return;
+		}
+		
 		// change display name
 		String suffix = new ColorParse('&', MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix")).toChatColor();
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))

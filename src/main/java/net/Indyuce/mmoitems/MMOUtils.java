@@ -57,13 +57,6 @@ public class MMOUtils {
 		return bar.substring(0, (int) (ratio * n)) + ChatColor.WHITE + bar.substring((int) (ratio * n));
 	}
 
-	// public static PotionEffectType valueOfPotionEffectType(String effect) {
-	// for (PotionEffectType checked : PotionEffectType.values())
-	// if (checked.getName().equals(effect.toUpperCase().replace("-", "_")))
-	// return checked;
-	// return null;
-	// }
-
 	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
 
 		/*
@@ -111,7 +104,7 @@ public class MMOUtils {
 
 	public static String getDisplayName(ItemStack item) {
 		return item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName()
-				: MMOUtils.caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+				: caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
 	}
 
 	public static boolean twoHandedCase(Player player) {
@@ -195,55 +188,26 @@ public class MMOUtils {
 				&& (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
 			return false;
 
-		return loc == null ? true : MMOLib.plugin.getNMS().isInBoundingBox(target, loc);
+		return loc == null || MMOLib.plugin.getNMS().isInBoundingBox(target, loc);
 	}
 
-	public static String intToRoman(int input) {
-		if (input < 1 || input > 499)
-			return ">499";
+	private static final String[] romanChars = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV",
+			"I" };
+	private static final int[] romanValues = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
 
-		String s = "";
-		while (input >= 400) {
-			s += "CD";
-			input -= 400;
-		}
-		while (input >= 100) {
-			s += "C";
-			input -= 100;
-		}
-		while (input >= 90) {
-			s += "XC";
-			input -= 90;
-		}
-		while (input >= 50) {
-			s += "L";
-			input -= 50;
-		}
-		while (input >= 40) {
-			s += "XL";
-			input -= 40;
-		}
-		while (input >= 10) {
-			s += "X";
-			input -= 10;
-		}
-		while (input >= 9) {
-			s += "IX";
-			input -= 9;
-		}
-		while (input >= 5) {
-			s += "V";
-			input -= 5;
-		}
-		while (input >= 4) {
-			s += "IV";
-			input -= 4;
-		}
-		while (input >= 1) {
-			s += "I";
-			input -= 1;
-		}
-		return s;
+	public static String intToRoman(int input) {
+		if (input < 1 || input > 3999)
+			throw new IllegalArgumentException("Input must be between 1 and 3999");
+
+		String format = "";
+
+		for (int i = 0; i < romanChars.length; i++)
+			while (input >= romanValues[i]) {
+				format += romanChars[i];
+				input -= romanValues[i];
+			}
+
+		return format;
 	}
 
 	@Deprecated

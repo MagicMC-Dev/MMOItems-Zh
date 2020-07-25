@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5d63659c-5618-457a-acc9-0ab2be5e41a7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="ProjectId" id="1fARNSyJZcaZXnWQjQl6uwIKgOR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="Downloaded.Files.Path.Enabled" value="true" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn install" />
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5d63659c-5618-457a-acc9-0ab2be5e41a7" name="Default Changelist" comment="" />
+      <created>1595658870787</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1595658870787</updated>
+    </task>
+    <task id="LOCAL-00001" summary="!Ok, this is the REAL test commit.">
+      <created>1595659986784</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1595659986784</updated>
+    </task>
+    <task id="LOCAL-00002" summary="!Added .idea to gitignore.">
+      <created>1595660294786</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1595660294786</updated>
+    </task>
+    <task id="LOCAL-00003" summary="!Test.">
+      <created>1595660473968</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1595660473968</updated>
+    </task>
+    <task id="LOCAL-00004" summary="!Updated .gitignore.">
+      <created>1595660581547</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1595660581547</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="!Ok, this is the REAL test commit." />
+    <MESSAGE value="!Added .idea to gitignore." />
+    <MESSAGE value="!Test." />
+    <MESSAGE value="!Updated .gitignore." />
+    <option name="LAST_COMMIT_MESSAGE" value="!Updated .gitignore." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="845" y="383" key="#Notifications" timestamp="1595660492649">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="845" y="383" key="#Notifications/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660492649" />
+    <state x="440" y="94" key="#Project_Structure" timestamp="1595659479460">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="440" y="94" key="#Project_Structure/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659479460" />
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1595659812260">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659812260" />
+    <state x="614" y="116" key="CommitChangelistDialog2" timestamp="1595660580894">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="614" y="116" key="CommitChangelistDialog2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660580894" />
+    <state x="184" y="95" key="DiffContextDialog" timestamp="1595660117812">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="184" y="95" key="DiffContextDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660117812" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1595659811531">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659811531" />
+    <state width="938" height="282" key="GridCell.Tab.0.bottom" timestamp="1595660424563">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660424563" />
+    <state width="938" height="282" key="GridCell.Tab.0.center" timestamp="1595660424562">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="282" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660424562" />
+    <state width="938" height="282" key="GridCell.Tab.0.left" timestamp="1595660424562">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="282" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660424562" />
+    <state width="938" height="282" key="GridCell.Tab.0.right" timestamp="1595660424563">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="282" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660424563" />
+    <state x="780" y="113" key="SettingsEditor" timestamp="1595659446731">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="780" y="113" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659446731" />
+    <state x="722" y="224" key="VCS.ChangeListViewerDialog" timestamp="1595659168635">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="722" y="224" key="VCS.ChangeListViewerDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659168635" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1595660595549">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660595549" />
+    <state x="1004" y="430" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1595659401618">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1004" y="430" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659401618" />
+    <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595660395855">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595660395855" />
+    <state x="677" y="308" key="git4idea.merge.GitPullDialog" timestamp="1595659660909">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="677" y="308" key="git4idea.merge.GitPullDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659660909" />
+    <state x="753" y="414" key="git4idea.ui.GitResetDialog" timestamp="1595659171845">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="753" y="414" key="git4idea.ui.GitResetDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659171845" />
+    <state x="616" y="240" width="672" height="677" key="run.anything.popup" timestamp="1595659853582">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" width="672" height="677" key="run.anything.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1595659853582" />
+  </component>
+</project>

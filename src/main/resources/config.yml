@@ -59,7 +59,7 @@ soulbound:
         base: 1
         per-lvl: 2
         
-# Enable, disable and customize the weapon effects here.
+# Enable, disable, and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.
 item-ability:
     staff:

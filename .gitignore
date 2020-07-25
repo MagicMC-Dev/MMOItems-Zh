@@ -1,6 +1,7 @@
 /bin/
 /target/
 /.settings/
+/.idea/
 .classpath
 .project
 MMOItems.eml

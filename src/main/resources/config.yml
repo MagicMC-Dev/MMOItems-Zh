@@ -57,7 +57,7 @@ soulbound:
     # items which are not bound to themselves.
     damage:
         base: 1
-        per-lvl: 2
+        per-lvl: 1
         
 # Enable, disable, and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.

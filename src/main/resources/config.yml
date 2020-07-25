@@ -56,7 +56,7 @@ soulbound:
     # Edit soulbound damage when players try to use
     # items which are not bound to themselves.
     damage:
-        base: 2
+        base: 1
         per-lvl: 2
         
 # Enable, disable and customize the weapon effects here.

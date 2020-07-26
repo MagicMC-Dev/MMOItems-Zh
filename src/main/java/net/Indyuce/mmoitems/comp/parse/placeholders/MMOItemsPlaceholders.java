@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.comp.parse.placeholders;
 
 import java.text.DecimalFormat;
 
+import net.mmogroup.mmolib.api.player.MMOPlayerData;
+import net.mmogroup.mmolib.listener.DamageReduction;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,11 +35,16 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	}
 
 	public String onPlaceholderRequest(Player player, String identifier) {
+		// registering before identifier.startsWith("stat_") to prevent issues
+		// i don't register it in the starts with condition because it will mess with substring
+		if (identifier.equals("stat_defense_percent"))
+			return twoDigits.format(new DamageReduction.DefenseCalculator(MMOPlayerData.get(player)).getReductionPercent()) + "%";
 		if (identifier.startsWith("stat_")) {
 			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
 			if (stat != null)
 				return twoDigits.format(PlayerData.get(player).getStats().getStat(stat));
 		}
+
 
 		if (identifier.startsWith("ability_cd_")) {
 			PlayerData data = PlayerData.get(player);

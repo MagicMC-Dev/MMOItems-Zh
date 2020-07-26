@@ -183,6 +183,9 @@ public abstract class ItemStat {
 			"Magic Damage", new String[] { "Additional magic skill damage in %." });
 	public static final ItemStat PHYSICAL_DAMAGE = new DoubleStat("PHYSICAL_DAMAGE", new ItemStack(Material.IRON_AXE),
 			"Physical Damage", new String[] { "Additional skill/weapon physical damage." });
+	public static final ItemStat DEFENSE = new DoubleStat("DEFENSE",
+			new ItemStack(Material.SHIELD), "Defense",
+			new String[] { "Reduces damage from any source.", "Formula can be set in MMOLib Config." });
 	public static final ItemStat DAMAGE_REDUCTION = new DoubleStat("DAMAGE_REDUCTION",
 			new ItemStack(Material.IRON_CHESTPLATE), "Damage Reduction",
 			new String[] { "Reduces damage from any source.", "In %." });

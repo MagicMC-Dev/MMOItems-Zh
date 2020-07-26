@@ -40,6 +40,7 @@ lore-format:
 - '#skill-damage#'
 - '#physical-damage#'
 - '#projectile-damage#'
+- '#defense#'
 - '#damage-reduction#'
 - '#fall-damage-reduction#'
 - '#fire-damage-reduction#'

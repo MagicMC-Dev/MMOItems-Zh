@@ -44,6 +44,7 @@ max-health: '&c❤ Health: <plus>#'
 movement-speed: '&7■ Movement Speed: &f<plus>#'
 
 # Damage Reduction
+defense: '&7■ Defense: &f<plus>#'
 damage-reduction: '&7■ Damage Reduction: &f<plus>#%'
 fall-damage-reduction: '&7■ Fall Damage Reduction: &f<plus>#%'
 fire-damage-reduction: '&7■ Fire Damage Reduction: &f<plus>#%'

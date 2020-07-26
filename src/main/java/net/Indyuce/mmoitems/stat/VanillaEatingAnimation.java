@@ -11,7 +11,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class VanillaEatingAnimation extends BooleanStat {
 	public VanillaEatingAnimation() {
-		super("VANILLA_EATING", new ItemStack(Material.COOKED_BEEF), "Vanilla Eating Animation", new String[] { "When enabled, players have to wait", "for the vanilla eating animation", "in order to eat the consumable." }, new String[] { "consumable" });
+		super("VANILLA_EATING", new ItemStack(Material.COOKED_BEEF), "Vanilla Eating Animation", new String[] { "When enabled, players have to wait", "for the vanilla eating animation", "in order to eat the consumable.", "", "Only works on items that", "can normally be eaten."}, new String[] { "consumable" });
 	}
 
 	@Override

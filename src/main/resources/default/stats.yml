@@ -100,9 +100,21 @@ item-type: '&c#'
 tier: '# ITEM'
 required-class: '&7# Item'
 required-level: '&eRequires Lvl #'
+# Attributes
 required-dexterity: '&eRequires &c# &eDexterity'
 required-strength: '&eRequires &c# &eStrength'
 required-intelligence: '&eRequires &c# &eIntelligence'
+# Professions
+profession-alchemy: '&eAlchemy Level: &c#'
+profession-enchanting: '&eEnchanting Level: &c#'
+profession-farming: '&eFarming Level: &c#'
+profession-fishing: '&eFishing Level: &c#'
+profession-mining: '&eMining Level: &c#'
+profession-smelting: '&eSmelting Level: &c#'
+profession-smithing: '&eSmithing Level: &c#'
+profession-woodcutting: '&eWoodcutting Level: &c#'
+
+
 
 # Elemental Damage
 fire-damage: '&c❖ #% Fire Damage'

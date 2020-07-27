@@ -27,6 +27,7 @@ public enum Message {
 	NOT_ENOUGH_MANA("You don't have enough mana!"),
 	NOT_ENOUGH_STAMINA("You don't have enough stamina!"),
 	NOT_ENOUGH_ATTRIBUTE("You don't have enough #attribute#!"),
+	NOT_ENOUGH_PROFESSION("You aren't high enough #profession# level!"),
 	UNIDENTIFIED_ITEM("You can't use an unidentified item!"),
 
 	// custom durability

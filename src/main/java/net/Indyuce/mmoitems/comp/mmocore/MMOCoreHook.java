@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
+import net.Indyuce.mmocore.api.experience.Profession;
+import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -23,10 +25,12 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 		/*
 		 * only works when the server is reloaded. needs /reload when changing
-		 * attributes to refresh MMOItems stats
+		 * attributes or professions to refresh MMOItems stats
 		 */
 		for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
 			MMOItems.plugin.getStats().register(new Required_Attribute(attribute));
+		for (Profession profession : MMOCore.plugin.professionManager.getAll())
+			MMOItems.plugin.getStats().register(new Required_Profession(profession));
 	}
 
 	@Override

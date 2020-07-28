@@ -93,7 +93,7 @@ public class MMOItems extends JavaPlugin {
 	private final ItemGenManager itemGenerator = new ItemGenManager();
 	private final EntityManager entityManager = new EntityManager();
 	private final TypeManager typeManager = new TypeManager();
-
+ 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
 	private UpgradeManager upgradeManager;

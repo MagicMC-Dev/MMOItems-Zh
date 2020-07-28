@@ -1,21 +1,5 @@
 package net.Indyuce.mmoitems.gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -28,6 +12,22 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
@@ -271,7 +271,10 @@ public class ItemBrowser extends PluginInventory {
 
 		} else {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				player.getInventory().addItem(removeLastLoreLines(item, 3));
+				ItemStack generatedItem =  (NBTItem.get(item).getBoolean("UNSTACKABLE")) // this refreshes the item if it's unstackable
+						? MMOItems.plugin.getItems().getMMOItem(type, id).clone().newBuilder().build()
+						: item;
+				player.getInventory().addItem(removeLastLoreLines(generatedItem, 3));
 				player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
 			}
 

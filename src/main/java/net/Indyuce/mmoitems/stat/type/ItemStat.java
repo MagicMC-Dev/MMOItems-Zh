@@ -157,7 +157,7 @@ public abstract class ItemStat {
 			VersionMaterial.SKELETON_SKULL.toItem(), "Undead Damage",
 			new String[] { "Deals additional damage to undead.", "In %." });
 	public static final ItemStat UNBREAKABLE = new Unbreakable(), TIER = new ItemTierStat(), SET = new ItemSetStat(),
-			ARMOR = new Armor(), ARMOR_TOUGHNESS = new ArmorToughness(), MAX_HEALTH = new MaxHealth();
+			ARMOR = new Armor(), ARMOR_TOUGHNESS = new ArmorToughness(), MAX_HEALTH = new MaxHealth(), UNSTACKABLE = new Unstackable();
 	public static final ItemStat MAX_MANA = new DoubleStat("MAX_MANA", VersionMaterial.LAPIS_LAZULI.toItem(),
 			"Max Mana", new String[] { "Adds mana to your max mana bar." });
 	public static final ItemStat KNOCKBACK_RESISTANCE = new KnockbackResistance(), MOVEMENT_SPEED = new MovementSpeed();

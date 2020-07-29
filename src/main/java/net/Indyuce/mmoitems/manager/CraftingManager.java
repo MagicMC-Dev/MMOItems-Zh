@@ -108,7 +108,15 @@ public class CraftingManager {
 				CraftingStation station = new CraftingStation(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file));
 				stations.put(station.getId(), station);
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load station " + file.getName() + ": " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load station '" + file.getName() + "': " + exception.getMessage());
+			}
+		
+		for (CraftingStation station : stations.values())
+			try {
+				station.postLoad();
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						"Could not post-load station '" + station.getId() + "': " + exception.getMessage());
 			}
 	}
 
@@ -251,5 +259,4 @@ public class CraftingManager {
 			return read.apply(item);
 		}
 	}
-
 }

@@ -66,7 +66,7 @@ public class PluginHelp {
 		SPACE(""),
 
 		HELP("mi help <page>", "Shows the help page."),
-		GIVE("mi <type> <item> (player) (min-max) (unident-chance)...",
+		GIVE("mi <type> <item> (player) (min-max) (unident-chance) (drop-chance)",
 				"&a/mi <type> <item> (player) (min-max) (unidentification-chance) (drop-chance)\\n&fGives an item to a player.\\nSupports drop chance, unidentification chance & random amounts."),
 		GIVEALL("mi giveall <type> <item> <min-max> <unident-chance>", "Gives an item to all online players on the server."),
 		BROWSE("mi browse (type)", "Allows you to browse through all the items you created."),

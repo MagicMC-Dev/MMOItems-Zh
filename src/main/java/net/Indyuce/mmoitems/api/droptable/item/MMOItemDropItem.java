@@ -6,12 +6,17 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.DropItem;
+import net.Indyuce.mmoitems.api.util.RandomAmount;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemDropItem extends DropItem {
 	private final Type type;
 	private final String id;
 	private final double unidentification;
+
+	public MMOItemDropItem(Type type, String id, double drop, double unidentification, RandomAmount amount) {
+		this(type, id, drop, unidentification, amount.getMin(), amount.getMax());
+	}
 
 	public MMOItemDropItem(Type type, String id, double drop, double unidentification, int min, int max) {
 		super(drop, min, max);

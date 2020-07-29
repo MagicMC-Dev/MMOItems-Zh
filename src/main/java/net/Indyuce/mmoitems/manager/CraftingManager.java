@@ -12,6 +12,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
+import net.Indyuce.mmoitems.api.crafting.trigger.CommandTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.MessageTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.SoundTrigger;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.google.gson.JsonParser;
@@ -49,6 +52,7 @@ public class CraftingManager {
 	private final Map<String, CraftingStation> stations = new HashMap<>();
 
 	public CraftingManager() {
+		// conditions
 		registerCondition("level", config -> new LevelCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
 		registerCondition("permission", config -> new PermissionCondition(config), null);
 		registerCondition("mana", config -> new ManaCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
@@ -57,6 +61,12 @@ public class CraftingManager {
 		registerCondition("class", config -> new ClassCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Required Class: #class#", "&c" + AltChar.cross + " Required Class: #class#"));
 		registerCondition("ingredient", config -> new IngredientCondition(), null);
 
+		// triggers
+		registerTrigger("command", config -> new CommandTrigger(config));
+		registerTrigger("message", config -> new MessageTrigger(config));
+		registerTrigger("sound", config -> new SoundTrigger(config));
+
+		// ingredients
 		registerIngredient("vanilla", config -> new VanillaIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, item -> item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null));
 		registerIngredient("mmoitem", config -> new MMOItemIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level##item#", "&c" + AltChar.cross + " &7#amount# #level##item#"), nbt -> nbt.hasType(), item -> {
 			String upgradeString = item.getString("MMOITEMS_UPGRADE");

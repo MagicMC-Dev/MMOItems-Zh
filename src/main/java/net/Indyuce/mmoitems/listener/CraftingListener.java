@@ -1,13 +1,11 @@
 package net.Indyuce.mmoitems.listener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,10 +17,8 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
-import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
-import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class CraftingListener implements Listener {
 	Map<UUID, CachedRecipe> cachedRecipe = new HashMap<>();
@@ -86,7 +82,16 @@ public class CraftingListener implements Listener {
 		for (CustomRecipe recipe : MMOItems.plugin.getRecipes().getCustomRecipes()) {
 			if (!recipe.fitsPlayerCrafting() && inv.getMatrix().length == 4)
 				continue;
+			int airCount = 0;
 
+			for(Entry<Integer, WorkbenchIngredient> ingredient : recipe.getIngredients()){
+				if(ingredient.getValue().matches(new ItemStack(Material.AIR))){
+					airCount++;
+				}
+			}
+			if(recipe.isEmpty() || airCount > 8){
+				continue;
+			}
 			CachedRecipe cached = new CachedRecipe();
 			boolean matches = true;
 			List<Integer> slotsChecked = new ArrayList<>();

@@ -50,11 +50,11 @@ public class CraftingRecipe extends Recipe {
  	 * yaml format is 'output-item: false' under options
 	 */
 	public boolean isItemRecipe() {
-		return config.getConfigurationSection("options").getBoolean("output-item", true);
+		return config.getBoolean("options.output-item", true);
 	}
 
 	public boolean isSilent() {
-		return config.getConfigurationSection("options").getBoolean("silent-craft", false);
+		return config.getBoolean("options.silent-craft", false);
 	}
 
 	public ConfigMMOItem getOutput() {

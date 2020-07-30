@@ -189,10 +189,12 @@ public class CraftingStationView extends PluginInventory {
 					data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 				if (recipe.isItemRecipe())
 					new SmartGive(data.getPlayer()).give(craftedItem);
-			} else
+			}
+			else {
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 				for (Ingredient ingredient : craft.getRecipe().getIngredients())
 					new SmartGive(data.getPlayer()).give(ingredient.generateItemStack());
+			}
 
 			updateData();
 			open();

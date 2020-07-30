@@ -20,11 +20,11 @@ import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public abstract class Recipe {
 	private final String id;
-	private Map<RecipeOption, Boolean> options = new HashMap<>();
+	private final Map<RecipeOption, Boolean> options = new HashMap<>();
 
-	private Set<Ingredient> ingredients = new LinkedHashSet<>();
-	private Set<Condition> conditions = new LinkedHashSet<>();
-	private Set<Trigger> triggers = new LinkedHashSet<>();
+	private final Set<Ingredient> ingredients = new LinkedHashSet<>();
+	private final Set<Condition> conditions = new LinkedHashSet<>();
+	private final Set<Trigger> triggers = new LinkedHashSet<>();
 
 	public Recipe(ConfigurationSection config) {
 		this(config.getName());
@@ -147,7 +147,7 @@ public abstract class Recipe {
 	public enum RecipeOption {
 		HIDE_WHEN_LOCKED;
 
-		private boolean def;
+		private final boolean def;
 
 		private RecipeOption() {
 			this(false);

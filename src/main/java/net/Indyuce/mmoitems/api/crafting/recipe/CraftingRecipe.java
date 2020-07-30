@@ -17,6 +17,8 @@ import net.mmogroup.mmolib.api.util.SmartGive;
 public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
 
+	private final ConfigurationSection config;
+
 	/*
 	 * there can't be any crafting time for upgrading recipes since there is no
 	 * way to save an MMOItem in the config file TODO save as ItemStack
@@ -25,6 +27,7 @@ public class CraftingRecipe extends Recipe {
 
 	public CraftingRecipe(ConfigurationSection config) {
 		super(config);
+		this.config = config;
 
 		craftingTime = config.getDouble("crafting-time");
 
@@ -42,6 +45,18 @@ public class CraftingRecipe extends Recipe {
 		return craftingTime <= 0;
 	}
 
+	/*
+	 * this determines whether or not to give an item whenever an item is crafted
+ 	 * yaml format is 'output-item: false' under options
+	 */
+	public boolean isItemRecipe() {
+		return config.getConfigurationSection("options").getBoolean("output-item", true);
+	}
+
+	public boolean isSilent() {
+		return config.getConfigurationSection("options").getBoolean("silent-craft", false);
+	}
+
 	public ConfigMMOItem getOutput() {
 		return output;
 	}
@@ -53,9 +68,11 @@ public class CraftingRecipe extends Recipe {
 		 * directly add the ingredients to the player inventory
 		 */
 		if (isInstant()) {
-			new SmartGive(data.getPlayer()).give(getOutput().generate());
+			if (isItemRecipe())
+				new SmartGive(data.getPlayer()).give(getOutput().generate());
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-
+			if (!isSilent())
+				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 			/*
 			 * if recipe not instant, add item to crafting queue, either way
 			 * RELOAD inventory data and reopen inventory!
@@ -63,7 +80,8 @@ public class CraftingRecipe extends Recipe {
 		} else
 			data.getCrafting().getQueue(station).add(this);
 
-		data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+		if (!isInstant())
+			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 	}
 
 	@Override

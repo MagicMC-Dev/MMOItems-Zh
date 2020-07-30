@@ -178,8 +178,6 @@ public class CraftingStationView extends PluginInventory {
 		if (!(tag = item.getString("queueId")).equals("")) {
 			UUID uuid = UUID.fromString(tag);
 			CraftingInfo craft = data.getCrafting().getQueue(station).getCraft(uuid);
-
-			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 			data.getCrafting().getQueue(station).remove(craft);
 
 			if (craft.isReady()) {
@@ -187,10 +185,16 @@ public class CraftingStationView extends PluginInventory {
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 				ItemStack craftedItem = recipe.getOutput().generate();
 				CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
-				new SmartGive(data.getPlayer()).give(craftedItem);
-			} else
+				if (!recipe.isSilent())
+					data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+				if (recipe.isItemRecipe())
+					new SmartGive(data.getPlayer()).give(craftedItem);
+			}
+			else {
+				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 				for (Ingredient ingredient : craft.getRecipe().getIngredients())
 					new SmartGive(data.getPlayer()).give(ingredient.generateItemStack());
+			}
 
 			updateData();
 			open();

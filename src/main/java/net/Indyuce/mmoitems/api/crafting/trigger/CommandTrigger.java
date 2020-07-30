@@ -12,7 +12,7 @@ public class CommandTrigger extends Trigger {
 		super("command");
 
 		config.validate("format");
-		player = config.getBoolean("player");
+		player = config.getBoolean("player", false);
 		command = config.getString("format");
 	}
 

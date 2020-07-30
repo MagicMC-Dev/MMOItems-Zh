@@ -7,6 +7,10 @@ name: 'Mythical Forge (#page#/#max#)'
 # max number of items players are able to craft simultaneously.
 max-queue-size: 10
 
+# Crafting station parent. This station will inherit of
+# all the recipes of the specified crafting station
+parent: arcane-forge
+
 # Configure GUI items here
 items:
     fill:

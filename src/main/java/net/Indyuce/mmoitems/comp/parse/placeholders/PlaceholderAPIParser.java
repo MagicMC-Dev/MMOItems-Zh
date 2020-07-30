@@ -12,6 +12,7 @@ public class PlaceholderAPIParser implements PlaceholderParser {
 
 	@Override
 	public String parse(OfflinePlayer player, String string) {
-		return new ColorParse('&', PlaceholderAPI.setPlaceholders(player, string.replace("%player%", player.getName()))).toChatColor();
+		return new ColorParse('&', PlaceholderAPI.setPlaceholders(player, string.replace("%player%", player.getName())))
+				.toChatColor();
 	}
 }

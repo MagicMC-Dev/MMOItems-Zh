@@ -16,20 +16,20 @@ import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
-
-	private final ConfigurationSection config;
+	private final boolean itemRecipe, silent;
 
 	/*
-	 * there can't be any crafting time for upgrading recipes since there is no
-	 * way to save an MMOItem in the config file TODO save as ItemStack
+	 * there can't be any crafting time for upgrading recipes since there is no way
+	 * to save an MMOItem in the config file TODO save as ItemStack
 	 */
 	private final double craftingTime;
 
 	public CraftingRecipe(ConfigurationSection config) {
 		super(config);
-		this.config = config;
 
 		craftingTime = config.getDouble("crafting-time");
+		itemRecipe = config.getBoolean("options.output-item", true);
+		silent = config.getBoolean("options.silent-craft");
 
 		/*
 		 * load recipe output
@@ -47,14 +47,14 @@ public class CraftingRecipe extends Recipe {
 
 	/*
 	 * this determines whether or not to give an item whenever an item is crafted
- 	 * yaml format is 'output-item: false' under options
+	 * yaml format is 'output-item: false' under options
 	 */
 	public boolean isItemRecipe() {
-		return config.getBoolean("options.output-item", true);
+		return itemRecipe;
 	}
 
 	public boolean isSilent() {
-		return config.getBoolean("options.silent-craft", false);
+		return silent;
 	}
 
 	public ConfigMMOItem getOutput() {
@@ -74,8 +74,8 @@ public class CraftingRecipe extends Recipe {
 			if (!isSilent())
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 			/*
-			 * if recipe not instant, add item to crafting queue, either way
-			 * RELOAD inventory data and reopen inventory!
+			 * if recipe not instant, add item to crafting queue, either way RELOAD
+			 * inventory data and reopen inventory!
 			 */
 		} else
 			data.getCrafting().getQueue(station).add(this);

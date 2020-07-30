@@ -33,7 +33,9 @@ recipes:
         
         # Recipe options
         options:
-            hide-when-locked: false
+            output-item: true # Set to false to give no item
+            silent-craft: false # No sound when clicking
+            hide-when-locked: false # Hide in the GUI when conditions are not met
         
         # Conditions to unlock the recipe
         conditions:

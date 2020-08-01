@@ -19,7 +19,7 @@ public class SoundTrigger extends Trigger {
 	}
 
 	@Override
-	public void whenCrafting(PlayerData player) {
-		player.getPlayer().playSound(player.getPlayer().getLocation(), sound, vol, pitch);
+	public void whenCrafting(PlayerData data) {
+		data.getPlayer().playSound(data.getPlayer().getLocation(), sound, vol, pitch);
 	}
 }

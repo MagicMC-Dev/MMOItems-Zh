@@ -12,9 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-import net.Indyuce.mmoitems.api.crafting.trigger.CommandTrigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.MessageTrigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.SoundTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.google.gson.JsonParser;
@@ -34,7 +32,6 @@ import net.Indyuce.mmoitems.api.crafting.condition.StaminaCondition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.VanillaIngredient;
-import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -65,6 +62,8 @@ public class CraftingManager {
 		registerTrigger("command", config -> new CommandTrigger(config));
 		registerTrigger("message", config -> new MessageTrigger(config));
 		registerTrigger("sound", config -> new SoundTrigger(config));
+		registerTrigger("vanilla", config -> new VanillaTrigger(config));
+		registerTrigger("mmoitem", config -> new MMOItemTrigger(config));
 
 		// ingredients
 		registerIngredient("vanilla", config -> new VanillaIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, item -> item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null));

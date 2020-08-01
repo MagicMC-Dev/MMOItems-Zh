@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.comp.mythicmobs;
 
 import java.util.logging.Level;
 
+import net.Indyuce.mmoitems.api.crafting.trigger.MMOItemTrigger;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -39,6 +40,7 @@ public class MythicMobsHook implements Listener {
 		MMOItems.plugin.getCrafting().registerIngredient("mythicitem", config -> new MythicItemIngredient(config),
 				new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
 				nbt -> nbt.hasTag("MYTHIC_TYPE"), nbt -> nbt.getString("MYTHIC_TYPE").toLowerCase());
+		//MMOItems.plugin.getCrafting().registerTrigger("mmskill", config -> new MythicMobsSkillTrigger(config));
 	}
 
 	/*

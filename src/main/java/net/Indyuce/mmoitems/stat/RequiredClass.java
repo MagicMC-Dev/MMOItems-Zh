@@ -34,7 +34,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 public class RequiredClass extends ItemStat implements ItemRestriction, ProperStat {
 	public RequiredClass() {
 		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class",
-				new String[] { "The class you need to", "profress to use your item." }, new String[] { "all" });
+				new String[] { "The class you need to", "profess to use your item." }, new String[] { "all" });
 	}
 
 	@Override

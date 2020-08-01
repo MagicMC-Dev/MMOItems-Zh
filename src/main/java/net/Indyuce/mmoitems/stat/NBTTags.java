@@ -110,7 +110,7 @@ public class NBTTags extends ItemStat {
 		((StringListData) data).getList().forEach(tag -> {
 			array.add(tag);
 
-			item.addItemTag(new ItemTag(tag.substring(0, tag.indexOf(' ')), tag.substring(tag.indexOf(' ') + 1)));
+			item.addItemTag(new ItemTag(tag.substring(0, tag.indexOf(' ')), calculateObjectType(tag.substring(tag.indexOf(' ') + 1))));
 		});
 		item.addItemTag(new ItemTag("MMOITEMS_NBTTAGS", array.toString()));
 	}
@@ -120,5 +120,21 @@ public class NBTTags extends ItemStat {
 		if (mmoitem.getNBT().hasTag("MMOITEMS_NBTTAGS"))
 			mmoitem.setData(ItemStat.NBT_TAGS,
 					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_NBTTAGS")).getAsJsonArray()));
+	}
+	
+	public Object calculateObjectType(String input) {
+		if(input.equalsIgnoreCase("true")) return (Boolean) true;
+		if(input.equalsIgnoreCase("false")) return (Boolean) false;
+		try {
+			int value = Integer.parseInt(input);
+			return (Integer) value;
+		} catch(NumberFormatException e) {}
+		if(input.contains("[") && input.contains("]")) {
+			List<String> entries = new ArrayList<>();
+			for(String s : input.replace("[", "").replace("]", "").split("\\,"))
+				entries.add(s.replace("\"", ""));
+			return (List<?>) entries;	
+		}
+		return (String) input;
 	}
 }

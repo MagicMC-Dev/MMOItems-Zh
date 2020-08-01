@@ -188,8 +188,13 @@ public class MMOItems extends JavaPlugin {
 		 * allows now to use a glitchy itemEquipEvent. must be called after
 		 * loading the config since it checks for a config option
 		 */
-		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).checkForInventoryUpdate()),
-				100, getConfig().getInt("inventory-update-delay"));
+		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+			@Override
+			public void run() {
+				for(Player player : Bukkit.getOnlinePlayers())
+					PlayerData.get(player).checkForInventoryUpdate();
+			}
+		}, 100, getConfig().getInt("inventory-update-delay"));
 
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
 			flagPlugin = new ResidenceFlags();

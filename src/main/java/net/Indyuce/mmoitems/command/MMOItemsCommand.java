@@ -1099,8 +1099,13 @@ public class MMOItemsCommand implements CommandExecutor {
 						"Usage: /mi <type> <item> (player) (min-max) (unident-chance) (drop-chance)");
 
 				// target
-				Player target = args.length > 2 ? Bukkit.getPlayer(args[2]) : (Player) sender;
-				Validate.notNull(target, "Could not find player called '" + args[2] + "'.");
+				Player target;
+				if(args.length > 2) {
+					target = Bukkit.getPlayer(args[2]);
+					Validate.notNull(target, "Could not find player called '" + args[2] + "'.");
+				}
+				else
+					target = (Player) sender;
 
 				// item
 				Type type = MMOItems.plugin.getTypes().getOrThrow(args[0]);

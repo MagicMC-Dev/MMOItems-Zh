@@ -273,8 +273,8 @@ public class ItemBrowser extends PluginInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				ItemStack generatedItem =  (NBTItem.get(item).getBoolean("UNSTACKABLE")) // this refreshes the item if it's unstackable
 						? MMOItems.plugin.getItems().getMMOItem(type, id).clone().newBuilder().build()
-						: item;
-				player.getInventory().addItem(removeLastLoreLines(generatedItem, 3));
+						: removeLastLoreLines(item, 3);
+				player.getInventory().addItem(generatedItem);
 				player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
 			}
 

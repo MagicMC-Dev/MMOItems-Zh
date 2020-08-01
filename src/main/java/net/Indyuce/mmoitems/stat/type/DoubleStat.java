@@ -1,15 +1,5 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.util.List;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -25,6 +15,15 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class DoubleStat extends ItemStat implements Upgradable {
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
@@ -56,7 +55,8 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag(getNBTPath(), value));
-		item.getLore().insert(getPath(), format(value, "#", new StatFormat("##").format(value)));
+		if (value > 0)
+			item.getLore().insert(getPath(), format(value, "#", new StatFormat("##").format(value)));
 	}
 
 	@Override

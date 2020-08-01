@@ -44,13 +44,22 @@ item-glow: true
 item-upgrading:
 
     # Display name suffix for upgraded items.
-    name-suffix: '&f &a+#lvl#'
+    name-suffix: '&f &a(+#lvl#)'
     
     # Whether to display in Item Name or Lore
     # Disable if item renaming is available to players.
     # If set to 'false', remember to include
     # %upgrade_level% in your item lore.
     display-in-name: true
+
+    # How stat changes are formatted
+    # in the stat suffix.
+    stat-change-suffix: '&f &e(+#stat#)'
+
+    # Whether or not to display which
+    # stats are changed in the lore.
+    # EXPERIMENTAL FEATURE
+    display-stat-changes: false
 
 soulbound:
     # Edit soulbound damage when players try to use

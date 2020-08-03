@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +27,7 @@ import net.Indyuce.mmoitems.comp.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
 import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
 import net.Indyuce.mmoitems.comp.RealDualWieldHook;
+import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
@@ -155,6 +155,11 @@ public class MMOItems extends JavaPlugin {
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 			worldGenManager = new WorldGenManager();
 			blockManager = new BlockManager();
+		}
+
+		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+			new VaultSupport();
+			getLogger().log(Level.INFO, "Hooked onto Vault");
 		}
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");

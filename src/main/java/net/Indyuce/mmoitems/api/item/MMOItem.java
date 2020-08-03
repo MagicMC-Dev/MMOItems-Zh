@@ -1,14 +1,13 @@
 package net.Indyuce.mmoitems.api.item;
 
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOItem {
 	private final Type type;
@@ -63,13 +62,6 @@ public class MMOItem {
 		MMOItem clone = new MMOItem(type, id);
 		stats.forEach((stat, data) -> clone.stats.put(stat, data));
 		return clone;
-	}
-
-	public boolean isUpgradable() {
-		UpgradeData upgradeData = (UpgradeData) this.getData(ItemStat.UPGRADE);
-		if (upgradeData != null)
-			return upgradeData.getTemplate() != null;
-		return false;
 	}
 
 	public void replaceData(ItemStat stat, StatData data) {

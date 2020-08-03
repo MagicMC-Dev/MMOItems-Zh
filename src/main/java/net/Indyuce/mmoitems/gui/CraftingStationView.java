@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui;
 import java.util.List;
 import java.util.UUID;
 
+import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -185,9 +186,9 @@ public class CraftingStationView extends PluginInventory {
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 				ItemStack craftedItem = recipe.getOutput().generate();
 				CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
-				if (!recipe.isSilent())
+				if (!recipe.getOption(Recipe.RecipeOption.SILENT_CRAFT))
 					data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-				if (recipe.isItemRecipe())
+				if (recipe.getOption(Recipe.RecipeOption.OUTPUT_ITEM))
 					new SmartGive(data.getPlayer()).give(craftedItem);
 			}
 			else {

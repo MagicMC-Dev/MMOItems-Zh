@@ -65,13 +65,6 @@ public class MMOItem {
 		return clone;
 	}
 
-	public boolean isUpgradable() {
-		UpgradeData upgradeData = (UpgradeData) this.getData(ItemStat.UPGRADE);
-		if (upgradeData != null)
-			return upgradeData.getTemplate() != null;
-		return false;
-	}
-
 	public void replaceData(ItemStat stat, StatData data) {
 		stats.replace(stat, data);
 	}

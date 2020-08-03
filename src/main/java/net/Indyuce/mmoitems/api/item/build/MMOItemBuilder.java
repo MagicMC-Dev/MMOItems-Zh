@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.asangarin.hexcolors.ColorParse;
@@ -20,13 +21,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class MMOItemBuilder {
-	private final MMOItem mmoitem;
+	private MMOItem mmoitem;
 
 	private final ItemStack item;
 	private final ItemMeta meta;
@@ -73,96 +74,7 @@ public class MMOItemBuilder {
 	}
 
 	public NBTItem buildNBT() {
-		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false))
-			if (mmoitem.isUpgradable()) {
-				UpgradeData upgradeData = ((UpgradeData) mmoitem.getData(ItemStat.UPGRADE));
-				for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
-					try {
-						if (upgradeData.getLevel() > 0) {
-
-							// data getters
-							DoubleStat.DoubleUpgradeInfo doubleUpgradeInfo = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate().getUpgradeInfo(stat));
-							StoredTagsData data = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
-
-							if (!mmoitem.hasData(stat))
-								mmoitem.setData(stat, new DoubleData(0));
-
-							// default values
-							double baseValue = 0;
-							boolean hasBase = false;
-							double value = ((DoubleData) mmoitem.getData(stat)).generateNewValue();
-							int level = upgradeData.getLevel();
-
-
-							/*
-							 * checks if base value is set
-							 */
-							for (ItemTag tag : data.getTags()) {
-								if (tag.getPath().equals("BASE_" + stat.getNBTPath())) {
-									hasBase = true;
-									baseValue = Double.parseDouble(tag.getValue().toString());
-									break;
-								}
-							}
-
-							/*
-							 * sets the base value in stored_tags if it's not set
-							 * will also get the correct base for already upgraded items
-							 */
-							if (!hasBase) // this checks if the base stat is registers
-								if (doubleUpgradeInfo != null) {
-
-									ItemTag baseTag;
-
-									if (!doubleUpgradeInfo.isRelative()) {
-										baseTag = new ItemTag("BASE_" + stat.getNBTPath(),
-												value/level );
-
-									}
-
-									else {
-										double base = value;
-										for(int i=1;i<=level;i++){
-											base /= 1 + doubleUpgradeInfo.getAmount();
-										}
-										baseTag = new ItemTag("BASE_" + stat.getNBTPath(), base);
-									}
-
-									data.addTag(baseTag);
-									baseValue = Double.parseDouble(baseTag.getValue().toString());
-									mmoitem.replaceData(ItemStat.STORED_TAGS, data);
-								}
-
-							/*
-							 * updates the stats
-							 */
-							if (doubleUpgradeInfo != null) // this updates stats to the current version
-								if (!doubleUpgradeInfo.isRelative())
-									mmoitem.replaceData(stat, new DoubleData((doubleUpgradeInfo.getAmount() * level)
-											+ baseValue));
-								else if (doubleUpgradeInfo.isRelative()) {
-									double base = baseValue;
-									for(int i=1;i<=level;i++){
-										base *= 1 + doubleUpgradeInfo.getAmount();
-									}
-									mmoitem.replaceData(stat, new DoubleData(base));
-								}
-
-								/*
-								 * inserts the correct lore
-								 */
-							value = ((DoubleData) mmoitem.getData(stat)).generateNewValue();
-							if (value > 0)
-								lore.insert(stat.getPath(), stat.format(value, "#", new StatFormat("##").format(value))
-										+ new ColorParse(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
-										.replace("#stat#", new StatFormat("##").format(value-baseValue))).toChatColor());
-						}
-					} catch (IllegalArgumentException exception) {
-						MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '" + mmoitem.getId() + "' with stat '"
-								+ stat.getId() + "': " + exception.getMessage());
-					}
-				}
-			}
+		this.mmoitem = new StatLore(mmoitem).generateNewItem();
 		for (ItemStat stat : mmoitem.getStats())
 			try {
 				stat.whenApplied(this, mmoitem.getData(stat));
@@ -207,4 +119,122 @@ public class MMOItemBuilder {
 	public ItemStack build() {
 		return buildNBT().toItem();
 	}
+
+	public class StatLore {
+		private final MMOItem mmoitem;
+
+		private final UpgradeData upgradeData;
+
+		public StatLore(MMOItem mmoitem) {
+			this.mmoitem = mmoitem.clone();
+			this.upgradeData = ((UpgradeData) mmoitem.getData(ItemStat.UPGRADE));
+
+		}
+
+		public MMOItem getMMOItem() {
+			return mmoitem;
+		}
+
+		public boolean isUpgradable() {
+			if (upgradeData != null)
+				return upgradeData.getTemplate() != null;
+			return false;
+		}
+
+		public MMOItem generateNewItem() {
+			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false)
+					&& isUpgradable()) {
+				if (upgradeData.getLevel() > 0)
+					for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
+						UpgradeInfo upgradeInfo = upgradeData.getTemplate().getUpgradeInfo(stat);
+						if (upgradeInfo instanceof DoubleStat.DoubleUpgradeInfo) {
+
+							DoubleStat.DoubleUpgradeInfo info = ((DoubleStat.DoubleUpgradeInfo) upgradeInfo);
+							int level = upgradeData.getLevel();
+
+							if (!mmoitem.hasData(stat))
+								mmoitem.setData(stat, new DoubleData(0));
+
+							calculateBase(stat, info, level);
+
+							updateStat(stat, info, level);
+
+							double value = getValue(stat);
+
+							System.out.println("VALUE: " + value);
+							System.out.println("BASE: " + getBase(stat));
+
+							if (value > 0)
+								lore.insert(stat.getPath(), stat.format(value, "#", new StatFormat("##").format(value))
+										+ new ColorParse(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
+										.replace("#stat#", new StatFormat("##").format(value-getBase(stat)))).toChatColor());
+						}
+					}
+			}
+			return mmoitem;
+		}
+
+		public void calculateBase(ItemStat stat, DoubleStat.DoubleUpgradeInfo info, int level) {
+			if (!hasBase(stat)) {
+				ItemTag tag;
+				String key = "BASE_" + stat.getNBTPath();
+				double value = getValue(stat);
+
+				// does inverse math to get the base
+				if (info.isRelative()) {
+					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate().getUpgradeInfo(stat)).getAmount();
+
+					for(int i=1;i<=level;i++){
+						value /= 1 + upgradeAmount;
+					}
+
+					tag = new ItemTag(key, value);
+				}
+				else {
+					tag = new ItemTag(key, Math.max(0, value - (info.getAmount()*level)));
+				}
+				StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
+
+				tagsData.addTag(tag);
+				mmoitem.replaceData(ItemStat.STORED_TAGS, tagsData);
+			}
+		}
+
+		// sets the mmoitem data to reflect current upgrade
+		public void updateStat(ItemStat stat, DoubleStat.DoubleUpgradeInfo info, int level) {
+			double base = getBase(stat);
+			if (info.isRelative()) {
+				for(int i=1;i<=level;i++){
+					base *= 1 + info.getAmount();
+				}
+				mmoitem.replaceData(stat, new DoubleData(base));
+			}
+			else {
+				mmoitem.replaceData(stat, new DoubleData((info.getAmount() * level) + base));
+			}
+		}
+
+		public HashMap<String,ItemTag> getStoredTags() {
+			HashMap<String,ItemTag> map = new HashMap<>();
+			StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
+
+			for (ItemTag tag : tagsData.getTags())
+				map.put(tag.getPath(), tag);
+			return map;
+		}
+
+		public double getValue(ItemStat stat) {
+			return ((DoubleData) mmoitem.getData(stat)).generateNewValue();
+		}
+		
+		public boolean hasBase(ItemStat stat) {
+			return getStoredTags().containsKey("BASE_" + stat.getNBTPath());
+		}
+
+		public double getBase(ItemStat stat) {
+			return Double.parseDouble(getStoredTags().get("BASE_" + stat.getNBTPath()).getValue().toString());
+		}
+	}
+
+
 }

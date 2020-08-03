@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -253,6 +254,12 @@ public class MMOItems extends JavaPlugin {
 			new MMOItemsRewardTypes().register();
 			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
 		}
+// Will be used in the future.
+//
+//		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
+//			new MythicMobsLoader();
+//			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
+//		}
 
 		findRpgPlugin();
 

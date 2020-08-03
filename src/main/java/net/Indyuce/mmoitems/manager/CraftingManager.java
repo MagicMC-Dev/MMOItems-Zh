@@ -13,6 +13,9 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import net.Indyuce.mmoitems.api.crafting.trigger.*;
+import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
+import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicMobsSkillTrigger;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.google.gson.JsonParser;
@@ -72,6 +75,14 @@ public class CraftingManager {
 			int level = !upgradeString.isEmpty() ? new JsonParser().parse(upgradeString).getAsJsonObject().get("Level").getAsInt() : 0;
 			return item.getString("MMOITEMS_ITEM_TYPE").toLowerCase() + (level != 0 ? "-" + level : "") + "_" + item.getString("MMOITEMS_ITEM_ID").toLowerCase();
 		});
+
+		// mm comp
+		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
+			registerIngredient("mythicitem", config -> new MythicItemIngredient(config),
+					new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
+					nbt -> nbt.hasTag("MYTHIC_TYPE"), nbt -> nbt.getString("MYTHIC_TYPE").toLowerCase());
+			registerTrigger("mmskill", config -> new MythicMobsSkillTrigger(config));
+		}
 	}
 
 	public void reload() {

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.comp.mythicmobs;
+package net.Indyuce.mmoitems.comp.mythicmobs.crafting;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;

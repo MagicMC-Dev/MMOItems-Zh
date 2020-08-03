@@ -42,10 +42,9 @@ public class RecipeInfo {
 			if (!info.isMet())
 				conditionsMet = false;
 
-			if (info.getCondition() instanceof IngredientCondition) {
+			if (info.getCondition() instanceof IngredientCondition)
 				if (ingredientsHad)
 					conditionsMet = true;
-			}
 		}
 	}
 

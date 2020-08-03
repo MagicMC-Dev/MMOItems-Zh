@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.comp.mythicmobs;
 
 import java.util.logging.Level;
 
-import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -21,21 +20,25 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.droptable.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.util.AltChar;
 
 public class MythicMobsHook implements Listener {
 
 	/*
-	 * has been moved over to MythicMobs because MMOItems needs access to
-	 * MythicMobs abilities and therefore must be enabled after MythicMobs
+	 * has been moved over to MythicMobs because MMOItems needs access to MythicMobs
+	 * abilities and therefore must be enabled after MythicMobs
+	 */
+
+	/*
+	 * MUST NOT BE REMOVED - this class must be kept as vitam aeternam in case we
+	 * need to change something in MM compatibility and sent it back to MM devs
 	 */
 	public MythicMobsHook() {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String
-				.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill",
+				Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData
+						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 //		MMOItems.plugin.getCrafting().registerIngredient("mythicitem", config -> new MythicItemIngredient(config),
 //				new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
@@ -52,13 +55,14 @@ public class MythicMobsHook implements Listener {
 	}
 
 	/*
-	 * register placeholders when MM is reloaded. the skill placeholder let
-	 * players retrieve cached ability values.
+	 * register placeholders when MM is reloaded. the skill placeholder let players
+	 * retrieve cached ability values.
 	 */
 	@EventHandler
 	public void b(MythicReloadedEvent event) {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill", Placeholder.meta((metadata, arg) -> String
-				.valueOf(PlayerData.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill",
+				Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData
+						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 	}
 
 	public class MMOItemsDrop extends Drop implements IMultiDrop {
@@ -68,12 +72,13 @@ public class MythicMobsHook implements Listener {
 			super(config.getLine(), config);
 
 			/*
-			 * TODO move try-catch to the MythicDropLoadEvent method and make
-			 * the dropItem field final
+			 * TODO move try-catch to the MythicDropLoadEvent method and make the dropItem
+			 * field final
 			 */
 			try {
 				String typeFormat = config.getString("type").toUpperCase().replace("-", "_");
-				Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat), "Could not find type with ID " + typeFormat);
+				Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat),
+						"Could not find type with ID " + typeFormat);
 
 				Type type = MMOItems.plugin.getTypes().get(typeFormat);
 				String id = config.getString("id");
@@ -96,7 +101,8 @@ public class MythicMobsHook implements Listener {
 		public LootBag get(DropMetadata metadata) {
 			LootBag loot = new LootBag(metadata);
 			if (dropItem != null)
-				loot.add(new ItemDrop(this.getLine(), (MythicLineConfig) this.getConfig(), new BukkitItemStack(dropItem.getItem(1))));
+				loot.add(new ItemDrop(this.getLine(), (MythicLineConfig) this.getConfig(),
+						new BukkitItemStack(dropItem.getItem(1))));
 			return loot;
 		}
 	}

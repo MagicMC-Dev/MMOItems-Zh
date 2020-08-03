@@ -145,20 +145,14 @@ public abstract class Recipe {
 	public abstract ItemStack display(RecipeInfo recipe);
 
 	public enum RecipeOption {
-		HIDE_WHEN_LOCKED,
-		OUTPUT_ITEM,
-		SILENT_CRAFT;
+		HIDE_WHEN_LOCKED(false),
+		OUTPUT_ITEM(true),
+		SILENT_CRAFT(false);
 
 		private final boolean def;
 
-		private RecipeOption() {
-			// this stores the defaults of the enums
-			HashMap<String, Boolean> defaultMap = new HashMap<String, Boolean>() {{
-				put("HIDE_WHEN_LOCKED", false);
-				put("OUTPUT_ITEM", true);
-				put("SILENT_CRAFT", false);
-			}};
-			this.def = defaultMap.get(this.toString());
+		private RecipeOption(boolean def) {
+			this.def = def;
 		}
 
 		public boolean getDefault() {

@@ -1,17 +1,10 @@
 package net.Indyuce.mmoitems.api.item.build;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.*;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -20,10 +13,21 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.StoredTagsData;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemBuilder {
 	private final MMOItem mmoitem;
@@ -73,6 +77,8 @@ public class MMOItemBuilder {
 	}
 
 	public NBTItem buildNBT() {
+		
+		// TODO MMOItems 6 - scrap that big portion
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false))
 			if (mmoitem.isUpgradable()) {
 				UpgradeData upgradeData = ((UpgradeData) mmoitem.getData(ItemStat.UPGRADE));

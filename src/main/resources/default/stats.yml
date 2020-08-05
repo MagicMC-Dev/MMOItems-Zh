@@ -23,6 +23,7 @@ undead-damage: '&7■ Undead Damage: &f<plus>#%'
 skill-damage: '&7■ Skill Damage: &f<plus>#%'
 physical-damage: '&7■ Physical Damage: &f<plus>#%'
 projectile-damage: '&7■ Projectile Damage: &f<plus>#%'
+faction-damage-undead: '&7■ Undead Faction Damage: &f<plus>#%'
 
 # Abilities
 ability-format: '&2#c: #a'

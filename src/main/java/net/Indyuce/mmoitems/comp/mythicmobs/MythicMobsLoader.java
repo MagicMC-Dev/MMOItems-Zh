@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 /*
  * this loads mmoitems comp for mythic mobs
- * since MythicMobsHook is never used
+ * since MythicMobsHook is purely for documentation
  */
 public class MythicMobsLoader {
 

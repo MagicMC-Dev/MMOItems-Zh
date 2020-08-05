@@ -57,6 +57,7 @@ lore-format:
 - '#projectile-damage-reduction#'
 - '#physical-damage-reduction#'
 - '#undead-damage#'
+- '#faction-damage-undead#'
 - '#block-power#'
 - '#block-rating#'
 - '#dodge-rating#'

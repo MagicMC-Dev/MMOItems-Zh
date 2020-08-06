@@ -743,6 +743,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			if (args[1].equalsIgnoreCase("type")) {
 				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------["
 						+ ChatColor.LIGHT_PURPLE + " Item Types " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH
+						+ ChatColor.LIGHT_PURPLE + " Item Types " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH
 						+ "]-----------------");
 				for (Type type : MMOItems.plugin.getTypes().getAll())
 					sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + type.getName() + " (" + type.getId() + ")");
@@ -858,7 +859,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 
-			Type type = Type.get(args[1]);
+			Type type = Type.get(args[1].toUpperCase());
 			String name = args[2].toUpperCase().replace("-", "_");
 			FileConfiguration config = type.getConfigFile().getConfig();
 			if (!config.contains(name)) {
@@ -1108,8 +1109,8 @@ public class MMOItemsCommand implements CommandExecutor {
 					target = (Player) sender;
 
 				// item
-				Type type = MMOItems.plugin.getTypes().getOrThrow(args[0]);
-				MMOItemDropItem dropItem = new MMOItemDropItem(type, args[1],
+				Type type = MMOItems.plugin.getTypes().getOrThrow(args[0].toUpperCase());
+				MMOItemDropItem dropItem = new MMOItemDropItem(type, args[1].toUpperCase(),
 						args.length > 5 ? Double.parseDouble(args[5]) / 100 : 1,
 						args.length > 4 ? Double.parseDouble(args[4]) / 100 : 0,
 						args.length > 3 ? new RandomAmount(args[3]) : new RandomAmount(1, 1));

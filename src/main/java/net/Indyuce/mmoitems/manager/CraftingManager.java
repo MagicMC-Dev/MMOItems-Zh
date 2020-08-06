@@ -12,9 +12,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-import net.Indyuce.mmoitems.api.crafting.trigger.*;
-import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
-import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicMobsSkillTrigger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,7 +24,6 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.condition.ClassCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.condition.FoodCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.IngredientCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.LevelCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.ManaCondition;
 import net.Indyuce.mmoitems.api.crafting.condition.PermissionCondition;
@@ -35,9 +31,17 @@ import net.Indyuce.mmoitems.api.crafting.condition.StaminaCondition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.VanillaIngredient;
-import net.mmogroup.mmolib.api.util.AltChar;
+import net.Indyuce.mmoitems.api.crafting.trigger.CommandTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.MMOItemTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.MessageTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.SoundTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.VanillaTrigger;
+import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
+import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicMobsSkillTrigger;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class CraftingManager {
 
@@ -59,7 +63,6 @@ public class CraftingManager {
 		registerCondition("stamina", config -> new StaminaCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
 		registerCondition("food", config -> new FoodCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
 		registerCondition("class", config -> new ClassCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Required Class: #class#", "&c" + AltChar.cross + " Required Class: #class#"));
-		registerCondition("ingredient", config -> new IngredientCondition(), null);
 
 		// triggers
 		registerTrigger("command", config -> new CommandTrigger(config));

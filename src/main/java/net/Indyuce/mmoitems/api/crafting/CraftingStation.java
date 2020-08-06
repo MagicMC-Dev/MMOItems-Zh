@@ -105,7 +105,8 @@ public class CraftingStation extends PostLoadObject {
 
 		for (Recipe recipe : getRecipes()) {
 			RecipeInfo info = recipe.getRecipeInfo(data, inv);
-			if (info.isUnlocked() || !info.getRecipe().getOption(RecipeOption.HIDE_WHEN_LOCKED))
+			if ((info.areConditionsMet() || !info.getRecipe().hasOption(RecipeOption.HIDE_WHEN_LOCKED))
+					&& (info.allIngredientsHad() || !info.getRecipe().hasOption(RecipeOption.HIDE_WHEN_NO_INGREDIENTS)))
 				infos.add(info);
 		}
 

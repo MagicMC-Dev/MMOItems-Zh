@@ -53,10 +53,10 @@ public class CraftingRecipe extends Recipe {
 		 * directly add the ingredients to the player inventory
 		 */
 		if (isInstant()) {
-			if (getOption(RecipeOption.OUTPUT_ITEM))
+			if (hasOption(RecipeOption.OUTPUT_ITEM))
 				new SmartGive(data.getPlayer()).give(getOutput().generate());
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-			if (!getOption(RecipeOption.SILENT_CRAFT))
+			if (!hasOption(RecipeOption.SILENT_CRAFT))
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 			/*
 			 * if recipe not instant, add item to crafting queue, either way RELOAD

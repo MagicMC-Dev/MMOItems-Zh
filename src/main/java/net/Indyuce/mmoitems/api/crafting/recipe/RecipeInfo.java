@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.IngredientCondition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -32,19 +31,19 @@ public class RecipeInfo {
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			CheckedIngredient info = ingredient.newIngredientInfo(inv);
 			ingredients.add(info);
-			if (!info.isHad())
+			if (!info.isHad()) {
 				ingredientsHad = false;
+				break;
+			}
 		}
 
 		for (Condition condition : recipe.getConditions()) {
 			CheckedCondition info = condition.newConditionInfo(data);
 			conditions.add(info);
-			if (!info.isMet())
+			if (!info.isMet()) {
 				conditionsMet = false;
-
-			if (info.getCondition() instanceof IngredientCondition)
-				if (ingredientsHad)
-					conditionsMet = true;
+				break;
+			}
 		}
 	}
 
@@ -52,6 +51,7 @@ public class RecipeInfo {
 		return recipe;
 	}
 
+	@Deprecated
 	public boolean isUnlocked() {
 		return ingredientsHad && conditionsMet;
 	}
@@ -73,7 +73,8 @@ public class RecipeInfo {
 	}
 
 	public Set<CheckedCondition> getDisplayableConditions() {
-		return conditions.stream().filter(condition -> condition.getCondition().getDisplay() != null).collect(Collectors.toSet());
+		return conditions.stream().filter(condition -> condition.getCondition().getDisplay() != null)
+				.collect(Collectors.toSet());
 	}
 
 	public Set<CheckedIngredient> getIngredients() {

@@ -46,7 +46,8 @@ public abstract class Recipe {
 				Validate.notNull(ingredient, "Could not match ingredient");
 				ingredients.add(ingredient);
 			} catch (IllegalArgumentException exception) {
-				throw new IllegalArgumentException("Could not load ingredient '" + format + "': " + exception.getMessage());
+				throw new IllegalArgumentException(
+						"Could not load ingredient '" + format + "': " + exception.getMessage());
 			}
 
 		Validate.notEmpty(ingredients, id + ": Ingredients must not be empty");
@@ -60,7 +61,8 @@ public abstract class Recipe {
 				Validate.notNull(condition, "Could not match condition");
 				conditions.add(condition);
 			} catch (IllegalArgumentException exception) {
-				throw new IllegalArgumentException("Could not load condition '" + format + "': " + exception.getMessage());
+				throw new IllegalArgumentException(
+						"Could not load condition '" + format + "': " + exception.getMessage());
 			}
 
 		/*
@@ -72,7 +74,8 @@ public abstract class Recipe {
 				Validate.notNull(trigger, "Could not match trigger");
 				triggers.add(trigger);
 			} catch (IllegalArgumentException exception) {
-				throw new IllegalArgumentException("Could not load trigger '" + format + "': " + exception.getMessage());
+				throw new IllegalArgumentException(
+						"Could not load trigger '" + format + "': " + exception.getMessage());
 			}
 	}
 
@@ -105,8 +108,8 @@ public abstract class Recipe {
 		return null;
 	}
 
-	public boolean getOption(RecipeOption option) {
-		return options.containsKey(option) ? options.get(option) : option.getDefault();
+	public boolean hasOption(RecipeOption option) {
+		return options.getOrDefault(option, option.getDefault());
 	}
 
 	public void addIngredient(Ingredient ingredient) {
@@ -131,22 +134,32 @@ public abstract class Recipe {
 	}
 
 	/*
-	 * when the recipe is claimed once in the crafting queue. if it returns
-	 * true, the conditions are applied and the ingredients are taken off the
-	 * player's inventory
+	 * when the recipe is claimed once in the crafting queue. if it returns true,
+	 * the conditions are applied and the ingredients are taken off the player's
+	 * inventory
 	 */
 	public abstract void whenUsed(PlayerData data, IngredientInventory inv, RecipeInfo recipe, CraftingStation station);
 
 	/*
 	 * extra conditions when trying to use the recipe.
 	 */
-	public abstract boolean canUse(PlayerData data, IngredientInventory inv, RecipeInfo recipe, CraftingStation station);
+	public abstract boolean canUse(PlayerData data, IngredientInventory inv, RecipeInfo recipe,
+			CraftingStation station);
 
 	public abstract ItemStack display(RecipeInfo recipe);
 
 	public enum RecipeOption {
+
+		// hide crafting recipe when conditions are not met
 		HIDE_WHEN_LOCKED(false),
+
+		// hide crafting recipe when insufficient ingredients
+		HIDE_WHEN_NO_INGREDIENTS(false),
+
+		// set to false not to output any item when used
 		OUTPUT_ITEM(true),
+
+		// removes crafting sound when used
 		SILENT_CRAFT(false);
 
 		private final boolean def;

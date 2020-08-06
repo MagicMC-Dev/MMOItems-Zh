@@ -186,9 +186,9 @@ public class CraftingStationView extends PluginInventory {
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 				ItemStack craftedItem = recipe.getOutput().generate();
 				CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
-				if (!recipe.getOption(Recipe.RecipeOption.SILENT_CRAFT))
+				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
 					data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-				if (recipe.getOption(Recipe.RecipeOption.OUTPUT_ITEM))
+				if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
 					new SmartGive(data.getPlayer()).give(craftedItem);
 			}
 			else {

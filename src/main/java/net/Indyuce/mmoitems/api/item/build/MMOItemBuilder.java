@@ -173,9 +173,6 @@ public class MMOItemBuilder {
 
 							double value = getValue(stat);
 
-							System.out.println("VALUE: " + value);
-							System.out.println("BASE: " + getBase(stat));
-
 							if (value > 0)
 								lore.insert(stat.getPath(), stat.format(value, "#", new StatFormat("##").format(value))
 										+ new ColorParse(MMOItems.plugin.getConfig()

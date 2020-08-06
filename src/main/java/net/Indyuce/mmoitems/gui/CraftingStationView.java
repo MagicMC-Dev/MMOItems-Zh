@@ -215,8 +215,10 @@ public class CraftingStationView extends PluginInventory {
 			return;
 		}
 
-		if (!recipe.getRecipe().canUse(data, ingredients, recipe, station))
+		if (!recipe.getRecipe().canUse(data, ingredients, recipe, station)) {
+			updateData();
 			return;
+		}
 
 		PlayerUseRecipeEvent called = new PlayerUseRecipeEvent(data, station, recipe);
 		Bukkit.getPluginManager().callEvent(called);

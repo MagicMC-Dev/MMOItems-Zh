@@ -33,7 +33,6 @@ public class RecipeInfo {
 			ingredients.add(info);
 			if (!info.isHad()) {
 				ingredientsHad = false;
-				break;
 			}
 		}
 
@@ -42,7 +41,6 @@ public class RecipeInfo {
 			conditions.add(info);
 			if (!info.isMet()) {
 				conditionsMet = false;
-				break;
 			}
 		}
 	}

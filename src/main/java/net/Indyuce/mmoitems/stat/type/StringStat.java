@@ -76,7 +76,7 @@ public class StringStat extends ItemStat {
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + " None");
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");

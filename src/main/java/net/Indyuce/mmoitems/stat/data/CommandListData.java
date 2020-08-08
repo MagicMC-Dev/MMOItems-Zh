@@ -11,9 +11,15 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class CommandListData implements StatData, Mergeable, RandomStatData {
-	private final Set<CommandData> commands = new HashSet<>();
+	private final Set<CommandData> commands;
+
+	public CommandListData(Set<CommandData> commands) {
+		this.commands = commands;
+	}
 
 	public CommandListData(CommandData... commands) {
+		this(new HashSet<>());
+
 		add(commands);
 	}
 
@@ -34,6 +40,6 @@ public class CommandListData implements StatData, Mergeable, RandomStatData {
 
 	@Override
 	public StatData randomize(GeneratedItemBuilder builder) {
-		return this;
+		return new CommandListData(new HashSet<>(commands));
 	}
 }

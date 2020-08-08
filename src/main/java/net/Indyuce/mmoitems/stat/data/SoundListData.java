@@ -13,37 +13,41 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class SoundListData implements StatData, Mergeable, RandomStatData {
-	private final Map<CustomSound, SoundData> stats = new HashMap<>();
+	private final Map<CustomSound, SoundData> sounds;
+
+	public SoundListData() {
+		this(new HashMap<>());
+	}
+
+	public SoundListData(Map<CustomSound, SoundData> sounds) {
+		this.sounds = sounds;
+	}
 
 	public Set<CustomSound> getCustomSounds() {
-		return stats.keySet();
+		return sounds.keySet();
 	}
 
 	public Map<CustomSound, SoundData> mapData() {
-		return stats;
+		return sounds;
 	}
 
 	public SoundData get(CustomSound sound) {
-		return stats.get(sound);
+		return sounds.get(sound);
 	}
 
 	public void set(CustomSound type, String sound, double volume, double pitch) {
-		this.stats.put(type, new SoundData(sound, volume, pitch));
-	}
-
-	public int total() {
-		return stats.size();
+		this.sounds.put(type, new SoundData(sound, volume, pitch));
 	}
 
 	@Override
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof SoundListData, "Cannot merge two different stat data types");
 		SoundListData cast = (SoundListData) data;
-		cast.stats.keySet().forEach(key -> stats.put(key, cast.stats.get(key)));
+		cast.sounds.forEach((sound, soundData) -> sounds.put(sound, soundData));
 	}
 
 	@Override
 	public StatData randomize(GeneratedItemBuilder builder) {
-		return this;
+		return new SoundListData(new HashMap<>(sounds));
 	}
 }

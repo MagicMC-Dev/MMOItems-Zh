@@ -111,11 +111,11 @@ public class GeneratedItemBuilder {
 		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
 		nameModifiers.add(modifier);
 	}
-	
+
 	private Collection<GenerationModifier> rollModifiers(GenerationTemplate template) {
 		if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
 			return template.getModifiers();
-		
+
 		List<GenerationModifier> modifiers = new ArrayList<>(template.getModifiers());
 		Collections.shuffle(modifiers);
 		return modifiers;

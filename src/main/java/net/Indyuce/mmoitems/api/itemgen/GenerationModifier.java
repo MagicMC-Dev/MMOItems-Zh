@@ -31,13 +31,23 @@ public class GenerationModifier {
 		this(null, config);
 	}
 
+	/**
+	 * Loads an item gen modifier from a configuration section. If you provide
+	 * the ItemGenManager, you will be able to use the 'parent' option to
+	 * redirect that modifier to a public gen modifier.
+	 * 
+	 * @param manager
+	 *            Provide the ItemGenManager to use the 'parent' option
+	 * @param config
+	 *            The configuration section to load the modifier from
+	 */
 	public GenerationModifier(ItemGenManager manager, ConfigurationSection config) {
 		Validate.notNull(config, "Could not read config");
 		id = config.getName().toLowerCase().replace("_", "-");
 
 		/*
 		 * when providing a non-null itemGenManager, it indicates that public
-		 * modifiers were loaded and that the constructor can them
+		 * modifiers were loaded and that the constructor can use them
 		 */
 		if (manager != null && config.contains("parent")) {
 			String parentFormat = config.get("parent").toString().toLowerCase().replace("_", "-").replace(" ", "_");

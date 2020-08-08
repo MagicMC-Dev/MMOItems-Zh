@@ -160,7 +160,7 @@ public class CustomSounds extends ItemStat implements ProperStat {
 						mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
 		}
 
-		if (sounds.total() > 0)
+		if (sounds.getCustomSounds().size() > 0)
 			mmoitem.setData(ItemStat.CUSTOM_SOUNDS, sounds);
 	}
 }

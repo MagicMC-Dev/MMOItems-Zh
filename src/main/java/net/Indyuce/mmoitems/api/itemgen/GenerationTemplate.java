@@ -46,8 +46,7 @@ public class GenerationTemplate {
 		if (config.contains("modifiers"))
 			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
 				try {
-					modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(),
-							config.getConfigurationSection("modifiers." + key)));
+					modifiers.add(new GenerationModifier(MMOItems.plugin.getItemGenerator(), config.getConfigurationSection("modifiers." + key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key
 							+ "' from item gen template '" + id + "': " + exception.getMessage());
@@ -62,8 +61,8 @@ public class GenerationTemplate {
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				base.put(stat, stat.whenInitializedGeneration(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '"
-						+ key + "' from item gen template '" + id + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '" + key
+						+ "' from item gen template '" + id + "': " + exception.getMessage());
 			}
 	}
 
@@ -87,6 +86,12 @@ public class GenerationTemplate {
 		return options.contains(option);
 	}
 
+	/**
+	 * @param player
+	 *            The rpg info about the player whom you want to give a random
+	 *            item to
+	 * @return A random item builder which scales on the player's level.
+	 */
 	public GeneratedItemBuilder newBuilder(RPGPlayer player) {
 		int itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(player.getLevel());
 		RolledTier itemTier = MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
@@ -100,8 +105,8 @@ public class GenerationTemplate {
 	public enum TemplateOption {
 
 		/*
-		 * when the item is being generated, modifiers are rolled in a random order so
-		 * you never the same modifiers again and again
+		 * when the item is being generated, modifiers are rolled in a random
+		 * order so you never the same modifiers again and again
 		 */
 		ROLL_MODIFIER_CHECK_ORDER;
 	}

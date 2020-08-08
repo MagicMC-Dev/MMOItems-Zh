@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,6 +10,7 @@ import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
+import net.Indyuce.mmoitems.api.event.crafting.CraftingStationCraftEvent;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -53,6 +55,10 @@ public class CraftingRecipe extends Recipe {
 		 * directly add the ingredients to the player inventory
 		 */
 		if (isInstant()) {
+			CraftingStationCraftEvent event = new CraftingStationCraftEvent(data, station, this, true);
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled()) return;
+			
 			if (hasOption(RecipeOption.OUTPUT_ITEM))
 				new SmartGive(data.getPlayer()).give(getOutput().generate());
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));

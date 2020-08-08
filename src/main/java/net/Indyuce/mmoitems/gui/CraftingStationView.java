@@ -22,6 +22,7 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
+import net.Indyuce.mmoitems.api.event.crafting.CraftingStationCraftEvent;
 import net.Indyuce.mmoitems.api.event.crafting.PlayerUseRecipeEvent;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -183,13 +184,17 @@ public class CraftingStationView extends PluginInventory {
 
 			if (craft.isReady()) {
 				CraftingRecipe recipe = craft.getRecipe();
-				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-				ItemStack craftedItem = recipe.getOutput().generate();
-				CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
-				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
-					data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-				if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
-					new SmartGive(data.getPlayer()).give(craftedItem);
+				CraftingStationCraftEvent cscevent = new CraftingStationCraftEvent(data, station, recipe, true);
+				Bukkit.getPluginManager().callEvent(cscevent);
+				if(!cscevent.isCancelled()) {
+					recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
+					ItemStack craftedItem = recipe.getOutput().generate();
+					CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
+					if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
+						data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+					if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
+						new SmartGive(data.getPlayer()).give(craftedItem);
+				}
 			}
 			else {
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);

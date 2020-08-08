@@ -10,7 +10,7 @@ import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
-import net.Indyuce.mmoitems.api.event.crafting.CraftingStationCraftEvent;
+import net.Indyuce.mmoitems.api.event.crafting.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -20,8 +20,8 @@ public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
 
 	/*
-	 * there can't be any crafting time for upgrading recipes since there is no way
-	 * to save an MMOItem in the config file TODO save as ItemStack
+	 * there can't be any crafting time for upgrading recipes since there is no
+	 * way to save an MMOItem in the config file TODO save as ItemStack
 	 */
 	private final double craftingTime;
 
@@ -55,18 +55,19 @@ public class CraftingRecipe extends Recipe {
 		 * directly add the ingredients to the player inventory
 		 */
 		if (isInstant()) {
-			CraftingStationCraftEvent event = new CraftingStationCraftEvent(data, station, this, true);
+			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe);
 			Bukkit.getPluginManager().callEvent(event);
-			if(event.isCancelled()) return;
-			
+			if (event.isCancelled())
+				return;
+
 			if (hasOption(RecipeOption.OUTPUT_ITEM))
 				new SmartGive(data.getPlayer()).give(getOutput().generate());
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 			if (!hasOption(RecipeOption.SILENT_CRAFT))
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 			/*
-			 * if recipe not instant, add item to crafting queue, either way RELOAD
-			 * inventory data and reopen inventory!
+			 * if recipe not instant, add item to crafting queue, either way
+			 * RELOAD inventory data and reopen inventory!
 			 */
 		} else
 			data.getCrafting().getQueue(station).add(this);

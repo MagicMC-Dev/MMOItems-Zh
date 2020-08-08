@@ -11,6 +11,14 @@ public class NameModifier {
 	private final String format;
 	private final int priority;
 
+	/**
+	 * Loads a prefix/suffix from either a config section or a string
+	 * 
+	 * @param type
+	 *            Either a prefix or a suffix
+	 * @param object
+	 *            The object to load the modifier from
+	 */
 	public NameModifier(ModifierType type, Object object) {
 		Validate.notNull(object, "Object cannot be null");
 		this.type = type;

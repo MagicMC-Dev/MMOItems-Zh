@@ -40,7 +40,7 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 
 	@Override
 	public StatData randomize(GeneratedItemBuilder builder) {
-		return this;
+		return new StringListData(new ArrayList<>(list));
 	}
 
 	@Override

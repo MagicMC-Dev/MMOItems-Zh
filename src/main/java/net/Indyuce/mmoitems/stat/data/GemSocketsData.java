@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 		emptySlots.remove(getEmptySocket(gem));
 		gems.add(gemstone);
 	}
-	
+
 	public void addEmptySlot(String slot) {
 		emptySlots.add(slot);
 	}
@@ -77,6 +78,6 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 
 	@Override
 	public StatData randomize(GeneratedItemBuilder builder) {
-		return this;
+		return new GemSocketsData(new ArrayList<>(emptySlots));
 	}
 }

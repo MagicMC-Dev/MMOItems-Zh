@@ -38,8 +38,6 @@ public class CraftingListener implements Listener {
 	public void getResult(InventoryClickEvent e) {
 		if (!(e.getView().getPlayer() instanceof Player) ||
 			!(e.getInventory() instanceof CraftingInventory)) return;
-		debug("Inventory Action", e.getAction());
-		debug("Click Type", e.getClick());
 		if (e.getSlotType() == SlotType.CRAFTING && e.getAction() == InventoryAction.PLACE_ONE)
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, new Runnable() {
 				@Override
@@ -80,11 +78,6 @@ public class CraftingListener implements Listener {
 			}, 1);
 			e.setCurrentItem(cached.getResult());
 		}
-	}
-
-	private void debug(String s1, Object s2) {
-		System.out.println("[DEBUG MMOCRAFTING] " + s1 + ": " + s2);
-		
 	}
 
 	public void handleCustomCrafting(CraftingInventory inv, Player player) {

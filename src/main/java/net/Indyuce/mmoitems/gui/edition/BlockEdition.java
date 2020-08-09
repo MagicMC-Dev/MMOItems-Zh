@@ -22,7 +22,7 @@ import net.Indyuce.mmoitems.api.edition.BlockChatEdition;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.gui.BlockBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class BlockEdition extends PluginInventory {
@@ -43,7 +43,7 @@ public class BlockEdition extends PluginInventory {
 			ItemMeta meta = blockItem.getItemMeta();
 			meta.setDisplayName(ChatColor.GREEN + configOptions.name().replace("_", " "));
 			meta.addItemFlags(ItemFlag.values());
-			List<String> eventLore = new ArrayList<String>();
+			List<String> eventLore = new ArrayList<>();
 			eventLore.add("");
 			if (configOptions.path.equals("lore")) {
 				eventLore.add(ChatColor.GRAY + "- Current Value:");
@@ -52,14 +52,15 @@ public class BlockEdition extends PluginInventory {
 				if (loreList.isEmpty())
 					eventLore.add(ChatColor.RED + "No lore.");
 				for (String lore : loreList)
-					eventLore.add(ChatColor.GREEN + new ColorParse('&', lore).toChatColor());
+					eventLore.add(ChatColor.GREEN + MMOLib.plugin.parseColors(lore));
 			} else
-				eventLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + (configOptions.format.equals("int")
-						? config.getConfig().contains(block.getId() + "." + configOptions.path)
-								? ChatColor.GREEN + config.getConfig().getString(block.getId() + "." + configOptions.path)
-								: ChatColor.RED + "0"
-						: new ColorParse('&', config.getConfig().getString(block.getId() + "." + configOptions.path, ChatColor.RED + "Default"))
-								.toChatColor()));
+				eventLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
+						+ (configOptions.format.equals("int")
+								? config.getConfig().contains(block.getId() + "." + configOptions.path)
+										? ChatColor.GREEN + config.getConfig().getString(block.getId() + "." + configOptions.path)
+										: ChatColor.RED + "0"
+								: MMOLib.plugin.parseColors(
+										config.getConfig().getString(block.getId() + "." + configOptions.path, ChatColor.RED + "Default"))));
 
 			eventLore.add("");
 			eventLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");

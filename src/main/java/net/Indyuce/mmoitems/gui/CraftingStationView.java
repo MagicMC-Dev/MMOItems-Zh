@@ -163,7 +163,7 @@ public class CraftingStationView extends PluginInventory {
 			return;
 		}
 
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getCurrentItem());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 		String tag = item.getString("recipeId");
 		if (!tag.equals("")) {
 			RecipeInfo recipe = getRecipe(tag);

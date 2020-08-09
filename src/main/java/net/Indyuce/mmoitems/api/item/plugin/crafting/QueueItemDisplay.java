@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -23,7 +22,9 @@ public class QueueItemDisplay extends ConfigItem {
 	private static final String[] chars = { "s", "m", "h", "d" };
 
 	public QueueItemDisplay() {
-		super("QUEUE_ITEM_DISPLAY", Material.BARRIER, "&6&lQueue&f #name#", "{ready}&7&oThis item was successfully crafted.", "{queue}&7&oThis item is in the crafting queue.", "{queue}", "{queue}&7Time Left: &c#left#", "", "{ready}&eClick to claim!", "{queue}&eClick to cancel.");
+		super("QUEUE_ITEM_DISPLAY", Material.BARRIER, "&6&lQueue&f #name#", "{ready}&7&oThis item was successfully crafted.",
+				"{queue}&7&oThis item is in the crafting queue.", "{queue}", "{queue}&7Time Left: &c#left#", "", "{ready}&eClick to claim!",
+				"{queue}&eClick to cancel.");
 	}
 
 	public ItemBuilder newBuilder(CraftingInfo crafting, int position) {
@@ -77,17 +78,18 @@ public class QueueItemDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, new ColorParse('&', lore.get(n)).toChatColor());
+				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = ((CraftingRecipe) crafting.getRecipe()).getOutput().getPreview();
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(new ColorParse('&', name.replace("#name#", meta.getDisplayName())).toChatColor());
+			meta.setDisplayName(MMOLib.plugin.parseColors(name.replace("#name#", meta.getDisplayName())));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString())).toItem();
+			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString()))
+					.toItem();
 		}
 	}
 

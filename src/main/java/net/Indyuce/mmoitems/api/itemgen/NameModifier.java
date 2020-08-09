@@ -4,7 +4,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 
 public class NameModifier {
 	private final ModifierType type;
@@ -32,7 +32,7 @@ public class NameModifier {
 		if (object instanceof ConfigurationSection) {
 			ConfigurationSection config = (ConfigurationSection) object;
 			Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " format cannot be null");
-			format = new ColorParse('&', config.get("format").toString()).toChatColor();
+			format = MMOLib.plugin.parseColors(config.get("format").toString());
 			priority = config.getInt("priority");
 			return;
 		}
@@ -43,7 +43,7 @@ public class NameModifier {
 	public NameModifier(ModifierType type, String format, int priority) {
 		Validate.notNull(format, "Format cannot be null");
 		this.type = type;
-		this.format = new ColorParse('&', format).toChatColor();
+		this.format = MMOLib.plugin.parseColors(format);
 		this.priority = priority;
 
 		Validate.notNull(type, "Type cannot be null");

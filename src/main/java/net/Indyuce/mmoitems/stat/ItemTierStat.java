@@ -28,7 +28,7 @@ public class ItemTierStat extends StringStat {
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(path);
 		item.addItemTag(new ItemTag("MMOITEMS_TIER", path));
-		item.getLore().insert("tier", translate().replace("#", tier.getName()));
+		item.getLore().insert("tier", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", tier.getName()));
 	}
 
 	@Override

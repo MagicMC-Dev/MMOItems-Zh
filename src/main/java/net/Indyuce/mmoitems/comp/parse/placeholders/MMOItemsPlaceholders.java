@@ -73,15 +73,15 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 			return null;
 
 		if (identifier.equals("durability"))
-			return "" + (int) MMOLib.plugin.getNMS().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
+			return "" + (int) MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
 					.getDouble("MMOITEMS_DURABILITY");
 
 		if (identifier.equals("durability_max"))
-			return "" + (int) MMOLib.plugin.getNMS().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
+			return "" + (int) MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
 					.getDouble("MMOITEMS_MAX_DURABILITY");
 
 		if (identifier.equals("durability_ratio")) {
-			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getPlayer().getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand());
 			double durability = item.getDouble("MMOITEMS_DURABILITY");
 			double maxDurability = item.getDouble("MMOITEMS_MAX_DURABILITY");
 			return oneDigit.format(durability / maxDurability * 100);
@@ -99,7 +99,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	}
 
 	private String getCurrentDurabilityBar(ItemStack item, String barChar, int length) {
-		NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(item);
+		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
 		double durability = nbtItem.getDouble("MMOITEMS_DURABILITY");
 		double maxDurability = nbtItem.getDouble("MMOITEMS_MAX_DURABILITY");
 		long r = Math.round(durability / maxDurability * length);

@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class DisplayName extends StringStat {
@@ -21,7 +21,7 @@ public class DisplayName extends StringStat {
 
 	@Override
 	public void whenApplied(MMOItemBuilder item, StatData data) {
-		item.getMeta().setDisplayName(fix(new ColorParse('&', getDisplayName(data)).toChatColor()));
+		item.getMeta().setDisplayName(fix(MMOLib.plugin.parseColors(getDisplayName(data))));
 	}
 
 	@Override
@@ -36,6 +36,7 @@ public class DisplayName extends StringStat {
 	 * white color code, just add an extra color code which won't be seen on the
 	 * item
 	 */
+	@Deprecated
 	private String fix(String str) {
 		return str.startsWith(ChatColor.WHITE + "") ? "" + ChatColor.GREEN + ChatColor.WHITE + str : str;
 	}

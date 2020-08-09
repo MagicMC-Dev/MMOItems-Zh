@@ -20,6 +20,6 @@ public class MaxHealth extends AttributeStat {
 	public void whenApplied(MMOItemBuilder item, StatData data) {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag("MMOITEMS_MAX_HEALTH", value));
-		item.getLore().insert("max-health", format(value, "#", new StatFormat("##").format(value)));
+		item.getLore().insert("max-health", formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}
 }

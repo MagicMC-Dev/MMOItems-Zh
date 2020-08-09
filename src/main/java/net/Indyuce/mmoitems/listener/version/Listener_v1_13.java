@@ -25,7 +25,7 @@ public class Listener_v1_13 implements Listener {
 		if (!item.hasItem())
 			return;
 
-		NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(item.getItem());
+		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
 		Type type = nbtItem.getType();
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());

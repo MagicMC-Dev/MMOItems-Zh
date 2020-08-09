@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 
 public class MMOItemLore {
 	private final List<String> lore = MMOItems.plugin.getLanguage().getDefaultLoreFormat();
@@ -81,7 +81,7 @@ public class MMOItemLore {
 		 * successfully calculated
 		 */
 		for (int n = 0; n < lore.size(); n++)
-			lore.set(n, new ColorParse('&', lore.get(n).replace("{bar}", "").replace("{sbar}", "")).toChatColor());
+			lore.set(n, MMOLib.plugin.parseColors(lore.get(n).replace("{bar}", "").replace("{sbar}", "")));
 
 		return this;
 	}

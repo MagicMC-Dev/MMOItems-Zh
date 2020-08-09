@@ -9,7 +9,6 @@ import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 
 public class StatEdition implements Edition {
@@ -48,7 +47,7 @@ public class StatEdition implements Edition {
 
 		inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
 		for (String line : message)
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + new ColorParse('&', line).toChatColor());
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + line);
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
 
 		/*
@@ -64,7 +63,7 @@ public class StatEdition implements Edition {
 		 * default chat edition feature
 		 */
 		new ChatEdition(this);
-		MMOLib.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
+		MMOLib.plugin.getVersion().getWrapper().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
 	}
 
 	@Override

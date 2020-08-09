@@ -229,7 +229,7 @@ public class Type {
 	 */
 	@Deprecated
 	public static Type get(ItemStack item) {
-		return MMOLib.plugin.getNMS().getNBTItem(item).getType();
+		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getType();
 	}
 
 	/**

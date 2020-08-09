@@ -34,7 +34,7 @@ public class IngredientInventory {
 	public IngredientInventory(Inventory inv) {
 		loop: for (ItemStack item : inv.getContents())
 			if (item != null && item.getType() != Material.AIR) {
-				NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item);
+				NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
 				for (IngredientType ingredient : MMOItems.plugin.getCrafting().getIngredients()) {
 					if (ingredient.check(nbt)) {
 						addIngredient(nbt, ingredient);

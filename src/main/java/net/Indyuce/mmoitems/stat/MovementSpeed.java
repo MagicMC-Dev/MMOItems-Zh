@@ -22,6 +22,6 @@ public class MovementSpeed extends AttributeStat {
 		// for (String slot : item.getMMOItem().getType().getSlots())
 		// item.addItemAttribute(new Attribute("movementSpeed", value, slot));
 		item.addItemTag(new ItemTag("MMOITEMS_MOVEMENT_SPEED", value));
-		item.getLore().insert("movement-speed", format(value, "#", new StatFormat("####").format(value)));
+		item.getLore().insert("movement-speed", formatNumericStat(value, "#", new StatFormat("####").format(value)));
 	}
 }

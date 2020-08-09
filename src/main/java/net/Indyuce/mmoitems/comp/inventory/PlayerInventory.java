@@ -18,7 +18,7 @@ public interface PlayerInventory {
 		private final EquipmentSlot slot;
 
 		public EquippedItem(ItemStack item, EquipmentSlot slot) {
-			this(MMOLib.plugin.getNMS().getNBTItem(item), slot);
+			this(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item), slot);
 		}
 
 		public EquippedItem(NBTItem item, EquipmentSlot slot) {

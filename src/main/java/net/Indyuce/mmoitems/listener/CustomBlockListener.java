@@ -71,7 +71,7 @@ public class CustomBlockListener implements Listener {
 				|| event.getClickedBlock().getType().isInteractable())
 			return;
 		if (event.getItem().getType() == Material.CLAY_BALL) {
-			NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(event.getItem());
+			NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 			if (nbtItem.getInteger("MMOITEMS_BLOCK_ID") > 160 || nbtItem.getInteger("MMOITEMS_BLOCK_ID") < 1)
 				return;
 
@@ -99,8 +99,8 @@ public class CustomBlockListener implements Listener {
 			modify.setType(block.getState().getType(), false);
 			modify.setBlockData(block.getState().getBlockData(), false);
 
-			MMOLib.plugin.getNMS().playArmAnimation(event.getPlayer());
-			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOLib.plugin.getNMS().getBlockPlaceSound(modify), 0.8f, 1.0f);
+			MMOLib.plugin.getVersion().getWrapper().playArmAnimation(event.getPlayer());
+			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOLib.plugin.getVersion().getWrapper().getBlockPlaceSound(modify), 0.8f, 1.0f);
 
 			BlockPlaceEvent bpe = new BlockPlaceEvent(modify, oldState.getState(), event.getClickedBlock(), event.getItem(), event.getPlayer(), true,
 					EquipmentSlot.HAND);

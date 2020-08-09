@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.ReadMMOItem;
@@ -35,7 +36,7 @@ public class BooleanStat extends ItemStat {
 	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled()) {
 			item.addItemTag(new ItemTag(getNBTPath(), true));
-			item.getLore().insert(getPath(), translate());
+			item.getLore().insert(getPath(), MMOItems.plugin.getLanguage().getStatFormat(getPath()));
 		}
 	}
 

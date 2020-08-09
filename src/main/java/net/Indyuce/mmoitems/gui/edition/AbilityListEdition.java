@@ -76,7 +76,7 @@ public class AbilityListEdition extends EditionInventory {
 				abilityItemMeta.setLore(abilityItemLore);
 				abilityItem.setItemMeta(abilityItemMeta);
 
-				abilityItem = MMOLib.plugin.getNMS().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
+				abilityItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
 
 				inv.setItem(slots[n++], abilityItem);
 			}
@@ -130,7 +130,7 @@ public class AbilityListEdition extends EditionInventory {
 				}
 		}
 
-		String tag = MMOLib.plugin.getNMS().getNBTItem(item).getString("configKey");
+		String tag = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("configKey");
 		if (tag.equals(""))
 			return;
 

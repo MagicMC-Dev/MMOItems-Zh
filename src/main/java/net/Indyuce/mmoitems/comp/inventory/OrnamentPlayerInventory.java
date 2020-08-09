@@ -34,7 +34,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 
 		for (ItemStack item : player.getInventory().getContents()) {
 			NBTItem nbtItem;
-			if (item != null && (nbtItem = MMOLib.plugin.getNMS().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
+			if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
 				list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
 		}
 

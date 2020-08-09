@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.comp.parse.placeholders;
 import org.bukkit.OfflinePlayer;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 
 public class PlaceholderAPIParser implements PlaceholderParser {
 	public PlaceholderAPIParser() {
@@ -12,7 +12,6 @@ public class PlaceholderAPIParser implements PlaceholderParser {
 
 	@Override
 	public String parse(OfflinePlayer player, String string) {
-		return new ColorParse('&', PlaceholderAPI.setPlaceholders(player, string.replace("%player%", player.getName())))
-				.toChatColor();
+		return MMOLib.plugin.parseColors(PlaceholderAPI.setPlaceholders(player, string.replace("%player%", player.getName())));
 	}
 }

@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -28,7 +28,9 @@ public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
 
 	public CraftingRecipeDisplay() {
-		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "{conditions}&8Conditions:", "{crafting_time}", "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
+		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "{conditions}&8Conditions:", "{crafting_time}",
+				"{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!",
+				"&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(RecipeInfo recipe) {
@@ -73,7 +75,8 @@ public class CraftingRecipeDisplay extends ConfigItem {
 						continue;
 					}
 
-					replace.put(str, str.replace("{crafting_time}", "").replace("#crafting-time#", craftingTimeFormat.format(craftingRecipe.getCraftingTime())));
+					replace.put(str, str.replace("{crafting_time}", "").replace("#crafting-time#",
+							craftingTimeFormat.format(craftingRecipe.getCraftingTime())));
 				}
 
 				if (str.startsWith("{conditions}")) {
@@ -109,7 +112,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, new ColorParse('&', lore.get(n)).toChatColor());
+				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = craftingRecipe.getOutput().getPreview();
 			int amount = craftingRecipe.getOutput().getAmount();
@@ -121,7 +124,8 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(new ColorParse('&', name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))).toChatColor());
+			meta.setDisplayName(MMOLib.plugin.parseColors(
+					name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 

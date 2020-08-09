@@ -40,7 +40,7 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
 						return;
 
 					ItemStack caught = event.getResult();
-					NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(caught);
+					NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(caught);
 					if (!nbt.hasType())
 						return;
 

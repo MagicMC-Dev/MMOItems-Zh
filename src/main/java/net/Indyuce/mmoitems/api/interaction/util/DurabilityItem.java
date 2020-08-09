@@ -27,7 +27,7 @@ public class DurabilityItem {
 	private static final Random random = new Random();
 
 	public DurabilityItem(Player player, ItemStack item) {
-		this(player, MMOLib.plugin.getNMS().getNBTItem(item));
+		this(player, MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}
 
 	public DurabilityItem(Player player, NBTItem item) {

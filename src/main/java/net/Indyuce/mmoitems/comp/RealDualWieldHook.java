@@ -42,8 +42,8 @@ public class RealDualWieldHook implements Listener {
 		 * be cancelled before anything is applied
 		 */
 		PlayerData playerData = PlayerData.get(player);
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
-		NBTItem offhandItem = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem offhandItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInOffHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType()) {

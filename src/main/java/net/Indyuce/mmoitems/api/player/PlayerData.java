@@ -158,8 +158,8 @@ public class PlayerData {
 	 * one two handed item and one other item at the same time. this will
 	 */
 	public boolean areHandsFull() {
-		NBTItem main = MMOLib.plugin.getNMS().getNBTItem(getPlayer().getInventory().getItemInMainHand());
-		NBTItem off = MMOLib.plugin.getNMS().getNBTItem(getPlayer().getInventory().getItemInOffHand());
+		NBTItem main = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
+		NBTItem off = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
 		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
 				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}

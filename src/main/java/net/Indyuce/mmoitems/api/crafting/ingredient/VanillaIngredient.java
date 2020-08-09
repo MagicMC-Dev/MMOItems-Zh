@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class VanillaIngredient extends Ingredient {
@@ -23,7 +23,7 @@ public class VanillaIngredient extends Ingredient {
 		config.validate("type");
 
 		material = Material.valueOf(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
-		displayName = config.contains("name") ? new ColorParse('&', config.getString("name")).toChatColor() : null;
+		displayName = config.contains("name") ? MMOLib.plugin.parseColors(config.getString("name")) : null;
 
 		display = config.contains("display") ? config.getString("display") : MMOUtils.caseOnWords(material.name().toLowerCase().replace("_", " "));
 	}

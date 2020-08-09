@@ -10,7 +10,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 public class AdvancedEnchantmentsHook implements Listener {
 	@EventHandler
 	public void a(EnchantApplyEvent event) {
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getItem());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (item.getType() != null && item.getBoolean("MMOITEMS_DISABLE_ADVANCED_ENCHANTS"))
 			event.setCancelled(true);
 	}

@@ -25,7 +25,6 @@ import net.Indyuce.mmoitems.stat.data.ArrowParticlesData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
@@ -113,7 +112,7 @@ public class ArrowParticles extends ItemStat {
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to "
-					+ new ColorParse('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue).toChatColor());
+					+ ChatColor.translateAlternateColorCodes('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
 			return true;
 		}
 
@@ -186,8 +185,8 @@ public class ArrowParticles extends ItemStat {
 			lore.add("");
 
 			if (ParticleData.isColorable(data.getParticle()))
-				lore.add(new ColorParse('&',
-						"&7* Color: &c&l" + data.getRed() + "&7 - &a&l" + data.getGreen() + "&7 - &9&l" + data.getBlue()).toChatColor());
+				lore.add(ChatColor.translateAlternateColorCodes('&',
+						"&7* Color: &c&l" + data.getRed() + "&7 - &a&l" + data.getGreen() + "&7 - &9&l" + data.getBlue()));
 			else
 				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + data.getSpeed());
 		}

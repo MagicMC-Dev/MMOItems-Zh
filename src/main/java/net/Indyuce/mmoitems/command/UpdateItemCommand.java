@@ -29,7 +29,7 @@ public class UpdateItemCommand implements CommandExecutor {
 
 		Player player = (Player) sender;
 		if (args.length < 1) {
-			NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+			NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 
 			// for items generated before 2.0
 			if (!item.hasTag("MMOITEMS_ITEM_TYPE")) {

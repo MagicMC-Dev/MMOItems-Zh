@@ -27,7 +27,6 @@ import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
@@ -102,8 +101,7 @@ public class GemSockets extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(
-						MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor() + ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + ChatColor.GRAY + "'.");
 			}
 		}
 	}

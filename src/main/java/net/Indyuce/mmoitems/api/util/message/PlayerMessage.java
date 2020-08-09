@@ -41,7 +41,7 @@ public class PlayerMessage {
 			if (Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
 				PlayerData.get(player).setActionBarTimeOut(60);
 
-			MMOLib.plugin.getNMS().sendActionBar(player, message);
+			MMOLib.plugin.getVersion().getWrapper().sendActionBar(player, message);
 		} else
 			player.sendMessage(message);
 	}

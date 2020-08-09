@@ -79,7 +79,7 @@ public class PlayerListener implements Listener {
 		Iterator<ItemStack> iterator = event.getDrops().iterator();
 		while (iterator.hasNext()) {
 			ItemStack item = iterator.next();
-			NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item);
+			NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
 
 			/*
 			 * not a perfect check but it's very sufficient and so we avoid

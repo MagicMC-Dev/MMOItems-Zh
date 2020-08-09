@@ -26,7 +26,6 @@ import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -114,7 +113,7 @@ public class MMOItemBuilder {
 
 			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 			item.setItemMeta(meta);
-			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags);
+			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
 
 			/*
 			 * on legacy spigot, it is not required to add a fake modifier to
@@ -124,7 +123,7 @@ public class MMOItemBuilder {
 		} catch (NoSuchMethodError exception) {
 			item.setItemMeta(meta);
 			@SuppressWarnings("deprecation")
-			NBTItem nbt = MMOLib.plugin.getNMS().getNBTItem(item).cancelVanillaAttributeModifiers();
+			NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).cancelVanillaAttributeModifiers();
 			return nbt.addTag(tags);
 		}
 	}
@@ -181,9 +180,10 @@ public class MMOItemBuilder {
 							double value = getValue(stat);
 
 							if (value > 0)
-								lore.insert(stat.getPath(), stat.format(value, "#", new StatFormat("##").format(value))
-										+ new ColorParse(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
-												.replace("#stat#", new StatFormat("##").format(value - getBase(stat)))).toChatColor());
+								lore.insert(stat.getPath(),
+										stat.formatNumericStat(value, "#", new StatFormat("##").format(value)) + MMOLib.plugin.parseColors(
+												MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
+														.replace("#stat#", new StatFormat("##").format(value - getBase(stat)))));
 						}
 					}
 			}

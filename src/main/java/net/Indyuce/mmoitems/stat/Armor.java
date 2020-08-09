@@ -22,6 +22,6 @@ public class Armor extends AttributeStat {
 		// for (String slot : item.getMMOItem().getType().getSlots())
 		// item.addItemAttribute(new Attribute("armor", value, slot));
 		item.addItemTag(new ItemTag("MMOITEMS_ARMOR", value));
-		item.getLore().insert("armor", format(value, "#", new StatFormat("##").format(value)));
+		item.getLore().insert("armor", formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}
 }

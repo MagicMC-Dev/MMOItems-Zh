@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
@@ -62,7 +61,7 @@ public class ParticlesEdition extends EditionInventory {
 						: ChatColor.GOLD + particleType.getDefaultName()));
 		if (particleType != null) {
 			particleTypeItemLore
-					.add("" + ChatColor.GRAY + ChatColor.ITALIC + new ColorParse('&', particleType.getDescription()).toChatColor());
+					.add("" + ChatColor.GRAY + ChatColor.ITALIC + particleType.getDescription());
 		}
 		particleTypeItemLore.add("");
 		particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");

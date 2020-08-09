@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
@@ -63,8 +62,7 @@ public class NBTTags extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".custom-nbt", nbtTags);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(
-						MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor() + ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
 			}
 		}
 	}
@@ -93,7 +91,7 @@ public class NBTTags extends ItemStat {
 		if (mmoitem.hasData(this)) {
 			lore.add(ChatColor.GRAY + "Current Value:");
 			StringListData data = (StringListData) mmoitem.getData(this);
-			data.getList().forEach(str -> lore.add(ChatColor.GRAY + new ColorParse('&', str).toChatColor()));
+			data.getList().forEach(str -> lore.add(ChatColor.GRAY + str));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

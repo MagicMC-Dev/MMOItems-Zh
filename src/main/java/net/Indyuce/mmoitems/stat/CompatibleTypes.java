@@ -23,7 +23,6 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
@@ -63,8 +62,7 @@ public class CompatibleTypes extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(
-						MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor() + ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
 			}
 		}
 	}
@@ -88,7 +86,7 @@ public class CompatibleTypes extends ItemStat {
 		if (mmoitem.hasData(this)) {
 			lore.add(ChatColor.GRAY + "Current Value:");
 			StringListData data = (StringListData) mmoitem.getData(this);
-			data.getList().forEach(str -> lore.add(ChatColor.GRAY + new ColorParse('&', str).toChatColor()));
+			data.getList().forEach(str -> lore.add(ChatColor.GRAY + str));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
@@ -103,7 +101,6 @@ public class CompatibleTypes extends ItemStat {
 		List<String> compatibleTypes = new ArrayList<>();
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(line -> {
-			line = new ColorParse('&', line).toChatColor();
 			array.add(line);
 			compatibleTypes.add(line);
 		});

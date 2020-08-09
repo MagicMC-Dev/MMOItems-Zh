@@ -56,7 +56,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		double value = ((DoubleData) data).generateNewValue();
 		item.addItemTag(new ItemTag(getNBTPath(), value));
 		if (value > 0)
-			item.getLore().insert(getPath(), format(value, "#", new StatFormat("##").format(value)));
+			item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}
 
 	@Override

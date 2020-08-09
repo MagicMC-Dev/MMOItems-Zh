@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 
 public class UpgradeData implements StatData, RandomStatData {
 	private final String reference, template;
@@ -78,7 +78,7 @@ public class UpgradeData implements StatData, RandomStatData {
 		}
 		
 		// change display name
-		String suffix = new ColorParse('&', MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix")).toChatColor();
+		String suffix = MMOLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
 			if (mmoitem.hasData(ItemStat.NAME)) {
 				StringData nameData = (StringData) mmoitem.getData(ItemStat.NAME);

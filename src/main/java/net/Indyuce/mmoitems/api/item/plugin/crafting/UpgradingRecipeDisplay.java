@@ -17,13 +17,13 @@ import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class UpgradingRecipeDisplay extends ConfigItem {
 	public UpgradingRecipeDisplay() {
-		super("UPGRADING_RECIPE_DISPLAY", Material.BARRIER, "&e&lUpgrade&f #name#", "{conditions}", "{conditions}&8Conditions:", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
+		super("UPGRADING_RECIPE_DISPLAY", Material.BARRIER, "&e&lUpgrade&f #name#", "{conditions}", "{conditions}&8Conditions:", "", "&8Ingredients:",
+				"#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(RecipeInfo recipe) {
@@ -85,16 +85,16 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, new ColorParse('&', lore.get(n)).toChatColor());
+				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = upgradingRecipe.getItem().getPreview();
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(new ColorParse('&', name.replace("#name#", MMOUtils.getDisplayName(item))).toChatColor());
+			meta.setDisplayName(MMOLib.plugin.parseColors(name.replace("#name#", MMOUtils.getDisplayName(item))));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
+			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
 		}
 	}
 }

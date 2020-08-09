@@ -142,7 +142,7 @@ public class BlockBrowser extends PluginInventory {
 			}
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
-				MMOLib.plugin.getNMS().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\",\"italic\":true,\"color\":\"white\"}]}}]");
+				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\",\"italic\":true,\"color\":\"white\"}]}}]");
 				player.closeInventory();
 				return;
 			}

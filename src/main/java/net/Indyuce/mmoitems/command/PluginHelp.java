@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
 
@@ -37,7 +36,7 @@ public class PluginHelp {
 			while (n++ < commandsPerPage)
 				sender.sendMessage("");
 
-			MMOLib.plugin.getNMS().sendJson((Player) sender,
+			MMOLib.plugin.getVersion().getWrapper().sendJson((Player) sender,
 					"[{\"text\":\"" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "------------------" + ChatColor.DARK_GRAY + "[\"},{\"text\":\""
 							+ ChatColor.RED + "««\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help " + (page - 1)
 							+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Previous Page\"}}},{\"text\":\""
@@ -95,7 +94,7 @@ public class PluginHelp {
 
 		;
 
-		private String usage, help;
+		private final String usage, help;
 
 		private PluginCommand(String line) {
 			this(line, null);
@@ -103,7 +102,7 @@ public class PluginHelp {
 
 		private PluginCommand(String usage, String help) {
 			this.usage = usage;
-			this.help = help == null ? null : new ColorParse('&', help).toChatColor();
+			this.help = help == null ? null : ChatColor.translateAlternateColorCodes('&', help);
 		}
 
 		private boolean isCommand() {
@@ -112,7 +111,7 @@ public class PluginHelp {
 
 		private void sendAsJson(Player player) {
 			if (isCommand())
-				MMOLib.plugin.getNMS().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY + " /" + usage
+				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY + " /" + usage
 						+ "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + help + "\"}}}");
 			else
 				player.sendMessage(ChatColor.LIGHT_PURPLE + usage);

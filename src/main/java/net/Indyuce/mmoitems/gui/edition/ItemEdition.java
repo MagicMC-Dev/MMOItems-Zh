@@ -19,7 +19,6 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -61,14 +60,14 @@ public class ItemEdition extends EditionInventory {
 			meta.setDisplayName(ChatColor.GREEN + stat.getName());
 			List<String> lore = new ArrayList<>();
 			for (String s1 : stat.getLore())
-				lore.add(ChatColor.GRAY + new ColorParse('&', s1).toChatColor());
+				lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(s1));
 			lore.add("");
 
 			stat.whenDisplayed(lore, mmoitem);
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);
-			inv.setItem(slots[n++], MMOLib.plugin.getNMS().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
+			inv.setItem(slots[n++], MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
 		}
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();

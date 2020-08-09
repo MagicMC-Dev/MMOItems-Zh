@@ -446,16 +446,11 @@ public abstract class ItemStat {
 		enabled = false;
 	}
 
-	public String format(double value, String... replace) {
-		String format = translate().replace("<plus>", value > 0 ? "+" : "");
+	public String formatNumericStat(double value, String... replace) {
+		String format = MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("<plus>", value > 0 ? "+" : "");
 		for (int j = 0; j < replace.length; j += 2)
 			format = format.replace(replace[j], replace[j + 1]);
 		return format;
-	}
-
-	public String translate() {
-		String str = MMOItems.plugin.getLanguage().getStatFormat(getPath());
-		return str == null ? "<TranslationNotFound:" + getPath() + ">" : str;
 	}
 
 	@Override

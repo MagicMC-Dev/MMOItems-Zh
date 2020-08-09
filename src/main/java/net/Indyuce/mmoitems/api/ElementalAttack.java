@@ -40,7 +40,7 @@ public class ElementalAttack {
 
 		// elemental defense
 		for (ItemStack equip : target.getEquipment().getArmorContents()) {
-			NBTItem nbtEquip = MMOLib.plugin.getNMS().getNBTItem(equip);
+			NBTItem nbtEquip = MMOLib.plugin.getVersion().getWrapper().getNBTItem(equip);
 			if (nbtEquip.getType() != null)
 				for (Element element : absolute.keySet()) {
 					double defense = nbtEquip.getStat(element.name() + "_DEFENSE") / 100;

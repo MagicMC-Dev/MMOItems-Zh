@@ -109,7 +109,7 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 	@Override
 	public void whenApplied(MMOItemBuilder item, StatData data) {
 		String joined = String.join(", ", ((StringListData) data).getList());
-		item.getLore().insert("required-class", translate().replace("#", joined));
+		item.getLore().insert("required-class", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", joined));
 		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_CLASS", joined));
 	}
 

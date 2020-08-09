@@ -110,7 +110,7 @@ public class AbilityEdition extends EditionInventory {
 				modifierItemMeta.setLore(modifierItemLore);
 				modifierItem.setItemMeta(modifierItemMeta);
 
-				modifierItem = MMOLib.plugin.getNMS().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier)).toItem();
+				modifierItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier)).toItem();
 
 				inv.setItem(slots[n++], modifierItem);
 			}
@@ -204,7 +204,7 @@ public class AbilityEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MMOLib.plugin.getNMS().getNBTItem(item).getString("abilityModifier");
+		String tag = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("abilityModifier");
 		if (tag.equals(""))
 			return;
 

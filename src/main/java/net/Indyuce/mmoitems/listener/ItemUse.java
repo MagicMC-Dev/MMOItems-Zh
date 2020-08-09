@@ -54,7 +54,7 @@ public class ItemUse implements Listener {
 		if (!event.hasItem() || event.getHand() != EquipmentSlot.HAND)
 			return;
 
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getItem());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (!item.hasType())
 			return;
 
@@ -128,8 +128,8 @@ public class ItemUse implements Listener {
 		 * be cancelled before anything is applied
 		 */
 		PlayerData playerData = PlayerData.get(player);
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
-		NBTItem offhandItem = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInOffHand());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem offhandItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInOffHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType()) {
@@ -180,7 +180,7 @@ public class ItemUse implements Listener {
 		if (player.getGameMode() == GameMode.CREATIVE)
 			return;
 
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		if (!item.hasType())
 			return;
 
@@ -200,7 +200,7 @@ public class ItemUse implements Listener {
 		if (!(event.getRightClicked() instanceof LivingEntity))
 			return;
 
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		if (!item.hasType())
 			return;
 
@@ -227,7 +227,7 @@ public class ItemUse implements Listener {
 		if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR)
 			return;
 
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getCursor());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCursor());
 		if (!item.hasType())
 			return;
 
@@ -236,7 +236,7 @@ public class ItemUse implements Listener {
 			return;
 
 		if (useItem instanceof ItemSkin) {
-			NBTItem picked = MMOLib.plugin.getNMS().getNBTItem(event.getCurrentItem());
+			NBTItem picked = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 			if (!picked.hasType())
 				return;
 
@@ -254,7 +254,7 @@ public class ItemUse implements Listener {
 		}
 
 		if (useItem instanceof GemStone) {
-			NBTItem picked = MMOLib.plugin.getNMS().getNBTItem(event.getCurrentItem());
+			NBTItem picked = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 			if (!picked.hasType())
 				return;
 
@@ -273,7 +273,7 @@ public class ItemUse implements Listener {
 
 		if (useItem instanceof Consumable && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
 			event.setCancelled(true);
-			if (((Consumable) useItem).useOnItem(event, MMOLib.plugin.getNMS().getNBTItem(event.getCurrentItem())))
+			if (((Consumable) useItem).useOnItem(event, MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem())))
 				event.getCursor().setAmount(event.getCursor().getAmount() - 1);
 		}
 	}
@@ -283,7 +283,7 @@ public class ItemUse implements Listener {
 		if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
 			return;
 
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getBow());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getBow());
 		Type type = item.getType();
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
@@ -302,7 +302,7 @@ public class ItemUse implements Listener {
 
 	@EventHandler
 	public void g(PlayerItemConsumeEvent event) {
-		NBTItem item = MMOLib.plugin.getNMS().getNBTItem(event.getItem());
+		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (!item.hasType())
 			return;
 

@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.entity.Player;
-
-import net.Indyuce.mmoitems.MMOItems;
 
 public class CommandData {
 	private final String command;
@@ -37,9 +34,5 @@ public class CommandData {
 
 	public boolean hasOpPerms() {
 		return op;
-	}
-
-	public String getParsed(Player player) {
-		return MMOItems.plugin.getPlaceholderParser().parse(player, command);
 	}
 }

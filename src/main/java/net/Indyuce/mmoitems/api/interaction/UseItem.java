@@ -71,12 +71,13 @@ public class UseItem {
 	}
 
 	private void scheduleCommandExecution(CommandData command) {
-		final String parsed = command.getParsed(player);
+		String parsed = MMOItems.plugin.getPlaceholderParser().parse(player, command.getCommand());
 
 		if (!command.hasDelay())
 			dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms());
 		else
-			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms()), (long) command.getDelay() * 20);
+			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms()),
+					(long) command.getDelay() * 20);
 	}
 
 	private void dispatchCommand(String parsed, boolean console, boolean op) {

@@ -149,7 +149,7 @@ public class UpdaterManager implements Listener {
 	}
 
 	public ItemStack getUpdated(ItemStack item) {
-		return getUpdated(MMOLib.plugin.getNMS().getNBTItem(item));
+		return getUpdated(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}
 
 	public ItemStack getUpdated(NBTItem item) {

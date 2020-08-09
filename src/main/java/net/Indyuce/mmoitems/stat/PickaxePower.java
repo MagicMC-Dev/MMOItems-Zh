@@ -19,6 +19,6 @@ public class PickaxePower extends DoubleStat {
 		int pickPower = (int) ((DoubleData) data).generateNewValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", pickPower));
-		item.getLore().insert("pickaxe-power", format(pickPower, "#", "" + pickPower));
+		item.getLore().insert("pickaxe-power", formatNumericStat(pickPower, "#", "" + pickPower));
 	}
 }

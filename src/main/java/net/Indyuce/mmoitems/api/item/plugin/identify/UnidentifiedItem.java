@@ -22,7 +22,6 @@ import net.Indyuce.mmoitems.api.item.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -96,7 +95,7 @@ public class UnidentifiedItem extends ConfigItem {
 				String str = lore.get(n);
 				for (String placeholder : placeholders.keySet())
 					str = str.replace("#" + placeholder + "#", placeholders.get(placeholder));
-				lore.set(n, new ColorParse('&', str.replace("{range}", "").replace("{tier}", "")).toChatColor());
+				lore.set(n, MMOLib.plugin.parseColors(str.replace("{range}", "").replace("{tier}", "")));
 			}
 
 			/*
@@ -106,7 +105,7 @@ public class UnidentifiedItem extends ConfigItem {
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);
-			meta.setDisplayName(new ColorParse('&', name).toChatColor());
+			meta.setDisplayName(MMOLib.plugin.parseColors(name));
 			meta.setLore(lore);
 			unidentified.setItemMeta(meta);
 

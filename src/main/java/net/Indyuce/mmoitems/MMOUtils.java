@@ -113,7 +113,7 @@ public class MMOUtils {
 		for (ItemStack item : new ItemStack[] { player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() })
 			if (item.getType() != Material.AIR) {
 				normal++;
-				if (MMOLib.plugin.getNMS().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
+				if (MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
 					twoHanded++;
 			}
 
@@ -188,7 +188,7 @@ public class MMOUtils {
 				&& (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
 			return false;
 
-		return loc == null || MMOLib.plugin.getNMS().isInBoundingBox(target, loc);
+		return loc == null || MMOLib.plugin.getVersion().getWrapper().isInBoundingBox(target, loc);
 	}
 
 	private static final String[] romanChars = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV",

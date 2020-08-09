@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
-import net.asangarin.hexcolors.ColorParse;
+import net.mmogroup.mmolib.MMOLib;
 
 public class ItemTier {
 	private final String name, id;
@@ -29,7 +29,7 @@ public class ItemTier {
 
 	public ItemTier(ConfigurationSection config) {
 		id = config.getName().toUpperCase().replace("-", "_");
-		name = new ColorParse('&', config.getString("name")).toChatColor();
+		name = config.getString("name");
 		deconstruct = config.contains("deconstruct-item") ? new DropTable(config.getConfigurationSection("deconstruct-item")) : null;
 		unidentificationInfo = new UnidentificationInfo(config.getConfigurationSection("unidentification"));
 
@@ -79,10 +79,6 @@ public class ItemTier {
 	public List<ItemStack> generateDeconstructedItem() {
 		return hasDropTable() ? deconstruct.read(false) : new ArrayList<>();
 	}
-	
-//	public RolledTier roll() {
-//		return new RolledTier(info, itemLevel)
-//	}
 
 	public class UnidentificationInfo {
 		private final String name, prefix;
@@ -113,6 +109,6 @@ public class ItemTier {
 	}
 
 	private String color(String str) {
-		return new ColorParse('&', str).toChatColor();
+		return MMOLib.plugin.parseColors(str);
 	}
 }

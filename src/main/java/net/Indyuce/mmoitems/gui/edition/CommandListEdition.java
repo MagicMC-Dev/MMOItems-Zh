@@ -96,7 +96,7 @@ public class CommandListEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MMOLib.plugin.getNMS().getNBTItem(item).getString("configKey");
+		String tag = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("configKey");
 		if (tag.equals(""))
 			return;
 

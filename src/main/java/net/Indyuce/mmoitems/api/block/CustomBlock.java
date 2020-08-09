@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
@@ -14,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MushroomState;
-import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -33,10 +31,10 @@ public class CustomBlock {
 
 		Validate.notNull(config, "Could not read custom block config");
 
-		blockName = new ColorParse('&', config.getString("display-name", ChatColor.RESET + "Custom Block")).toChatColor();
+		blockName = MMOLib.plugin.parseColors(config.getString("display-name", "Custom Block"));
 		if (config.contains("lore"))
 			for (String s : config.getStringList("lore"))
-				lore.add(new ColorParse('&', s).toChatColor());
+				lore.add(MMOLib.plugin.parseColors(s));
 		minExp = config.getInt("min-xp", 0);
 		maxExp = config.getInt("max-xp", 0);
 		requiredPower = config.getInt("required-power", 0);
@@ -93,7 +91,7 @@ public class CustomBlock {
 
 		item.setItemMeta(meta);
 
-		return MMOLib.plugin.getNMS().getNBTItem(item)
+		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)
 				.addTag(new ItemTag("MMOITEMS_DISABLE_CRAFTING", true), new ItemTag("MMOITEMS_DISABLE_SMITHING", true),
 						new ItemTag("MMOITEMS_DISABLE_ENCHANTING", true), new ItemTag("MMOITEMS_DISABLE_REPAIRING", true),
 						new ItemTag("MMOITEMS_BLOCK_ID", id), new ItemTag("CustomModelData", id + 1000))

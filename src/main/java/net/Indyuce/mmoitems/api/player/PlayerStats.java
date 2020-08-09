@@ -11,6 +11,8 @@ import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.stat.StatInstance;
 import net.mmogroup.mmolib.api.stat.StatMap;
+import net.mmogroup.mmolib.api.stat.modifier.ModifierType;
+import net.mmogroup.mmolib.api.stat.modifier.StatModifier;
 
 public class PlayerStats {
 	private final PlayerData playerData;
@@ -46,7 +48,8 @@ public class PlayerStats {
 		});
 
 		if (playerData.hasSetBonuses())
-			playerData.getSetBonuses().getStats().forEach((stat, value) -> getInstance(stat).addModifier("fullSetBonus", value));
+			playerData.getSetBonuses().getStats()
+					.forEach((stat, value) -> getInstance(stat).addModifier("fullSetBonus", new StatModifier(value, ModifierType.FLAT)));
 
 		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
 			double t = 0;
@@ -55,7 +58,8 @@ public class PlayerStats {
 				t += item.getNBT().getStat(stat.getId());
 
 			if (t != 0)
-				getInstance(stat).addModifier("item", t - (stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0));
+				getInstance(stat).addModifier("item",
+						new StatModifier(t - (stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0), ModifierType.FLAT));
 		}
 	}
 

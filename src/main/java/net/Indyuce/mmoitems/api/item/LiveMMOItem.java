@@ -11,7 +11,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class LiveMMOItem extends ReadMMOItem {
 	public LiveMMOItem(ItemStack item) {
-		this(MMOLib.plugin.getNMS().getNBTItem(item));
+		this(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}
 
 	/*

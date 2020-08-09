@@ -26,24 +26,29 @@ public enum ParticleType {
 	HELIX((particle, player) -> new HelixParticles(particle, player), true, 1, "Particles drawing a sphere around you.", new StringValue("radius", .8), new StringValue("height", .6), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("amount", 4), new StringValue("speed", 0)),
 	AURA((particle, player) -> new AuraParticles(particle, player), true, 1, "Particles dashing around you (height can differ).", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("y-offset", .7), new StringValue("radius", 1.3), new StringValue("height", 1));
 
-	/*
-	 * if override is set to true, only one particle effect can play at a time,
-	 * and the particle which overrides has priority
+	private final BiFunction<ParticleData, PlayerData, ParticleRunnable> func;
+	private final boolean override;
+	private final long period;
+	private final String lore;
+	private final Map<String, Double> modifiers = new HashMap<>();
+
+	/**
+	 * @param func
+	 *            What the effect does
+	 * @param override
+	 *            Higher priority particle effect which disables every other
+	 *            effects
+	 * @param period
+	 *            The particle displays again every X seconds
+	 * @param lore
+	 *            The effect description
+	 * @param modifiers
+	 *            The list of double modifeirs that allow to configurate the
+	 *            particle effect. They are displayed in the effect editor once
+	 *            the particle type is chosen
 	 */
-	private boolean override;
-
-	/*
-	 * list of double modifiers that allow to configurate the particle effects,
-	 * they'll be displayed in the effect editor once the particle type is
-	 * chosen.
-	 */
-	private Map<String, Double> modifiers = new HashMap<>();
-
-	private long period;
-	private BiFunction<ParticleData, PlayerData, ParticleRunnable> func;
-	private String lore;
-
-	private ParticleType(BiFunction<ParticleData, PlayerData, ParticleRunnable> func, boolean override, long period, String lore, StringValue... modifiers) {
+	private ParticleType(BiFunction<ParticleData, PlayerData, ParticleRunnable> func, boolean override, long period, String lore,
+			StringValue... modifiers) {
 		this.func = func;
 		this.override = override;
 		this.period = period;

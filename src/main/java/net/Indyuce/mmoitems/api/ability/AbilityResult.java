@@ -13,9 +13,19 @@ public abstract class AbilityResult {
 		return ability;
 	}
 
+	/**
+	 * @param path
+	 *            Path of ability modifier
+	 * @return Calculates a new value for a given ability modifier
+	 */
 	public double getModifier(String path) {
 		return ability.getModifier(path);
 	}
 
+	/**
+	 * @return If the ability is cast successfully. This method is used to apply
+	 *         extra ability conditions (player must be on the ground, must aim
+	 *         at an entity..)
+	 */
 	public abstract boolean isSuccessful();
 }

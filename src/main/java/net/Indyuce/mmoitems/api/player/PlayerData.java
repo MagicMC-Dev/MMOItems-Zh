@@ -110,7 +110,7 @@ public class PlayerData {
 	public MMOPlayerData getMMOPlayerData() {
 		return mmoData;
 	}
-	
+
 	public UUID getUniqueId() {
 		return mmoData.getUniqueId();
 	}
@@ -417,15 +417,11 @@ public class PlayerData {
 		 * target, removes resources needed from the player
 		 */
 		if (ability.hasModifier("mana"))
-			rpgPlayer.giveMana(-ability.getModifier("mana"));
+			rpgPlayer.giveMana(-abilityResult.getModifier("mana"));
 		if (ability.hasModifier("stamina"))
-			rpgPlayer.giveStamina(-ability.getModifier("stamina"));
+			rpgPlayer.giveStamina(-abilityResult.getModifier("stamina"));
 
-		double cooldown = ability.getModifier("cooldown");
-
-		// apply cooldown reduction
-		cooldown *= 1 - Math.min(.8, stats.getStat(ItemStat.COOLDOWN_REDUCTION) / 100);
-
+		double cooldown = abilityResult.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStat.COOLDOWN_REDUCTION) / 100));
 		if (cooldown > 0)
 			applyAbilityCooldown(ability.getAbility(), cooldown);
 

@@ -8,9 +8,9 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class DoubleData implements StatData, Mergeable {
-	private static final Random random = new Random();
-
 	private double min, max;
+
+	private static final Random random = new Random();
 
 	public DoubleData(Object object) {
 		if (object instanceof Number) {

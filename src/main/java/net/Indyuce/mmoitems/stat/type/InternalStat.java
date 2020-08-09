@@ -14,8 +14,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public abstract class InternalStat extends ItemStat {
 
-	/*
-	 * internal stats can be used to store specific item data and cannot be
+	/**
+	 * Internal stats can be used to store specific item data and cannot be
 	 * edited in the item edition GUI since they only exist once the item is
 	 * physically generated.
 	 */

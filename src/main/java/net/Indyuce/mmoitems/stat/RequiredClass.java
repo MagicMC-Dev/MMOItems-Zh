@@ -50,16 +50,16 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.REQUIRED_CLASS).enable("Write in the chat the class you want your item to support.");
+			new StatEdition(inv, this).enable("Write in the chat the class you want your item to support.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).getKeys(false).contains("required-class")) {
 				List<String> supportedClasses = config.getConfig().getStringList(inv.getEdited().getId() + ".required-class");
 				if (supportedClasses.size() < 1)
-					return true;
+					return;
 
 				String last = supportedClasses.get(supportedClasses.size() - 1);
 				supportedClasses.remove(last);
@@ -69,7 +69,6 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
 		}
-		return true;
 	}
 
 	@Override

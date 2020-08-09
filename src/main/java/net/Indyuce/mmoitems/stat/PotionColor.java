@@ -30,7 +30,7 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.POTION_COLOR).enable("Write in the chat the RGB color you want.",
@@ -42,7 +42,6 @@ public class PotionColor extends StringStat {
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
 		}
-		return true;
 	}
 
 	@Override

@@ -39,17 +39,16 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
-			return true;
+			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the text you want.");
-		return true;
 	}
 
 	@Override

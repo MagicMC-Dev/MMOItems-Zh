@@ -31,7 +31,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new CraftingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -45,7 +45,6 @@ public class Crafting extends ItemStat {
 								+ ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
 			}
 		}
-		return true;
 	}
 
 	@Override

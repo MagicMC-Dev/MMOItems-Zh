@@ -13,16 +13,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.Edition;
-import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.MMOLib;
 
 public class AnvilGUI extends EditionProcess implements Listener {
 	private final int containerId;
 	private final Inventory inventory;
+
 	private boolean open;
 
-	public AnvilGUI(PluginInventory inv, Edition edition) {
-		super(inv, edition);
+	public AnvilGUI(Edition edition) {
+		super(edition);
 
 		ItemStack paper = new ItemStack(Material.PAPER);
 		ItemMeta paperMeta = paper.getItemMeta();
@@ -72,7 +72,7 @@ public class AnvilGUI extends EditionProcess implements Listener {
 			if (event.getRawSlot() == 2) {
 				ItemStack clicked = inventory.getItem(event.getRawSlot());
 				if (clicked != null && clicked.getType() != Material.AIR)
-					input(clicked.hasItemMeta() ? clicked.getItemMeta().getDisplayName() : clicked.getType().toString());
+					registerInput(clicked.hasItemMeta() ? clicked.getItemMeta().getDisplayName() : clicked.getType().toString());
 			}
 		}
 	}

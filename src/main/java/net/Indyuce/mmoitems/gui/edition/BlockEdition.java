@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,13 +29,6 @@ public class BlockEdition extends PluginInventory {
 	private final ConfigFile config = new ConfigFile("custom-blocks");
 	private final CustomBlock block;
 
-	private static Map<Integer, ConfigOptions> correspondingSlot = new HashMap<>();
-
-	static {
-		for (ConfigOptions configOptions : ConfigOptions.values())
-			correspondingSlot.put(configOptions.getSlot(), configOptions);
-	}
-
 	public BlockEdition(Player player, CustomBlock block) {
 		super(player);
 
@@ -46,7 +37,7 @@ public class BlockEdition extends PluginInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Block Edition: ");
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Block Edition: " + block.getId());
 		for (ConfigOptions configOptions : ConfigOptions.values()) {
 			ItemStack blockItem = new ItemStack(configOptions.getItem());
 			ItemMeta meta = blockItem.getItemMeta();
@@ -63,15 +54,12 @@ public class BlockEdition extends PluginInventory {
 				for (String lore : loreList)
 					eventLore.add(ChatColor.GREEN + new ColorParse('&', lore).toChatColor());
 			} else
-				eventLore
-						.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-								+ (configOptions.format.equals("int")
-										? config.getConfig().contains(block.getId() + "." + configOptions.path)
-												? ChatColor.GREEN + config.getConfig()
-														.getString(block.getId() + "." + configOptions.path)
-												: ChatColor.RED + "0"
-										: new ColorParse('&', config.getConfig().getString(
-												block.getId() + "." + configOptions.path, ChatColor.RED + "Default")).toChatColor()));
+				eventLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + (configOptions.format.equals("int")
+						? config.getConfig().contains(block.getId() + "." + configOptions.path)
+								? ChatColor.GREEN + config.getConfig().getString(block.getId() + "." + configOptions.path)
+								: ChatColor.RED + "0"
+						: new ColorParse('&', config.getConfig().getString(block.getId() + "." + configOptions.path, ChatColor.RED + "Default"))
+								.toChatColor()));
 
 			eventLore.add("");
 			eventLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -99,38 +87,37 @@ public class BlockEdition extends PluginInventory {
 		if (event.getSlot() == 40)
 			new BlockBrowser(player).open();
 
-		if (correspondingSlot.containsKey(event.getSlot())) {
-			if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				ConfigOptions co = correspondingSlot.get(event.getSlot());
-				new BlockChatEdition(this, co, block.getId()).enable("Write in the chat the " + co.getChatFormat());
-			}
+		ConfigOptions option = ConfigOptions.getBySlot(event.getSlot());
+		if (option == null)
+			return;
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				String path = correspondingSlot.get(event.getSlot()).getConfigPath();
-				config.getConfig().set(block.getId() + "." + path, null);
-				config.save();
-				MMOItems.plugin.getCustomBlocks().reload();
+		if (event.getAction() == InventoryAction.PICKUP_ALL)
+			new BlockChatEdition(this, option, block.getId()).enable("Write in the chat the " + option.getChatFormat());
 
-				new BlockEdition(player, block).open();
-				player.sendMessage(
-						MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(path.replace("-", " "))
-								+ " Value" + ChatColor.GRAY + " successfully removed.");
-			}
+		if (event.getAction() == InventoryAction.PICKUP_HALF) {
+			config.getConfig().set(block.getId() + "." + option.getConfigPath(), null);
+			config.save();
+			MMOItems.plugin.getCustomBlocks().reload();
+
+			new BlockEdition(player, block).open();
+			player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(option.getConfigPath().replace("-", " ")) + " Value"
+					+ ChatColor.GRAY + " successfully removed.");
 		}
 	}
 
 	public enum ConfigOptions {
-		DISPLAY_NAME("display-name", Material.WRITABLE_BOOK, 11, "string"), LORE("lore", Material.MAP, 13, "line"),
+		DISPLAY_NAME("display-name", Material.WRITABLE_BOOK, 11, "string"),
+		LORE("lore", Material.MAP, 13, "line"),
 		REQUIRED_PICKAXE_POWER("required-power", Material.IRON_PICKAXE, 15, "int"),
 		MIN_XP("min-xp", Material.EXPERIENCE_BOTTLE, 21, "int"),
 		MAX_XP("max-xp", Material.EXPERIENCE_BOTTLE, 23, "int"),
-		WORLD_GEN_TEMPLATE("gen-template", Material.GRASS_BLOCK, 31, "string"),;
+		WORLD_GEN_TEMPLATE("gen-template", Material.GRASS_BLOCK, 31, "string");
 
 		private final String path, format;
 		private final Material item;
 		private final int slot;
 
-		ConfigOptions(String path, Material item, int slot, String format) {
+		private ConfigOptions(String path, Material item, int slot, String format) {
 			this.path = path;
 			this.item = item;
 			this.slot = slot;
@@ -141,10 +128,6 @@ public class BlockEdition extends PluginInventory {
 			return path;
 		}
 
-		public String getFormat() {
-			return format;
-		}
-
 		public Material getItem() {
 			return item;
 		}
@@ -153,46 +136,52 @@ public class BlockEdition extends PluginInventory {
 			return slot;
 		}
 
+		public String getFormat() {
+			return format;
+		}
+
 		public String getChatFormat() {
 			switch (format) {
-				case "int":
-					return "desired number for this field.";
-				case "line":
-					return "new line to add.";
-				default:
-					return "new value.";
+			case "int":
+				return "desired number for this field.";
+			case "line":
+				return "new line to add.";
+			default:
+				return "new value.";
 			}
+		}
+
+		public static ConfigOptions getBySlot(int slot) {
+			for (ConfigOptions option : values())
+				if (option.getSlot() == slot)
+					return option;
+			return null;
 		}
 
 		public boolean whenInput(PluginInventory inv, String message, String path) {
 			switch (format) {
-				case "int":
-					int value = 0;
-					try {
-						value = Integer.parseInt(message);
-					} catch (Exception e1) {
-						inv.getPlayer().sendMessage(
-								MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-						return false;
-					}
-					setConfigValue(new ConfigFile("custom-blocks"), path, value);
-					inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + name().replace("_", " ")
-							+ " successfully changed to " + value + ".");
-					break;
-				case "line":
-					ConfigFile config = new ConfigFile("custom-blocks");
-					List<String> lore = config.getConfig().contains(path) ? config.getConfig().getStringList(path)
-							: new ArrayList<>();
-					lore.add(message);
-					setConfigValue(config, path, lore);
-					inv.getPlayer().sendMessage(
-							MMOItems.plugin.getPrefix() + "Successfully added to " + message + " to block lore.");
-					break;
-				default:
-					setConfigValue(new ConfigFile("custom-blocks"), path, message);
-					inv.getPlayer().sendMessage(
-							MMOItems.plugin.getPrefix() + "Successfully changed value to " + message + ".");
-					break;
+			case "int":
+				int value = 0;
+				try {
+					value = Integer.parseInt(message);
+				} catch (Exception e1) {
+					inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
+					return false;
+				}
+				setConfigValue(new ConfigFile("custom-blocks"), path, value);
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + name().replace("_", " ") + " successfully changed to " + value + ".");
+				break;
+			case "line":
+				ConfigFile config = new ConfigFile("custom-blocks");
+				List<String> lore = config.getConfig().contains(path) ? config.getConfig().getStringList(path) : new ArrayList<>();
+				lore.add(message);
+				setConfigValue(config, path, lore);
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully added to " + message + " to block lore.");
+				break;
+			default:
+				setConfigValue(new ConfigFile("custom-blocks"), path, message);
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully changed value to " + message + ".");
+				break;
 			}
 
 			return true;

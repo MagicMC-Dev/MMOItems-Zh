@@ -46,7 +46,7 @@ public class NBTTags extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.",
@@ -56,18 +56,17 @@ public class NBTTags extends ItemStat {
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("custom-nbt")) {
 				List<String> nbtTags = config.getConfig().getStringList(inv.getEdited().getId() + ".custom-nbt");
 				if (nbtTags.size() < 1)
-					return true;
+					return;
 
 				String last = nbtTags.get(nbtTags.size() - 1);
 				nbtTags.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".custom-nbt", nbtTags);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor()
-						+ ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(
+						MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor() + ChatColor.GRAY + "'.");
 			}
 		}
-		return true;
 	}
 
 	@Override
@@ -121,19 +120,22 @@ public class NBTTags extends ItemStat {
 			mmoitem.setData(ItemStat.NBT_TAGS,
 					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_NBTTAGS")).getAsJsonArray()));
 	}
-	
+
 	public Object calculateObjectType(String input) {
-		if(input.equalsIgnoreCase("true")) return (Boolean) true;
-		if(input.equalsIgnoreCase("false")) return (Boolean) false;
+		if (input.equalsIgnoreCase("true"))
+			return (Boolean) true;
+		if (input.equalsIgnoreCase("false"))
+			return (Boolean) false;
 		try {
 			int value = Integer.parseInt(input);
 			return (Integer) value;
-		} catch(NumberFormatException e) {}
-		if(input.contains("[") && input.contains("]")) {
+		} catch (NumberFormatException e) {
+		}
+		if (input.contains("[") && input.contains("]")) {
 			List<String> entries = new ArrayList<>();
-			for(String s : input.replace("[", "").replace("]", "").split("\\,"))
+			for (String s : input.replace("[", "").replace("]", "").split("\\,"))
 				entries.add(s.replace("\"", ""));
-			return (List<?>) entries;	
+			return (List<?>) entries;
 		}
 		return (String) input;
 	}

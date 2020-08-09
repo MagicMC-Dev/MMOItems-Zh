@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.asangarin.hexcolors.ColorParse;
 import net.mmogroup.mmolib.MMOLib;
@@ -49,7 +50,7 @@ public class ItemEdition extends EditionInventory {
 		 * the for loop will just let some slots empty
 		 */
 		List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
-				.filter(stat -> stat.hasValidMaterial(getCachedItem()) && !stat.isInternal()).collect(Collectors.toList());
+				.filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).collect(Collectors.toList());
 
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Edition: " + getEdited().getId());
 		for (int j = min; j < Math.min(appliable.size(), max); j++) {

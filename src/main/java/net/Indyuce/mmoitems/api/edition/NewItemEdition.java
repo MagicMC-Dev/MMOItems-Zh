@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
+import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.MMOLib;
 
 public class NewItemEdition implements Edition {
@@ -23,6 +24,11 @@ public class NewItemEdition implements Edition {
 	}
 
 	@Override
+	public PluginInventory getInventory() {
+		return inv;
+	}
+
+	@Override
 	public void enable(String... message) {
 		inv.getPlayer().closeInventory();
 
@@ -35,26 +41,29 @@ public class NewItemEdition implements Edition {
 		 * text if they are having conflicts with their chat management plugins.
 		 */
 		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
-			new AnvilGUI(inv, this);
+			new AnvilGUI(this);
 			return;
 		}
 
 		/*
 		 * default chat edition feature
 		 */
-		new ChatEdition(inv, this);
+		new ChatEdition(this);
 		MMOLib.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Creation", "See chat.", 10, 40, 10);
 	}
 
 	@Override
-	public boolean output(String input) {
+	public boolean processInput(String input) {
 		if (input.equals("cancel"))
 			return true;
 
-		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(inv.getPlayer(), "mmoitems create " + inv.getType().getId() + " " + input.toUpperCase().replace(" ", "_").replace("-", "_")));
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> Bukkit.dispatchCommand(inv.getPlayer(),
+				"mmoitems create " + inv.getType().getId() + " " + input.toUpperCase().replace(" ", "_").replace("-", "_")));
 		return true;
 	}
-	
-	public boolean shouldGoBack()
-	{ return false; }
+
+	@Override
+	public boolean shouldGoBack() {
+		return false;
+	}
 }

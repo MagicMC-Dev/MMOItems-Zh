@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
 import net.Indyuce.mmoitems.comp.parse.StringInputParser;
+import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.asangarin.hexcolors.ColorParse;
@@ -28,6 +29,11 @@ public class StatEdition implements Edition {
 		this.info = info;
 	}
 
+	@Override
+	public PluginInventory getInventory() {
+		return inv;
+	}
+
 	public ItemStat getStat() {
 		return stat;
 	}
@@ -36,6 +42,7 @@ public class StatEdition implements Edition {
 		return info;
 	}
 
+	@Override
 	public void enable(String... message) {
 		inv.getPlayer().closeInventory();
 
@@ -49,23 +56,32 @@ public class StatEdition implements Edition {
 		 * text if they are having conflicts with their chat management plugins.
 		 */
 		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
-			new AnvilGUI(inv, this);
+			new AnvilGUI(this);
 			return;
 		}
 
 		/*
 		 * default chat edition feature
 		 */
-		new ChatEdition(inv, this);
+		new ChatEdition(this);
 		MMOLib.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
 	}
 
 	@Override
-	public boolean output(String input) {
+	public boolean processInput(String input) {
 
 		// apply string input parsers
 		for (StringInputParser parser : MMOItems.plugin.getStringInputParsers())
 			input = parser.parseInput(inv.getPlayer(), input);
+
+		if (input.equals("cancel"))
+			return true;
+
+		try {
+
+		} catch (IllegalArgumentException exception) {
+			return false;
+		}
 
 		return input.equals("cancel")
 				|| stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getEdited().getType().getConfigFile(), input, info);

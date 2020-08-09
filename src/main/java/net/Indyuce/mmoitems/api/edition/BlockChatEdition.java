@@ -31,6 +31,11 @@ public class BlockChatEdition implements Edition {
 		return option;
 	}
 
+	@Override
+	public PluginInventory getInventory() {
+		return inv;
+	}
+
 	public void enable(String... message) {
 		inv.getPlayer().closeInventory();
 
@@ -44,19 +49,19 @@ public class BlockChatEdition implements Edition {
 		 * text if they are having conflicts with their chat management plugins.
 		 */
 		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
-			new AnvilGUI(inv, this);
+			new AnvilGUI(this);
 			return;
 		}
 
 		/*
 		 * default chat edition feature
 		 */
-		new ChatEdition(inv, this);
+		new ChatEdition(this);
 		MMOLib.plugin.getNMS().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Block Edition", "See chat.", 10, 40, 10);
 	}
 
 	@Override
-	public boolean output(String input) {
+	public boolean processInput(String input) {
 		return input.equals("cancel") || option.whenInput(inv, input, blockId + "." + option.getConfigPath());
 	}
 

@@ -60,9 +60,8 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new CommandListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
-		return true;
 	}
 
 	@Override

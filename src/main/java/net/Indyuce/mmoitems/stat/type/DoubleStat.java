@@ -60,18 +60,17 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = inv.getEdited().getType().getConfigFile();
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
 				"Or write [MIN-VALUE]=[MAX-VALUE] to make the stat random.");
-		return true;
 	}
 
 	@Override

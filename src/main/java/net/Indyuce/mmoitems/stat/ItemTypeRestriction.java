@@ -32,7 +32,7 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
@@ -63,7 +63,7 @@ public class ItemTypeRestriction extends StringStat {
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())) {
 				List<String> list = config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath());
 				if (list.size() < 1)
-					return true;
+					return;
 
 				String last = list.get(list.size() - 1);
 				list.remove(last);
@@ -72,7 +72,6 @@ public class ItemTypeRestriction extends StringStat {
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
-		return true;
 	}
 
 	@Override

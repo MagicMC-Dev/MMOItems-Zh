@@ -50,7 +50,7 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERMISSION).enable("Write in the chat the permission you want your item to require.");
@@ -59,7 +59,8 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("permission")) {
 				List<String> requiredPerms = config.getConfig().getStringList(inv.getEdited().getId() + ".permission");
 				if (requiredPerms.size() < 1)
-					return true;
+					return;
+
 				String last = requiredPerms.get(requiredPerms.size() - 1);
 				requiredPerms.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".permission", requiredPerms.size() == 0 ? null : requiredPerms);
@@ -68,7 +69,6 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
 		}
-		return true;
 	}
 
 	@Override

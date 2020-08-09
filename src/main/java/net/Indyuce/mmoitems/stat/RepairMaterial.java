@@ -11,7 +11,6 @@ import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 
@@ -20,12 +19,13 @@ public class RepairMaterial extends StringStat {
 		super("REPAIR_MATERIAL", new ItemStack(Material.ANVIL), "Repair Material",
 				new String[] { "The material to be used when", "repairing this item in an anvil.", "", "Currently serves no purpose!" },
 				new String[] { "all" });
+		
+		disable();
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		new StatEdition(inv, ItemStat.MATERIAL).enable("Write in the chat the material you want.");
-		return true;
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+		new StatEdition(inv, this).enable("Write in the chat the material you want.");
 	}
 
 	@Override

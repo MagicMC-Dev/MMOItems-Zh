@@ -36,9 +36,8 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new ParticlesEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
-		return true;
 	}
 
 	@Override

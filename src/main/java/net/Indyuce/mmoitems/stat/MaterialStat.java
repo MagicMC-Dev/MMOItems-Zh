@@ -41,9 +41,8 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new StatEdition(inv, ItemStat.MATERIAL).enable("Write in the chat the material you want.");
-		return true;
 	}
 
 	@Override

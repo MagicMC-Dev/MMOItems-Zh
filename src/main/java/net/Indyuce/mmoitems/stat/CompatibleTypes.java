@@ -47,7 +47,7 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
@@ -56,18 +56,17 @@ public class CompatibleTypes extends ItemStat {
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("compatible-types")) {
 				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + ".compatible-types");
 				if (lore.size() < 1)
-					return true;
+					return;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
 				inv.registerItemEdition(config);
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor()
-						+ ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(
+						MMOItems.plugin.getPrefix() + "Successfully removed '" + new ColorParse('&', last).toChatColor() + ChatColor.GRAY + "'.");
 			}
 		}
-		return true;
 	}
 
 	@Override

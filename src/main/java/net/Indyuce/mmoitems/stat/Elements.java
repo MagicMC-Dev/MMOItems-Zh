@@ -56,7 +56,7 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new ElementsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
@@ -68,7 +68,6 @@ public class Elements extends ItemStat {
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
 			}
-		return true;
 	}
 
 	@Override

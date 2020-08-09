@@ -40,12 +40,11 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), !config.getConfig().getBoolean(inv.getEdited().getId() + "." + getPath()));
 		inv.registerItemEdition(config);
 		inv.open();
-		return true;
 	}
 
 	@Override

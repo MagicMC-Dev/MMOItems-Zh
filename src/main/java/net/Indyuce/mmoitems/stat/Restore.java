@@ -44,10 +44,9 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new StatEdition(inv, ItemStat.RESTORE).enable("Write in the chat the values you want.",
 				ChatColor.AQUA + "Format: [HEALTH] [FOOD] [SATURATION]");
-		return true;
 	}
 
 	@Override

@@ -30,18 +30,17 @@ public class LuteAttackEffectStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + ".lute-attack-effect", null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
-			return true;
+			return;
 		}
 
 		new StatEdition(inv, this).enable("Write in the chat the text you want.");
-		return true;
 	}
 
 	@Override

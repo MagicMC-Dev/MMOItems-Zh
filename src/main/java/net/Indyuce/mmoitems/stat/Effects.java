@@ -73,7 +73,7 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
@@ -92,7 +92,6 @@ public class Effects extends ItemStat {
 						+ last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
 			}
 		}
-		return true;
 	}
 
 	@Override

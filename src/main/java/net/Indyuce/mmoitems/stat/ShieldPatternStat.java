@@ -74,7 +74,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
@@ -92,19 +92,18 @@ public class ShieldPatternStat extends StringStat {
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
 			if (!config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("shield-pattern"))
-				return false;
+				return;
 
 			Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".shield-pattern").getKeys(false);
 			String last = new ArrayList<String>(set).get(set.size() - 1);
 			if (last.equalsIgnoreCase("color"))
-				return false;
+				return;
 
 			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + last, null);
 			inv.registerItemEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
 		}
-		return true;
 	}
 
 	@Override

@@ -36,9 +36,8 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		// not supported
-		return true;
 	}
 
 	@Override

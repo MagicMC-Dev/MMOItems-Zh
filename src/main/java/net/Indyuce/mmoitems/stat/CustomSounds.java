@@ -62,7 +62,7 @@ public class CustomSounds extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new SoundsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
@@ -74,7 +74,6 @@ public class CustomSounds extends ItemStat implements ProperStat {
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
 			}
-		return true;
 	}
 
 	@Override

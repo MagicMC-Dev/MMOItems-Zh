@@ -51,7 +51,7 @@ public class UpgradeStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new UpgradingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
@@ -64,7 +64,6 @@ public class UpgradeStat extends ItemStat {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
 			}
 		}
-		return true;
 	}
 
 	@Override

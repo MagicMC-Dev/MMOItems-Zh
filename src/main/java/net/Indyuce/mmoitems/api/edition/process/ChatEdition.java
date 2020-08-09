@@ -10,11 +10,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.Edition;
-import net.Indyuce.mmoitems.gui.PluginInventory;
 
 public class ChatEdition extends EditionProcess implements Listener {
-	public ChatEdition(PluginInventory inv, Edition edition) {
-		super(inv, edition);
+	public ChatEdition(Edition edition) {
+		super(edition);
 
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 	}
@@ -28,7 +27,7 @@ public class ChatEdition extends EditionProcess implements Listener {
 	public void a(AsyncPlayerChatEvent event) {
 		if (event.getPlayer().equals(getPlayer())) {
 			event.setCancelled(true);
-			input(event.getMessage());
+			registerInput(event.getMessage());
 		}
 	}
 

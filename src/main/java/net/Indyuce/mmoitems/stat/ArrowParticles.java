@@ -86,9 +86,8 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new ArrowParticlesEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
-		return true;
 	}
 
 	@Override

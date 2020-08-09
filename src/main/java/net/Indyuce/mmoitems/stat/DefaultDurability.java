@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
@@ -17,7 +17,7 @@ public class DefaultDurability extends DoubleStat implements ProperStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		if (item.getMeta() instanceof Damageable)
 			((Damageable) item.getMeta()).setDamage((int) ((DoubleData) data).generateNewValue());
 	}

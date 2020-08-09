@@ -5,7 +5,6 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.droptable.DropItem;
 import net.Indyuce.mmoitems.api.util.RandomAmount;
 import net.mmogroup.mmolib.api.item.NBTItem;
 

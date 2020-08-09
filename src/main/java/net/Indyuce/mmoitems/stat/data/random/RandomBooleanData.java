@@ -2,8 +2,7 @@ package net.Indyuce.mmoitems.stat.data.random;
 
 import java.util.Random;
 
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -21,7 +20,7 @@ public class RandomBooleanData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return new BooleanData(random.nextDouble() < chance);
 	}
 }

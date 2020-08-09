@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.stat.block;
 
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
@@ -15,7 +15,7 @@ public class BlockID extends DoubleStat {
     }
 
     @Override
-    public void whenApplied(MMOItemBuilder item, StatData data) {
+    public void whenApplied(ItemStackBuilder item, StatData data) {
         super.whenApplied(item, data);
         item.addItemTag(new ItemTag("CustomModelData", (int) ((DoubleData) data).generateNewValue() +1000));
     }

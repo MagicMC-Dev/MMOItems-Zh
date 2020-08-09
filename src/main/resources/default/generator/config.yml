@@ -5,15 +5,7 @@
 # modifier capacity they should have.
 tiers:
     uncommon:
-        chance: 0.15
-        capacity:
-            base: 6
-            
-            # Scales on the item level
-            scale: .1
-            
-            spread: .1
-            max-spread: .3
+
     rare:
         chance: 0.06
         capacity:
@@ -22,19 +14,8 @@ tiers:
             spread: .1
             max-spread: .3
     legendary:
-        chance: 0.01
-        capacity:
-            base: 12
-            scale: .2
-            spread: .1
-            max-spread: .3
-    mythical:
-        chance: 0.003
-        capacity:
-            base: 15
-            scale: .3
-            spread: .1
-            max-spread: .3
+
+
     default:
         capacity:
             base: 3

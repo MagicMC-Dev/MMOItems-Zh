@@ -61,13 +61,14 @@ public class ConfigFile {
 		}
 	}
 
+	@Deprecated
 	public void registerItemEdition(Type type, String id) {
 
 		/*
 		 * uncaches the item so it can be generated to apply newest changes in
 		 * case the same inventory is opened again.
 		 */
-		MMOItems.plugin.getItems().uncache(type, id);
+		// MMOItems.plugin.getItems().uncache(type, id);
 
 		/*
 		 * update the database UUID for the dynamic item updater

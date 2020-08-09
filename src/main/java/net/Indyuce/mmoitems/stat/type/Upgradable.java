@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 
 public interface Upgradable {

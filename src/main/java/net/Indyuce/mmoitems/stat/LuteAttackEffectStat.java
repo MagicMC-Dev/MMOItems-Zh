@@ -14,7 +14,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.LuteAttackHan
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SimpleLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SlashLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.WaveLuteAttack;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -63,7 +63,7 @@ public class LuteAttackEffectStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		LuteAttackEffect effect = LuteAttackEffect.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
 		item.getLore().insert("lute-attack-effect", effect.getName());

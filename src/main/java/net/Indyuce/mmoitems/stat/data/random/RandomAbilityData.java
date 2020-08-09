@@ -10,8 +10,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class RandomAbilityData {
@@ -65,7 +65,7 @@ public class RandomAbilityData {
 		return modifiers.get(path);
 	}
 
-	public AbilityData randomize(GeneratedItemBuilder builder) {
+	public AbilityData randomize(MMOItemBuilder builder) {
 		AbilityData data = new AbilityData(ability, castMode);
 		modifiers.forEach((key, formula) -> data.setModifier(key, formula.calculate(builder.getLevel())));
 		return data;

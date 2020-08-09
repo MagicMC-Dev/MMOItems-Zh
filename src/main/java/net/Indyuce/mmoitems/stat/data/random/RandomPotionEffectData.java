@@ -5,8 +5,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
+import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 
 public class RandomPotionEffectData {
@@ -45,7 +45,7 @@ public class RandomPotionEffectData {
 		return level;
 	}
 
-	public PotionEffectData randomize(GeneratedItemBuilder builder) {
+	public PotionEffectData randomize(MMOItemBuilder builder) {
 		return new PotionEffectData(type, duration.calculate(builder.getLevel()), (int) level.calculate(builder.getLevel()));
 	}
 }

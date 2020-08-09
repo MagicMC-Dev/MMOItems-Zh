@@ -1,8 +1,33 @@
 package net.Indyuce.mmoitems.command;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpdaterData;
@@ -10,13 +35,12 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.plugin.identify.IdentifiedItem;
-import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
-import net.Indyuce.mmoitems.api.itemgen.loot.LootBuilder;
-import net.Indyuce.mmoitems.api.itemgen.loot.restriction.ClassFilter;
-import net.Indyuce.mmoitems.api.itemgen.loot.restriction.TypeFilter;
-import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
+import net.Indyuce.mmoitems.api.item.LootBuilder;
+import net.Indyuce.mmoitems.api.item.internal.identify.IdentifiedItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.loot.ClassFilter;
+import net.Indyuce.mmoitems.api.item.template.loot.TypeFilter;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.RandomAmount;
@@ -33,25 +57,6 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.SmartGive;
-import org.apache.commons.lang.Validate;
-import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class MMOItemsCommand implements CommandExecutor {
 	private static final Random random = new Random();
@@ -115,22 +120,24 @@ public class MMOItemsCommand implements CommandExecutor {
 				RPGPlayer rpgPlayer = PlayerData.get(target).getRPG();
 				final int itemLevel = handler.hasArgument("level") ? Integer.parseInt(handler.getValue("level"))
 						: (handler.hasArgument("matchlevel")
-								? MMOItems.plugin.getItemGenerator().rollLevel(rpgPlayer.getLevel())
+								? MMOItems.plugin.getItems().rollLevel(rpgPlayer.getLevel())
 								: 1 + random.nextInt(100));
-				final RolledTier itemTier = handler.hasArgument("tier") ? MMOItems.plugin.getItemGenerator()
-						.getTierInfo(MMOItems.plugin.getTiers()
-								.getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_")))
-						.roll(itemLevel) : MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
+				final ItemTier itemTier = handler.hasArgument("tier")
+						? MMOItems.plugin.getTiers().getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_"))
+						: MMOItems.plugin.getItems().rollTier();
 
 				// no need to use a LootBuilder
 				if (handler.hasArgument("id")) {
+					Validate.isTrue(handler.hasArgument("type"), "You must specify a type as well.");
+					String format = handler.getValue("type");
+					Validate.isTrue(Type.isValid(format), "Could not find type with ID '" + format + "'");
+					Type type = Type.get(format);
+
 					String id = handler.getValue("id").toUpperCase().replace("-", "_");
-					Validate.isTrue(MMOItems.plugin.getItemGenerator().hasTemplate(id),
-							"Could not find gen item with ID '" + id + "'");
-					GenerationTemplate template = MMOItems.plugin.getItemGenerator().getTemplate(id);
+					Validate.isTrue(MMOItems.plugin.getItems().hasTemplate(type, id), "Could not find gen item with ID '" + id + "'");
+					MMOItemTemplate template = MMOItems.plugin.getItems().getTemplate(type, id);
 					ItemStack item = template.newBuilder(itemLevel, itemTier).build().newBuilder().build();
-					Validate.isTrue(item != null && item.getType() != Material.AIR,
-							"Could not generate gen item with ID '" + id + "'");
+					Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate gen item with ID '" + id + "'");
 					new SmartGive(give).give(item);
 					return true;
 				}
@@ -558,7 +565,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getTiers().reload();
 			MMOItems.plugin.getSets().reload();
 			MMOItems.plugin.getUpgrades().reload();
-			MMOItems.plugin.getItemGenerator().reload();
+			MMOItems.plugin.getItems().reload();
 			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
 				MMOItems.plugin.getWorldGen().reload();
 				MMOItems.plugin.getCustomBlocks().reload();

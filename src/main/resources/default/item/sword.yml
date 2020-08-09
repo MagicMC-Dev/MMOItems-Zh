@@ -1,3 +1,32 @@
+# Example item
+LONG_SWORD:
+    
+    # Base item data
+    base:
+        material: IRON_SWORD
+        name: '&fLong Sword'
+        attack-speed: 1.6
+        attack-damage:
+            base: 6
+            scale: 1.2
+            spread: .1
+            max-spread: .3
+        required-level:
+            base: 0
+            scale: 1
+        element:
+            fire:
+                damage: 10
+
+    # Modifiers which have a chance to be rolled
+    modifiers:
+        sharp:
+            chance: 0.5
+            parent: sharp
+        fiery:
+            chance: 0.5
+            parent: fiery
+
 CUTLASS:
   material: IRON_SWORD
   attack-damage: 6.0=8.0

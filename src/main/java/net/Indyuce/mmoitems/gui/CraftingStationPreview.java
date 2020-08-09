@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
-import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.item.internal.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 
 public class CraftingStationPreview extends PluginInventory {

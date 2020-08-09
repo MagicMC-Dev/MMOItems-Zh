@@ -1,148 +1,168 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 
-import org.bukkit.configuration.ConfigurationSection;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
-public class ItemManager extends BukkitRunnable {
-	private final Map<Type, CachedItems> cache = new HashMap<>();
+public class ItemManager {
 
-	public ItemManager() {
-		runTaskTimerAsynchronously(MMOItems.plugin, 60 * 20, 2 * 60 * 20);
+	/*
+	 * registered mmoitem templates
+	 */
+	private final Map<Type, Map<String, MMOItemTemplate>> templates = new HashMap<>();
+
+	/*
+	 * bank of item modifiers which can be used anywhere in generation templates
+	 * to make item generation easier.
+	 */
+	private final Map<String, TemplateModifier> modifiers = new HashMap<>();
+
+	private static final Random random = new Random();
+
+	public MMOItemTemplate getTemplate(Type type, String id) {
+
+		Validate.isTrue(templates.containsKey(type), "No template is registered with type " + type.getId() + "");
+		Map<String, MMOItemTemplate> templates = this.templates.get(type);
+
+		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
+		Validate.isTrue(templates.containsKey(id), "No template was found with ID '" + id + "'");
+
+		return templates.get(id);
 	}
 
+	public MMOItem generateMMOItem(Type type, String id, PlayerData player) {
+		return getTemplate(type, id).newBuilder(player.getRPG()).build();
+	}
+
+	@Deprecated
 	public MMOItem getMMOItem(Type type, String id) {
-		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
-
-		LoadedItem cached = getCachedMMOItem(type, id);
-		if (cached != null) {
-			cached.refresh();
-			return cached.getItem();
-		}
-
-		FileConfiguration typeConfig = type.getConfigFile().getConfig();
-		if (!typeConfig.contains(id))
-			return null;
-
-		MMOItem mmoitem = new MMOItem(type, id);
-		ConfigurationSection section = typeConfig.getConfigurationSection(id);
-
-		for (ItemStat stat : type.getAvailableStats())
-			if (section.contains(stat.getPath()))
-				try {
-					mmoitem.setData(stat, stat.whenInitialized(section.get(stat.getPath())));
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING,
-							"Error while loading " + type.getId() + "." + id + " (" + stat.getName() + "): " + exception.getMessage());
-				}
-
-		cache(mmoitem);
-		return mmoitem;
+		return getTemplate(type, id).newBuilder(0, rollTier()).build();
 	}
 
+	@Deprecated
 	public ItemStack getItem(Type type, String id) {
-		MMOItem item = getMMOItem(type, id);
-		return item == null ? null : item.newBuilder().build();
+		return getMMOItem(type, id).newBuilder().build();
 	}
 
-	public LoadedItem getCachedMMOItem(Type type, String id) {
-		CachedItems cached;
-		return this.cache.containsKey(type) ? (cached = cache.get(type)).isCached(id) ? cached.getCached(id) : null : null;
-	}
-
-	/*
-	 * warning, this method checks the entire config file and should only be
-	 * used when the plugin is loading.
+	/**
+	 * Registers an MMOItem template internally. Can be done at any time
+	 * 
+	 * @param template
+	 *            Template to register
 	 */
+	public void registerTemplate(MMOItemTemplate template) {
+		Validate.notNull(template, "MMOItem template cannot be null");
+
+		if (!templates.containsKey(template.getType()))
+			templates.put(template.getType(), new HashMap<>());
+		templates.get(template.getType()).put(template.getId(), template);
+	}
+
+	@Deprecated
 	public boolean hasMMOItem(Type type, String id) {
+		return hasTemplate(type, id);
+	}
+
+	public boolean hasTemplate(Type type, String id) {
 		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
-
-		// check cache
-		if (cache.containsKey(type) && cache.get(type).isCached(id))
-			return true;
-		
-		// check type config file
-		return type.getConfigFile().getConfig().contains(id);
+		return templates.containsKey(type) && templates.get(type).containsKey(id);
 	}
 
-	public void uncache(Type type, String id) {
-		if (cache.containsKey(type))
-			cache.get(type).emptyCache(id);
+	public Collection<TemplateModifier> getModifiers() {
+		return modifiers.values();
 	}
 
-	private void cache(MMOItem item) {
-		if (!cache.containsKey(item.getType()))
-			cache.put(item.getType(), new CachedItems());
-		cache.get(item.getType()).cache(item.getId(), item);
+	public boolean hasModifier(String id) {
+		return modifiers.containsKey(id);
+	}
+
+	public TemplateModifier getModifier(String id) {
+		return modifiers.get(id);
+	}
+
+	public ItemTier rollTier() {
+
+		double s = 0;
+		for (ItemTier tier : MMOItems.plugin.getTiers().getAll()) {
+			if (random.nextDouble() < tier.getGenerationChance() / (1 - s))
+				return tier;
+
+			s += tier.getGenerationChance();
+		}
+
+		// default tier
+		return null;
 	}
 
 	/*
-	 * every two minutes, loops through any loaded item and uncaches any if they
-	 * have not been generated for more than 5 minutes.
+	 * formula to generate the item level. input is the player level and the
+	 * level spread which corresponds to the standard deviation of a gaussian
+	 * distribution centered on the player level
 	 */
-	@Override
-	public void run() {
-		cache.values().forEach(cached -> cached.removeIf(loaded -> loaded.isTimedOut()));
+	public int rollLevel(int playerLevel) {
+		double found = random.nextGaussian() * MMOItems.plugin.getLanguage().levelSpread + playerLevel;
+
+		// cannot be more than 2x the level and must be higher than 1
+		found = Math.max(Math.min(2 * playerLevel, found), 1);
+
+		return (int) found;
 	}
 
-	public class CachedItems {
-		private final Map<String, LoadedItem> cache = new HashMap<>();
-
-		public LoadedItem getCached(String id) {
-			return cache.get(id);
-		}
-
-		public boolean isCached(String id) {
-			return cache.containsKey(id);
-		}
-
-		public void emptyCache(String id) {
-			cache.remove(id);
-		}
-
-		public void cache(String id, MMOItem item) {
-			cache.put(id, new LoadedItem(item));
-		}
-
-		public void removeIf(Predicate<LoadedItem> filter) {
-			cache.values().removeIf(filter);
-		}
-	}
-
-	public class LoadedItem {
-		private final MMOItem item;
-
-		private long loaded = System.currentTimeMillis();
-
-		public LoadedItem(MMOItem item) {
-			this.item = item;
-		}
-
-		public void refresh() {
-			loaded = System.currentTimeMillis();
-		}
-
-		public MMOItem getItem() {
-			return item;
-		}
-
-		public boolean isTimedOut() {
-			return loaded + 5 * 60 * 1000 < System.currentTimeMillis();
-		}
+	/**
+	 * @return Collects all existing mmoitem templates into a set so that it can
+	 *         be filtered afterwards to generate random loot
+	 */
+	public Set<MMOItemTemplate> collectTemplates() {
+		Set<MMOItemTemplate> templates = new HashSet<>();
+		this.templates.values().forEach(map -> templates.addAll(map.values()));
+		return templates;
 	}
 
 	public void reload() {
-		cache.clear();
+		templates.clear();
+		modifiers.clear();
+
+		MMOItems.plugin.getLogger().log(Level.INFO, "Loading template modifiers, please wait..");
+		for (File file : new File(MMOItems.plugin.getDataFolder() + "/generator/modifiers").listFiles()) {
+			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			for (String key : config.getKeys(false))
+				try {
+					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
+					modifiers.put(modifier.getId(), modifier);
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.INFO,
+							"An error occured while trying to load item gen modifier '" + key + "': " + exception.getMessage());
+				}
+		}
+
+		MMOItems.plugin.getLogger().log(Level.INFO, "Loading item templates, please wait..");
+		for (Type type : MMOItems.plugin.getTypes().getAll()) {
+			FileConfiguration config = type.getConfigFile().getConfig();
+			for (String key : config.getKeys(false))
+				try {
+					registerTemplate(new MMOItemTemplate(config.getConfigurationSection(key)));
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.INFO,
+							"An error occured while trying to load item gen template '" + key + "': " + exception.getMessage());
+				}
+		}
 	}
 }

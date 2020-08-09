@@ -4,31 +4,35 @@ import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmocore.api.loot.LootBuilder;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.itemgen.GenerationTemplate;
-import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class ItemTemplateDropItem extends ItemGenerationDropItem {
-	private final GenerationTemplate template;
+	private final MMOItemTemplate template;
 
 	public ItemTemplateDropItem(MMOLineConfig config) {
 		super(config);
 
-		config.validate("id");
+		config.validate("type", "id");
 
-		String id = config.getString("id");
-		Validate.isTrue(MMOItems.plugin.getItemGenerator().hasTemplate(id), "Could not find gen template with ID '" + id + "'");
-		template = MMOItems.plugin.getItemGenerator().getTemplate(id);
+		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
+		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type with ID '" + format + "'");
+		Type type = MMOItems.plugin.getTypes().get(format);
+
+		String id = config.getString("id").replace("-", "_").toUpperCase();
+		Validate.isTrue(MMOItems.plugin.getItems().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
+		template = MMOItems.plugin.getItems().getTemplate(type, id);
 	}
 
 	@Override
 	public void collect(LootBuilder builder) {
 		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
 
-		int itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
-		RolledTier itemTier = this.tier != null ? new RolledTier(MMOItems.plugin.getItemGenerator().getTierInfo(this.tier), itemLevel)
-				: MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
+		int itemLevel = MMOItems.plugin.getItems().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
+		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getItems().rollTier();
 
 		builder.addLoot(template.newBuilder(itemLevel, itemTier).build().newBuilder().build());
 	}

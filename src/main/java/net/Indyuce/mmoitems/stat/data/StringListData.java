@@ -8,8 +8,8 @@ import org.apache.commons.lang.Validate;
 
 import com.google.gson.JsonArray;
 
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -39,7 +39,7 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return new StringListData(new ArrayList<>(list));
 	}
 

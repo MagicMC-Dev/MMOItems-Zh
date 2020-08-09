@@ -1,20 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
-import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.util.AltChar;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.potion.PotionEffectType;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +12,23 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffectType;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.item.internal.ConfigItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.util.AltChar;
+
 public class ConfigManager {
 
 	// cached config files
@@ -36,8 +38,8 @@ public class ConfigManager {
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
-
-	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage;
+	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
+	public NumericStatFormula defaultItemCapacity;
 
 	private static final Random random = new Random();
 	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
@@ -72,8 +74,7 @@ public class ConfigManager {
 					String name = entries.nextElement().getName();
 					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
 						Files.copy(MMOItems.plugin.getResource(name),
-								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2])
-										.toPath());
+								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
 				}
 				jarFile.close();
 			} catch (IOException exception) {
@@ -203,6 +204,16 @@ public class ConfigManager {
 		soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
 		soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
 		upgradeRequirementsCheck = MMOItems.plugin.getConfig().getBoolean("item-upgrade-requirements-check");
+		levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
+
+		try {
+			defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));
+		} catch (IllegalArgumentException exception) {
+			defaultItemCapacity = new NumericStatFormula(5, .05, .1, .3);
+			MMOItems.plugin.getLogger().log(Level.INFO,
+					"An error occured while trying to load default capacity formula for the item generator, using default: "
+							+ exception.getMessage());
+		}
 
 		for (ConfigItem item : ConfigItem.values)
 			item.update(items.getConfig().getConfigurationSection(item.getId()));
@@ -344,6 +355,7 @@ public class ConfigManager {
 				}
 		}
 	}
+
 	public static class YamlConverter {
 		private File file;
 
@@ -357,7 +369,10 @@ public class ConfigManager {
 
 		public boolean convert() throws IOException {
 			if (!file.exists())
-				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) { // this converts old custom-blocks.yml
+				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) { // this
+																																			// converts
+																																			// old
+																																			// custom-blocks.yml
 					file.createNewFile(); // creates the file
 
 					YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
@@ -367,10 +382,14 @@ public class ConfigManager {
 					for (String id : oldConfig.getKeys(false)) {
 						ConfigurationSection section = newConfig.getConfigurationSection(id);
 						section.set("material", "STONE"); // adds material
-						section.set("block-id", Integer.parseInt(id)); // adds block id
+						section.set("block-id", Integer.parseInt(id)); // adds
+																		// block
+																		// id
 						for (String node : section.getKeys(false)) {
 							Object value = section.get(node);
-							if (node.equalsIgnoreCase("display-name")) { // converts name format
+							if (node.equalsIgnoreCase("display-name")) { // converts
+																			// name
+																			// format
 								section.set("display-name", null);
 								section.set("name", value);
 							}

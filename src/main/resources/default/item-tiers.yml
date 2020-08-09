@@ -48,6 +48,17 @@ UNCOMMON:
         # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Color.html
         color: 'GRAY'
     
+    generation:
+        chance: 0.15
+        capacity:
+            base: 6
+            
+            # Scales on the item level
+            scale: .1
+            
+            spread: .1
+            max-spread: .3
+    
     deconstruct-item:
         success:
             coef: 1
@@ -65,6 +76,13 @@ RARE:
         name: 'Rare'
         range: 6
         prefix: '&6'
+    generation:
+        chance: 0.01
+        capacity:
+            base: 12
+            scale: .2
+            spread: .1
+            max-spread: .3
     deconstruct-item:
         success:
             coef: 1
@@ -116,6 +134,13 @@ MYTHICAL:
         name: 'Mythical'
         prefix: '&5'
         range: 6
+    generation:
+        chance: 0.003
+        capacity:
+            base: 15
+            scale: .3
+            spread: .1
+            max-spread: .3
     deconstruct-item:
         success:
             coef: 1

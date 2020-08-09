@@ -6,8 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -35,7 +34,7 @@ public class RandomPotionEffectListData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		PotionEffectListData list = new PotionEffectListData();
 		effects.forEach(random -> list.add(random.randomize(builder)));
 		return list;

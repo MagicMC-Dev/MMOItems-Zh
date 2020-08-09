@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.stat;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
@@ -18,7 +18,7 @@ public class LegacyDurability extends DoubleStat implements ProperStat {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		item.getItemStack().setDurability((short) ((DoubleData) data).generateNewValue());
 	}
 

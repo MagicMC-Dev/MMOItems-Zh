@@ -1,3 +1,28 @@
+COMPOSITE_BOW:
+    base:
+        material: BOW
+        name: '&fComposite Bow'
+        critical-strike-chance: 30.0
+        attack-damage:
+            base: 7
+            scale: 0.3
+            spread: .1
+            max-spread: .3
+        required-level:
+            base: 0
+            scale: 1
+    modifiers:
+        swiftness:
+            weight: 3
+            parent: swiftness
+        heavy:
+            chance: 0.05
+            weight: 3
+            parent: heavy
+        doom:
+            weight: 5
+            parent: impending-doom
+
 HELL_BOW:
   material: BOW
   enchants:

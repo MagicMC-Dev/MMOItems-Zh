@@ -28,6 +28,26 @@ disable-abilities-in-offhand: false
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10
 
+# When generating an item, the item gen must
+# choose an item level which coincides with
+# the player's level (otherwise unplayable).
+#
+# The item level is modeled by a gaussian
+# random variable which mean is the player level.
+# You can edit the standard deviation here.
+#
+# Leave it like this if don't you know
+# what it does, default value is fine.
+item-level-spread: 2
+
+# When an item is generated with no tier,
+# this is the capacity it should have.
+default-item-capacity:
+    base: 3
+    scale: 0
+    spread: 0
+    max-spread: 0
+
 # Changes the default value for some stats.
 default:
     attack-speed: 0.67

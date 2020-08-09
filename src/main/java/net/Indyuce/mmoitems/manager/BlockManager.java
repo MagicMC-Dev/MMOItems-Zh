@@ -43,6 +43,7 @@ public class BlockManager {
 	/*
 	 * maps the custom block id to the custom block instance
 	 */
+
 	private final Map<Integer, CustomBlock> customBlocks = new HashMap<>();
 
 	/*

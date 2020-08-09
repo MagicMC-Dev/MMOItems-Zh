@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -85,7 +85,7 @@ public class Type {
 	 * list of stats which can be applied onto an item which has this type. This
 	 * improves performance when generating an item by a significant amount.
 	 */
-	private final Set<ItemStat> available = new HashSet<>();
+	private final List<ItemStat> available = new ArrayList<>();
 
 	public Type(TypeSet set, String id, boolean weapon, boolean melee, boolean rightClickSpecial, EquipmentSlot equipType) {
 		this.set = set;
@@ -178,7 +178,7 @@ public class Type {
 	 *         specific item type. This list is cached when types are being
 	 *         loaded and is a PRETTY GOOD performance improvement.
 	 */
-	public Set<ItemStat> getAvailableStats() {
+	public List<ItemStat> getAvailableStats() {
 		return available;
 	}
 

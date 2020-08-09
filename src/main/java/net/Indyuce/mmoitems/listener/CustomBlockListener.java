@@ -59,7 +59,7 @@ public class CustomBlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void c(BlockPlaceEvent event) {
 		if (!event.isCancelled() && !isMushroomBlock(event.getBlockPlaced().getType())) {
-			NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(event.getItemInHand());
+			NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItemInHand());
 			int blockId = nbtItem.getInteger("MMOITEMS_BLOCK_ID");
 			if (blockId > 160 || blockId < 1 || blockId == 54) // checks if block is a custom block
 				return;

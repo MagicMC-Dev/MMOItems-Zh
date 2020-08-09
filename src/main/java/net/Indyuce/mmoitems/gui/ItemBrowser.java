@@ -259,7 +259,7 @@ public class ItemBrowser extends PluginInventory {
 			}
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
-				MMOLib.plugin.getNMS().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
+				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
 				player.closeInventory();
 				return;
 			}
@@ -288,7 +288,8 @@ public class ItemBrowser extends PluginInventory {
 
 		} else {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				ItemStack generatedItem =  (NBTItem.get(item).getBoolean("UNSTACKABLE")) // this refreshes the item if it's unstackable
+				// this refreshes the item if it's unstackable
+				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE"))
 						? MMOItems.plugin.getItems().getMMOItem(type, id).clone().newBuilder().build()
 						: removeLastLoreLines(item, 3);
 				player.getInventory().addItem(generatedItem);

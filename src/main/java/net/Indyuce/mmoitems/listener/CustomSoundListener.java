@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.listener;
 
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -20,8 +21,6 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomSoundListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
@@ -78,7 +77,7 @@ public class CustomSoundListener implements Listener {
 		playSound(event.getBrokenItem(), "ON_ITEM_BREAK", event.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void i(BlockPlaceEvent event) {
 		playSound(event.getItemInHand(), "ON_PLACED", event.getPlayer());
 	}

@@ -1,18 +1,17 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.plugin.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Type {
 
@@ -50,8 +49,9 @@ public class Type {
 	public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, false, true, EquipmentSlot.OTHER);
 	public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, false, true, EquipmentSlot.OTHER);
 	public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, false, true, EquipmentSlot.ACCESSORY);
+    public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, false, false, EquipmentSlot.OTHER);
 
-	private final String id;
+    private final String id;
 	private String name;
 	private final TypeSet set;
 
@@ -68,7 +68,7 @@ public class Type {
 
 	/*
 	 * used to display the item in the item explorer and in the item recipes
-	 * list in the advanved workbench. can also be edited using the config
+	 * list in the advanced workbench. can also be edited using the config
 	 * files.
 	 */
 	private ItemStack item;

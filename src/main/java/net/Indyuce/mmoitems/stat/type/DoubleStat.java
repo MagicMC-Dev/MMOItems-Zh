@@ -27,10 +27,11 @@ import java.util.List;
 
 public class DoubleStat extends ItemStat implements Upgradable {
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
-		super(id, item, name, lore, new String[] { "!miscellaneous", "all" });
+		super(id, item, name, lore, new String[] { "!miscellaneous", "!block", "all" });
 	}
 
 	public DoubleStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
+
 		super(id, item, name, lore, types, materials);
 	}
 

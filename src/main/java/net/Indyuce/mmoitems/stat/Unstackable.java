@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.UUID;
-
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class Unstackable extends BooleanStat {
 	public Unstackable() {
@@ -20,8 +19,8 @@ public class Unstackable extends BooleanStat {
 	@Override
 	public void whenApplied(MMOItemBuilder item, StatData data) {
 		if (((BooleanData) data).isEnabled()) {
-			item.addItemTag(new ItemTag("MMOITEMS_UNSTACKABLE", true));
-			item.addItemTag(new ItemTag("MMOITEMS_UNSTACKABLE_UUID", UUID.randomUUID().toString()));
+			item.addItemTag(new ItemTag(getNBTPath(), true));
+			item.addItemTag(new ItemTag(getNBTPath() + "_UUID", UUID.randomUUID().toString()));
 		}
 	}
 }

@@ -1,53 +1,38 @@
 package net.Indyuce.mmoitems.api.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.util.MushroomState;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.bukkit.inventory.ItemStack;
 
 public class CustomBlock {
 	private final int id;
 	private final MushroomState state;
 
-	private final String blockName;
+	private final MMOItem mmoitem;
+
 	private final WorldGenTemplate template;
-	private final List<String> lore = new ArrayList<>();
 	private final int minExp, maxExp, requiredPower;
 
-	public CustomBlock(MushroomState state, ConfigurationSection config) {
-		this.id = Integer.valueOf(config.getName());
+	public CustomBlock(MushroomState state, MMOItem mmoitem) {
+		this.mmoitem = mmoitem;
+
+		this.id = (mmoitem.hasData(ItemStat.BLOCK_ID)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).generateNewValue() : 0;
 		this.state = state;
 
-		Validate.notNull(config, "Could not read custom block config");
+		this.minExp =  (mmoitem.hasData(ItemStat.MIN_XP)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.MIN_XP)).generateNewValue() : 0;
+		this.maxExp =  (mmoitem.hasData(ItemStat.MAX_XP)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.MAX_XP)).generateNewValue() : 0;
+		this.requiredPower =  (mmoitem.hasData(ItemStat.REQUIRED_POWER)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.REQUIRED_POWER)).generateNewValue() : 0;
 
-		blockName = MMOLib.plugin.parseColors(config.getString("display-name", "Custom Block"));
-		if (config.contains("lore"))
-			for (String s : config.getStringList("lore"))
-				lore.add(MMOLib.plugin.parseColors(s));
-		minExp = config.getInt("min-xp", 0);
-		maxExp = config.getInt("max-xp", 0);
-		requiredPower = config.getInt("required-power", 0);
-		template = config.contains("gen-template") ? MMOItems.plugin.getWorldGen().getOrThrow(config.get("gen-template").toString()) : null;
+		this.template = (mmoitem.hasData(ItemStat.GEN_TEMPLATE)) ? MMOItems.plugin.getWorldGen().getOrThrow((mmoitem.getData(ItemStat.GEN_TEMPLATE)).toString()) : null;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public String getName() {
-		return blockName;
-	}
 
 	public MushroomState getState() {
 		return state;
@@ -59,10 +44,6 @@ public class CustomBlock {
 
 	public WorldGenTemplate getGenTemplate() {
 		return template;
-	}
-
-	public List<String> getLore() {
-		return lore;
 	}
 
 	public int getMinExpDrop() {
@@ -77,24 +58,7 @@ public class CustomBlock {
 		return requiredPower;
 	}
 
-	// Convert block data into Item
 	public ItemStack getItem() {
-		ItemStack item = new ItemStack(Material.CLAY_BALL);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(blockName);
-		meta.setLore(lore);
-		meta.setUnbreakable(true);
-		meta.addItemFlags(ItemFlag.values());
-
-		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
-			((Damageable) meta).setDamage(id);
-
-		item.setItemMeta(meta);
-
-		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)
-				.addTag(new ItemTag("MMOITEMS_DISABLE_CRAFTING", true), new ItemTag("MMOITEMS_DISABLE_SMITHING", true),
-						new ItemTag("MMOITEMS_DISABLE_ENCHANTING", true), new ItemTag("MMOITEMS_DISABLE_REPAIRING", true),
-						new ItemTag("MMOITEMS_BLOCK_ID", id), new ItemTag("CustomModelData", id + 1000))
-				.toItem();
+		return mmoitem.newBuilder().getItemStack();
 	}
 }

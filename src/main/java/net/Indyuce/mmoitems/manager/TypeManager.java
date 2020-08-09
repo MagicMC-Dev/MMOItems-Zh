@@ -1,17 +1,16 @@
 package net.Indyuce.mmoitems.manager;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
+import org.apache.commons.lang.Validate;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
 
 public class TypeManager {
 	private final Map<String, Type> map = new LinkedHashMap<>();
@@ -22,7 +21,7 @@ public class TypeManager {
 	 */
 	public void reload() {
 		map.clear();
-		registerAll(Type.ACCESSORY, Type.ARMOR, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET, Type.GEM_STONE,
+		registerAll(Type.ACCESSORY, Type.ARMOR, Type.BLOCK, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET, Type.GEM_STONE,
 				Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST, Type.ORNAMENT, Type.SPEAR, Type.STAFF,
 				Type.SWORD, Type.TOOL, Type.WHIP);
 
@@ -67,7 +66,7 @@ public class TypeManager {
 		map.put(type.getId(), type);
 	}
 
-	private void registerAll(Type... types) {
+	public void registerAll(Type... types) {
 		for (Type type : types)
 			register(type);
 	}

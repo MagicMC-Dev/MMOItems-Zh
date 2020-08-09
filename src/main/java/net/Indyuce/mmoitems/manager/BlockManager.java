@@ -1,28 +1,23 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Level;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.util.MushroomState;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.MultipleFacing;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.Indyuce.mmoitems.api.util.MushroomState;
+import java.util.*;
+import java.util.logging.Level;
 
 public class BlockManager {
 	private final static List<Integer> downIds = Arrays.asList(new Integer[] { 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
 			91, 92, 93, 94, 95, 96, 97, 98, 99, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149,
 			150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160 });
 	private final static List<Integer> eastIds = Arrays
@@ -107,17 +102,21 @@ public class BlockManager {
 		customBlocks.clear();
 		mushroomStateValue.clear();
 
-		FileConfiguration config = new ConfigFile("custom-blocks").getConfig();
-		for (int id = 1; id < 161; id++)
-			if (id != 54 && config.contains("" + id))
+		for (String blockItemId : Type.BLOCK.getConfigFile().getConfig().getKeys(false)) {
+			MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(Type.BLOCK, blockItemId).clone();
+			int id = (mmoitem.hasData(ItemStat.BLOCK_ID)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).generateNewValue() : 0;
+			if (id > 0 && id < 161 && id != 54) {
+				MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id),
+						eastIds.contains(id), southIds.contains(id), northIds.contains(id));
+				CustomBlock customBlock = new CustomBlock(state, mmoitem);
+				register(customBlock);
 				try {
-					MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id),
-							eastIds.contains(id), southIds.contains(id), northIds.contains(id));
-					register(new CustomBlock(state, config.getConfigurationSection("" + id)));
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block '" + id + "': " + exception.getMessage());
-				}
 
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block '" + blockItemId + "': " + exception.getMessage());
+				}
+			}
+		}
 	}
 
 	private Material getType(int id) {

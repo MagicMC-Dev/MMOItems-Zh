@@ -1,41 +1,33 @@
 package net.Indyuce.mmoitems.listener;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.Optional;
+import java.util.Random;
+import java.util.logging.Level;
 
 public class CustomBlockListener implements Listener {
 
 	private static final Random random = new Random();
-	private static final List<Material> mat = Arrays.asList(Material.GRASS, Material.TALL_GRASS, Material.SEAGRASS, Material.TALL_SEAGRASS,
-			Material.FERN, Material.LARGE_FERN, Material.DEAD_BUSH, Material.SNOW);
 
 	public CustomBlockListener() {
 		if (MMOItems.plugin.getLanguage().replaceMushroomDrops)
@@ -64,77 +56,29 @@ public class CustomBlockListener implements Listener {
 								: random.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
 						: 0);
 	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void c(PlayerInteractEvent event) {
-		if (!event.hasItem() || event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND
-				|| event.getClickedBlock().getType().isInteractable())
-			return;
-		if (event.getItem().getType() == Material.CLAY_BALL) {
-			NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
-			if (nbtItem.getInteger("MMOITEMS_BLOCK_ID") > 160 || nbtItem.getInteger("MMOITEMS_BLOCK_ID") < 1)
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void c(BlockPlaceEvent event) {
+		if (!event.isCancelled() && !isMushroomBlock(event.getBlockPlaced().getType())) {
+			NBTItem nbtItem = MMOLib.plugin.getNMS().getNBTItem(event.getItemInHand());
+			int blockId = nbtItem.getInteger("MMOITEMS_BLOCK_ID");
+			if (blockId > 160 || blockId < 1 || blockId == 54) // checks if block is a custom block
 				return;
-
-			CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(nbtItem.getInteger("MMOITEMS_BLOCK_ID"));
-
-			Block modify = mat.contains(event.getClickedBlock().getType()) ? event.getClickedBlock()
-					: event.getClickedBlock().getRelative(event.getBlockFace());
-
-			if (isStandingInside(event.getPlayer().getLocation(), modify.getLocation()))
+			if (MMOItems.plugin.getCustomBlocks().getBlock(blockId) == null) {
+				MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load custom block '" + blockId + "': " + " Block is not registered.");
+				MMOItems.plugin.getLogger().log(Level.SEVERE, "Try reloading the plugin to solve the issue.");
+				event.setCancelled(true);
 				return;
+			}
 
-			if (!mat.contains(modify.getType()))
-				switch (modify.getType()) {
-				case AIR:
-				case CAVE_AIR:
-				case STRUCTURE_VOID:
-					break;
-				default:
-					return;
-				}
+			CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(blockId); // stores the custom block
+			Block newBlock = event.getBlockPlaced();
+			newBlock.setType(block.getState().getType(), false);
+			newBlock.setBlockData(block.getState().getBlockData(), false);
 
-			Block oldState = modify;
-			Material cachedType = modify.getType();
-			BlockData cachedData = modify.getBlockData();
-			modify.setType(block.getState().getType(), false);
-			modify.setBlockData(block.getState().getBlockData(), false);
-
-			MMOLib.plugin.getVersion().getWrapper().playArmAnimation(event.getPlayer());
-			modify.getWorld().playSound(event.getPlayer().getLocation(), MMOLib.plugin.getVersion().getWrapper().getBlockPlaceSound(modify), 0.8f, 1.0f);
-
-			BlockPlaceEvent bpe = new BlockPlaceEvent(modify, oldState.getState(), event.getClickedBlock(), event.getItem(), event.getPlayer(), true,
+			BlockPlaceEvent bpe = new BlockPlaceEvent(newBlock, newBlock.getState(), event.getBlockAgainst(), event.getItemInHand(), event.getPlayer(), true,
 					EquipmentSlot.HAND);
 			Bukkit.getServer().getPluginManager().callEvent(bpe);
-			if (bpe.isCancelled()) {
-				modify.setType(cachedType);
-				modify.setBlockData(cachedData);
-			} else if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-				ItemStack stack = event.getItem();
-				stack.setAmount(stack.getAmount() - 1);
-				event.getPlayer().getInventory().setItemInMainHand(stack.getAmount() > 0 ? stack : null);
-			}
 		}
-		/**
-		 * else
-		 * if(MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getItem().getType()))
-		 * { event.setCancelled(true); Block modify =
-		 * event.getClickedBlock().getRelative(event.getBlockFace());
-		 * 
-		 * if(isStandingInside(event.getPlayer().getLocation(),
-		 * modify.getLocation())) return; if(modify.getType() != Material.AIR)
-		 * return;
-		 * 
-		 * Block oldState = modify; modify.setType(event.getItem().getType(),
-		 * false);
-		 * modify.setBlockData(event.getItem().getType().createBlockData(),
-		 * false);
-		 * 
-		 * BlockPlaceEvent bpe = new BlockPlaceEvent(modify,
-		 * oldState.getState(), event.getClickedBlock(), event.getItem(),
-		 * event.getPlayer(), true, EquipmentSlot.HAND);
-		 * Bukkit.getServer().getPluginManager().callEvent(bpe);
-		 * if(bpe.isCancelled()) modify.setType(Material.AIR); }
-		 */
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -145,11 +89,6 @@ public class CustomBlockListener implements Listener {
 				if (MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getRelative(face).getBlockData()) != null)
 					event.setCancelled(true);
 		}
-	}
-
-	private boolean isStandingInside(Location p, Location b) {
-		return (p.getBlockX() == b.getBlockX() && (p.getBlockY() == b.getBlockY() || p.getBlockY() + 1 == b.getBlockY())
-				&& p.getBlockZ() == b.getBlockZ());
 	}
 
 	public static int getPickaxePower(Player player) {
@@ -181,6 +120,10 @@ public class CustomBlockListener implements Listener {
 		}
 
 		return 0;
+	}
+
+	private boolean isMushroomBlock(Material material) {
+		return (material == Material.BROWN_MUSHROOM_BLOCK || material == Material.MUSHROOM_STEM || material == Material.RED_MUSHROOM_BLOCK);
 	}
 
 	public class MushroomReplacer implements Listener {

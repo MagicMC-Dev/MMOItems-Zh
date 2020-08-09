@@ -1,19 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.text.DecimalFormat;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Random;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-
-import org.bukkit.potion.PotionEffectType;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -25,6 +11,21 @@ import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffectType;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Random;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
 
 public class ConfigManager {
 
@@ -71,7 +72,8 @@ public class ConfigManager {
 					String name = entries.nextElement().getName();
 					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
 						Files.copy(MMOItems.plugin.getResource(name),
-								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
+								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2])
+										.toPath());
 				}
 				jarFile.close();
 			} catch (IOException exception) {
@@ -261,7 +263,6 @@ public class ConfigManager {
 		// default general config files -> /MMOItems
 		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
 		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
-		CUSTOM_BLOCKS("custom-blocks.yml", "", "custom-blocks.yml"),
 		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
 		DROPS("drops.yml", "", "drops.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
@@ -283,6 +284,7 @@ public class ConfigManager {
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),
 		AXE("item/axe.yml", "item", "axe.yml"),
+		BLOCK("item/block.yml", "item", "block.yml"),
 		BOW("item/bow.yml", "item", "bow.yml"),
 		CATALYST("item/catalyst.yml", "item", "catalyst.yml"),
 		CONSUMABLE("item/consumable.yml", "item", "consumable.yml"),
@@ -333,10 +335,52 @@ public class ConfigManager {
 			File file = getFile();
 			if (!file.exists())
 				try {
-					Files.copy(MMOItems.plugin.getResource("default/" + resourceName), file.getAbsoluteFile().toPath());
+					if (!new YamlConverter(file).convert()) {
+						Files.copy(MMOItems.plugin.getResource("default/" + resourceName), file.getAbsoluteFile().toPath());
+					}
+
 				} catch (IOException exception) {
 					exception.printStackTrace();
 				}
+		}
+	}
+	public static class YamlConverter {
+		private File file;
+
+		private final String fileName;
+
+		public YamlConverter(File newConfig) {
+			this.file = newConfig;
+			this.fileName = newConfig.getName();
+
+		}
+
+		public boolean convert() throws IOException {
+			if (!file.exists())
+				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) { // this converts old custom-blocks.yml
+					file.createNewFile(); // creates the file
+
+					YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
+
+					YamlConfiguration newConfig = oldConfig;
+
+					for (String id : oldConfig.getKeys(false)) {
+						ConfigurationSection section = newConfig.getConfigurationSection(id);
+						section.set("material", "STONE"); // adds material
+						section.set("block-id", Integer.parseInt(id)); // adds block id
+						for (String node : section.getKeys(false)) {
+							Object value = section.get(node);
+							if (node.equalsIgnoreCase("display-name")) { // converts name format
+								section.set("display-name", null);
+								section.set("name", value);
+							}
+						}
+					}
+					newConfig.save(file);
+					MMOItems.plugin.getLogger().log(Level.CONFIG, "Successfully converted custom-blocks.yml");
+					return true;
+				}
+			return false;
 		}
 	}
 }

@@ -1,13 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
@@ -21,12 +13,19 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {
 		super("SET", new ItemStack(Material.LEATHER_CHESTPLATE), "Item Set",
 				new String[] { "Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear." },
-				new String[] { "!gem_stone", "!consumable", "!material", "!miscellaneous", "all" });
+				new String[] { "!gem_stone", "!consumable", "!material", "!block", "!miscellaneous", "all" });
 	}
 
 	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event, Player player, Type type, String path) {

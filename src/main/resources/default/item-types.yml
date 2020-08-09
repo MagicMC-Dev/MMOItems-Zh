@@ -291,6 +291,20 @@ GEM_STONE:
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
+BLOCK:
+    display: STONE:0
+    name: 'Block'
+    unident-item:
+        name: '&f#prefix#Unidentified Block'
+        lore:
+            - '&7This item is unidentified. I must'
+            - '&7find a way to identify it!'
+            - '{tier}'
+            - '{tier}&8Item Info:'
+            - '{range}&8- &7Lvl Range: &e#range#'
+            - '{tier}&8- &7Item Tier: #prefix##tier#'
+
+
 # Default subtypes
 GREATSWORD:
     display: DIAMOND_SWORD

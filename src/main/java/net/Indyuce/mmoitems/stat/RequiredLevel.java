@@ -1,9 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
@@ -18,6 +14,9 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.inventory.ItemStack;
 
 public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
@@ -28,7 +27,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 	 */
 	public RequiredLevel() {
 		super("REQUIRED_LEVEL", new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial()), "Required Level",
-				new String[] { "The level your item needs", "in order to be used." }, new String[] { "all" });
+				new String[] { "The level your item needs", "in order to be used." }, new String[] { "!block", "all" });
 	}
 
 	@Override

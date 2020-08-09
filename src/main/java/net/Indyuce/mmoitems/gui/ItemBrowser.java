@@ -24,10 +24,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
@@ -121,7 +118,7 @@ public class ItemBrowser extends PluginInventory {
 		ItemMeta errorMeta = error.getItemMeta();
 		errorMeta.setDisplayName(ChatColor.RED + "- Error -");
 		List<String> errorLore = new ArrayList<>();
-		errorLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "An error occured while");
+		errorLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "An error occurred while");
 		errorLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "trying to generate that item.");
 		errorMeta.setLore(errorLore);
 		error.setItemMeta(errorMeta);
@@ -193,6 +190,15 @@ public class ItemBrowser extends PluginInventory {
 		previousMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
 		previous.setItemMeta(previousMeta);
 
+		if (type == Type.BLOCK) {
+			ItemStack downloadPack = new ItemStack(Material.HOPPER);
+			ItemMeta downloadMeta = downloadPack.getItemMeta();
+			downloadMeta.setDisplayName(ChatColor.GREEN + "Download Default Resourcepack");
+			downloadMeta.setLore(Arrays.asList(ChatColor.LIGHT_PURPLE + "Only seeing stone blocks?", "", ChatColor.RED + "By downloading the default resourcepack you can", ChatColor.RED + "edit the blocks however you want.", ChatColor.RED + "You will still have to add it to your server!"));
+			downloadPack.setItemMeta(downloadMeta);
+			inv.setItem(45, downloadPack);
+		}
+
 		while (n < slots.length)
 			inv.setItem(slots[n++], noItem);
 		if (!deleteMode)
@@ -233,7 +239,7 @@ public class ItemBrowser extends PluginInventory {
 
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
 				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
-					new BlockBrowser(player).open();
+					new ItemBrowser(player, Type.BLOCK).open();
 				else
 					player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return;
@@ -252,8 +258,19 @@ public class ItemBrowser extends PluginInventory {
 				open();
 			}
 
+			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
+				MMOLib.plugin.getNMS().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
+				player.closeInventory();
+				return;
+			}
+
 			if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -")) {
 				Type type = MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"));
+				if (type == Type.BLOCK && !MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
+					player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
+					return;
+				}
+
 				new ItemBrowser(player, type).open();
 			}
 		}

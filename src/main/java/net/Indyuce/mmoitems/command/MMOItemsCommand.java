@@ -1,29 +1,5 @@
 package net.Indyuce.mmoitems.command;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -45,7 +21,6 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.RandomAmount;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.gui.BlockBrowser;
 import net.Indyuce.mmoitems.gui.CraftingStationView;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
@@ -58,6 +33,25 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.SmartGive;
+import org.apache.commons.lang.Validate;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MMOItemsCommand implements CommandExecutor {
 	private static final Random random = new Random();
@@ -173,13 +167,6 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			if (args.length < 2) {
 				new ItemBrowser((Player) sender).open();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("blocks")) {
-				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
-					new BlockBrowser((Player) sender).open();
-				else
-					sender.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
 				return true;
 			}
 			if (!Type.isValid(args[1])) {

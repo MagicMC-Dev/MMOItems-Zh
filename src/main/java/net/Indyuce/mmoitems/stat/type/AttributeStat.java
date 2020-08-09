@@ -17,7 +17,7 @@ public abstract class AttributeStat extends DoubleStat {
 	}
 
 	public AttributeStat(String id, ItemStack item, String name, String[] lore, Attribute attribute, double offset) {
-		super(id, item, name, lore, new String[] { "!consumable", "!miscellaneous", "all" });
+		super(id, item, name, lore, new String[] { "!consumable", "!block", "!miscellaneous", "all" });
 
 		this.offset = offset;
 		this.attribute = attribute;

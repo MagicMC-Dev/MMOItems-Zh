@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.logging.Level;
-
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import net.Indyuce.mmoitems.MMOItems;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class ConfigFile {
 	private final Plugin plugin;
@@ -54,8 +53,9 @@ public class ConfigFile {
 			if (!new File(plugin.getDataFolder() + path).exists())
 				new File(plugin.getDataFolder() + path).mkdir();
 
-			if (!new File(plugin.getDataFolder() + path, name + ".yml").exists())
+			if (!new File(plugin.getDataFolder() + path, name + ".yml").exists()) {
 				new File(plugin.getDataFolder() + path, name + ".yml").createNewFile();
+			}
 		} catch (IOException e) {
 			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml");
 		}

@@ -6,7 +6,7 @@ critical-strike-power: '&7■ Сила Критической Атаки: &f<plu
 range: '&7■ Радиус: &f#'
 mana-cost: '&9■ Маны за Использование: #'
 stamina-cost: '&9■ Стамины за Использование: #'
-arrow-velocity: '&7■ Arrow Velocity: &f#%'
+arrow-velocity: '&7■ Arrow Velocity: &f#'
 blunt-power: '&7■ Сила Блока: &f#'
 blunt-rating: '&7■ Шанс Блока: &f#%'
 two-handed: '&7■ &cДвуручное'

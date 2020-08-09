@@ -21,6 +21,16 @@ public class MMOItem {
 	 */
 	private final Map<ItemStat, StatData> stats = new LinkedHashMap<>();
 
+	/**
+	 * Constructor used to generate an ItemStack based on some stat data
+	 * 
+	 * @param type
+	 *            The type of the item you want to create
+	 * @param id
+	 *            The id of the item, make sure it is different from other
+	 *            existing items not to interfere with MI features like the
+	 *            dynamic item updater
+	 */
 	public MMOItem(Type type, String id) {
 		this.type = type;
 		this.id = id;
@@ -38,6 +48,10 @@ public class MMOItem {
 		stats.put(stat, data);
 	}
 
+	public void replaceData(ItemStat stat, StatData data) {
+		stats.replace(stat, data);
+	}
+
 	public void removeData(ItemStat stat) {
 		stats.remove(stat);
 	}
@@ -50,6 +64,9 @@ public class MMOItem {
 		return stats.containsKey(stat);
 	}
 
+	/**
+	 * @return Collection of all item stats which have some data on this mmoitem
+	 */
 	public Set<ItemStat> getStats() {
 		return stats.keySet();
 	}
@@ -58,13 +75,14 @@ public class MMOItem {
 		return new MMOItemBuilder(this);
 	}
 
+	/***
+	 * @return A closed instance of this mmoitem. This does NOT clone the
+	 *         StatData instances! If you edit these statDatas, the previous
+	 *         mmoitem will be edited as well.
+	 */
 	public MMOItem clone() {
 		MMOItem clone = new MMOItem(type, id);
 		stats.forEach((stat, data) -> clone.stats.put(stat, data));
 		return clone;
-	}
-
-	public void replaceData(ItemStat stat, StatData data) {
-		stats.replace(stat, data);
 	}
 }

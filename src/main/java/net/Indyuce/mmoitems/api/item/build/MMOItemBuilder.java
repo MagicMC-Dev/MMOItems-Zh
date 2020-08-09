@@ -39,15 +39,20 @@ public class MMOItemBuilder {
 	private final MMOItemLore lore = new MMOItemLore();
 	private final List<ItemTag> tags = new ArrayList<>();
 
-	private static final AttributeModifier fakeModifier = new AttributeModifier(
-			UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "mmoitemsDecoy", 0, Operation.ADD_NUMBER);
+	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
+			"mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
+	/***
+	 * Used to build an MMOItem into an ItemStack
+	 * 
+	 * @param mmoitem
+	 *            The mmoitem you want to build
+	 */
 	public MMOItemBuilder(MMOItem mmoitem) {
 		this.mmoitem = mmoitem;
 
 		item = new ItemStack(
-				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial()
-						: Material.DIAMOND_SWORD);
+				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
 		meta = item.getItemMeta();
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
@@ -55,8 +60,7 @@ public class MMOItemBuilder {
 		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
 
 		if (MMOItems.plugin.getUpdater().hasData(mmoitem))
-			tags.add(new ItemTag("MMOITEMS_ITEM_UUID",
-					MMOItems.plugin.getUpdater().getData(mmoitem).getUniqueId().toString()));
+			tags.add(new ItemTag("MMOITEMS_ITEM_UUID", MMOItems.plugin.getUpdater().getData(mmoitem).getUniqueId().toString()));
 	}
 
 	public MMOItemLore getLore() {
@@ -87,8 +91,8 @@ public class MMOItemBuilder {
 			try {
 				stat.whenApplied(this, mmoitem.getData(stat));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '"
-						+ mmoitem.getId() + "' with stat '" + stat.getId() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '" + mmoitem.getId() + "' with stat '"
+						+ stat.getId() + "': " + exception.getMessage());
 			}
 
 		// lore
@@ -96,15 +100,15 @@ public class MMOItemBuilder {
 			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
 		lore.insert("item-type",
 				ItemStat.translate("item-type").replace("#",
-						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE)
-								? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
+						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE) ? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
 								: mmoitem.getType().getName()));
 
 		meta.setLore(lore.build().toStringList());
+
 		/*
 		 * this tag is added to entirely override default vanilla item attribute
-		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the holder.
-		 * since 4.7 attributes are handled via custom calculations
+		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the
+		 * holder. since 4.7 attributes are handled via custom calculations
 		 */
 		try {
 
@@ -113,8 +117,9 @@ public class MMOItemBuilder {
 			return MMOLib.plugin.getNMS().getNBTItem(item).addTag(tags);
 
 			/*
-			 * on legacy spigot, it is not required to add a fake modifier to the modifier
-			 * list, so just override the string tag and it works fine.
+			 * on legacy spigot, it is not required to add a fake modifier to
+			 * the modifier list, so just override the string tag and it works
+			 * fine.
 			 */
 		} catch (NoSuchMethodError exception) {
 			item.setItemMeta(meta);
@@ -124,6 +129,9 @@ public class MMOItemBuilder {
 		}
 	}
 
+	/**
+	 * @return Builds an ItemStack
+	 */
 	public ItemStack build() {
 		return buildNBT().toItem();
 	}
@@ -133,14 +141,14 @@ public class MMOItemBuilder {
 
 		private final UpgradeData upgradeData;
 
-		/*** @deprecated will be improved with mmoitems 6
+		/***
+		 * @deprecated will be improved with mmoitems 6
 		 * 
 		 * @param mmoitem
 		 */
 		public StatLore(MMOItem mmoitem) {
 			this.mmoitem = mmoitem.clone();
 			this.upgradeData = ((UpgradeData) mmoitem.getData(ItemStat.UPGRADE));
-
 		}
 
 		public MMOItem getMMOItem() {
@@ -154,8 +162,7 @@ public class MMOItemBuilder {
 		}
 
 		public MMOItem generateNewItem() {
-			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false)
-					&& isUpgradable()) {
+			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false) && isUpgradable()) {
 				if (upgradeData.getLevel() > 0)
 					for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
 						UpgradeInfo upgradeInfo = upgradeData.getTemplate().getUpgradeInfo(stat);
@@ -175,10 +182,8 @@ public class MMOItemBuilder {
 
 							if (value > 0)
 								lore.insert(stat.getPath(), stat.format(value, "#", new StatFormat("##").format(value))
-										+ new ColorParse(MMOItems.plugin.getConfig()
-												.getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
-												.replace("#stat#", new StatFormat("##").format(value - getBase(stat))))
-														.toChatColor());
+										+ new ColorParse(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
+												.replace("#stat#", new StatFormat("##").format(value - getBase(stat)))).toChatColor());
 						}
 					}
 			}
@@ -193,8 +198,7 @@ public class MMOItemBuilder {
 
 				// does inverse math to get the base
 				if (info.isRelative()) {
-					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate()
-							.getUpgradeInfo(stat)).getAmount();
+					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate().getUpgradeInfo(stat)).getAmount();
 
 					for (int i = 1; i <= level; i++) {
 						value /= 1 + upgradeAmount;

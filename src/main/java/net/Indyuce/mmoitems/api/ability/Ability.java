@@ -39,10 +39,6 @@ public abstract class Ability {
 		this.allowedModes = Arrays.asList(allowedModes);
 	}
 
-	public void addModifier(String modifierPath, double defaultValue) {
-		modifiers.put(modifierPath, defaultValue);
-	}
-
 	public String getID() {
 		return id;
 	}
@@ -63,6 +59,10 @@ public abstract class Ability {
 		return allowedModes.contains(castingMode);
 	}
 
+	/**
+	 * @return The list of all the casting modes which are compatible with this
+	 *         ability
+	 */
 	public List<CastingMode> getSupportedCastingModes() {
 		return allowedModes;
 	}
@@ -75,48 +75,83 @@ public abstract class Ability {
 		return modifiers.keySet();
 	}
 
-	/*
-	 * when that boolean is set to false, the ability will not register when the
-	 * plugin enables which prevents it from being registered in the ability
-	 * manager from MMOItems
+	public void addModifier(String modifier, double defaultValue) {
+		modifiers.put(modifier, defaultValue);
+	}
+
+	/**
+	 * Disables an ability. This method must be called before MMOItems registers
+	 * this ability since it is just a boolean check when registering abilities
+	 * through the abilityManager
 	 */
 	public void disable() {
 		enabled = false;
 	}
 
-	/*
-	 * these methods need to be overriden by ability classes depending on their
-	 * ability type
+	/**
+	 * The first method called when a player uses an ability.
+	 * 
+	 * @param stats
+	 *            Cached statistics of the player casting the ability
+	 * @param target
+	 *            The eventual ability target
+	 * @param ability
+	 *            The ability being cast
+	 * @param result
+	 *            The melee attack result, which can be edited to
+	 *            increase/decrease final damage dealt
+	 * @return If the ability can be cast or not. AbilityResult should cache any
+	 *         information used by the ability: target if found, etc.
 	 */
 	public abstract AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result);
 
+	/**
+	 * Called when a player successfully casts an ability
+	 * 
+	 * @param stats
+	 *            Cached statistics of the player casting the ability
+	 * @param ability
+	 *            All the information about the ability being cast. This is the
+	 *            same instance as the one returned in whenRan(..)
+	 * @param result
+	 *            The melee attack result, which can be edited to
+	 *            increase/decrease final damage dealt
+	 */
 	public abstract void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result);
 
 	public enum CastingMode {
 
-		/*
-		 * when the player hits another entity.
+		/**
+		 * When the player hits another entity
 		 */
 		ON_HIT(false),
 
-		/*
-		 * when the player is hit by another entity
+		/**
+		 * When the player is hit by another entity
 		 */
 		WHEN_HIT(false),
 
-		/*
-		 * when the player performs a simple click
+		/**
+		 * When the player performs a left click
 		 */
 		LEFT_CLICK,
+
+		/**
+		 * When the player performs a right click
+		 */
 		RIGHT_CLICK,
 
-		/*
-		 * when the player performs a simple click while sneaking
+		/**
+		 * Performing a left click while sneaking
 		 */
 		SHIFT_LEFT_CLICK,
+
+		/**
+		 * Performing a right click while sneaking
+		 */
 		SHIFT_RIGHT_CLICK;
 
-		private boolean message;
+		private final boolean message;
 
 		private CastingMode() {
 			this(true);
@@ -134,7 +169,7 @@ public abstract class Ability {
 			return MMOUtils.caseOnWords(name().toLowerCase().replace("_", " "));
 		}
 
-		public String getLowerCaseID() {
+		public String getLowerCaseId() {
 			return name().toLowerCase().replace("_", "-");
 		}
 

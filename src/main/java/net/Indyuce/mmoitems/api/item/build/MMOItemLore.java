@@ -10,6 +10,16 @@ import net.asangarin.hexcolors.ColorParse;
 public class MMOItemLore {
 	private final List<String> lore = MMOItems.plugin.getLanguage().getDefaultLoreFormat();
 
+	/**
+	 * Inserts a list of strings in the item lore. The lines are added only if a
+	 * line #item-stat-id# can be found in the lore format.
+	 * 
+	 * @param path
+	 *            The path of the stat, used to locate where to insert the stat
+	 *            in the lore
+	 * @param add
+	 *            The lines you want to add
+	 */
 	public void insert(String path, String... add) {
 		int index = lore.indexOf("#" + path + "#");
 		if (index < 0)
@@ -20,6 +30,16 @@ public class MMOItemLore {
 		lore.remove(index);
 	}
 
+	/**
+	 * Inserts a list of strings in the item lore. The lines are added only if a
+	 * line #item-stat-id# can be found in the lore format.
+	 * 
+	 * @param path
+	 *            The path of the stat, used to locate where to insert the stat
+	 *            in the lore
+	 * @param add
+	 *            The lines you want to add
+	 */
 	public void insert(String path, List<String> list) {
 		int index = lore.indexOf("#" + path + "#");
 		if (index < 0)
@@ -29,6 +49,11 @@ public class MMOItemLore {
 		lore.remove(index);
 	}
 
+	/**
+	 * @return A built item lore. This method must be called after all lines
+	 *         have been inserted in the lore. It cleans all unused lore format
+	 *         # lines as well as lore bars
+	 */
 	public MMOItemLore build() {
 
 		/*
@@ -40,18 +65,15 @@ public class MMOItemLore {
 			String line = lore.get(n);
 
 			// removed unused placeholders
-			if (line.startsWith("#")) {
+			if (line.startsWith("#"))
 				lore.remove(n);
-				continue;
-			}
 
 			// remove useless lore stripes
-			if (line.startsWith("{bar}") && (n == lore.size() - 1 || isBar(lore.get(n + 1)))) {
+			else if (line.startsWith("{bar}") && (n == lore.size() - 1 || isBar(lore.get(n + 1))))
 				lore.remove(n);
-				continue;
-			}
 
-			j++;
+			else
+				j++;
 		}
 
 		/*

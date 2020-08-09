@@ -141,8 +141,8 @@ public class ConfigManager {
 					abilities.getConfig().set("modifier." + modifier, MMOUtils.caseOnWords(modifier.replace("-", " ")));
 		}
 		for (CastingMode mode : CastingMode.values())
-			if (!abilities.getConfig().contains("cast-mode." + mode.getLowerCaseID()))
-				abilities.getConfig().set("cast-mode." + mode.getLowerCaseID(), mode.getName());
+			if (!abilities.getConfig().contains("cast-mode." + mode.getLowerCaseId()))
+				abilities.getConfig().set("cast-mode." + mode.getLowerCaseId(), mode.getName());
 		abilities.save();
 
 		ConfigFile potionEffects = new ConfigFile("/language", "potion-effects");
@@ -232,7 +232,7 @@ public class ConfigManager {
 	}
 
 	public String getCastingModeName(CastingMode mode) {
-		return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseID());
+		return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId());
 	}
 
 	public String getModifierName(String path) {

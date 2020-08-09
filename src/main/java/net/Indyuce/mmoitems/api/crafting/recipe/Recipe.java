@@ -1,14 +1,5 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
@@ -17,6 +8,14 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.api.MMOLineConfig;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class Recipe {
 	private final String id;
@@ -50,7 +49,6 @@ public abstract class Recipe {
 						"Could not load ingredient '" + format + "': " + exception.getMessage());
 			}
 
-		Validate.notEmpty(ingredients, id + ": Ingredients must not be empty");
 
 		/*
 		 * load conditions
@@ -64,6 +62,10 @@ public abstract class Recipe {
 				throw new IllegalArgumentException(
 						"Could not load condition '" + format + "': " + exception.getMessage());
 			}
+
+		if (conditions.isEmpty() && ingredients.isEmpty()) {
+			throw new IllegalArgumentException("No conditions or ingredients set.");
+		}
 
 		/*
 		 * load triggers

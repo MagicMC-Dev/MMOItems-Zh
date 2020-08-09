@@ -1,15 +1,17 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
-import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
-import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
@@ -17,8 +19,10 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.Map.Entry;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 
 public class CraftingListener implements Listener {
 	Map<UUID, CachedRecipe> cachedRecipe = new HashMap<>();
@@ -32,8 +36,8 @@ public class CraftingListener implements Listener {
 
 	@EventHandler
 	public void getResult(InventoryClickEvent e) {
-		if (!(e.getView().getPlayer() instanceof Player)) return;
-		if (!(e.getInventory() instanceof CraftingInventory)) return;
+		if (!(e.getView().getPlayer() instanceof Player) ||
+			!(e.getInventory() instanceof CraftingInventory)) return;
 		if (e.getSlotType() == SlotType.CRAFTING && e.getAction() == InventoryAction.PLACE_ONE)
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, new Runnable() {
 				@Override
@@ -45,14 +49,14 @@ public class CraftingListener implements Listener {
 			CraftingInventory inv = (CraftingInventory) e.getInventory();
 			if (e.getCurrentItem() == null || !cachedRecipe.containsKey(e.getWhoClicked().getUniqueId()))
 				return;
-			if (e.getClick() != ClickType.LEFT) {
+			if (e.getAction() != InventoryAction.PICKUP_ALL) {
 				e.setCancelled(true);
 				return;
 			}
 			CachedRecipe cached = cachedRecipe.get(e.getWhoClicked().getUniqueId());
 			cachedRecipe.remove(e.getWhoClicked().getUniqueId());
-			if (!cached.isValid(inv.getMatrix()) || !e.getCurrentItem().isSimilar(cached.getResult())
-					|| e.getCurrentItem().getAmount() == e.getCurrentItem().getMaxStackSize()) {
+			
+			if (!cached.isValid(inv.getMatrix())) {
 				e.setCancelled(true);
 				return;
 			}
@@ -77,7 +81,6 @@ public class CraftingListener implements Listener {
 	}
 
 	public void handleCustomCrafting(CraftingInventory inv, Player player) {
-		player.updateInventory();
 		cachedRecipe.remove(player.getUniqueId());
 		for (CustomRecipe recipe : MMOItems.plugin.getRecipes().getCustomRecipes()) {
 			if (!recipe.fitsPlayerCrafting() && inv.getMatrix().length == 4)
@@ -137,6 +140,7 @@ public class CraftingListener implements Listener {
 					@Override
 					public void run() {
 						inv.setItem(0, recipe.getResult());
+						player.updateInventory();
 					}
 				}, 1);
 				break;

@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
@@ -263,7 +265,8 @@ public abstract class ItemStat {
 	private final String id, name;
 	private final ItemStack item;
 
-	private final String[] lore, compatibleTypes;
+	private final String[] lore;
+	private final List<String> compatibleTypes;
 	private final List<Material> compatibleMaterials;
 
 	/*
@@ -295,7 +298,7 @@ public abstract class ItemStat {
 		this.id = id;
 		this.item = item;
 		this.lore = lore == null ? new String[0] : lore;
-		this.compatibleTypes = types == null ? new String[0] : types;
+		this.compatibleTypes = types == null ? new ArrayList<>() : Arrays.asList(types);
 		this.name = name;
 		this.compatibleMaterials = Arrays.asList(materials);
 	}
@@ -384,6 +387,11 @@ public abstract class ItemStat {
 		return id;
 	}
 
+	/**
+	 * @return The stat ID
+	 * @deprecated Use getId() instead. Type is no longer an util since they can
+	 *             now be registered from external plugins
+	 */
 	@Deprecated
 	public String name() {
 		return id;
@@ -393,6 +401,11 @@ public abstract class ItemStat {
 		return id.toLowerCase().replace("_", "-");
 	}
 
+	/**
+	 * @return The NBT path used by the stat to save data in an item's NBTTags.
+	 *         The format is 'MMOITEMS_' followed by the stat name in capital
+	 *         letters only using _
+	 */
 	public String getNBTPath() {
 		return "MMOITEMS_" + id;
 	}
@@ -409,8 +422,20 @@ public abstract class ItemStat {
 		return lore;
 	}
 
-	public String[] getCompatibleTypes() {
+	public List<String> getCompatibleTypes() {
 		return compatibleTypes;
+	}
+
+	/**
+	 * @param type
+	 *            The item type to check
+	 * @return If a certain item type is compatible with this item stat
+	 */
+	public boolean isCompatible(Type type) {
+		String lower = getId().toLowerCase();
+		return type.isSubtype() ? isCompatible(type.getParent())
+				: !compatibleTypes.contains("!" + lower) && (compatibleTypes.contains("all") || compatibleTypes.contains(lower)
+						|| compatibleTypes.contains(type.getItemSet().getName().toLowerCase()));
 	}
 
 	public boolean hasValidMaterial(ItemStack item) {

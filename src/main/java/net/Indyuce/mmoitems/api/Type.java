@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -52,7 +53,7 @@ public class Type {
 
 	private final String id;
 	private String name;
-	private TypeSet set;
+	private final TypeSet set;
 
 	/*
 	 * the 'weapon' boolean is used for item type restrictions for gem stones to
@@ -76,7 +77,7 @@ public class Type {
 	 * any type can have a subtype which basically dictates what the item type
 	 * does.
 	 */
-	private Type parent = null;
+	private Type parent;
 
 	private UnidentifiedItem unidentifiedTemplate;
 
@@ -84,7 +85,7 @@ public class Type {
 	 * list of stats which can be applied onto an item which has this type. This
 	 * improves performance when generating an item by a significant amount.
 	 */
-	private List<ItemStat> available;
+	private final Set<ItemStat> available = new HashSet<>();
 
 	public Type(TypeSet set, String id, boolean weapon, boolean melee, boolean rightClickSpecial, EquipmentSlot equipType) {
 		this.set = set;
@@ -172,10 +173,19 @@ public class Type {
 		return getItemSet() == set;
 	}
 
-	public List<ItemStat> getAvailableStats() {
+	/**
+	 * @return The collection of all stats which can be applied onto this
+	 *         specific item type. This list is cached when types are being
+	 *         loaded and is a PRETTY GOOD performance improvement.
+	 */
+	public Set<ItemStat> getAvailableStats() {
 		return available;
 	}
 
+	/**
+	 * @return Finds the /item config file corresponding to the item type and
+	 *         loads it
+	 */
 	public ConfigFile getConfigFile() {
 		return new ConfigFile("/item", getId().toLowerCase());
 	}
@@ -184,21 +194,14 @@ public class Type {
 		return unidentifiedTemplate;
 	}
 
-	public void cacheAvailableStats(List<ItemStat> stats) {
-		available = stats;
-	}
-
+	/**
+	 * @param stat
+	 *            The stat to check
+	 * @return If the stat can be handled by this type of item
+	 */
+	@Deprecated
 	public boolean canHave(ItemStat stat) {
-		if (isSubtype())
-			return getParent().canHave(stat);
-
-		for (String s1 : stat.getCompatibleTypes()) {
-			if (s1.equalsIgnoreCase("!" + getId()))
-				return false;
-			if (s1.equalsIgnoreCase(getId()) || s1.equalsIgnoreCase(set.name()) || s1.equalsIgnoreCase("all"))
-				return true;
-		}
-		return false;
+		return stat.isCompatible(this);
 	}
 
 	@Override
@@ -214,19 +217,39 @@ public class Type {
 		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 
+	/**
+	 * 
+	 * @param item
+	 *            The item to retrieve the type from
+	 * @return The type of the item.
+	 * @deprecated Really heavy method because it instantiates an NBTItem (reads
+	 *             through all the item NBT data), looks for the type tag and
+	 *             does a type map lookup. Use NBTItem#get(ItemStack) first and
+	 *             then NBTItem#getType()
+	 */
 	@Deprecated
 	public static Type get(ItemStack item) {
 		return MMOLib.plugin.getNMS().getNBTItem(item).getType();
 	}
 
-	/*
-	 * methods used in command executors and completions for a faster access to
-	 * the typeManager instance, therefore no need to replace _ for " "
+	/**
+	 * Used in command executors and completions for easier manipulation
+	 * 
+	 * @param id
+	 *            The type id
+	 * @return The type or NPE if it couldn't be found
 	 */
 	public static Type get(String id) {
 		return MMOItems.plugin.getTypes().get(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}
 
+	/**
+	 * Used in command executors and completions for easier manipulation
+	 * 
+	 * @param id
+	 *            The type id
+	 * @return If a registered type with this ID could be found
+	 */
 	public static boolean isValid(String id) {
 		return MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}

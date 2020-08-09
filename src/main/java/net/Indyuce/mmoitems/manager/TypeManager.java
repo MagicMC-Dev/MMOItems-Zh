@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.Validate;
 
@@ -17,9 +16,13 @@ import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
 public class TypeManager {
 	private final Map<String, Type> map = new LinkedHashMap<>();
 
+	/**
+	 * Reloads the type manager. It entirely empties the currently registered
+	 * item types, registers default item types again and reads item-types.yml
+	 */
 	public void reload() {
 		map.clear();
-		addAll(Type.ACCESSORY, Type.ARMOR, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET, Type.GEM_STONE,
+		registerAll(Type.ACCESSORY, Type.ARMOR, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET, Type.GEM_STONE,
 				Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST, Type.ORNAMENT, Type.SPEAR, Type.STAFF,
 				Type.SWORD, Type.TOOL, Type.WHIP);
 
@@ -34,51 +37,42 @@ public class TypeManager {
 		for (String id : config.getConfig().getKeys(false))
 			if (!map.containsKey(id))
 				try {
-					add(new Type(this, config.getConfig().getConfigurationSection(id)));
+					register(new Type(this, config.getConfig().getConfigurationSection(id)));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the type " + id + ": " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register type '" + id + "': " + exception.getMessage());
 				}
 
-		/*
-		 * reload names & display items from types and generate corresponding
-		 * config files.
-		 */
 		for (Iterator<Type> iterator = map.values().iterator(); iterator.hasNext();) {
 			Type type = iterator.next();
 
 			try {
 				type.load(config.getConfig().getConfigurationSection(type.getId()));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register the type " + type.getId() + ": " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register type '" + type.getId() + "': " + exception.getMessage());
 				iterator.remove();
 				continue;
 			}
-
-			String path = type.getId().toLowerCase().replace("_", "-");
-			if (!config.getConfig().contains(path))
-				config.getConfig().set(path, type.getName());
 
 			/*
 			 * caches all the stats which the type can have to reduce future
 			 * both item generation (and GUI) calculations. probably the thing
 			 * which takes the most time when loading item types.
 			 */
-			type.cacheAvailableStats(MMOItems.plugin.getStats().getAll().stream().filter(stat -> type.canHave(stat)).collect(Collectors.toList()));
+			type.getAvailableStats().clear();
+			MMOItems.plugin.getStats().getAll().stream().filter(stat -> stat.isCompatible(type)).forEach(stat -> type.getAvailableStats().add(stat));
 		}
 	}
 
-	public void add(Type type) {
+	public void register(Type type) {
 		map.put(type.getId(), type);
 	}
 
-	public void addAll(Type... types) {
+	private void registerAll(Type... types) {
 		for (Type type : types)
-			add(type);
+			register(type);
 	}
 
-	/*
-	 * TODO minor refactor, use Optional<Type>
-	 */
+	// TODO minor refactor, use Optional<Type>
 	public Type get(String id) {
 		return map.get(id);
 	}

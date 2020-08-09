@@ -20,8 +20,8 @@ import net.mmogroup.mmolib.version.VersionSound;
 
 public enum TypeSet {
 
-	/*
-	 * slashing weapons deal damage in a cone behind the player's initial
+	/**
+	 * Slashing weapons deal damage in a cone behind the player's initial
 	 * target, which makes it a deadly AoE weapon for warriors
 	 */
 	SLASHING((stats, target, weapon, result) -> {
@@ -37,12 +37,15 @@ public enum TypeSet {
 				loc.getWorld().spawnParticle(Particle.CRIT, loc.clone().add(Math.cos(a + a1) * r, Math.sin(p) * r, Math.sin(a + a1) * r), 0);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().subtract(stats.getPlayer().getLocation()).toVector()) < Math.PI / 3 && MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
+			if (entity.getLocation().distanceSquared(loc) < 40
+					&& stats.getPlayer().getEyeLocation().getDirection()
+							.angle(entity.getLocation().subtract(stats.getPlayer().getLocation()).toVector()) < Math.PI / 3
+					&& MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
 				result.clone().multiplyDamage(.4).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity);
 	}),
 
-	/*
-	 * piercing weapons deal damage in a line behind the initial target, which
+	/**
+	 * Piercing weapons deal damage in a line behind the initial target, which
 	 * is harder to land than a slashing weapon but the AoE damage ratio is
 	 * increased which makes it a perfect 'double or nothing' weapon for
 	 * assassins
@@ -60,12 +63,15 @@ public enum TypeSet {
 				loc.getWorld().spawnParticle(Particle.CRIT, loc.clone().add(Math.cos(a + a1) * r, Math.sin(p) * r, Math.sin(a + a1) * r), 0);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(stats.getPlayer().getLocation()) < 40 && stats.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 18 && MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
+			if (entity.getLocation().distanceSquared(stats.getPlayer().getLocation()) < 40
+					&& stats.getPlayer().getEyeLocation().getDirection()
+							.angle(entity.getLocation().toVector().subtract(stats.getPlayer().getLocation().toVector())) < Math.PI / 18
+					&& MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
 				result.clone().multiplyDamage(.4).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity);
 	}),
 
-	/*
-	 * blunt weapons are like 1.9 sweep attacks. they damage all enemies nearby
+	/**
+	 * Blunt weapons are like 1.9 sweep attacks. They damage all enemies nearby
 	 * and apply a slight knockback
 	 */
 	BLUNT((stats, target, weapon, result) -> {
@@ -77,50 +83,52 @@ public enum TypeSet {
 			target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 			double bluntPower = stats.getStat(ItemStat.BLUNT_POWER);
 			if (bluntPower > 0) {
-				double bluntRating = weapon.getValue(stats.getStat(ItemStat.BLUNT_RATING), MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
+				double bluntRating = weapon.getValue(stats.getStat(ItemStat.BLUNT_RATING),
+						MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
 				for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
 					if (MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
 						result.clone().multiplyDamage(bluntRating).applyEffectsAndDamage(stats, weapon.getNBTItem(), (LivingEntity) entity);
 			}
 		}
 
-		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.stun.enabled") && !stats.getData().isOnCooldown(CooldownType.SPECIAL_ATTACK) && random.nextDouble() < MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.chance") / 100) {
+		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.stun.enabled") && !stats.getData().isOnCooldown(CooldownType.SPECIAL_ATTACK)
+				&& random.nextDouble() < MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.chance") / 100) {
 			stats.getData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.cooldown"));
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR.toSound(), 1, 2);
 			target.removePotionEffect(PotionEffectType.SLOW);
 			target.removePotionEffect(PotionEffectType.BLINDNESS);
 			target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0));
-			target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (30 * MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.power")), 1));
+			target.addPotionEffect(
+					new PotionEffect(PotionEffectType.SLOW, (int) (30 * MMOItems.plugin.getConfig().getDouble("item-ability.blunt.stun.power")), 1));
 			Location loc = target.getLocation();
 			loc.setYaw((float) (loc.getYaw() + 2 * (random.nextDouble() - .5) * 90));
 			loc.setPitch((float) (loc.getPitch() + 2 * (random.nextDouble() - .5) * 30));
 		}
 	}),
 
-	/*
-	 * any item type can may apply their stats even when worn in offhand.
-	 * they're the only items with that specific property
+	/**
+	 * Any item type can may apply their stats even when worn in offhand.
+	 * They're the only items with that specific property
 	 */
 	OFFHAND,
 
-	/*
-	 * ranged attacks based weapons. when the player is too squishy to fight in
+	/**
+	 * Ranged attacks based weapons. when the player is too squishy to fight in
 	 * the middle of the battle-field, these weapons allow him to take some
 	 * distance and still deal some good damage
 	 */
 	RANGE,
 
-	/*
-	 * any other item type, like armor, consumables, etc. they all have their
+	/**
+	 * Any other item type, like armor, consumables, etc. They all have their
 	 * very specific passive depending on their item type
 	 */
 	EXTRA;
 
-	private SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler;
+	private final SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler;
 
 	private TypeSet() {
-		this((playerStats, target, weapon, result) -> {
-		});
+		this(null);
 	}
 
 	private TypeSet(SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {

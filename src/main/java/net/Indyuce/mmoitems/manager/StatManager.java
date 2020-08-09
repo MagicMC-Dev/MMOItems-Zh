@@ -46,17 +46,28 @@ public class StatManager {
 		return stats.values();
 	}
 
-	/*
-	 * cache specific stats for better performance using these extra sets
+	/**
+	 * @return Collection of all stats which are based on vanilla player
+	 *         attributes like movement speed, attack damage, max health..
 	 */
 	public Set<AttributeStat> getAttributeStats() {
 		return attributeBased;
 	}
 
+	/**
+	 * @return Collection of all numeric stats like atk damage, crit strike
+	 *         chance, max mana... which can be applied on a gem stone. This is
+	 *         used when applying gem stones to quickly access all the stats
+	 *         which needs to be applied
+	 */
 	public Set<DoubleStat> getNumericStats() {
 		return numeric;
 	}
 
+	/**
+	 * @return Collection of all stats which constitute an item restriction:
+	 *         required level, required class, soulbound..
+	 */
 	public Set<ItemRestriction> getItemRestrictionStats() {
 		return itemRestriction;
 	}
@@ -65,16 +76,32 @@ public class StatManager {
 		return stats.containsKey(id);
 	}
 
+	public ItemStat get(String id) {
+		return stats.getOrDefault(id, null);
+	}
+
+	/**
+	 * Registers a stat in MMOItems
+	 * 
+	 * @param id
+	 *            Useless.
+	 * @param stat
+	 *            The stat instance
+	 * @deprecated Stat IDs are now stored in the stat instance directly. Please
+	 *             use StatManager#register(ItemStat) instead
+	 */
 	@Deprecated
 	public void register(String id, ItemStat stat) {
-		MMOItems.plugin.getLogger().log(Level.WARNING,
-				"Stat IDs are now stored in the stat instance directly. You must now use StatManager#register(ItemStat)");
 		register(stat);
 	}
 
-	/*
-	 * the extra checks in that method to register stats even after the plugin
-	 * has successfully enabled otherwise the other sets would not be updated.
+	/**
+	 * Registers a stat in MMOItems. It must be done right after MMOItems loads
+	 * before any manager is initialized because stats are commonly used when
+	 * loading configs.
+	 * 
+	 * @param stat
+	 *            The stat to register
 	 */
 	public void register(ItemStat stat) {
 		if (!stat.isEnabled())
@@ -82,7 +109,7 @@ public class StatManager {
 
 		stats.put(stat.getId(), stat);
 
-		if (stat instanceof DoubleStat && !(stat instanceof ProperStat) && Type.GEM_STONE.canHave(stat))
+		if (stat instanceof DoubleStat && !(stat instanceof ProperStat) && stat.isCompatible(Type.GEM_STONE))
 			numeric.add((DoubleStat) stat);
 
 		if (stat instanceof AttributeStat)
@@ -93,15 +120,14 @@ public class StatManager {
 
 		/*
 		 * cache stat for every type which may have this stat. really important
-		 * otherwise the stat will NOT be used anywhere in the plugin.
+		 * otherwise the stat will NOT be used anywhere in the plugin. this
+		 * process is also done in the TypeManager when registering new types
+		 * but since stats can be registered after types are loaded, we must
+		 * take it into account
 		 */
 		if (MMOItems.plugin.getTypes() != null)
 			for (Type type : MMOItems.plugin.getTypes().getAll())
-				if (type.canHave(stat))
+				if (stat.isCompatible(type))
 					type.getAvailableStats().add(stat);
-	}
-
-	public ItemStat get(String str) {
-		return stats.containsKey(str) ? stats.get(str) : null;
 	}
 }

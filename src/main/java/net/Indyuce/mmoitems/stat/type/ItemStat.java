@@ -432,7 +432,7 @@ public abstract class ItemStat {
 	 * @return If a certain item type is compatible with this item stat
 	 */
 	public boolean isCompatible(Type type) {
-		String lower = getId().toLowerCase();
+		String lower = type.getId().toLowerCase();
 		return type.isSubtype() ? isCompatible(type.getParent())
 				: !compatibleTypes.contains("!" + lower) && (compatibleTypes.contains("all") || compatibleTypes.contains(lower)
 						|| compatibleTypes.contains(type.getItemSet().getName().toLowerCase()));

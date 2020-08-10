@@ -43,7 +43,7 @@ public class AbilityEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Ability Edition");
+		Inventory inv = Bukkit.createInventory(this, 54, "Ability Edition");
 		int n = 0;
 
 		String configString = getEditedSection().getString("ability." + configKey + ".type");

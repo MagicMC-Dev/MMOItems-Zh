@@ -35,7 +35,7 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapedInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Recipe Editor: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Recipe Editor: " + template.getId());
 
 		if (!getEditedSection().contains("crafting.shaped.1")) {
 			getEditedSection().set("crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
@@ -78,7 +78,7 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapelessInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Recipe Editor: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Recipe Editor: " + template.getId());
 		if (!getEditedSection().contains("crafting.shapeless.1")) {
 			getEditedSection().set("crafting.shapeless.1", Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR"));
 			registerTemplateEdition();

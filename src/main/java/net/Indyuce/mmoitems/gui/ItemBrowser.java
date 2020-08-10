@@ -60,7 +60,7 @@ public class ItemBrowser extends PluginInventory {
 		 * by the player
 		 */
 		if (type == null) {
-			Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Explorer");
+			Inventory inv = Bukkit.createInventory(this, 54, "Item Explorer");
 			List<Type> types = new ArrayList<>(MMOItems.plugin.getTypes().getAll());
 			for (int j = min; j < Math.min(max, types.size()); j++) {
 				Type type = types.get(j);
@@ -127,7 +127,7 @@ public class ItemBrowser extends PluginInventory {
 		 * map at the top to reduce performance impact and are directly rendered
 		 */
 		Inventory inv = Bukkit.createInventory(this, 54,
-				(deleteMode ? (ChatColor.UNDERLINE + "Delete Mode: ") : (ChatColor.UNDERLINE + "Item Explorer: ")) + type.getName());
+				(deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
 		for (int j = min; j < Math.min(max, templates.size()); j++) {
 			MMOItemTemplate template = templates.get(j);
 			if (!cached.containsKey(template.getId())) {

@@ -47,7 +47,7 @@ public class ElementsEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Elements E.: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Elements E.: " + template.getId());
 		int n = 0;
 
 		for (Element element : Element.values()) {

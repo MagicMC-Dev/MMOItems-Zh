@@ -33,7 +33,7 @@ public class UpgradingEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Upgrade Setup: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Upgrade Setup: " + template.getId());
 
 		boolean workbench = getEditedSection().getBoolean("upgrade.workbench");
 		if (!template.getType().corresponds(Type.CONSUMABLE)) {

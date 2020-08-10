@@ -28,7 +28,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Updater: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Item Updater: " + template.getId());
 
 		// setup if not in map
 		if (!MMOItems.plugin.getUpdater().hasData(template)) {

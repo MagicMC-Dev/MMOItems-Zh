@@ -34,7 +34,7 @@ public class ParticlesEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Particles E.: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Particles E.: " + template.getId());
 		int[] slots = { 37, 38, 39, 40, 41, 42, 43 };
 		int n = 0;
 

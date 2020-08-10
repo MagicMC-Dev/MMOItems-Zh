@@ -32,7 +32,7 @@ public class CommandListEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Command List");
+		Inventory inv = Bukkit.createInventory(this, 54, "Command List");
 		int n = 0;
 
 		if (getEditedSection().contains("commands"))

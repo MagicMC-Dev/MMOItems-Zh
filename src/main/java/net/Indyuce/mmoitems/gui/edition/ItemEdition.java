@@ -47,7 +47,7 @@ public class ItemEdition extends EditionInventory {
 		List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
 				.filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).collect(Collectors.toList());
 
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Edition: " + getEdited().getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Item Edition: " + getEdited().getId());
 		for (int j = min; j < Math.min(appliable.size(), max); j++) {
 			ItemStat stat = appliable.get(j);
 			ItemStack item = stat.getItem();

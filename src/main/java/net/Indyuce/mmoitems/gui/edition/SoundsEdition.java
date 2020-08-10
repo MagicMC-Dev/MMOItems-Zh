@@ -37,7 +37,7 @@ public class SoundsEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Custom Sounds: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Custom Sounds: " + template.getId());
 		int[] slots = { 19, 22, 25, 28, 31, 34, 37, 40, 43 };
 		int n = 0;
 

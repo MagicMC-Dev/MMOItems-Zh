@@ -31,7 +31,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Arrow Particles: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Arrow Particles: " + template.getId());
 		// FileConfiguration config =
 		// template.getType().getConfigFile().getConfig();
 

@@ -32,7 +32,7 @@ public class CraftingEdition extends EditionInventory {
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, MMOLib.plugin.getVersion().isStrictlyHigher(1, 14) ? 45 : 36,
-				ChatColor.UNDERLINE + "Crafting Recipes: " + template.getId());
+				"Crafting Recipes: " + template.getId());
 
 		int n = 0;
 

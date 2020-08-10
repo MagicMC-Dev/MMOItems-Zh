@@ -34,7 +34,7 @@ public class AbilityListEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Ability List");
+		Inventory inv = Bukkit.createInventory(this, 54, "Ability List");
 		int n = 0;
 
 		if (getEditedSection().contains("ability"))

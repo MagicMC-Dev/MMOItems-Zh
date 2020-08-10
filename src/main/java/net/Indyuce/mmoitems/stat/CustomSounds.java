@@ -21,7 +21,6 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.SoundsEdition;
 import net.Indyuce.mmoitems.stat.data.SoundData;
 import net.Indyuce.mmoitems.stat.data.SoundListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
@@ -57,11 +56,6 @@ public class CustomSounds extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
-	}
-
-	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
@@ -70,7 +64,7 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("sounds")) {
 				config.getConfig().set(inv.getEdited().getId() + ".sounds", null);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
 			}
@@ -108,7 +102,7 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".volume", volume);
 		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".pitch", pitch);
 
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY
 				+ " successfully changed to '" + soundName + "'.");

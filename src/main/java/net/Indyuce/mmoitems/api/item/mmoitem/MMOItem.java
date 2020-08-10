@@ -5,11 +5,12 @@ import java.util.Map;
 import java.util.Set;
 
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
-public class MMOItem {
+public class MMOItem implements ItemReference {
 	private final Type type;
 	private final String id;
 
@@ -36,12 +37,14 @@ public class MMOItem {
 		this.id = id;
 	}
 
-	public String getId() {
-		return id;
-	}
-
+	@Override
 	public Type getType() {
 		return type;
+	}
+
+	@Override
+	public String getId() {
+		return id;
 	}
 
 	public void setData(ItemStat stat, StatData data) {

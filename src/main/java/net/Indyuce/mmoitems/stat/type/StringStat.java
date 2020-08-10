@@ -28,7 +28,7 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		return new StringData(object.toString());
 	}
 
@@ -43,7 +43,7 @@ public class StringStat extends ItemStat {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
 			return;
@@ -54,7 +54,7 @@ public class StringStat extends ItemStat {
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), message);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(
 				MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MMOLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
@@ -81,10 +81,5 @@ public class StringStat extends ItemStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return new StringData(object.toString());
 	}
 }

@@ -1,5 +1,16 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -10,7 +21,6 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -19,16 +29,6 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 public class RequiredClass extends ItemStat implements ItemRestriction, ProperStat {
 	public RequiredClass() {
@@ -41,11 +41,6 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 	public StringListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
 	}
 
 	@Override
@@ -63,7 +58,7 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 				String last = supportedClasses.get(supportedClasses.size() - 1);
 				supportedClasses.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".required-class", supportedClasses.size() == 0 ? null : supportedClasses);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
@@ -77,7 +72,7 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 				: new ArrayList<>());
 		lore.add(message);
 		config.getConfig().set(inv.getEdited().getId() + ".required-class", lore);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
 		return true;

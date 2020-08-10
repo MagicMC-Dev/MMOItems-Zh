@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -28,7 +29,7 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -40,7 +41,6 @@ public class SkullTextureStat extends StringStat {
 
 		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
-
 		return skullTexture;
 	}
 
@@ -48,7 +48,7 @@ public class SkullTextureStat extends StringStat {
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
 		config.getConfig().set(inv.getEdited().getId() + ".skull-texture.value", message);
 		config.getConfig().set(inv.getEdited().getId() + ".skull-texture.uuid", UUID.randomUUID().toString());
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ".");
 		return true;

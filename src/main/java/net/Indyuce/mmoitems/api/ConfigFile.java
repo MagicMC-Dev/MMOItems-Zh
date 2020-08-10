@@ -1,14 +1,16 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.MMOItems;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Level;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.ItemReference;
 
 public class ConfigFile {
 	private final Plugin plugin;
@@ -62,7 +64,7 @@ public class ConfigFile {
 	}
 
 	@Deprecated
-	public void registerTemplateEdition(Type type, String id) {
+	public void registerTemplateEdition(ItemReference ref) {
 
 		/*
 		 * uncaches the item so it can be generated to apply newest changes in
@@ -70,15 +72,11 @@ public class ConfigFile {
 		 */
 		// MMOItems.plugin.getItems().uncache(type, id);
 
-		/*
-		 * update the database UUID for the dynamic item updater
-		 */
-		if (MMOItems.plugin.getUpdater().hasData(type, id))
-			MMOItems.plugin.getUpdater().getData(type, id).setUniqueId(UUID.randomUUID());
+		// update the database UUID for the dynamic item updater
+		if (MMOItems.plugin.getUpdater().hasData(ref))
+			MMOItems.plugin.getUpdater().getData(ref).setUniqueId(UUID.randomUUID());
 
-		/*
-		 * finally saves the changes
-		 */
+		// finally saves the changes
 		save();
 	}
 }

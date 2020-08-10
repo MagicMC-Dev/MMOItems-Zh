@@ -1,5 +1,15 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.util.List;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -15,15 +25,6 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class DoubleStat extends ItemStat implements Upgradable {
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
@@ -36,12 +37,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		return new DoubleData(object);
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 
 		if (object instanceof Number)
 			return new NumericStatFormula(Double.valueOf(object.toString()), 0, 0, 0);
@@ -54,7 +50,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).generateNewValue();
+		double value = ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag(getNBTPath(), value));
 		if (value > 0)
 			item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
@@ -65,7 +61,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = inv.getEdited().getType().getConfigFile();
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
 			return;
@@ -100,7 +96,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), split.length > 1 ? value + "=" + value1 : value);
 		if (value == 0 && value1 == 0)
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to "
 				+ (value1 != 0 ? "{between " + value + " and " + value1 + "}" : "" + value) + ".");

@@ -187,7 +187,7 @@ public class CraftingStationView extends PluginInventory {
 				Bukkit.getPluginManager().callEvent(called);
 				if (!called.isCancelled()) {
 					recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-					ItemStack craftedItem = recipe.getOutput().generate();
+					ItemStack craftedItem = recipe.getOutput().generate(playerData.getRPG());
 					CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
 					if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
 						data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
@@ -197,7 +197,7 @@ public class CraftingStationView extends PluginInventory {
 			} else {
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 				for (Ingredient ingredient : craft.getRecipe().getIngredients())
-					new SmartGive(data.getPlayer()).give(ingredient.generateItemStack());
+					new SmartGive(data.getPlayer()).give(ingredient.generateItemStack(playerData.getRPG()));
 			}
 
 			updateData();

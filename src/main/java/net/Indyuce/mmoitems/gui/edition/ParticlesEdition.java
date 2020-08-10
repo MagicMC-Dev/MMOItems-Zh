@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -30,21 +30,21 @@ import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ParticlesEdition extends EditionInventory {
-	public ParticlesEdition(Player player, MMOItem mmoitem) {
-		super(player, mmoitem);
+	public ParticlesEdition(Player player, MMOItemTemplate template) {
+		super(player, template);
 	}
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Particles E.: " + mmoitem.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Particles E.: " + template.getId());
 		int[] slots = { 37, 38, 39, 40, 41, 42, 43 };
 		int n = 0;
 
-		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
+		FileConfiguration config = template.getType().getConfigFile().getConfig();
 
 		ParticleType particleType = null;
 		try {
-			particleType = ParticleType.valueOf(config.getString(mmoitem.getId() + ".item-particles.type"));
+			particleType = ParticleType.valueOf(config.getString(template.getId() + ".item-particles.type"));
 		} catch (Exception e) {
 		}
 
@@ -71,7 +71,7 @@ public class ParticlesEdition extends EditionInventory {
 
 		Particle particle = null;
 		try {
-			particle = Particle.valueOf(config.getString(mmoitem.getId() + ".item-particles.particle"));
+			particle = Particle.valueOf(config.getString(template.getId() + ".item-particles.particle"));
 		} catch (Exception e) {
 		}
 
@@ -92,7 +92,7 @@ public class ParticlesEdition extends EditionInventory {
 		particleItem.setItemMeta(particleItemMeta);
 
 		if (particleType != null) {
-			ConfigurationSection psection = config.getConfigurationSection(mmoitem.getId() + ".item-particles");
+			ConfigurationSection psection = config.getConfigurationSection(template.getId() + ".item-particles");
 			for (String modifier : particleType.getModifiers()) {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
@@ -116,9 +116,9 @@ public class ParticlesEdition extends EditionInventory {
 		}
 
 		if (ParticleData.isColorable(particle)) {
-			int red = config.getInt(mmoitem.getId() + ".item-particles.color.red");
-			int green = config.getInt(mmoitem.getId() + ".item-particles.color.green");
-			int blue = config.getInt(mmoitem.getId() + ".item-particles.color.blue");
+			int red = config.getInt(template.getId() + ".item-particles.color.red");
+			int green = config.getInt(template.getId() + ".item-particles.color.green");
+			int blue = config.getInt(template.getId() + ".item-particles.color.blue");
 
 			ItemStack colorItem = VersionMaterial.RED_DYE.toItem();
 			ItemMeta colorItemMeta = colorItem.getItemMeta();
@@ -167,12 +167,12 @@ public class ParticlesEdition extends EditionInventory {
 						.enable("Write in the chat the particle you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = mmoitem.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("item-particles")
-						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles")
+				ConfigFile config = template.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(template.getId()).contains("item-particles")
+						&& config.getConfig().getConfigurationSection(template.getId() + ".item-particles")
 								.contains("particle")) {
-					config.getConfig().set(mmoitem.getId() + ".item-particles.particle", null);
-					registerTemplateEdition(config, true);
+					config.getConfig().set(template.getId() + ".item-particles.particle", null);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
 				}
@@ -185,11 +185,11 @@ public class ParticlesEdition extends EditionInventory {
 						"Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = mmoitem.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("item-particles") && config
-						.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles").contains("color")) {
-					config.getConfig().set(mmoitem.getId() + ".item-particles.color", null);
-					registerTemplateEdition(config, true);
+				ConfigFile config = template.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(template.getId()).contains("item-particles") && config
+						.getConfig().getConfigurationSection(template.getId() + ".item-particles").contains("color")) {
+					config.getConfig().set(template.getId() + ".item-particles.color", null);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
 				}
@@ -207,18 +207,18 @@ public class ParticlesEdition extends EditionInventory {
 			}
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = mmoitem.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("item-particles") && config
-						.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles").contains("type")) {
-					config.getConfig().set(mmoitem.getId() + ".item-particles.type", null);
+				ConfigFile config = template.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(template.getId()).contains("item-particles") && config
+						.getConfig().getConfigurationSection(template.getId() + ".item-particles").contains("type")) {
+					config.getConfig().set(template.getId() + ".item-particles.type", null);
 
 					// reset other modifiers
-					for (String key : config.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles")
+					for (String key : config.getConfig().getConfigurationSection(template.getId() + ".item-particles")
 							.getKeys(false))
 						if (!key.equals("particle"))
-							config.getConfig().set(mmoitem.getId() + ".item-particles." + key, null);
+							config.getConfig().set(template.getId() + ".item-particles." + key, null);
 
-					registerTemplateEdition(config, true);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle pattern.");
 				}
@@ -233,11 +233,11 @@ public class ParticlesEdition extends EditionInventory {
 			new StatEdition(this, ItemStat.ITEM_PARTICLES, tag).enable("Write in the chat the value you want.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = mmoitem.getType().getConfigFile();
-			if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("item-particles")
-					&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles").contains(tag)) {
-				config.getConfig().set(mmoitem.getId() + ".item-particles." + tag, null);
-				registerTemplateEdition(config, true);
+			ConfigFile config = template.getType().getConfigFile();
+			if (config.getConfig().getConfigurationSection(template.getId()).contains("item-particles")
+					&& config.getConfig().getConfigurationSection(template.getId() + ".item-particles").contains(tag)) {
+				config.getConfig().set(template.getId() + ".item-particles." + tag, null);
+				registerTemplateEdition(config);
 				open();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset " + ChatColor.GOLD + tag
 						+ ChatColor.GRAY + ".");

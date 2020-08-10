@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,9 +26,15 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof Boolean, "Must specify true/false");
-		return new BooleanData((boolean) object);
+	public RandomStatData whenInitialized(Object object) {
+
+		if (object instanceof Boolean)
+			return new RandomBooleanData((boolean) object);
+
+		if (object instanceof Number)
+			return new RandomBooleanData(Double.valueOf(object.toString()));
+
+		throw new IllegalArgumentException("Must specify a number (chance) or true/false");
 	}
 
 	@Override
@@ -44,7 +49,7 @@ public class BooleanStat extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), !config.getConfig().getBoolean(inv.getEdited().getId() + "." + getPath()));
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 	}
 
@@ -65,17 +70,5 @@ public class BooleanStat extends ItemStat {
 				+ (mmoitem.hasData(this) && ((BooleanData) mmoitem.getData(this)).isEnabled() ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to switch this value.");
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-
-		if (object instanceof Boolean)
-			return new RandomBooleanData((boolean) object);
-
-		if (object instanceof Number)
-			return new RandomBooleanData(Double.valueOf(object.toString()));
-
-		throw new IllegalArgumentException("Must specify a number (chance) or true/false");
 	}
 }

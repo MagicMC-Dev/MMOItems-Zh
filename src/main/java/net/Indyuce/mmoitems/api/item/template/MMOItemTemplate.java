@@ -13,11 +13,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
-public class MMOItemTemplate {
+public class MMOItemTemplate implements ItemReference {
 	private final String id;
 	private final Type type;
 
@@ -60,7 +61,7 @@ public class MMOItemTemplate {
 				Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
-				base.put(stat, stat.whenInitializedGeneration(config.get("base." + key)));
+				base.put(stat, stat.whenInitialized(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '" + key
 						+ "' from item gen template '" + id + "': " + exception.getMessage());
@@ -75,10 +76,12 @@ public class MMOItemTemplate {
 		return modifiers;
 	}
 
+	@Override
 	public Type getType() {
 		return type;
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}

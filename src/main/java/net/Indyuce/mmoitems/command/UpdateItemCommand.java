@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.ItemUpdaterEdition;
 import net.mmogroup.mmolib.MMOLib;
@@ -64,13 +63,12 @@ public class UpdateItemCommand implements CommandExecutor {
 			return true;
 		}
 
-		MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(type, args[1]);
-		if (mmoitem == null) {
-			player.sendMessage(ChatColor.RED + "This item does not exist or has issues loading.");
+		if (!MMOItems.plugin.getItems().hasTemplate(type, args[1])) {
+			player.sendMessage(ChatColor.RED + "Could not find an item template with ID '" + args[1] + "'");
 			return true;
 		}
 
-		new ItemUpdaterEdition(player, mmoitem).open();
+		new ItemUpdaterEdition(player, MMOItems.plugin.getItems().getTemplate(type, args[1])).open();
 		return true;
 	}
 }

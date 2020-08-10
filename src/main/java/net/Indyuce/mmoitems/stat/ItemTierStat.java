@@ -41,7 +41,7 @@ public class ItemTierStat extends StringStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".tier", format);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + format + ".");
 		return true;

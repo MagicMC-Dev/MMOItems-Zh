@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
@@ -39,7 +40,7 @@ public class VanillaIngredient extends Ingredient {
 	}
 
 	@Override
-	public ItemStack generateItemStack() {
+	public ItemStack generateItemStack(RPGPlayer player) {
 		ItemStack item = new ItemStack(material, getAmount());
 		if (displayName != null) {
 			ItemMeta meta = item.getItemMeta();

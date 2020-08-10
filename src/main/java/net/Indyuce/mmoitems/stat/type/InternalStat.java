@@ -10,7 +10,6 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public abstract class InternalStat extends ItemStat {
 
@@ -24,13 +23,7 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		// not supported
-		return null;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		// not supported
 		return null;
 	}

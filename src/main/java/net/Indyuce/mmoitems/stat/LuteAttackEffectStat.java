@@ -34,7 +34,7 @@ public class LuteAttackEffectStat extends StringStat {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + ".lute-attack-effect", null);
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
 			return;
@@ -56,7 +56,7 @@ public class LuteAttackEffectStat extends StringStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".lute-attack-effect", effect.name());
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + effect.getDefaultName() + ".");
 		return true;

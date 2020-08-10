@@ -61,13 +61,9 @@ public abstract class EditionInventory extends PluginInventory {
 		return cachedItemStack;
 	}
 
-	public void registerTemplateEdition(ConfigFile config, boolean uuid) {
+	public void registerTemplateEdition(ConfigFile config) {
 
-		/*
-		 * cached item needs to be flushed otherwise modifications applied
-		 * cannot display on the edition GUI
-		 */
-		config.registerTemplateEdition(template.getType(), uuid ? template.getId() : null);
+		config.registerTemplateEdition(template);
 
 		/*
 		 * update edited mmoitem after registering the item edition and

@@ -12,12 +12,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.command.MMOItemsCommand;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
@@ -85,7 +83,7 @@ import net.mmogroup.mmolib.version.SpigotPlugin;
 
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
- 
+
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
 	private final AbilityManager abilityManager = new AbilityManager();
@@ -193,7 +191,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			@Override
 			public void run() {
-				for(Player player : Bukkit.getOnlinePlayers())
+				for (Player player : Bukkit.getOnlinePlayers())
 					PlayerData.get(player).checkForInventoryUpdate();
 			}
 		}, 100, getConfig().getInt("inventory-update-delay"));
@@ -287,7 +285,7 @@ public class MMOItems extends JavaPlugin {
 		// save item updater data
 		ConfigFile updater = new ConfigFile("/dynamic", "updater");
 		updater.getConfig().getKeys(false).forEach(key -> updater.getConfig().set(key, null));
-		dynamicUpdater.getActive().forEach(data -> {
+		dynamicUpdater.collectActive().forEach(data -> {
 			updater.getConfig().createSection(data.getPath());
 			data.save(updater.getConfig().getConfigurationSection(data.getPath()));
 		});
@@ -303,7 +301,7 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public String getPrefix() {
-		return ChatColor.YELLOW + "MI" + ChatColor.DARK_GRAY + "> " + ChatColor.GRAY;
+		return ChatColor.YELLOW + "MMOItems" + ChatColor.DARK_GRAY + "> " + ChatColor.GRAY;
 	}
 
 	public File getJarFile() {
@@ -325,7 +323,6 @@ public class MMOItems extends JavaPlugin {
 	public FlagPlugin getFlags() {
 		return flagPlugin;
 	}
-
 
 	public void setFlags(FlagPlugin value) {
 		flagPlugin = value;
@@ -435,45 +432,6 @@ public class MMOItems extends JavaPlugin {
 
 	public boolean isBlacklisted(Material material) {
 		return getConfig().getStringList("block-blacklist").contains(material.name());
-	}
-
-	/***
-	 * Parses an ItemStack from a string. Can be used to both get a vanilla
-	 * material or an MMOItem. Used by the recipe manager.
-	 */
-	public ItemStack parseStack(String parse) {
-		ItemStack stack = null;
-		String[] split = parse.split("\\:");
-		String input = split[0];
-
-		if (input.contains(".")) {
-			String[] typeId = input.split("\\.");
-			String typeFormat = typeId[0].toUpperCase().replace("-", "_").replace(" ", "_");
-			Validate.isTrue(getTypes().has(typeFormat), "Could not find type " + typeFormat);
-
-			MMOItem mmo = getItems().getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
-			if (mmo != null)
-				stack = mmo.newBuilder().build();
-		} else {
-			Material mat = Material.AIR;
-			try {
-				mat = Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_"));
-			} catch (IllegalArgumentException e) {
-				getLogger().warning("Couldn't parse material from '" + parse + "'!");
-			}
-
-			if (mat != Material.AIR)
-				stack = new ItemStack(mat);
-		}
-
-		try {
-			if (stack != null && split.length > 1)
-				stack.setAmount(Integer.parseInt(split[1]));
-		} catch (NumberFormatException e) {
-			getLogger().warning("Couldn't parse amount from '" + parse + "'!");
-		}
-
-		return stack;
 	}
 
 	public void debug(Object... message) {

@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,12 +19,6 @@ public class DisableStat extends BooleanStat {
 
 	public DisableStat(String id, Material material, String name, String[] types, String... lore) {
 		super("DISABLE_" + id, new ItemStack(material), name, lore, types);
-	}
-
-	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof Boolean, "Must specify true/false");
-		return new BooleanData((boolean) object);
 	}
 
 	@Override

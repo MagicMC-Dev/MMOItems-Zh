@@ -59,7 +59,8 @@ public class ItemStackBuilder {
 		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
 
 		if (MMOItems.plugin.getUpdater().hasData(mmoitem))
-			tags.add(new ItemTag("MMOITEMS_ITEM_UUID", MMOItems.plugin.getUpdater().getData(mmoitem).getUniqueId().toString()));
+			tags.add(new ItemTag("MMOITEMS_ITEM_UUID",
+					MMOItems.plugin.getUpdater().getData(mmoitem.getType(), mmoitem.getId()).getUniqueId().toString()));
 	}
 
 	public MMOItemLore getLore() {

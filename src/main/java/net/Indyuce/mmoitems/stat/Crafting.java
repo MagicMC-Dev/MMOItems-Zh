@@ -39,7 +39,7 @@ public class Crafting extends ItemStat {
 			ConfigurationSection section = config.getConfig().getConfigurationSection(inv.getEdited().getId());
 			if (section.contains("crafting")) {
 				section.set("crafting", null);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.getPlayer()
 						.sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using "
 								+ ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
@@ -68,12 +68,12 @@ public class Crafting extends ItemStat {
 					newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
 					config.getConfig().set(inv.getEdited().getId() + ".crafting.shaped.1", newList);
-					inv.registerTemplateEdition(config, true);
+					inv.registerTemplateEdition(config);
 				} else {
 					List<String> newList = config.getConfig().getStringList(inv.getEdited().getId() + ".crafting.shapeless.1");
 					newList.set(slot, message);
 					config.getConfig().set(inv.getEdited().getId() + ".crafting.shapeless.1", newList);
-					inv.registerTemplateEdition(config, true);
+					inv.registerTemplateEdition(config);
 				}
 			}
 		} else if (type.equals("item")) {
@@ -103,7 +103,7 @@ public class Crafting extends ItemStat {
 			config.getConfig().set(inv.getEdited().getId() + ".crafting." + info[1] + ".1.item", args[0]);
 			config.getConfig().set(inv.getEdited().getId() + ".crafting." + info[1] + ".1.time", time);
 			config.getConfig().set(inv.getEdited().getId() + ".crafting." + info[1] + ".1.experience", exp);
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 		} else
 			MMOItems.plugin.getLogger().warning("Something went wrong!");
 
@@ -111,12 +111,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		return null;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		return null;
 	}
 

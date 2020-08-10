@@ -35,22 +35,7 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		ElementListData elements = new ElementListData();
-
-		for (Element element : Element.values()) {
-			elements.setDamage(element, config.getDouble(element.name().toLowerCase() + ".damage"));
-			elements.setDefense(element, config.getDouble(element.name().toLowerCase() + ".defense"));
-		}
-
-		return elements;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomElementListData((ConfigurationSection) object);
 	}
@@ -64,7 +49,7 @@ public class Elements extends ItemStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("element")) {
 				config.getConfig().set(inv.getEdited().getId() + ".element", null);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
 			}
@@ -94,7 +79,7 @@ public class Elements extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".element", null);
 		}
 
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
 				+ " successfully changed to " + value + ".");

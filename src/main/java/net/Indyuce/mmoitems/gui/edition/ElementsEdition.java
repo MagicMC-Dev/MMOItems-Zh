@@ -20,45 +20,45 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class ElementsEdition extends EditionInventory {
 	public static Map<Integer, String> correspondingSlot = new HashMap<>();
 
-	public ElementsEdition(Player player, MMOItem mmoitem) {
-		super(player, mmoitem);
-		
-		if (correspondingSlot.isEmpty()) {
-			correspondingSlot.put(19, "fire.damage");
-			correspondingSlot.put(25, "fire.defense");
-			correspondingSlot.put(20, "ice.damage");
-			correspondingSlot.put(24, "ice.defense");
-			correspondingSlot.put(28, "wind.damage");
-			correspondingSlot.put(34, "wind.defense");
-			correspondingSlot.put(29, "earth.damage");
-			correspondingSlot.put(33, "earth.defense");
-			correspondingSlot.put(30, "thunder.damage");
-			correspondingSlot.put(32, "thunder.defense");
-			correspondingSlot.put(37, "water.damage");
-			correspondingSlot.put(43, "water.defense");
-		}
+	static {
+		correspondingSlot.put(19, "fire.damage");
+		correspondingSlot.put(25, "fire.defense");
+		correspondingSlot.put(20, "ice.damage");
+		correspondingSlot.put(24, "ice.defense");
+		correspondingSlot.put(28, "wind.damage");
+		correspondingSlot.put(34, "wind.defense");
+		correspondingSlot.put(29, "earth.damage");
+		correspondingSlot.put(33, "earth.defense");
+		correspondingSlot.put(30, "thunder.damage");
+		correspondingSlot.put(32, "thunder.defense");
+		correspondingSlot.put(37, "water.damage");
+		correspondingSlot.put(43, "water.defense");
+	}
+	
+	public ElementsEdition(Player player, MMOItemTemplate template) {
+		super(player, template);
 	}
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Elements E.: " + mmoitem.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Elements E.: " + template.getId());
 		int[] slots = { 19, 25, 20, 24, 28, 34, 29, 33, 30, 32, 37, 43, 38, 42, 39, 41 };
 		int n = 0;
 
-		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
+		FileConfiguration config = template.getType().getConfigFile().getConfig();
 		for (Element element : Element.values()) {
 			ItemStack attack = element.getItem().clone();
 			ItemMeta attackMeta = attack.getItemMeta();
 			attackMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Damage");
 			List<String> attackLore = new ArrayList<String>();
-			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(mmoitem.getId() + ".element." + element.getName().toLowerCase() + ".damage"));
+			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(template.getId() + ".element." + element.getName().toLowerCase() + ".damage"));
 			attackLore.add("");
 			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
@@ -69,7 +69,7 @@ public class ElementsEdition extends EditionInventory {
 			ItemMeta defenseMeta = defense.getItemMeta();
 			defenseMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Defense");
 			List<String> defenseLore = new ArrayList<String>();
-			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(mmoitem.getId() + ".element." + element.getName().toLowerCase() + ".defense"));
+			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + config.getDouble(template.getId() + ".element." + element.getName().toLowerCase() + ".defense"));
 			defenseLore.add("");
 			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
@@ -99,22 +99,22 @@ public class ElementsEdition extends EditionInventory {
 				new StatEdition(this, ItemStat.ELEMENTS, event.getSlot()).enable("Write in the value you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = mmoitem.getType().getConfigFile();
+				ConfigFile config = template.getType().getConfigFile();
 				String elementPath = correspondingSlot.get(event.getSlot());
-				config.getConfig().set(mmoitem.getId() + ".element." + elementPath, null);
+				config.getConfig().set(template.getId() + ".element." + elementPath, null);
 
 				// clear element config section
 				String elementName = elementPath.split("\\.")[0];
-				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("element")) {
-					if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".element").contains(elementName))
-						if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".element." + elementName).getKeys(false).isEmpty())
-							config.getConfig().set(mmoitem.getId() + ".element." + elementName, null);
-					if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".element").getKeys(false).isEmpty())
-						config.getConfig().set(mmoitem.getId() + ".element", null);
+				if (config.getConfig().getConfigurationSection(template.getId()).contains("element")) {
+					if (config.getConfig().getConfigurationSection(template.getId() + ".element").contains(elementName))
+						if (config.getConfig().getConfigurationSection(template.getId() + ".element." + elementName).getKeys(false).isEmpty())
+							config.getConfig().set(template.getId() + ".element." + elementName, null);
+					if (config.getConfig().getConfigurationSection(template.getId() + ".element").getKeys(false).isEmpty())
+						config.getConfig().set(template.getId() + ".element", null);
 				}
 
-				registerTemplateEdition(config, true);
-				new ElementsEdition(player, mmoitem).open(getPreviousPage());
+				registerTemplateEdition(config);
+				new ElementsEdition(player, template).open(getPreviousPage());
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY + " successfully removed.");
 			}
 		}

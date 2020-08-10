@@ -46,28 +46,7 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		PotionEffectListData effects = new PotionEffectListData();
-
-		for (String effect : config.getKeys(false)) {
-			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
-
-			String[] split = config.getString(effect).split("\\,");
-			double duration = Double.parseDouble(split[0]);
-
-			int amplifier = Integer.parseInt(split[1]);
-			effects.add(new PotionEffectData(type, duration, amplifier));
-		}
-
-		return effects;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
@@ -86,7 +65,7 @@ public class Effects extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".effects." + last, null);
 				if (set.size() <= 1)
 					config.getConfig().set(inv.getEdited().getId() + ".effects", null);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
@@ -137,7 +116,7 @@ public class Effects extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".effects." + effect.getName(), duration + "," + amplifier);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
 		return true;

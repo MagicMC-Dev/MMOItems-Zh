@@ -1,9 +1,19 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -13,20 +23,11 @@ import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Commands extends ItemStat {
 	private static final int max = 15;
@@ -50,11 +51,6 @@ public class Commands extends ItemStat {
 		}
 
 		return list;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
 	}
 
 	@Override
@@ -116,7 +112,7 @@ public class Commands extends ItemStat {
 		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".delay", delay);
 		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".console", console ? console : null);
 		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".op", op ? op : null);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
 		return true;

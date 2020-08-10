@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -41,11 +40,6 @@ public class GemSockets extends ItemStat {
 	public GemSocketsData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new GemSocketsData((List<String>) object);
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
 	}
 
 	@Override
@@ -99,7 +93,7 @@ public class GemSockets extends ItemStat {
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + ChatColor.GRAY + "'.");
 			}
@@ -113,7 +107,7 @@ public class GemSockets extends ItemStat {
 				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + message + " successfully added.");
 		return true;

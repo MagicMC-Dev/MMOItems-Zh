@@ -13,6 +13,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class UpdaterData {
 
+	// TODO change this to MMOItemTemplate
 	private final Type type;
 	private final String id;
 
@@ -57,6 +58,14 @@ public class UpdaterData {
 
 	public String getPath() {
 		return type.getId() + "." + id;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public UUID getUniqueId() {

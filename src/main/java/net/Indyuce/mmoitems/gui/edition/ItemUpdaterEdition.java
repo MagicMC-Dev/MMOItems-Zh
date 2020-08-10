@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.UpdaterData;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
@@ -22,21 +22,21 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 public class ItemUpdaterEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 28, 29, 30, 37, 38, 39 };
 
-	public ItemUpdaterEdition(Player player, MMOItem mmoitem) {
-		super(player, mmoitem);
+	public ItemUpdaterEdition(Player player, MMOItemTemplate template) {
+		super(player, template);
 	}
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Updater: " + mmoitem.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Updater: " + template.getId());
 
 		// setup if not in map
-		if (!MMOItems.plugin.getUpdater().hasData(mmoitem)) {
-			MMOItems.plugin.getUpdater().enable(mmoitem);
-			player.sendMessage(ChatColor.YELLOW + "Successfully enabled the item updater for " + mmoitem.getId() + ".");
+		if (!MMOItems.plugin.getUpdater().hasData(template)) {
+			MMOItems.plugin.getUpdater().enable(template);
+			player.sendMessage(ChatColor.YELLOW + "Successfully enabled the item updater for " + template.getId() + ".");
 		}
 
-		UpdaterData did = MMOItems.plugin.getUpdater().getData(mmoitem);
+		UpdaterData did = MMOItems.plugin.getUpdater().getData(template);
 
 		ItemStack disable = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
 		ItemMeta disableMeta = disable.getItemMeta();
@@ -54,7 +54,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 					getBooleanItem(MMOUtils.caseOnWords(option.name().substring(5).toLowerCase()), did.hasOption(option), option.getLore()));
 
 		inv.setItem(32, disable);
-		inv.setItem(4, getCachedItem());
+		inv.setItem(4, getCachedItemStack());
 
 		return inv;
 	}
@@ -82,15 +82,15 @@ public class ItemUpdaterEdition extends EditionInventory {
 			return;
 
 		// safe check
-		if (!MMOItems.plugin.getUpdater().hasData(mmoitem)) {
+		if (!MMOItems.plugin.getUpdater().hasData(template)) {
 			player.closeInventory();
 			return;
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Disable")) {
-			MMOItems.plugin.getUpdater().disable(mmoitem);
+			MMOItems.plugin.getUpdater().disable(template);
 			player.closeInventory();
-			player.sendMessage(ChatColor.YELLOW + "Successfully disabled the item updater for " + mmoitem.getId() + ".");
+			player.sendMessage(ChatColor.YELLOW + "Successfully disabled the item updater for " + template.getId() + ".");
 			return;
 		}
 
@@ -102,7 +102,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		if (!format.startsWith(ChatColor.GREEN + "Keep "))
 			return;
 
-		UpdaterData did = MMOItems.plugin.getUpdater().getData(mmoitem);
+		UpdaterData did = MMOItems.plugin.getUpdater().getData(template);
 		KeepOption option = KeepOption.valueOf(format.substring(2, format.length() - 1).replace(" ", "_").toUpperCase());
 		if (did.hasOption(option))
 			did.removeOption(option);

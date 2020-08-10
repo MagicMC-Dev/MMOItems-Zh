@@ -46,7 +46,7 @@ public class CraftingEdition extends EditionInventory {
 			craftingEventItem.setDisplayName(ChatColor.GREEN + ctype.getName());
 			List<String> eventLore = new ArrayList<String>();
 			eventLore.add(ChatColor.GRAY + ctype.getLore());
-			if (!mmoitem.getType().getConfigFile().getConfig().contains(mmoitem.getId() + ".crafting." + ctype.name().toLowerCase())) {
+			if (!template.getType().getConfigFile().getConfig().contains(template.getId() + ".crafting." + ctype.name().toLowerCase())) {
 				eventLore.add("");
 				eventLore.add(ChatColor.RED + "No recipes found.");
 			}
@@ -79,7 +79,7 @@ public class CraftingEdition extends EditionInventory {
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			if (event.getSlot() == 21 || event.getSlot() == 22)
-				new RecipeEdition(player, mmoitem, event.getSlot() == 22).open(getPreviousPage());
+				new RecipeEdition(player, template, event.getSlot() == 22).open(getPreviousPage());
 			else
 				new StatEdition(this, ItemStat.CRAFTING, "item", corresponding.name().toLowerCase()).enable(
 						"Write in the chat the item, tickspeed and exp you want.", "Format: '[ITEM] [TICKS] [EXP]'",
@@ -87,17 +87,17 @@ public class CraftingEdition extends EditionInventory {
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = mmoitem.getType().getConfigFile();
-			if (!config.getConfig().contains(mmoitem.getId() + ".crafting." + corresponding.name().toLowerCase()))
+			ConfigFile config = template.getType().getConfigFile();
+			if (!config.getConfig().contains(template.getId() + ".crafting." + corresponding.name().toLowerCase()))
 				return;
 
-			config.getConfig().set(mmoitem.getId() + ".crafting." + corresponding.name().toLowerCase(), null);
+			config.getConfig().set(template.getId() + ".crafting." + corresponding.name().toLowerCase(), null);
 			player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + corresponding.getName() + " recipe.");
 
-			if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".crafting") == null)
-				config.getConfig().set(mmoitem.getId() + ".crafting", null);
+			if (config.getConfig().getConfigurationSection(template.getId() + ".crafting") == null)
+				config.getConfig().set(template.getId() + ".crafting", null);
 
-			registerTemplateEdition(config, true);
+			registerTemplateEdition(config);
 		}
 	}
 }

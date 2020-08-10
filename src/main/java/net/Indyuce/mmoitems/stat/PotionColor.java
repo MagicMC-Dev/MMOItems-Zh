@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ColorData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -30,6 +31,12 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
+	public RandomStatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof String, "Must specify a string");
+		return new ColorData((String) object);
+	}
+
+	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
@@ -38,7 +45,7 @@ public class PotionColor extends StringStat {
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + ".potion-color", null);
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
 		}
@@ -62,7 +69,7 @@ public class PotionColor extends StringStat {
 			}
 
 		config.getConfig().set(inv.getEdited().getId() + ".potion-color", message);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + message + ".");
 		return true;
@@ -76,12 +83,6 @@ public class PotionColor extends StringStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the potion color.");
-	}
-
-	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof String, "Must specify a string");
-		return new ColorData((String) object);
 	}
 
 	@Override

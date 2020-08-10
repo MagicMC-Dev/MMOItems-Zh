@@ -30,7 +30,6 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.UpdaterData;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
@@ -48,7 +47,6 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.CraftingStationView;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -323,30 +321,6 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 		}
 		// ==================================================================================================================================
-		else if (args[0].equalsIgnoreCase("checkupdater")) {
-			if (args.length < 2) {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH
-						+ "--------------------------------------------------");
-				for (UpdaterData data : MMOItems.plugin.getUpdater().getActive())
-					sender.sendMessage(ChatColor.RED + data.getPath() + ChatColor.WHITE + " - " + ChatColor.RED
-							+ data.getUniqueId().toString());
-				return true;
-			}
-			try {
-				@SuppressWarnings("deprecation")
-				UpdaterData data = MMOItems.plugin.getUpdater().getData(args[1].toUpperCase().replace("-", "_"));
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH
-						+ "--------------------------------------------------");
-				sender.sendMessage(ChatColor.AQUA + "UUID = " + ChatColor.RESET + data.getUniqueId().toString());
-				for (KeepOption option : KeepOption.values())
-					sender.sendMessage(
-							ChatColor.AQUA + MMOUtils.caseOnWords(option.name().replace("_", " ").toLowerCase()) + " = "
-									+ ChatColor.RESET + data.hasOption(option));
-			} catch (Exception e) {
-				sender.sendMessage("Couldn't find updater data.");
-			}
-		}
-		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("checktags")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is only for players.");
@@ -613,7 +587,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			config.getConfig().set(id2, config.getConfig().getConfigurationSection(id1));
-			config.registerTemplateEdition(type, id2);
+			config.save();
 			if (sender instanceof Player)
 				new ItemEdition((Player) sender, MMOItems.plugin.getItems().getTemplate(type, id2)).open();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + id1 + " to "
@@ -827,7 +801,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			config.getConfig().set(name + ".material",
 					args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());
 
-			config.registerTemplateEdition(type, name);
+			config.save();
 			if (sender instanceof Player)
 				new ItemEdition((Player) sender, MMOItems.plugin.getItems().getTemplate(type, name)).open();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully "
@@ -956,6 +930,8 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			Type type = Type.get(args[1]);
 			String id = args[2].toUpperCase().replace("-", "_");
+			
+			
 			ConfigFile config = type.getConfigFile();
 			if (!config.getConfig().contains(id)) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + id + ".");
@@ -963,7 +939,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			config.getConfig().set(id, null);
-			config.registerTemplateEdition(type, id);
+			config.save();
 
 			/*
 			 * remove the item updater data and uuid data from the plugin to prevent other

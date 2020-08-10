@@ -1,8 +1,20 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -22,16 +34,6 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.###");
@@ -42,20 +44,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		AbilityListData list = new AbilityListData();
-
-		for (String key : config.getKeys(false))
-			list.add(new AbilityData(config.getConfigurationSection(key)));
-
-		return list;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -116,7 +105,7 @@ public class Abilities extends ItemStat {
 
 			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey, null);
 			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".type", format);
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
@@ -139,7 +128,7 @@ public class Abilities extends ItemStat {
 			}
 
 			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".mode", castMode.name());
-			inv.registerTemplateEdition(config, true);
+			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
 					+ ChatColor.GRAY + ".");
@@ -155,7 +144,7 @@ public class Abilities extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + "." + edited, value);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
 				+ " successfully added.");

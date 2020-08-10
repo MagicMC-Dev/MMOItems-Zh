@@ -1,5 +1,9 @@
 package net.Indyuce.mmoitems.stat;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -14,9 +18,6 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
 
 public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
@@ -39,12 +40,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		return new RequiredLevelData(object);
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		return new RandomRequiredLevelData(object);
 	}
 

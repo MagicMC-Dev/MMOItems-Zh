@@ -2,9 +2,7 @@ package net.Indyuce.mmoitems.manager;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -17,22 +15,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpdaterData;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.api.item.ItemReference;
+import net.Indyuce.mmoitems.api.util.TemplateMap;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.version.wrapper.VersionWrapper;
 
 public class UpdaterManager implements Listener {
-	private final Map<String, UpdaterData> map = new HashMap<>();
+	private final TemplateMap<UpdaterData> data = new TemplateMap<>();
 
 	public UpdaterManager() {
 		FileConfiguration config = new ConfigFile("/dynamic", "updater").getConfig();
@@ -47,81 +42,48 @@ public class UpdaterManager implements Listener {
 			}
 	}
 
-	public UpdaterData getData(MMOItem mmoitem) {
-		return getData(mmoitem.getType(), mmoitem.getId());
+	public UpdaterData getData(ItemReference template) {
+		return data.getValue(template.getType(), template.getId());
 	}
 
 	public UpdaterData getData(Type type, String id) {
-		return map.get(toPath(type, id));
+		return data.getValue(type, id);
 	}
 
-	@Deprecated
-	public UpdaterData getData(String path) {
-		return map.get(path);
+	public boolean hasData(ItemReference template) {
+		return data.hasValue(template.getType(), template.getId());
 	}
 
-	public boolean hasData(MMOItem mmoitem) {
-		return hasData(mmoitem.getType(), mmoitem.getId());
-	}
-
-	public boolean hasData(Type type, String id) {
-		return map.containsKey(toPath(type, id));
-	}
-
-	@Deprecated
-	public boolean hasData(String path) {
-		return map.containsKey(path);
-	}
-
-	public Collection<UpdaterData> getActive() {
-		return map.values();
-	}
-
-	public void disable(MMOItem mmoitem) {
-		disable(mmoitem.getType(), mmoitem.getId());
-	}
-
-	public void disable(Type type, String id) {
-		map.remove(toPath(type, id));
-	}
-
-	@Deprecated
-	public void disable(String path) {
-		map.remove(path);
-	}
-
-	public void enable(MMOItem mmoitem) {
-		enable(mmoitem.getType(), mmoitem.getId());
+	public void enable(ItemReference template) {
+		this.data.setValue(template.getType(), template.getId(), new UpdaterData(template.getType(), template.getId(), UUID.randomUUID()));
 	}
 
 	public void enable(Type type, String id) {
-		enable(new UpdaterData(type, id, UUID.randomUUID()));
-	}
-
-	@Deprecated
-	public void enable(String path) {
-		String[] split = path.split("\\.");
-		Type type = MMOItems.plugin.getTypes().getOrThrow(split[0]);
-		enable(type, split[1]);
+		this.data.setValue(type, id, new UpdaterData(type, id, UUID.randomUUID()));
 	}
 
 	public void enable(UpdaterData data) {
-		map.put(data.getPath(), data);
+		this.data.setValue(data.getType(), data.getId(), data);
 	}
 
-	/*
-	 * these keys are used to easily save updater data instances
-	 */
-	private String toPath(Type type, String id) {
-		return type.getId() + "." + id;
+	public void disable(Type type, String id) {
+		data.removeValue(type, id);
 	}
 
-	/*
-	 * updates inventory item when clicked
+	public void disable(ItemReference template) {
+		data.removeValue(template.getType(), template.getId());
+	}
+
+	public Collection<UpdaterData> collectActive() {
+		return data.collectValues();
+	}
+
+	/**
+	 * Updates inventory item when an item is clicked in a player's inventory
 	 */
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void a(InventoryClickEvent event) {
+	public void updateOnClick(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
 		if (item == null || item.getType() == Material.AIR)
 			return;
@@ -131,11 +93,11 @@ public class UpdaterManager implements Listener {
 			event.setCurrentItem(newItem);
 	}
 
-	/*
-	 * updated inventory item when joining
+	/**
+	 * Updates a player inventory when joining
 	 */
 	@EventHandler
-	public void b(PlayerJoinEvent event) {
+	public void updateOnJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 
 		player.getEquipment().setHelmet(getUpdated(player.getEquipment().getHelmet()));
@@ -162,81 +124,95 @@ public class UpdaterManager implements Listener {
 		if (type == null)
 			return item.getItem();
 
-		String id = item.getString("MMOITEMS_ITEM_ID");
-		String path = type.getId() + "." + id;
-		if (!map.containsKey(path))
-			return item.getItem();
+		return item.getItem();
 
-		/*
-		 * check the internal UUID of the item, if it does not make the one
-		 * stored in the item updater map then the item is outdated.
-		 */
-		UpdaterData did = map.get(path);
-		if (did.matches(item))
-			return item.getItem();
-
-		// (funny bug fix) CLONE THE MMOITEM
-		MMOItem newItemMMO = MMOItems.plugin.getItems().getMMOItem(type, id).clone();
-
-		/*
-		 * apply older gem stones, using a light MMOItem so the item does not
-		 * calculate every stat data from the older item.
-		 */
-		MMOItem itemMMO = new VolatileMMOItem(item);
-		if (did.hasOption(KeepOption.KEEP_GEMS) && itemMMO.hasData(ItemStat.GEM_SOCKETS))
-			newItemMMO.setData(ItemStat.GEM_SOCKETS, itemMMO.getData(ItemStat.GEM_SOCKETS));
-
-		if (did.hasOption(KeepOption.KEEP_SOULBOUND) && itemMMO.hasData(ItemStat.SOULBOUND))
-			newItemMMO.setData(ItemStat.SOULBOUND, itemMMO.getData(ItemStat.SOULBOUND));
-
-		// if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
-
-		// apply amount
-		ItemStack newItem = newItemMMO.newBuilder().build();
-		newItem.setAmount(item.getItem().getAmount());
-
-		ItemMeta newItemMeta = newItem.getItemMeta();
-		List<String> lore = newItemMeta.getLore();
-
-		/*
-		 * add old enchants to the item. warning - if enabled the item will
-		 * remember of ANY enchant on the old item, even the enchants that were
-		 * removed!
-		 */
-		if (did.hasOption(KeepOption.KEEP_ENCHANTS))
-			item.getItem().getItemMeta().getEnchants().forEach((enchant, level) -> newItemMeta.addEnchant(enchant, level, true));
-
-		/*
-		 * keepLore is used to save enchants from custom enchants plugins that
-		 * only use lore to save enchant data
-		 */
-		if (did.hasOption(KeepOption.KEEP_LORE)) {
-			int n = 0;
-			for (String s : item.getItem().getItemMeta().getLore()) {
-				if (!s.startsWith(ChatColor.GRAY + ""))
-					break;
-				lore.add(n++, s);
-			}
-		}
-
-		/*
-		 * keep durability can be used for tools to save their durability so
-		 * users do not get extra durability when the item is updated
-		 */
-		VersionWrapper wrapper = MMOLib.plugin.getVersion().getWrapper();
-		if (did.hasOption(KeepOption.KEEP_DURABILITY) && wrapper.isDamageable(item.getItem()) && wrapper.isDamageable(newItem))
-			wrapper.applyDurability(newItem, newItemMeta, wrapper.getDurability(item.getItem(), item.getItem().getItemMeta()));
-
-		/*
-		 * keep name so players who renamed the item in the anvil does not have
-		 * to rename it again
-		 */
-		if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
-			newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
-
-		newItemMeta.setLore(lore);
-		newItem.setItemMeta(newItemMeta);
-		return newItem;
+		// String id = item.getString("MMOITEMS_ITEM_ID");
+		// String path = type.getId() + "." + id;
+		// if (!data.containsKey(path))
+		// return item.getItem();
+		//
+		// /*
+		// * check the internal UUID of the item, if it does not make the one
+		// * stored in the item updater data then the item is outdated.
+		// */
+		// UpdaterData did = data.get(path);
+		// if (did.matches(item))
+		// return item.getItem();
+		//
+		// // (funny bug fix) CLONE THE MMOITEM
+		// MMOItem newItemMMO = MMOItems.plugin.getItems().getMMOItem(type,
+		// id).clone();
+		//
+		// /*
+		// * apply older gem stones, using a light MMOItem so the item does not
+		// * calculate every stat data from the older item.
+		// */
+		// MMOItem itemMMO = new VolatileMMOItem(item);
+		// if (did.hasOption(KeepOption.KEEP_GEMS) &&
+		// itemMMO.hasData(ItemStat.GEM_SOCKETS))
+		// newItemMMO.setData(ItemStat.GEM_SOCKETS,
+		// itemMMO.getData(ItemStat.GEM_SOCKETS));
+		//
+		// if (did.hasOption(KeepOption.KEEP_SOULBOUND) &&
+		// itemMMO.hasData(ItemStat.SOULBOUND))
+		// newItemMMO.setData(ItemStat.SOULBOUND,
+		// itemMMO.getData(ItemStat.SOULBOUND));
+		//
+		// // if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
+		//
+		// // apply amount
+		// ItemStack newItem = newItemMMO.newBuilder().build();
+		// newItem.setAmount(item.getItem().getAmount());
+		//
+		// ItemMeta newItemMeta = newItem.getItemMeta();
+		// List<String> lore = newItemMeta.getLore();
+		//
+		// /*
+		// * add old enchants to the item. warning - if enabled the item will
+		// * remember of ANY enchant on the old item, even the enchants that
+		// were
+		// * removed!
+		// */
+		// if (did.hasOption(KeepOption.KEEP_ENCHANTS))
+		// item.getItem().getItemMeta().getEnchants().forEach((enchant, level)
+		// -> newItemMeta.addEnchant(enchant, level, true));
+		//
+		// /*
+		// * keepLore is used to save enchants from custom enchants plugins that
+		// * only use lore to save enchant data
+		// */
+		// if (did.hasOption(KeepOption.KEEP_LORE)) {
+		// int n = 0;
+		// for (String s : item.getItem().getItemMeta().getLore()) {
+		// if (!s.startsWith(ChatColor.GRAY + ""))
+		// break;
+		// lore.add(n++, s);
+		// }
+		// }
+		//
+		// /*
+		// * keep durability can be used for tools to save their durability so
+		// * users do not get extra durability when the item is updated
+		// */
+		// VersionWrapper wrapper = MMOLib.plugin.getVersion().getWrapper();
+		// if (did.hasOption(KeepOption.KEEP_DURABILITY) &&
+		// wrapper.isDamageable(item.getItem()) &&
+		// wrapper.isDamageable(newItem))
+		// wrapper.applyDurability(newItem, newItemMeta,
+		// wrapper.getDurability(item.getItem(), item.getItem().getItemMeta()));
+		//
+		// /*
+		// * keep name so players who renamed the item in the anvil does not
+		// have
+		// * to rename it again
+		// */
+		// if (did.hasOption(KeepOption.KEEP_NAME) &&
+		// item.getItem().getItemMeta().hasDisplayName())
+		// newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
+		//
+		// newItemMeta.setLore(lore);
+		// newItem.setItemMeta(newItemMeta);
+		// return newItem;
 	}
 
 	public enum KeepOption {

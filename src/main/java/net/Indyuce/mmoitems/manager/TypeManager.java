@@ -21,9 +21,9 @@ public class TypeManager {
 	 */
 	public void reload() {
 		map.clear();
-		registerAll(Type.ACCESSORY, Type.ARMOR, Type.BLOCK, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET, Type.GEM_STONE,
-				Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST, Type.ORNAMENT, Type.SPEAR, Type.STAFF,
-				Type.SWORD, Type.TOOL, Type.WHIP);
+		registerAll(Type.ACCESSORY, Type.ARMOR, Type.BLOCK, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET,
+				Type.GEM_STONE, Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST, Type.ORNAMENT, Type.SPEAR,
+				Type.STAFF, Type.SWORD, Type.TOOL, Type.WHIP);
 
 		/*
 		 * register all other types. important: check if the map already
@@ -78,7 +78,7 @@ public class TypeManager {
 
 	public Type getOrThrow(String id) {
 		Validate.isTrue(map.containsKey(id), "Could not find item type with ID '" + id + "'");
-		return get(id);
+		return map.get(id);
 	}
 
 	public boolean has(String id) {

@@ -3,10 +3,8 @@ package net.Indyuce.mmoitems.manager;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
@@ -21,13 +19,14 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.TemplateMap;
 
 public class ItemManager {
 
 	/*
 	 * registered mmoitem templates
 	 */
-	private final Map<Type, Map<String, MMOItemTemplate>> templates = new HashMap<>();
+	private final TemplateMap<MMOItemTemplate> templates = new TemplateMap<>();
 
 	/*
 	 * bank of item modifiers which can be used anywhere in generation templates
@@ -37,30 +36,30 @@ public class ItemManager {
 
 	private static final Random random = new Random();
 
-	/**
-	 * @param type
-	 *            Type of the mmoitem template
-	 * @param id
-	 *            Internal ID of the mmoitem template
-	 * @return If a template is registered with these type and ID
-	 */
 	public boolean hasTemplate(Type type, String id) {
-		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
-		return templates.containsKey(type) && templates.get(type).containsKey(id);
+		return templates.hasValue(type, id);
 	}
 
 	public MMOItemTemplate getTemplate(Type type, String id) {
-		return templates.get(type).get(id);
+		return templates.getValue(type, id);
 	}
 
 	/**
+	 * Used in class constructors to easily
+	 * 
 	 * @param type
-	 *            The item type used to look for templates
-	 * @return All the templates with a specific item type. This is used in the
-	 *         item browser to display all the items for example
+	 *            The item type
+	 * @param id
+	 *            The item ID
+	 * @return MMOItem template if it exists, or throws an IAE otherwise
 	 */
+	public MMOItemTemplate getTemplateOrThrow(Type type, String id) {
+		Validate.isTrue(hasTemplate(type, id), "Could not find a template with ID '" + id + "'");
+		return templates.getValue(type, id);
+	}
+
 	public Collection<MMOItemTemplate> getTemplates(Type type) {
-		return templates.containsKey(type) ? templates.get(type).values() : new HashSet<>();
+		return templates.collectValues(type);
 	}
 
 	public MMOItem generateMMOItem(Type type, String id, PlayerData player) {
@@ -72,7 +71,7 @@ public class ItemManager {
 	 */
 	@Deprecated
 	public MMOItem getMMOItem(Type type, String id) {
-		return getTemplate(type, id).newBuilder(0, rollTier()).build();
+		return getTemplate(type, id).newBuilder(0, null).build();
 	}
 
 	public ItemStack generateItem(Type type, String id, PlayerData player) {
@@ -96,9 +95,42 @@ public class ItemManager {
 	public void registerTemplate(MMOItemTemplate template) {
 		Validate.notNull(template, "MMOItem template cannot be null");
 
-		if (!templates.containsKey(template.getType()))
-			templates.put(template.getType(), new HashMap<>());
-		templates.get(template.getType()).put(template.getId(), template);
+		templates.setValue(template.getType(), template.getId(), template);
+	}
+
+	/**
+	 * Unregisters a template from mmoitem registery. Must be used when an item
+	 * is removed from the config files.
+	 * 
+	 * @param type
+	 *            The item type
+	 * @param id
+	 *            The item ID
+	 */
+	public void unregisterTemplate(Type type, String id) {
+		templates.removeValue(type, id);
+		MMOItems.plugin.getUpdater().disable(type, id);
+	}
+
+	/**
+	 * Used whenever an item is created or edited through the GUI edition. This
+	 * method unregisters the current template and loads it again from the
+	 * configuration file.
+	 * 
+	 * @param type
+	 *            The item type
+	 * @param id
+	 *            The item ID
+	 */
+	public void requestTemplateUpdate(Type type, String id) {
+		templates.removeValue(type, id);
+
+		try {
+			registerTemplate(new MMOItemTemplate(type.getConfigFile().getConfig().getConfigurationSection(id)));
+		} catch (IllegalArgumentException exception) {
+			MMOItems.plugin.getLogger().log(Level.INFO,
+					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
+		}
 	}
 
 	/**
@@ -107,6 +139,14 @@ public class ItemManager {
 	@Deprecated
 	public boolean hasMMOItem(Type type, String id) {
 		return hasTemplate(type, id);
+	}
+
+	/**
+	 * @return Collects all existing mmoitem templates into a set so that it can
+	 *         be filtered afterwards to generate random loot
+	 */
+	public Collection<MMOItemTemplate> collectTemplates() {
+		return templates.collectValues();
 	}
 
 	public boolean hasModifier(String id) {
@@ -150,16 +190,6 @@ public class ItemManager {
 		found = Math.max(Math.min(2 * playerLevel, found), 1);
 
 		return (int) found;
-	}
-
-	/**
-	 * @return Collects all existing mmoitem templates into a set so that it can
-	 *         be filtered afterwards to generate random loot
-	 */
-	public Set<MMOItemTemplate> collectTemplates() {
-		Set<MMOItemTemplate> templates = new HashSet<>();
-		this.templates.values().forEach(map -> templates.addAll(map.values()));
-		return templates;
 	}
 
 	public void reload() {

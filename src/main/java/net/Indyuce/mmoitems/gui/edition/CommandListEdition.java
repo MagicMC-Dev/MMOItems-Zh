@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -28,8 +28,8 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 public class CommandListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25, 28, 29, 33, 34, 37, 38, 42, 43 };
 
-	public CommandListEdition(Player player, MMOItem mmoitem) {
-		super(player, mmoitem);
+	public CommandListEdition(Player player, MMOItemTemplate template) {
+		super(player, template);
 	}
 
 	@Override
@@ -37,15 +37,15 @@ public class CommandListEdition extends EditionInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Command List");
 		int n = 0;
 
-		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
+		FileConfiguration config = template.getType().getConfigFile().getConfig();
 
-		if (config.getConfigurationSection(mmoitem.getId()).contains("commands"))
-			for (String key : config.getConfigurationSection(mmoitem.getId() + ".commands").getKeys(false)) {
+		if (config.getConfigurationSection(template.getId()).contains("commands"))
+			for (String key : config.getConfigurationSection(template.getId() + ".commands").getKeys(false)) {
 
-				String format = config.getString(mmoitem.getId() + ".commands." + key + ".format");
-				double delay = config.getDouble(mmoitem.getId() + ".commands." + key + ".delay");
-				boolean console = config.getBoolean(mmoitem.getId() + ".commands." + key + ".console"),
-						op = config.getBoolean(mmoitem.getId() + ".commands." + key + ".op");
+				String format = config.getString(template.getId() + ".commands." + key + ".format");
+				double delay = config.getDouble(template.getId() + ".commands." + key + ".delay");
+				boolean console = config.getBoolean(template.getId() + ".commands." + key + ".console"),
+						op = config.getBoolean(template.getId() + ".commands." + key + ".op");
 
 				ItemStack item = new ItemStack(VersionMaterial.COMPARATOR.toMaterial());
 				ItemMeta itemMeta = item.getItemMeta();
@@ -101,11 +101,11 @@ public class CommandListEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = mmoitem.getType().getConfigFile();
-			if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("commands")
-					&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".commands").contains(tag)) {
-				config.getConfig().set(mmoitem.getId() + ".commands." + tag, null);
-				registerTemplateEdition(config, true);
+			ConfigFile config = template.getType().getConfigFile();
+			if (config.getConfig().getConfigurationSection(template.getId()).contains("commands")
+					&& config.getConfig().getConfigurationSection(template.getId() + ".commands").contains(tag)) {
+				config.getConfig().set(template.getId() + ".commands." + tag, null);
+				registerTemplateEdition(config);
 				open();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
 						+ " (Internal ID)" + ChatColor.GRAY + ".");

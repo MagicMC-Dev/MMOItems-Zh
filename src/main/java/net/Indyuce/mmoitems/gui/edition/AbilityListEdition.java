@@ -112,7 +112,7 @@ public class AbilityListEdition extends EditionInventory {
 			ConfigFile config = template.getType().getConfigFile();
 			if (!config.getConfig().getConfigurationSection(template.getId()).contains("ability")) {
 				config.getConfig().createSection(template.getId() + ".ability.ability1");
-				registerTemplateEdition(config, true);
+				registerTemplateEdition(config);
 				new AbilityEdition(player, template, "ability1").open(getPreviousPage());
 				return;
 			}
@@ -125,7 +125,7 @@ public class AbilityListEdition extends EditionInventory {
 			for (int j = 1; j < 8; j++)
 				if (!config.getConfig().getConfigurationSection(template.getId() + ".ability").contains("ability" + j)) {
 					config.getConfig().createSection(template.getId() + ".ability.ability" + j);
-					registerTemplateEdition(config, true);
+					registerTemplateEdition(config);
 					new AbilityEdition(player, template, "ability" + j).open(getPreviousPage());
 					break;
 				}
@@ -143,7 +143,7 @@ public class AbilityListEdition extends EditionInventory {
 			if (config.getConfig().getConfigurationSection(template.getId()).contains("ability")
 					&& config.getConfig().getConfigurationSection(template.getId() + ".ability").contains(tag)) {
 				config.getConfig().set(template.getId() + ".ability." + tag, null);
-				registerTemplateEdition(config, true);
+				registerTemplateEdition(config);
 				open();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
 						+ " (Internal ID)" + ChatColor.GRAY + ".");

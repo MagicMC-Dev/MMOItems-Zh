@@ -7,7 +7,6 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
@@ -36,23 +35,7 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		EnchantListData enchants = new EnchantListData();
-
-		for (String format : config.getKeys(false)) {
-			Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(format.toLowerCase().replace("-", "_")));
-			Validate.notNull(enchant, "Could not find enchant with key '" + format + "'");
-			enchants.addEnchant(enchant, config.getInt(format));
-		}
-
-		return enchants;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomEnchantListData((ConfigurationSection) object);
 	}
@@ -71,7 +54,7 @@ public class Enchants extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".enchants." + last, null);
 				if (set.size() <= 1)
 					config.getConfig().set(inv.getEdited().getId() + ".enchants", null);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase().replace("_", " ") + ".");
@@ -115,7 +98,7 @@ public class Enchants extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".enchants." + getName(enchant), level);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName(enchant) + " " + MMOUtils.intToRoman(level) + " successfully added.");
 		return true;

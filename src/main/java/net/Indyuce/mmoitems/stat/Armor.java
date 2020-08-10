@@ -13,12 +13,13 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Armor extends AttributeStat {
 	public Armor() {
-		super("ARMOR", new ItemStack(VersionMaterial.GOLDEN_CHESTPLATE.toMaterial()), "Armor", new String[] { "The armor given to the holder." }, Attribute.GENERIC_ARMOR);
+		super("ARMOR", new ItemStack(VersionMaterial.GOLDEN_CHESTPLATE.toMaterial()), "Armor", new String[] { "The armor given to the holder." },
+				Attribute.GENERIC_ARMOR);
 	}
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).generateNewValue();
+		double value = ((DoubleData) data).getValue();
 		// for (String slot : item.getMMOItem().getType().getSlots())
 		// item.addItemAttribute(new Attribute("armor", value, slot));
 		item.addItemTag(new ItemTag("MMOITEMS_ARMOR", value));

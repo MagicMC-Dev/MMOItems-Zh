@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -29,6 +30,13 @@ public class ItemTypeRestriction extends StringStat {
 	public ItemTypeRestriction() {
 		super("ITEM_TYPE_RESTRICTION", new ItemStack(Material.EMERALD), "Item Type Restriction",
 				new String[] { "This option defines the item types", "on which your gem can be applied." }, new String[] { "gem_stone" });
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public RandomStatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		return new StringListData((List<String>) object);
 	}
 
 	@Override
@@ -68,7 +76,7 @@ public class ItemTypeRestriction extends StringStat {
 				String last = list.get(list.size() - 1);
 				list.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list.size() == 0 ? null : list);
-				inv.registerTemplateEdition(config, true);
+				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
@@ -98,7 +106,7 @@ public class ItemTypeRestriction extends StringStat {
 				: new ArrayList<>();
 		list.add(format);
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list);
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your gem now supports " + format + ".");
 		return true;
@@ -118,13 +126,6 @@ public class ItemTypeRestriction extends StringStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a supported item type/set.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last element.");
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
-		return new StringListData((List<String>) object);
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class CraftingStationPreview extends PluginInventory {
 		ingredients.clear();
 		for(CheckedIngredient ing : recipe.getIngredients()) {
 			if(ing.getIngredient().getAmount() > 64) {
-				ItemStack sample = ing.getIngredient().generateItemStack();
+				ItemStack sample = ing.getIngredient().generateItemStack(playerData.getRPG());
 				sample.setAmount(64);
 				int amount = ing.getIngredient().getAmount();
 				//calculate how many full stacks there are
@@ -58,8 +58,8 @@ public class CraftingStationPreview extends PluginInventory {
 						if(i == stacks) sample.setAmount(amount - (stacks * 64));
 						ingredients.add(sample.clone());
 					}
-			}
-			else ingredients.add(ing.getIngredient().generateItemStack());
+			} else
+				ingredients.add(ing.getIngredient().generateItemStack(playerData.getRPG()));
 		}
 
 		int min = (page - 1) * slots.length, max = page * slots.length;

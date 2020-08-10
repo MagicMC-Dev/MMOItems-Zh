@@ -33,12 +33,12 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Arrow Particles: " + mmoitem.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Arrow Particles: " + template.getId());
 		FileConfiguration config = template.getType().getConfigFile().getConfig();
 
 		Particle particle = null;
 		try {
-			particle = Particle.valueOf(config.getString(mmoitem.getId() + ".arrow-particles.particle"));
+			particle = Particle.valueOf(config.getString(template.getId() + ".arrow-particles.particle"));
 		} catch (Exception e) {
 		}
 
@@ -62,7 +62,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		amountMeta.setDisplayName(ChatColor.GREEN + "Amount");
 		List<String> amountLore = new ArrayList<>();
 		amountLore.add("");
-		amountLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getInt(mmoitem.getId() + ".arrow-particles.amount"));
+		amountLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getInt(template.getId() + ".arrow-particles.amount"));
 		amountLore.add("");
 		amountLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		amountLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -74,7 +74,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		offsetMeta.setDisplayName(ChatColor.GREEN + "Offset");
 		List<String> offsetLore = new ArrayList<>();
 		offsetLore.add("");
-		offsetLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getDouble(mmoitem.getId() + ".arrow-particles.offset"));
+		offsetLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getDouble(template.getId() + ".arrow-particles.offset"));
 		offsetLore.add("");
 		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -82,7 +82,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		offset.setItemMeta(offsetMeta);
 
 		if (particle != null) {
-			ConfigurationSection section = config.getConfigurationSection(mmoitem.getId() + ".arrow-particles");
+			ConfigurationSection section = config.getConfigurationSection(template.getId() + ".arrow-particles");
 			if (ParticleData.isColorable(particle)) {
 				int red = section.getInt("color.red");
 				int green = section.getInt("color.green");
@@ -143,11 +143,11 @@ public class ArrowParticlesEdition extends EditionInventory {
 				new StatEdition(this, ItemStat.ARROW_PARTICLES, "particle").enable("Write in the chat the particle you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = mmoitem.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
-						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains("particle")) {
-					config.getConfig().set(mmoitem.getId() + ".arrow-particles", null);
-					registerTemplateEdition(config, true);
+				ConfigFile config = template.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(template.getId()).contains("arrow-particles")
+						&& config.getConfig().getConfigurationSection(template.getId() + ".arrow-particles").contains("particle")) {
+					config.getConfig().set(template.getId() + ".arrow-particles", null);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
 				}
@@ -160,11 +160,11 @@ public class ArrowParticlesEdition extends EditionInventory {
 						ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = mmoitem.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
-						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains("color")) {
-					config.getConfig().set(mmoitem.getId() + ".arrow-particles.color", null);
-					registerTemplateEdition(config, true);
+				ConfigFile config = template.getType().getConfigFile();
+				if (config.getConfig().getConfigurationSection(template.getId()).contains("arrow-particles")
+						&& config.getConfig().getConfigurationSection(template.getId() + ".arrow-particles").contains("color")) {
+					config.getConfig().set(template.getId() + ".arrow-particles.color", null);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
 				}
@@ -177,11 +177,11 @@ public class ArrowParticlesEdition extends EditionInventory {
 					new StatEdition(this, ItemStat.ARROW_PARTICLES, string).enable("Write in the chat the " + string + " you want.");
 
 				if (event.getAction() == InventoryAction.PICKUP_HALF) {
-					ConfigFile config = mmoitem.getType().getConfigFile();
-					if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
-							&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains(string)) {
-						config.getConfig().set(mmoitem.getId() + ".arrow-particles." + string, null);
-						registerTemplateEdition(config, true);
+					ConfigFile config = template.getType().getConfigFile();
+					if (config.getConfig().getConfigurationSection(template.getId()).contains("arrow-particles")
+							&& config.getConfig().getConfigurationSection(template.getId() + ".arrow-particles").contains(string)) {
+						config.getConfig().set(template.getId() + ".arrow-particles." + string, null);
+						registerTemplateEdition(config);
 						open();
 						player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the " + string + ".");
 					}

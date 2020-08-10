@@ -17,7 +17,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
@@ -33,11 +32,6 @@ public class MaterialStat extends ItemStat {
 	public MaterialData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof String, "Must specify material name as string");
 		return new MaterialData(Material.valueOf(((String) object).toUpperCase().replace("-", "_").replace(" ", "_")));
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
 	}
 
 	@Override
@@ -59,7 +53,7 @@ public class MaterialStat extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".material", material.name());
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + material.name() + ".");
 		return true;

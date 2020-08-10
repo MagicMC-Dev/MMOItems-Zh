@@ -167,7 +167,7 @@ public class AbilityEdition extends EditionInventory {
 						if (config.getConfig().getConfigurationSection(template.getId() + ".ability").getKeys(false).size() < 1)
 							config.getConfig().set(template.getId() + ".ability", null);
 
-					registerTemplateEdition(config, true);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the ability.");
 				}
@@ -197,7 +197,7 @@ public class AbilityEdition extends EditionInventory {
 						if (config.getConfig().getConfigurationSection(template.getId() + ".ability").getKeys(false).size() < 1)
 							config.getConfig().set(template.getId() + ".ability", null);
 
-					registerTemplateEdition(config, true);
+					registerTemplateEdition(config);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the ability.");
 				}
@@ -218,7 +218,7 @@ public class AbilityEdition extends EditionInventory {
 					&& config.getConfig().getConfigurationSection(template.getId() + ".ability").contains(configKey)
 					&& config.getConfig().getConfigurationSection(template.getId() + ".ability." + configKey).contains(tag)) {
 				config.getConfig().set(template.getId() + ".ability." + configKey + "." + tag, null);
-				registerTemplateEdition(config, true);
+				registerTemplateEdition(config);
 				open();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset " + ChatColor.GOLD + MMOUtils.caseOnWords(tag.replace("-", " "))
 						+ ChatColor.GRAY + ".");

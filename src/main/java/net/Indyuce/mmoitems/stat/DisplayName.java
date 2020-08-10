@@ -21,7 +21,7 @@ public class DisplayName extends StringStat {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.getMeta().setDisplayName(fix(MMOLib.plugin.parseColors(getDisplayName(data))));
+		item.getMeta().setDisplayName(fix(MMOLib.plugin.parseColors(getDisplayName(data.toString()))));
 	}
 
 	@Override
@@ -41,8 +41,7 @@ public class DisplayName extends StringStat {
 		return str.startsWith(ChatColor.WHITE + "") ? "" + ChatColor.GREEN + ChatColor.WHITE + str : str;
 	}
 
-	public String getDisplayName(StatData data) {
-		String display = data.toString();
+	public String getDisplayName(String display) {
 
 		// name placeholders
 		String[] split = display.split("\\<");

@@ -11,13 +11,12 @@ public class MMORecipeChoice {
 	private final boolean isVanilla;
 
 	public MMORecipeChoice(String input) {
-		item = MMOItems.plugin.parseStack(input);
-		
-		if(item != null) {
+		item = MMOItems.plugin.getRecipes().parseStack(input);
+
+		if (item != null) {
 			isVanilla = !NBTItem.get(item).hasType();
 			amount = item.getAmount();
-		}
-		else {
+		} else {
 			amount = 1;
 			isVanilla = true;
 		}
@@ -26,7 +25,7 @@ public class MMORecipeChoice {
 	public boolean isValid() {
 		return item != null;
 	}
-	
+
 	public boolean isVanilla() {
 		return isVanilla;
 	}

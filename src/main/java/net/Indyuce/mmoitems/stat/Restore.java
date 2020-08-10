@@ -38,7 +38,7 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomRestoreData((ConfigurationSection) object);
 	}
@@ -71,7 +71,7 @@ public class Restore extends ItemStat {
 		config.getConfig().set(inv.getEdited().getId() + ".restore.food", (food <= 0 ? null : food));
 		config.getConfig().set(inv.getEdited().getId() + ".restore.saturation", (saturation <= 0 ? null : saturation));
 
-		inv.registerTemplateEdition(config, true);
+		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Restore successfully changed to " + message + ".");
 		return true;

@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -42,20 +41,18 @@ public class Enchants extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.ENCHANTS).enable("Write in the chat the enchant you want to add.",
 					ChatColor.AQUA + "Format: [ENCHANT] [LEVEL]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("enchants")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".enchants").getKeys(false);
+			if (inv.getEditedSection().contains("enchants")) {
+				Set<String> set = inv.getEditedSection().getConfigurationSection("enchants").getKeys(false);
 				String last = Arrays.asList(set.toArray(new String[0])).get(set.size() - 1);
-				config.getConfig().set(inv.getEdited().getId() + ".enchants." + last, null);
+				inv.getEditedSection().set("enchants." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getEdited().getId() + ".enchants", null);
-				inv.registerTemplateEdition(config);
-				inv.open();
+					inv.getEditedSection().set("enchants", null);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase().replace("_", " ") + ".");
 			}
@@ -67,13 +64,9 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 2) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [ENCHANT] [LEVEL].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'DAMAGE_ALL 10' stands for Sharpness 10.");
-			return false;
-		}
+		Validate.notNull(split.length == 2, message + " is not a valid [ENCHANT] [LEVEL]. Example: 'DAMAGE_ALL 10' stands for Sharpness 10.");
 
 		Enchantment enchant = null;
 		for (Enchantment enchant1 : Enchantment.values())
@@ -81,27 +74,14 @@ public class Enchants extends ItemStat {
 				enchant = enchant1;
 				break;
 			}
+		Validate.notNull(enchant, split[0]
+				+ " is not a valid enchantment! All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
 
-		if (enchant == null) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid enchantment!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
-					+ "All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
-			return false;
-		}
+		int level = (int) Double.parseDouble(split[1]);
 
-		int level = 0;
-		try {
-			level = (int) Double.parseDouble(split[1]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".enchants." + getName(enchant), level);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("enchants." + getName(enchant), level);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName(enchant) + " " + MMOUtils.intToRoman(level) + " successfully added.");
-		return true;
 	}
 
 	@Override

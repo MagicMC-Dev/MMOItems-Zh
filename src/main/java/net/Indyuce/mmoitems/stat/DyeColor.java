@@ -11,7 +11,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -38,41 +37,29 @@ public class DyeColor extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.DYE_COLOR).enable("Write in the chat the RGB color you want.",
 					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getEdited().getId() + ".dye-color", null);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("dye-color", null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Dye Color.");
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 3) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [RED] [GREEN] [BLUE].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: '75 0 130' stands for Indigo Purple.");
-			return false;
+		Validate.isTrue(split.length == 3, message + " is not a valid [RED] [GREEN] [BLUE].");
+		for (String str : split) {
+			int k = Integer.parseInt(str);
+			Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
 		}
-		for (String str : split)
-			try {
-				int k = Integer.parseInt(str);
-				Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
-			} catch (IllegalArgumentException exception) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + str + " is not a valid number (must be between 0 and 255).");
-				return false;
-			}
 
-		config.getConfig().set(inv.getEdited().getId() + ".dye-color", message);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("dye-color", message);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Dye Color successfully changed to " + message + ".");
-		return true;
 	}
 
 	@Override

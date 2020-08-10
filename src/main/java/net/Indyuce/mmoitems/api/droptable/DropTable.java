@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -47,7 +49,7 @@ public class DropTable {
 		return subtablesList.get(random.nextInt(subtablesList.size()));
 	}
 
-	public List<ItemStack> read(PlayerData player, boolean silkTouch) {
+	public List<ItemStack> read(@Nullable PlayerData player, boolean silkTouch) {
 		List<ItemStack> dropped = new ArrayList<>();
 
 		String randomSubtable = getRandomSubtable();

@@ -53,7 +53,7 @@ public class MaterialStat extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getEdited().getId() + ".material", material.name());
+		config.getConfig().set("material", material.name());
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + material.name() + ".");

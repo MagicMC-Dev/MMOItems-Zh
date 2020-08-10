@@ -31,13 +31,6 @@ public class ItemEdition extends EditionInventory {
 		super(player, template);
 	}
 
-	/**
-	 * Used in the item browser and when using /mi edit
-	 */
-	public ItemEdition(Player player, MMOItemTemplate template, ItemStack cached) {
-		super(player, template, cached);
-	}
-
 	@Override
 	public Inventory getInventory() {
 		int min = (page - 1) * slots.length;
@@ -63,7 +56,9 @@ public class ItemEdition extends EditionInventory {
 				lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(s1));
 			lore.add("");
 
-			stat.whenDisplayed(lore, getCachedMMOItem());
+			
+			
+//			stat.whenDisplayed(lore, getCachedMMOItem());
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);

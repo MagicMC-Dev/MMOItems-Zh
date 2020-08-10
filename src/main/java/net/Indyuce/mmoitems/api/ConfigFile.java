@@ -63,14 +63,13 @@ public class ConfigFile {
 		}
 	}
 
-	@Deprecated
 	public void registerTemplateEdition(ItemReference ref) {
 
 		/*
 		 * uncaches the item so it can be generated to apply newest changes in
 		 * case the same inventory is opened again.
 		 */
-		// MMOItems.plugin.getItems().uncache(type, id);
+		MMOItems.plugin.getItems().requestTemplateUpdate(ref.getType(), ref.getId());
 
 		// update the database UUID for the dynamic item updater
 		if (MMOItems.plugin.getUpdater().hasData(ref))

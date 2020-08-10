@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -42,48 +41,39 @@ public class Elements extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new ElementsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("element")) {
-				config.getConfig().set(inv.getEdited().getId() + ".element", null);
-				inv.registerTemplateEdition(config);
-				inv.open();
+			if (inv.getEditedSection().contains("element")) {
+				inv.getEditedSection().set("element", null);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
 			}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String elementPath = ElementsEdition.correspondingSlot.get(info[0]);
-		double value = 0;
-		try {
-			value = Double.parseDouble(message);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-			return false;
-		}
-		config.getConfig().set(inv.getEdited().getId() + ".element." + elementPath, value);
+		double value = Double.parseDouble(message);
+
+		inv.getEditedSection().set("element." + elementPath, value);
 		if (value == 0)
-			config.getConfig().set(inv.getEdited().getId() + ".element." + elementPath, null);
+			inv.getEditedSection().set("element." + elementPath, null);
 
 		// clear element config section
 		String elementName = elementPath.split("\\.")[0];
-		if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("element")) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".element").contains(elementName))
-				if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".element." + elementName).getKeys(false).isEmpty())
-					config.getConfig().set(inv.getEdited().getId() + ".element." + elementName, null);
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".element").getKeys(false).isEmpty())
-				config.getConfig().set(inv.getEdited().getId() + ".element", null);
+		if (inv.getEditedSection().contains("element")) {
+			if (inv.getEditedSection().getConfigurationSection("element").contains(elementName)
+					&& inv.getEditedSection().getConfigurationSection("element." + elementName).getKeys(false).isEmpty())
+				inv.getEditedSection().set("element." + elementName, null);
+			if (inv.getEditedSection().getConfigurationSection("element").getKeys(false).isEmpty())
+				inv.getEditedSection().set("element", null);
 		}
 
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
 				+ " successfully changed to " + value + ".");
-		return true;
 	}
 
 	@Override

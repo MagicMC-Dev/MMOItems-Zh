@@ -14,7 +14,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -42,37 +41,32 @@ public class CompatibleTypes extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("compatible-types")) {
-				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + ".compatible-types");
+			if (inv.getEditedSection().contains("compatible-types")) {
+				List<String> lore = inv.getEditedSection().getStringList("compatible-types");
 				if (lore.size() < 1)
 					return;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
-				inv.registerTemplateEdition(config);
-				inv.open();
+				inv.getEditedSection().set("compatible-types", lore);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
 			}
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("compatible-types")
-				? config.getConfig().getStringList(inv.getEdited().getId() + ".compatible-types")
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		List<String> lore = inv.getEditedSection().contains("compatible-types") ? inv.getEditedSection().getStringList("compatible-types")
 				: new ArrayList<>();
 		lore.add(message.toUpperCase());
-		config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("compatible-types", lore);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Compatible Types successfully added.");
-		return true;
 	}
 
 	@Override

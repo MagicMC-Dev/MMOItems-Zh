@@ -23,7 +23,6 @@ import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -53,20 +52,18 @@ public class Effects extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
 					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".effects").getKeys(false);
+			if (inv.getEditedSection().contains("effects")) {
+				Set<String> set = inv.getEditedSection().getConfigurationSection("effects").getKeys(false);
 				String last = Arrays.asList(set.toArray(new String[0])).get(set.size() - 1);
-				config.getConfig().set(inv.getEdited().getId() + ".effects." + last, null);
+				inv.getEditedSection().set("effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getEdited().getId() + ".effects", null);
-				inv.registerTemplateEdition(config);
-				inv.open();
+					inv.getEditedSection().set("effects", null);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
 			}
@@ -74,52 +71,26 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 3) {
-			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER].");
-			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
-			return false;
-		}
+		Validate.isTrue(split.length == 3,
+				message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER]. Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
 
 		PotionEffectType effect = null;
 		for (PotionEffectType effect1 : PotionEffectType.values())
-			if (effect1 != null)
-				if (effect1.getName().equalsIgnoreCase(split[0].replace("-", "_"))) {
-					effect = effect1;
-					break;
-				}
+			if (effect1 != null && effect1.getName().equalsIgnoreCase(split[0].replace("-", "_"))) {
+				effect = effect1;
+				break;
+			}
+		Validate.notNull(effect, split[0]
+				+ " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		if (effect == null) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid potion effect!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
-					+ "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
-			return false;
-		}
+		double duration = Double.parseDouble(split[1]);
+		int amplifier = (int) Double.parseDouble(split[2]);
 
-		double duration = 0;
-		try {
-			duration = Double.parseDouble(split[1]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number!");
-			return false;
-		}
-
-		int amplifier = 0;
-		try {
-			amplifier = (int) Double.parseDouble(split[2]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[2] + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".effects." + effect.getName(), duration + "," + amplifier);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("effects." + effect.getName(), duration + "," + amplifier);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
-		return true;
 	}
 
 	@Override

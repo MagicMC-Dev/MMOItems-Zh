@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.recipe.CraftingType;
@@ -46,7 +45,7 @@ public class CraftingEdition extends EditionInventory {
 			craftingEventItem.setDisplayName(ChatColor.GREEN + ctype.getName());
 			List<String> eventLore = new ArrayList<String>();
 			eventLore.add(ChatColor.GRAY + ctype.getLore());
-			if (!template.getType().getConfigFile().getConfig().contains(template.getId() + ".crafting." + ctype.name().toLowerCase())) {
+			if (!getEditedSection().contains("crafting." + ctype.name().toLowerCase())) {
 				eventLore.add("");
 				eventLore.add(ChatColor.RED + "No recipes found.");
 			}
@@ -86,18 +85,14 @@ public class CraftingEdition extends EditionInventory {
 						"[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 		}
 
-		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = template.getType().getConfigFile();
-			if (!config.getConfig().contains(template.getId() + ".crafting." + corresponding.name().toLowerCase()))
-				return;
-
-			config.getConfig().set(template.getId() + ".crafting." + corresponding.name().toLowerCase(), null);
+		if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("crafting." + corresponding.name().toLowerCase())) {
+			getEditedSection().set("crafting." + corresponding.name().toLowerCase(), null);
 			player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + corresponding.getName() + " recipe.");
 
-			if (config.getConfig().getConfigurationSection(template.getId() + ".crafting") == null)
-				config.getConfig().set(template.getId() + ".crafting", null);
+			if (getEditedSection().getConfigurationSection("crafting").getKeys(false).size() == 0)
+				getEditedSection().set("crafting", null);
 
-			registerTemplateEdition(config);
+			registerTemplateEdition();
 		}
 	}
 }

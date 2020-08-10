@@ -48,14 +48,14 @@ public class Lore extends ItemStat implements ProperStat {
 			new StatEdition(inv, ItemStat.LORE).enable("Write in the chat the lore line you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("lore")) {
-				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + ".lore");
+			if (config.getConfig().contains("lore")) {
+				List<String> lore = config.getConfig().getStringList("lore");
 				if (lore.size() < 1)
 					return;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
+				config.getConfig().set("lore", lore);
 				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(
@@ -66,11 +66,11 @@ public class Lore extends ItemStat implements ProperStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("lore")
-				? config.getConfig().getStringList(inv.getEdited().getId() + ".lore")
+		List<String> lore = config.getConfig().contains("lore")
+				? config.getConfig().getStringList("lore")
 				: new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
+		config.getConfig().set("lore", lore);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore successfully added.");

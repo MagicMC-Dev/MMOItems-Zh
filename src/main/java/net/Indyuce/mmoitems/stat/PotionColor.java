@@ -44,7 +44,7 @@ public class PotionColor extends StringStat {
 					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getEdited().getId() + ".potion-color", null);
+			config.getConfig().set("potion-color", null);
 			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
@@ -68,7 +68,7 @@ public class PotionColor extends StringStat {
 				return false;
 			}
 
-		config.getConfig().set(inv.getEdited().getId() + ".potion-color", message);
+		config.getConfig().set("potion-color", message);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + message + ".");

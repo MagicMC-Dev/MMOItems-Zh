@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -40,25 +39,20 @@ public class StringStat extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set(getPath(), null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
-			return;
-		}
-		new StatEdition(inv, this).enable("Write in the chat the text you want.");
+		} else
+			new StatEdition(inv, this).enable("Write in the chat the text you want.");
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), message);
-		inv.registerTemplateEdition(config);
-		inv.open();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		inv.getEditedSection().set(getPath(), message);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(
 				MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MMOLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
-		return true;
 	}
 
 	@Override

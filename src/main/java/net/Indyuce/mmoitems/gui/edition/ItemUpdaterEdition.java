@@ -33,7 +33,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		// setup if not in map
 		if (!MMOItems.plugin.getUpdater().hasData(template)) {
 			MMOItems.plugin.getUpdater().enable(template);
-			player.sendMessage(ChatColor.YELLOW + "Successfully enabled the item updater for " + template.getId() + ".");
+			player.sendMessage(ChatColor.YELLOW + "Successfully enabled the item updater for '" + template.getId() + "'.");
 		}
 
 		UpdaterData did = MMOItems.plugin.getUpdater().getData(template);
@@ -54,7 +54,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 					getBooleanItem(MMOUtils.caseOnWords(option.name().substring(5).toLowerCase()), did.hasOption(option), option.getLore()));
 
 		inv.setItem(32, disable);
-		inv.setItem(4, getCachedItemStack());
+		inv.setItem(4, getCachedItem());
 
 		return inv;
 	}
@@ -90,7 +90,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Disable")) {
 			MMOItems.plugin.getUpdater().disable(template);
 			player.closeInventory();
-			player.sendMessage(ChatColor.YELLOW + "Successfully disabled the item updater for " + template.getId() + ".");
+			player.sendMessage(ChatColor.YELLOW + "Successfully disabled the item updater for '" + template.getId() + "'.");
 			return;
 		}
 

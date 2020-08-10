@@ -51,14 +51,14 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 			new StatEdition(inv, this).enable("Write in the chat the class you want your item to support.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).getKeys(false).contains("required-class")) {
-				List<String> supportedClasses = config.getConfig().getStringList(inv.getEdited().getId() + ".required-class");
+			if (config.getConfig().getKeys(false).contains("required-class")) {
+				List<String> supportedClasses = config.getConfig().getStringList("required-class");
 				if (supportedClasses.size() < 1)
 					return;
 
 				String last = supportedClasses.get(supportedClasses.size() - 1);
 				supportedClasses.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + ".required-class", supportedClasses.size() == 0 ? null : supportedClasses);
+				config.getConfig().set("required-class", supportedClasses.size() == 0 ? null : supportedClasses);
 				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
@@ -68,11 +68,11 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = (config.getConfig().getConfigurationSection(inv.getEdited().getId()).getKeys(false).contains("required-class")
-				? config.getConfig().getStringList(inv.getEdited().getId() + ".required-class")
+		List<String> lore = (config.getConfig().getKeys(false).contains("required-class")
+				? config.getConfig().getStringList("required-class")
 				: new ArrayList<>());
 		lore.add(message);
-		config.getConfig().set(inv.getEdited().getId() + ".required-class", lore);
+		config.getConfig().set("required-class", lore);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");

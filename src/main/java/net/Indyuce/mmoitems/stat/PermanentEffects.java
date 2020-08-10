@@ -65,12 +65,12 @@ public class PermanentEffects extends ItemStat {
 					"Format: [POTION_EFFECT] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("perm-effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".perm-effects").getKeys(false);
+			if (config.getConfig().contains("perm-effects")) {
+				Set<String> set = config.getConfig().getConfigurationSection("perm-effects").getKeys(false);
 				String last = new ArrayList<>(set).get(set.size() - 1);
-				config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + last, null);
+				config.getConfig().set("perm-effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getEdited().getId() + ".perm-effects", null);
+					config.getConfig().set("perm-effects", null);
 				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
@@ -110,7 +110,7 @@ public class PermanentEffects extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + effect.getName(), amplifier);
+		config.getConfig().set("perm-effects." + effect.getName(), amplifier);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");

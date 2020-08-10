@@ -17,7 +17,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -81,37 +80,31 @@ public class GemSockets extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.GEM_SOCKETS).enable("Write in the chat the COLOR of the gem socket you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())) {
-				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath());
+			if (inv.getEditedSection().contains(getPath())) {
+				List<String> lore = inv.getEditedSection().getStringList("" + getPath());
 				if (lore.size() < 1)
 					return;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
-				inv.registerTemplateEdition(config);
-				inv.open();
+				inv.getEditedSection().set("" + getPath(), lore);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + ChatColor.GRAY + "'.");
 			}
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())
-				? config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath())
-				: new ArrayList<>();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		List<String> lore = inv.getEditedSection().contains(getPath()) ? inv.getEditedSection().getStringList("" + getPath()) : new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("" + getPath(), lore);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + message + " successfully added.");
-		return true;
 	}
 
 	@Override

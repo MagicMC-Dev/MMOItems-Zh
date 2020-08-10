@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -51,8 +52,8 @@ public class UpgradeStat extends ItemStat {
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = inv.getEdited().getType().getConfigFile();
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("upgrade")) {
-				config.getConfig().set(inv.getEdited().getId() + ".upgrade", null);
+			if (config.getConfig().contains("upgrade")) {
+				config.getConfig().set("upgrade", null);
 				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
@@ -64,7 +65,7 @@ public class UpgradeStat extends ItemStat {
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
 
 		if (info[0].equals("ref")) {
-			config.getConfig().set(inv.getEdited().getId() + ".upgrade.reference", message);
+			config.getConfig().set("upgrade.reference", message);
 			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -82,7 +83,7 @@ public class UpgradeStat extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getEdited().getId() + ".upgrade.max", i);
+			config.getConfig().set("upgrade.max", i);
 			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer()
@@ -100,7 +101,7 @@ public class UpgradeStat extends ItemStat {
 				return false;
 			}
 
-			config.getConfig().set(inv.getEdited().getId() + ".upgrade.success", d);
+			config.getConfig().set("upgrade.success", d);
 			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -114,7 +115,7 @@ public class UpgradeStat extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getEdited().getId() + ".upgrade.template", message);
+		config.getConfig().set("upgrade.template", message);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(

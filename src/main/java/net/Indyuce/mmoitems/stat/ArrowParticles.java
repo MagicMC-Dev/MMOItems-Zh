@@ -15,7 +15,6 @@ import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.ArrowParticlesEdition;
@@ -85,82 +84,45 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String edited = (String) info[0];
 
 		if (edited.equals("color")) {
 			String[] split = message.split("\\ ");
-			int red = 0, green = 0, blue = 0;
-
-			try {
-				red = Integer.parseInt(split[0]);
-				green = Integer.parseInt(split[1]);
-				blue = Integer.parseInt(split[2]);
-			} catch (Exception e) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Make sure you enter 3 valid numbers.");
-				return false;
-			}
-
-			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.red", red);
-			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.green", green);
-			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.blue", blue);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			int red = Integer.parseInt(split[0]), green = Integer.parseInt(split[1]), blue = Integer.parseInt(split[2]);
+			inv.getEditedSection().set("arrow-particles.color.red", red);
+			inv.getEditedSection().set("arrow-particles.color.green", green);
+			inv.getEditedSection().set("arrow-particles.color.blue", blue);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to "
 					+ ChatColor.translateAlternateColorCodes('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
-			return true;
+			return;
 		}
 
 		if (edited.equals("particle")) {
-			String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
-			Particle particle;
-			try {
-				particle = Particle.valueOf(format);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid particle!");
-				return false;
-			}
-
-			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.particle", particle.name());
-			inv.registerTemplateEdition(config);
-			inv.open();
+			Particle particle = Particle.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
+			inv.getEditedSection().set("arrow-particles.particle", particle.name());
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD
 					+ MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
 		if (edited.equals("amount")) {
-			int value = 0;
-			try {
-				value = Integer.parseInt(message);
-			} catch (Exception e) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-				return false;
-			}
-
-			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.amount", value);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			int value = Integer.parseInt(message);
+			inv.getEditedSection().set("arrow-particles.amount", value);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + value
 					+ ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
 		// offset & speed
-		double value = 0;
-		try {
-			value = Double.parseDouble(message);
-		} catch (Exception e) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".arrow-particles." + edited, value);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		double value = Double.parseDouble(message);
+		inv.getEditedSection().set("arrow-particles." + edited, value);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
 				+ " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
-		return true;
 	}
 
 	@Override

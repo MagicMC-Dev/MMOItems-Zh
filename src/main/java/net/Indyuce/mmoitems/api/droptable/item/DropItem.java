@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.api.droptable.item;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -38,11 +40,11 @@ public abstract class DropItem {
 		return max > min ? min + random.nextInt(max - min + 1) : min;
 	}
 
-	public ItemStack getItem(PlayerData player) {
+	public ItemStack getItem(@Nullable PlayerData player) {
 		return getItem(player, rollAmount());
 	}
 
-	public abstract ItemStack getItem(PlayerData player, int amount);
+	public abstract ItemStack getItem(@Nullable PlayerData player, int amount);
 
 	public abstract String getKey();
 }

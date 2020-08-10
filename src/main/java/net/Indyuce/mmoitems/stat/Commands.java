@@ -16,7 +16,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
@@ -60,13 +59,13 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("commands"))
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".commands").getKeys(false).size() >= max) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		if (inv.getEditedSection().contains("commands"))
+			if (inv.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= max) {
 				// max command number = 8
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your item has reached the " + max + " commands limit.");
-				return false;
+				return;
 			}
 
 		double delay = 0;
@@ -76,11 +75,7 @@ public class Commands extends ItemStat {
 		for (int j = 0; j < split.length && split[j].startsWith("-"); j++) {
 			String arg = split[j];
 			if (arg.startsWith("-d:")) {
-				try {
-					delay = Double.parseDouble(arg.substring(3));
-				} catch (NumberFormatException e) {
-					// cant read delay.
-				}
+				delay = Double.parseDouble(arg.substring(3));
 				message = message.replaceFirst(arg + " ", "");
 				continue;
 			} else if (arg.equalsIgnoreCase("-c")) {
@@ -98,7 +93,7 @@ public class Commands extends ItemStat {
 		 * determine the command ID based on the command IDs which have been
 		 * registered before.
 		 */
-		ConfigurationSection commands = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".commands");
+		ConfigurationSection commands = inv.getEditedSection().getConfigurationSection("commands");
 		String path = "cmd" + (max + 1);
 		if (commands == null)
 			path = "cmd0";
@@ -109,14 +104,12 @@ public class Commands extends ItemStat {
 					break;
 				}
 
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".format", message);
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".delay", delay);
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".console", console ? console : null);
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".op", op ? op : null);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("commands." + path + ".format", message);
+		inv.getEditedSection().set("commands." + path + ".delay", delay);
+		inv.getEditedSection().set("commands." + path + ".console", console ? console : null);
+		inv.getEditedSection().set("commands." + path + ".op", op ? op : null);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
-		return true;
 	}
 
 	@Override

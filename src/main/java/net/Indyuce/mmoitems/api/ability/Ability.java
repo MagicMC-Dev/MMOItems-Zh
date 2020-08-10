@@ -173,12 +173,11 @@ public abstract class Ability {
 			return name().toLowerCase().replace("_", "-");
 		}
 
-		public static CastingMode safeValueOf(String path) {
-			try {
-				return CastingMode.valueOf(path.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
-			} catch (Exception e) {
-				return null;
-			}
+		public static CastingMode safeValueOf(String format) {
+			for (CastingMode mode : values())
+				if (mode.name().equals(format))
+					return mode;
+			return null;
 		}
 	}
 }

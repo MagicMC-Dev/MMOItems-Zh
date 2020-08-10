@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -27,7 +26,6 @@ import net.Indyuce.mmoitems.stat.Crafting;
 import net.Indyuce.mmoitems.stat.CraftingPermission;
 import net.Indyuce.mmoitems.stat.CustomModelData;
 import net.Indyuce.mmoitems.stat.CustomSounds;
-import net.Indyuce.mmoitems.stat.ItemDamage;
 import net.Indyuce.mmoitems.stat.DisableAdvancedEnchantments;
 import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.DyeColor;
@@ -39,6 +37,7 @@ import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.HideEnchants;
 import net.Indyuce.mmoitems.stat.HidePotionEffects;
 import net.Indyuce.mmoitems.stat.Inedible;
+import net.Indyuce.mmoitems.stat.ItemDamage;
 import net.Indyuce.mmoitems.stat.ItemParticles;
 import net.Indyuce.mmoitems.stat.ItemSetStat;
 import net.Indyuce.mmoitems.stat.ItemTierStat;
@@ -82,9 +81,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class ItemStat {
-	public static final ItemStat MATERIAL = new MaterialStat(),
-			DURABILITY = new ItemDamage(),
-			CUSTOM_MODEL_DATA = new CustomModelData(), MAX_DURABILITY = new MaximumDurability(), WILL_BREAK = new LostWhenBroken();
+	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = new ItemDamage(), CUSTOM_MODEL_DATA = new CustomModelData(),
+			MAX_DURABILITY = new MaximumDurability(), WILL_BREAK = new LostWhenBroken();
 	public static final ItemStat NAME = new DisplayName(), LORE = new Lore(), NBT_TAGS = new NBTTags();
 
 	// block stats
@@ -232,6 +230,7 @@ public abstract class ItemStat {
 	public static final ItemStat SUCCESS_RATE = new SuccessRate();
 	public static final ItemStat COMPATIBLE_TYPES = new CompatibleTypes();
 
+	@SuppressWarnings("deprecation")
 	public static final ItemStat CRAFTING = new Crafting(), CRAFT_PERMISSION = new CraftingPermission(),
 			CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", new ItemStack(Material.WOODEN_AXE), "Crafted Amount",
 					new String[] { "The stack count for", "this item when crafted." }, new String[] { "all" });
@@ -338,9 +337,7 @@ public abstract class ItemStat {
 	 *            MMOItem builder which must be completed
 	 * @param data
 	 *            Stat data being applied
-	 * @deprecated Being moved to RandomStatData
 	 */
-	@Deprecated
 	public abstract void whenApplied(ItemStackBuilder item, StatData data);
 
 	/**
@@ -356,7 +353,9 @@ public abstract class ItemStat {
 
 	/**
 	 * When inputing data using chat or anvil input in order to edit the edit in
-	 * the GUI editor
+	 * the GUI editor. IAE are handled and exception messages are sent back to
+	 * the player. Stat edition is not canceled until a right input is given or
+	 * the player inputs 'cancel'
 	 * 
 	 * @param inv
 	 *            Previously opened edition menu
@@ -368,9 +367,8 @@ public abstract class ItemStat {
 	 *            Extra information given by the stat when instanciating
 	 *            StatEdition given to this method to identify what is being
 	 *            edited
-	 * @return
 	 */
-	public abstract boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info);
+	public abstract void whenInput(EditionInventory inv, String message, Object... info);
 
 	/**
 	 * Called when stat data is read from an ItemStack in a player inventory

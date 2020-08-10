@@ -51,14 +51,14 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 			new StatEdition(inv, ItemStat.PERMISSION).enable("Write in the chat the permission you want your item to require.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("permission")) {
-				List<String> requiredPerms = config.getConfig().getStringList(inv.getEdited().getId() + ".permission");
+			if (config.getConfig().contains("permission")) {
+				List<String> requiredPerms = config.getConfig().getStringList("permission");
 				if (requiredPerms.size() < 1)
 					return;
 
 				String last = requiredPerms.get(requiredPerms.size() - 1);
 				requiredPerms.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + ".permission", requiredPerms.size() == 0 ? null : requiredPerms);
+				config.getConfig().set("permission", requiredPerms.size() == 0 ? null : requiredPerms);
 				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
@@ -73,11 +73,11 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 			return false;
 		}
 
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("permission")
-				? config.getConfig().getStringList(inv.getEdited().getId() + ".permission")
+		List<String> lore = config.getConfig().contains("permission")
+				? config.getConfig().getStringList("permission")
 				: new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set(inv.getEdited().getId() + ".permission", lore);
+		config.getConfig().set("permission", lore);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");

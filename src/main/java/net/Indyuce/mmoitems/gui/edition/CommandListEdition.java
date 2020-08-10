@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -37,15 +35,13 @@ public class CommandListEdition extends EditionInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Command List");
 		int n = 0;
 
-		FileConfiguration config = template.getType().getConfigFile().getConfig();
+		if (getEditedSection().contains("commands"))
+			for (String key : getEditedSection().getConfigurationSection("commands").getKeys(false)) {
 
-		if (config.getConfigurationSection(template.getId()).contains("commands"))
-			for (String key : config.getConfigurationSection(template.getId() + ".commands").getKeys(false)) {
-
-				String format = config.getString(template.getId() + ".commands." + key + ".format");
-				double delay = config.getDouble(template.getId() + ".commands." + key + ".delay");
-				boolean console = config.getBoolean(template.getId() + ".commands." + key + ".console"),
-						op = config.getBoolean(template.getId() + ".commands." + key + ".op");
+				String format = getEditedSection().getString("commands." + key + ".format");
+				double delay = getEditedSection().getDouble("commands." + key + ".delay");
+				boolean console = getEditedSection().getBoolean("commands." + key + ".console"),
+						op = getEditedSection().getBoolean("commands." + key + ".op");
 
 				ItemStack item = new ItemStack(VersionMaterial.COMPARATOR.toMaterial());
 				ItemMeta itemMeta = item.getItemMeta();
@@ -101,12 +97,9 @@ public class CommandListEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = template.getType().getConfigFile();
-			if (config.getConfig().getConfigurationSection(template.getId()).contains("commands")
-					&& config.getConfig().getConfigurationSection(template.getId() + ".commands").contains(tag)) {
-				config.getConfig().set(template.getId() + ".commands." + tag, null);
-				registerTemplateEdition(config);
-				open();
+			if (getEditedSection().contains("commands") && getEditedSection().getConfigurationSection("commands").contains(tag)) {
+				getEditedSection().set("commands." + tag, null);
+				registerTemplateEdition();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
 						+ " (Internal ID)" + ChatColor.GRAY + ".");
 			}

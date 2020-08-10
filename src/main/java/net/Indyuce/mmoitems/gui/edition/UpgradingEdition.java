@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.internal.NamedItemStack;
@@ -35,14 +34,8 @@ public class UpgradingEdition extends EditionInventory {
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Upgrade Setup: " + template.getId());
-		ConfigFile config = template.getType().getConfigFile();
 
-		if (!config.getConfig().contains(template.getId() + ".upgrade")) {
-			config.getConfig().createSection(template.getId() + ".upgrade");
-			config.save();
-		}
-
-		boolean workbench = config.getConfig().getBoolean(template.getId() + ".upgrade.workbench");
+		boolean workbench = getEditedSection().getBoolean("upgrade.workbench");
 		if (!template.getType().corresponds(Type.CONSUMABLE)) {
 
 			ItemStack workbenchItem = new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial());
@@ -60,7 +53,7 @@ public class UpgradingEdition extends EditionInventory {
 			workbenchItem.setItemMeta(workbenchItemMeta);
 			inv.setItem(20, workbenchItem);
 
-			String upgradeTemplate = config.getConfig().getString(template.getId() + ".upgrade.template");
+			String upgradeTemplate = getEditedSection().getString("upgrade.template");
 			ItemStack templateItem = new ItemStack(VersionMaterial.OAK_SIGN.toMaterial());
 			ItemMeta templateItemMeta = templateItem.getItemMeta();
 			templateItemMeta.setDisplayName(ChatColor.GREEN + "Upgrade Template");
@@ -77,7 +70,7 @@ public class UpgradingEdition extends EditionInventory {
 			templateItem.setItemMeta(templateItemMeta);
 			inv.setItem(22, templateItem);
 
-			int max = config.getConfig().getInt(template.getId() + ".upgrade.max");
+			int max = getEditedSection().getInt("upgrade.max");
 			ItemStack maxItem = new ItemStack(Material.BARRIER);
 			ItemMeta maxItemMeta = maxItem.getItemMeta();
 			maxItemMeta.setDisplayName(ChatColor.GREEN + "Max Upgrades");
@@ -99,7 +92,7 @@ public class UpgradingEdition extends EditionInventory {
 
 		if (!workbench || template.getType().corresponds(Type.CONSUMABLE)) {
 
-			String reference = config.getConfig().getString(template.getId() + ".upgrade.reference");
+			String reference = getEditedSection().getString("upgrade.reference");
 			ItemStack referenceItem = new ItemStack(Material.PAPER);
 			ItemMeta referenceItemMeta = referenceItem.getItemMeta();
 			referenceItemMeta.setDisplayName(ChatColor.GREEN + "Upgrade Reference");
@@ -121,7 +114,7 @@ public class UpgradingEdition extends EditionInventory {
 		} else
 			inv.setItem(38, notAvailable);
 
-		double success = config.getConfig().getDouble(template.getId() + ".upgrade.success");
+		double success = getEditedSection().getDouble("upgrade.success");
 		ItemStack successItem = new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial());
 		ItemMeta successItemMeta = successItem.getItemMeta();
 		successItemMeta.setDisplayName(ChatColor.GREEN + "Success Chance");
@@ -146,8 +139,7 @@ public class UpgradingEdition extends EditionInventory {
 			destroyOnFailLore.add(ChatColor.GRAY + "When toggled on, the item will be");
 			destroyOnFailLore.add(ChatColor.GRAY + "destroyed when failing at upgrading it.");
 			destroyOnFailLore.add("");
-			destroyOnFailLore
-					.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + config.getConfig().getBoolean(template.getId() + ".upgrade.destroy"));
+			destroyOnFailLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + getEditedSection().getBoolean("upgrade.destroy"));
 			destroyOnFailLore.add("");
 			destroyOnFailLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 			destroyOnFailMeta.setLore(destroyOnFailLore);
@@ -172,15 +164,10 @@ public class UpgradingEdition extends EditionInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStat.UPGRADE, "rate").enable("Write in the chat the success rate you want.");
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("upgrade")
-						&& config.getConfig().getConfigurationSection(template.getId() + ".upgrade").contains("success")) {
-					config.getConfig().set(template.getId() + ".upgrade.success", null);
-					registerTemplateEdition(config);
-					open();
-					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset success chance.");
-				}
+			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.success")) {
+				getEditedSection().set("upgrade.success", null);
+				registerTemplateEdition();
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset success chance.");
 			}
 		}
 
@@ -188,15 +175,10 @@ public class UpgradingEdition extends EditionInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStat.UPGRADE, "max").enable("Write in the chat the number you want.");
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("upgrade")
-						&& config.getConfig().getConfigurationSection(template.getId() + ".upgrade").contains("max")) {
-					config.getConfig().set(template.getId() + ".upgrade.max", null);
-					registerTemplateEdition(config);
-					open();
-					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the number of max upgrades.");
-				}
+			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.max")) {
+				getEditedSection().set("upgrade.max", null);
+				registerTemplateEdition();
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the number of max upgrades.");
 			}
 		}
 
@@ -204,15 +186,10 @@ public class UpgradingEdition extends EditionInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStat.UPGRADE, "template").enable("Write in the chat the upgrade template ID you want.");
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("upgrade")
-						&& config.getConfig().getConfigurationSection(template.getId() + ".upgrade").contains("template")) {
-					config.getConfig().set(template.getId() + ".upgrade.template", null);
-					registerTemplateEdition(config);
-					open();
-					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset upgrade template.");
-				}
+			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.template")) {
+				getEditedSection().set("upgrade.template", null);
+				registerTemplateEdition();
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset upgrade template.");
 			}
 		}
 
@@ -220,34 +197,25 @@ public class UpgradingEdition extends EditionInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStat.UPGRADE, "ref").enable("Write in the chat the upgrade reference (text) you want.");
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("upgrade")
-						&& config.getConfig().getConfigurationSection(template.getId() + ".upgrade").contains("reference")) {
-					config.getConfig().set(template.getId() + ".upgrade.reference", null);
-					registerTemplateEdition(config);
-					open();
-					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset upgrade reference.");
-				}
+			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.reference")) {
+				getEditedSection().set("upgrade.reference", null);
+				registerTemplateEdition();
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset upgrade reference.");
 			}
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Workbench Upgrade Only?")) {
-			ConfigFile config = template.getType().getConfigFile();
-			boolean bool = !config.getConfig().getBoolean(template.getId() + ".upgrade.workbench");
-			config.getConfig().set(template.getId() + ".upgrade.workbench", bool);
-			registerTemplateEdition(config);
-			open();
+			boolean bool = !getEditedSection().getBoolean("upgrade.workbench");
+			getEditedSection().set("upgrade.workbench", bool);
+			registerTemplateEdition();
 			player.sendMessage(MMOItems.plugin.getPrefix()
 					+ (bool ? "Your item must now be upgraded via recipes." : "Your item can now be upgraded using consumables."));
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Destroy on fail?")) {
-			ConfigFile config = template.getType().getConfigFile();
-			boolean bool = !config.getConfig().getBoolean(template.getId() + ".upgrade.destroy");
-			config.getConfig().set(template.getId() + ".upgrade.destroy", bool);
-			registerTemplateEdition(config);
-			open();
+			boolean bool = !getEditedSection().getBoolean("upgrade.destroy");
+			getEditedSection().set("upgrade.destroy", bool);
+			registerTemplateEdition();
 			player.sendMessage(MMOItems.plugin.getPrefix()
 					+ (bool ? "Your item will be destroyed upon failing upgrade." : "Your item will not be destroyed upon failing upgrade."));
 		}

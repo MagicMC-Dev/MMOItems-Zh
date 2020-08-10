@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -43,7 +41,6 @@ public class SoundsEdition extends EditionInventory {
 		int[] slots = { 19, 22, 25, 28, 31, 34, 37, 40, 43 };
 		int n = 0;
 
-		FileConfiguration config = template.getType().getConfigFile().getConfig();
 		for (CustomSound sound : CustomSound.values()) {
 			ItemStack soundEvent = sound.getItem().clone();
 			ItemMeta soundEventMeta = soundEvent.getItemMeta();
@@ -54,15 +51,14 @@ public class SoundsEdition extends EditionInventory {
 				eventLore.add(ChatColor.GRAY + lore);
 			eventLore.add("");
 			String configSoundName = sound.getName().replace(" ", "-").toLowerCase();
-			String value = config.getString(template.getId() + ".sounds." + configSoundName + ".sound");
+			String value = getEditedSection().getString("sounds." + configSoundName + ".sound");
 			if (value != null) {
 				eventLore.add(ChatColor.GRAY + "Current Values:");
 				eventLore.add(ChatColor.GRAY + " - Sound Name: '" + ChatColor.GREEN
-						+ config.getString(template.getId() + ".sounds." + configSoundName + ".sound") + ChatColor.GRAY + "'");
-				eventLore.add(ChatColor.GRAY + " - Volume: " + ChatColor.GREEN
-						+ config.getDouble(template.getId() + ".sounds." + configSoundName + ".volume"));
-				eventLore.add(ChatColor.GRAY + " - Pitch: " + ChatColor.GREEN
-						+ config.getDouble(template.getId() + ".sounds." + configSoundName + ".pitch"));
+						+ getEditedSection().getString("sounds." + configSoundName + ".sound") + ChatColor.GRAY + "'");
+				eventLore.add(
+						ChatColor.GRAY + " - Volume: " + ChatColor.GREEN + getEditedSection().getDouble("sounds." + configSoundName + ".volume"));
+				eventLore.add(ChatColor.GRAY + " - Pitch: " + ChatColor.GREEN + getEditedSection().getDouble("sounds." + configSoundName + ".pitch"));
 			} else
 				eventLore.add(ChatColor.GRAY + "Current Values: " + ChatColor.RED + "None");
 			eventLore.add("");
@@ -94,21 +90,18 @@ public class SoundsEdition extends EditionInventory {
 						ChatColor.AQUA + "Format: [SOUND NAME] [VOLUME] [PITCH]");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
 				String soundPath = correspondingSlot.get(event.getSlot());
-				config.getConfig().set(template.getId() + ".sounds." + soundPath, null);
+				getEditedSection().set("sounds." + soundPath, null);
 
 				// clear sound config section
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("sounds")) {
-					if (config.getConfig().getConfigurationSection(template.getId() + ".sounds").contains(soundPath))
-						if (config.getConfig().getConfigurationSection(template.getId() + ".sounds." + soundPath).getKeys(false).isEmpty())
-							config.getConfig().set(template.getId() + ".sounds." + soundPath, null);
-					if (config.getConfig().getConfigurationSection(template.getId() + ".sounds").getKeys(false).isEmpty())
-						config.getConfig().set(template.getId() + ".sounds", null);
+				if (getEditedSection().contains("sounds." + soundPath)
+						&& getEditedSection().getConfigurationSection("sounds." + soundPath).getKeys(false).isEmpty()) {
+					getEditedSection().set("sounds." + soundPath, null);
+					if (getEditedSection().getConfigurationSection("sounds").getKeys(false).isEmpty())
+						getEditedSection().set("sounds", null);
 				}
 
-				registerTemplateEdition(config);
-				new SoundsEdition(player, template).open(getPreviousPage());
+				registerTemplateEdition();
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundPath.replace("-", " ")) + " Sound"
 						+ ChatColor.GRAY + " successfully removed.");
 			}

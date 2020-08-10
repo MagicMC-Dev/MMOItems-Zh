@@ -55,12 +55,12 @@ public class PotionEffects extends ItemStat {
 					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("potion-effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".potion-effects").getKeys(false);
+			if (config.getConfig().contains("potion-effects")) {
+				Set<String> set = config.getConfig().getConfigurationSection("potion-effects").getKeys(false);
 				String last = Arrays.asList(set.toArray(new String[0])).get(set.size() - 1);
-				config.getConfig().set(inv.getEdited().getId() + ".potion-effects." + last, null);
+				config.getConfig().set("potion-effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getEdited().getId() + ".potion-effects", null);
+					config.getConfig().set("potion-effects", null);
 				inv.registerTemplateEdition(config);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
@@ -111,7 +111,7 @@ public class PotionEffects extends ItemStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getEdited().getId() + ".potion-effects." + effect.getName(), duration + "," + amplifier);
+		config.getConfig().set("potion-effects." + effect.getName(), duration + "," + amplifier);
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");

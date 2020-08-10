@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -14,25 +15,40 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public abstract class EditionInventory extends PluginInventory {
 
+	/**
+	 * Item template currently being edited. This field is not final as it is
+	 * refreshed every time the item is edited (after applying a config change,
+	 * MMOItems updates the registered template and removes the old one)
+	 */
 	protected MMOItemTemplate template;
 
+	/**
+	 * Config file being edited. It is cached when the edition inventory is
+	 * opened and can only be accessed through the getEditedSection() method
+	 */
+	private final ConfigFile configFile;
+
+	/**
+	 * Template modifier being edited, if it is null then the player is directly
+	 * base item data
+	 */
+	private TemplateModifier editedModifier;
+
 	private ItemStack cachedItem;
-	private int prevPage;
+	private int previousPage;
 
 	public EditionInventory(Player player, MMOItemTemplate template) {
-		this(player, template, null);
-	}
-
-	public EditionInventory(Player player, MMOItemTemplate template, ItemStack cached) {
 		super(player);
 
 		this.template = template;
+		configFile = template.getType().getConfigFile();
 		if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
 			this.cachedItem = ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cachedItem;
 	}
@@ -41,17 +57,20 @@ public abstract class EditionInventory extends PluginInventory {
 		return template;
 	}
 
-	public ItemStack getCachedItem() {
-		if (cachedItem != null)
-			return cachedItem;
-
-		updateCachedItem();
-		return cachedItem;
+	/**
+	 * @return The currently edited configuration section. It depends if the
+	 *         player is editing the base item data or editing a modifier. This
+	 *         config section contains item data (either the 'base' config
+	 *         section or the 'stats' section for modifiers).
+	 */
+	public ConfigurationSection getEditedSection() {
+		return configFile.getConfig()
+				.getConfigurationSection(template.getId() + (editedModifier == null ? ".base" : ".modifiers." + editedModifier.getId() + ".stats"));
 	}
 
-	public void registerTemplateEdition(ConfigFile config) {
+	public void registerTemplateEdition() {
 
-		config.registerTemplateEdition(template);
+		configFile.registerTemplateEdition(template);
 
 		/*
 		 * update edited mmoitem after registering the item edition and
@@ -59,6 +78,8 @@ public abstract class EditionInventory extends PluginInventory {
 		 */
 		template = MMOItems.plugin.getItems().getTemplate(template.getType(), template.getId());
 		updateCachedItem();
+
+		open();
 	}
 
 	/**
@@ -67,6 +88,14 @@ public abstract class EditionInventory extends PluginInventory {
 	 */
 	public void updateCachedItem() {
 		cachedItem = template.newBuilder(PlayerData.get(getPlayer()).getRPG()).build().newBuilder().build();
+	}
+
+	public ItemStack getCachedItem() {
+		if (cachedItem != null)
+			return cachedItem;
+
+		updateCachedItem();
+		return cachedItem;
 	}
 
 	public void addEditionInventoryItems(Inventory inv, boolean displayBack) {
@@ -97,11 +126,11 @@ public abstract class EditionInventory extends PluginInventory {
 	}
 
 	public void open(int page) {
-		prevPage = page;
+		previousPage = page;
 		open();
 	}
 
 	public int getPreviousPage() {
-		return prevPage;
+		return previousPage;
 	}
 }

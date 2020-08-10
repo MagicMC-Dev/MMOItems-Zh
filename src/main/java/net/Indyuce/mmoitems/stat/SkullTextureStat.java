@@ -46,8 +46,8 @@ public class SkullTextureStat extends StringStat {
 
 	@Override
 	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		config.getConfig().set(inv.getEdited().getId() + ".skull-texture.value", message);
-		config.getConfig().set(inv.getEdited().getId() + ".skull-texture.uuid", UUID.randomUUID().toString());
+		config.getConfig().set("skull-texture.value", message);
+		config.getConfig().set("skull-texture.uuid", UUID.randomUUID().toString());
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ".");

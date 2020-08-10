@@ -902,7 +902,7 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 
 			ItemStack item = new MMOItemDropItem(type, name, dropChance / 100, unidentifiedChance / 100, min, max)
-					.getItem();
+					.getItem(null);
 			if (item == null || item.getType() == Material.AIR) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED
 						+ "An error occured while attempting to generate the item called " + name + ".");
@@ -1034,7 +1034,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				// item
 				Type type = MMOItems.plugin.getTypes().getOrThrow(args[1]);
 				ItemStack item = new MMOItemDropItem(type, args[2], 1, Double.parseDouble(args[4]) / 100,
-						new RandomAmount(args[3])).getItem();
+						new RandomAmount(args[3])).getItem(null);
 				Validate.isTrue(item != null && item.getType() != Material.AIR,
 						"Couldn't find/generate the item called '" + args[1].toUpperCase()
 								+ "'. Check your console for potential item generation issues.");
@@ -1051,13 +1051,8 @@ public class MMOItemsCommand implements CommandExecutor {
 						"Usage: /mi <type> <item> (player) (min-max) (unident-chance) (drop-chance)");
 
 				// target
-				Player target;
-				if(args.length > 2) {
-					target = Bukkit.getPlayer(args[2]);
-					Validate.notNull(target, "Could not find player called '" + args[2] + "'.");
-				}
-				else
-					target = (Player) sender;
+				Player target = args.length > 2 ? Bukkit.getPlayer(args[2]) : (Player) sender;
+				Validate.notNull(target, "Could not find player called '" + args[2] + "'.");
 
 				// item
 				Type type = MMOItems.plugin.getTypes().getOrThrow(args[0].toUpperCase());
@@ -1068,7 +1063,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (!dropItem.rollDrop())
 					return true;
 
-				ItemStack item = dropItem.getItem();
+				ItemStack item = dropItem.getItem(PlayerData.get(target));
 				Validate.isTrue(item != null && item.getType() != Material.AIR,
 						"Couldn't find/generate the item called '" + args[1].toUpperCase()
 								+ "'. Check your console for potential item generation issues.");

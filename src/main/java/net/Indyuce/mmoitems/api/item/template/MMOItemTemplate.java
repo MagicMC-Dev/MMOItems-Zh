@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.item.template;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -19,15 +19,38 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOItemTemplate implements ItemReference {
-	private final String id;
 	private final Type type;
+	private final String id;
 
 	// base item data
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
 
-	private final Set<TemplateModifier> modifiers = new LinkedHashSet<>();
+	private final Map<String, TemplateModifier> modifiers = new LinkedHashMap<>();
 	private final Set<TemplateOption> options = new HashSet<>();
 
+	/**
+	 * Public constructor which can be used to register extra item templates
+	 * using other addons or plugins
+	 * 
+	 * @param type
+	 *            The item type of your template
+	 * @param id
+	 *            The template identifier, it's ok if two templates with
+	 *            different item types share the same ID
+	 */
+	public MMOItemTemplate(Type type, String id) {
+		this.type = type;
+		this.id = id;
+	}
+
+	/**
+	 * Used to load mmoitem templates from config files
+	 * 
+	 * @param type
+	 *            The item type of your template
+	 * @param config
+	 *            The config file read to load the template
+	 */
 	public MMOItemTemplate(Type type, ConfigurationSection config) {
 		Validate.notNull(config, "Could not load item gen template config");
 
@@ -44,7 +67,8 @@ public class MMOItemTemplate implements ItemReference {
 		if (config.contains("modifiers"))
 			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
 				try {
-					modifiers.add(new TemplateModifier(MMOItems.plugin.getItems(), config.getConfigurationSection("modifiers." + key)));
+					TemplateModifier modifier = new TemplateModifier(MMOItems.plugin.getItems(), config.getConfigurationSection("modifiers." + key));
+					modifiers.put(modifier.getId(), modifier);
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key
 							+ "' from item gen template '" + id + "': " + exception.getMessage());
@@ -68,8 +92,16 @@ public class MMOItemTemplate implements ItemReference {
 		return base;
 	}
 
-	public Set<TemplateModifier> getModifiers() {
+	public Map<String, TemplateModifier> getModifiers() {
 		return modifiers;
+	}
+
+	public boolean hasModifier(String id) {
+		return modifiers.containsKey(id);
+	}
+
+	public TemplateModifier getModifier(String id) {
+		return modifiers.get(id);
 	}
 
 	@Override

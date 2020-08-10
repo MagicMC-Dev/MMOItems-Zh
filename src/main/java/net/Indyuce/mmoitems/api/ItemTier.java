@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.droptable.DropTable;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
 import net.mmogroup.mmolib.MMOLib;
@@ -105,8 +106,8 @@ public class ItemTier {
 	/**
 	 * @return Reads a random item in the deconstruction drop table
 	 */
-	public List<ItemStack> generateDeconstructedItem() {
-		return hasDropTable() ? deconstruct.read(false) : new ArrayList<>();
+	public List<ItemStack> generateDeconstructedItem(PlayerData player) {
+		return hasDropTable() ? deconstruct.read(player, false) : new ArrayList<>();
 	}
 
 	public class UnidentificationInfo {

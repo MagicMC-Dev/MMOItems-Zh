@@ -104,7 +104,7 @@ public class BlockManager {
 
 		for (String blockItemId : Type.BLOCK.getConfigFile().getConfig().getKeys(false)) {
 			MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(Type.BLOCK, blockItemId).clone();
-			int id = (mmoitem.hasData(ItemStat.BLOCK_ID)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).generateNewValue() : 0;
+			int id = (mmoitem.hasData(ItemStat.BLOCK_ID)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).getValue() : 0;
 			if (id > 0 && id < 161 && id != 54) {
 				MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id),
 						eastIds.contains(id), southIds.contains(id), northIds.contains(id));

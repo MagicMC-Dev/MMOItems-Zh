@@ -71,7 +71,7 @@ public class Consumable extends UseItem {
 		String itemTierTag = target.getString("MMOITEMS_TIER");
 		if (getNBTItem().getBoolean("MMOITEMS_CAN_DECONSTRUCT") && !itemTierTag.equals("")) {
 			ItemTier tier = MMOItems.plugin.getTiers().get(itemTierTag);
-			List<ItemStack> deconstructed = tier.generateDeconstructedItem();
+			List<ItemStack> deconstructed = tier.generateDeconstructedItem(playerData);
 			if (!deconstructed.isEmpty()) {
 				Message.SUCCESSFULLY_DECONSTRUCTED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
 				event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);

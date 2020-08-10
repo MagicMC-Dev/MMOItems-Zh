@@ -60,9 +60,9 @@ public class Restore extends ItemStat {
 		double food = Double.parseDouble(split[1]);
 		double saturation = Double.parseDouble(split[2]);
 
-		config.getConfig().set(inv.getEdited().getId() + ".restore.health", (health <= 0 ? null : health));
-		config.getConfig().set(inv.getEdited().getId() + ".restore.food", (food <= 0 ? null : food));
-		config.getConfig().set(inv.getEdited().getId() + ".restore.saturation", (saturation <= 0 ? null : saturation));
+		config.getConfig().set("restore.health", (health <= 0 ? null : health));
+		config.getConfig().set("restore.food", (food <= 0 ? null : food));
+		config.getConfig().set("restore.saturation", (saturation <= 0 ? null : saturation));
 
 		inv.registerTemplateEdition(config);
 		inv.open();

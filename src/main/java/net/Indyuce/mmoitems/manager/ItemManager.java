@@ -126,7 +126,7 @@ public class ItemManager {
 		templates.removeValue(type, id);
 
 		try {
-			registerTemplate(new MMOItemTemplate(type.getConfigFile().getConfig().getConfigurationSection(id)));
+			registerTemplate(new MMOItemTemplate(type, type.getConfigFile().getConfig().getConfigurationSection(id)));
 		} catch (IllegalArgumentException exception) {
 			MMOItems.plugin.getLogger().log(Level.INFO,
 					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
@@ -214,7 +214,7 @@ public class ItemManager {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			for (String key : config.getKeys(false))
 				try {
-					registerTemplate(new MMOItemTemplate(config.getConfigurationSection(key)));
+					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO,
 							"An error occured while trying to load item gen template '" + key + "': " + exception.getMessage());

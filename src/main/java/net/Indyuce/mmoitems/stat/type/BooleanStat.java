@@ -4,13 +4,15 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -50,15 +52,26 @@ public class BooleanStat extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
-		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), !config.getConfig().getBoolean(inv.getEdited().getId() + "." + getPath()));
-		inv.registerTemplateEdition(config);
-		inv.open();
+
+		if (event.getAction() == InventoryAction.PICKUP_ALL) {
+			inv.getEditedSection().set(getPath(), !inv.getEditedSection().getBoolean(getPath()));
+			inv.registerTemplateEdition();
+		}
+
+		else if (event.getAction() == InventoryAction.PICKUP_HALF)
+			new StatEdition(inv, this).enable("Write in the chat the probability you want (a percentage)");
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		return true;
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+
+		double probability = Double.parseDouble(message);
+		Validate.isTrue(probability >= 0 && probability <= 100, "Chance must be between 0 and 100");
+
+		inv.getEditedSection().set(getPath(), probability / 100);
+		inv.registerTemplateEdition();
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + ChatColor.GREEN + probability + "% chance"
+				+ ChatColor.GRAY + ".");
 	}
 
 	@Override
@@ -75,6 +88,7 @@ public class BooleanStat extends ItemStat {
 								: ChatColor.GREEN + digit.format(((RandomBooleanData) optional.get()).getChance() * 100) + "%"
 						: ChatColor.RED + "False"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to switch this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to switch this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to choose a probability to have this option.");
 	}
 }

@@ -81,7 +81,7 @@ public class ShieldPatternStat extends StringStat {
 			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern.color", null);
+			config.getConfig().set("shield-pattern.color", null);
 
 			inv.registerTemplateEdition(config);
 			inv.open();
@@ -92,15 +92,15 @@ public class ShieldPatternStat extends StringStat {
 					ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
-			if (!config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("shield-pattern"))
+			if (!config.getConfig().contains("shield-pattern"))
 				return;
 
-			Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".shield-pattern").getKeys(false);
+			Set<String> set = config.getConfig().getConfigurationSection("shield-pattern").getKeys(false);
 			String last = new ArrayList<String>(set).get(set.size() - 1);
 			if (last.equalsIgnoreCase("color"))
 				return;
 
-			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + last, null);
+			config.getConfig().set("shield-pattern." + last, null);
 			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
@@ -136,14 +136,14 @@ public class ShieldPatternStat extends StringStat {
 				return false;
 			}
 
-			int availableKey = getNextAvailableKey(config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".shield-pattern"));
+			int availableKey = getNextAvailableKey(config.getConfig().getConfigurationSection("shield-pattern"));
 			if (availableKey < 0) {
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "You can have more than 100 shield patterns on a single item.");
 				return false;
 			}
 
-			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + availableKey + ".pattern", patternType.name());
-			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + availableKey + ".color", dyeColor.name());
+			config.getConfig().set("shield-pattern." + availableKey + ".pattern", patternType.name());
+			config.getConfig().set("shield-pattern." + availableKey + ".color", dyeColor.name());
 			inv.registerTemplateEdition(config);
 			inv.open();
 			inv.getPlayer().sendMessage(
@@ -159,7 +159,7 @@ public class ShieldPatternStat extends StringStat {
 			return false;
 		}
 
-		config.getConfig().set(inv.getEdited().getId() + ".shield-pattern.color", color.name());
+		config.getConfig().set("shield-pattern.color", color.name());
 		inv.registerTemplateEdition(config);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");

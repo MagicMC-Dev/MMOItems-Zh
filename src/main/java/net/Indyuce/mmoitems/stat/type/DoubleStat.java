@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -62,48 +61,37 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = inv.getEdited().getType().getConfigFile();
-			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set(getPath(), null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
 			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
-				"Or write [MIN-VALUE]=[MAX-VALUE] to make the stat random.");
+				"Second Format: {Base} {Scaling-Value} {Spread} {Max-Spread}");
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		String[] split = message.split("\\=");
-		double value = 0;
-		double value1 = 0;
-		try {
-			value = Double.parseDouble(split[0]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid number.");
-			return false;
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		String[] split = message.split("\\ ");
+		double base = Double.parseDouble(split[0]);
+		double scale = split.length > 1 ? Double.parseDouble(split[1]) : 0;
+		double spread = split.length > 2 ? Double.parseDouble(split[2]) : 0;
+		double maxSpread = split.length > 3 ? Double.parseDouble(split[3]) : 0;
+
+		// save as number
+		if (scale == 0 && spread == 0 && maxSpread == 0)
+			inv.getEditedSection().set(getPath(), base);
+
+		else {
+			inv.getEditedSection().set(getPath() + ".base", base);
+			inv.getEditedSection().set(getPath() + ".scale", scale == 0 ? null : scale);
+			inv.getEditedSection().set(getPath() + ".spread", spread == 0 ? null : spread);
+			inv.getEditedSection().set(getPath() + ".maxSpread", maxSpread == 0 ? null : maxSpread);
 		}
 
-		// second value
-		if (split.length > 1)
-			try {
-				value1 = Double.parseDouble(split[1]);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number.");
-				return false;
-			}
-
-		// STRING if length == 2
-		// DOUBLE if length == 1
-		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), split.length > 1 ? value + "=" + value1 : value);
-		if (value == 0 && value1 == 0)
-			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-		inv.registerTemplateEdition(config);
-		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to "
-				+ (value1 != 0 ? "{between " + value + " and " + value1 + "}" : "" + value) + ".");
-		return true;
+		inv.registerTemplateEdition();
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to {" + base + " - " + scale + " - " + spread
+				+ " - " + maxSpread + "}");
 	}
 
 	@Override

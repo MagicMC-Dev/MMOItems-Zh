@@ -18,7 +18,6 @@ import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -89,66 +88,41 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String configKey = (String) info[0];
 		String edited = (String) info[1];
 
 		if (edited.equals("ability")) {
 			String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
-			if (!MMOItems.plugin.getAbilities().hasAbility(format)) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid ability!");
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all abilities: /mi list ability.");
-				return false;
-			}
-
+			Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(format),
+					"format is not a valid ability! You may check the ability list using /mi list ability.");
 			Ability ability = MMOItems.plugin.getAbilities().getAbility(format);
 
-			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey, null);
-			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".type", format);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("ability." + configKey, null);
+			inv.getEditedSection().set("ability." + configKey + ".type", format);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
 		if (edited.equals("mode")) {
-			CastingMode castMode = CastingMode.safeValueOf(message);
-			if (castMode == null) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Make sure you enter a valid casting mode.");
-				return false;
-			}
+			CastingMode castMode = CastingMode.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
+			Ability ability = MMOItems.plugin.getAbilities().getAbility(inv.getEditedSection().getString("ability." + configKey + ".type")
+					.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
+			Validate.isTrue(ability.isAllowedMode(castMode), "This ability does not support this casting mode.");
 
-			Ability ability = MMOItems.plugin.getAbilities()
-					.getAbility(config.getConfig().getString(inv.getEdited().getId() + ".ability." + configKey + ".type").toUpperCase()
-							.replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
-			if (!ability.isAllowedMode(castMode)) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "This ability does not support this casting mode.");
-				return false;
-			}
-
-			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".mode", castMode.name());
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
 					+ ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
-		double value = 0;
-		try {
-			value = Double.parseDouble(message);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + "." + edited, value);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("ability." + configKey + "." + edited, Double.parseDouble(message));
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
 				+ " successfully added.");
-		return true;
 	}
 
 	@Override

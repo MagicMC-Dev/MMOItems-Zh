@@ -115,9 +115,9 @@ public class MMOItemBuilder {
 
 	private Collection<TemplateModifier> rollModifiers(MMOItemTemplate template) {
 		if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
-			return template.getModifiers();
+			return template.getModifiers().values();
 
-		List<TemplateModifier> modifiers = new ArrayList<>(template.getModifiers());
+		List<TemplateModifier> modifiers = new ArrayList<>(template.getModifiers().values());
 		Collections.shuffle(modifiers);
 		return modifiers;
 	}

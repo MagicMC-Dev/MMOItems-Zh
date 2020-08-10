@@ -12,7 +12,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -41,7 +40,6 @@ public class ItemTypeRestriction extends StringStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.ITEM_TYPE_RESTRICTION).enable("Write in the chat the item type you want your gem to support.",
@@ -60,7 +58,7 @@ public class ItemTypeRestriction extends StringStat {
 		// if (config.getConfigurationSection(path).contains(getPath()))
 		// if (config.getConfigurationSection(path + "." +
 		// getPath()).contains("display")) {
-		// config.getConfig().set(path + "." + getPath() + ".display", null);
+		// inv.getEditedSection().set(path + "." + getPath() + ".display", null);
 		// type.saveConfigFile(config, path);
 		// new ItemEdition(player, type, path).open();
 		// player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset
@@ -68,24 +66,24 @@ public class ItemTypeRestriction extends StringStat {
 		// }
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())) {
-				List<String> list = config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath());
+			if (inv.getEditedSection().contains(getPath())) {
+				List<String> list = inv.getEditedSection().getStringList("" + getPath());
 				if (list.size() < 1)
 					return;
 
 				String last = list.get(list.size() - 1);
 				list.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list.size() == 0 ? null : list);
-				inv.registerTemplateEdition(config);
-				inv.open();
+				inv.getEditedSection().set("" + getPath(), list.size() == 0 ? null : list);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		// if (counter > 1) {
-		// config.getConfig().set(path + "." + getPath() + ".display", message);
+		// inv.getEditedSection().set(path + "." + getPath() + ".display",
+		// message);
 		// type.saveConfigFile(config, path);
 		// new ItemEdition(player, type, path).open();
 		// player.sendMessage(MMOItems.plugin.getPrefix() + "Type restrictions
@@ -94,22 +92,14 @@ public class ItemTypeRestriction extends StringStat {
 		// }
 
 		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
-		if (!isValid(format)) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid item type/set.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all item types here: /mi list type.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "You can also enter WEAPON or BLUNT, PIERCING, SLASHING, OFFHAND, EXTRA.");
-			return false;
-		}
+		Validate.isTrue(isValid(format), format
+				+ " is not a valid item type/set. You can enter WEAPON, BLUNT, PIERCING, SLASHING, OFFHAND, EXTRA, as well as other item types here: /mi list type.");
 
-		List<String> list = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains(getPath())
-				? config.getConfig().getStringList(inv.getEdited().getId() + "." + getPath())
-				: new ArrayList<>();
+		List<String> list = inv.getEditedSection().contains(getPath()) ? inv.getEditedSection().getStringList("" + getPath()) : new ArrayList<>();
 		list.add(format);
-		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set(getPath(), list);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your gem now supports " + format + ".");
-		return true;
 	}
 
 	@Override

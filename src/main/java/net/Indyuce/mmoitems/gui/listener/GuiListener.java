@@ -42,15 +42,11 @@ public class GuiListener implements Listener {
 				if (event.getAction() == InventoryAction.PICKUP_ALL) {
 					for (ItemStack drop : player.getInventory().addItem(event.getInventory().getItem(4)).values())
 						player.getWorld().dropItemNaturally(player.getLocation(), drop);
-					if (NBTItem.get(event.getInventory().getItem(4)).getBoolean("UNSTACKABLE")) { // this
-																									// refreshes
-																									// the
-																									// item
-																									// if
-																									// it's
-																									// unstackable
+
+					// this refreshes the item if it's unstackable
+					if (NBTItem.get(event.getInventory().getItem(4)).getBoolean("UNSTACKABLE")) {
 						((EditionInventory) inventory).updateCachedItem();
-						event.getInventory().setItem(4, ((EditionInventory) inventory).getCachedItemStack());
+						event.getInventory().setItem(4, ((EditionInventory) inventory).getCachedItem());
 					}
 				}
 
@@ -60,7 +56,7 @@ public class GuiListener implements Listener {
 						player.getWorld().dropItemNaturally(player.getLocation(), drop);
 
 					((EditionInventory) inventory).updateCachedItem();
-					event.getInventory().setItem(4, ((EditionInventory) inventory).getCachedItemStack());
+					event.getInventory().setItem(4, ((EditionInventory) inventory).getCachedItem());
 				}
 			}
 

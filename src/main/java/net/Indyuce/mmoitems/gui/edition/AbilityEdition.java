@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -30,11 +28,12 @@ import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AbilityEdition extends EditionInventory {
-	private String configKey;
+	private final String configKey;
+
 	private Ability ability;
-	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43 };
 
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
+	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43 };
 
 	public AbilityEdition(Player player, MMOItemTemplate template, String configKey) {
 		super(player, template);
@@ -47,9 +46,7 @@ public class AbilityEdition extends EditionInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Ability Edition");
 		int n = 0;
 
-		FileConfiguration config = template.getType().getConfigFile().getConfig();
-
-		String configString = config.getString(template.getId() + ".ability." + configKey + ".type");
+		String configString = getEditedSection().getString("ability." + configKey + ".type");
 		String format = configString == null ? "" : configString.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
 		ability = MMOItems.plugin.getAbilities().hasAbility(format) ? MMOItems.plugin.getAbilities().getAbility(format) : null;
 
@@ -68,7 +65,7 @@ public class AbilityEdition extends EditionInventory {
 		abilityItem.setItemMeta(abilityItemMeta);
 
 		if (ability != null) {
-			String castModeConfigString = config.getString(template.getId() + ".ability." + configKey + ".mode");
+			String castModeConfigString = getEditedSection().getString("ability." + configKey + ".mode");
 			String castModeFormat = castModeConfigString == null ? ""
 					: castModeConfigString.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
 			CastingMode castMode = CastingMode.safeValueOf(castModeFormat);
@@ -92,7 +89,7 @@ public class AbilityEdition extends EditionInventory {
 		}
 
 		if (ability != null) {
-			ConfigurationSection section = config.getConfigurationSection(template.getId() + ".ability." + configKey);
+			ConfigurationSection section = getEditedSection().getConfigurationSection("ability." + configKey);
 			for (String modifier : ability.getModifiers()) {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
@@ -156,19 +153,13 @@ public class AbilityEdition extends EditionInventory {
 						"You can access the ability list by typing " + ChatColor.AQUA + "/mi list ability");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("ability")
-						&& config.getConfig().getConfigurationSection(template.getId() + ".ability").contains(configKey)
-						&& config.getConfig().getConfigurationSection(template.getId() + ".ability." + configKey).contains("type")) {
-					config.getConfig().set(template.getId() + ".ability." + configKey, null);
+				if (getEditedSection().contains("ability." + configKey + ".type")) {
+					getEditedSection().set("ability." + configKey, null);
 
-					config.getConfig().set(template.getId() + ".ability." + configKey, null);
-					if (config.getConfig().getConfigurationSection(template.getId()).contains("ability"))
-						if (config.getConfig().getConfigurationSection(template.getId() + ".ability").getKeys(false).size() < 1)
-							config.getConfig().set(template.getId() + ".ability", null);
+					if (getEditedSection().contains("ability") && getEditedSection().getConfigurationSection("ability").getKeys(false).size() == 0)
+						getEditedSection().set("ability", null);
 
-					registerTemplateEdition(config);
-					open();
+					registerTemplateEdition();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the ability.");
 				}
 			}
@@ -185,22 +176,10 @@ public class AbilityEdition extends EditionInventory {
 					player.sendMessage("* " + ChatColor.GREEN + castMode.name());
 			}
 
-			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				ConfigFile config = template.getType().getConfigFile();
-				if (config.getConfig().getConfigurationSection(template.getId()).contains("ability")
-						&& config.getConfig().getConfigurationSection(template.getId() + ".ability").contains(configKey)
-						&& config.getConfig().getConfigurationSection(template.getId() + ".ability." + configKey).contains("type")) {
-					config.getConfig().set(template.getId() + ".ability." + configKey, null);
-
-					config.getConfig().set(template.getId() + ".ability." + configKey, null);
-					if (config.getConfig().getConfigurationSection(template.getId()).contains("ability"))
-						if (config.getConfig().getConfigurationSection(template.getId() + ".ability").getKeys(false).size() < 1)
-							config.getConfig().set(template.getId() + ".ability", null);
-
-					registerTemplateEdition(config);
-					open();
-					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the ability.");
-				}
+			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("ability." + configKey + ".mode")) {
+				getEditedSection().set("ability." + configKey + ".mode", null);
+				registerTemplateEdition();
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the casting mode.");
 			}
 			return;
 		}
@@ -213,13 +192,9 @@ public class AbilityEdition extends EditionInventory {
 			new StatEdition(this, ItemStat.ABILITIES, configKey, tag).enable("Write in the chat the value you want.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = template.getType().getConfigFile();
-			if (config.getConfig().getConfigurationSection(template.getId()).contains("ability")
-					&& config.getConfig().getConfigurationSection(template.getId() + ".ability").contains(configKey)
-					&& config.getConfig().getConfigurationSection(template.getId() + ".ability." + configKey).contains(tag)) {
-				config.getConfig().set(template.getId() + ".ability." + configKey + "." + tag, null);
-				registerTemplateEdition(config);
-				open();
+			if (getEditedSection().contains("ability." + configKey + "." + tag)) {
+				getEditedSection().set("ability." + configKey + "." + tag, null);
+				registerTemplateEdition();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset " + ChatColor.GOLD + MMOUtils.caseOnWords(tag.replace("-", " "))
 						+ ChatColor.GRAY + ".");
 			}

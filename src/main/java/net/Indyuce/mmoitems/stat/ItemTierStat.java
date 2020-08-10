@@ -1,12 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -32,18 +30,12 @@ public class ItemTierStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
+		Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Couldn't find the tier called '" + format + "'.");
 
-		if (!MMOItems.plugin.getTiers().has(format)) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find the tier called " + format + ".");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".tier", format);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("tier", format);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + format + ".");
-		return true;
 	}
 }

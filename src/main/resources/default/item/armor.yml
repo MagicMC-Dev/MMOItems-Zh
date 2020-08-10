@@ -7,7 +7,7 @@ MYTHRIL_CHAINMAIL:
   element:
     ice:
       defense: 8.0
-    light:
+    earth:
       defense: 6.4
   gem-sockets:
   - Red

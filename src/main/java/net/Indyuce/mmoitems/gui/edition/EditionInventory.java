@@ -48,7 +48,7 @@ public abstract class EditionInventory extends PluginInventory {
 		super(player);
 
 		this.template = template;
-		configFile = template.getType().getConfigFile();
+		this.configFile = template.getType().getConfigFile();
 		if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
 			this.cachedItem = ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cachedItem;
 	}
@@ -76,7 +76,8 @@ public abstract class EditionInventory extends PluginInventory {
 		 * update edited mmoitem after registering the item edition and
 		 * refreshes the displayed item.
 		 */
-		template = MMOItems.plugin.getItems().getTemplate(template.getType(), template.getId());
+		template = MMOItems.plugin.getTemplates().getTemplate(template.getType(), template.getId());
+		editedModifier = template.getModifier(editedModifier.getId());
 		updateCachedItem();
 
 		open();

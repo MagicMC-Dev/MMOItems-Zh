@@ -74,12 +74,15 @@ public class MMOItem implements ItemReference {
 		return stats.keySet();
 	}
 
+	/**
+	 * @return A class which lets you build this mmoitem into an ItemStack
+	 */
 	public ItemStackBuilder newBuilder() {
 		return new ItemStackBuilder(this);
 	}
 
 	/***
-	 * @return A closed instance of this mmoitem. This does NOT clone the
+	 * @return A cloned instance of this mmoitem. This does NOT clone the
 	 *         StatData instances! If you edit these statDatas, the previous
 	 *         mmoitem will be edited as well.
 	 */

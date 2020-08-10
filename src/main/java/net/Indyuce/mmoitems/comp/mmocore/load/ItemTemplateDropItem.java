@@ -23,16 +23,16 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
 		Type type = MMOItems.plugin.getTypes().get(format);
 
 		String id = config.getString("id").replace("-", "_").toUpperCase();
-		Validate.isTrue(MMOItems.plugin.getItems().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
-		template = MMOItems.plugin.getItems().getTemplate(type, id);
+		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
+		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
 	}
 
 	@Override
 	public void collect(LootBuilder builder) {
 		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
 
-		int itemLevel = MMOItems.plugin.getItems().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
-		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getItems().rollTier();
+		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
+		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getTemplates().rollTier();
 
 		builder.addLoot(template.newBuilder(itemLevel, itemTier).build().newBuilder().build());
 	}

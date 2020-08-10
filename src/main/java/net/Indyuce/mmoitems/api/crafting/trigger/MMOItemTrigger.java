@@ -22,9 +22,9 @@ public class MMOItemTrigger extends Trigger {
 
 		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
 		String id = config.getString("id").replace("-", "_").toUpperCase();
-		Validate.isTrue(MMOItems.plugin.getItems().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
+		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
 
-		template = MMOItems.plugin.getItems().getTemplate(type, id);
+		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
 		amount = config.args().length > 0 ? Math.max(1, Integer.parseInt(config.args()[0])) : 1;
 	}
 

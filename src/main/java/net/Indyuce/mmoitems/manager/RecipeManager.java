@@ -26,6 +26,7 @@ import org.bukkit.inventory.SmokingRecipe;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
 
@@ -42,81 +43,46 @@ public class RecipeManager {
 
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
-
-			for (String id : config.getKeys(false))
-				if (config.getConfigurationSection(id).contains("crafting"))
+			for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(type))
+				if (config.contains(template.getId() + ".crafting"))
 					try {
-						ConfigurationSection section = config.getConfigurationSection(id + ".crafting");
+						ConfigurationSection section = config.getConfigurationSection(template.getId() + ".crafting");
 
 						if (section.contains("shaped"))
 							section.getConfigurationSection("shaped").getKeys(false)
-									.forEach(recipe -> registerShapedRecipe(type, id, section.getStringList("shaped." + recipe)));
+									.forEach(recipe -> registerShapedRecipe(type, template.getId(), section.getStringList("shaped." + recipe)));
 						if (section.contains("shapeless"))
 							section.getConfigurationSection("shapeless").getKeys(false)
-									.forEach(recipe -> registerShapelessRecipe(type, id, section.getStringList("shapeless." + recipe)));
+									.forEach(recipe -> registerShapelessRecipe(type, template.getId(), section.getStringList("shapeless." + recipe)));
 						if (section.contains("furnace"))
-							section.getConfigurationSection("furnace").getKeys(false).forEach(recipe -> registerFurnaceRecipe(type, id,
-									new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
+							section.getConfigurationSection("furnace").getKeys(false)
+									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.FURNACE, type, template.getId(),
+											new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
 						if (section.contains("blast"))
-							section.getConfigurationSection("blast").getKeys(false).forEach(recipe -> registerBlastRecipe(type, id,
-									new BurningRecipeInformation(section.getConfigurationSection("blast." + recipe)), recipe));
+							section.getConfigurationSection("blast").getKeys(false)
+									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.BLAST, type, template.getId(),
+											new BurningRecipeInformation(section.getConfigurationSection("blast." + recipe)), recipe));
 						if (section.contains("smoker"))
-							section.getConfigurationSection("smoker").getKeys(false).forEach(recipe -> registerSmokerRecipe(type, id,
-									new BurningRecipeInformation(section.getConfigurationSection("smoker." + recipe)), recipe));
+							section.getConfigurationSection("smoker").getKeys(false)
+									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.SMOKER, type, template.getId(),
+											new BurningRecipeInformation(section.getConfigurationSection("smoker." + recipe)), recipe));
 						if (section.contains("campfire"))
-							section.getConfigurationSection("campfire").getKeys(false).forEach(recipe -> registerCampfireRecipe(type, id,
-									new BurningRecipeInformation(section.getConfigurationSection("campfire." + recipe)), recipe));
+							section.getConfigurationSection("campfire").getKeys(false)
+									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.CAMPFIRE, type, template.getId(),
+											new BurningRecipeInformation(section.getConfigurationSection("campfire." + recipe)), recipe));
 					} catch (IllegalArgumentException exception) {
-						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load recipe of '" + id + "': " + exception.getMessage());
+						MMOItems.plugin.getLogger().log(Level.WARNING,
+								"Could not load recipe of '" + template.getId() + "': " + exception.getMessage());
 					}
 		}
 
 		sortRecipes();
-		Bukkit.getScheduler().runTask(MMOItems.plugin, () ->
-
-		getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe.getRecipe())));
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe.getRecipe())));
 	}
 
-	public void registerFurnaceRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if (!info.getChoice().isValid()) {
-			MMOItems.plugin.getLogger().warning("Couldn't load furnace recipe for '" + type.getId() + "." + id + "'");
-			return;
-		}
-		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
-				info.getBurnTime());
-		registerRecipe(key, recipe);
-	}
-
-	public void registerBlastRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if (!info.getChoice().isValid()) {
-			MMOItems.plugin.getLogger().warning("Couldn't load blast furnace recipe for '" + type.getId() + "." + id + "'");
-			return;
-		}
-		NamespacedKey key = getRecipeKey(type, id, "blast", number);
-		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
-				info.getBurnTime());
-		registerRecipe(key, recipe);
-	}
-
-	public void registerSmokerRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if (!info.getChoice().isValid()) {
-			MMOItems.plugin.getLogger().warning("Couldn't load smoker recipe for '" + type.getId() + "." + id + "'");
-			return;
-		}
-		NamespacedKey key = getRecipeKey(type, id, "smoker", number);
-		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
-				info.getBurnTime());
-		registerRecipe(key, recipe);
-	}
-
-	public void registerCampfireRecipe(Type type, String id, BurningRecipeInformation info, String number) {
-		if (!info.getChoice().isValid()) {
-			MMOItems.plugin.getLogger().warning("Couldn't load campfire recipe for '" + type.getId() + "." + id + "'");
-			return;
-		}
-		NamespacedKey key = getRecipeKey(type, id, "campfire", number);
-		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info, String recipeId) {
+		NamespacedKey key = getRecipeKey(type, id, recipeType.getPath(), recipeId);
+		Recipe recipe = recipeType.provideRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
 				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
@@ -193,7 +159,7 @@ public class RecipeManager {
 
 	/***
 	 * Parses an ItemStack from a string. Can be used to both get a vanilla
-	 * material or an MMOItem. Used by the recipe manager.
+	 * material or an MMOItem
 	 */
 	public ItemStack parseStack(String parse) {
 		ItemStack stack = null;
@@ -228,6 +194,38 @@ public class RecipeManager {
 		}
 
 		return stack;
+	}
+
+	/**
+	 * Easier control of furnace, smoker, campfire and blast recipes so there is
+	 * no need to have four time the same method to register this type of recipe
+	 * 
+	 * @author cympe
+	 */
+	public enum BurningRecipeType {
+		FURNACE((key, result, source, experience, cookTime) -> new FurnaceRecipe(key, result, source, experience, cookTime)),
+		SMOKER((key, result, source, experience, cookTime) -> new SmokingRecipe(key, result, source, experience, cookTime)),
+		CAMPFIRE((key, result, source, experience, cookTime) -> new CampfireRecipe(key, result, source, experience, cookTime)),
+		BLAST((key, result, source, experience, cookTime) -> new BlastingRecipe(key, result, source, experience, cookTime));
+
+		private final RecipeProvider provider;
+
+		private BurningRecipeType(RecipeProvider provider) {
+			this.provider = provider;
+		}
+
+		public Recipe provideRecipe(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime) {
+			return provider.provide(key, result, source, experience, cookTime);
+		}
+
+		public String getPath() {
+			return name().toLowerCase();
+		}
+	}
+
+	@FunctionalInterface
+	public interface RecipeProvider {
+		Recipe provide(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime);
 	}
 
 	/*

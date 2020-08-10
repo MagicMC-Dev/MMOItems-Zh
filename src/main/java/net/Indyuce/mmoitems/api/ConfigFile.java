@@ -69,7 +69,7 @@ public class ConfigFile {
 		 * uncaches the item so it can be generated to apply newest changes in
 		 * case the same inventory is opened again.
 		 */
-		MMOItems.plugin.getItems().requestTemplateUpdate(ref.getType(), ref.getId());
+		MMOItems.plugin.getTemplates().requestTemplateUpdate(ref.getType(), ref.getId());
 
 		// update the database UUID for the dynamic item updater
 		if (MMOItems.plugin.getUpdater().hasData(ref))

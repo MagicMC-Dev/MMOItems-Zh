@@ -19,8 +19,8 @@ public class RandomPotionEffectData {
 		type = PotionEffectType.getByName(config.getName().toUpperCase().replace("-", "_").replace(" ", "_"));
 		Validate.notNull(type, "Could not find potion effect with name '" + config.getName() + "'");
 
-		duration = new NumericStatFormula(config.getConfigurationSection("duration"));
-		level = new NumericStatFormula(config.getConfigurationSection("level"));
+		duration = new NumericStatFormula(config.get("duration"));
+		level = new NumericStatFormula(config.get("level"));
 	}
 
 	public RandomPotionEffectData(PotionEffectType type, NumericStatFormula level) {

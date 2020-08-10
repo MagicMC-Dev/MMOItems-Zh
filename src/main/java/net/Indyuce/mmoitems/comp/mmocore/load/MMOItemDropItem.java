@@ -28,7 +28,7 @@ public class MMOItemDropItem extends DropItem {
 
 	@Override
 	public void collect(LootBuilder builder) {
-		if (!MMOItems.plugin.getItems().hasTemplate(type, id))
+		if (!MMOItems.plugin.getTemplates().hasTemplate(type, id))
 			return;
 
 		ItemStack item = MMOItems.plugin.getItem(type, id, builder.getEntity().getMMOPlayerData().getMMOItems());

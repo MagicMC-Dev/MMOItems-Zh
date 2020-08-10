@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.recipe;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -12,29 +13,21 @@ public class MMORecipeChoice {
 
 	public MMORecipeChoice(String input) {
 		item = MMOItems.plugin.getRecipes().parseStack(input);
+		Validate.notNull(item, "Could not parse recipe choice");
 
-		if (item != null) {
-			isVanilla = !NBTItem.get(item).hasType();
-			amount = item.getAmount();
-		} else {
-			amount = 1;
-			isVanilla = true;
-		}
+		isVanilla = !NBTItem.get(item).hasType();
+		amount = item.getAmount();
 	}
 
-	public boolean isValid() {
-		return item != null;
-	}
-
-	public boolean isVanilla() {
-		return isVanilla;
+	public ItemStack getItem() {
+		return item;
 	}
 
 	public int getAmount() {
 		return amount;
 	}
 
-	public ItemStack getItem() {
-		return item;
+	public boolean isVanilla() {
+		return isVanilla;
 	}
 }

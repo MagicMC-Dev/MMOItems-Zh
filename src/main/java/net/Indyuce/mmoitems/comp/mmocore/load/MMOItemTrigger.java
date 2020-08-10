@@ -32,7 +32,7 @@ public class MMOItemTrigger extends Trigger {
 
 	@Override
 	public void apply(PlayerData player) {
-		if (!MMOItems.plugin.getItems().hasTemplate(type, id))
+		if (!MMOItems.plugin.getTemplates().hasTemplate(type, id))
 			return;
 
 		ItemStack item = MMOItems.plugin.getItem(type, id, player.getMMOPlayerData().getMMOItems());

@@ -406,7 +406,7 @@ public class MMOItems extends JavaPlugin {
 		return hologramSupport;
 	}
 
-	public TemplateManager getItems() {
+	public TemplateManager getTemplates() {
 		return templateManager;
 	}
 

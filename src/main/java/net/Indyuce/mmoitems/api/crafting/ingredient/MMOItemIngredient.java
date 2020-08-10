@@ -25,7 +25,7 @@ public class MMOItemIngredient extends Ingredient {
 
 		config.validate("type", "id");
 		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
-		template = MMOItems.plugin.getItems().getTemplateOrThrow(type, config.getString("id"));
+		template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, config.getString("id"));
 
 		level = config.getInt("level", 0);
 		display = config.contains("display") ? config.getString("display") : findName();

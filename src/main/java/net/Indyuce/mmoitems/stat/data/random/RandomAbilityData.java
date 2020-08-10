@@ -28,12 +28,11 @@ public class RandomAbilityData {
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
 		castMode = CastingMode.valueOf(modeFormat);
-
 		Validate.isTrue(ability.isAllowedMode(castMode), "Ability " + ability.getID() + " does not support cast mode " + castMode.name());
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
-				modifiers.put(key, new NumericStatFormula(config.getConfigurationSection(key)));
+				modifiers.put(key, new NumericStatFormula(config.get(key)));
 	}
 
 	public RandomAbilityData(Ability ability, CastingMode castMode) {

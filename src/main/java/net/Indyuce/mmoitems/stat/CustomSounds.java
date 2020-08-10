@@ -41,15 +41,9 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		SoundListData sounds = new SoundListData();
 
 		for (CustomSound sound : CustomSound.values()) {
-			String path = sound.getName().replace(" ", "-").toLowerCase();
-			if (!config.contains(path))
-				continue;
-
-			String soundName = config.getString(path + ".sound");
-			double vol = config.getDouble(path + ".volume");
-			double pit = config.getDouble(path + ".pitch");
-			if (!soundName.isEmpty() && vol > 0)
-				sounds.set(sound, soundName, vol, pit);
+			String path = sound.name().replace("_", "-").toLowerCase();
+			if (config.contains(path))
+				sounds.set(sound, new SoundData(config.get(path)));
 		}
 
 		return sounds;
@@ -127,8 +121,8 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		for (CustomSound sound : CustomSound.values()) {
 			String soundName = mmoitem.getNBT().getString("MMOITEMS_SOUND_" + sound.name());
 			if (soundName != null && !soundName.isEmpty())
-				sounds.set(sound, soundName, mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"),
-						mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT"));
+				sounds.set(sound, new SoundData(soundName, mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"),
+						mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT")));
 		}
 
 		if (sounds.getCustomSounds().size() > 0)

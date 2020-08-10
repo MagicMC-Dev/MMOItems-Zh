@@ -64,7 +64,7 @@ public class ItemBrowser extends PluginInventory {
 			List<Type> types = new ArrayList<>(MMOItems.plugin.getTypes().getAll());
 			for (int j = min; j < Math.min(max, types.size()); j++) {
 				Type type = types.get(j);
-				int items = type.getConfigFile().getConfig().getKeys(false).size();
+				int items = MMOItems.plugin.getTemplates().getTemplates(type).size();
 
 				ItemStack item = type.getItem();
 				item.setAmount(Math.max(1, Math.min(64, items)));
@@ -120,7 +120,7 @@ public class ItemBrowser extends PluginInventory {
 		errorMeta.setLore(errorLore);
 		error.setItemMeta(errorMeta);
 
-		List<MMOItemTemplate> templates = new ArrayList<>(MMOItems.plugin.getItems().getTemplates(type));
+		List<MMOItemTemplate> templates = new ArrayList<>(MMOItems.plugin.getTemplates().getTemplates(type));
 
 		/*
 		 * displays every item in a specific type. items are cached inside the
@@ -281,7 +281,7 @@ public class ItemBrowser extends PluginInventory {
 			}
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF)
-				new ItemEdition(getPlayer(), MMOItems.plugin.getItems().getTemplate(type, id)).open();
+				new ItemEdition(getPlayer(), MMOItems.plugin.getTemplates().getTemplate(type, id)).open();
 		}
 	}
 

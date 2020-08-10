@@ -177,8 +177,7 @@ public class TemplateManager {
 					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
 					modifiers.put(modifier.getId(), modifier);
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO,
-							"An error occured while trying to load item gen modifier '" + key + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load template modifier '" + key + "': " + exception.getMessage());
 				}
 		}
 
@@ -189,8 +188,7 @@ public class TemplateManager {
 				try {
 					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO,
-							"An error occured while trying to load item gen template '" + key + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
 				}
 		}
 	}

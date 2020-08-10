@@ -63,12 +63,12 @@ public class UpdateItemCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (!MMOItems.plugin.getItems().hasTemplate(type, args[1])) {
+		if (!MMOItems.plugin.getTemplates().hasTemplate(type, args[1])) {
 			player.sendMessage(ChatColor.RED + "Could not find an item template with ID '" + args[1] + "'");
 			return true;
 		}
 
-		new ItemUpdaterEdition(player, MMOItems.plugin.getItems().getTemplate(type, args[1])).open();
+		new ItemUpdaterEdition(player, MMOItems.plugin.getTemplates().getTemplate(type, args[1])).open();
 		return true;
 	}
 }

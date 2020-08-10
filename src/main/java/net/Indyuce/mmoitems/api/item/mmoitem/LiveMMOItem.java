@@ -14,8 +14,12 @@ public class LiveMMOItem extends ReadMMOItem {
 		this(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}
 
-	/*
-	 * loads all the item data of an item into an MMOItem instance.
+	/**
+	 * This class is used to load ALL the data from an item in one constructor.
+	 * They should be used with care because it is quite performance heavy
+	 * 
+	 * @param item
+	 *            The item to read
 	 */
 	public LiveMMOItem(NBTItem item) {
 		super(item);

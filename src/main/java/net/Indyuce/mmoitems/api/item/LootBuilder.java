@@ -25,21 +25,21 @@ public class LootBuilder {
 	private final int itemLevel;
 
 	public LootBuilder(RPGPlayer player, ItemTier itemTier) {
-		itemLevel = MMOItems.plugin.getItems().rollLevel(player.getLevel());
+		itemLevel = MMOItems.plugin.getTemplates().rollLevel(player.getLevel());
 		this.itemTier = itemTier;
-		all = MMOItems.plugin.getItems().collectTemplates();
+		all = MMOItems.plugin.getTemplates().collectTemplates();
 	}
 
 	public LootBuilder(RPGPlayer player) {
-		itemLevel = MMOItems.plugin.getItems().rollLevel(player.getLevel());
-		itemTier = MMOItems.plugin.getItems().rollTier();
-		all = MMOItems.plugin.getItems().collectTemplates();
+		itemLevel = MMOItems.plugin.getTemplates().rollLevel(player.getLevel());
+		itemTier = MMOItems.plugin.getTemplates().rollTier();
+		all = MMOItems.plugin.getTemplates().collectTemplates();
 	}
 
 	public LootBuilder(int itemLevel, ItemTier itemTier) {
 		this.itemLevel = itemLevel;
 		this.itemTier = itemTier;
-		all = MMOItems.plugin.getItems().collectTemplates();
+		all = MMOItems.plugin.getTemplates().collectTemplates();
 	}
 
 	public int count() {

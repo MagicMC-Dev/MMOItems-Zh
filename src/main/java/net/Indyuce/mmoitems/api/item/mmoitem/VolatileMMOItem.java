@@ -8,19 +8,24 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class VolatileMMOItem extends ReadMMOItem {
 
-	/*
-	 * using VolatileMMOItem compared to LiveMMOItem, MMOItems only loads the item
-	 * data it really NEEDS. the item data is only read when using hasData(ItemStat)
-	 * for the first time, whereas LiveMMOItem reads everything on constructor ; it
-	 * is purely a performance concern
+	/**
+	 * VolatileMMOItems only loads the item data it needs instantly. The item
+	 * data is only read when using hasData(ItemStat) for the first time.
+	 * LiveMMOItems read everything on the constructor. VolativeMMOItems are
+	 * used in player inventory updates
+	 * 
+	 * @param item
+	 *            The item to read from
 	 */
 	public VolatileMMOItem(NBTItem item) {
 		super(item);
 	}
 
-	/*
-	 * since it checks for the data every time this method is called, this method
-	 * must only be called ONCE if we want the best performance
+	/**
+	 * This should only be used once if we want the best performance. This
+	 * method both checks for stat data, and loads it if it did found one
+	 * 
+	 * @return If the item has some stat data
 	 */
 	@Override
 	public boolean hasData(ItemStat stat) {
@@ -28,8 +33,8 @@ public class VolatileMMOItem extends ReadMMOItem {
 			try {
 				stat.whenLoaded(this);
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load stat '" + stat.getId()
-						+ "'item data from '" + getId() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						"Could not load stat '" + stat.getId() + "'item data from '" + getId() + "': " + exception.getMessage());
 			}
 		return super.hasData(stat);
 	}

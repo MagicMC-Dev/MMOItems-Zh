@@ -30,7 +30,6 @@ import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.api.event.blocks.CustomBlockDropEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
-import net.mmogroup.mmolib.MMOLib;
 
 public class DropTableManager implements Listener {
 	private final Map<EntityType, DropTable> monsters = new HashMap<>();

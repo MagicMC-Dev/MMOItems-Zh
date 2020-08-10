@@ -110,7 +110,7 @@ public class BlockManager {
 		customBlocks.clear();
 		mushroomStateValue.clear();
 
-		for (MMOItemTemplate template : MMOItems.plugin.getItems().getTemplates(Type.BLOCK)) {
+		for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(Type.BLOCK)) {
 			MMOItem mmoitem = template.newBuilder(0, null).build();
 			int id = mmoitem.hasData(ItemStat.BLOCK_ID) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).getValue() : 0;
 			if (id > 0 && id < 161 && id != 54)

@@ -18,23 +18,34 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class MMOItemBuilder {
-	private final int level;
 	private final MMOItem mmoitem;
+	private final int level;
 	private final ItemTier tier;
 
-	/*
-	 * capacity is not final because it is lowered as modifiers are applied
+	/**
+	 * Capacity is not final as it keeps lowering as modifiers are selected and
+	 * applied
 	 */
 	private double capacity;
 
-	/*
-	 * name modifiers which must be applied at the end of the item generation
-	 * process
+	/**
+	 * Name modifiers, prefixes or suffixes, with priorities. They are saved
+	 * because they must be applied after the modifier selection process
 	 */
 	private final Set<NameModifier> nameModifiers = new HashSet<>();
 
-	/*
-	 * instance is created everytime an item is being randomly generated.
+	/**
+	 * Instance which is created everytime an mmoitem is being randomly
+	 * generated
+	 * 
+	 * @param template
+	 *            The mmoitem template used to generate an item.
+	 * @param level
+	 *            Specified item level.
+	 * @param tier
+	 *            Specified item level which determines how many capacity it
+	 *            will have. If no tier is given, item uses the default capacity
+	 *            formula given in the main config file
 	 */
 	public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
 		this.level = level;

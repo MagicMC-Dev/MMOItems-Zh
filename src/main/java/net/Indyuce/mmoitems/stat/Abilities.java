@@ -46,7 +46,6 @@ public class Abilities extends ItemStat {
 	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
-
 		RandomAbilityListData list = new RandomAbilityListData();
 
 		for (String key : config.getKeys(false))

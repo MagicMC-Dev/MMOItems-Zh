@@ -52,7 +52,7 @@ public class MMOItemTemplate implements ItemReference {
 	 *            The config file read to load the template
 	 */
 	public MMOItemTemplate(Type type, ConfigurationSection config) {
-		Validate.notNull(config, "Could not load item gen template config");
+		Validate.notNull(config, "Could not load template config");
 
 		this.type = type;
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
@@ -67,11 +67,12 @@ public class MMOItemTemplate implements ItemReference {
 		if (config.contains("modifiers"))
 			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
 				try {
-					TemplateModifier modifier = new TemplateModifier(MMOItems.plugin.getItems(), config.getConfigurationSection("modifiers." + key));
+					TemplateModifier modifier = new TemplateModifier(MMOItems.plugin.getTemplates(),
+							config.getConfigurationSection("modifiers." + key));
 					modifiers.put(modifier.getId(), modifier);
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load modifier '" + key
-							+ "' from item gen template '" + id + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.INFO,
+							"Could not load modifier '" + key + "' from item template '" + type.getId() + "." + id + "': " + exception.getMessage());
 				}
 
 		Validate.notNull(config.getConfigurationSection("base"), "Could not find base item data");
@@ -83,8 +84,8 @@ public class MMOItemTemplate implements ItemReference {
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				base.put(stat, stat.whenInitialized(config.get("base." + key)));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to load base item data '" + key
-						+ "' from item gen template '" + id + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.INFO, "Could not load base item data '" + key + "' from item template '" + type.getId() + "."
+						+ id + "': " + exception.getMessage());
 			}
 	}
 
@@ -125,8 +126,8 @@ public class MMOItemTemplate implements ItemReference {
 	 * @return A random item builder which scales on the player's level.
 	 */
 	public MMOItemBuilder newBuilder(RPGPlayer player) {
-		int itemLevel = MMOItems.plugin.getItems().rollLevel(player.getLevel());
-		ItemTier itemTier = MMOItems.plugin.getItems().rollTier();
+		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(player.getLevel());
+		ItemTier itemTier = MMOItems.plugin.getTemplates().rollTier();
 		return newBuilder(itemLevel, itemTier);
 	}
 

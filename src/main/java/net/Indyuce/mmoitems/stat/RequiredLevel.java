@@ -33,7 +33,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		int lvl = (int) ((DoubleData) data).generateNewValue();
+		int lvl = (int) ((DoubleData) data).getValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_LEVEL", lvl));
 		item.getLore().insert("required-level", formatNumericStat(lvl, "#", "" + lvl));

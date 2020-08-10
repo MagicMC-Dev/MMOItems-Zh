@@ -101,8 +101,9 @@ public class MythicMobsHook implements Listener {
 		public LootBag get(DropMetadata metadata) {
 			LootBag loot = new LootBag(metadata);
 			if (dropItem != null)
+				// TODO fix null
 				loot.add(new ItemDrop(this.getLine(), (MythicLineConfig) this.getConfig(),
-						new BukkitItemStack(dropItem.getItem(1))));
+						new BukkitItemStack(dropItem.getItem(null, 1))));
 			return loot;
 		}
 	}

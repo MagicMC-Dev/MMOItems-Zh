@@ -1,29 +1,89 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.*;
-import net.Indyuce.mmoitems.stat.block.*;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.Abilities;
+import net.Indyuce.mmoitems.stat.Armor;
+import net.Indyuce.mmoitems.stat.ArmorToughness;
+import net.Indyuce.mmoitems.stat.ArrowParticles;
+import net.Indyuce.mmoitems.stat.AttackDamage;
+import net.Indyuce.mmoitems.stat.AttackSpeed;
+import net.Indyuce.mmoitems.stat.Commands;
+import net.Indyuce.mmoitems.stat.CompatibleTypes;
+import net.Indyuce.mmoitems.stat.Crafting;
+import net.Indyuce.mmoitems.stat.CraftingPermission;
+import net.Indyuce.mmoitems.stat.CustomModelData;
+import net.Indyuce.mmoitems.stat.CustomSounds;
+import net.Indyuce.mmoitems.stat.ItemDamage;
+import net.Indyuce.mmoitems.stat.DisableAdvancedEnchantments;
+import net.Indyuce.mmoitems.stat.DisplayName;
+import net.Indyuce.mmoitems.stat.DyeColor;
+import net.Indyuce.mmoitems.stat.Effects;
+import net.Indyuce.mmoitems.stat.Elements;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.GemColor;
+import net.Indyuce.mmoitems.stat.GemSockets;
+import net.Indyuce.mmoitems.stat.HideEnchants;
+import net.Indyuce.mmoitems.stat.HidePotionEffects;
+import net.Indyuce.mmoitems.stat.Inedible;
+import net.Indyuce.mmoitems.stat.ItemParticles;
+import net.Indyuce.mmoitems.stat.ItemSetStat;
+import net.Indyuce.mmoitems.stat.ItemTierStat;
+import net.Indyuce.mmoitems.stat.ItemTypeRestriction;
+import net.Indyuce.mmoitems.stat.KnockbackResistance;
+import net.Indyuce.mmoitems.stat.Lore;
+import net.Indyuce.mmoitems.stat.LostWhenBroken;
+import net.Indyuce.mmoitems.stat.LuteAttackEffectStat;
+import net.Indyuce.mmoitems.stat.LuteAttackSoundStat;
+import net.Indyuce.mmoitems.stat.MaterialStat;
+import net.Indyuce.mmoitems.stat.MaxHealth;
+import net.Indyuce.mmoitems.stat.MaximumDurability;
+import net.Indyuce.mmoitems.stat.MovementSpeed;
+import net.Indyuce.mmoitems.stat.NBTTags;
+import net.Indyuce.mmoitems.stat.PermanentEffects;
+import net.Indyuce.mmoitems.stat.Permission;
+import net.Indyuce.mmoitems.stat.PickaxePower;
+import net.Indyuce.mmoitems.stat.PotionColor;
+import net.Indyuce.mmoitems.stat.PotionEffects;
+import net.Indyuce.mmoitems.stat.RequiredClass;
+import net.Indyuce.mmoitems.stat.RequiredLevel;
+import net.Indyuce.mmoitems.stat.Restore;
+import net.Indyuce.mmoitems.stat.ShieldPatternStat;
+import net.Indyuce.mmoitems.stat.SkullTextureStat;
+import net.Indyuce.mmoitems.stat.Soulbound;
+import net.Indyuce.mmoitems.stat.SoulboundLevel;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat;
+import net.Indyuce.mmoitems.stat.StoredTags;
+import net.Indyuce.mmoitems.stat.SuccessRate;
+import net.Indyuce.mmoitems.stat.Unbreakable;
+import net.Indyuce.mmoitems.stat.Unstackable;
+import net.Indyuce.mmoitems.stat.UpgradeStat;
+import net.Indyuce.mmoitems.stat.VanillaEatingAnimation;
+import net.Indyuce.mmoitems.stat.block.BlockID;
+import net.Indyuce.mmoitems.stat.block.GenTemplate;
+import net.Indyuce.mmoitems.stat.block.MaxXP;
+import net.Indyuce.mmoitems.stat.block.MinXP;
+import net.Indyuce.mmoitems.stat.block.RequiredPower;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class ItemStat {
 	public static final ItemStat MATERIAL = new MaterialStat(),
-			DURABILITY = MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(),
+			DURABILITY = new ItemDamage(),
 			CUSTOM_MODEL_DATA = new CustomModelData(), MAX_DURABILITY = new MaximumDurability(), WILL_BREAK = new LostWhenBroken();
 	public static final ItemStat NAME = new DisplayName(), LORE = new Lore(), NBT_TAGS = new NBTTags();
 
@@ -321,16 +381,18 @@ public abstract class ItemStat {
 	public abstract void whenLoaded(ReadMMOItem mmoitem);
 
 	/**
-	 * Called when stat data is displayed in the edition GUI
+	 * Called when stat data is displayed in the edition GUI. We cannot use
+	 * MMOItemTemplate as input here because we need to know if we are editing a
+	 * modifier or base item data. It is much easier to display RandomStatData
+	 * if it exists
 	 * 
 	 * @param lore
 	 *            Current item lore which must be completed
-	 * @param mmoitem
-	 *            MMOItem being read
-	 * @deprecated Being moved to RandomStatData
+	 * @param data
+	 *            Stat data being displayed, optional is empty if there is no
+	 *            stat data
 	 */
-	@Deprecated
-	public abstract void whenDisplayed(List<String> lore, MMOItem mmoitem);
+	public abstract void whenDisplayed(List<String> lore, Optional<RandomStatData> optional);
 
 	public String getName() {
 		return name;

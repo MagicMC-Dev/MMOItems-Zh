@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
@@ -18,7 +19,6 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
@@ -105,11 +105,11 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			EnchantListData data = (EnchantListData) mmoitem.getData(this);
+			EnchantListData data = (EnchantListData) optional.get();
 			data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(enchant.getKey().getKey().replace("_", " "))
 					+ " " + MMOUtils.intToRoman(data.getLevel(enchant))));
 

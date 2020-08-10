@@ -11,12 +11,13 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class PickaxePower extends DoubleStat {
 	public PickaxePower() {
-		super("PICKAXE_POWER", new ItemStack(Material.IRON_PICKAXE), "Pickaxe Power", new String[] { "The breaking strength of the", "item when mining custom blocks." }, new String[] { "tool" });
+		super("PICKAXE_POWER", new ItemStack(Material.IRON_PICKAXE), "Pickaxe Power",
+				new String[] { "The breaking strength of the", "item when mining custom blocks." }, new String[] { "tool" });
 	}
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		int pickPower = (int) ((DoubleData) data).generateNewValue();
+		int pickPower = (int) ((DoubleData) data).getValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", pickPower));
 		item.getLore().insert("pickaxe-power", formatNumericStat(pickPower, "#", "" + pickPower));

@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class RandomBooleanData implements RandomStatData {
 	private final double chance;
-	
+
 	private static final Random random = new Random();
 
 	public RandomBooleanData(boolean state) {
@@ -17,6 +17,10 @@ public class RandomBooleanData implements RandomStatData {
 
 	public RandomBooleanData(double chance) {
 		this.chance = chance;
+	}
+	
+	public double getChance() {
+		return chance;
 	}
 
 	@Override

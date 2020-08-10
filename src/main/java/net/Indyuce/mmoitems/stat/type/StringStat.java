@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,7 +13,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
@@ -68,10 +68,10 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
-			String value = MMOLib.plugin.parseColors(mmoitem.getData(this).toString());
+		if (optional.isPresent()) {
+			String value = MMOLib.plugin.parseColors(optional.get().toString());
 			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
 

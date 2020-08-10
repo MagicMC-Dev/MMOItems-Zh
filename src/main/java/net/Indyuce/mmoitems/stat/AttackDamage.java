@@ -13,12 +13,13 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class AttackDamage extends AttributeStat {
 	public AttackDamage() {
-		super("ATTACK_DAMAGE", new ItemStack(Material.IRON_SWORD), "Attack Damage", new String[] { "The amount of damage", "your weapon deals." }, Attribute.GENERIC_ATTACK_DAMAGE, 1);
+		super("ATTACK_DAMAGE", new ItemStack(Material.IRON_SWORD), "Attack Damage", new String[] { "The amount of damage", "your weapon deals." },
+				Attribute.GENERIC_ATTACK_DAMAGE, 1);
 	}
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).generateNewValue();
+		double value = ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag("MMOITEMS_ATTACK_DAMAGE", value));
 		item.getLore().insert("attack-damage", formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}

@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.item.BlockDropItem;
 import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class DropTable {
 	private static final Random random = new Random();
@@ -46,13 +47,13 @@ public class DropTable {
 		return subtablesList.get(random.nextInt(subtablesList.size()));
 	}
 
-	public List<ItemStack> read(boolean silkTouch) {
+	public List<ItemStack> read(PlayerData player, boolean silkTouch) {
 		List<ItemStack> dropped = new ArrayList<>();
 
 		String randomSubtable = getRandomSubtable();
 		for (DropItem dropItem : getSubtable(randomSubtable).getDropItems(silkTouch))
 			if (dropItem.rollDrop()) {
-				ItemStack drop = dropItem.getItem();
+				ItemStack drop = dropItem.getItem(player);
 				if (drop == null)
 					MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't read the subtable item " + dropItem.getKey());
 				else

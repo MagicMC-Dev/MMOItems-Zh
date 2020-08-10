@@ -61,6 +61,14 @@ public class NumericStatFormula implements RandomStatData {
 		return scale;
 	}
 
+	public double getSpread() {
+		return spread;
+	}
+
+	public double getMaxSpread() {
+		return maxSpread;
+	}
+
 	public double calculate(double x) {
 
 		// calculate linear value

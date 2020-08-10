@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
@@ -15,12 +16,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -33,7 +34,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 public class RequiredClass extends ItemStat implements ItemRestriction, ProperStat {
 	public RequiredClass() {
 		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class",
-				new String[] { "The class you need to", "profess to use your item." }, new String[] { "!block", "all"});
+				new String[] { "The class you need to", "profess to use your item." }, new String[] { "!block", "all" });
 	}
 
 	@Override
@@ -85,11 +86,11 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) mmoitem.getData(this);
+			StringListData data = (StringListData) optional.get();
 			data.getList().forEach(el -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + el));
 
 		} else

@@ -49,7 +49,7 @@ public class ItemEdition extends EditionInventory {
 		 * the for loop will just let some slots empty
 		 */
 		List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
-				.filter(stat -> stat.hasValidMaterial(getCachedItemStack()) && !(stat instanceof InternalStat)).collect(Collectors.toList());
+				.filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).collect(Collectors.toList());
 
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Edition: " + getEdited().getId());
 		for (int j = min; j < Math.min(appliable.size(), max); j++) {

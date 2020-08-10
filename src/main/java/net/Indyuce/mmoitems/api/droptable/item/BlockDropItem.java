@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.droptable.item;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class BlockDropItem extends DropItem {
 	private final int blockId;
@@ -18,7 +19,7 @@ public class BlockDropItem extends DropItem {
 	}
 
 	@Override
-	public ItemStack getItem(int amount) {
+	public ItemStack getItem(PlayerData player, int amount) {
 		return MMOItems.plugin.getCustomBlocks().getBlock(blockId).getItem();
 	}
 

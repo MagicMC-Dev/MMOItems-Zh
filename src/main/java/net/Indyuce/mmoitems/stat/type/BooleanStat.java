@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
@@ -21,6 +22,8 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class BooleanStat extends ItemStat {
+	private static final DecimalFormat digit = new DecimalFormat("0.#");
+
 	public BooleanStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
 		super(id, item, name, lore, types, materials);
 	}
@@ -65,9 +68,12 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.GRAY + "Current Value: "
-				+ (mmoitem.hasData(this) && ((BooleanData) mmoitem.getData(this)).isEnabled() ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
+				+ (optional.isPresent()
+						? ((RandomBooleanData) optional.get()).getChance() >= 1 ? ChatColor.GREEN + "True"
+								: ChatColor.GREEN + digit.format(((RandomBooleanData) optional.get()).getChance() * 100) + "%"
+						: ChatColor.RED + "False"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to switch this value.");
 	}

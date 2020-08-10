@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -27,12 +29,13 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class DoubleStat extends ItemStat implements Upgradable {
+	private static final DecimalFormat digit = new DecimalFormat("0.#");
+
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
 		super(id, item, name, lore, new String[] { "!miscellaneous", "!block", "all" });
 	}
 
 	public DoubleStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
-
 		super(id, item, name, lore, types, materials);
 	}
 
@@ -110,14 +113,19 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		DoubleData data;
-		String format = mmoitem.hasData(this)
-				? ((data = (DoubleData) mmoitem.getData(this)).hasMax() ? data.getMin() + " -> " + data.getMax() : "" + data.getMin())
-				: "0";
+		if (optional.isPresent()) {
+			NumericStatFormula data = (NumericStatFormula) optional.get();
+			lore.add(ChatColor.GRAY + "Value: " + ChatColor.RED + data.getBase()
+					+ (data.getBase() != 0 ? ChatColor.GRAY + " (+" + ChatColor.RED + data.getScale() + ChatColor.GRAY + ")" : ""));
+			if (data.getSpread() > 0)
+				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.RED + digit.format(data.getSpread() * 100) + ChatColor.GRAY + " (Max:"
+						+ ChatColor.RED + digit.format(data.getMaxSpread() * 100) + ChatColor.GRAY + ")");
 
-		lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + format);
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");

@@ -15,7 +15,6 @@ import com.google.gson.JsonParser;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.UpgradingEdition;
@@ -38,11 +37,6 @@ public class UpgradeStat extends ItemStat {
 	public UpgradeData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new UpgradeData((ConfigurationSection) object);
-	}
-
-	@Override
-	public RandomStatData whenInitialized(Object object) {
-		return whenInitialized(object);
 	}
 
 	@Override
@@ -135,7 +129,7 @@ public class UpgradeStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup upgrading.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
 	}

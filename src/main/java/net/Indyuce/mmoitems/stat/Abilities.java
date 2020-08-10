@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -21,7 +22,6 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -152,9 +152,9 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
-		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GREEN
-				+ (mmoitem.hasData(this) ? ((AbilityListData) mmoitem.getData(this)).getAbilities().size() : "0"));
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GOLD
+				+ (optional.isPresent() ? "0" : ((RandomAbilityListData) optional.get()).getAbilities().size()));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
@@ -24,10 +25,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ShieldPatternData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -40,7 +41,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -166,11 +167,11 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			ShieldPatternData data = (ShieldPatternData) mmoitem.getData(this);
+			ShieldPatternData data = (ShieldPatternData) optional.get();
 			lore.add(ChatColor.GRAY + "* Base Color: "
 					+ (data.getBaseColor() != null
 							? ChatColor.GREEN + MMOUtils.caseOnWords(data.getBaseColor().name().toLowerCase().replace("_", " "))

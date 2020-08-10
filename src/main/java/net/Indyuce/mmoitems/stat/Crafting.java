@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,7 +15,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.CraftingEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -48,7 +48,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the crafting edition menu.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all crafting recipes.");
 	}

@@ -18,7 +18,7 @@ public class SoulboundLevel extends DoubleStat {
 	// writes soulbound level with roman writing in lore
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		int value = (int) ((DoubleData) data).generateNewValue();
+		int value = (int) ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", value));
 		item.getLore().insert("soulbound-level", formatNumericStat(value, "#", MMOUtils.intToRoman(value)));
 	}

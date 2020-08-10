@@ -21,7 +21,7 @@ public class CustomModelData extends DoubleStat implements ProperStat {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("CustomModelData", (int) ((DoubleData) data).generateNewValue()));
+		item.addItemTag(new ItemTag("CustomModelData", (int) ((DoubleData) data).getValue()));
 	}
 
 	@Override

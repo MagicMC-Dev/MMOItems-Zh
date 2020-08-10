@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -11,7 +12,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -28,13 +28,6 @@ public class Restore extends ItemStat {
 	public Restore() {
 		super("RESTORE", VersionMaterial.RED_DYE.toItem(), "Restore",
 				new String[] { "The amount of health/food/saturation", "your consumable item restores." }, new String[] { "consumable" });
-	}
-
-	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-		return new RestoreData(config.getDouble("health"), config.getDouble("food"), config.getDouble("saturation"));
 	}
 
 	@Override
@@ -78,10 +71,10 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
-			RestoreData data = (RestoreData) mmoitem.getData(this);
+		if (optional.isPresent()) {
+			RestoreData data = (RestoreData) optional.get();
 			lore.add(ChatColor.GRAY + "* Restore Health: " + ChatColor.GREEN + data.getHealth());
 			lore.add(ChatColor.GRAY + "* Restore Food: " + ChatColor.GREEN + data.getFood());
 			lore.add(ChatColor.GRAY + "* Restore Saturation: " + ChatColor.GREEN + data.getSaturation());

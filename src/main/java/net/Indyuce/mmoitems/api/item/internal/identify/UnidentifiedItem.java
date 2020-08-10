@@ -31,7 +31,8 @@ public class UnidentifiedItem extends ConfigItem {
 		super("unidentified", type.getItem().getType());
 
 		setName("#prefix#Unidentified " + type.getName());
-		setLore(Arrays.asList("&7This item is unidentified. I must", "&7find a way to identify it!", "{tier}", "{tier}&8Item Info:", "{range}&8- &7Lvl Range: &e#range#", "{tier}&8- &7Item Tier: #prefix##tier#"));
+		setLore(Arrays.asList("&7This item is unidentified. I must", "&7find a way to identify it!", "{tier}", "{tier}&8Item Info:",
+				"{range}&8- &7Lvl Range: &e#range#", "{tier}&8- &7Item Tier: #prefix##tier#"));
 	}
 
 	public ItemBuilder newBuilder(NBTItem item) {
@@ -60,7 +61,7 @@ public class UnidentifiedItem extends ConfigItem {
 			 */
 			MMOItem mmoitem = new VolatileMMOItem(item);
 			ItemTier tier = MMOItems.plugin.getTiers().findTier(mmoitem);
-			int level = mmoitem.hasData(ItemStat.REQUIRED_LEVEL) ? (int) ((DoubleData) mmoitem.getData(ItemStat.REQUIRED_LEVEL)).getMin() : -1;
+			int level = mmoitem.hasData(ItemStat.REQUIRED_LEVEL) ? (int) ((DoubleData) mmoitem.getData(ItemStat.REQUIRED_LEVEL)).getValue() : -1;
 
 			/*
 			 * load placeholders
@@ -101,7 +102,8 @@ public class UnidentifiedItem extends ConfigItem {
 			/*
 			 * apply changes to item
 			 */
-			ItemStack unidentified = MMOLib.plugin.getVersion().getWrapper().copyTexture(item).addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
+			ItemStack unidentified = MMOLib.plugin.getVersion().getWrapper().copyTexture(item)
+					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);

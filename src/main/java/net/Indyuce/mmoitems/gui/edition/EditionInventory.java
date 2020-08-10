@@ -13,16 +13,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public abstract class EditionInventory extends PluginInventory {
+
 	protected MMOItemTemplate template;
-	private MMOItem cachedMMOItem;
-	private ItemStack cachedItemStack;
+
+	private ItemStack cachedItem;
 	private int prevPage;
 
 	public EditionInventory(Player player, MMOItemTemplate template) {
@@ -33,32 +33,20 @@ public abstract class EditionInventory extends PluginInventory {
 		super(player);
 
 		this.template = template;
-
-		if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory) {
-			EditionInventory inv = (EditionInventory) player.getOpenInventory().getTopInventory().getHolder();
-			this.cachedMMOItem = inv.cachedMMOItem;
-			this.cachedItemStack = inv.cachedItemStack;
-		}
+		if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
+			this.cachedItem = ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cachedItem;
 	}
 
 	public MMOItemTemplate getEdited() {
 		return template;
 	}
 
-	public MMOItem getCachedMMOItem() {
-		if (cachedMMOItem != null)
-			return cachedMMOItem;
+	public ItemStack getCachedItem() {
+		if (cachedItem != null)
+			return cachedItem;
 
 		updateCachedItem();
-		return cachedMMOItem;
-	}
-
-	public ItemStack getCachedItemStack() {
-		if (cachedItemStack != null)
-			return cachedItemStack;
-
-		updateCachedItem();
-		return cachedItemStack;
+		return cachedItem;
 	}
 
 	public void registerTemplateEdition(ConfigFile config) {
@@ -78,11 +66,10 @@ public abstract class EditionInventory extends PluginInventory {
 	 * can reroll the stats.
 	 */
 	public void updateCachedItem() {
-		cachedMMOItem = template.newBuilder(PlayerData.get(getPlayer()).getRPG()).build();
-		cachedItemStack = cachedMMOItem.newBuilder().build();
+		cachedItem = template.newBuilder(PlayerData.get(getPlayer()).getRPG()).build().newBuilder().build();
 	}
 
-	public void addEditionInventoryItems(Inventory inv, boolean backBool) {
+	public void addEditionInventoryItems(Inventory inv, boolean displayBack) {
 		ItemStack get = new ItemStack(Material.CHEST);
 		ItemMeta getMeta = get.getItemMeta();
 		getMeta.addItemFlags(ItemFlag.values());
@@ -96,7 +83,7 @@ public abstract class EditionInventory extends PluginInventory {
 		getMeta.setLore(getLore);
 		get.setItemMeta(getMeta);
 
-		if (backBool) {
+		if (displayBack) {
 			ItemStack back = new ItemStack(Material.BARRIER);
 			ItemMeta backMeta = back.getItemMeta();
 			backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " Back");
@@ -106,7 +93,7 @@ public abstract class EditionInventory extends PluginInventory {
 		}
 
 		inv.setItem(2, get);
-		inv.setItem(4, getCachedItemStack());
+		inv.setItem(4, getCachedItem());
 	}
 
 	public void open(int page) {

@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -13,10 +14,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
@@ -73,12 +74,11 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
 		lore.add(ChatColor.GRAY + "Current Value: "
-				+ (mmoitem.hasData(this)
-						? ChatColor.GREEN
-								+ MMOUtils.caseOnWords(((MaterialData) mmoitem.getData(this)).getMaterial().name().toLowerCase().replace("_", " "))
+				+ (optional.isPresent()
+						? ChatColor.GREEN + MMOUtils.caseOnWords(((MaterialData) optional.get()).getMaterial().name().toLowerCase().replace("_", " "))
 						: ChatColor.RED + "None"));
 
 		lore.add("");

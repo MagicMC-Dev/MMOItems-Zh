@@ -28,15 +28,11 @@ public class MMOItemTemplate implements ItemReference {
 	private final Set<TemplateModifier> modifiers = new LinkedHashSet<>();
 	private final Set<TemplateOption> options = new HashSet<>();
 
-	public MMOItemTemplate(ConfigurationSection config) {
+	public MMOItemTemplate(Type type, ConfigurationSection config) {
 		Validate.notNull(config, "Could not load item gen template config");
 
+		this.type = type;
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
-
-		Validate.isTrue(config.contains("type"), "Could not find item gen type");
-		String typeFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat));
-		type = MMOItems.plugin.getTypes().get(typeFormat);
 
 		if (config.contains("option"))
 			for (String key : config.getConfigurationSection("option").getKeys(false)) {

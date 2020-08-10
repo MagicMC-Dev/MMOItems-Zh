@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -15,7 +16,6 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -87,11 +87,11 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			ElementListData data = (ElementListData) mmoitem.getData(this);
+			ElementListData data = (ElementListData) optional.get();
 			data.getDamageElements()
 					.forEach(element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + data.getDamage(element) + "%"));
 			data.getDefenseElements()

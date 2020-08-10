@@ -239,7 +239,7 @@ public class ItemStackBuilder {
 		}
 
 		public double getValue(ItemStat stat) {
-			return ((DoubleData) mmoitem.getData(stat)).generateNewValue();
+			return ((DoubleData) mmoitem.getData(stat)).getValue();
 		}
 
 		public boolean hasBase(ItemStat stat) {

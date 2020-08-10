@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -17,12 +18,12 @@ import com.google.gson.JsonSyntaxException;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -119,9 +120,9 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
-				+ (mmoitem.hasData(this) ? ((CommandListData) mmoitem.getData(this)).getCommands().size() : "0"));
+				+ (optional.isPresent() ? ((CommandListData) optional.get()).getCommands().size() : "0"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit item commands.");
 	}

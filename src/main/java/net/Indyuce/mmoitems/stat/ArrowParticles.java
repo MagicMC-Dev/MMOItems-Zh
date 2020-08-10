@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -16,12 +17,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.ArrowParticlesEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ArrowParticlesData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -163,26 +164,26 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (!mmoitem.hasData(this))
+		if (!optional.isPresent())
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
 		else {
-			ArrowParticlesData data = (ArrowParticlesData) mmoitem.getData(this);
+			ArrowParticlesData cast = (ArrowParticlesData) optional.get();
 			lore.add(ChatColor.GRAY + "Current Value:");
 
 			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD
-					+ MMOUtils.caseOnWords(data.getParticle().name().replace("_", " ").toLowerCase()));
-			lore.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + data.getAmount());
-			lore.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + data.getOffset());
+					+ MMOUtils.caseOnWords(cast.getParticle().name().replace("_", " ").toLowerCase()));
+			lore.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + cast.getAmount());
+			lore.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + cast.getOffset());
 			lore.add("");
 
-			if (ParticleData.isColorable(data.getParticle()))
+			if (ParticleData.isColorable(cast.getParticle()))
 				lore.add(ChatColor.translateAlternateColorCodes('&',
-						"&7* Color: &c&l" + data.getRed() + "&7 - &a&l" + data.getGreen() + "&7 - &9&l" + data.getBlue()));
+						"&7* Color: &c&l" + cast.getRed() + "&7 - &a&l" + cast.getGreen() + "&7 - &9&l" + cast.getBlue()));
 			else
-				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + data.getSpeed());
+				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + cast.getSpeed());
 		}
 
 		lore.add("");

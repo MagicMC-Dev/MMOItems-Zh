@@ -71,6 +71,7 @@ import net.Indyuce.mmoitems.manager.ConfigManager;
 import net.Indyuce.mmoitems.manager.CraftingManager;
 import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
+import net.Indyuce.mmoitems.manager.ItemManager;
 import net.Indyuce.mmoitems.manager.PluginUpdateManager;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import net.Indyuce.mmoitems.manager.SetManager;
@@ -93,6 +94,7 @@ public class MMOItems extends JavaPlugin {
 	private final EntityManager entityManager = new EntityManager();
 	private final TypeManager typeManager = new TypeManager();
 	private final TemplateManager templateManager = new TemplateManager();
+	private final ItemManager itemManager = new ItemManager();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -408,6 +410,11 @@ public class MMOItems extends JavaPlugin {
 
 	public TemplateManager getTemplates() {
 		return templateManager;
+	}
+
+	@Deprecated
+	public ItemManager getItems() {
+		return itemManager;
 	}
 
 	public List<StringInputParser> getStringInputParsers() {

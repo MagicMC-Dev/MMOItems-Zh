@@ -127,7 +127,7 @@ public class Abilities extends ItemStat {
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GOLD
-				+ (optional.isPresent() ? "0" : ((RandomAbilityListData) optional.get()).getAbilities().size()));
+				+ (optional.isPresent() ? ((RandomAbilityListData) optional.get()).getAbilities().size() : 0));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}

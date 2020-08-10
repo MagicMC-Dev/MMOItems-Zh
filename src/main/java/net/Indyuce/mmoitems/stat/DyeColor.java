@@ -65,6 +65,7 @@ public class DyeColor extends ItemStat {
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.GRAY + "Current Value: " + (optional.isPresent() ? ChatColor.GREEN + optional.get().toString() : ChatColor.RED + "None"));
+		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the dye color.");
 	}

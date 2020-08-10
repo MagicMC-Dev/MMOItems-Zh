@@ -86,7 +86,7 @@ public class BooleanStat extends ItemStat {
 		if (optional.isPresent()) {
 			double chance = ((RandomBooleanData) optional.get()).getChance();
 			lore.add(ChatColor.GRAY + "Current Value: " + (chance >= 1 ? ChatColor.GREEN + "True"
-					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + digit.format(chance * 100) + "%"));
+					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + digit.format(chance * 100) + "% Chance"));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "False");

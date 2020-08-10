@@ -103,10 +103,10 @@ public class PermanentEffects extends ItemStat {
 
 		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			PotionEffectListData data = (PotionEffectListData) optional.get();
-			for (PotionEffectData effect : data.getEffects())
+			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
+			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
-						+ " " + MMOUtils.intToRoman(effect.getLevel()));
+						+ " " + effect.getLevel().toString());
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

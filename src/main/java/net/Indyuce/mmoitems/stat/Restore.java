@@ -62,10 +62,10 @@ public class Restore extends ItemStat {
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
 		if (optional.isPresent()) {
-			RestoreData data = (RestoreData) optional.get();
-			lore.add(ChatColor.GRAY + "* Restore Health: " + ChatColor.GREEN + data.getHealth());
-			lore.add(ChatColor.GRAY + "* Restore Food: " + ChatColor.GREEN + data.getFood());
-			lore.add(ChatColor.GRAY + "* Restore Saturation: " + ChatColor.GREEN + data.getSaturation());
+			RandomRestoreData data = (RandomRestoreData) optional.get();
+			lore.add(ChatColor.GRAY + "* Restore Health: " + ChatColor.RED + data.getHealth());
+			lore.add(ChatColor.GRAY + "* Restore Food: " + ChatColor.RED + data.getFood());
+			lore.add(ChatColor.GRAY + "* Restore Saturation: " + ChatColor.RED + data.getSaturation());
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

@@ -81,11 +81,11 @@ public class Elements extends ItemStat {
 
 		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			ElementListData data = (ElementListData) optional.get();
-			data.getDamageElements()
-					.forEach(element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + data.getDamage(element) + "%"));
-			data.getDefenseElements()
-					.forEach(element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + data.getDefense(element) + "%"));
+			RandomElementListData data = (RandomElementListData) optional.get();
+			data.getDamageElements().forEach(
+					element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + ChatColor.RED + data.getDamage(element) + " (%)"));
+			data.getDefenseElements().forEach(
+					element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + ChatColor.RED + data.getDefense(element) + " (%)"));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

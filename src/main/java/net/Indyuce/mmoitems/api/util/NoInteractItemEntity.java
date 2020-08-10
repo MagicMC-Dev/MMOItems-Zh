@@ -14,6 +14,15 @@ import net.Indyuce.mmoitems.MMOItems;
 public class NoInteractItemEntity implements Listener {
 	private final Item item;
 
+	/**
+	 * Util class which creates an item which cannot be picked up. Item is
+	 * removed if it tries to go through a nether portal
+	 * 
+	 * @param loc
+	 *            Spawn location of the item
+	 * @param item
+	 *            ItemStack used to summon the entity
+	 */
 	public NoInteractItemEntity(Location loc, ItemStack item) {
 		item.setAmount(1);
 

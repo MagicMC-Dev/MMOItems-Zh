@@ -91,11 +91,6 @@ public class MMOItemsCommand implements CommandExecutor {
 								config.getConfig().set(id + ".base." + statKey + ".base", avg);
 								config.getConfig().set(id + ".base." + statKey + ".spread", rel / 3);
 								config.getConfig().set(id + ".base." + statKey + ".max-spread", rel);
-								
-								
-								
-								
-								
 
 							} catch (Exception e) {
 
@@ -1017,12 +1012,12 @@ public class MMOItemsCommand implements CommandExecutor {
 		// ==================================================================================================================================
 		else if (args.length > 1)
 			try {
-				Validate.isTrue(args.length > 1 || sender instanceof Player,
+				Validate.isTrue(args.length > 2 || sender instanceof Player,
 						"Usage: /mi <type> <item> (player) (min-max) (unident-chance) (drop-chance)");
 
 				// target
 				Player target = args.length > 2 ? Bukkit.getPlayer(args[2]) : (Player) sender;
-				Validate.notNull(target, "Could not find player called '" + args[2] + "'.");
+				Validate.notNull(target, "Could not find player called '" + args[args.length > 2 ? 2 : 1] + "'.");
 
 				// item
 				Type type = MMOItems.plugin.getTypes().getOrThrow(args[0].toUpperCase());

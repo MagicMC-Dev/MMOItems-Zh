@@ -74,13 +74,18 @@ public class StatEdition implements Edition {
 		for (StringInputParser parser : MMOItems.plugin.getStringInputParsers())
 			input = parser.parseInput(inv.getPlayer(), input);
 
-		if (input.equals("cancel"))
+		// if cancel, open back inventory
+		if (input.equals("cancel")) {
+			inv.open();
 			return true;
+		}
 
 		try {
 			stat.whenInput(inv, input, info);
 			return true;
+
 		} catch (IllegalArgumentException exception) {
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + exception.getMessage());
 			return false;
 		}
 	}

@@ -28,7 +28,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class DoubleStat extends ItemStat implements Upgradable {
-	private static final DecimalFormat digit = new DecimalFormat("0.#");
+	private static final DecimalFormat digit = new DecimalFormat("0.####");
 
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
 		super(id, item, name, lore, new String[] { "!miscellaneous", "!block", "all" });
@@ -105,11 +105,11 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 		if (optional.isPresent()) {
 			NumericStatFormula data = (NumericStatFormula) optional.get();
-			lore.add(ChatColor.GRAY + "Value: " + ChatColor.RED + data.getBase()
-					+ (data.getBase() != 0 ? ChatColor.GRAY + " (+" + ChatColor.RED + data.getScale() + ChatColor.GRAY + ")" : ""));
+			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.RED + digit.format(data.getBase())
+					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.RED + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
 			if (data.getSpread() > 0)
-				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.RED + digit.format(data.getSpread() * 100) + ChatColor.GRAY + " (Max:"
-						+ ChatColor.RED + digit.format(data.getMaxSpread() * 100) + ChatColor.GRAY + ")");
+				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.RED + digit.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
+						+ ChatColor.RED + digit.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");

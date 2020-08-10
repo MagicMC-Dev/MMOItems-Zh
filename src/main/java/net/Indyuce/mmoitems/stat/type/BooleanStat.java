@@ -54,7 +54,7 @@ public class BooleanStat extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
-			inv.getEditedSection().set(getPath(), !inv.getEditedSection().getBoolean(getPath()));
+			inv.getEditedSection().set(getPath(), inv.getEditedSection().getBoolean(getPath()) ? null : true);
 			inv.registerTemplateEdition();
 		}
 
@@ -70,8 +70,8 @@ public class BooleanStat extends ItemStat {
 
 		inv.getEditedSection().set(getPath(), probability / 100);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + ChatColor.GREEN + probability + "% chance"
-				+ ChatColor.GRAY + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + ChatColor.GREEN
+				+ digit.format(probability) + "% Chance" + ChatColor.GRAY + ".");
 	}
 
 	@Override
@@ -82,11 +82,15 @@ public class BooleanStat extends ItemStat {
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
-		lore.add(ChatColor.GRAY + "Current Value: "
-				+ (optional.isPresent()
-						? ((RandomBooleanData) optional.get()).getChance() >= 1 ? ChatColor.GREEN + "True"
-								: ChatColor.GREEN + digit.format(((RandomBooleanData) optional.get()).getChance() * 100) + "%"
-						: ChatColor.RED + "False"));
+
+		if (optional.isPresent()) {
+			double chance = ((RandomBooleanData) optional.get()).getChance();
+			lore.add(ChatColor.GRAY + "Current Value: " + (chance >= 1 ? ChatColor.GREEN + "True"
+					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + digit.format(chance * 100) + "%"));
+
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "False");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to switch this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to choose a probability to have this option.");

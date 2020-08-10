@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.util;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import org.apache.commons.lang.Validate;
@@ -14,6 +15,7 @@ public class NumericStatFormula implements RandomStatData {
 	private final double base, scale, spread, maxSpread;
 
 	private static final Random random = new Random();
+	private static final DecimalFormat digit = new DecimalFormat("0.####");
 
 	public static final NumericStatFormula ZERO = new NumericStatFormula(0, 0, 0, 0);
 
@@ -36,7 +38,7 @@ public class NumericStatFormula implements RandomStatData {
 			maxSpread = config.getDouble("max-spread", .3);
 
 			Validate.isTrue(spread >= 0, "Spread must be positive");
-			Validate.isTrue(maxSpread >= 0, "Max spread must be positive");
+			Validate.isTrue(maxSpread >= 0, "Max spread must be positive and lower than 1");
 			return;
 		}
 
@@ -85,5 +87,19 @@ public class NumericStatFormula implements RandomStatData {
 	@Override
 	public StatData randomize(MMOItemBuilder builder) {
 		return new DoubleData(calculate(builder.getLevel()));
+	}
+
+	@Override
+	public String toString() {
+
+		if (scale == 0 && spread == 0)
+			return digit.format(base);
+
+		if (scale == 0)
+			return "[" + digit.format(base * (1 - maxSpread)) + " -> " + digit.format(base * (1 + maxSpread)) + "] (" + digit.format(spread * 100)
+					+ "% Spread) (" + digit.format(base) + " Avg)";
+
+		return "{Avg:" + digit.format(base) + (scale != 0 ? ",Scale:" + digit.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
+				+ (maxSpread != 0 ? ",Max=" + maxSpread : "") + "}";
 	}
 }

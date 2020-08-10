@@ -82,7 +82,9 @@ public class MMOItemTemplate implements ItemReference {
 				Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
-				base.put(stat, stat.whenInitialized(config.get("base." + key)));
+				RandomStatData data = stat.whenInitialized(config.get("base." + key));
+				if (data != null)
+					base.put(stat, data);
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.INFO, "Could not load base item data '" + key + "' from item template '" + type.getId() + "."
 						+ id + "': " + exception.getMessage());

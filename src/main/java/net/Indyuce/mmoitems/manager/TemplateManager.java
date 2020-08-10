@@ -95,14 +95,18 @@ public class TemplateManager {
 	 * @param id
 	 *            The item ID
 	 */
-	public void requestTemplateUpdate(Type type, String id) {
+	public MMOItemTemplate requestTemplateUpdate(Type type, String id) {
 		templates.removeValue(type, id);
 
 		try {
-			registerTemplate(new MMOItemTemplate(type, type.getConfigFile().getConfig().getConfigurationSection(id)));
+			MMOItemTemplate template = new MMOItemTemplate(type, type.getConfigFile().getConfig().getConfigurationSection(id));
+			registerTemplate(template);
+			return template;
+
 		} catch (IllegalArgumentException exception) {
 			MMOItems.plugin.getLogger().log(Level.INFO,
 					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
+			return null;
 		}
 	}
 

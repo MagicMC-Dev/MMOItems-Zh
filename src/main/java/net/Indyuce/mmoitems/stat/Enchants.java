@@ -89,9 +89,9 @@ public class Enchants extends ItemStat {
 
 		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			EnchantListData data = (EnchantListData) optional.get();
+			RandomEnchantListData data = (RandomEnchantListData) optional.get();
 			data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(enchant.getKey().getKey().replace("_", " "))
-					+ " " + MMOUtils.intToRoman(data.getLevel(enchant))));
+					+ " " + data.getLevel(enchant).toString()));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

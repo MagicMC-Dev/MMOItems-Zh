@@ -45,8 +45,8 @@ public class ConfigFile {
 	public void save() {
 		try {
 			config.save(new File(plugin.getDataFolder() + path, name + ".yml"));
-		} catch (IOException e2) {
-			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save " + name + ".yml");
+		} catch (IOException exception) {
+			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save " + name + ".yml: " + exception.getMessage());
 		}
 	}
 
@@ -58,16 +58,21 @@ public class ConfigFile {
 			if (!new File(plugin.getDataFolder() + path, name + ".yml").exists()) {
 				new File(plugin.getDataFolder() + path, name + ".yml").createNewFile();
 			}
-		} catch (IOException e) {
-			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml");
+		} catch (IOException exception) {
+			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml: " + exception.getMessage());
 		}
 	}
 
 	public void registerTemplateEdition(ItemReference ref) {
 
 		/*
-		 * uncaches the item so it can be generated to apply newest changes in
-		 * case the same inventory is opened again.
+		 * saves the changes before asking for a template update
+		 */
+		save();
+
+		/*
+		 * goes for a template update once the change has been saved. this
+		 * simply unloads the currently saved template and reloads it
 		 */
 		MMOItems.plugin.getTemplates().requestTemplateUpdate(ref.getType(), ref.getId());
 
@@ -75,7 +80,5 @@ public class ConfigFile {
 		if (MMOItems.plugin.getUpdater().hasData(ref))
 			MMOItems.plugin.getUpdater().getData(ref).setUniqueId(UUID.randomUUID());
 
-		// finally saves the changes
-		save();
 	}
 }

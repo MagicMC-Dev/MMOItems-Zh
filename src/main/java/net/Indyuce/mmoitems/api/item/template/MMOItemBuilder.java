@@ -54,7 +54,7 @@ public class MMOItemBuilder {
 		this.mmoitem = new MMOItem(template.getType(), template.getId());
 
 		// apply base item data
-		template.getBaseItemData().entrySet().forEach(entry -> applyData(entry.getKey(), entry.getValue().randomize(this)));
+		template.getBaseItemData().forEach((stat, random) -> applyData(stat, random.randomize(this)));
 
 		if (tier != null)
 			mmoitem.setData(ItemStat.TIER, new StringData(tier.getId()));

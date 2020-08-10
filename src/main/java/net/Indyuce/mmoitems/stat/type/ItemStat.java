@@ -277,8 +277,8 @@ public abstract class ItemStat {
 	private final List<String> compatibleTypes;
 	private final List<Material> compatibleMaterials;
 
-	/*
-	 * the stat can be enabled or not, depending on the server version to
+	/**
+	 * The stat can be enabled or not, depending on the server version to
 	 * prevent from displaying useless editable stats in the edition menu.
 	 */
 	private boolean enabled = true;
@@ -310,15 +310,6 @@ public abstract class ItemStat {
 		this.name = name;
 		this.compatibleMaterials = Arrays.asList(materials);
 	}
-
-	/**
-	 * When stat data is being read from a /item config file
-	 *
-	 * @param object
-	 *            Could be a config section, a string, a string list, etc.
-	 * @return Stat data read from config, or throws an IAE
-	 */
-	// public abstract StatData whenInitialized(Object object);
 
 	/**
 	 * When random stat data is being read from a config file

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +19,8 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.gui.PluginInventory;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public abstract class EditionInventory extends PluginInventory {
@@ -68,6 +71,15 @@ public abstract class EditionInventory extends PluginInventory {
 				.getConfigurationSection(template.getId() + (editedModifier == null ? ".base" : ".modifiers." + editedModifier.getId() + ".stats"));
 	}
 
+	/**
+	 * @return The item data map used to display what the player is currently
+	 *         editing. If he is editing a stat modifier, use the modifier item
+	 *         data map. Otherwise, use the base item data map
+	 */
+	public Map<ItemStat, RandomStatData> getCurrentDataMap() {
+		return editedModifier != null ? editedModifier.getItemData() : template.getBaseItemData();
+	}
+
 	public void registerTemplateEdition() {
 
 		configFile.registerTemplateEdition(template);
@@ -77,7 +89,7 @@ public abstract class EditionInventory extends PluginInventory {
 		 * refreshes the displayed item.
 		 */
 		template = MMOItems.plugin.getTemplates().getTemplate(template.getType(), template.getId());
-		editedModifier = template.getModifier(editedModifier.getId());
+		editedModifier = editedModifier != null ? template.getModifier(editedModifier.getId()) : null;
 		updateCachedItem();
 
 		open();

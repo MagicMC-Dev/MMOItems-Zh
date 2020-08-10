@@ -21,6 +21,7 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -98,8 +99,15 @@ public class AbilityEdition extends EditionInventory {
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is an ability modifier. Changing this");
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "value will slightly customize the ability.");
 				modifierItemLore.add("");
-				modifierItemLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD
-						+ modifierFormat.format(section.contains(modifier) ? section.getDouble(modifier) : ability.getDefaultValue(modifier)));
+
+				try {
+					modifierItemLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD
+							+ (section.contains(modifier) ? new NumericStatFormula(section.get(modifier)).toString()
+									: modifierFormat.format(ability.getDefaultValue(modifier))));
+				} catch (IllegalArgumentException exception) {
+					modifierItemLore.add(ChatColor.GRAY + "Could not read value. Using default");
+				}
+
 				modifierItemLore.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + modifierFormat.format(ability.getDefaultValue(modifier)));
 				modifierItemLore.add("");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");

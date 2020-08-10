@@ -19,8 +19,29 @@ public class NumericStatFormula implements RandomStatData {
 
 	public static final NumericStatFormula ZERO = new NumericStatFormula(0, 0, 0, 0);
 
+	/**
+	 * When reading a numeric stat formula either from a config file
+	 * (configuration section, or number) or when reading player input when a
+	 * player edits a stat (string message). Although the string format would
+	 * work in the config as well.
+	 * 
+	 * Throws an IAE either if the format is not good or if the object does not
+	 * have the right type
+	 * 
+	 * @param object
+	 *            Object to read data from.
+	 */
 	public NumericStatFormula(Object object) {
 		Validate.notNull(object, "Config must not be null");
+
+		if (object instanceof String) {
+			String[] split = object.toString().split("\\ ");
+			base = Double.parseDouble(split[0]);
+			scale = Double.parseDouble(split[1]);
+			spread = Double.parseDouble(split[2]);
+			maxSpread = Double.parseDouble(split[3]);
+			return;
+		}
 
 		if (object instanceof Number) {
 			base = Double.valueOf(object.toString());
@@ -42,11 +63,27 @@ public class NumericStatFormula implements RandomStatData {
 			return;
 		}
 
-		throw new IllegalArgumentException("Must specify a config section or a number");
+		throw new IllegalArgumentException("Must specify a config section, a string or a number");
 	}
 
-	/*
-	 * used as a StatData class to generate a DoubleData instance!
+	/**
+	 * Formula for numeric statistics. These formulas allow stats to scale
+	 * accordingly to the item level but also have a more or less important
+	 * gaussian based random factor
+	 * 
+	 * @param base
+	 *            Base value
+	 * @param scale
+	 *            Value which scales with the item level
+	 * @param spread
+	 *            The relative standard deviation of a normal law centered on
+	 *            (base + scale * level). If it's set to 0.1, the standard
+	 *            deviation will be 10% of the stat value without the random
+	 *            factor.
+	 * @param maxSpread
+	 *            The max amount of deviation you can have. If it's set to 0.3,
+	 *            let A = base + scale * level, then the final stat value will
+	 *            be in [0.7 * A, 1.3 * A]
 	 */
 	public NumericStatFormula(double base, double scale, double spread, double maxSpread) {
 		this.base = base;
@@ -72,21 +109,32 @@ public class NumericStatFormula implements RandomStatData {
 	}
 
 	public double calculate(double x) {
-
-		// calculate linear value
-		double linear = base + scale * x;
-
-		// apply gaussian distribution to add +- maxSpread%
-		// spread represents the standard deviation in % of the calculated
-		// linear value
-		double gaussian = linear * (1 + Math.min(Math.max(random.nextGaussian() * spread, -maxSpread), maxSpread));
-
-		return gaussian;
+		return (base + scale * x) * (1 + Math.min(Math.max(random.nextGaussian() * spread, -maxSpread), maxSpread));
 	}
 
 	@Override
 	public StatData randomize(MMOItemBuilder builder) {
 		return new DoubleData(calculate(builder.getLevel()));
+	}
+
+	/**
+	 * Save some formula in a config file. This method is used when editing stat
+	 * data in the edition GUI (when a player inputs a numeric formula)
+	 * 
+	 * @param config
+	 *            The formula will be saved in that config file
+	 * @param path
+	 *            The config path used to save the formula
+	 */
+	public void fillConfigurationSection(ConfigurationSection config, String path) {
+		if (scale == 0 && spread == 0 && maxSpread == 0)
+			config.set(path, base == 0 ? null : base);
+		else {
+			config.set(path + ".base", base);
+			config.set(path + ".scale", scale);
+			config.set(path + ".spread", spread);
+			config.set(path + ".max-spread", maxSpread);
+		}
 	}
 
 	@Override
@@ -99,7 +147,7 @@ public class NumericStatFormula implements RandomStatData {
 			return "[" + digit.format(base * (1 - maxSpread)) + " -> " + digit.format(base * (1 + maxSpread)) + "] (" + digit.format(spread * 100)
 					+ "% Spread) (" + digit.format(base) + " Avg)";
 
-		return "{Avg:" + digit.format(base) + (scale != 0 ? ",Scale:" + digit.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
+		return "{Base=" + digit.format(base) + (scale != 0 ? ",Scale=" + digit.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
 				+ (maxSpread != 0 ? ",Max=" + maxSpread : "") + "}";
 	}
 }

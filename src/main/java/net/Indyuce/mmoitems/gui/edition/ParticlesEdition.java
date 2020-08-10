@@ -172,7 +172,7 @@ public class ParticlesEdition extends EditionInventory {
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles")
 								.contains("particle")) {
 					config.getConfig().set(mmoitem.getId() + ".item-particles.particle", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
 				}
@@ -189,7 +189,7 @@ public class ParticlesEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("item-particles") && config
 						.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles").contains("color")) {
 					config.getConfig().set(mmoitem.getId() + ".item-particles.color", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
 				}
@@ -218,7 +218,7 @@ public class ParticlesEdition extends EditionInventory {
 						if (!key.equals("particle"))
 							config.getConfig().set(mmoitem.getId() + ".item-particles." + key, null);
 
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle pattern.");
 				}
@@ -237,7 +237,7 @@ public class ParticlesEdition extends EditionInventory {
 			if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("item-particles")
 					&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".item-particles").contains(tag)) {
 				config.getConfig().set(mmoitem.getId() + ".item-particles." + tag, null);
-				registerItemEdition(config);
+				registerTemplateEdition(config, true);
 				open();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset " + ChatColor.GOLD + tag
 						+ ChatColor.GRAY + ".");

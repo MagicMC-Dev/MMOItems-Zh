@@ -20,21 +20,21 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ArrowParticlesEdition extends EditionInventory {
-	public ArrowParticlesEdition(Player player, MMOItem mmoitem) {
-		super(player, mmoitem);
+	public ArrowParticlesEdition(Player player, MMOItemTemplate template) {
+		super(player, template);
 	}
 
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Arrow Particles: " + mmoitem.getId());
-		FileConfiguration config = mmoitem.getType().getConfigFile().getConfig();
+		FileConfiguration config = template.getType().getConfigFile().getConfig();
 
 		Particle particle = null;
 		try {
@@ -147,7 +147,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains("particle")) {
 					config.getConfig().set(mmoitem.getId() + ".arrow-particles", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
 				}
@@ -164,7 +164,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains("color")) {
 					config.getConfig().set(mmoitem.getId() + ".arrow-particles.color", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
 				}
@@ -181,7 +181,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 					if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("arrow-particles")
 							&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".arrow-particles").contains(string)) {
 						config.getConfig().set(mmoitem.getId() + ".arrow-particles." + string, null);
-						registerItemEdition(config);
+						registerTemplateEdition(config, true);
 						open();
 						player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the " + string + ".");
 					}

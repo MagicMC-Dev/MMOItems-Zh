@@ -68,7 +68,7 @@ public class ItemTypeRestriction extends StringStat {
 				String last = list.get(list.size() - 1);
 				list.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list.size() == 0 ? null : list);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
@@ -98,7 +98,7 @@ public class ItemTypeRestriction extends StringStat {
 				: new ArrayList<>();
 		list.add(format);
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), list);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your gem now supports " + format + ".");
 		return true;

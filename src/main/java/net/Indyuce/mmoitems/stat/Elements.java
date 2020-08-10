@@ -64,7 +64,7 @@ public class Elements extends ItemStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("element")) {
 				config.getConfig().set(inv.getEdited().getId() + ".element", null);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
 			}
@@ -94,7 +94,7 @@ public class Elements extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".element", null);
 		}
 
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
 				+ " successfully changed to " + value + ".");

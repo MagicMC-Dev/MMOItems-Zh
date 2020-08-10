@@ -50,7 +50,7 @@ public class DyeColor extends ItemStat {
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + ".dye-color", null);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Dye Color.");
 		}
@@ -74,7 +74,7 @@ public class DyeColor extends ItemStat {
 			}
 
 		config.getConfig().set(inv.getEdited().getId() + ".dye-color", message);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Dye Color successfully changed to " + message + ".");
 		return true;

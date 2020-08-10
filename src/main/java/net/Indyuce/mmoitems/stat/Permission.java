@@ -63,7 +63,7 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 				String last = requiredPerms.get(requiredPerms.size() - 1);
 				requiredPerms.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".permission", requiredPerms.size() == 0 ? null : requiredPerms);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
@@ -82,7 +82,7 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getEdited().getId() + ".permission", lore);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
 		return true;

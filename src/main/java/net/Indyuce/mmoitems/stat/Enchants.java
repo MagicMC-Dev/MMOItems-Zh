@@ -71,7 +71,7 @@ public class Enchants extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".enchants." + last, null);
 				if (set.size() <= 1)
 					config.getConfig().set(inv.getEdited().getId() + ".enchants", null);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase().replace("_", " ") + ".");
@@ -115,7 +115,7 @@ public class Enchants extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".enchants." + getName(enchant), level);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName(enchant) + " " + MMOUtils.intToRoman(level) + " successfully added.");
 		return true;

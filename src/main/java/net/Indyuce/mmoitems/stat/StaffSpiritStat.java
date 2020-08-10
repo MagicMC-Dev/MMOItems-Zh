@@ -40,7 +40,7 @@ public class StaffSpiritStat extends StringStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".staff-spirit", ss.name());
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Staff Spirit successfully changed to " + ss.getName() + ".");
 		return true;

@@ -68,7 +68,7 @@ public class ItemSetStat extends StringStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".set", format);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Set successfully changed to " + set.getName() + ChatColor.GRAY + ".");
 		return true;

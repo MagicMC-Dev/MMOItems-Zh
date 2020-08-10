@@ -61,7 +61,7 @@ public class Lore extends ItemStat implements ProperStat {
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(
 						MMOItems.plugin.getPrefix() + "Successfully removed '" + MMOLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
@@ -76,7 +76,7 @@ public class Lore extends ItemStat implements ProperStat {
 				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore successfully added.");
 		return true;

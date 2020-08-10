@@ -37,26 +37,51 @@ public class ItemManager {
 
 	private static final Random random = new Random();
 
-	public MMOItemTemplate getTemplate(Type type, String id) {
-
-		Validate.isTrue(templates.containsKey(type), "No template is registered with type " + type.getId() + "");
-		Map<String, MMOItemTemplate> templates = this.templates.get(type);
-
+	/**
+	 * @param type
+	 *            Type of the mmoitem template
+	 * @param id
+	 *            Internal ID of the mmoitem template
+	 * @return If a template is registered with these type and ID
+	 */
+	public boolean hasTemplate(Type type, String id) {
 		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(templates.containsKey(id), "No template was found with ID '" + id + "'");
+		return templates.containsKey(type) && templates.get(type).containsKey(id);
+	}
 
-		return templates.get(id);
+	public MMOItemTemplate getTemplate(Type type, String id) {
+		return templates.get(type).get(id);
+	}
+
+	/**
+	 * @param type
+	 *            The item type used to look for templates
+	 * @return All the templates with a specific item type. This is used in the
+	 *         item browser to display all the items for example
+	 */
+	public Collection<MMOItemTemplate> getTemplates(Type type) {
+		return templates.containsKey(type) ? templates.get(type).values() : new HashSet<>();
 	}
 
 	public MMOItem generateMMOItem(Type type, String id, PlayerData player) {
 		return getTemplate(type, id).newBuilder(player.getRPG()).build();
 	}
 
+	/**
+	 * @deprecated Use generateMMOItem(Type, String, PlayerData) instead
+	 */
 	@Deprecated
 	public MMOItem getMMOItem(Type type, String id) {
 		return getTemplate(type, id).newBuilder(0, rollTier()).build();
 	}
 
+	public ItemStack generateItem(Type type, String id, PlayerData player) {
+		return generateMMOItem(type, id, player).newBuilder().build();
+	}
+
+	/**
+	 * @deprecated Use generateItem(Type, String, PlayerData) instead
+	 */
 	@Deprecated
 	public ItemStack getItem(Type type, String id) {
 		return getMMOItem(type, id).newBuilder().build();
@@ -76,18 +101,12 @@ public class ItemManager {
 		templates.get(template.getType()).put(template.getId(), template);
 	}
 
+	/**
+	 * @deprecated Use hasTemplate(Type, String) instead
+	 */
 	@Deprecated
 	public boolean hasMMOItem(Type type, String id) {
 		return hasTemplate(type, id);
-	}
-
-	public boolean hasTemplate(Type type, String id) {
-		id = id.toUpperCase().replace("-", "_").replace(" ", "_");
-		return templates.containsKey(type) && templates.get(type).containsKey(id);
-	}
-
-	public Collection<TemplateModifier> getModifiers() {
-		return modifiers.values();
 	}
 
 	public boolean hasModifier(String id) {
@@ -98,11 +117,15 @@ public class ItemManager {
 		return modifiers.get(id);
 	}
 
+	public Collection<TemplateModifier> getModifiers() {
+		return modifiers.values();
+	}
+
 	public ItemTier rollTier() {
 
 		double s = 0;
 		for (ItemTier tier : MMOItems.plugin.getTiers().getAll()) {
-			if (random.nextDouble() < tier.getGenerationChance() / (1 - s))
+			if (s >= 1 || random.nextDouble() < tier.getGenerationChance() / (1 - s))
 				return tier;
 
 			s += tier.getGenerationChance();
@@ -112,10 +135,13 @@ public class ItemManager {
 		return null;
 	}
 
-	/*
-	 * formula to generate the item level. input is the player level and the
-	 * level spread which corresponds to the standard deviation of a gaussian
-	 * distribution centered on the player level
+	/**
+	 * @param playerLevel
+	 *            Input player level
+	 * @return Generates a randomly chosen item level. The level spread
+	 *         (editable in the main config file) corresponding to the standard
+	 *         deviation of a gaussian distribution centered on the player level
+	 *         (input)
 	 */
 	public int rollLevel(int playerLevel) {
 		double found = random.nextGaussian() * MMOItems.plugin.getLanguage().levelSpread + playerLevel;

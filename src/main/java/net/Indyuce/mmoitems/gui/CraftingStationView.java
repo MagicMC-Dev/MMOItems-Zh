@@ -63,7 +63,7 @@ public class CraftingStationView extends PluginInventory {
 	}
 
 	void updateData() {
-		ingredients = new IngredientInventory(player);
+		ingredients = new IngredientInventory(getPlayer());
 		recipes = station.getAvailableRecipes(data, ingredients);
 	}
 
@@ -207,14 +207,14 @@ public class CraftingStationView extends PluginInventory {
 
 	public void processRecipe(RecipeInfo recipe) {
 		if (!recipe.areConditionsMet()) {
-			Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(player);
-			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(getPlayer());
+			getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return;
 		}
 
 		if (!recipe.allIngredientsHad()) {
-			Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(player);
-			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(getPlayer());
+			getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return;
 		}
 

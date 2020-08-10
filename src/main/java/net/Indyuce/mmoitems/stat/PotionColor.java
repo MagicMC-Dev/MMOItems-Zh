@@ -38,7 +38,7 @@ public class PotionColor extends StringStat {
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			config.getConfig().set(inv.getEdited().getId() + ".potion-color", null);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
 		}
@@ -62,7 +62,7 @@ public class PotionColor extends StringStat {
 			}
 
 		config.getConfig().set(inv.getEdited().getId() + ".potion-color", message);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + message + ".");
 		return true;

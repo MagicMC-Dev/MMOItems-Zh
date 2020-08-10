@@ -42,7 +42,7 @@ public class RepairMaterial extends StringStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".repair-material", material.name());
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Repair Material successfully changed to " + material.name() + ".");
 		return true;

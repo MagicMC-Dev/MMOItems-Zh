@@ -176,7 +176,7 @@ public class UpgradingEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("upgrade")
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".upgrade").contains("success")) {
 					config.getConfig().set(mmoitem.getId() + ".upgrade.success", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset success chance.");
 				}
@@ -192,7 +192,7 @@ public class UpgradingEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("upgrade")
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".upgrade").contains("max")) {
 					config.getConfig().set(mmoitem.getId() + ".upgrade.max", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the number of max upgrades.");
 				}
@@ -208,7 +208,7 @@ public class UpgradingEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("upgrade")
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".upgrade").contains("template")) {
 					config.getConfig().set(mmoitem.getId() + ".upgrade.template", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset upgrade template.");
 				}
@@ -224,7 +224,7 @@ public class UpgradingEdition extends EditionInventory {
 				if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("upgrade")
 						&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".upgrade").contains("reference")) {
 					config.getConfig().set(mmoitem.getId() + ".upgrade.reference", null);
-					registerItemEdition(config);
+					registerTemplateEdition(config, true);
 					open();
 					player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset upgrade reference.");
 				}
@@ -235,7 +235,7 @@ public class UpgradingEdition extends EditionInventory {
 			ConfigFile config = mmoitem.getType().getConfigFile();
 			boolean bool = !config.getConfig().getBoolean(mmoitem.getId() + ".upgrade.workbench");
 			config.getConfig().set(mmoitem.getId() + ".upgrade.workbench", bool);
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 			open();
 			player.sendMessage(MMOItems.plugin.getPrefix()
 					+ (bool ? "Your item must now be upgraded via recipes." : "Your item can now be upgraded using consumables."));
@@ -245,7 +245,7 @@ public class UpgradingEdition extends EditionInventory {
 			ConfigFile config = mmoitem.getType().getConfigFile();
 			boolean bool = !config.getConfig().getBoolean(mmoitem.getId() + ".upgrade.destroy");
 			config.getConfig().set(mmoitem.getId() + ".upgrade.destroy", bool);
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 			open();
 			player.sendMessage(MMOItems.plugin.getPrefix()
 					+ (bool ? "Your item will be destroyed upon failing upgrade." : "Your item will not be destroyed upon failing upgrade."));

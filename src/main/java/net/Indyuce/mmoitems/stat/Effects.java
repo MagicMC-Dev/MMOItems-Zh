@@ -86,7 +86,7 @@ public class Effects extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".effects." + last, null);
 				if (set.size() <= 1)
 					config.getConfig().set(inv.getEdited().getId() + ".effects", null);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
@@ -137,7 +137,7 @@ public class Effects extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".effects." + effect.getName(), duration + "," + amplifier);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
 		return true;

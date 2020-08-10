@@ -41,7 +41,7 @@ public class RecipeEdition extends EditionInventory {
 		ConfigFile config = mmoitem.getType().getConfigFile();
 		if (!config.getConfig().contains(mmoitem.getId() + ".crafting.shaped.1")) {
 			config.getConfig().set(mmoitem.getId() + ".crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 		}
 		List<String> recipe = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shaped.1");
 		if (recipe.size() < 3) {
@@ -49,7 +49,7 @@ public class RecipeEdition extends EditionInventory {
 				recipe.add("AIR AIR AIR");
 
 			config.getConfig().set(mmoitem.getId() + ".crafting.shaped.1", recipe);
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 		}
 		for (int j = 0; j < 9; j++) {
 			int slot = intToSlot(j);
@@ -82,7 +82,7 @@ public class RecipeEdition extends EditionInventory {
 		if (!config.getConfig().contains(mmoitem.getId() + ".crafting.shapeless.1")) {
 			config.getConfig().set(mmoitem.getId() + ".crafting.shapeless.1",
 				Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR"));
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 		}
 		List<String> ingredients = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shapeless.1");
 		if(ingredients.size() == 9)
@@ -145,7 +145,7 @@ public class RecipeEdition extends EditionInventory {
 		newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
 		config.getConfig().set(mmoitem.getId() + ".crafting.shaped.1", newList);
-		registerItemEdition(config);
+		registerTemplateEdition(config, true);
 		open();
 	}
 
@@ -155,7 +155,7 @@ public class RecipeEdition extends EditionInventory {
 			List<String> newList = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shapeless.1");
 			newList.set(slot, "AIR");
 			config.getConfig().set(mmoitem.getId() + ".crafting.shapeless.1", newList);
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 			open();
 		}
 	}

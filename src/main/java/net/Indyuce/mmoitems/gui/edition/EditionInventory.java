@@ -14,61 +14,76 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public abstract class EditionInventory extends PluginInventory {
-	protected MMOItem mmoitem;
-	private ItemStack cached;
+	protected MMOItemTemplate template;
+	private MMOItem cachedMMOItem;
+	private ItemStack cachedItemStack;
 	private int prevPage;
 
-	public EditionInventory(Player player, MMOItem mmoitem) {
-		this(player, mmoitem, null);
+	public EditionInventory(Player player, MMOItemTemplate template) {
+		this(player, template, null);
 	}
 
-	public EditionInventory(Player player, MMOItem mmoitem, ItemStack cached) {
+	public EditionInventory(Player player, MMOItemTemplate template, ItemStack cached) {
 		super(player);
 
-		this.mmoitem = mmoitem;
-		this.cached = player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory
-				? ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cached
-				: cached;
+		this.template = template;
+
+		if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory) {
+			EditionInventory inv = (EditionInventory) player.getOpenInventory().getTopInventory().getHolder();
+			this.cachedMMOItem = inv.cachedMMOItem;
+			this.cachedItemStack = inv.cachedItemStack;
+		}
 	}
 
-	public MMOItem getEdited() {
-		return mmoitem;
+	public MMOItemTemplate getEdited() {
+		return template;
 	}
 
-	public ItemStack getCachedItem() {
-		return cached != null ? cached : (cached = mmoitem.newBuilder().build());
+	public MMOItem getCachedMMOItem() {
+		if (cachedMMOItem != null)
+			return cachedMMOItem;
+
+		updateCachedItem();
+		return cachedMMOItem;
 	}
 
-	public void registerItemEdition(ConfigFile config) {
-		registerItemEdition(config, true);
+	public ItemStack getCachedItemStack() {
+		if (cachedItemStack != null)
+			return cachedItemStack;
+
+		updateCachedItem();
+		return cachedItemStack;
 	}
 
-	public void registerItemEdition(ConfigFile config, boolean uuid) {
+	public void registerTemplateEdition(ConfigFile config, boolean uuid) {
 
 		/*
 		 * cached item needs to be flushed otherwise modifications applied
 		 * cannot display on the edition GUI
 		 */
-		config.registerItemEdition(mmoitem.getType(), uuid ? mmoitem.getId() : null);
+		config.registerTemplateEdition(template.getType(), uuid ? template.getId() : null);
 
 		/*
 		 * update edited mmoitem after registering the item edition and
 		 * refreshes the displayed item.
 		 */
-		mmoitem = MMOItems.plugin.getItems().getMMOItem(mmoitem.getType(), mmoitem.getId());
+		template = MMOItems.plugin.getItems().getTemplate(template.getType(), template.getId());
 		updateCachedItem();
 	}
 
-	/*
-	 * method made public so that when generating the item using the chest item,
-	 * the player can reroll the item stats if needed
+	/**
+	 * Method used when the player gets the item using the chest item so that he
+	 * can reroll the stats.
 	 */
 	public void updateCachedItem() {
-		cached = mmoitem.newBuilder().build();
+		cachedMMOItem = template.newBuilder(PlayerData.get(getPlayer()).getRPG()).build();
+		cachedItemStack = cachedMMOItem.newBuilder().build();
 	}
 
 	public void addEditionInventoryItems(Inventory inv, boolean backBool) {
@@ -78,7 +93,7 @@ public abstract class EditionInventory extends PluginInventory {
 		getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub);
 		List<String> getLore = new ArrayList<>();
 		getLore.add(ChatColor.GRAY + "");
-		getLore.add(ChatColor.GRAY + "You may also use /mi " + mmoitem.getType().getId() + " " + mmoitem.getId());
+		getLore.add(ChatColor.GRAY + "You may also use /mi " + template.getType().getId() + " " + template.getId());
 		getLore.add(ChatColor.GRAY + "");
 		getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to get the item.");
 		getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to get it & reroll its stats.");
@@ -95,7 +110,7 @@ public abstract class EditionInventory extends PluginInventory {
 		}
 
 		inv.setItem(2, get);
-		inv.setItem(4, getCachedItem());
+		inv.setItem(4, getCachedItemStack());
 	}
 
 	public void open(int page) {

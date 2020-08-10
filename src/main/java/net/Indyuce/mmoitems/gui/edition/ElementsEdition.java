@@ -113,7 +113,7 @@ public class ElementsEdition extends EditionInventory {
 						config.getConfig().set(mmoitem.getId() + ".element", null);
 				}
 
-				registerItemEdition(config);
+				registerTemplateEdition(config, true);
 				new ElementsEdition(player, mmoitem).open(getPreviousPage());
 				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY + " successfully removed.");
 			}

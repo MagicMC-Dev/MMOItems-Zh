@@ -60,7 +60,7 @@ public class CompatibleTypes extends ItemStat {
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
 			}
@@ -74,7 +74,7 @@ public class CompatibleTypes extends ItemStat {
 				: new ArrayList<>();
 		lore.add(message.toUpperCase());
 		config.getConfig().set(inv.getEdited().getId() + ".compatible-types", lore);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Compatible Types successfully added.");
 		return true;

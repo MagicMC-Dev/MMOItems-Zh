@@ -99,7 +99,7 @@ public class GemSockets extends ItemStat {
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + ChatColor.GRAY + "'.");
 			}
@@ -113,7 +113,7 @@ public class GemSockets extends ItemStat {
 				: new ArrayList<>();
 		lore.add(message);
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), lore);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + message + " successfully added.");
 		return true;

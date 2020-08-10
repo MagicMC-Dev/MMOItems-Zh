@@ -60,7 +60,7 @@ public class NBTTags extends ItemStat {
 				String last = nbtTags.get(nbtTags.size() - 1);
 				nbtTags.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".custom-nbt", nbtTags);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
 			}
@@ -79,7 +79,7 @@ public class NBTTags extends ItemStat {
 				: new ArrayList<>();
 		customNbt.add(message);
 		config.getConfig().set(inv.getEdited().getId() + ".custom-nbt", customNbt);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat successfully added.");
 		return true;

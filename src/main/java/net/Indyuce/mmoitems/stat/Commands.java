@@ -116,7 +116,7 @@ public class Commands extends ItemStat {
 		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".delay", delay);
 		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".console", console ? console : null);
 		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".op", op ? op : null);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
 		return true;

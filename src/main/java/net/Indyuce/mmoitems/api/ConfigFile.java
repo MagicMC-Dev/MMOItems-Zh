@@ -62,7 +62,7 @@ public class ConfigFile {
 	}
 
 	@Deprecated
-	public void registerItemEdition(Type type, String id) {
+	public void registerTemplateEdition(Type type, String id) {
 
 		/*
 		 * uncaches the item so it can be generated to apply newest changes in

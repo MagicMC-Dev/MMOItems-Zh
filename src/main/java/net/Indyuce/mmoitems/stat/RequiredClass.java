@@ -63,7 +63,7 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 				String last = supportedClasses.get(supportedClasses.size() - 1);
 				supportedClasses.remove(last);
 				config.getConfig().set(inv.getEdited().getId() + ".required-class", supportedClasses.size() == 0 ? null : supportedClasses);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
@@ -77,7 +77,7 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 				: new ArrayList<>());
 		lore.add(message);
 		config.getConfig().set(inv.getEdited().getId() + ".required-class", lore);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
 		return true;

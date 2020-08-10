@@ -82,7 +82,7 @@ public class ShieldPatternStat extends StringStat {
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern.color", null);
 
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the shield color.");
 		}
@@ -100,7 +100,7 @@ public class ShieldPatternStat extends StringStat {
 				return;
 
 			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + last, null);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
 		}
@@ -143,7 +143,7 @@ public class ShieldPatternStat extends StringStat {
 
 			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + availableKey + ".pattern", patternType.name());
 			config.getConfig().set(inv.getEdited().getId() + ".shield-pattern." + availableKey + ".color", dyeColor.name());
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + MMOUtils.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " successfully added.");
@@ -159,7 +159,7 @@ public class ShieldPatternStat extends StringStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".shield-pattern.color", color.name());
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");
 		return true;

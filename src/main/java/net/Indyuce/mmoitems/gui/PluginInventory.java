@@ -7,14 +7,21 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public abstract class PluginInventory implements InventoryHolder {
+	protected final PlayerData playerData;
 	protected final Player player;
 
 	protected int page = 1;
 
 	public PluginInventory(Player player) {
-		this.player = player;
+		this(PlayerData.get(player));
+	}
+
+	public PluginInventory(PlayerData playerData) {
+		this.playerData = playerData;
+		this.player = playerData.getPlayer();
 	}
 
 	public int getPage() {
@@ -23,6 +30,10 @@ public abstract class PluginInventory implements InventoryHolder {
 
 	public Player getPlayer() {
 		return player;
+	}
+
+	public PlayerData getPlayerData() {
+		return playerData;
 	}
 
 	@Override

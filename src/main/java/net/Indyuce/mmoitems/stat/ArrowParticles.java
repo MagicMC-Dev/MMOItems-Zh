@@ -109,7 +109,7 @@ public class ArrowParticles extends ItemStat {
 			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.red", red);
 			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.green", green);
 			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.color.blue", blue);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to "
 					+ ChatColor.translateAlternateColorCodes('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
@@ -127,7 +127,7 @@ public class ArrowParticles extends ItemStat {
 			}
 
 			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.particle", particle.name());
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD
 					+ MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
@@ -144,7 +144,7 @@ public class ArrowParticles extends ItemStat {
 			}
 
 			config.getConfig().set(inv.getEdited().getId() + ".arrow-particles.amount", value);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + value
 					+ ChatColor.GRAY + ".");
@@ -161,7 +161,7 @@ public class ArrowParticles extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".arrow-particles." + edited, value);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
 				+ " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");

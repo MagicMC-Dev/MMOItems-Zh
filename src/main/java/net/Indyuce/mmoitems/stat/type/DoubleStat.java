@@ -65,7 +65,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			ConfigFile config = inv.getEdited().getType().getConfigFile();
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
 			return;
@@ -100,7 +100,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), split.length > 1 ? value + "=" + value1 : value);
 		if (value == 0 && value1 == 0)
 			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to "
 				+ (value1 != 0 ? "{between " + value + " and " + value1 + "}" : "" + value) + ".");

@@ -71,7 +71,7 @@ public class Restore extends ItemStat {
 		config.getConfig().set(inv.getEdited().getId() + ".restore.food", (food <= 0 ? null : food));
 		config.getConfig().set(inv.getEdited().getId() + ".restore.saturation", (saturation <= 0 ? null : saturation));
 
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Restore successfully changed to " + message + ".");
 		return true;

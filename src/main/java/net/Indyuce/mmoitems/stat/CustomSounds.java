@@ -70,7 +70,7 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("sounds")) {
 				config.getConfig().set(inv.getEdited().getId() + ".sounds", null);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
 			}
@@ -108,7 +108,7 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".volume", volume);
 		config.getConfig().set(inv.getEdited().getId() + ".sounds." + soundsPath + ".pitch", pitch);
 
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY
 				+ " successfully changed to '" + soundName + "'.");

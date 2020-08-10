@@ -44,7 +44,7 @@ public class BooleanStat extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), !config.getConfig().getBoolean(inv.getEdited().getId() + "." + getPath()));
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 	}
 

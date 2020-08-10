@@ -85,7 +85,7 @@ public class PermanentEffects extends ItemStat {
 				config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + last, null);
 				if (set.size() <= 1)
 					config.getConfig().set(inv.getEdited().getId() + ".perm-effects", null);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + "�7.");
@@ -125,7 +125,7 @@ public class PermanentEffects extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + effect.getName(), amplifier);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
 		return true;

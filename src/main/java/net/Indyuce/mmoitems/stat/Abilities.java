@@ -116,7 +116,7 @@ public class Abilities extends ItemStat {
 
 			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey, null);
 			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".type", format);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
@@ -139,7 +139,7 @@ public class Abilities extends ItemStat {
 			}
 
 			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".mode", castMode.name());
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
 					+ ChatColor.GRAY + ".");
@@ -155,7 +155,7 @@ public class Abilities extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + "." + edited, value);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
 				+ " successfully added.");

@@ -105,7 +105,7 @@ public class CommandListEdition extends EditionInventory {
 			if (config.getConfig().getConfigurationSection(mmoitem.getId()).contains("commands")
 					&& config.getConfig().getConfigurationSection(mmoitem.getId() + ".commands").contains(tag)) {
 				config.getConfig().set(mmoitem.getId() + ".commands." + tag, null);
-				registerItemEdition(config);
+				registerTemplateEdition(config, true);
 				open();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
 						+ " (Internal ID)" + ChatColor.GRAY + ".");

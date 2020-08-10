@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.recipe.CraftingType;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -26,14 +26,14 @@ import net.mmogroup.mmolib.api.util.AltChar;
 public class CraftingEdition extends EditionInventory {
 	private static final int[] slots = { 21, 22, 23, 30, 31, 32 };
 
-	public CraftingEdition(Player player, MMOItem mmoitem) {
-		super(player, mmoitem);
+	public CraftingEdition(Player player, MMOItemTemplate template) {
+		super(player, template);
 	}
 
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, MMOLib.plugin.getVersion().isStrictlyHigher(1, 14) ? 45 : 36,
-				ChatColor.UNDERLINE + "Crafting Recipes: " + mmoitem.getId());
+				ChatColor.UNDERLINE + "Crafting Recipes: " + template.getId());
 
 		int n = 0;
 
@@ -97,7 +97,7 @@ public class CraftingEdition extends EditionInventory {
 			if (config.getConfig().getConfigurationSection(mmoitem.getId() + ".crafting") == null)
 				config.getConfig().set(mmoitem.getId() + ".crafting", null);
 
-			registerItemEdition(config);
+			registerTemplateEdition(config, true);
 		}
 	}
 }

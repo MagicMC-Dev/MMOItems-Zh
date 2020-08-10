@@ -20,10 +20,7 @@ public class MMOItemTrigger extends Trigger {
 
 		config.validate("type", "id");
 
-		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type with ID '" + format + "'");
-		Type type = MMOItems.plugin.getTypes().get(format);
-
+		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
 		String id = config.getString("id").replace("-", "_").toUpperCase();
 		Validate.isTrue(MMOItems.plugin.getItems().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
 

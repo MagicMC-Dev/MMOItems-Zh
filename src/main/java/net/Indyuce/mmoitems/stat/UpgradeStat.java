@@ -59,7 +59,7 @@ public class UpgradeStat extends ItemStat {
 			ConfigFile config = inv.getEdited().getType().getConfigFile();
 			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("upgrade")) {
 				config.getConfig().set(inv.getEdited().getId() + ".upgrade", null);
-				inv.registerItemEdition(config);
+				inv.registerTemplateEdition(config, true);
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
 			}
@@ -71,7 +71,7 @@ public class UpgradeStat extends ItemStat {
 
 		if (info[0].equals("ref")) {
 			config.getConfig().set(inv.getEdited().getId() + ".upgrade.reference", message);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Upgrading reference successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
@@ -89,7 +89,7 @@ public class UpgradeStat extends ItemStat {
 			}
 
 			config.getConfig().set(inv.getEdited().getId() + ".upgrade.max", i);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer()
 					.sendMessage(MMOItems.plugin.getPrefix() + "Max upgrades successfully set to " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
@@ -107,7 +107,7 @@ public class UpgradeStat extends ItemStat {
 			}
 
 			config.getConfig().set(inv.getEdited().getId() + ".upgrade.success", d);
-			inv.registerItemEdition(config);
+			inv.registerTemplateEdition(config, true);
 			inv.open();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Upgrading rate successfully set to " + ChatColor.GOLD + d + "%" + ChatColor.GRAY + ".");
@@ -121,7 +121,7 @@ public class UpgradeStat extends ItemStat {
 		}
 
 		config.getConfig().set(inv.getEdited().getId() + ".upgrade.template", message);
-		inv.registerItemEdition(config);
+		inv.registerTemplateEdition(config, true);
 		inv.open();
 		inv.getPlayer().sendMessage(
 				MMOItems.plugin.getPrefix() + "Upgrading template successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");

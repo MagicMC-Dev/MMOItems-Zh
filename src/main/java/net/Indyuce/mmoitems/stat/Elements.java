@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
@@ -54,12 +55,10 @@ public class Elements extends ItemStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String elementPath = ElementsEdition.correspondingSlot.get(info[0]);
-		double value = Double.parseDouble(message);
+		String elementPath = info[0].toString();
 
-		inv.getEditedSection().set("element." + elementPath, value);
-		if (value == 0)
-			inv.getEditedSection().set("element." + elementPath, null);
+		NumericStatFormula formula = new NumericStatFormula(message);
+		formula.fillConfigurationSection(inv.getEditedSection(), "element." + elementPath);
 
 		// clear element config section
 		String elementName = elementPath.split("\\.")[0];
@@ -73,7 +72,7 @@ public class Elements extends ItemStat {
 
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
-				+ " successfully changed to " + value + ".");
+				+ " successfully changed to " + ChatColor.GOLD + formula.toString() + ChatColor.GRAY + ".");
 	}
 
 	@Override

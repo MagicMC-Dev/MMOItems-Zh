@@ -37,9 +37,9 @@ public class NumericStatFormula implements RandomStatData {
 		if (object instanceof String) {
 			String[] split = object.toString().split("\\ ");
 			base = Double.parseDouble(split[0]);
-			scale = Double.parseDouble(split[1]);
-			spread = Double.parseDouble(split[2]);
-			maxSpread = Double.parseDouble(split[3]);
+			scale = split.length > 1 ? Double.parseDouble(split[1]) : 0;
+			spread = split.length > 2 ? Double.parseDouble(split[2]) : 0;
+			maxSpread = split.length > 3 ? Double.parseDouble(split[3]) : 0;
 			return;
 		}
 

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui.edition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -72,12 +73,22 @@ public abstract class EditionInventory extends PluginInventory {
 	}
 
 	/**
-	 * @return The item data map used to display what the player is currently
-	 *         editing. If he is editing a stat modifier, use the modifier item
-	 *         data map. Otherwise, use the base item data map
+	 * Used in edition GUIs to display the current stat data of the edited
+	 * template.
+	 * 
+	 * @param stat
+	 *            The stat which data we are looking for
+	 * @return Optional which contains the corresponding random stat data
 	 */
-	public Map<ItemStat, RandomStatData> getCurrentDataMap() {
-		return editedModifier != null ? editedModifier.getItemData() : template.getBaseItemData();
+	public Optional<RandomStatData> getEventualStatData(ItemStat stat) {
+
+		/**
+		 * The item data map used to display what the player is currently
+		 * editing. If he is editing a stat modifier, use the modifier item data
+		 * map. Otherwise, use the base item data map
+		 */
+		Map<ItemStat, RandomStatData> map = editedModifier != null ? editedModifier.getItemData() : template.getBaseItemData();
+		return map.containsKey(stat) ? Optional.of(map.get(stat)) : Optional.empty();
 	}
 
 	public void registerTemplateEdition() {

@@ -33,7 +33,7 @@ public enum Element {
 			target.setFireTicks((int) (attack * 2));
 			result.addDamage(absolute);
 		}
-	}),
+	}, 19, 25),
 
 	ICE(VersionMaterial.SNOWBALL.toMaterial(), "Ice", ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE),
 			new ElementHandler() {
@@ -57,7 +57,7 @@ public enum Element {
 					target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (attack * 1.5), 5));
 					result.addDamage(absolute);
 				}
-			}),
+			}, 20, 24),
 
 	WIND(Material.FEATHER, "Wind", ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), new ElementHandler() {
 		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
@@ -74,7 +74,7 @@ public enum Element {
 				target.getWorld().spawnParticle(Particle.CLOUD, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
 						Math.sin(k), .15);
 		}
-	}),
+	}, 28, 34),
 
 	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), "Earth", ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT),
 			new ElementHandler() {
@@ -89,7 +89,7 @@ public enum Element {
 						if (MMOUtils.canDamage(stats.getPlayer(), entity))
 							entity.setVelocity(new Vector(0, 1, 0));
 				}
-			}),
+			}, 29, 33),
 
 	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), "Thunder", ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8),
 			new ElementHandler() {
@@ -105,7 +105,7 @@ public enum Element {
 						target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0,
 								Math.cos(k), .01, Math.sin(k), .18);
 				}
-			}),
+			}, 30, 32),
 
 	WATER(VersionMaterial.LILY_PAD.toMaterial(), "Water", ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER),
 			new ElementHandler() {
@@ -125,20 +125,24 @@ public enum Element {
 						}
 					}.runTaskTimer(MMOItems.plugin, 0, 1);
 				}
-			});
+			}, 37, 43);
 
 	private final ItemStack item;
 	private final String name;
 	private final ChatColor color;
 	private final ElementParticle particle;
 	private final ElementHandler handler;
+	private final int damageGuiSlot, defenseGuiSlot;
 
-	private Element(Material material, String name, ChatColor color, ElementParticle particle, ElementHandler handler) {
+	private Element(Material material, String name, ChatColor color, ElementParticle particle, ElementHandler handler, int damageGuiSlot,
+			int defenseGuiSlot) {
 		this.item = new ItemStack(material);
 		this.name = name;
 		this.color = color;
 		this.particle = particle;
 		this.handler = handler;
+		this.damageGuiSlot = damageGuiSlot;
+		this.defenseGuiSlot = defenseGuiSlot;
 	}
 
 	public ItemStack getItem() {
@@ -159,6 +163,14 @@ public enum Element {
 
 	public ElementHandler getHandler() {
 		return handler;
+	}
+
+	public int getDamageGuiSlot() {
+		return damageGuiSlot;
+	}
+
+	public int getDefenseGuiSlot() {
+		return defenseGuiSlot;
 	}
 
 	public static interface ElementHandler {

@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +18,13 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class AbilityListEdition extends EditionInventory {
-	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25 };
 
 	public AbilityListEdition(Player player, MMOItemTemplate template) {
@@ -59,11 +58,16 @@ public class AbilityListEdition extends EditionInventory {
 				boolean check = false;
 				if (ability != null)
 					for (String modifier : getEditedSection().getConfigurationSection("ability." + key).getKeys(false))
-						if (!modifier.equals("type") && !modifier.equals("mode") && ability.getModifiers().contains(modifier)) {
-							abilityItemLore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": "
-									+ ChatColor.GOLD + modifierFormat.format(getEditedSection().getDouble("ability." + key + "." + modifier)));
-							check = true;
-						}
+						if (!modifier.equals("type") && !modifier.equals("mode") && ability.getModifiers().contains(modifier))
+							try {
+								abilityItemLore.add(
+										ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD
+												+ new NumericStatFormula(getEditedSection().get("ability." + key + "." + modifier)).toString());
+								check = true;
+							} catch (IllegalArgumentException exception) {
+								abilityItemLore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": "
+										+ ChatColor.GOLD + "Unreadable");
+							}
 				if (check)
 					abilityItemLore.add("");
 

@@ -2,8 +2,6 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -19,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -59,8 +56,7 @@ public class ItemEdition extends EditionInventory {
 				lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(s1));
 			lore.add("");
 
-			Map<ItemStat, RandomStatData> itemData = getCurrentDataMap();
-			stat.whenDisplayed(lore, itemData.containsKey(stat) ? Optional.of(itemData.get(stat)) : Optional.empty());
+			stat.whenDisplayed(lore, getEventualStatData(stat));
 
 			meta.setLore(lore);
 			item.setItemMeta(meta);

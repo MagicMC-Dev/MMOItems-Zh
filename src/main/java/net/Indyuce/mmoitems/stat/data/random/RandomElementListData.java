@@ -28,6 +28,14 @@ public class RandomElementListData implements StatData, RandomStatData {
 		}
 	}
 
+	public boolean hasDamage(Element element) {
+		return damage.containsKey(element);
+	}
+
+	public boolean hasDefense(Element element) {
+		return defense.containsKey(element);
+	}
+
 	public NumericStatFormula getDefense(Element element) {
 		return defense.getOrDefault(element, NumericStatFormula.ZERO);
 	}

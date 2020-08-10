@@ -7,7 +7,6 @@ import net.Indyuce.mmocore.api.block.BlockInfo.RegeneratingBlock;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MMOItemsBlockType implements BlockType {
@@ -31,8 +30,7 @@ public class MMOItemsBlockType implements BlockType {
 	public void place(Location loc, RegeneratingBlock regenerating) {
 		CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(id);
 		loc.getBlock().setType(block.getState().getType());
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
-			loc.getBlock().setBlockData(block.getState().getBlockData());
+		loc.getBlock().setBlockData(block.getState().getBlockData());
 	}
 
 	public static boolean matches(Block block) {

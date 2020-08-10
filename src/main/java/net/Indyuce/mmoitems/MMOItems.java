@@ -65,7 +65,6 @@ import net.Indyuce.mmoitems.listener.DurabilityListener;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.listener.PlayerListener;
-import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
 import net.Indyuce.mmoitems.manager.AbilityManager;
 import net.Indyuce.mmoitems.manager.BlockManager;
 import net.Indyuce.mmoitems.manager.ConfigManager;
@@ -82,7 +81,6 @@ import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.manager.UpdaterManager;
 import net.Indyuce.mmoitems.manager.UpgradeManager;
 import net.Indyuce.mmoitems.manager.WorldGenManager;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
 
@@ -118,7 +116,7 @@ public class MMOItems extends JavaPlugin {
 		plugin = this;
 
 		try {
-			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
+			if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
 				flagPlugin = new WorldGuardFlags();
 				getLogger().log(Level.INFO, "Hooked onto WorldGuard");
 			}
@@ -151,10 +149,8 @@ public class MMOItems extends JavaPlugin {
 		upgradeManager = new UpgradeManager();
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-			worldGenManager = new WorldGenManager();
-			blockManager = new BlockManager();
-		}
+		worldGenManager = new WorldGenManager();
+		blockManager = new BlockManager();
 
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
 			new VaultSupport();
@@ -175,10 +171,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-			Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
-			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
-		}
+		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 
 		/*
 		 * this class implements the Listener, if the option

@@ -93,10 +93,7 @@ public class DropTableManager implements Listener {
 			return;
 
 		Block block = event.getBlock();
-		Optional<CustomBlock> opt = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)
-				? MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData())
-				: Optional.empty();
-
+		Optional<CustomBlock> opt = MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData());
 		if (opt.isPresent()) {
 			CustomBlock customBlock = opt.get();
 
@@ -135,8 +132,7 @@ public class DropTableManager implements Listener {
 	// public Collection<ItemStack> getBlockDrops(Block block, Player player) {
 	// final Material type = block.getType();
 	//
-	// CustomBlock custom = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ?
-	// CustomBlock.getFromData(block.getBlockData()) : null;
+	// CustomBlock custom = CustomBlock.getFromData(block.getBlockData()) ;
 	// if (custom != null) {
 	// if (customBlocks.containsKey(custom.getId())) {
 	// if (CustomBlockListener.getPickaxePower(player) >=

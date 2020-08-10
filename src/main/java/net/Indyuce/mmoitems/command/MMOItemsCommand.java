@@ -540,19 +540,17 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getSets().reload();
 			MMOItems.plugin.getUpgrades().reload();
 			MMOItems.plugin.getItems().reload();
-			if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-				MMOItems.plugin.getWorldGen().reload();
-				MMOItems.plugin.getCustomBlocks().reload();
-			}
+			MMOItems.plugin.getWorldGen().reload();
+			MMOItems.plugin.getCustomBlocks().reload();
 			MMOItems.plugin.getItems().reload();
-			sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " "
-					+ MMOItems.plugin.getDescription().getVersion() + " reloaded.");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-					+ MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-					+ MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-					+ MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
+			sender.sendMessage(
+					MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("copy")) {

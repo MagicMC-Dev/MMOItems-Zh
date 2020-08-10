@@ -99,15 +99,6 @@ public class ItemBrowser extends PluginInventory {
 			ItemStack switchBrowse = new ItemStack(Material.STONE);
 			ItemMeta switchMeta = switchBrowse.getItemMeta();
 			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
-
-			if (!MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-				List<String> lore = new ArrayList<String>();
-				lore.add("");
-				lore.add("&cThis feature is disabled.");
-				lore.add("&cUpdating to 1.13+ is recommended.");
-				switchMeta.setLore(lore);
-			}
-
 			switchBrowse.setItemMeta(switchMeta);
 
 			while (n < slots.length)
@@ -233,55 +224,40 @@ public class ItemBrowser extends PluginInventory {
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
 				page++;
 				open();
-				return;
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
 				page--;
 				open();
-				return;
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(getPlayer()).open();
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
-				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
-					new ItemBrowser(getPlayer(), Type.BLOCK).open();
-				else
-					getPlayer().sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
-				return;
-			}
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer"))
+				new ItemBrowser(getPlayer(), Type.BLOCK).open();
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
 				deleteMode = false;
 				open();
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
 				new NewItemEdition(this).enable("Write in the chat the text you want.");
 
-			if (type != null && item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Delete Item")) {
+			else if (type != null && item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Delete Item")) {
 				deleteMode = true;
 				open();
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
 				MMOLib.plugin.getVersion().getWrapper().sendJson(getPlayer(),
 						"[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
 				getPlayer().closeInventory();
-				return;
 			}
 
-			if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -")) {
-				Type type = MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"));
-				if (type == Type.BLOCK && !MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-					getPlayer().sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
-					return;
-				}
-
-				new ItemBrowser(getPlayer(), type).open();
-			}
+			else if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -"))
+				new ItemBrowser(getPlayer(), MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"))).open();
 		}
 
 		String id = NBTItem.get(item).getString("MMOITEMS_ITEM_ID");
@@ -298,8 +274,7 @@ public class ItemBrowser extends PluginInventory {
 		} else {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				// this refreshes the item if it's unstackable
-				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE"))
-						? MMOItems.plugin.getItem(type, id, playerData)
+				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE")) ? MMOItems.plugin.getItem(type, id, playerData)
 						: removeLastLoreLines(item, 3);
 				getPlayer().getInventory().addItem(generatedItem);
 				getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);

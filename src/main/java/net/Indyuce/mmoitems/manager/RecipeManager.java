@@ -83,7 +83,7 @@ public class RecipeManager {
 			return;
 		}
 		NamespacedKey key = getRecipeKey(type, id, "furnace", number);
-		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+		FurnaceRecipe recipe = new FurnaceRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
 				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
@@ -94,7 +94,7 @@ public class RecipeManager {
 			return;
 		}
 		NamespacedKey key = getRecipeKey(type, id, "blast", number);
-		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+		BlastingRecipe recipe = new BlastingRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
 				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
@@ -105,7 +105,7 @@ public class RecipeManager {
 			return;
 		}
 		NamespacedKey key = getRecipeKey(type, id, "smoker", number);
-		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+		SmokingRecipe recipe = new SmokingRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
 				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
@@ -116,17 +116,17 @@ public class RecipeManager {
 			return;
 		}
 		NamespacedKey key = getRecipeKey(type, id, "campfire", number);
-		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItems().getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+		CampfireRecipe recipe = new CampfireRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
 				info.getBurnTime());
 		registerRecipe(key, recipe);
 	}
 
 	public void registerShapedRecipe(Type type, String id, List<String> list) {
-		registerRecipe(new CustomRecipe(MMOItems.plugin.getItems().getMMOItem(type, id).newBuilder().buildNBT(), list, false));
+		registerRecipe(new CustomRecipe(MMOItems.plugin.getMMOItem(type, id).newBuilder().buildNBT(), list, false));
 	}
 
 	public void registerShapelessRecipe(Type type, String id, List<String> list) {
-		registerRecipe(new CustomRecipe(MMOItems.plugin.getItems().getMMOItem(type, id).newBuilder().buildNBT(), list, true));
+		registerRecipe(new CustomRecipe(MMOItems.plugin.getMMOItem(type, id).newBuilder().buildNBT(), list, true));
 	}
 
 	/*
@@ -205,7 +205,7 @@ public class RecipeManager {
 			String typeFormat = typeId[0].toUpperCase().replace("-", "_").replace(" ", "_");
 			Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat), "Could not find type " + typeFormat);
 
-			MMOItem mmo = MMOItems.plugin.getItems().getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
+			MMOItem mmo = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
 			if (mmo != null)
 				stack = mmo.newBuilder().build();
 		} else {

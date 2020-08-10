@@ -5,17 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.command.MMOItemsCommand;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
@@ -67,11 +72,11 @@ import net.Indyuce.mmoitems.manager.ConfigManager;
 import net.Indyuce.mmoitems.manager.CraftingManager;
 import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
-import net.Indyuce.mmoitems.manager.ItemManager;
 import net.Indyuce.mmoitems.manager.PluginUpdateManager;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import net.Indyuce.mmoitems.manager.SetManager;
 import net.Indyuce.mmoitems.manager.StatManager;
+import net.Indyuce.mmoitems.manager.TemplateManager;
 import net.Indyuce.mmoitems.manager.TierManager;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.manager.UpdaterManager;
@@ -89,7 +94,7 @@ public class MMOItems extends JavaPlugin {
 	private final AbilityManager abilityManager = new AbilityManager();
 	private final EntityManager entityManager = new EntityManager();
 	private final TypeManager typeManager = new TypeManager();
-	private final ItemManager itemManager = new ItemManager();
+	private final TemplateManager templateManager = new TemplateManager();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -140,7 +145,7 @@ public class MMOItems extends JavaPlugin {
 
 		abilityManager.initialize();
 		configManager = new ConfigManager();
-		itemManager.reload();
+		templateManager.reload();
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
@@ -408,8 +413,8 @@ public class MMOItems extends JavaPlugin {
 		return hologramSupport;
 	}
 
-	public ItemManager getItems() {
-		return itemManager;
+	public TemplateManager getItems() {
+		return templateManager;
 	}
 
 	public List<StringInputParser> getStringInputParsers() {
@@ -430,17 +435,44 @@ public class MMOItems extends JavaPlugin {
 		setRPG(new DefaultHook());
 	}
 
-	public boolean isBlacklisted(Material material) {
-		return getConfig().getStringList("block-blacklist").contains(material.name());
+	/**
+	 * @return Generates an item given an item template. The item level will
+	 *         scale according to the player RPG level
+	 */
+	public MMOItem getMMOItem(Type type, String id, PlayerData player) {
+		return templateManager.getTemplate(type, id).newBuilder(player.getRPG()).build();
 	}
 
-	public void debug(Object... message) {
-		if (!getConfig().getBoolean("debug"))
-			return;
+	public ItemStack getItem(Type type, String id, PlayerData player) {
+		return getMMOItem(type, id, player).newBuilder().build();
+	}
 
-		for (Object line : message) {
-			getLogger().log(Level.INFO, "Debug> " + line.toString());
-			Bukkit.getOnlinePlayers().forEach(online -> online.sendMessage(ChatColor.YELLOW + "Debug> " + ChatColor.WHITE + line.toString()));
-		}
+	/**
+	 * @param itemLevel
+	 *            The desired item level
+	 * @param itemTier
+	 *            The desired item tier
+	 * @return Generates an item given an item template with a specific item
+	 *         level and item tier. The item tier can be null
+	 */
+	public MMOItem getMMOItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
+		return templateManager.getTemplate(type, id).newBuilder(itemLevel, itemTier).build();
+	}
+
+	public ItemStack getItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
+		return getMMOItem(type, id, itemLevel, itemTier).newBuilder().build();
+	}
+
+	/**
+	 * @return Generates an item given an item template. The item level will be
+	 *         0 and the item will have no item tier unless one is specified in
+	 *         the base item data.
+	 */
+	public MMOItem getMMOItem(Type type, String id) {
+		return templateManager.getTemplate(type, id).newBuilder(0, null).build();
+	}
+
+	public ItemStack getItem(Type type, String id) {
+		return getMMOItem(type, id).newBuilder().build();
 	}
 }

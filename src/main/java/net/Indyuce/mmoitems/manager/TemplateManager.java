@@ -10,18 +10,15 @@ import java.util.logging.Level;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
 
-public class ItemManager {
+public class TemplateManager {
 
 	/*
 	 * registered mmoitem templates
@@ -60,30 +57,6 @@ public class ItemManager {
 
 	public Collection<MMOItemTemplate> getTemplates(Type type) {
 		return templates.collectValues(type);
-	}
-
-	public MMOItem generateMMOItem(Type type, String id, PlayerData player) {
-		return getTemplate(type, id).newBuilder(player.getRPG()).build();
-	}
-
-	/**
-	 * @deprecated Use generateMMOItem(Type, String, PlayerData) instead
-	 */
-	@Deprecated
-	public MMOItem getMMOItem(Type type, String id) {
-		return getTemplate(type, id).newBuilder(0, null).build();
-	}
-
-	public ItemStack generateItem(Type type, String id, PlayerData player) {
-		return generateMMOItem(type, id, player).newBuilder().build();
-	}
-
-	/**
-	 * @deprecated Use generateItem(Type, String, PlayerData) instead
-	 */
-	@Deprecated
-	public ItemStack getItem(Type type, String id) {
-		return getMMOItem(type, id).newBuilder().build();
 	}
 
 	/**

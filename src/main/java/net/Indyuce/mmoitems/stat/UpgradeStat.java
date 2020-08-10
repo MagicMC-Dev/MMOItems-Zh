@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -50,77 +49,47 @@ public class UpgradeStat extends ItemStat {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new UpgradingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
-		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = inv.getEdited().getType().getConfigFile();
-			if (config.getConfig().contains("upgrade")) {
-				config.getConfig().set("upgrade", null);
-				inv.registerTemplateEdition(config);
-				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
-			}
+		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("upgrade")) {
+			inv.getEditedSection().set("upgrade", null);
+			inv.registerTemplateEdition();
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 
 		if (info[0].equals("ref")) {
-			config.getConfig().set("upgrade.reference", message);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("upgrade.reference", message);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Upgrading reference successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
 		if (info[0].equals("max")) {
-
-			int i = 0;
-			try {
-				i = Integer.parseInt(message);
-			} catch (NumberFormatException exception) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-				return false;
-			}
-
-			config.getConfig().set("upgrade.max", i);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			int i = Integer.parseInt(message);
+			inv.getEditedSection().set("upgrade.max", i);
+			inv.registerTemplateEdition();
 			inv.getPlayer()
 					.sendMessage(MMOItems.plugin.getPrefix() + "Max upgrades successfully set to " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
 		if (info[0].equals("rate")) {
-
-			double d = 0;
-			try {
-				d = Double.parseDouble(message);
-			} catch (NumberFormatException exception) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number.");
-				return false;
-			}
-
-			config.getConfig().set("upgrade.success", d);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			double d = Double.parseDouble(message);
+			inv.getEditedSection().set("upgrade.success", d);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Upgrading rate successfully set to " + ChatColor.GOLD + d + "%" + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
-		if (!MMOItems.plugin.getUpgrades().hasTemplate(message)) {
-			inv.getPlayer().sendMessage(
-					MMOItems.plugin.getPrefix() + "Could not find any upgrade template with ID " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
-			return false;
-		}
-
-		config.getConfig().set("upgrade.template", message);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		Validate.isTrue(MMOItems.plugin.getUpgrades().hasTemplate(message), "Could not find any upgrade template with ID '" + message + "'.");
+		inv.getEditedSection().set("upgrade.template", message);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(
 				MMOItems.plugin.getPrefix() + "Upgrading template successfully changed to " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
-		return true;
 	}
 
 	@Override

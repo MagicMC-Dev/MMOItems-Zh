@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
-import net.Indyuce.mmoitems.manager.ItemManager;
+import net.Indyuce.mmoitems.manager.TemplateManager;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -42,7 +42,7 @@ public class TemplateModifier {
 	 * @param config
 	 *            The configuration section to load the modifier from
 	 */
-	public TemplateModifier(ItemManager manager, ConfigurationSection config) {
+	public TemplateModifier(TemplateManager manager, ConfigurationSection config) {
 		Validate.notNull(config, "Could not read config");
 		id = config.getName().toLowerCase().replace("_", "-");
 

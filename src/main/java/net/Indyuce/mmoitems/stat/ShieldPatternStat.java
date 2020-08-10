@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -76,94 +75,58 @@ public class ShieldPatternStat extends StringStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-			config.getConfig().set("shield-pattern.color", null);
+			inv.getEditedSection().set("shield-pattern.color", null);
 
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the shield color.");
 		}
+
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
 			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 1).enable("Write in the chat the pattern you want to add.",
 					ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
 
-		if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
-			if (!config.getConfig().contains("shield-pattern"))
-				return;
-
-			Set<String> set = config.getConfig().getConfigurationSection("shield-pattern").getKeys(false);
+		if (event.getAction() == InventoryAction.DROP_ONE_SLOT && inv.getEditedSection().contains("shield-pattern")) {
+			Set<String> set = inv.getEditedSection().getConfigurationSection("shield-pattern").getKeys(false);
 			String last = new ArrayList<String>(set).get(set.size() - 1);
 			if (last.equalsIgnoreCase("color"))
 				return;
 
-			config.getConfig().set("shield-pattern." + last, null);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("shield-pattern." + last, null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		int editedStatData = (int) info[0];
 
 		if (editedStatData == 1) {
 			String[] split = message.split("\\ ");
-			if (split.length != 2) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [PATTERN_TYPE] [DYE_COLOR].");
-				return false;
-			}
+			Validate.isTrue(split.length == 2, message + " is not a valid [PATTERN_TYPE] [DYE_COLOR].");
 
-			String patternFormat = split[0].toUpperCase().replace("-", "_").replace(" ", "_");
-			PatternType patternType;
-			try {
-				patternType = PatternType.valueOf(patternFormat);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + patternFormat + " is not a valid pattern type!");
-				return false;
-			}
+			PatternType patternType = PatternType.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
+			DyeColor dyeColor = DyeColor.valueOf(split[1].toUpperCase().replace("-", "_").replace(" ", "_"));
 
-			String colorFormat = split[1].toUpperCase().replace("-", "_").replace(" ", "_");
-			DyeColor dyeColor;
-			try {
-				dyeColor = DyeColor.valueOf(colorFormat);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + colorFormat + " is not a valid dye color!");
-				return false;
-			}
+			int availableKey = getNextAvailableKey(inv.getEditedSection().getConfigurationSection("shield-pattern"));
+			Validate.isTrue(availableKey >= 0, "You can have more than 100 shield patterns on a single item.");
 
-			int availableKey = getNextAvailableKey(config.getConfig().getConfigurationSection("shield-pattern"));
-			if (availableKey < 0) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "You can have more than 100 shield patterns on a single item.");
-				return false;
-			}
-
-			config.getConfig().set("shield-pattern." + availableKey + ".pattern", patternType.name());
-			config.getConfig().set("shield-pattern." + availableKey + ".color", dyeColor.name());
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("shield-pattern." + availableKey + ".pattern", patternType.name());
+			inv.getEditedSection().set("shield-pattern." + availableKey + ".color", dyeColor.name());
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + MMOUtils.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " successfully added.");
-			return true;
+			return;
 		}
 
-		DyeColor color;
-		try {
-			color = DyeColor.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
-		} catch (Exception e) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid color!");
-			return false;
-		}
-
-		config.getConfig().set("shield-pattern.color", color.name());
-		inv.registerTemplateEdition(config);
-		inv.open();
+		DyeColor color = DyeColor.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
+		inv.getEditedSection().set("shield-pattern.color", color.name());
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");
-		return true;
 	}
 
 	@Override

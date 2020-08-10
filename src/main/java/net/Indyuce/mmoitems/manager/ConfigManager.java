@@ -12,6 +12,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffectType;
@@ -217,6 +218,10 @@ public class ConfigManager {
 
 		for (ConfigItem item : ConfigItem.values)
 			item.update(items.getConfig().getConfigurationSection(item.getId()));
+	}
+
+	public boolean isBlacklisted(Material material) {
+		return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(material.name());
 	}
 
 	public String getStatFormat(String path) {

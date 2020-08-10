@@ -186,7 +186,6 @@ public class Type {
 	 * @return Finds the /item config file corresponding to the item type and
 	 *         loads it
 	 */
-	@Deprecated
 	public ConfigFile getConfigFile() {
 		return new ConfigFile("/item", getId().toLowerCase());
 	}

@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -46,37 +45,32 @@ public class RequiredClass extends ItemStat implements ItemRestriction, ProperSt
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, this).enable("Write in the chat the class you want your item to support.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getKeys(false).contains("required-class")) {
-				List<String> supportedClasses = config.getConfig().getStringList("required-class");
+			if (inv.getEditedSection().getKeys(false).contains("required-class")) {
+				List<String> supportedClasses = inv.getEditedSection().getStringList("required-class");
 				if (supportedClasses.size() < 1)
 					return;
 
 				String last = supportedClasses.get(supportedClasses.size() - 1);
 				supportedClasses.remove(last);
-				config.getConfig().set("required-class", supportedClasses.size() == 0 ? null : supportedClasses);
-				inv.registerTemplateEdition(config);
-				inv.open();
+				inv.getEditedSection().set("required-class", supportedClasses.size() == 0 ? null : supportedClasses);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = (config.getConfig().getKeys(false).contains("required-class")
-				? config.getConfig().getStringList("required-class")
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		List<String> lore = (inv.getEditedSection().getKeys(false).contains("required-class") ? inv.getEditedSection().getStringList("required-class")
 				: new ArrayList<>());
 		lore.add(message);
-		config.getConfig().set("required-class", lore);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("required-class", lore);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
-		return true;
 	}
 
 	@Override

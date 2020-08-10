@@ -19,7 +19,6 @@ import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -59,20 +58,18 @@ public class PermanentEffects extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
 					"Format: [POTION_EFFECT] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().contains("perm-effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection("perm-effects").getKeys(false);
+			if (inv.getEditedSection().contains("perm-effects")) {
+				Set<String> set = inv.getEditedSection().getConfigurationSection("perm-effects").getKeys(false);
 				String last = new ArrayList<>(set).get(set.size() - 1);
-				config.getConfig().set("perm-effects." + last, null);
+				inv.getEditedSection().set("perm-effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set("perm-effects", null);
-				inv.registerTemplateEdition(config);
-				inv.open();
+					inv.getEditedSection().set("perm-effects", null);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + "�7.");
 			}
@@ -80,13 +77,10 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 2) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [POTION_EFFECT] [AMPLIFIER].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'INCREASE_DAMAGE 4' stands for Strength 4.");
-			return false;
-		}
+		Validate.isTrue(split.length == 2,
+				message + " is not a valid [POTION_EFFECT] [AMPLIFIER]. Example: 'INCREASE_DAMAGE 4' stands for Strength 4.");
 
 		PotionEffectType effect = null;
 		for (PotionEffectType effect1 : PotionEffectType.values())
@@ -94,27 +88,14 @@ public class PermanentEffects extends ItemStat {
 				effect = effect1;
 				break;
 			}
+		Validate.notNull(effect, split[0]
+				+ " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		if (effect == null) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid potion effect.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED
-					+ "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
-			return false;
-		}
+		int amplifier = (int) Double.parseDouble(split[1]);
 
-		int amplifier = 0;
-		try {
-			amplifier = (int) Double.parseDouble(split[1]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set("perm-effects." + effect.getName(), amplifier);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("perm-effects." + effect.getName(), amplifier);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
-		return true;
 	}
 
 	@Override

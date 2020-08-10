@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.ChatColor;
-
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.LightningSpirit;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.ManaSpirit;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.NetherSpirit;
@@ -28,22 +25,15 @@ public class StaffSpiritStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		StaffSpirit ss = null;
-		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		try {
-			ss = StaffSpirit.valueOf(format);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid staff spirit.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all Staff Spirits here: /mi list spirit.");
-			return false;
+			StaffSpirit spirit = StaffSpirit.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
+			inv.getEditedSection().set("staff-spirit", spirit.name());
+			inv.registerTemplateEdition();
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Staff Spirit successfully changed to " + spirit.getName() + ".");
+		} catch (IllegalArgumentException exception) {
+			throw new IllegalArgumentException(exception.getMessage() + " (See all Staff Spirits here: /mi list spirit).");
 		}
-
-		config.getConfig().set("staff-spirit", ss.name());
-		inv.registerTemplateEdition(config);
-		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Staff Spirit successfully changed to " + ss.getName() + ".");
-		return true;
 	}
 
 	@Override

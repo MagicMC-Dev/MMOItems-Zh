@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -38,41 +37,30 @@ public class PotionColor extends StringStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.POTION_COLOR).enable("Write in the chat the RGB color you want.",
 					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set("potion-color", null);
-			inv.registerTemplateEdition(config);
-			inv.open();
+			inv.getEditedSection().set("potion-color", null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 3) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "" + message + " is not a valid [RED] [GREEN] [BLUE].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: '75 0 130' stands for Indigo Purple.");
-			return false;
-		}
-		for (String str : split)
-			try {
-				int k = Integer.parseInt(str);
-				Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
-			} catch (IllegalArgumentException exception) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + str + " is not a valid number (must be between 0 and 255).");
-				return false;
-			}
+		Validate.isTrue(split.length == 3, message + " is not a valid [RED] [GREEN] [BLUE].Example: '75 0 130' stands for Purple.");
 
-		config.getConfig().set("potion-color", message);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		for (String str : split) {
+			int k = Integer.parseInt(str);
+			Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
+		}
+
+		inv.getEditedSection().set("potion-color", message);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + message + ".");
-		return true;
 	}
 
 	@Override

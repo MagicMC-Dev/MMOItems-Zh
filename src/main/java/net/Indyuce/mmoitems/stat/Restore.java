@@ -9,7 +9,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -43,31 +42,20 @@ public class Restore extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 3) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [HEALTH] [FOOD] [SATURATION].");
-			return false;
-		}
-		for (String s : split)
-			try {
-				Double.parseDouble(s);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + s + " is not a valid number.");
-				return false;
-			}
+		Validate.isTrue(split.length == 3, message + " is not a valid [HEALTH] [FOOD] [SATURATION].");
+
 		double health = Double.parseDouble(split[0]);
 		double food = Double.parseDouble(split[1]);
 		double saturation = Double.parseDouble(split[2]);
 
-		config.getConfig().set("restore.health", (health <= 0 ? null : health));
-		config.getConfig().set("restore.food", (food <= 0 ? null : food));
-		config.getConfig().set("restore.saturation", (saturation <= 0 ? null : saturation));
+		inv.getEditedSection().set("restore.health", (health <= 0 ? null : health));
+		inv.getEditedSection().set("restore.food", (food <= 0 ? null : food));
+		inv.getEditedSection().set("restore.saturation", (saturation <= 0 ? null : saturation));
 
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Restore successfully changed to " + message + ".");
-		return true;
 	}
 
 	@Override

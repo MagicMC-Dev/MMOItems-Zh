@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -46,42 +45,32 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERMISSION).enable("Write in the chat the permission you want your item to require.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().contains("permission")) {
-				List<String> requiredPerms = config.getConfig().getStringList("permission");
+			if (inv.getEditedSection().contains("permission")) {
+				List<String> requiredPerms = inv.getEditedSection().getStringList("permission");
 				if (requiredPerms.size() < 1)
 					return;
 
 				String last = requiredPerms.get(requiredPerms.size() - 1);
 				requiredPerms.remove(last);
-				config.getConfig().set("permission", requiredPerms.size() == 0 ? null : requiredPerms);
-				inv.registerTemplateEdition(config);
-				inv.open();
+				inv.getEditedSection().set("permission", requiredPerms.size() == 0 ? null : requiredPerms);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if (message.contains("|")) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your perm node must not contain any | symbol.");
-			return false;
-		}
-
-		List<String> lore = config.getConfig().contains("permission")
-				? config.getConfig().getStringList("permission")
-				: new ArrayList<>();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		Validate.isTrue(!message.contains("|"), "Your perm node must not contain any | symbol.");
+		List<String> lore = inv.getEditedSection().contains("permission") ? inv.getEditedSection().getStringList("permission") : new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set("permission", lore);
-		inv.registerTemplateEdition(config);
-		inv.open();
+		inv.getEditedSection().set("permission", lore);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
-		return true;
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -45,13 +44,11 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		config.getConfig().set("skull-texture.value", message);
-		config.getConfig().set("skull-texture.uuid", UUID.randomUUID().toString());
-		inv.registerTemplateEdition(config);
-		inv.open();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		inv.getEditedSection().set("skull-texture.value", message);
+		inv.getEditedSection().set("skull-texture.uuid", UUID.randomUUID().toString());
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + message + ".");
-		return true;
 	}
 
 	@Override

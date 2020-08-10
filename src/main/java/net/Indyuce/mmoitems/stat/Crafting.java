@@ -108,7 +108,6 @@ public class Crafting extends ItemStat {
 	public void whenLoaded(ReadMMOItem mmoitem) {
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean validate(Player player, String input) {
 		if (input.contains(":")) {
 			String[] count = input.split("\\:");
@@ -140,7 +139,7 @@ public class Crafting extends ItemStat {
 			}
 
 			Type type = Type.get(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"));
-			if (MMOItems.plugin.getItems().getItem(type, typeid[1]) == null) {
+			if (MMOItems.plugin.getItem(type, typeid[1]) == null) {
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Could not find item with ID '"
 						+ typeid[1].toUpperCase().replace("-", "_").replace(" ", "_") + "'.");
 				return false;

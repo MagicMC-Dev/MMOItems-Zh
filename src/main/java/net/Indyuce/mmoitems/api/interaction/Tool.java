@@ -50,7 +50,7 @@ public class Tool extends UseItem {
 
 					loc.add(v);
 					Block block = loc.getBlock();
-					if (block.getType() == Material.AIR || MMOItems.plugin.isBlacklisted(block.getType()))
+					if (block.getType() == Material.AIR || MMOItems.plugin.getLanguage().isBlacklisted(block.getType()))
 						return;
 
 					block.breakNaturally(getItem());

@@ -28,7 +28,10 @@ public class MMOItemDropItem extends DropItem {
 
 	@Override
 	public void collect(LootBuilder builder) {
-		ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
+		if (!MMOItems.plugin.getItems().hasTemplate(type, id))
+			return;
+
+		ItemStack item = MMOItems.plugin.getItem(type, id, builder.getEntity().getMMOPlayerData().getMMOItems());
 		if (item != null && item.getType() != Material.AIR) {
 			item.setAmount(rollAmount());
 			builder.addLoot(item);

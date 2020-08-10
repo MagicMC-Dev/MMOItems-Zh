@@ -15,7 +15,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -41,43 +40,35 @@ public class NBTTags extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.",
 					ChatColor.AQUA + "Format: [TAG_NAME] [TAG_VALUE]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().contains("custom-nbt")) {
-				List<String> nbtTags = config.getConfig().getStringList("custom-nbt");
+			if (inv.getEditedSection().contains("custom-nbt")) {
+				List<String> nbtTags = inv.getEditedSection().getStringList("custom-nbt");
 				if (nbtTags.size() < 1)
 					return;
 
 				String last = nbtTags.get(nbtTags.size() - 1);
 				nbtTags.remove(last);
-				config.getConfig().set("custom-nbt", nbtTags);
-				inv.registerTemplateEdition(config);
-				inv.open();
+				inv.getEditedSection().set("custom-nbt", nbtTags);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
 			}
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if (message.split("\\ ").length < 2) {
-			inv.getPlayer().sendMessage(ChatColor.RED + "Invalid format");
-			return false;
-		}
-
-		List<String> customNbt = config.getConfig().contains("custom-nbt")
-				? config.getConfig().getStringList("custom-nbt")
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		Validate.isTrue(message.split("\\ ").length > 2, "Invalid format");
+		List<String> customNbt = inv.getEditedSection().contains("custom-nbt") ? inv.getEditedSection().getStringList("custom-nbt")
 				: new ArrayList<>();
 		customNbt.add(message);
-		config.getConfig().set("custom-nbt", customNbt);
-		inv.registerTemplateEdition(config);
-		inv.open();
+
+		inv.getEditedSection().set("custom-nbt", customNbt);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat successfully added.");
-		return true;
 	}
 
 	@Override

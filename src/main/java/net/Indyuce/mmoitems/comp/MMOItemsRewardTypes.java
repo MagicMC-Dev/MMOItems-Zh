@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class MMOItemsRewardTypes extends BSRewardType {
 
@@ -28,7 +29,8 @@ public class MMOItemsRewardTypes extends BSRewardType {
 		if (object != null || !(object instanceof List<?>))
 			return true;
 
-		ClassManager.manager.getBugFinder().severe("Couldn't load the MMOItems reward type" + itemName + ". The reward object needs to be a list of types & IDs (format: [ITEM_TYPE].[ITEM_ID]).");
+		ClassManager.manager.getBugFinder().severe("Couldn't load the MMOItems reward type" + itemName
+				+ ". The reward object needs to be a list of types & IDs (format: [ITEM_TYPE].[ITEM_ID]).");
 		return false;
 	}
 
@@ -48,7 +50,8 @@ public class MMOItemsRewardTypes extends BSRewardType {
 			try {
 				String[] split = item.split("\\.");
 				Type type = MMOItems.plugin.getTypes().get(split[0].toUpperCase().replace("-", "_"));
-				for (ItemStack drop : player.getInventory().addItem(MMOItems.plugin.getItems().getItem(type, split[1])).values())
+				for (ItemStack drop : player.getInventory().addItem(MMOItems.plugin.getItem(type, split[1], PlayerData.get(player)))
+						.values())
 					player.getWorld().dropItem(player.getLocation(), drop);
 			} catch (Exception e) {
 				ClassManager.manager.getBugFinder().severe("Couldn't load the MMOItems reward type" + item + ". Format: [ITEM_TYPE].[ITEM_ID]).");

@@ -1,454 +1,523 @@
 MYTHRIL_CHAINMAIL:
-  material: CHAINMAIL_CHESTPLATE
-  name: '&b--] &fMythril Chainmail &b[--'
-  block-power: 50.0=70.0
-  block-rating: 10.0=15.0
-  armor: 5
-  element:
-    ice:
-      defense: 8.0
-    earth:
-      defense: 6.4
-  gem-sockets:
-  - Red
-  - Blue
-  required-level: 4.0
-  tier: UNCOMMON
+  base:
+    material: CHAINMAIL_CHESTPLATE
+    name: '&b--] &fMythril Chainmail &b[--'
+    block-power:
+      base: 60.0
+      spread: 0.048
+      max-spread: 0.14
+    block-rating:
+      base: 12.5
+      spread: 0.06
+      max-spread: 0.17
+    armor: 5
+    element:
+      ice:
+        defense: 8.0
+      earth:
+        defense: 6.4
+    gem-sockets:
+    - Red
+    - Blue
+    required-level: 4.0
+    tier: UNCOMMON
 STEEL_HELMET:
-  material: IRON_HELMET
-  block-power: 5.0=7.0
-  block-rating: 5.0=8.0
-  required-level: 3.0
-  name: '&fSteel Helm'
-  armor: 2.5
-  lore:
-  - '&7Slightly better than an iron helmet.'
-  tier: COMMON
-  knockback-resistance: 0.01=0.03
-  gem-sockets:
-  - Green
-  set: STEEL
-  crafting:
-    shaped:
-      '1':
-      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      - AIR AIR AIR
-      '2':
-      - AIR AIR AIR
-      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+  base:
+    material: IRON_HELMET
+    block-power:
+      base: 6.0
+      spread: 0.048
+      max-spread: 0.14
+    block-rating:
+      base: 6.5
+      spread: 0.0625
+      max-spread: 0.1875
+    required-level: 3.0
+    name: '&fSteel Helm'
+    armor: 2.5
+    lore:
+    - '&7Slightly better than an iron helmet.'
+    tier: COMMON
+    knockback-resistance:
+      base: 0.02
+      spread: 0.11
+      max-spread: 0.33
+    gem-sockets:
+    - Green
+    set: STEEL
+    crafting:
+      shaped:
+        '1':
+        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        - AIR AIR AIR
+        '2':
+        - AIR AIR AIR
+        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
 STEEL_CHESTPLATE:
-  material: IRON_CHESTPLATE
-  block-power: 5.0=7.0
-  block-rating: 5.0=8.0
-  required-level: 3.0
-  name: '&fSteel Chestplate'
-  armor: 6.5
-  lore:
-  - '&7Slightly better than an iron chestplate.'
-  tier: COMMON
-  knockback-resistance: 0.01=0.03
-  gem-sockets:
-  - Blue
-  set: STEEL
-  crafting:
-    shaped:
-      '1':
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+  base:
+    material: IRON_CHESTPLATE
+    block-power:
+      base: 6.0
+      spread: 0.048
+      max-spread: 0.15
+    block-rating:
+      base: 6.5
+      spread: 0.0625
+      max-spread: 0.1875
+    required-level: 3.0
+    name: '&fSteel Chestplate'
+    armor: 6.5
+    lore:
+    - '&7Slightly better than an iron chestplate.'
+    tier: COMMON
+    knockback-resistance:
+      base: 0.02
+      spread: 0.11
+      max-spread: 0.33
+    gem-sockets:
+    - Blue
+    set: STEEL
+    crafting:
+      shaped:
+        '1':
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
 STEEL_LEGGINGS:
-  material: IRON_LEGGINGS
-  block-power: 5.0=7.0
-  block-rating: 5.0=8.0
-  required-level: 3.0
-  name: '&fSteel Leggings'
-  armor: 5.5
-  lore:
-  - '&7Slightly better than iron leggings.'
-  tier: COMMON
-  knockback-resistance: 0.01=0.03
-  gem-sockets:
-  - Blue
-  set: STEEL
-  crafting:
-    shaped:
-      '1':
-      - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+  base:
+    material: IRON_LEGGINGS
+    block-power:
+      base: 6.0
+      spread: 0.048
+      max-spread: 0.14
+    block-rating:
+      base: 6.5
+      spread: 0.0625
+      max-spread: 0.1875
+    required-level: 3.0
+    name: '&fSteel Leggings'
+    armor: 5.5
+    lore:
+    - '&7Slightly better than iron leggings.'
+    tier: COMMON
+    knockback-resistance:
+      base: 0.02
+      spread: 0.11
+      max-spread: 0.33
+    gem-sockets:
+    - Blue
+    set: STEEL
+    crafting:
+      shaped:
+        '1':
+        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
 STEEL_BOOTS:
-  material: IRON_BOOTS
-  block-power: 5.0=7.0
-  block-rating: 5.0=8.0
-  required-level: 3.0
-  name: '&fSteel Boots'
-  armor: 2.5
-  lore:
-  - '&7Slightly better than iron boots.'
-  tier: COMMON
-  knockback-resistance: 0.01=0.03
-  gem-sockets:
-  - Green
-  set: STEEL
-  crafting:
-    shaped:
-      '2':
-      - AIR AIR AIR
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      '1':
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-      - AIR AIR AIR
+  base:
+    material: IRON_BOOTS
+    block-power:
+      base: 6.0
+      spread: 0.048
+      max-spread: 0.14
+    block-rating:
+      base: 6.5
+      spread: 0.0625
+      max-spread: 0.1875
+    required-level: 3.0
+    name: '&fSteel Boots'
+    armor: 2.5
+    lore:
+    - '&7Slightly better than iron boots.'
+    tier: COMMON
+    knockback-resistance:
+      base: 0.02
+      spread: 0.11
+      max-spread: 0.33
+    gem-sockets:
+    - Green
+    set: STEEL
+    crafting:
+      shaped:
+        '2':
+        - AIR AIR AIR
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        '1':
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+        - AIR AIR AIR
 CURSED_WITHER_SKULL:
-  material: WITHER_SKELETON_SKULL
-  name: '&7Cursed Wither Skull'
-  required-level: 30.0
-  tier: UNIQUE
-  gem-sockets:
-  - Red
-  - Blue
-  armor: 3.0
-  armor-toughness: 2.0
-  perm-effects:
-    ABSORPTION: 1
-  lore:
-  - '&7Grants a permanent &62'
-  - '&6hearts &7absorption shield.'
-  durability: 1.0
-  element:
-    light:
-      defense: 67.4
-    fire:
-      defense: 53.4
-  crafting:
-    shaped:
-      '1':
-      - BONE BONE BONE
-      - BONE MATERIAL.UNIQUE_WEAPON_ESSENCE BONE
-      - BONE BONE BONE
+  base:
+    material: WITHER_SKELETON_SKULL
+    name: '&7Cursed Wither Skull'
+    required-level: 30.0
+    tier: UNIQUE
+    gem-sockets:
+    - Red
+    - Blue
+    armor: 3.0
+    armor-toughness: 2.0
+    perm-effects:
+      ABSORPTION: 1
+    lore:
+    - '&7Grants a permanent &62'
+    - '&6hearts &7absorption shield.'
+    durability: 1.0
+    element:
+      thunder:
+        defense: 67.4
+      fire:
+        defense: 53.4
+    crafting:
+      shaped:
+        '1':
+        - BONE BONE BONE
+        - BONE MATERIAL.UNIQUE_WEAPON_ESSENCE BONE
+        - BONE BONE BONE
 HUGE_MOTHRON_WINGS:
-  material: ELYTRA
-  max-durability: 5.0
-  two-handed: false
-  name: '&eHuge Mothron Wings'
-  tier: RARE
-  unbreakable: true
-  movement-speed: -0.03
-  will-break: false
+  base:
+    material: ELYTRA
+    max-durability: 5.0
+    two-handed: false
+    name: '&eHuge Mothron Wings'
+    tier: RARE
+    unbreakable: true
+    movement-speed: -0.03
+    will-break: false
 ARCANE_HELM:
-  material: LEATHER_HELMET
-  name: '&5Arcane Helm'
-  tier: RARE
-  required-level: 4.0
-  max-mana: 10.0
-  dye-color: 100 100 255
-  armor: 2.0
-  magic-damage: 15.0
-  item-particles:
-    type: GALAXY
-    particle: SPELL_WITCH
-  set: ARCANE
+  base:
+    material: LEATHER_HELMET
+    name: '&5Arcane Helm'
+    tier: RARE
+    required-level: 4.0
+    max-mana: 10.0
+    dye-color: 100 100 255
+    armor: 2.0
+    magic-damage: 15.0
+    item-particles:
+      type: GALAXY
+      particle: SPELL_WITCH
+    set: ARCANE
 ARCANE_CHESTPLATE:
-  material: LEATHER_CHESTPLATE
-  name: '&5Arcane Tunic'
-  tier: RARE
-  required-level: 4.0
-  max-mana: 10.0
-  dye-color: 100 100 255
-  armor: 6.0
-  magic-damage: 15.0
-  ability:
-    on-hit:
-      type: WITHER
-      mode: WHEN_HIT
-      cooldown: 9.0
-      amplifier: 2.0
-  item-particles:
-    type: GALAXY
-    particle: SPELL_WITCH
-  lore:
-  - '&2Enemies trying to attack you'
-  - '&2will be violently inflicted a wither'
-  - '&2effect for a short period of time.'
-  set: ARCANE
+  base:
+    material: LEATHER_CHESTPLATE
+    name: '&5Arcane Tunic'
+    tier: RARE
+    required-level: 4.0
+    max-mana: 10.0
+    dye-color: 100 100 255
+    armor: 6.0
+    magic-damage: 15.0
+    ability:
+      on-hit:
+        type: WITHER
+        mode: WHEN_HIT
+        cooldown: 9.0
+        amplifier: 2.0
+    item-particles:
+      type: GALAXY
+      particle: SPELL_WITCH
+    lore:
+    - '&2Enemies trying to attack you'
+    - '&2will be violently inflicted a wither'
+    - '&2effect for a short period of time.'
+    set: ARCANE
 ARCANE_LEGGINGS:
-  material: LEATHER_LEGGINGS
-  name: '&5Arcane Leggings'
-  tier: RARE
-  required-level: 4.0
-  max-mana: 10.0
-  dye-color: 100 100 255
-  armor: 5.0
-  magic-damage: 15.0
-  item-particles:
-    type: GALAXY
-    particle: SPELL_WITCH
-  gem-sockets:
-  - Blue
-  - Green
-  set: ARCANE
+  base:
+    material: LEATHER_LEGGINGS
+    name: '&5Arcane Leggings'
+    tier: RARE
+    required-level: 4.0
+    max-mana: 10.0
+    dye-color: 100 100 255
+    armor: 5.0
+    magic-damage: 15.0
+    item-particles:
+      type: GALAXY
+      particle: SPELL_WITCH
+    gem-sockets:
+    - Blue
+    - Green
+    set: ARCANE
 ARCANE_BOOTS:
-  material: LEATHER_BOOTS
-  name: '&5Arcane Boots'
-  tier: RARE
-  required-level: 4.0
-  max-mana: 10.0
-  dye-color: 100 100 255
-  armor: 2.0
-  magic-damage: 15.0
-  item-particles:
-    type: GALAXY
-    particle: SPELL_WITCH
-  lore:
-  - '&2Greatly increases your'
-  - '&2fall damage reduction.'
-  fall-damage-reduction: 40.0=50.0
-  set: ARCANE
+  base:
+    material: LEATHER_BOOTS
+    name: '&5Arcane Boots'
+    tier: RARE
+    required-level: 4.0
+    max-mana: 10.0
+    dye-color: 100 100 255
+    armor: 2.0
+    magic-damage: 15.0
+    item-particles:
+      type: GALAXY
+      particle: SPELL_WITCH
+    lore:
+    - '&2Greatly increases your'
+    - '&2fall damage reduction.'
+    fall-damage-reduction:
+      base: 45.0
+      spread: 0.033
+      max-spread: 0.1
+    set: ARCANE
 GINGERBREAD_HELM:
-  material: LEATHER_HELMET
-  dye-color: 255 150 100
-  name: '&cGingerbread Helmet'
-  required-level: 2.0
-  lore:
-  - '&eEarned during X-Mas 2018!'
-  set: GINGERBREAD
-  parry-rating: 5.0
-  max-health: 2.0
-  armor: 2.0
-  regeneration: 10.0
-  item-particles:
-    type: OFFSET
-    particle: REDSTONE
-    color:
-      red: 255
-      green: 100
-      blue: 100
+  base:
+    material: LEATHER_HELMET
+    dye-color: 255 150 100
+    name: '&cGingerbread Helmet'
+    required-level: 2.0
+    lore:
+    - '&eEarned during X-Mas 2018!'
+    set: GINGERBREAD
+    parry-rating: 5.0
+    max-health: 2.0
+    armor: 2.0
+    health-regeneration: 10.0
+    item-particles:
+      type: OFFSET
+      particle: REDSTONE
+      color:
+        red: 255
+        green: 100
+        blue: 100
 GINGERBREAD_TUNIC:
-  material: LEATHER_CHESTPLATE
-  dye-color: 255 130 130
-  name: '&cGingerbread Tunic'
-  required-level: 2.0
-  lore:
-  - '&eEarned during X-Mas 2018!'
-  set: GINGERBREAD
-  parry-rating: 5.0
-  max-health: 2.0
-  armor: 6.0
-  regeneration: 10.0
-  item-particles:
-    type: OFFSET
-    particle: REDSTONE
-    color:
-      red: 255
-      green: 100
-      blue: 100
+  base:
+    material: LEATHER_CHESTPLATE
+    dye-color: 255 130 130
+    name: '&cGingerbread Tunic'
+    required-level: 2.0
+    lore:
+    - '&eEarned during X-Mas 2018!'
+    set: GINGERBREAD
+    parry-rating: 5.0
+    max-health: 2.0
+    armor: 6.0
+    health-regeneration: 10.0
+    item-particles:
+      type: OFFSET
+      particle: REDSTONE
+      color:
+        red: 255
+        green: 100
+        blue: 100
 GINGERBREAD_LEGGINGS:
-  material: LEATHER_LEGGINGS
-  dye-color: 255 140 120
-  name: '&cGingerbread Leggings'
-  required-level: 2.0
-  lore:
-  - '&eEarned during X-Mas 2018!'
-  set: GINGERBREAD
-  parry-rating: 5.0
-  max-health: 2.0
-  armor: 5.0
-  regeneration: 10.0
-  item-particles:
-    type: OFFSET
-    particle: REDSTONE
-    color:
-      red: 255
-      green: 100
-      blue: 100
+  base:
+    material: LEATHER_LEGGINGS
+    dye-color: 255 140 120
+    name: '&cGingerbread Leggings'
+    required-level: 2.0
+    lore:
+    - '&eEarned during X-Mas 2018!'
+    set: GINGERBREAD
+    parry-rating: 5.0
+    max-health: 2.0
+    armor: 5.0
+    health-regeneration: 10.0
+    item-particles:
+      type: OFFSET
+      particle: REDSTONE
+      color:
+        red: 255
+        green: 100
+        blue: 100
 GINGERBREAD_BOOTS:
-  material: LEATHER_BOOTS
-  dye-color: 255 150 150
-  name: '&cGingerbread Boots'
-  required-level: 2.0
-  lore:
-  - '&eEarned during X-Mas 2018!'
-  set: GINGERBREAD
-  parry-rating: 5.0
-  max-health: 2.0
-  armor: 2.0
-  regeneration: 10.0
-  item-particles:
-    type: OFFSET
-    particle: REDSTONE
-    color:
-      red: 255
-      green: 100
-      blue: 100
+  base:
+    material: LEATHER_BOOTS
+    dye-color: 255 150 150
+    name: '&cGingerbread Boots'
+    required-level: 2.0
+    lore:
+    - '&eEarned during X-Mas 2018!'
+    set: GINGERBREAD
+    parry-rating: 5.0
+    max-health: 2.0
+    armor: 2.0
+    health-regeneration: 10.0
+    item-particles:
+      type: OFFSET
+      particle: REDSTONE
+      color:
+        red: 255
+        green: 100
+        blue: 100
 DEAD_PHARAOH_HELMET:
-  material: PLAYER_HEAD
-  skull-texture:
-    value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGU1NWRmOTc5YWI3OTc0OWY4YjU1MWI0MjM5YTQ2OWFhNzY5ZDliNDYwNTBhYWJkOWY2ZDFjZWU1M2VkMzYifX19
-    uuid: 852deb36-af4a-412f-ac76-2b06dc123ed2
-  name: '&cDead Pharaoh Helmet'
-  disable-interaction: true
-  item-particles:
-    type: FIREFLIES
-    particle: SMOKE_NORMAL
-  fire-damage-reduction: 30.0
-  armor: 4.0
-  undead-damage: 30.0
-  lore:
-  - '&7This powerful forgotten helmet'
-  - '&7will greatly increase your power'
-  - '&7against undead creatures.'
-  required-level: 9.0
+  base:
+    material: PLAYER_HEAD
+    skull-texture:
+      value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGU1NWRmOTc5YWI3OTc0OWY4YjU1MWI0MjM5YTQ2OWFhNzY5ZDliNDYwNTBhYWJkOWY2ZDFjZWU1M2VkMzYifX19
+      uuid: 852deb36-af4a-412f-ac76-2b06dc123ed2
+    name: '&cDead Pharaoh Helmet'
+    disable-interaction: true
+    item-particles:
+      type: FIREFLIES
+      particle: SMOKE_NORMAL
+    fire-damage-reduction: 30.0
+    armor: 4.0
+    undead-damage: 30.0
+    lore:
+    - '&7This powerful forgotten helmet'
+    - '&7will greatly increase your power'
+    - '&7against undead creatures.'
+    required-level: 9.0
 MOSSY_SKELETON_SKULL:
-  material: PLAYER_HEAD
-  skull-texture:
-    value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWE2MzE0ZWFjMzQ0MTZjZTEwYWIyMmMyZTFjNGRjYjQ3MmEzZmViOThkNGUwNGQzZmJiYjg1YTlhNDcxYjE4In19fQ
-    uuid: f455a085-3f09-43ac-8be1-175204d1a6ad
-  name: '&8Mossy Skeleton Skull'
-  required-level: 6.0
-  armor: 3.5
-  knockback-resistance: 0.1
-  movement-speed: -0.01
-  disable-interaction: true
+  base:
+    material: PLAYER_HEAD
+    skull-texture:
+      value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWE2MzE0ZWFjMzQ0MTZjZTEwYWIyMmMyZTFjNGRjYjQ3MmEzZmViOThkNGUwNGQzZmJiYjg1YTlhNDcxYjE4In19fQ
+      uuid: f455a085-3f09-43ac-8be1-175204d1a6ad
+    name: '&8Mossy Skeleton Skull'
+    required-level: 6.0
+    armor: 3.5
+    knockback-resistance: 0.1
+    movement-speed: -0.01
+    disable-interaction: true
 SKELETON_CROWN:
-  material: PLAYER_HEAD
-  skull-texture:
-    value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM3OGQyMTAyZGI3NWYxYjM3NDRhNWU3ZTliYWNjZjg4ZmRhNGNjNDk3OWViYzBhODFiN2Q5ZWI1NzIxYzAifX19
-    uuid: ccb901e7-0919-463d-9bdd-ee9acae8e0e2
-  name: '&eSkeleton Crown'
-  required-level: 9.0
-  armor: 3.0
-  movement-speed: 0.01
-  ability:
-    ability1:
-      type: LIFE_ENDER
-      mode: WHEN_HIT
-      damage: 3.0
-      cooldown: 9.0
-  lore:
-  - '&7Every 9 seconds, summons a'
-  - '&cdeadly meteor&7 at your attacker,'
-  - '&7dealing &c4&7 damage while briefly'
-  - '&7knocking them away.'
-  disable-interaction: true
+  base:
+    material: PLAYER_HEAD
+    skull-texture:
+      value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM3OGQyMTAyZGI3NWYxYjM3NDRhNWU3ZTliYWNjZjg4ZmRhNGNjNDk3OWViYzBhODFiN2Q5ZWI1NzIxYzAifX19
+      uuid: ccb901e7-0919-463d-9bdd-ee9acae8e0e2
+    name: '&eSkeleton Crown'
+    required-level: 9.0
+    armor: 3.0
+    movement-speed: 0.01
+    ability:
+      ability1:
+        type: LIFE_ENDER
+        mode: WHEN_HIT
+        damage: 3.0
+        cooldown: 9.0
+    lore:
+    - '&7Every 9 seconds, summons a'
+    - '&cdeadly meteor&7 at your attacker,'
+    - '&7dealing &c4&7 damage while briefly'
+    - '&7knocking them away.'
+    disable-interaction: true
 WYVERN_CAP:
-  material: GOLDEN_HELMET
-  name: '&fWyvern Cap'
-  required-level: 10.0
-  hide-enchants: false
-  enchants:
-    unbreaking: 9
-  armor: 2.5
-  fall-damage-reduction: 70.0
-  perm-effects:
-    JUMP: 2
-  lore:
-  - '&7Grants permanent jump boost II'
-  crafting:
-    shaped:
-      '1':
-      - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
-      - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
-      - AIR AIR AIR
-      '2':
-      - AIR AIR AIR
-      - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
-      - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
+  base:
+    material: GOLDEN_HELMET
+    name: '&fWyvern Cap'
+    required-level: 10.0
+    hide-enchants: false
+    enchants:
+      unbreaking: 9
+    armor: 2.5
+    fall-damage-reduction: 70.0
+    perm-effects:
+      JUMP: 2
+    lore:
+    - '&7Grants permanent jump boost II'
+    crafting:
+      shaped:
+        '1':
+        - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
+        - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
+        - AIR AIR AIR
+        '2':
+        - AIR AIR AIR
+        - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
+        - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
 TRAVEL_BOOTS:
-  material: LEATHER_BOOTS
-  name: §fTravel boots
-  tier: NORMAL
-  movement-speed: 0.005
-  dye-color: 187 118 126
-  will-break: true
-  max-durability: 100.0
-  armor: 2.0
-  fall-damage-reduction: 5.0
+  base:
+    material: LEATHER_BOOTS
+    name: §fTravel boots
+    tier: NORMAL
+    movement-speed: 0.005
+    dye-color: 187 118 126
+    will-break: true
+    max-durability: 100.0
+    armor: 2.0
+    fall-damage-reduction: 5.0
 SHADOWVEIL:
-  material: LEATHER_HELMET
-  dye-color: 0 0 0
-  name: '&cDark Veil'
-  tier: RARE
-  unbreakable: true
-  max-durability: 1000.0
-  enchants:
-    protection: 4
-    unbreaking: 3
-  hide-enchants: false
-  disable-enchanting: true
-  disable-repairing: true
-  ability:
-    ability1:
-      type: SHADOW_VEIL
-      mode: SHIFT_LEFT_CLICK
-      duration: 5.0
-      cooldown: 20.0
-  lore:
-  - '&7&oObtained from the depths of bedrock'
-  max-health: 10.0
-  armor: 3.0
-  armor-toughness: 2.0
+  base:
+    material: LEATHER_HELMET
+    dye-color: 0 0 0
+    name: '&cDark Veil'
+    tier: RARE
+    unbreakable: true
+    max-durability: 1000.0
+    enchants:
+      protection: 4
+      unbreaking: 3
+    hide-enchants: false
+    disable-enchanting: true
+    disable-repairing: true
+    ability:
+      ability1:
+        type: SHADOW_VEIL
+        mode: SHIFT_LEFT_CLICK
+        duration: 5.0
+        cooldown: 20.0
+    lore:
+    - '&7&oObtained from the depths of bedrock'
+    max-health: 10.0
+    armor: 3.0
+    armor-toughness: 2.0
 SHADOWROBE:
-  material: LEATHER_CHESTPLATE
-  lore:
-  - '&7&oObtained from the depths of bedrock'
-  name: '&cShadow Robe'
-  max-durability: 1000.0
-  disable-repairing: true
-  disable-enchanting: true
-  enchants:
-    unbreaking: 3
-    protection: 4
-  tier: RARE
-  unbreakable: true
-  magic-damage-reduction: 25.0
-  armor-toughness: 2.0
-  armor: 8.0
-  dye-color: 0 0 0
-  max-health: 16.0
-  ability:
-    ability1:
-      type: CORRUPT
-      mode: WHEN_HIT
-      duration: 4.0
-      damage: 12.0
-      cooldown: 15.0
-      amplifier: 1.0
+  base:
+    material: LEATHER_CHESTPLATE
+    lore:
+    - '&7&oObtained from the depths of bedrock'
+    name: '&cShadow Robe'
+    max-durability: 1000.0
+    disable-repairing: true
+    disable-enchanting: true
+    enchants:
+      unbreaking: 3
+      protection: 4
+    tier: RARE
+    unbreakable: true
+    magic-damage-reduction: 25.0
+    armor-toughness: 2.0
+    armor: 8.0
+    dye-color: 0 0 0
+    max-health: 16.0
+    ability:
+      ability1:
+        type: CORRUPT
+        mode: WHEN_HIT
+        duration: 4.0
+        damage: 12.0
+        cooldown: 15.0
+        amplifier: 1.0
 SHADOWLEGGINGS:
-  material: LEATHER_LEGGINGS
-  lore:
-  - '&7&oObtained from the depths of bedrock'
-  name: '&cShadow Leggings'
-  enchants:
-    unbreaking: 3
-    protection: 4
-  disable-repairing: true
-  disable-enchanting: true
-  magic-damage-reduction: 25.0
-  unbreakable: true
-  tier: RARE
-  armor-toughness: 2.0
-  armor: 6.0
-  max-health: 14.0
-  dye-color: 0 0 0
+  base:
+    material: LEATHER_LEGGINGS
+    lore:
+    - '&7&oObtained from the depths of bedrock'
+    name: '&cShadow Leggings'
+    enchants:
+      unbreaking: 3
+      protection: 4
+    disable-repairing: true
+    disable-enchanting: true
+    magic-damage-reduction: 25.0
+    unbreakable: true
+    tier: RARE
+    armor-toughness: 2.0
+    armor: 6.0
+    max-health: 14.0
+    dye-color: 0 0 0
 SHADOWBOOTS:
-  material: LEATHER_BOOTS
-  name: '&cShadow Boots'
-  lore:
-  - '&7&oObtained from the depths of bedrock'
-  enchants:
-    unbreaking: 3
-    protection: 4
-  disable-repairing: true
-  disable-enchanting: true
-  max-durability: 1000.0
-  unbreakable: true
-  tier: RARE
-  fall-damage-reduction: 15.0
-  armor-toughness: 2.0
-  armor: 3.0
-  max-health: 8.0
-  movement-speed: 0.01
-  dye-color: 0 0 0
+  base:
+    material: LEATHER_BOOTS
+    name: '&cShadow Boots'
+    lore:
+    - '&7&oObtained from the depths of bedrock'
+    enchants:
+      unbreaking: 3
+      protection: 4
+    disable-repairing: true
+    disable-enchanting: true
+    max-durability: 1000.0
+    unbreakable: true
+    tier: RARE
+    fall-damage-reduction: 15.0
+    armor-toughness: 2.0
+    armor: 3.0
+    max-health: 8.0
+    movement-speed: 0.01
+    dye-color: 0 0 0

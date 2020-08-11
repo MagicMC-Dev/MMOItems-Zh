@@ -1,79 +1,92 @@
 COMPOSITE_BOW:
-    base:
-        material: BOW
-        name: '&fComposite Bow'
-        critical-strike-chance: 30.0
-        attack-damage:
-            base: 7
-            scale: 0.3
-            spread: .1
-            max-spread: .3
-        required-level:
-            base: 0
-            scale: 1
-    modifiers:
-        swiftness:
-            weight: 3
-            parent: swiftness
-        heavy:
-            chance: 0.05
-            weight: 3
-            parent: heavy
-        doom:
-            weight: 5
-            parent: impending-doom
-
+  base:
+    material: BOW
+    name: '&fComposite Bow'
+    critical-strike-chance: 30.0
+    attack-damage:
+      base: 7
+      scale: 0.3
+      spread: 0.1
+      max-spread: 0.3
+    required-level:
+      base: 0
+      scale: 1
+  modifiers:
+    swiftness:
+      weight: 3
+      parent: swiftness
+    heavy:
+      chance: 0.05
+      weight: 3
+      parent: heavy
+    doom:
+      weight: 5
+      parent: impending-doom
 HELL_BOW:
-  material: BOW
-  enchants:
-    unbreaking: 10
-    infinity: 1
-  hide-enchants: true
-  unbreakable: true
-  tier: '&6Rare'
-  attack-damage: 10.0=13.0
-  critical-strike-chance: 10.0=60.0
-  critical-strike-power: 10.0=15.0
-  element:
-    fire:
-      damage: 14.0
-  ability:
-    right-click:
-      type: FIREBOLT
-      mode: SHIFT_LEFT_CLICK
-      cooldown: 20.0
-      damage: 4.0
-      ignite: 6.0
-  gem-sockets:
-  - Red
-  - Red
-  - Green
-  name: '&cHell Bow'
-  pve-damage: 20.0=30.0
-  arrow-particles:
-    amount: 5
-    offset: 0.05
-    particle: FLAME
-    speed: 0.08
+  base:
+    material: BOW
+    enchants:
+      unbreaking: 10
+      infinity: 1
+    hide-enchants: true
+    unbreakable: true
+    tier: '&6Rare'
+    attack-damage:
+      base: 11.5
+      spread: 0.038
+      max-spread: 0.12
+    critical-strike-chance:
+      base: 35.0
+      spread: 0.14
+      max-spread: 0.42
+    critical-strike-power:
+      base: 12.5
+      spread: 0.06
+      max-spread: 0.17
+    element:
+      fire:
+        damage: 14.0
+    ability:
+      right-click:
+        type: FIREBOLT
+        mode: SHIFT_LEFT_CLICK
+        cooldown: 20.0
+        damage: 4.0
+        ignite: 6.0
+    gem-sockets:
+    - Red
+    - Red
+    - Green
+    name: '&cHell Bow'
+    pve-damage:
+      base: 25.0
+      spread: 0.06
+      max-spread: 0.17
+    arrow-particles:
+      amount: 5
+      offset: 0.05
+      particle: FLAME
+      speed: 0.08
 MARKING_BOW:
-  material: BOW
-  enchants:
-    unbreaking: 3
-  name: '&8Marking Bow'
-  attack-damage: 7.0
-  arrow-particles:
-    particle: SMOKE_NORMAL
-    amount: 3
-    speed: 0.05
-  ability:
-    ability1:
-      type: WEAKEN_TARGET
-      mode: ON_HIT
-      extra-damage: 60.0
-  dodge-rating: 10.0
-  damage-reduction: -5.0
-  required-level: 10.0
-  lore:
-  - '&7Shoot an entity to &cmark &7it. The'
-  - '&7next attack against this entity'
-  - '&7will deal &c60%&7 extra damage.'
+  base:
+    material: BOW
+    enchants:
+      unbreaking: 3
+    name: '&8Marking Bow'
+    attack-damage: 7.0
+    arrow-particles:
+      particle: SMOKE_NORMAL
+      amount: 3
+      speed: 0.05
+    ability:
+      ability1:
+        type: WEAKEN_TARGET
+        mode: ON_HIT
+        extra-damage: 60.0
+    dodge-rating: 10.0
+    damage-reduction: -5.0
+    required-level: 10.0
+    lore:
+    - '&7Shoot an entity to &cmark &7it. The'
+    - '&7next attack against this entity'
+    - '&7will deal &c60%&7 extra damage.'

@@ -1,142 +1,177 @@
-# Example item
 LONG_SWORD:
-    
-    # Base item data
-    base:
-        material: IRON_SWORD
-        name: '&fLong Sword'
-        attack-speed: 1.6
-        attack-damage:
-            base: 6
-            scale: 1.2
-            spread: .1
-            max-spread: .3
-        required-level:
-            base: 0
-            scale: 1
-        element:
-            fire:
-                damage: 10
-
-    # Modifiers which have a chance to be rolled
-    modifiers:
-        sharp:
-            chance: 0.5
-            parent: sharp
-        fiery:
-            chance: 0.5
-            parent: fiery
-
+  base:
+    material: IRON_SWORD
+    name: '&fLong Sword'
+    attack-speed: 1.6
+    attack-damage:
+      base: 6
+      scale: 1.2
+      spread: 0.1
+      max-spread: 0.3
+    required-level:
+      base: 0
+      scale: 1
+    element:
+      fire:
+        damage: 10
+  modifiers:
+    sharp:
+      chance: 0.5
+      parent: sharp
+    fiery:
+      chance: 0.5
+      parent: fiery
 CUTLASS:
-  material: IRON_SWORD
-  attack-damage: 6.0=8.0
-  attack-speed: 1.6=1.8
-  lore:
-  - '&7Slightly better than an iron sword.'
-  required-level: 3.0
-  tier: COMMON
-  name: '&fSharp Cutlass'
-  max-durability: 300.0
+  base:
+    material: IRON_SWORD
+    attack-damage:
+      base: 7.0
+      spread: 0.04
+      max-spread: 0.13
+    attack-speed:
+      base: 1.7
+      spread: 0.02
+      max-spread: 0.05
+    lore:
+    - '&7Slightly better than an iron sword.'
+    required-level: 3.0
+    tier: COMMON
+    name: '&fSharp Cutlass'
+    max-durability: 300.0
 FALCON_BLADE:
-  material: GOLDEN_SWORD
-  name: '&e&nFalcon Blade'
-  required-level: 10.0
-  attack-damage: 7.0=9.0
-  attack-speed: 1.6=2.0
-  critical-strike-chance: 50.0=70.0
-  gem-sockets:
-  - Blue
-  - Green
-  ability:
-    on-hit:
-      type: STUN
-      mode: ON_HIT
-      duration: 1.0
-      cooldown: 9.0
-  unbreakable: true
-  perm-effects:
-    SPEED: 1
-  hide-enchants: true
-  enchants:
-    unbreaking: 1
-  disable-enchanting: true
-  disable-crafting: true
-  disable-repairing: true
-  disable-smelting: true
-  tier: EPIC
-  crafting:
-    shaped:
-      '1':
-      - AIR MATERIAL.EPIC_WEAPON_ESSENCE AIR
-      - MATERIAL.EPIC_WEAPON_ESSENCE GOLDEN_SWORD MATERIAL.EPIC_WEAPON_ESSENCE
-      - AIR MATERIAL.EPIC_WEAPON_ESSENCE AIR
+  base:
+    material: GOLDEN_SWORD
+    required-level: 10.0
+    attack-damage:
+      base: 8.0
+      spread: 0.04
+      max-spread: 0.11
+      maxSpread: 0.11
+    attack-speed:
+      base: 1.8
+      spread: 0.03
+      max-spread: 0.1
+    critical-strike-chance:
+      base: 60.0
+      spread: 0.05
+      max-spread: 0.14
+    gem-sockets:
+    - Blue
+    - Green
+    ability:
+      on-hit:
+        type: LIFE_ENDER
+        mode: ON_HIT
+        damage:
+          base: 10.0
+          scale: 10.0
+          spread: 0.1
+          max-spread: 0.1
+    unbreakable: true
+    perm-effects:
+      SPEED:
+        base: 1.0
+        scale: 1.0
+        spread: 0.0
+        max-spread: 0.0
+    disable-enchanting: true
+    tier: EPIC
+    crafting:
+      shaped:
+        '1':
+        - AIR MATERIAL.EPIC_WEAPON_ESSENCE AIR
+        - MATERIAL.EPIC_WEAPON_ESSENCE GOLDEN_SWORD MATERIAL.EPIC_WEAPON_ESSENCE
+        - AIR MATERIAL.EPIC_WEAPON_ESSENCE AIR
+    disable-repairing: true
+    name: '&eFalcon Blade'
+    upgrade:
+      workbench: false
+    hide-enchants: true
 KATANA:
-  material: IRON_SWORD
-  attack-damage: 7.0
-  lore:
-  - '&7&oA very sharp & light sword'
-  - '&7&oforged by a hundred years'
-  - '&7&oof smithing mastery.'
-  attack-speed: 2.0
-  tier: RARE
-  movement-speed: 0.02
-  critical-strike-chance: 10.0
-  name: '&fKatana'
-  max-durability: 800.0
+  base:
+    material: IRON_SWORD
+    attack-damage: 7.0
+    lore:
+    - '&7&oA very sharp & light sword'
+    - '&7&oforged by a hundred years'
+    - '&7&oof smithing mastery.'
+    attack-speed: 2.0
+    tier: RARE
+    movement-speed: 0.02
+    critical-strike-chance: 10.0
+    name: '&fKatana'
+    max-durability: 800.0
 SOULSTEALER:
-  material: IRON_SWORD
-  enchants:
-    unbreaking: 9
-  name: '&cThe Soulstealer'
-  attack-damage: 7.0=7.5
-  attack-speed: 1.6=1.7
-  mana-cost: 2.0
-  critical-strike-chance: 30.0
-  max-health: 2.0
-  required-level: 10.0
-  ability:
-    ability1:
-      type: VAMPIRISM
-      mode: ON_HIT
-      cooldown: 7.0
-  crafting:
-    shaped:
-      '1':
-      - MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL
-      - MISCELLANEOUS.HUMAN_SOUL SWORD.SILVER_SWORD MISCELLANEOUS.HUMAN_SOUL
-      - MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL
-  lore:
-  - '&7Drains &c10%&7 of the damage'
-  - '&7dealt as health points.'
+  base:
+    material: IRON_SWORD
+    enchants:
+      unbreaking: 9
+    name: '&cThe Soulstealer'
+    attack-damage:
+      base: 10.0
+      spread: 10.0
+      max-spread: 0.03
+      scale: 10.0
+      maxSpread: 10.0
+    attack-speed:
+      base: 1.65
+      spread: 0.01
+      max-spread: 0.03
+    mana-cost: 2.0
+    critical-strike-chance: 30.0
+    max-health: 2.0
+    required-level: 10.0
+    ability:
+      ability1:
+        type: VAMPIRISM
+        mode: ON_HIT
+        cooldown: 7.0
+    crafting:
+      shaped:
+        '1':
+        - MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL
+        - MISCELLANEOUS.HUMAN_SOUL SWORD.SILVER_SWORD MISCELLANEOUS.HUMAN_SOUL
+        - MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL MISCELLANEOUS.HUMAN_SOUL
+    lore:
+    - '&7Drains &c10%&7 of the damage'
+    - '&7dealt as health points.'
 STEEL_SWORD:
-  material: IRON_SWORD
-  name: '&fSteel Sword'
-  attack-damage: 6=7
-  attack-speed: 1.6=1.65
-  lore:
-  - '&7May be upgraded.'
-  required-level: 6.0
-  upgrade:
-    template: weapon-default
+  base:
+    material: IRON_SWORD
+    name: '&fSteel Sword'
+    attack-damage:
+      base: 6.5
+      spread: 0.02
+      max-spread: 0.07
+    attack-speed:
+      base: 1.625
+      spread: 0.006
+      max-spread: 0.02
+    lore:
+    - '&7May be upgraded.'
+    required-level: 6.0
+    upgrade:
+      template: weapon-default
 SILVER_SWORD:
-  material: IRON_SWORD
-  name: '&fSilver Sword'
-  attack-damage: 6.0
-  attack-speed: 1.6
-  lore:
-  - '&7May be upgraded.'
-  required-level: 4.0
-  crafting:
-    shaped:
-      '1':
-      - AIR MATERIAL.SILVER_INGOT AIR
-      - AIR MATERIAL.SILVER_INGOT AIR
-      - AIR STICK AIR
-      '2':
-      - MATERIAL.SILVER_INGOT AIR AIR
-      - MATERIAL.SILVER_INGOT AIR AIR
-      - STICK AIR AIR
-      '3':
-      - AIR AIR MATERIAL.SILVER_INGOT
-      - AIR AIR MATERIAL.SILVER_INGOT
-      - AIR AIR STICK
+  base:
+    material: IRON_SWORD
+    name: '&fSilver Sword'
+    attack-damage: 6.0
+    attack-speed: 1.6
+    lore:
+    - '&7May be upgraded.'
+    required-level: 4.0
+    crafting:
+      shaped:
+        '1':
+        - AIR MATERIAL.SILVER_INGOT AIR
+        - AIR MATERIAL.SILVER_INGOT AIR
+        - AIR STICK AIR
+        '2':
+        - MATERIAL.SILVER_INGOT AIR AIR
+        - MATERIAL.SILVER_INGOT AIR AIR
+        - STICK AIR AIR
+        '3':
+        - AIR AIR MATERIAL.SILVER_INGOT
+        - AIR AIR MATERIAL.SILVER_INGOT
+        - AIR AIR STICK

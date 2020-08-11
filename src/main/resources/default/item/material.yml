@@ -1,153 +1,170 @@
 STEEL_INGOT:
-  material: IRON_INGOT
-  name: '&fSteel Ingot'
-  disable-repairing: true
-  disable-crafting: true
-  lore:
-  - '&7Can be used at the steel crafting'
-  - '&7station to craft advanced gear.'
+  base:
+    material: IRON_INGOT
+    name: '&fSteel Ingot'
+    disable-repairing: true
+    disable-crafting: true
+    lore:
+    - '&7Can be used at the steel crafting'
+    - '&7station to craft advanced gear.'
 UNCOMMON_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft uncommon items.'
-  name: '&eUncommon Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft uncommon items.'
+    name: '&eUncommon Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 WITHER_ESSENCE:
-  material: BLACK_DYE
-  name: '&8Wither Essence'
-  disable-crafting: true
+  base:
+    material: BLACK_DYE
+    name: '&8Wither Essence'
+    disable-crafting: true
 RARE_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft rare items.'
-  name: '&eRare Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft rare items.'
+    name: '&eRare Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 VERY_RARE_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft very rare items.'
-  name: '&eVery rare Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft very rare items.'
+    name: '&eVery rare Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 LEGENDARY_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft legendary items.'
-  name: '&eLegendary Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft legendary items.'
+    name: '&eLegendary Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 MYTHICAL_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft mythical items.'
-  name: '&eMythical Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft mythical items.'
+    name: '&eMythical Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 EPIC_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft epic items.'
-  name: '&eEpic Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft epic items.'
+    name: '&eEpic Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 MAGICAL_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft magical items.'
-  name: '&eMagical Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft magical items.'
+    name: '&eMagical Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 UNIQUE_WEAPON_ESSENCE:
-  material: BLAZE_POWDER
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  lore:
-  - '&7Can be used to craft unique items.'
-  name: '&eUnique Weapon Essence'
-  disable-crafting: true
-  disable-smelting: true
+  base:
+    material: BLAZE_POWDER
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    lore:
+    - '&7Can be used to craft unique items.'
+    name: '&eUnique Weapon Essence'
+    disable-crafting: true
+    disable-smelting: true
 WEAPON_POWDER:
-  material: GUNPOWDER
-  tier: TRASH
-  name: '&7Broken Weapon Powder'
-  lore:
-  - '&7Can be used as regular gunpowder.'
-  - '&7Obtained when deconstructing an item.'
+  base:
+    material: GUNPOWDER
+    tier: TRASH
+    name: '&7Broken Weapon Powder'
+    lore:
+    - '&7Can be used as regular gunpowder.'
+    - '&7Obtained when deconstructing an item.'
 MAGIC_FRAGMENT:
-  material: MAGENTA_DYE
-  disable-crafting: true
-  tier: RARE
-  name: '&8Magic Fragment'
+  base:
+    material: MAGENTA_DYE
+    disable-crafting: true
+    tier: RARE
+    name: '&8Magic Fragment'
 MAGIC_ESSENCE:
-  material: BOOK
-  disable-crafting: true
-  tier: RARE
-  name: '&5Magic Essence'
+  base:
+    material: BOOK
+    disable-crafting: true
+    tier: RARE
+    name: '&5Magic Essence'
 FIRE_ESSENCE:
-  material: BLAZE_POWDER
-  disable-crafting: true
-  name: '&bFire Essence'
-  hide-enchants: true
-  enchants:
-    unbreaking: 1
-  crafting:
-    shaped:
-      '1':
-      - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
-      - BLAZE_POWDER BLAZE_ROD BLAZE_POWDER
-      - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
+  base:
+    material: BLAZE_POWDER
+    disable-crafting: true
+    name: '&bFire Essence'
+    hide-enchants: true
+    enchants:
+      unbreaking: 1
+    crafting:
+      shaped:
+        '1':
+        - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
+        - BLAZE_POWDER BLAZE_ROD BLAZE_POWDER
+        - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
 RARE_DIAMOND:
-  material: DIAMOND
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  disable-crafting: true
-  name: '&bRare Diamond'
+  base:
+    material: DIAMOND
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    disable-crafting: true
+    name: '&bRare Diamond'
 SILVER_COIN:
-  material: IRON_NUGGET
-  name: '&fSilver Coin'
-  lore:
-  - '&7A very shiny silver coin.'
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  disable-crafting: true
+  base:
+    material: IRON_NUGGET
+    name: '&fSilver Coin'
+    lore:
+    - '&7A very shiny silver coin.'
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    disable-crafting: true
 SILVER_INGOT:
-  material: IRON_INGOT
-  name: '&fSilver Ingot'
-  lore:
-  - '&7A very shiny silver ingot.'
-  enchants:
-    unbreaking: 1
-  hide-enchants: true
-  disable-crafting: true
-  crafting:
-    shaped:
-      '1':
-      - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
-      - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
-      - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+  base:
+    material: IRON_INGOT
+    name: '&fSilver Ingot'
+    lore:
+    - '&7A very shiny silver ingot.'
+    enchants:
+      unbreaking: 1
+    hide-enchants: true
+    disable-crafting: true
+    crafting:
+      shaped:
+        '1':
+        - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+        - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+        - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN

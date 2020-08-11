@@ -91,7 +91,7 @@ public class ItemUse implements Listener {
 
 			if (useItem instanceof Consumable) {
 				event.setCancelled(true);
-				if (((Consumable) useItem).useWithoutItem(true))
+				if (((Consumable) useItem).useWithoutItem())
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
 			}
 		}
@@ -320,7 +320,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!((Consumable) useItem).useWithoutItem(true)) {
+			if (!((Consumable) useItem).useWithoutItem()) {
 				event.setCancelled(true);
 				return;
 			}

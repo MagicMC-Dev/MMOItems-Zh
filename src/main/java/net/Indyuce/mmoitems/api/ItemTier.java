@@ -104,9 +104,11 @@ public class ItemTier {
 	}
 
 	/**
-	 * @return Reads a random item in the deconstruction drop table
+	 * @return Reads the deconstruction drop table. This may return a list
+	 *         containing multiple items and they should all be added to the
+	 *         player's inventory
 	 */
-	public List<ItemStack> generateDeconstructedItem(PlayerData player) {
+	public List<ItemStack> getDeconstructedLoot(PlayerData player) {
 		return hasDropTable() ? deconstruct.read(player, false) : new ArrayList<>();
 	}
 

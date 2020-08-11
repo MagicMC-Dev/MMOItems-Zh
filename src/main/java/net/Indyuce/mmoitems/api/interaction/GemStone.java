@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.event.GemStoneAppliedEvent;
+import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -61,7 +61,7 @@ public class GemStone extends UseItem {
 			return new ApplyResult(ResultType.FAILURE);
 		}
 
-		GemStoneAppliedEvent called = new GemStoneAppliedEvent(playerData, mmoitem, targetMMO);
+		ApplyGemStoneEvent called = new ApplyGemStoneEvent(playerData, mmoitem, targetMMO);
 		Bukkit.getPluginManager().callEvent(called);
 		if (called.isCancelled())
 			return new ApplyResult(ResultType.NONE);

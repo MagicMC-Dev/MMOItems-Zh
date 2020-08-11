@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -14,6 +15,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.ApplySoulboundEvent;
+import net.Indyuce.mmoitems.api.event.item.BreakSoulboundEvent;
+import net.Indyuce.mmoitems.api.event.item.DeconstructItemEvent;
+import net.Indyuce.mmoitems.api.event.item.IdentifyItemEvent;
+import net.Indyuce.mmoitems.api.event.item.RepairItemEvent;
+import net.Indyuce.mmoitems.api.event.item.UpgradeItemEvent;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -40,22 +47,31 @@ public class Consumable extends UseItem {
 		return MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_CONSUMABLES) && playerData.getRPG().canUse(getNBTItem(), true);
 	}
 
-	/*
-	 * this boolean is used to check if the consumable has applied at least once
-	 * of its item options. if so, the consumable should be consumed
+	/**
+	 * @param event
+	 *            The click event
+	 * @param target
+	 *            The item on which the consumable is being applied
+	 * @return If the consumable has applied at least once of its item options
+	 *         ie if it should be consumed
 	 */
 	public boolean useOnItem(InventoryClickEvent event, NBTItem target) {
 		if (event.getClickedInventory() != event.getWhoClicked().getInventory())
 			return false;
 
 		/*
-		 * unidentified items do not have any type, so you must check if the
+		 * Unidentified items do not have any type, so you must check if the
 		 * item has a type first.
 		 */
 		Type targetType = target.getType();
 		if (targetType == null) {
-			String unidentifiedItemTag = target.getString("MMOITEMS_UNIDENTIFIED_ITEM");
-			if (getNBTItem().getBoolean("MMOITEMS_CAN_IDENTIFY") && !unidentifiedItemTag.equals("")) {
+			if (getNBTItem().getBoolean("MMOITEMS_CAN_IDENTIFY") && target.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
+
+				IdentifyItemEvent called = new IdentifyItemEvent(playerData, mmoitem, target);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return false;
+
 				event.setCurrentItem(new IdentifiedItem(target).identify());
 				Message.SUCCESSFULLY_IDENTIFIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
@@ -65,27 +81,33 @@ public class Consumable extends UseItem {
 		}
 
 		/*
-		 * deconstructing an item. usually consumables do not deconstruct and
-		 * repair items at the same time so there's no pb with that
+		 * Deconstructing an item, usually consumables do not deconstruct and
+		 * repair items at the same time so there should not be any problem with
+		 * that
 		 */
 		String itemTierTag = target.getString("MMOITEMS_TIER");
-		if (getNBTItem().getBoolean("MMOITEMS_CAN_DECONSTRUCT") && !itemTierTag.equals("")) {
+		if (!itemTierTag.equals("") && getNBTItem().getBoolean("MMOITEMS_CAN_DECONSTRUCT")) {
 			ItemTier tier = MMOItems.plugin.getTiers().get(itemTierTag);
-			List<ItemStack> deconstructed = tier.generateDeconstructedItem(playerData);
-			if (!deconstructed.isEmpty()) {
+			List<ItemStack> loot = tier.getDeconstructedLoot(playerData);
+			if (!loot.isEmpty()) {
+
+				DeconstructItemEvent called = new DeconstructItemEvent(playerData, mmoitem, target, loot);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return false;
+
 				Message.SUCCESSFULLY_DECONSTRUCTED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
 				event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-				for (ItemStack drop : player.getInventory().addItem(deconstructed.toArray(new ItemStack[deconstructed.size()])).values())
+				for (ItemStack drop : player.getInventory().addItem(loot.toArray(new ItemStack[loot.size()])).values())
 					player.getWorld().dropItem(player.getLocation(), drop);
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+				return true;
 			}
-
-			return true;
 		}
 
 		/*
-		 * upgrading an item. it is better not to repair an item while upgrading
-		 * it.
+		 * Upgrading an item, it is sbetter not to repair an item while
+		 * upgrading it.
 		 */
 		if (getNBTItem().hasTag("MMOITEMS_UPGRADE") && target.hasTag("MMOITEMS_UPGRADE")) {
 			if (target.getItem().getAmount() > 1) {
@@ -109,11 +131,16 @@ public class Consumable extends UseItem {
 				return false;
 			}
 
+			UpgradeItemEvent called = new UpgradeItemEvent(playerData, mmoitem, targetMMO, consumableSharpening, targetSharpening);
+			Bukkit.getPluginManager().callEvent(called);
+			if (called.isCancelled())
+				return false;
+
 			targetSharpening.upgrade(targetMMO);
 			NBTItem result = targetMMO.newBuilder().buildNBT();
 
 			/*
-			 * safe check, if the specs the item has after ugprade are too high
+			 * Safe check, if the specs the item has after ugprade are too high
 			 * for the player, then cancel upgrading because the player would
 			 * not be able to use it.
 			 */
@@ -157,6 +184,12 @@ public class Consumable extends UseItem {
 			}
 
 			if (random.nextDouble() < soulbindingChance / 100) {
+
+				ApplySoulboundEvent called = new ApplySoulboundEvent(playerData, mmoitem, target);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return false;
+
 				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStat.SOULBOUND_LEVEL));
 				(targetMMO = new LiveMMOItem(target)).setData(ItemStat.SOULBOUND,
 						ItemStat.SOULBOUND.newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
@@ -174,7 +207,7 @@ public class Consumable extends UseItem {
 		}
 
 		/*
-		 * breaking the item's current soulbound. it has a random factor
+		 * Breaking the item's current soulbound. It has a random factor
 		 * determined by the soulbound break chance, and the consumable needs to
 		 * have at least the soulbound's level to be able to break the item
 		 * soulbound.
@@ -197,6 +230,12 @@ public class Consumable extends UseItem {
 			}
 
 			if (random.nextDouble() < soulboundBreakChance / 100) {
+
+				BreakSoulboundEvent called = new BreakSoulboundEvent(playerData, mmoitem, target);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return false;
+
 				(targetMMO = new LiveMMOItem(target)).removeData(ItemStat.SOULBOUND);
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
 				Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player,
@@ -211,7 +250,7 @@ public class Consumable extends UseItem {
 		}
 
 		/*
-		 * item repairing, does not apply if there's no repair power or if the
+		 * Item repairing, does not apply if there's no repair power or if the
 		 * item still has all its uses left
 		 */
 		int repairPower = (int) getNBTItem().getStat(ItemStat.REPAIR);
@@ -219,10 +258,17 @@ public class Consumable extends UseItem {
 
 			// custom durability
 			if (target.hasTag("MMOITEMS_DURABILITY")) {
+
+				RepairItemEvent called = new RepairItemEvent(playerData, mmoitem, target, repairPower);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return false;
+
 				DurabilityItem durItem = new DurabilityItem(player, target);
 				if (durItem.getDurability() < durItem.getMaxDurability()) {
-					target.getItem().setItemMeta(durItem.addDurability(repairPower).toItem().getItemMeta());
-					Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower)
+					target.getItem().setItemMeta(durItem.addDurability(called.getRepaired()).toItem().getItemMeta());
+					Message.REPAIRED_ITEM
+							.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
 							.send(player);
 				}
 				return true;
@@ -231,8 +277,15 @@ public class Consumable extends UseItem {
 			// vanilla durability
 			if (!target.getBoolean("Unbreakable")
 					&& MMOLib.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
-				MMOLib.plugin.getVersion().getWrapper().repair(target.getItem(), repairPower);
-				Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + repairPower)
+
+				RepairItemEvent called = new RepairItemEvent(playerData, mmoitem, target, repairPower);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return false;
+
+				MMOLib.plugin.getVersion().getWrapper().repair(target.getItem(), called.getRepaired());
+				Message.REPAIRED_ITEM
+						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
 						.send(player);
 				return true;
 			}
@@ -241,11 +294,10 @@ public class Consumable extends UseItem {
 		return false;
 	}
 
-	/*
-	 * when the method returns true, one item will be taken away from the player
-	 * inventory
+	/**
+	 * @return If the item should be consumed
 	 */
-	public boolean useWithoutItem(boolean consume) {
+	public boolean useWithoutItem() {
 		NBTItem nbtItem = getNBTItem();
 
 		if (nbtItem.getBoolean("MMOITEMS_INEDIBLE"))
@@ -325,7 +377,7 @@ public class Consumable extends UseItem {
 			return false;
 		}
 
-		return consume && !nbtItem.getBoolean("MMOITEMS_DISABLE_RIGHT_CLICK_CONSUME");
+		return !nbtItem.getBoolean("MMOITEMS_DISABLE_RIGHT_CLICK_CONSUME");
 	}
 
 	public boolean hasVanillaEating() {

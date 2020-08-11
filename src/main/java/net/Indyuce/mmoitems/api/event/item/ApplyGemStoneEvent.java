@@ -1,11 +1,12 @@
-package net.Indyuce.mmoitems.api.event;
+package net.Indyuce.mmoitems.api.event.item;
 
 import org.bukkit.event.HandlerList;
 
+import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
-public class GemStoneAppliedEvent extends PlayerDataEvent {
+public class ApplyGemStoneEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
 	private final MMOItem gemStone, targetItem;
@@ -20,7 +21,7 @@ public class GemStoneAppliedEvent extends PlayerDataEvent {
 	 * @param target
 	 *            Item on which the gem is being applied
 	 */
-	public GemStoneAppliedEvent(PlayerData playerData, MMOItem gemStone, MMOItem targetItem) {
+	public ApplyGemStoneEvent(PlayerData playerData, MMOItem gemStone, MMOItem targetItem) {
 		super(playerData);
 
 		this.gemStone = gemStone;

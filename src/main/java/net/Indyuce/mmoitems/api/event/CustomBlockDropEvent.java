@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.event.blocks;
+package net.Indyuce.mmoitems.api.event;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class CustomBlockDropEvent extends PlayerDataEvent {

@@ -22,7 +22,7 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
-import net.Indyuce.mmoitems.api.event.crafting.PlayerUseCraftingStationEvent;
+import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;

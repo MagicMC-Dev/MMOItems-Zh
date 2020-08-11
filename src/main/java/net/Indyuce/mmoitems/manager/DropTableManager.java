@@ -27,7 +27,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
-import net.Indyuce.mmoitems.api.event.blocks.CustomBlockDropEvent;
+import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
 

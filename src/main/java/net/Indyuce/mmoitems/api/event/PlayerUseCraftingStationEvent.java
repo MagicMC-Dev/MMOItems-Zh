@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.event.crafting;
+package net.Indyuce.mmoitems.api.event;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.event.HandlerList;
@@ -7,7 +7,6 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
-import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class PlayerUseCraftingStationEvent extends PlayerDataEvent {

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.template;
+package net.Indyuce.mmoitems.api.item.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +10,9 @@ import java.util.Set;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.NameModifier;
+import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
 import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
 import net.Indyuce.mmoitems.stat.data.StringData;

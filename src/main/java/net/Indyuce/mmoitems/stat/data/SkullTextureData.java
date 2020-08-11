@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat.data;
 
 import com.mojang.authlib.GameProfile;
 
-import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 

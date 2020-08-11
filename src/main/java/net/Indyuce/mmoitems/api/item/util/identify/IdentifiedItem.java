@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.internal.identify;
+package net.Indyuce.mmoitems.api.item.util.identify;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

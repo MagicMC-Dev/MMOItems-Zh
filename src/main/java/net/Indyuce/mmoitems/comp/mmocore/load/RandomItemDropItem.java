@@ -41,7 +41,7 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
 		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getTemplates().rollTier();
 
-		net.Indyuce.mmoitems.api.item.LootBuilder loot = new net.Indyuce.mmoitems.api.item.LootBuilder(itemLevel, itemTier);
+		net.Indyuce.mmoitems.api.item.template.loot.LootBuilder loot = new net.Indyuce.mmoitems.api.item.template.loot.LootBuilder(itemLevel, itemTier);
 
 		if (matchClass)
 			loot.applyFilter(new ClassFilter(rpgPlayer));

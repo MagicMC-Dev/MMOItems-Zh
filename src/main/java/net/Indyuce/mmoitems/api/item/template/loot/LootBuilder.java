@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item;
+package net.Indyuce.mmoitems.api.item.template.loot;
 
 import java.util.Collection;
 import java.util.Optional;

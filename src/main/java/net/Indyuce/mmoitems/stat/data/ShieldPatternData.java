@@ -6,7 +6,7 @@ import java.util.List;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
 
-import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.internal.crafting;
+package net.Indyuce.mmoitems.api.item.util.crafting;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
-import net.Indyuce.mmoitems.api.item.internal.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;

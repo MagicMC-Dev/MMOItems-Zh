@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.internal.identify;
+package net.Indyuce.mmoitems.api.item.util.identify;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.internal.ConfigItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;

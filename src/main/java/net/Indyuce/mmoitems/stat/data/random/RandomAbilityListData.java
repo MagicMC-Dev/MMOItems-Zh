@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.stat.data.random;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.Indyuce.mmoitems.api.item.template.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 

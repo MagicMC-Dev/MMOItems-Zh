@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.internal;
+package net.Indyuce.mmoitems.api.item.util;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

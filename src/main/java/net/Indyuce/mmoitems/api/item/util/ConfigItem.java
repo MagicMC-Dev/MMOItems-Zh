@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.internal;
+package net.Indyuce.mmoitems.api.item.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.api.item.internal.crafting.CraftingRecipeDisplay;
-import net.Indyuce.mmoitems.api.item.internal.crafting.QueueItemDisplay;
-import net.Indyuce.mmoitems.api.item.internal.crafting.UpgradingRecipeDisplay;
+import net.Indyuce.mmoitems.api.item.util.crafting.CraftingRecipeDisplay;
+import net.Indyuce.mmoitems.api.item.util.crafting.QueueItemDisplay;
+import net.Indyuce.mmoitems.api.item.util.crafting.UpgradingRecipeDisplay;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionMaterial;
 

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.internal.crafting;
+package net.Indyuce.mmoitems.api.item.util.crafting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.item.internal.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 

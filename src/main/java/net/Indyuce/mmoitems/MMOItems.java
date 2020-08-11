@@ -332,6 +332,14 @@ public class MMOItems extends JavaPlugin {
 		return rpgPlugin;
 	}
 
+	/**
+	 * The RPGHandler interface lets MMOItems fetch and manipulate RPG data like
+	 * player level, class, resources like mana and stamina for item or skill
+	 * costs, item restrictions, etc.
+	 * 
+	 * @param handler
+	 *            Your RPGHandler instance
+	 */
 	public void setRPG(RPGHandler handler) {
 		Validate.notNull(handler, "RPGHandler cannot be null");
 
@@ -352,6 +360,18 @@ public class MMOItems extends JavaPlugin {
 		return inventory;
 	}
 
+	/**
+	 * The PlayerInventory interface lets MMOItems knows what items to look for
+	 * in player inventories when doing inventory updates. By default, it only
+	 * checks held items + armor slots. However other plugins like MMOInv do
+	 * implement custom slots and therefore must register a custom
+	 * PlayerInventory instance.
+	 * 
+	 * Default instance is DefaultPlayerInventory in comp.inventory
+	 * 
+	 * @param value
+	 *            The player inventory subclass
+	 */
 	public void setPlayerInventory(PlayerInventory value) {
 		inventory = value;
 	}

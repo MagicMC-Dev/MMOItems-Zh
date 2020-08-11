@@ -50,10 +50,11 @@ public class TemplateModifier {
 		 * when providing a non-null itemGenManager, it indicates that public
 		 * modifiers were loaded and that the constructor can use them
 		 */
-		if (manager != null && config.contains("parent")) {
-			String parentFormat = config.get("parent").toString().toLowerCase().replace("_", "-").replace(" ", "_");
-			Validate.isTrue(manager.hasModifier(parentFormat), "Could not find public modifier with ID '" + parentFormat + "'");
-			TemplateModifier parent = manager.getModifier(parentFormat);
+		if (!config.contains("stats")) {
+			Validate.notNull(manager, "Cannot create a private modifier outside an item template");
+
+			Validate.isTrue(manager.hasModifier(id), "Could not find public modifier with ID '" + id + "'");
+			TemplateModifier parent = manager.getModifier(id);
 
 			chance = Math.max(Math.min(config.getDouble("chance", parent.chance), 1), 0);
 			weight = config.getDouble("weight", parent.weight);

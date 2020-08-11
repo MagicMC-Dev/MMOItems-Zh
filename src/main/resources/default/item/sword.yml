@@ -17,10 +17,8 @@ LONG_SWORD:
   modifiers:
     sharp:
       chance: 0.5
-      parent: sharp
     fiery:
       chance: 0.5
-      parent: fiery
 CUTLASS:
   base:
     material: IRON_SWORD

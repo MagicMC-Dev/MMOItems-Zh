@@ -161,10 +161,12 @@ public class TemplateManager {
 	 *         (input)
 	 */
 	public int rollLevel(int playerLevel) {
-		double found = random.nextGaussian() * MMOItems.plugin.getLanguage().levelSpread + playerLevel;
+		double spread = MMOItems.plugin.getLanguage().levelSpread;
+		double found = random.nextGaussian() * spread * .7 + playerLevel;
 
-		// cannot be more than 2x the level and must be higher than 1
-		found = Math.max(Math.min(2 * playerLevel, found), 1);
+		// must be in [level - spread, level + spread]
+		// lower bound must be higher than 1
+		found = Math.max(Math.min(found, playerLevel + spread), Math.max(1, playerLevel - spread));
 
 		return (int) found;
 	}
@@ -174,7 +176,7 @@ public class TemplateManager {
 		modifiers.clear();
 
 		MMOItems.plugin.getLogger().log(Level.INFO, "Loading template modifiers, please wait..");
-		for (File file : new File(MMOItems.plugin.getDataFolder() + "/generator/modifiers").listFiles()) {
+		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 			for (String key : config.getKeys(false))
 				try {

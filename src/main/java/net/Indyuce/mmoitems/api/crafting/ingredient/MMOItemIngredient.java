@@ -8,7 +8,6 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
@@ -67,7 +66,7 @@ public class MMOItemIngredient extends Ingredient {
 
 	private String findName() {
 		if (template.getBaseItemData().containsKey(ItemStat.NAME))
-			return ((DisplayName) ItemStat.NAME).getDisplayName(template.getBaseItemData().get(ItemStat.NAME).toString());
+			return template.getBaseItemData().get(ItemStat.NAME).toString();
 		if (template.getBaseItemData().containsKey(ItemStat.MATERIAL))
 			return MMOUtils.caseOnWords(
 					((MaterialData) template.getBaseItemData().get(ItemStat.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));

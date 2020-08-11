@@ -68,40 +68,6 @@ public class MMOItemsCommand implements CommandExecutor {
 
 		// ==================================================================================================================================
 		if (args.length < 1) {
-
-			for (Type type : MMOItems.plugin.getTypes().getAll()) {
-				ConfigFile config = type.getConfigFile();
-				for (String id : config.getConfig().getKeys(false)) {
-
-					for (String statKey : config.getConfig().getConfigurationSection(id + ".base").getKeys(false)) {
-
-						String str = config.getConfig().getString(id + ".base." + statKey);
-						if (str != null)
-							try {
-
-								String[] split = str.split("\\=");
-								Validate.isTrue(split.length == 2);
-								double val1 = Double.parseDouble(split[0]);
-								double val2 = Double.parseDouble(split[1]);
-
-								double avg = (val1 + val2) / 2;
-								double max = Math.max(Math.abs(val1), Math.abs(val2));
-								double rel = (max - avg) / max;
-
-								config.getConfig().set(id + ".base." + statKey + ".base", avg);
-								config.getConfig().set(id + ".base." + statKey + ".spread", rel / 3);
-								config.getConfig().set(id + ".base." + statKey + ".max-spread", rel);
-
-							} catch (Exception e) {
-
-							}
-
-					}
-
-				}
-				config.save();
-			}
-
 			new PluginHelp(sender).open(1);
 			return true;
 		}

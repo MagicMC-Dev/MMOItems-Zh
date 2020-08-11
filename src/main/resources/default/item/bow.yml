@@ -14,14 +14,11 @@ COMPOSITE_BOW:
   modifiers:
     swiftness:
       weight: 3
-      parent: swiftness
     heavy:
       chance: 0.05
       weight: 3
-      parent: heavy
-    doom:
+    impending-doom:
       weight: 5
-      parent: impending-doom
 HELL_BOW:
   base:
     material: BOW

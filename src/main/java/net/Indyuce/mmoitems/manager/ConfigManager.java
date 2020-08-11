@@ -7,7 +7,6 @@ import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Random;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -33,7 +32,7 @@ import net.mmogroup.mmolib.api.util.AltChar;
 public class ConfigManager {
 
 	// cached config files
-	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders;
+	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects;
 
 	// cached config options
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
@@ -42,29 +41,16 @@ public class ConfigManager {
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
 	public NumericStatFormula defaultItemCapacity;
 
-	private static final Random random = new Random();
 	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
 	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
 
 	// try to setup non existing languages
 	public ConfigManager() {
-		File mainLanguageFolder = new File(MMOItems.plugin.getDataFolder() + "/language");
-		if (!mainLanguageFolder.exists())
-			mainLanguageFolder.mkdir();
 
-		File itemFolder = new File(MMOItems.plugin.getDataFolder() + "/item");
-		if (!itemFolder.exists())
-			itemFolder.mkdir();
-
-		File dynamicFolder = new File(MMOItems.plugin.getDataFolder() + "/dynamic");
-		if (!dynamicFolder.exists())
-			dynamicFolder.mkdir();
-
-		if (!new File(MMOItems.plugin.getDataFolder() + "/generator").exists()) {
-			new File(MMOItems.plugin.getDataFolder() + "/generator").mkdir();
-			new File(MMOItems.plugin.getDataFolder() + "/generator/templates").mkdir();
-			new File(MMOItems.plugin.getDataFolder() + "/generator/modifiers").mkdir();
-		}
+		mkdir("item");
+		mkdir("dynamic");
+		mkdir("language");
+		mkdir("modifiers");
 
 		File craftingStationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
 		if (!craftingStationsFolder.exists()) {
@@ -186,7 +172,6 @@ public class ConfigManager {
 		potionEffects = new ConfigFile("/language", "potion-effects");
 		stats = new ConfigFile("/language", "stats");
 		attackEffects = new ConfigFile("/language", "attack-effects");
-		namePlaceholders = new ConfigFile("name-placeholders");
 
 		/*
 		 * reload cached config options for quicker access - these options are
@@ -254,20 +239,25 @@ public class ConfigManager {
 		return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));
 	}
 
-	public String getNamePlaceholder(String path) {
-		if (!namePlaceholders.getConfig().contains(path))
-			return null;
-
-		List<String> possible = namePlaceholders.getConfig().getStringList(path);
-		return possible.get(random.nextInt(possible.size()));
-	}
-
 	public String getLuteAttackEffectName(LuteAttackEffect effect) {
 		return attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-"));
 	}
 
 	public String getStaffSpiritName(StaffSpirit spirit) {
 		return attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-"));
+	}
+
+	/**
+	 * Creates an empty directory in the MMOItems plugin folder if it does not
+	 * exist
+	 * 
+	 * @param path
+	 *            The path of your folder
+	 */
+	private void mkdir(String path) {
+		File folder = new File(MMOItems.plugin.getDataFolder() + "/" + path);
+		if (!folder.exists())
+			folder.mkdir();
 	}
 
 	/*
@@ -279,23 +269,14 @@ public class ConfigManager {
 		// default general config files -> /MMOItems
 		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
 		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
-		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
 		DROPS("drops.yml", "", "drops.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
-		NAME_PLACEHOLDERS("name-placeholders.yml", "", "name-placeholders.yml"),
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
-
-		// LEGACY_CONFIGS("legacy-configs.zip", "", "legacy-configs.zip", true),
-		// Not included in the jar anymore
+		EXAMPLE_MODIFIERS("modifiers/example-modifiers.yml", "modifiers", "example-modifiers.yml"),
 
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
-
-		// item generator
-		EXAMPLE_GEN_TEMPLATES("generator/templates/example-templates.yml", "generator/templates", "example-templates.yml"),
-		EXAMPLE_GEN_MODIFIERS("generator/modifiers/example-modifiers.yml", "generator/modifiers", "example-modifiers.yml"),
-		ITEM_GEN_CONFIG("generator/config.yml", "generator", "config.yml"),
 
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),

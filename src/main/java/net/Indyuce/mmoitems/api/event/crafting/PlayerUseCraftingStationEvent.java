@@ -97,13 +97,14 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 
 		/**
 		 * Called when a player places an item in the crafting queue when the
-		 * recipe is not instantaneous.
+		 * recipe is not instantaneous or when the player directly gets the item
+		 * via an instant recipe
 		 */
 		INTERACT_WITH_RECIPE,
 
 		/**
-		 * Called when a player claims the item either in the crafting queue or
-		 * because the recipe is instantaneous
+		 * Called when a player claims the item from the crafting queue due to a
+		 * non instant crafting recipe
 		 */
 		CRAFTING_QUEUE;
 	}

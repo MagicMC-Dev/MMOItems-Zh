@@ -46,8 +46,8 @@ public class MMOItemBuilder {
 	 * @param level
 	 *            Specified item level.
 	 * @param tier
-	 *            Specified item level which determines how many capacity it
-	 *            will have. If no tier is given, item uses the default capacity
+	 *            Specified item tier which determines how many capacity it will
+	 *            have. If no tier is given, item uses the default capacity
 	 *            formula given in the main config file
 	 */
 	public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
@@ -65,12 +65,9 @@ public class MMOItemBuilder {
 		// roll item gen modifiers
 		for (TemplateModifier modifier : rollModifiers(template)) {
 
-			// roll modifier change
-			if (!modifier.rollChance())
-				continue;
-
+			// roll modifier chance
 			// only apply if enough item weight
-			if (modifier.getWeight() > capacity)
+			if (!modifier.rollChance() && modifier.getWeight() > capacity)
 				continue;
 
 			capacity -= modifier.getWeight();
@@ -92,13 +89,15 @@ public class MMOItemBuilder {
 		return tier;
 	}
 
+	/**
+	 * Calculates the item display name after applying name modifiers. If name
+	 * modifiers are specified but the item has no display name, MMOItems uses
+	 * "Item"
+	 * 
+	 * @return Built MMOItem instance
+	 */
 	public MMOItem build() {
 
-		/*
-		 * calculate new display name with suffixes and prefixes if display name
-		 * cannot be found, MMOItems is used "Item" by default so the user has
-		 * to specify a default name
-		 */
 		if (!nameModifiers.isEmpty()) {
 			String displayName = mmoitem.hasData(ItemStat.NAME) ? mmoitem.getData(ItemStat.NAME).toString() : "Item";
 			for (NameModifier mod : nameModifiers) {
@@ -114,6 +113,15 @@ public class MMOItemBuilder {
 		return mmoitem;
 	}
 
+	/**
+	 * Applies statData to the builder, either merges it if statData is
+	 * mergeable like lore, abilities.. or entirely replaces current data
+	 * 
+	 * @param stat
+	 *            Stat owning the data
+	 * @param data
+	 *            StatData to apply
+	 */
 	public void applyData(ItemStat stat, StatData data) {
 		if (mmoitem.hasData(stat) && data instanceof Mergeable)
 			((Mergeable) mmoitem.getData(stat)).merge(data);
@@ -121,19 +129,30 @@ public class MMOItemBuilder {
 			mmoitem.setData(stat, data);
 	}
 
+	/**
+	 * Adds a modifier only if there aren't already modifier of the same type
+	 * with strictly higher priority. If there are none, adds modifier and
+	 * clears less priority modifiers
+	 * 
+	 * @param modifier
+	 *            Name modifier which needs to be added
+	 */
 	public void addModifier(NameModifier modifier) {
 
-		// clean less-priority name modifiers w/ same type only
-		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
-
-		// do not add name modifier if found a mod with strictly higher priority
-		for (NameModifier mod : nameModifiers)
-			if (mod.getPriority() > modifier.getPriority())
+		for (NameModifier current : nameModifiers)
+			if (current.getType() == modifier.getType() && current.getPriority() > modifier.getPriority())
 				return;
 
+		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
 		nameModifiers.add(modifier);
 	}
 
+	/**
+	 * @param template
+	 *            The template to list modifiers from
+	 * @return A sorted (or unsorted depending on the template options) list of
+	 *         modifiers that can be later rolled and applied to the builder
+	 */
 	private Collection<TemplateModifier> rollModifiers(MMOItemTemplate template) {
 		if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
 			return template.getModifiers().values();

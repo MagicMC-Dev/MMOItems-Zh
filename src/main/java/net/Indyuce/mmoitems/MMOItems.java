@@ -104,6 +104,7 @@ public class MMOItems extends JavaPlugin {
 		 * stat manager must be initialized before MMOCore compatibility
 		 * initializes so that MMOCore can register its stats
 		 */
+
 		saveDefaultConfig();
 		statManager = new StatManager();
 		typeManager.reload();

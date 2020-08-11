@@ -11,10 +11,10 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.template.NameModifier;
-import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
+import net.Indyuce.mmoitems.api.item.template.NameModifier;
 import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
+import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -122,8 +122,15 @@ public class MMOItemBuilder {
 	}
 
 	public void addModifier(NameModifier modifier) {
+
 		// clean less-priority name modifiers w/ same type only
 		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
+
+		// do not add name modifier if found a mod with strictly higher priority
+		for (NameModifier mod : nameModifiers)
+			if (mod.getPriority() > modifier.getPriority())
+				return;
+
 		nameModifiers.add(modifier);
 	}
 

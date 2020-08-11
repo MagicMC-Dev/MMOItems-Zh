@@ -1,10 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.ChatColor;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.MMOItem;
 import net.Indyuce.mmoitems.api.item.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.StringData;
@@ -13,6 +9,8 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 public class DisplayName extends StringStat {
 	public DisplayName() {
@@ -27,7 +25,7 @@ public class DisplayName extends StringStat {
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().getItem().getItemMeta().hasDisplayName())
-			((MMOItem) mmoitem).setData(ItemStat.NAME, new StringData(mmoitem.getNBT().getItem().getItemMeta().getDisplayName()));
+			(mmoitem).setData(ItemStat.NAME, new StringData(mmoitem.getNBT().getItem().getItemMeta().getDisplayName()));
 	}
 
 	/*

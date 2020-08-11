@@ -39,7 +39,7 @@ public class DyeColor extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.DYE_COLOR).enable("Write in the chat the RGB color you want.",
-					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
+					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("dye-color", null);
@@ -51,7 +51,7 @@ public class DyeColor extends ItemStat {
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		Validate.isTrue(split.length == 3, message + " is not a valid [RED] [GREEN] [BLUE].");
+		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}.");
 		for (String str : split) {
 			int k = Integer.parseInt(str);
 			Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");

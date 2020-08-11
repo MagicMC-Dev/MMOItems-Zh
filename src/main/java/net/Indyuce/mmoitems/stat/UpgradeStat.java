@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -77,7 +78,7 @@ public class UpgradeStat extends ItemStat {
 		}
 
 		if (info[0].equals("rate")) {
-			double d = Double.parseDouble(message);
+			double d = MMOUtils.parseDouble(message);
 			inv.getEditedSection().set("upgrade.success", d);
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(

@@ -39,7 +39,7 @@ public class PotionColor extends StringStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.POTION_COLOR).enable("Write in the chat the RGB color you want.",
-					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
+					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("potion-color", null);
@@ -51,7 +51,7 @@ public class PotionColor extends StringStat {
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		Validate.isTrue(split.length == 3, message + " is not a valid [RED] [GREEN] [BLUE].Example: '75 0 130' stands for Purple.");
+		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
 
 		for (String str : split) {
 			int k = Integer.parseInt(str);

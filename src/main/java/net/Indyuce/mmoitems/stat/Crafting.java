@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -85,7 +86,7 @@ public class Crafting extends ItemStat {
 			Validate.isTrue(args.length == 3, "Invalid format");
 			Validate.isTrue(validate(inv.getPlayer(), args[0]));
 			int time = Integer.parseInt(args[1]);
-			double exp = Double.parseDouble(args[2]);
+			double exp = MMOUtils.parseDouble(args[2]);
 
 			inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
 			inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);

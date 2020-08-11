@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -41,13 +43,33 @@ public class MMOUtils {
 		}
 	}
 
-	/*
-	 * used by many plugin abilities and mecanisms. sometimes vector cannot be
-	 * normalized because its length is equal to 0 (normalizing a vector just
-	 * divides the vector coordinates by its length), return vec if null length
+	/**
+	 * Returns either the normalized vector, or null vector if input is null
+	 * vector which cannot be normalized.
+	 * 
+	 * @param vector
+	 *            Vector which can be of length 0
+	 * @return Normalized vector or 0 depending on input
 	 */
 	public static Vector normalize(Vector vector) {
 		return vector.getX() == 0 && vector.getY() == 0 ? vector : vector.normalize();
+	}
+
+	/**
+	 * Double.parseDouble(String) cannot be used when asking for player input in
+	 * stat edition because the exception message is confusing. This method has
+	 * a better exception message
+	 * 
+	 * @param format
+	 *            Format to parse into a number
+	 * @return Parsed double
+	 */
+	public static double parseDouble(String format) {
+		try {
+			return Double.parseDouble(format);
+		} catch (IllegalArgumentException exception) {
+			throw new IllegalArgumentException("Could not read number from '" + format + "'");
+		}
 	}
 
 	public static String getProgressBar(double ratio, int n, String barChar) {
@@ -86,20 +108,20 @@ public class MMOUtils {
 		return null;
 	}
 
+	/**
+	 * The last 5 seconds of nausea are useless, night vision flashes in the
+	 * last 10 seconds, blindness takes a few seconds to decay as well, and
+	 * there can be small server lags. It's best to apply a specific duration
+	 * for every type of permanent effect.
+	 * 
+	 * @param type
+	 *            Potion effect type
+	 * @return The duration that MMOItems should be using to give player
+	 *         "permanent" potion effects, depending on the potion effect type
+	 */
 	public static int getEffectDuration(PotionEffectType type) {
-
-		// confusion takes a lot of time to decay
-		// night vision flashes your screen for the last 10sec of effect
-		if (type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION))
-			return 260;
-
-		// takes some time to decay
-		if (type.equals(PotionEffectType.BLINDNESS))
-			return 140;
-
-		// otherwise 4sec is high enough to maintain the effect even when the
-		// server laggs
-		return 80;
+		return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260
+				: type.equals(PotionEffectType.BLINDNESS) ? 140 : 80;
 	}
 
 	public static String getDisplayName(ItemStack item) {
@@ -134,6 +156,14 @@ public class MMOUtils {
 		return builder.toString();
 	}
 
+	/**
+	 * @param item
+	 *            The item to check
+	 * @param lore
+	 *            Whether or not MI should check for an item lore
+	 * @return If the item is not null, has an itemMeta and has a display name.
+	 *         If 'lore' is true, also checks if the itemMeta has a lore.
+	 */
 	public static boolean isMetaItem(ItemStack item, boolean lore) {
 		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null
 				&& (!lore || item.getItemMeta().getLore() != null);
@@ -162,11 +192,22 @@ public class MMOUtils {
 		return canDamage(null, null, target);
 	}
 
-	public static boolean canDamage(Player player, Location loc, Entity target) {
+	/**
+	 * @param player
+	 *            Player hitting the entity which can be null
+	 * @param loc
+	 *            If the given location is not null, this method checks if this
+	 *            location is inside the bounding box
+	 * @param target
+	 *            The entity being hit
+	 * @return If the entity can be damaged, by a specific player, at a specific
+	 *         spot
+	 */
+	public static boolean canDamage(@Nullable Player player, @Nullable Location loc, Entity target) {
 
 		/*
-		 * cannot hit himself or non-living entities. careful, some entities are
-		 * weirdly considered as livingEntities like the armor stand. also check
+		 * Cannot hit himself or non-living entities. Careful, some entities are
+		 * weirdly considered as livingEntities like the armor stand. Also check
 		 * if the entity is dead since a dying entity (dying effect takes some
 		 * time) can still be targeted but we dont want that
 		 */
@@ -174,14 +215,14 @@ public class MMOUtils {
 			return false;
 
 		/*
-		 * extra plugin compatibility, everything is handled via MMOLib because
+		 * Extra plugin compatibility, everything is handled via MMOLib because
 		 * the same system is used by MMOCore
 		 */
 		if (MMOLib.plugin.getEntities().findCustom(target))
 			return false;
 
 		/*
-		 * the ability player damage option is cached for quicker access in the
+		 * The ability player damage option is cached for quicker access in the
 		 * config manager instance since it is used in runnables
 		 */
 		if (target instanceof Player
@@ -191,8 +232,7 @@ public class MMOUtils {
 		return loc == null || MMOLib.plugin.getVersion().getWrapper().isInBoundingBox(target, loc);
 	}
 
-	private static final String[] romanChars = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV",
-			"I" };
+	private static final String[] romanChars = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
 	private static final int[] romanValues = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
 
 	public static String intToRoman(int input) {
@@ -254,21 +294,16 @@ public class MMOUtils {
 		return v;
 	}
 
-	/*
-	 * method to get all entities surrounding a location. this method does not
-	 * take every entity in the world but rather takes all the entities from the
-	 * 9 chunks around the entity, so even if the location is at the border of a
-	 * chunk (worst case border of 4 chunks), the entity will still be included
+	/**
+	 * @param loc
+	 *            Where we are looking for nearby entities
+	 * @return List of all entities surrounding a location. This method loops
+	 *         through the 9 surrounding chunks and collect all entities from
+	 *         them. This list can be cached and used multiple times in the same
+	 *         tick for projectile based spells which need to run entity
+	 *         checkups
 	 */
 	public static List<Entity> getNearbyChunkEntities(Location loc) {
-
-		/*
-		 * another method to save performance is if an entity bounding box
-		 * calculation is made twice in the same tick then the method does not
-		 * need to be called twice, it can utilize the same entity list since
-		 * the entities have not moved (e.g fireball which does 2+ calculations
-		 * per tick)
-		 */
 		List<Entity> entities = new ArrayList<>();
 
 		int cx = loc.getChunk().getX();

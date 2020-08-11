@@ -60,7 +60,7 @@ public class PermanentEffects extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
-					"Format: [POTION_EFFECT] [AMPLIFIER]");
+					ChatColor.AQUA + "Format: {Effect Name} {Amplifier Numeric Formula}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("perm-effects")) {
@@ -79,23 +79,18 @@ public class PermanentEffects extends ItemStat {
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		Validate.isTrue(split.length == 2,
-				message + " is not a valid [POTION_EFFECT] [AMPLIFIER]. Example: 'INCREASE_DAMAGE 4' stands for Strength 4.");
+		Validate.isTrue(split.length >= 2, "Use this format: {Effect Name} {Effect Amplifier Numeric Formula}. Example: 'speed 1 0.3' "
+				+ "stands for Speed 1, plus 0.3 level per item level (rounded up to lower int)");
 
-		PotionEffectType effect = null;
-		for (PotionEffectType effect1 : PotionEffectType.values())
-			if (effect1 != null && effect1.getName().equalsIgnoreCase(split[0].replace("-", "_"))) {
-				effect = effect1;
-				break;
-			}
-		Validate.notNull(effect, split[0]
-				+ " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_"));
+		Validate.notNull(effect, split[0] + " is not a valid potion effect. All potion effects can be found here: "
+				+ "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		int amplifier = (int) Double.parseDouble(split[1]);
-
-		inv.getEditedSection().set("perm-effects." + effect.getName(), amplifier);
+		NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
+		formula.fillConfigurationSection(inv.getEditedSection(), "perm-effects." + effect.getName());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
+		inv.getPlayer().sendMessage(
+				MMOItems.plugin.getPrefix() + ChatColor.GOLD + effect.getName() + " " + formula + ChatColor.GRAY + " successfully added.");
 	}
 
 	@Override
@@ -106,7 +101,7 @@ public class PermanentEffects extends ItemStat {
 			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
-						+ " " + effect.getLevel().toString());
+						+ " " + effect.getAmplifier().toString());
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

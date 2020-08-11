@@ -81,8 +81,8 @@ public class PotionEffects extends ItemStat {
 				}
 		Validate.notNull(effect, split[0] + " is not a valid potion effect.");
 
-		double duration = Double.parseDouble(split[1]);
-		int amplifier = (int) Double.parseDouble(split[2]);
+		double duration = MMOUtils.parseDouble(split[1]);
+		int amplifier = (int) MMOUtils.parseDouble(split[2]);
 
 		inv.getEditedSection().set("potion-effects." + effect.getName(), duration + "," + amplifier);
 		inv.registerTemplateEdition();

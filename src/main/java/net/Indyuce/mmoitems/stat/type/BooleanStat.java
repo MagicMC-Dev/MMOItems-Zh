@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -65,7 +66,7 @@ public class BooleanStat extends ItemStat {
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 
-		double probability = Double.parseDouble(message);
+		double probability = MMOUtils.parseDouble(message);
 		Validate.isTrue(probability >= 0 && probability <= 100, "Chance must be between 0 and 100");
 
 		inv.getEditedSection().set(getPath(), probability / 100);

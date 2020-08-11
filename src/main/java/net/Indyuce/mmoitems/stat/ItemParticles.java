@@ -94,7 +94,7 @@ public class ItemParticles extends ItemStat {
 			return;
 		}
 
-		double value = Double.parseDouble(message);
+		double value = MMOUtils.parseDouble(message);
 
 		inv.getEditedSection().set("item-particles." + edited, value);
 		inv.registerTemplateEdition();

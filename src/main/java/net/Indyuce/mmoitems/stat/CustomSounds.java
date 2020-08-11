@@ -69,8 +69,8 @@ public class CustomSounds extends ItemStat implements ProperStat {
 		Validate.isTrue(split.length == 3, message + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
 
 		String soundName = split[0].replace("-", "_");
-		double volume = Double.parseDouble(split[1]);
-		double pitch = Double.parseDouble(split[2]);
+		double volume = MMOUtils.parseDouble(split[1]);
+		double pitch = MMOUtils.parseDouble(split[2]);
 
 		inv.getEditedSection().set("sounds." + soundsPath + ".sound", soundName);
 		inv.getEditedSection().set("sounds." + soundsPath + ".volume", volume);

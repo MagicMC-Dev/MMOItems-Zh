@@ -59,7 +59,6 @@ import net.Indyuce.mmoitems.stat.PotionColor;
 import net.Indyuce.mmoitems.stat.PotionEffects;
 import net.Indyuce.mmoitems.stat.RequiredClass;
 import net.Indyuce.mmoitems.stat.RequiredLevel;
-import net.Indyuce.mmoitems.stat.Restore;
 import net.Indyuce.mmoitems.stat.ShieldPatternStat;
 import net.Indyuce.mmoitems.stat.SkullTextureStat;
 import net.Indyuce.mmoitems.stat.Soulbound;
@@ -200,7 +199,12 @@ public abstract class ItemStat {
 			new String[] { "If set to true, a player will be", "significantly slower if holding two", "items, one being Two Handed." },
 			new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool" });
 
-	public static final ItemStat RESTORE = new Restore();
+	public static final ItemStat RESTORE_HEALTH = new DoubleStat("RESTORE_HEALTH", VersionMaterial.RED_DYE.toItem(), "Health Restoration",
+			new String[] { "Health given when consumed." }, new String[] { "consumable" });
+	public static final ItemStat RESTORE_FOOD = new DoubleStat("RESTORE_FOOD", VersionMaterial.PORKCHOP.toItem(), "Food Restoration",
+			new String[] { "Food units given when consumed." }, new String[] { "consumable" });
+	public static final ItemStat RESTORE_SATURATION = new DoubleStat("RESTORE_SATURATION", new ItemStack(Material.GOLDEN_CARROT),
+			"Saturation Restoration", new String[] { "Saturation given when consumed." }, new String[] { "consumable" });
 	public static final ItemStat RESTORE_MANA = new DoubleStat("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toItem(), "Restore Mana",
 			new String[] { "The amount of mana", "your consumable restores." }, new String[] { "consumable" });
 	public static final ItemStat RESTORE_STAMINA = new DoubleStat("RESTORE_STAMINA", VersionMaterial.LIGHT_GRAY_DYE.toItem(), "Restore Stamina",

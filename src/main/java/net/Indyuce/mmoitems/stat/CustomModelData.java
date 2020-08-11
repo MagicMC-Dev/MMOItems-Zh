@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -8,8 +11,6 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 public class CustomModelData extends DoubleStat implements ProperStat {
 	public CustomModelData() {

@@ -118,7 +118,7 @@ public class ArrowParticles extends ItemStat {
 		}
 
 		// offset & speed
-		double value = Double.parseDouble(message);
+		double value = MMOUtils.parseDouble(message);
 		inv.getEditedSection().set("arrow-particles." + edited, value);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY

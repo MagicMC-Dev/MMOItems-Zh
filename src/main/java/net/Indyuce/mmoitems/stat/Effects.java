@@ -26,9 +26,11 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -54,7 +56,7 @@ public class Effects extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
-					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
+					ChatColor.AQUA + "Format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("effects")) {
@@ -72,23 +74,18 @@ public class Effects extends ItemStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split("\\ ");
-		Validate.isTrue(split.length == 3,
-				message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER]. Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
+		String[] split = message.split("\\|");
+		Validate.isTrue(split.length > 1, "Use this format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}.");
 
-		PotionEffectType effect = null;
-		for (PotionEffectType effect1 : PotionEffectType.values())
-			if (effect1 != null && effect1.getName().equalsIgnoreCase(split[0].replace("-", "_"))) {
-				effect = effect1;
-				break;
-			}
-		Validate.notNull(effect, split[0]
-				+ " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
+		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_").replace(" ", "_").toUpperCase());
+		Validate.notNull(effect, split[0] + " is not a valid potion effect. All potion effects "
+				+ "can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		double duration = Double.parseDouble(split[1]);
-		int amplifier = (int) Double.parseDouble(split[2]);
+		NumericStatFormula duration = new NumericStatFormula(split[1]);
+		NumericStatFormula amplifier = split.length > 2 ? new NumericStatFormula(split[2]) : new NumericStatFormula(1, 0, 0, 0);
 
-		inv.getEditedSection().set("effects." + effect.getName(), duration + "," + amplifier);
+		duration.fillConfigurationSection(inv.getEditedSection(), "effects." + effect.getName() + ".duration");
+		amplifier.fillConfigurationSection(inv.getEditedSection(), "effects." + effect.getName() + ".amplifier");
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
 	}
@@ -98,11 +95,11 @@ public class Effects extends ItemStat {
 
 		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			PotionEffectListData data = (PotionEffectListData) optional.get();
-			for (PotionEffectData effect : data.getEffects())
+			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
+			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
-						+ " " + MMOUtils.intToRoman(effect.getLevel()) + " " + ChatColor.GRAY + "(" + ChatColor.GREEN
-						+ durationFormat.format(effect.getDuration()) + ChatColor.GRAY + "s)");
+						+ ChatColor.GRAY + " Level: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
+						+ effect.getDuration());
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 

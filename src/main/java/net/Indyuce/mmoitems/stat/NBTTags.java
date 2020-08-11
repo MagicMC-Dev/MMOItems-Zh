@@ -42,7 +42,7 @@ public class NBTTags extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.",
-					ChatColor.AQUA + "Format: [TAG_NAME] [TAG_VALUE]");
+					ChatColor.AQUA + "Format: {Tag Name} {Tag Value}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("custom-nbt")) {
@@ -61,7 +61,7 @@ public class NBTTags extends ItemStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		Validate.isTrue(message.split("\\ ").length > 2, "Invalid format");
+		Validate.isTrue(message.split("\\ ").length > 2, "Use this format: {Tag Name} {Tag Value}");
 		List<String> customNbt = inv.getEditedSection().contains("custom-nbt") ? inv.getEditedSection().getStringList("custom-nbt")
 				: new ArrayList<>();
 		customNbt.add(message);

@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
@@ -75,7 +76,7 @@ public class Commands extends ItemStat {
 		for (int j = 0; j < split.length && split[j].startsWith("-"); j++) {
 			String arg = split[j];
 			if (arg.startsWith("-d:")) {
-				delay = Double.parseDouble(arg.substring(3));
+				delay = MMOUtils.parseDouble(arg.substring(3));
 				message = message.replaceFirst(arg + " ", "");
 				continue;
 			} else if (arg.equalsIgnoreCase("-c")) {

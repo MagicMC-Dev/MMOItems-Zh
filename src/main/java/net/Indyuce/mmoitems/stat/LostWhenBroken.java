@@ -1,12 +1,13 @@
 package net.Indyuce.mmoitems.stat;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 public class LostWhenBroken extends BooleanStat {
 	public LostWhenBroken() {

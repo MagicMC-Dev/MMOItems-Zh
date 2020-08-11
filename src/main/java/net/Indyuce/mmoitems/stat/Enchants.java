@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
@@ -19,13 +20,13 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomEnchantListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class Enchants extends ItemStat {
@@ -43,7 +44,7 @@ public class Enchants extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.ENCHANTS).enable("Write in the chat the enchant you want to add.",
-					ChatColor.AQUA + "Format: [ENCHANT] [LEVEL]");
+					ChatColor.AQUA + "Format: {Enchant Name} {Enchant Level Numeric Formula}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("enchants")) {
@@ -59,29 +60,20 @@ public class Enchants extends ItemStat {
 		}
 	}
 
-	private String getName(Enchantment enchant) {
-		return MMOLib.plugin.getVersion().getWrapper().getName(enchant);
-	}
-
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		Validate.notNull(split.length == 2, message + " is not a valid [ENCHANT] [LEVEL]. Example: 'DAMAGE_ALL 10' stands for Sharpness 10.");
+		Validate.isTrue(split.length >= 2, "Use this format: {Enchant Name} {Enchant Level Numeric Formula}. Example: 'sharpness 5 0.3' "
+				+ "stands for Sharpness 5, plus 0.3 level per item level (rounded up to lower integer)");
 
-		Enchantment enchant = null;
-		for (Enchantment enchant1 : Enchantment.values())
-			if (getName(enchant1).equalsIgnoreCase(split[0].replace("-", "_"))) {
-				enchant = enchant1;
-				break;
-			}
+		Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(split[0].replace("-", "_")));
 		Validate.notNull(enchant, split[0]
 				+ " is not a valid enchantment! All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
 
-		int level = (int) Double.parseDouble(split[1]);
-
-		inv.getEditedSection().set("enchants." + getName(enchant), level);
+		NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
+		formula.fillConfigurationSection(inv.getEditedSection(), "enchants." + enchant.getKey().getKey());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName(enchant) + " " + MMOUtils.intToRoman(level) + " successfully added.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + enchant.getKey().getKey() + " " + formula.toString() + " successfully added.");
 	}
 
 	@Override

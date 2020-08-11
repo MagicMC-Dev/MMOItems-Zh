@@ -14,12 +14,12 @@ import org.bukkit.inventory.ItemStack;
 public class SoulboundInfo {
 
 	/*
-	 * items that need to be given to the player whenever he respawns.
+	 * Items that need to be given to the player whenever he respawns.
 	 */
 	private final List<ItemStack> items = new ArrayList<>();
 
 	/*
-	 * if the player leaves the server before removing, the cached items will be
+	 * If the player leaves the server before removing, the cached items will be
 	 * lost. the plugin saves the last location of the player to drop the items
 	 * when the server shuts down this way they are 'saved'
 	 */
@@ -28,6 +28,10 @@ public class SoulboundInfo {
 
 	private static Map<UUID, SoulboundInfo> info = new HashMap<>();
 
+	/**
+	 * Used when a player dies and when some items must not be dropped and needs
+	 * to be cached before the player respawns
+	 */
 	public SoulboundInfo(Player player) {
 		this.player = player;
 		loc = player.getLocation().clone();
@@ -37,22 +41,18 @@ public class SoulboundInfo {
 		items.add(item);
 	}
 
-	public void setup() {
-		info.put(player.getUniqueId(), this);
+	public boolean hasItems() {
+		return !items.isEmpty();
 	}
 
-	public static Collection<SoulboundInfo> getAbandonnedInfo() {
-		return info.values();
+	public void setup() {
+		info.put(player.getUniqueId(), this);
 	}
 
 	public void giveItems() {
 		for (ItemStack item : items)
 			for (ItemStack drop : player.getInventory().addItem(item).values())
 				player.getWorld().dropItem(player.getLocation(), drop);
-	}
-
-	public boolean hasItems() {
-		return !items.isEmpty();
 	}
 
 	public void dropItems() {
@@ -64,5 +64,9 @@ public class SoulboundInfo {
 			info.get(player.getUniqueId()).giveItems();
 			info.remove(player.getUniqueId());
 		}
+	}
+
+	public static Collection<SoulboundInfo> getAbandonnedInfo() {
+		return info.values();
 	}
 }

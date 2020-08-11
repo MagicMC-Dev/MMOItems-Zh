@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -67,16 +68,16 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
-				"Second Format: {Base} {Scaling-Value} {Spread} {Max-Spread}");
+				"Second Format: {Base} {Scaling Value} {Spread} {Max Spread}");
 	}
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		double base = Double.parseDouble(split[0]);
-		double scale = split.length > 1 ? Double.parseDouble(split[1]) : 0;
-		double spread = split.length > 2 ? Double.parseDouble(split[2]) : 0;
-		double maxSpread = split.length > 3 ? Double.parseDouble(split[3]) : 0;
+		double base = MMOUtils.parseDouble(split[0]);
+		double scale = split.length > 1 ? MMOUtils.parseDouble(split[1]) : 0;
+		double spread = split.length > 2 ? MMOUtils.parseDouble(split[2]) : 0;
+		double maxSpread = split.length > 3 ? MMOUtils.parseDouble(split[3]) : 0;
 
 		// save as number
 		if (scale == 0 && spread == 0 && maxSpread == 0)
@@ -105,11 +106,11 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 		if (optional.isPresent()) {
 			NumericStatFormula data = (NumericStatFormula) optional.get();
-			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.RED + digit.format(data.getBase())
-					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.RED + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
+			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + digit.format(data.getBase())
+					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
 			if (data.getSpread() > 0)
-				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.RED + digit.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
-						+ ChatColor.RED + digit.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
+				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.GREEN + digit.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
+						+ ChatColor.GREEN + digit.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");
@@ -149,7 +150,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 				throw new IllegalArgumentException("Couldn't read amount");
 
 			relative = str.toCharArray()[str.length() - 1] == '%';
-			amount = relative ? Double.parseDouble(str.substring(0, str.length() - 1)) / 100 : Double.parseDouble(str);
+			amount = relative ? MMOUtils.parseDouble(str.substring(0, str.length() - 1)) / 100 : MMOUtils.parseDouble(str);
 		}
 
 		public double getAmount() {

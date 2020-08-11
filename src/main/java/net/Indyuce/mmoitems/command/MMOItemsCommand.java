@@ -478,30 +478,20 @@ public class MMOItemsCommand implements CommandExecutor {
 		else if (args[0].equalsIgnoreCase("reload")) {
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("stations")) {
-					Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
-						MMOItems.plugin.getCrafting().reload();
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().getAll().size()
-								+ ChatColor.GRAY + " Crafting Stations");
-						sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().countRecipes()
-								+ ChatColor.GRAY + " Recipes");
-					});
+					MMOItems.plugin.getCrafting().reload();
+					sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().getAll().size()
+							+ ChatColor.GRAY + " Crafting Stations");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().countRecipes()
+							+ ChatColor.GRAY + " Recipes");
 				}
 
 				if (args[1].equalsIgnoreCase("recipes")) {
-					Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
-						MMOItems.plugin.getRecipes().reloadRecipes();
-
-						/*
-						 * discoverRecipes must be called on the main thread.
-						 */
-						Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-							sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
-							sender.sendMessage(
-									MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + (MMOItems.plugin.getRecipes().getLoadedRecipes().size()
-											+ MMOItems.plugin.getRecipes().getCustomRecipes().size()) + ChatColor.GRAY + " Recipes");
-						});
-					});
+					MMOItems.plugin.getRecipes().reloadRecipes();
+					sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
+							+ (MMOItems.plugin.getRecipes().getLoadedRecipes().size() + MMOItems.plugin.getRecipes().getCustomRecipes().size())
+							+ ChatColor.GRAY + " Recipes");
 				}
 				return true;
 			}
@@ -515,7 +505,6 @@ public class MMOItemsCommand implements CommandExecutor {
 			MMOItems.plugin.getTemplates().reload();
 			MMOItems.plugin.getWorldGen().reload();
 			MMOItems.plugin.getCustomBlocks().reload();
-			MMOItems.plugin.getTemplates().reload();
 			sender.sendMessage(
 					MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
 			sender.sendMessage(

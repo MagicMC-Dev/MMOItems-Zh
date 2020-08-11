@@ -2,17 +2,14 @@ SANDWITCH:
   base:
     material: BREAD
     name: '&cSand&6witch'
-    restore:
-      health: 0
-      food: 5
-      saturation: 0
     effects:
       POISON:
         duration: 10
-        level: 2
+        amplifier: 2
     lore:
     - '&7Are you really that hungry?!'
     item-cooldown: 15
+    restore-food: 5.0
 ROCK:
   base:
     material: COBBLESTONE
@@ -108,21 +105,20 @@ APPLE_OF_DISCORD:
     durability: 1.0
     name: '&6[ Apple of Discord ]'
     required-level: 4.0
-    restore:
-      health: 1.0
-      food: 15.0
-      saturation: 1.0
     item-cooldown: 50.0
     effects:
       ABSORPTION:
         duration: 40
-        level: 2
+        amplifier: 2
       REGENERATION:
         duration: 40
-        level: 2
+        amplifier: 2
       SPEED:
         duration: 40
-        level: 2
+        amplifier: 2
+    restore-health: 1.0
+    restore-food: 15.0
+    restore-saturation: 1.0
 SHARP_FLINT:
   base:
     material: FLINT
@@ -139,19 +135,18 @@ DEATH_STEW:
     effects:
       HARM:
         duration: 1
-        level: 100
+        amplifier: 100
 KARTOFFELSALAT:
   base:
     material: RABBIT_STEW
     name: '&9Kartoffelsalat'
     tier: COMMON
     restore-stamina: 10.0
-    restore:
-      food: 3.0
-      saturation: 10.0
     item-cooldown: 30.0
     lore:
     - '&7Very punchy, yet hard to finish.'
+    restore-food: 3.0
+    restore-saturation: 10.0
 LARGE_HEALTH_POTION:
   base:
     material: PLAYER_HEAD
@@ -160,10 +155,9 @@ LARGE_HEALTH_POTION:
       uuid: 701aa558-c1b0-4eb7-81e4-79b1af25283c
     name: '&fLarge Health Potion'
     item-cooldown: 10.0
-    restore:
-      health: 10.0
     sounds:
       on-consume: ENTITY_GENERIC_DRINK
+    restore-health: 10.0
 LARGE_MANA_POTION:
   base:
     material: PLAYER_HEAD
@@ -185,13 +179,12 @@ TACO:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTQ5ZDNkODg5Y2ZmNjU1YzYyMjgzNDE4NDU1MjA1YjAzYWU3N2ZmYjdlZTE4ZGQwM2FjMGE0ZmZiODk1NjE1YiJ9fX0=
       uuid: c8113aeb-0b63-4654-9e8f-54416fd2fde8
     name: '&fTaco'
-    restore:
-      health: 3.0
-      food: 8.0
-      saturation: 10.0
     item-cooldown: 2.0
     lore:
     - '&7&oA hot & tasty taco!'
+    restore-health: 3.0
+    restore-food: 8.0
+    restore-saturation: 10.0
 BURGER:
   base:
     material: PLAYER_HEAD
@@ -199,14 +192,13 @@ BURGER:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTUwMzkxYjEzODNkOWVmOWU2ZTdiZjVmODJkMWNmODgyZDgxZTJiMDA0ZGUzNjlmNzI5ZWRhMDRiMmVhNjNkMyJ9fX0=
       uuid: 076dd3bf-0d76-497b-9745-40ed9402a311
-    restore:
-      health: 4.0
-      food: 10.0
-      saturation: 9.0
     restore-stamina: 30.0
     name: '&fTasty Burger'
     lore:
     - '&7&oMmmmh, yummy!'
+    restore-health: 4.0
+    restore-food: 10.0
+    restore-saturation: 9.0
 WEIRD_CANDY_BAG:
   base:
     material: PLAYER_HEAD
@@ -215,12 +207,11 @@ WEIRD_CANDY_BAG:
       uuid: efdf121e-209f-49a2-9c56-d0bf058f33ae
     name: '&9Weird Candy Bag'
     item-cooldown: 3.0
-    restore:
-      food: 4.0
     effects:
       CONFUSION:
         duration: 30
-        level: 1
+        amplifier: 1
+    restore-food: 4
 SUSHI_ROLL:
   base:
     material: PLAYER_HEAD
@@ -232,17 +223,13 @@ SUSHI_ROLL:
     - '&7&oSushis are leggit the'
     - '&7&obest food on Earth.'
     item-cooldown: 0.5
-    restore:
-      health: 1.0
     effects:
       SPEED:
         duration:
-          base: 10.0
-          scale: 10.0
-          spread: 0.0
-          max-spread: 0.0
-        level: 1
-        amplifier: 1.0
+          base: 10
+          scale: 10
+        amplifier: 1
+    restore-health: 1
 SOULBINDER1:
   base:
     material: ENDER_EYE
@@ -271,14 +258,6 @@ SOULCRUSHER2:
     disable-interaction: true
     soulbound-level: 2.0
     soulbound-break-chance: 40.0
-    effects:
-      SPEED:
-        duration:
-          base: 10.0
-          scale: 10.0
-          spread: 0.0
-          max-spread: 0.0
-        amplifier: 1.0
 SOULBINDER3:
   base:
     material: ENDER_EYE
@@ -307,15 +286,14 @@ SANTA_COOKIE:
     name: '&cS&fa&cn&ft&ca''&fs &cC&fo&co&fk&ci&fe'
     lore:
     - '&7&oWhere are the darn cookies!'
-    restore:
-      saturation: 12.0
     sounds:
       on-consume: ENTITY_PLAYER_BURP
     item-cooldown: 2.0
     effects:
       SPEED:
         duration: 1
-        level: 2
+        amplifier: 2
+    restore-saturation: 12
 ENDER_NOTE:
   base:
     material: PAPER
@@ -334,7 +312,7 @@ ENDER_NOTE:
     effects:
       HARM:
         duration: 1
-        level: 2
+        amplifier: 2
 THROW_COAL:
   base:
     material: COAL
@@ -354,10 +332,6 @@ EGGNOG:
     name: '&6Eggnog'
     disable-interaction: true
     item-cooldown: 3.0
-    restore:
-      health: 2.0
-      food: 2.0
-      saturation: 4.0
     commands:
       '1':
         format: me Mmmmmh!
@@ -377,6 +351,9 @@ EGGNOG:
         - AIR
         - AIR
         - AIR
+    restore-health: 2.0
+    restore-food: 2.0
+    restore-saturation: 4.0
 MANGO:
   base:
     material: PLAYER_HEAD
@@ -390,8 +367,7 @@ MANGO:
     effects:
       REGENERATION:
         duration: 20
-        level: 1
-    restore:
-      food: 8.0
-      saturation: 10.0
+        amplifier: 1
     vanilla-eating: false
+    restore-food: 8
+    restore-saturation: 10

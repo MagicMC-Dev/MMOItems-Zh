@@ -23,8 +23,8 @@ import net.Indyuce.mmoitems.api.UpdaterData;
 
 public class PluginUpdateManager {
 
-	/*
-	 * the integer as key is used as reference in order to apply an update using
+	/**
+	 * The integer as key is used as reference in order to apply an update using
 	 * the update command.
 	 */
 	private final Map<Integer, PluginUpdate> updates = new HashMap<>();
@@ -143,27 +143,29 @@ public class PluginUpdateManager {
 						"&cIt is REALLY important to save a backup before using this config update!" },
 				sender -> {
 
-					// translates items into templates
-					for (Type type : MMOItems.plugin.getTypes().getAll()) {
-						ConfigFile config = type.getConfigFile();
-						idLoop: for (String id : config.getConfig().getKeys(false)) {
-							if (config.getConfig().getConfigurationSection(id).contains("base"))
-								continue idLoop;
-
-							config.getConfig().createSection(id + ".base", config.getConfig().getConfigurationSection(id).getValues(false));
-							for (String statKey : config.getConfig().getConfigurationSection(id).getKeys(false))
-								if (!statKey.equals("base"))
-									config.getConfig().set(id + "." + statKey, null);
-						}
-
-						config.save();
-					}
-
 					// fixes stat formats
 					for (Type type : MMOItems.plugin.getTypes().getAll()) {
 						ConfigFile config = type.getConfigFile();
 						for (String id : config.getConfig().getKeys(false)) {
 
+							// translates items into templates
+							if (!config.getConfig().getConfigurationSection(id).contains("base")) {
+
+								config.getConfig().createSection(id + ".base", config.getConfig().getConfigurationSection(id).getValues(false));
+								for (String statKey : config.getConfig().getConfigurationSection(id).getKeys(false))
+									if (!statKey.equals("base"))
+										config.getConfig().set(id + "." + statKey, null);
+							}
+
+							if (config.getConfig().getConfigurationSection(id + ".base").contains("restore")) {
+								config.getConfig().set(id + ".base.restore-health", config.getConfig().getDouble(id + ".base.restore.health"));
+								config.getConfig().set(id + ".base.restore-food", config.getConfig().getDouble(id + ".base.restore.food"));
+								config.getConfig().set(id + ".base.restore-saturation",
+										config.getConfig().getDouble(id + ".base.restore.saturation"));
+								config.getConfig().set(id + ".base.restore", null);
+							}
+
+							// fix numeric stat formats
 							for (String statKey : config.getConfig().getConfigurationSection(id + ".base").getKeys(false)) {
 
 								String str = config.getConfig().getString(id + ".base." + statKey);

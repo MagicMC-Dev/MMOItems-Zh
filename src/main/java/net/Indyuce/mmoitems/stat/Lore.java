@@ -45,19 +45,17 @@ public class Lore extends ItemStat implements ProperStat {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.LORE).enable("Write in the chat the lore line you want to add.");
 
-		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (inv.getEditedSection().contains("lore")) {
-				List<String> lore = inv.getEditedSection().getStringList("lore");
-				if (lore.size() < 1)
-					return;
+		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("lore")) {
+			List<String> lore = inv.getEditedSection().getStringList("lore");
+			if (lore.isEmpty())
+				return;
 
-				String last = lore.get(lore.size() - 1);
-				lore.remove(last);
-				inv.getEditedSection().set("lore", lore);
-				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(
-						MMOItems.plugin.getPrefix() + "Successfully removed '" + MMOLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
-			}
+			String last = lore.get(lore.size() - 1);
+			lore.remove(last);
+			inv.getEditedSection().set("lore", lore.isEmpty() ? null : lore);
+			inv.registerTemplateEdition();
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MMOLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
 		}
 	}
 

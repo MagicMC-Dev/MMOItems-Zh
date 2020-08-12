@@ -62,16 +62,12 @@ FALCON_BLADE:
         mode: ON_HIT
         damage:
           base: 10.0
-          scale: 10.0
+          scale: 1
           spread: 0.1
-          max-spread: 0.1
+          max-spread: 0.2
     unbreakable: true
     perm-effects:
-      SPEED:
-        base: 1.0
-        scale: 1.0
-        spread: 0.0
-        max-spread: 0.0
+      SPEED: 1
     disable-enchanting: true
     tier: EPIC
     crafting:

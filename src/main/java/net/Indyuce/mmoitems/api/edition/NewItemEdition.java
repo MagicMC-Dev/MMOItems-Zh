@@ -49,7 +49,7 @@ public class NewItemEdition implements Edition {
 		 * default chat edition feature
 		 */
 		new ChatEdition(this);
-		MMOLib.plugin.getVersion().getWrapper().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Creation", "See chat.", 10, 40, 10);
+		inv.getPlayer().sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Item Creation", "See chat.", 10, 40, 10);
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Weaken_Target extends Ability implements Listener {
@@ -69,14 +68,16 @@ public class Weaken_Target extends Ability implements Listener {
 				}
 
 				for (double j = 0; j < Math.PI * 2; j += Math.PI / 18)
-					target.getWorld().spawnParticle(Particle.SMOKE_NORMAL, target.getLocation().clone().add(Math.cos(j) * .7, .1, Math.sin(j) * .7), 0);
+					target.getWorld().spawnParticle(Particle.SMOKE_NORMAL, target.getLocation().clone().add(Math.cos(j) * .7, .1, Math.sin(j) * .7),
+							0);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 20);
 	}
 
 	@EventHandler
 	public void a(EntityDamageEvent event) {
-		if (event.getCause() != DamageCause.ENTITY_ATTACK && event.getCause() != DamageCause.ENTITY_EXPLOSION && event.getCause() != DamageCause.PROJECTILE)
+		if (event.getCause() != DamageCause.ENTITY_ATTACK && event.getCause() != DamageCause.ENTITY_EXPLOSION
+				&& event.getCause() != DamageCause.PROJECTILE)
 			return;
 
 		Entity entity = event.getEntity();
@@ -106,7 +107,8 @@ public class Weaken_Target extends Ability implements Listener {
 				for (int j = 0; j < 3; j++) {
 					y += .07;
 					for (int k = 0; k < 3; k++)
-						MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5, y, Math.sin(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5), Color.BLACK);
+						loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5,
+								y, Math.sin(y * Math.PI + (k * Math.PI * 2 / 3)) * (3 - y) / 2.5), 1, new Particle.DustOptions(Color.BLACK, 1));
 				}
 				if (y > 3)
 					cancel();

@@ -20,7 +20,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.listener.ElementListener;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import net.mmogroup.mmolib.version.VersionSound;
@@ -47,9 +46,8 @@ public enum Element {
 								if ((y += .07) >= 3)
 									cancel();
 								for (double k = 0; k < Math.PI * 2; k += Math.PI * 2 / 3)
-									MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone()
-											.add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5, y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5),
-											Color.WHITE);
+									loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5,
+											y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5), 1, new Particle.DustOptions(Color.WHITE, 1));
 							}
 						}
 					}.runTaskTimer(MMOItems.plugin, 0, 1);
@@ -80,8 +78,8 @@ public enum Element {
 			new ElementHandler() {
 				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 					target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
-					MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1, 0,
-							Material.DIRT);
+					target.getWorld().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1,
+							Material.DIRT.createBlockData());
 					result.addDamage(absolute);
 
 					target.setVelocity(new Vector(0, 1, 0));
@@ -186,8 +184,8 @@ public enum Element {
 		}
 
 		public ElementParticle(Particle particle, float speed, int amount, Material material) {
-			display = (entity) -> MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle,
-					entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0, speed, material);
+			display = (entity) -> entity.getWorld().spawnParticle(particle, entity.getLocation().add(0, entity.getHeight() / 2, 0), amount, 0, 0, 0,
+					speed, material.createBlockData());
 		}
 
 		public void displayParticle(Entity entity) {

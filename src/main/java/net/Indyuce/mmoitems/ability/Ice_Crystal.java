@@ -21,14 +21,14 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Ice_Crystal extends Ability {
 	public Ice_Crystal() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("damage", 6);
 		addModifier("duration", 3);
@@ -70,9 +70,10 @@ public class Ice_Crystal extends Ability {
 					 */
 					for (double r = 0; r < .4; r += .1)
 						for (double a = 0; a < Math.PI * 2; a += Math.PI / 2) {
-							Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(a + (double) ti / 10), r * Math.sin(a + (double) ti / 10), 0), loc);
+							Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(a + (double) ti / 10), r * Math.sin(a + (double) ti / 10), 0),
+									loc);
 							loc.add(vec);
-							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc, .7f, Color.WHITE);
+							loc.getWorld().spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(Color.WHITE, .7f));
 							loc.add(vec.multiply(-1));
 						}
 
@@ -81,8 +82,10 @@ public class Ice_Crystal extends Ability {
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 48, 0, 0, 0, .2);
 							loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
-							new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) entity);
-							((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (ability.getModifier("duration") * 20), (int) ability.getModifier("amplifier")));
+							new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE)
+									.damage(stats.getPlayer(), (LivingEntity) entity);
+							((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW,
+									(int) (ability.getModifier("duration") * 20), (int) ability.getModifier("amplifier")));
 							cancel();
 							return;
 						}

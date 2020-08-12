@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ArrowParticles extends BukkitRunnable {
@@ -43,8 +42,7 @@ public class ArrowParticles extends BukkitRunnable {
 		}
 
 		if (color != null)
-			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, 0, 1,
-					color);
+			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, color);
 		else
 			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
 	}

@@ -19,12 +19,12 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Magical_Shield extends Ability {
 	public Magical_Shield() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("power", 40);
 		addModifier("radius", 5);
@@ -85,7 +85,9 @@ public class Magical_Shield extends Ability {
 
 			for (double j = 0; j < Math.PI / 2; j += Math.PI / (28 + random.nextInt(5)))
 				for (double i = 0; i < Math.PI * 2; i += Math.PI / (14 + random.nextInt(5)))
-					MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(2.5 * Math.cos(i + j) * Math.sin(j), 2.5 * Math.cos(j), 2.5 * Math.sin(i + j) * Math.sin(j)), Color.FUCHSIA);
+					loc.getWorld().spawnParticle(Particle.REDSTONE,
+							loc.clone().add(2.5 * Math.cos(i + j) * Math.sin(j), 2.5 * Math.cos(j), 2.5 * Math.sin(i + j) * Math.sin(j)), 1,
+							new Particle.DustOptions(Color.FUCHSIA, 1));
 		}
 	}
 }

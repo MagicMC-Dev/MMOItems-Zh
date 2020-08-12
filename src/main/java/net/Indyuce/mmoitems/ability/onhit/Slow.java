@@ -16,11 +16,11 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 
 public class Slow extends Ability {
 	public Slow() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("cooldown", 5);
 		addModifier("duration", 3);
@@ -49,11 +49,14 @@ public class Slow extends Ability {
 
 				for (double j = 0; j < Math.PI * 2; j += Math.PI)
 					for (double r = 0; r < .7; r += .1)
-						MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos((ti / 2) + j + (Math.PI * r)) * r * 2, .1, Math.sin((ti / 2) + j + (Math.PI * r)) * r * 2), Color.WHITE);
+						loc.getWorld().spawnParticle(Particle.REDSTONE,
+								loc.clone().add(Math.cos((ti / 2) + j + (Math.PI * r)) * r * 2, .1, Math.sin((ti / 2) + j + (Math.PI * r)) * r * 2),
+								1, new Particle.DustOptions(Color.WHITE, 1));
 
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_LLAMA_ANGRY, 1, 2);
-		target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (ability.getModifier("duration") * 20), (int) ability.getModifier("amplifier")));
+		target.addPotionEffect(
+				new PotionEffect(PotionEffectType.SLOW, (int) (ability.getModifier("duration") * 20), (int) ability.getModifier("amplifier")));
 	}
 }

@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -46,11 +45,12 @@ public class ManaSpirit implements StaffAttackHandler {
 					for (double item = 0; item < Math.PI * 2; item += Math.PI / 3.5) {
 						Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(item), r * Math.sin(item), 0), loc);
 						if (random.nextDouble() <= .6)
-							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), Color.AQUA);
+							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), 1, new Particle.DustOptions(Color.AQUA, 1));
 					}
 					for (Entity target : targets)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt,
+									(LivingEntity) target);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							cancel();
 							return;

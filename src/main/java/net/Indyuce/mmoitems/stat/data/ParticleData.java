@@ -20,7 +20,6 @@ import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.MMOLib;
 
 public class ParticleData implements StatData, RandomStatData {
 	private final ParticleType type;
@@ -98,15 +97,14 @@ public class ParticleData implements StatData, RandomStatData {
 
 	public void display(Location location, int amount, float offsetX, float offsetY, float offsetZ, float speed) {
 		if (isColorable(particle))
-			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, 1, color);
+			location.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed, new Particle.DustOptions(color, 1));
 		else
 			location.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, speed);
 	}
 
 	public void display(Location location, Vector direction, float speed) {
 		if (isColorable(particle))
-			MMOLib.plugin.getVersion().getWrapper().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed,
-					1, color);
+			location.getWorld().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed, new Particle.DustOptions(color, 1));
 		else
 			location.getWorld().spawnParticle(particle, location, 0, direction.getX(), direction.getY(), direction.getZ(), speed);
 	}

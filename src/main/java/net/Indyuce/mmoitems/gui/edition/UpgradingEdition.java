@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -20,7 +21,6 @@ import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.NamedItemStack;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
@@ -132,8 +132,9 @@ public class UpgradingEdition extends EditionInventory {
 		inv.setItem(24, successItem);
 
 		if (success > 0 && !template.getType().corresponds(Type.CONSUMABLE)) {
-			ItemStack destroyOnFail = MMOLib.plugin.getVersion().getWrapper().generate(Material.FISHING_ROD, 30);
+			ItemStack destroyOnFail = new ItemStack(Material.FISHING_ROD);
 			ItemMeta destroyOnFailMeta = destroyOnFail.getItemMeta();
+			((Damageable) destroyOnFailMeta).setDamage(30);
 			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "Destroy on fail?");
 			List<String> destroyOnFailLore = new ArrayList<>();
 			destroyOnFailLore.add(ChatColor.GRAY + "When toggled on, the item will be");

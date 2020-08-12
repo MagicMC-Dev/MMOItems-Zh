@@ -23,7 +23,6 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -121,8 +120,8 @@ public class Shulker_Missile extends Ability implements Listener {
 						y += .04;
 						for (int j = 0; j < 2; j++) {
 							double xz = y * Math.PI * 1.3 + (j * Math.PI);
-							MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)),
-									Color.MAROON);
+							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)), 1,
+									new Particle.DustOptions(Color.MAROON, 1));
 						}
 					}
 					if (y >= 2)

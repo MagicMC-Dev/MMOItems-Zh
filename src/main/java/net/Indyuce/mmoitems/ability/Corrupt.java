@@ -15,14 +15,14 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Corrupt extends Ability {
 	public Corrupt() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("damage", 8);
 		addModifier("duration", 4);
@@ -52,7 +52,7 @@ public class Corrupt extends Ability {
 			Location loc1 = loc.clone().add(Math.cos(j) * radius, 1, Math.sin(j) * radius);
 			double y_max = .5 + random.nextDouble();
 			for (double y = 0; y < y_max; y += .1)
-				MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.REDSTONE, loc1.clone().add(0, y, 0), Color.PURPLE);
+				loc1.getWorld().spawnParticle(Particle.REDSTONE, loc1.clone().add(0, y, 0), 1, new Particle.DustOptions(Color.PURPLE, 1));
 		}
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))

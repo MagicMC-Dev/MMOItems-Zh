@@ -21,11 +21,11 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 
 public class Shockwave extends Ability {
 	public Shockwave() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("cooldown", 7.5);
 		addModifier("knock-up", 1);
@@ -58,10 +58,11 @@ public class Shockwave extends Ability {
 				loc.add(vec);
 
 				loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 2);
-				MMOLib.plugin.getVersion().getWrapper().spawnParticle(Particle.BLOCK_CRACK, loc, 12, .5, 0, .5, 0, Material.DIRT);
+				loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 12, .5, 0, .5, 0, Material.DIRT.createBlockData());
 
 				for (Entity ent : MMOUtils.getNearbyChunkEntities(loc))
-					if (ent.getLocation().distance(loc) < 1.1 && ent instanceof LivingEntity && !ent.equals(stats.getPlayer()) && !hit.contains(ent.getEntityId())) {
+					if (ent.getLocation().distance(loc) < 1.1 && ent instanceof LivingEntity && !ent.equals(stats.getPlayer())
+							&& !hit.contains(ent.getEntityId())) {
 						hit.add(ent.getEntityId());
 						ent.playEffect(EntityEffect.HURT);
 						ent.setVelocity(ent.getVelocity().setY(.4 * knockUp));

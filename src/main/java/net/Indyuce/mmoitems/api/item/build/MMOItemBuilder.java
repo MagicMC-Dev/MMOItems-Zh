@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
 import net.Indyuce.mmoitems.api.item.template.NameModifier;
 import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -61,6 +62,7 @@ public class MMOItemBuilder {
 
 		if (tier != null)
 			mmoitem.setData(ItemStat.TIER, new StringData(tier.getId()));
+		mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
 
 		// roll item gen modifiers
 		for (TemplateModifier modifier : rollModifiers(template)) {

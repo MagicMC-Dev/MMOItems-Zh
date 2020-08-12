@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,12 +15,11 @@ public class MMOItem implements ItemReference {
 	private final String id;
 
 	/*
-	 * where data about all the item stats is stored. when the item is
-	 * generated, this map is read and all the stats are applied. the order in
-	 * which stats are added is very important because the material needs to be
-	 * applied first
+	 * Where data about all the item stats is stored. When the item is
+	 * generated, this map is read and all the stats are applied. The order in
+	 * which stats are added is not very important anymore
 	 */
-	private final Map<ItemStat, StatData> stats = new LinkedHashMap<>();
+	private final Map<ItemStat, StatData> stats = new HashMap<>();
 
 	/**
 	 * Constructor used to generate an ItemStack based on some stat data

@@ -41,7 +41,7 @@ public class ItemStackBuilder {
 	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
 			"mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
-	/***
+	/**
 	 * Used to build an MMOItem into an ItemStack
 	 * 
 	 * @param mmoitem
@@ -106,9 +106,9 @@ public class ItemStackBuilder {
 		meta.setLore(lore.build().toStringList());
 
 		/*
-		 * this tag is added to entirely override default vanilla item attribute
+		 * This tag is added to entirely override default vanilla item attribute
 		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the
-		 * holder. since 4.7 attributes are handled via custom calculations
+		 * holder. Since 4.7 attributes are handled via custom calculations
 		 */
 		try {
 
@@ -117,7 +117,7 @@ public class ItemStackBuilder {
 			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
 
 			/*
-			 * on legacy spigot, it is not required to add a fake modifier to
+			 * On legacy spigot, it is not required to add a fake modifier to
 			 * the modifier list, so just override the string tag and it works
 			 * fine.
 			 */

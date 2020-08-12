@@ -38,6 +38,7 @@ import net.Indyuce.mmoitems.stat.HideEnchants;
 import net.Indyuce.mmoitems.stat.HidePotionEffects;
 import net.Indyuce.mmoitems.stat.Inedible;
 import net.Indyuce.mmoitems.stat.ItemDamage;
+import net.Indyuce.mmoitems.stat.ItemLevel;
 import net.Indyuce.mmoitems.stat.ItemParticles;
 import net.Indyuce.mmoitems.stat.ItemSetStat;
 import net.Indyuce.mmoitems.stat.ItemTierStat;
@@ -273,6 +274,7 @@ public abstract class ItemStat {
 	 */
 	public static final Soulbound SOULBOUND = new Soulbound();
 	public static final ItemStat STORED_TAGS = new StoredTags();
+	public static final ItemStat ITEM_LEVEL = new ItemLevel();
 
 	private final String id, name;
 	private final ItemStack item;

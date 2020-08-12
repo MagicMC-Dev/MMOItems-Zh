@@ -10,6 +10,14 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class LiveMMOItem extends ReadMMOItem {
+
+	/**
+	 * This class is used to load ALL the data from an item in one constructor.
+	 * They should be used with care because it is quite performance heavy
+	 * 
+	 * @param item
+	 *            The item to read
+	 */
 	public LiveMMOItem(ItemStack item) {
 		this(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}

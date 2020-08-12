@@ -88,7 +88,7 @@ public class DurabilityItem {
 
 	public DurabilityItem addDurability(int gain) {
 		Validate.isTrue(gain > 0, "Durability gain must be greater than 0");
-		durability = Math.max(0, Math.min(durability + gain, getMaxDurability()));
+		durability = Math.max(0, Math.min(durability + gain, maxDurability));
 		return this;
 	}
 
@@ -103,7 +103,7 @@ public class DurabilityItem {
 		if (getUnbreakingLevel() > 0 && random.nextInt(getUnbreakingLevel()) > 0)
 			return this;
 
-		addDurability(-loss);
+		durability = Math.max(0, Math.min(durability - loss, maxDurability));
 
 		// When the item breaks
 		if (durability <= 0) {
@@ -126,9 +126,8 @@ public class DurabilityItem {
 		 * issues. Also makes sure the item can be mended using the vanilla
 		 * enchant.
 		 */
-		double ratio = (double) durability / maxDurability;
-		int damage = (int) ((1. - ratio) * nbtItem.getItem().getType().getMaxDurability());
-		damage = Math.max(durability == maxDurability ? 1 : 0, damage);
+		int damage = durability == maxDurability ? 0
+				: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
 		nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability), new ItemTag("Damage", damage));
 
 		return nbtItem.toItem();

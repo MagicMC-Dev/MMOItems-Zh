@@ -22,8 +22,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemStone extends UseItem {
 
-	public GemStone(Player player, NBTItem item, Type type) {
-		super(player, item, type);
+	public GemStone(Player player, NBTItem item) {
+		super(player, item);
 	}
 
 	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {

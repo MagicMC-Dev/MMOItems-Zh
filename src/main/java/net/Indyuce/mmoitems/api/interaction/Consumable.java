@@ -38,8 +38,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class Consumable extends UseItem {
-	public Consumable(Player player, NBTItem item, Type type) {
-		super(player, item, type);
+	public Consumable(Player player, NBTItem item) {
+		super(player, item);
 	}
 
 	@Override

@@ -108,7 +108,7 @@ public class PlayerListener implements Listener {
 		SoulboundInfo.read(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void registerProjectiles(ProjectileLaunchEvent event) {
 		if (!(event.getEntity() instanceof Trident) || !(event.getEntity().getShooter() instanceof Player))
 			return;
@@ -121,11 +121,10 @@ public class PlayerListener implements Listener {
 		Type type = nbtItem.getType();
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
-		if (type != null)
-			if (!new Weapon(playerData, nbtItem, type).canBeUsed()) {
-				event.setCancelled(true);
-				return;
-			}
+		if (type != null && !new Weapon(playerData, nbtItem).canBeUsed()) {
+			event.setCancelled(true);
+			return;
+		}
 
 		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), (Trident) event.getEntity(),
 				type != null);

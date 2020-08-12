@@ -133,7 +133,7 @@ public class ItemUse implements Listener {
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType()) {
-			Weapon weapon = new Weapon(playerData, item, item.getType());
+			Weapon weapon = new Weapon(playerData, item);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);
@@ -152,7 +152,7 @@ public class ItemUse implements Listener {
 			}
 		}
 		if (offhandItem.hasType()) {
-			Weapon weapon = new Weapon(playerData, offhandItem, offhandItem.getType());
+			Weapon weapon = new Weapon(playerData, offhandItem);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);
@@ -184,7 +184,7 @@ public class ItemUse implements Listener {
 		if (!item.hasType())
 			return;
 
-		Tool tool = new Tool(player, item, item.getType());
+		Tool tool = new Tool(player, item);
 		if (!tool.canBeUsed()) {
 			event.setCancelled(true);
 			return;
@@ -288,7 +288,7 @@ public class ItemUse implements Listener {
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
 		if (type != null)
-			if (!new Weapon(playerData, item, type).canBeUsed()) {
+			if (!new Weapon(playerData, item).canBeUsed()) {
 				event.setCancelled(true);
 				return;
 			}

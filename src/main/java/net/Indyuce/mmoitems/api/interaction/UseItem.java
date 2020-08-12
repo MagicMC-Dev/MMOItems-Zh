@@ -31,11 +31,11 @@ public class UseItem {
 
 	protected static final Random random = new Random();
 
-	public UseItem(Player player, NBTItem nbtItem, Type type) {
-		this(PlayerData.get(player), nbtItem, type);
+	public UseItem(Player player, NBTItem nbtItem) {
+		this(PlayerData.get(player), nbtItem);
 	}
 
-	public UseItem(PlayerData playerData, NBTItem nbtItem, Type type) {
+	public UseItem(PlayerData playerData, NBTItem nbtItem) {
 		this.player = playerData.getPlayer();
 		this.playerData = playerData;
 		this.mmoitem = new LiveMMOItem(nbtItem);
@@ -99,23 +99,23 @@ public class UseItem {
 
 	public static UseItem getItem(Player player, NBTItem item, Type type) {
 		if (type.corresponds(Type.CONSUMABLE))
-			return new Consumable(player, item, type);
+			return new Consumable(player, item);
 		if (type.corresponds(Type.SKIN))
-			return new ItemSkin(player, item, type);
+			return new ItemSkin(player, item);
 		if (type.corresponds(Type.GEM_STONE))
-			return new GemStone(player, item, type);
+			return new GemStone(player, item);
 		if (type.corresponds(Type.MUSKET))
-			return new Musket(player, item, type);
+			return new Musket(player, item);
 		if (type.corresponds(Type.CROSSBOW))
-			return new Crossbow(player, item, type);
+			return new Crossbow(player, item);
 		if (type.corresponds(Type.GAUNTLET))
-			return new Gauntlet(player, item, type);
+			return new Gauntlet(player, item);
 		if (type.corresponds(Type.WHIP))
-			return new Whip(player, item, type);
+			return new Whip(player, item);
 		if (type.corresponds(Type.LUTE))
-			return new Lute(player, item, type);
+			return new Lute(player, item);
 		if (type.corresponds(Type.STAFF))
-			return new Staff(player, item, type);
-		return type.isWeapon() ? new Weapon(player, item, type) : new UseItem(player, item, type);
+			return new Staff(player, item);
+		return type.isWeapon() ? new Weapon(player, item) : new UseItem(player, item);
 	}
 }

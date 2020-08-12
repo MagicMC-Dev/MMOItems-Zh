@@ -10,7 +10,6 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
@@ -21,8 +20,8 @@ import net.mmogroup.mmolib.api.MMORayTraceResult;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Musket extends UntargetedWeapon {
-	public Musket(Player player, NBTItem item, Type type) {
-		super(player, item, type, WeaponType.RIGHT_CLICK);
+	public Musket(Player player, NBTItem item) {
+		super(player, item, WeaponType.RIGHT_CLICK);
 	}
 
 	@Override

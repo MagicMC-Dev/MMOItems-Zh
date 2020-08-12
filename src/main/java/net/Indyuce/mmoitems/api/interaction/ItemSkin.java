@@ -21,8 +21,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemSkin extends UseItem {
-	public ItemSkin(Player player, NBTItem item, Type type) {
-		super(player, item, type);
+	public ItemSkin(Player player, NBTItem item) {
+		super(player, item);
 	}
 
 	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {

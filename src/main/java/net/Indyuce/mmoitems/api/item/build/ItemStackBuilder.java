@@ -22,6 +22,7 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StoredTagsData;
 import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
@@ -35,7 +36,7 @@ public class ItemStackBuilder {
 
 	private final ItemStack item;
 	private final ItemMeta meta;
-	private final MMOItemLore lore = new MMOItemLore();
+	private final LoreBuilder lore = new LoreBuilder();
 	private final List<ItemTag> tags = new ArrayList<>();
 
 	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
@@ -63,7 +64,7 @@ public class ItemStackBuilder {
 					MMOItems.plugin.getUpdater().getData(mmoitem.getType(), mmoitem.getId()).getUniqueId().toString()));
 	}
 
-	public MMOItemLore getLore() {
+	public LoreBuilder getLore() {
 		return lore;
 	}
 
@@ -95,13 +96,22 @@ public class ItemStackBuilder {
 						+ stat.getId() + "': " + exception.getMessage());
 			}
 
-		// lore
+		// Display gem stone lore
 		if (mmoitem.getType() == Type.GEM_STONE)
 			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
+
+		// Display item type
 		lore.insert("item-type",
 				ItemStat.translate("item-type").replace("#",
 						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE) ? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
 								: mmoitem.getType().getName()));
+
+		// Calculate lore with placeholders
+		if (mmoitem.hasData(ItemStat.LORE)) {
+			List<String> parsed = new ArrayList<>();
+			((StringListData) mmoitem.getData(ItemStat.LORE)).getList().forEach(str -> parsed.add(lore.applyLorePlaceholders(str)));
+			lore.insert("lore", parsed);
+		}
 
 		meta.setLore(lore.build().toStringList());
 
@@ -110,23 +120,9 @@ public class ItemStackBuilder {
 		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the
 		 * holder. Since 4.7 attributes are handled via custom calculations
 		 */
-		try {
-
-			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
-			item.setItemMeta(meta);
-			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
-
-			/*
-			 * On legacy spigot, it is not required to add a fake modifier to
-			 * the modifier list, so just override the string tag and it works
-			 * fine.
-			 */
-		} catch (NoSuchMethodError exception) {
-			item.setItemMeta(meta);
-			@SuppressWarnings("deprecation")
-			NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).cancelVanillaAttributeModifiers();
-			return nbt.addTag(tags);
-		}
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
+		item.setItemMeta(meta);
+		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
 	}
 
 	/**
@@ -141,14 +137,15 @@ public class ItemStackBuilder {
 
 		private final UpgradeData upgradeData;
 
-		/***
-		 * @deprecated will be improved with mmoitems 6
-		 * 
-		 * @param mmoitem
+		/**
+		 * @deprecated Will be improved with MMOItems 6. Currently used to
+		 *             display upgrade stats in the lore. Should be improved to
+		 *             be more OOP friendly. NO MODIFICATIONS ALLOWED BEFORE A
+		 *             REWRITE
 		 */
 		public StatLore(MMOItem mmoitem) {
 			this.mmoitem = mmoitem.clone();
-			this.upgradeData = ((UpgradeData) mmoitem.getData(ItemStat.UPGRADE));
+			this.upgradeData = (UpgradeData) mmoitem.getData(ItemStat.UPGRADE);
 		}
 
 		public MMOItem getMMOItem() {
@@ -156,9 +153,7 @@ public class ItemStackBuilder {
 		}
 
 		public boolean isUpgradable() {
-			if (upgradeData != null)
-				return upgradeData.getTemplate() != null;
-			return false;
+			return upgradeData != null && upgradeData.getTemplate() != null;
 		}
 
 		public MMOItem generateNewItem() {

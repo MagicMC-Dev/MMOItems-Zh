@@ -67,9 +67,12 @@ public class Abilities extends ItemStat {
 					MMOItems.plugin.getLanguage().getAbilityName(ability.getAbility())));
 
 			jsonArray.add(ability.toJson());
-			ability.getModifiers()
-					.forEach(modifier -> abilityLore.add(modifierFormat.replace("#m", MMOItems.plugin.getLanguage().getModifierName(modifier))
-							.replace("#v", this.modifierFormat.format(ability.getModifier(modifier)))));
+			for (String modifier : ability.getModifiers()) {
+				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getID().toLowerCase() + "_" + modifier,
+						this.modifierFormat.format(ability.getModifier(modifier)));
+				abilityLore.add(modifierFormat.replace("#m", MMOItems.plugin.getLanguage().getModifierName(modifier)).replace("#v",
+						this.modifierFormat.format(ability.getModifier(modifier))));
+			}
 
 			if (splitter)
 				abilityLore.add(MMOItems.plugin.getLanguage().abilitySplitter);

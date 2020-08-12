@@ -88,14 +88,16 @@ public class Lore extends ItemStat implements ProperStat {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		List<String> lore = new ArrayList<>();
+
+		/*
+		 * The lore is not directly inserted into the final itemStack lore
+		 * because all stats have not registered all their lore placeholders
+		 * yet. The lore is only saved in a JSon array so that it can be
+		 * recalculated LATER on with right placeholders
+		 */
+
 		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(line -> {
-			line = MMOLib.plugin.parseColors(line);
-			array.add(line);
-			lore.add(line);
-		});
-		item.getLore().insert("lore", lore);
+		((StringListData) data).getList().forEach(line -> array.add(line));
 		item.addItemTag(new ItemTag("MMOITEMS_LORE", array.toString()));
 	}
 

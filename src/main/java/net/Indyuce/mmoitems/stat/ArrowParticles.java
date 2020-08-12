@@ -36,7 +36,7 @@ public class ArrowParticles extends ItemStat {
 
 	@Override
 	public ArrowParticlesData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specifiy a valid config section");
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		Validate.isTrue(config.contains("particle"), "Could not find arrow particle");

@@ -1,14 +1,50 @@
 package net.Indyuce.mmoitems.api.item.build;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.mmogroup.mmolib.MMOLib;
 
-public class MMOItemLore {
+public class LoreBuilder {
 	private final List<String> lore = MMOItems.plugin.getLanguage().getDefaultLoreFormat();
+	private final Map<String, String> placeholders = new HashMap<>();
+
+	/**
+	 * Registers a placeholder. All placeholders registered will be parsed when
+	 * using applyLorePlaceholders(String)
+	 * 
+	 * @param path
+	 *            The placeholder path (CASE SENSITIVE)
+	 * @param value
+	 *            The placeholder value which is instantly saved as a string
+	 *            when registered
+	 */
+	public void registerPlaceholder(String path, Object value) {
+		placeholders.put(path, value.toString());
+	}
+
+	/**
+	 * Parses a string with registered placeholders
+	 * 
+	 * @param str
+	 *            String with {..} unformatted placeholders
+	 * @return Same string with replaced placeholders. Placeholders which
+	 *         couldn't be found are marked with PHE which means
+	 *         PlaceHolderError
+	 */
+	public String applyLorePlaceholders(String str) {
+
+		while (str.contains("{") && str.substring(str.indexOf("{")).contains("}")) {
+			String holder = str.substring(str.indexOf("{") + 1, str.indexOf("}"));
+			str = str.replace("{" + holder + "}", placeholders.containsKey(holder) ? placeholders.get(holder) : "PHE");
+		}
+
+		return MMOLib.plugin.parseColors(str);
+	}
 
 	/**
 	 * Inserts a list of strings in the item lore. The lines are added only if a
@@ -54,7 +90,7 @@ public class MMOItemLore {
 	 *         have been inserted in the lore. It cleans all unused lore format
 	 *         # lines as well as lore bars
 	 */
-	public MMOItemLore build() {
+	public LoreBuilder build() {
 
 		/*
 		 * loops backwards to remove all unused bars in one iteration only,

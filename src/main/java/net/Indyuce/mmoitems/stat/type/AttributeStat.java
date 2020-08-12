@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 public abstract class AttributeStat extends DoubleStat {
 
 	/*
-	 * attribute offset for e.g attack speed must be lowered when holding a
+	 * Йttribute offset for e.g attack speed must be lowered when holding a
 	 * weapon by 4 because this is the default base attribute value.
 	 */
 	private final double offset;
@@ -22,10 +22,6 @@ public abstract class AttributeStat extends DoubleStat {
 		this.offset = offset;
 		this.attribute = attribute;
 	}
-
-//	public boolean isWeaponSpecific() {
-//		return offset > 0;
-//	}
 
 	public Attribute getAttribute() {
 		return attribute;

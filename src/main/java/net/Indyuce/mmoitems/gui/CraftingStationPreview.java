@@ -40,22 +40,23 @@ public class CraftingStationPreview extends PluginInventory {
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 45, Message.RECIPE_PREVIEW.formatRaw(ChatColor.RESET));
 		ingredients.clear();
-		for(CheckedIngredient ing : recipe.getIngredients()) {
-			if(ing.getIngredient().getAmount() > 64) {
+		for (CheckedIngredient ing : recipe.getIngredients()) {
+			if (ing.getIngredient().getAmount() > 64) {
 				ItemStack sample = ing.getIngredient().generateItemStack(playerData.getRPG());
 				sample.setAmount(64);
 				int amount = ing.getIngredient().getAmount();
-				//calculate how many full stacks there are
+				// calculate how many full stacks there are
 				int stacks = (int) Math.floor(amount / 64);
-				//check for remainders
-				if((stacks % 64) == 0)
-					//simply add the desired amount of ingredients
-					for(int i = 0; i < stacks; i++)
+				// check for remainders
+				if ((stacks % 64) == 0)
+					// simply add the desired amount of ingredients
+					for (int i = 0; i < stacks; i++)
 						ingredients.add(sample.clone());
 				else
-					//iterate stacks + 1 for the final one
-					for(int i = 0; i < (stacks + 1); i++) {
-						if(i == stacks) sample.setAmount(amount - (stacks * 64));
+					// iterate stacks + 1 for the final one
+					for (int i = 0; i < (stacks + 1); i++) {
+						if (i == stacks)
+							sample.setAmount(amount - (stacks * 64));
 						ingredients.add(sample.clone());
 					}
 			} else
@@ -64,7 +65,8 @@ public class CraftingStationPreview extends PluginInventory {
 
 		int min = (page - 1) * slots.length, max = page * slots.length;
 		for (int j = min; j < max; j++) {
-			if (j >= ingredients.size()) break;
+			if (j >= ingredients.size())
+				break;
 			inv.setItem(slots[j - min], ingredients.get(j));
 		}
 
@@ -103,7 +105,6 @@ public class CraftingStationPreview extends PluginInventory {
 		return inv;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
 		event.setCancelled(true);
@@ -111,25 +112,25 @@ public class CraftingStationPreview extends PluginInventory {
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.CONFIRM.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.CONFIRM.getItem())) {
 			previous.processRecipe(recipe);
 			previous.open();
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.PREVIOUS_PAGE.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_PAGE.getItem())) {
 			page--;
 			open();
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.NEXT_PAGE.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_PAGE.getItem())) {
 			page++;
 			open();
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.BACK.getItem()))
+		if (event.getCurrentItem().isSimilar(ConfigItem.BACK.getItem()))
 			previous.open();
 	}
 }

@@ -2,8 +2,9 @@ package net.Indyuce.mmoitems.stat.data;
 
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+
 import com.google.gson.JsonObject;
-import com.sk89q.worldedit.entity.Player;
 
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 

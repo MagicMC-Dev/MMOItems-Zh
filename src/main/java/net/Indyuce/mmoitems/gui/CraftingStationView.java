@@ -131,7 +131,6 @@ public class CraftingStationView extends PluginInventory {
 		return inv;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
 		event.setCancelled(true);
@@ -139,25 +138,25 @@ public class CraftingStationView extends PluginInventory {
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.PREVIOUS_IN_QUEUE.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_IN_QUEUE.getItem())) {
 			queueOffset--;
 			open();
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.NEXT_IN_QUEUE.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_IN_QUEUE.getItem())) {
 			queueOffset++;
 			open();
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.NEXT_PAGE.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_PAGE.getItem())) {
 			page++;
 			open();
 			return;
 		}
 
-		if (MMOUtils.areSimilar(event.getCurrentItem(), ConfigItem.PREVIOUS_PAGE.getItem())) {
+		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_PAGE.getItem())) {
 			page--;
 			open();
 			return;

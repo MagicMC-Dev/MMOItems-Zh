@@ -1,19 +1,18 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class MMOItemTrigger extends Trigger {
-	private final Type type;
-	private final String id;
+	private final MMOItemTemplate template;
 	private final int amount;
 
 	public MMOItemTrigger(MMOLineConfig config) {
@@ -22,25 +21,20 @@ public class MMOItemTrigger extends Trigger {
 		config.validate("type", "id");
 
 		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type " + format);
-		type = MMOItems.plugin.getTypes().get(format);
+		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type with ID '" + format + "'");
+		Type type = MMOItems.plugin.getTypes().get(format);
 
-		id = config.getString("id").replace("-", "_").toUpperCase();
+		String id = config.getString("id").replace("-", "_").toUpperCase();
+		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
+		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
+
 		amount = config.args().length > 0 ? Math.max(1, Integer.parseInt(config.args()[0])) : 1;
-		Validate.isTrue(type.getConfigFile().getConfig().contains(id), "Could not find item id " + id);
 	}
 
 	@Override
 	public void apply(PlayerData player) {
-		if (!MMOItems.plugin.getTemplates().hasTemplate(type, id))
-			return;
-
-		ItemStack item = MMOItems.plugin.getItem(type, id, player.getMMOPlayerData().getMMOItems());
-		if (item == null || item.getType() == Material.AIR)
-			return;
-
+		ItemStack item = template.newBuilder(player.getMMOPlayerData().getMMOItems().getRPG()).build().newBuilder().build();
 		item.setAmount(amount);
-		if (item != null && item.getType() != Material.AIR)
-			new SmartGive(player.getPlayer()).give(item);
+		new SmartGive(player.getPlayer()).give(item);
 	}
 }

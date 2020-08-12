@@ -11,6 +11,8 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.loot.ClassFilter;
 import net.Indyuce.mmoitems.api.item.template.loot.TypeFilter;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.data.SoulboundData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class RandomItemDropItem extends ItemGenerationDropItem {
@@ -41,7 +43,8 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
 		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getTemplates().rollTier();
 
-		net.Indyuce.mmoitems.api.item.template.loot.LootBuilder loot = new net.Indyuce.mmoitems.api.item.template.loot.LootBuilder(itemLevel, itemTier);
+		net.Indyuce.mmoitems.api.item.template.loot.LootBuilder loot = new net.Indyuce.mmoitems.api.item.template.loot.LootBuilder(itemLevel,
+				itemTier);
 
 		if (matchClass)
 			loot.applyFilter(new ClassFilter(rpgPlayer));
@@ -55,8 +58,11 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 		if (rolled == null)
 			return;
 
-		ItemStack gen = rolled.newBuilder().build();
-		gen.setAmount(rollAmount());
-		builder.addLoot(gen);
+		if (rollSoulbound())
+			rolled.setData(ItemStat.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));
+
+		ItemStack stack = rollUnidentification(rolled);
+		stack.setAmount(rollAmount());
+		builder.addLoot(stack);
 	}
 }

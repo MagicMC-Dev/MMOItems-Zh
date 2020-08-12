@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpdaterData;
@@ -81,7 +80,6 @@ public class UpdaterManager implements Listener {
 	/**
 	 * Updates inventory item when an item is clicked in a player's inventory
 	 */
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void updateOnClick(InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
@@ -89,7 +87,7 @@ public class UpdaterManager implements Listener {
 			return;
 
 		ItemStack newItem = getUpdated(item);
-		if (!MMOUtils.areSimilar(newItem, item))
+		if (!newItem.equals(item))
 			event.setCurrentItem(newItem);
 	}
 
@@ -117,7 +115,7 @@ public class UpdaterManager implements Listener {
 	public ItemStack getUpdated(NBTItem item) {
 
 		/*
-		 * if the item type is null, then it is not an mmoitem and it does not
+		 * If the item type is null, then it is not an mmoitem and it does not
 		 * need to be updated
 		 */
 		Type type = item.getType();

@@ -22,6 +22,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -712,8 +713,8 @@ public class MMOItemsCommand implements CommandExecutor {
 				}
 
 				if (item.hasItemMeta()) {
-					if (MMOLib.plugin.getVersion().getWrapper().isDamaged(item, item.getItemMeta()))
-						config.getConfig().set(name + ".durability", MMOLib.plugin.getVersion().getWrapper().getDurability(item, item.getItemMeta()));
+					if (item.getItemMeta() instanceof Damageable)
+						config.getConfig().set(name + ".durability", ((Damageable) item.getItemMeta()).getDamage());
 					if (item.getItemMeta().hasDisplayName())
 						config.getConfig().set(name + ".name", item.getItemMeta().getDisplayName().replace("§", "&"));
 					if (item.getItemMeta().hasLore()) {
@@ -731,7 +732,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				if (MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getBoolean("Unbreakable"))
 					config.getConfig().set(name + ".unbreakable", true);
 				for (Enchantment enchant : item.getEnchantments().keySet())
-					config.getConfig().set(name + ".enchants." + MMOLib.plugin.getVersion().getWrapper().getName(enchant),
+					config.getConfig().set(name + ".enchants." + enchant.getKey().getKey(),
 							item.getEnchantmentLevel(enchant));
 			}
 			config.getConfig().set(name + ".material", args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());

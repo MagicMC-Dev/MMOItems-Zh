@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -275,15 +276,17 @@ public class Consumable extends UseItem {
 			}
 
 			// vanilla durability
-			if (!target.getBoolean("Unbreakable")
-					&& MMOLib.plugin.getVersion().getWrapper().isDamaged(target.getItem(), target.getItem().getItemMeta())) {
+			if (!target.getBoolean("Unbreakable") && target.getItem().hasItemMeta() && target.getItem().getItemMeta() instanceof Damageable
+					&& ((Damageable) target.getItem().getItemMeta()).getDamage() > 0) {
 
 				RepairItemEvent called = new RepairItemEvent(playerData, mmoitem, target, repairPower);
 				Bukkit.getPluginManager().callEvent(called);
 				if (called.isCancelled())
 					return false;
 
-				MMOLib.plugin.getVersion().getWrapper().repair(target.getItem(), called.getRepaired());
+				ItemMeta meta = target.getItem().getItemMeta();
+				((Damageable) meta).setDamage(Math.max(0, ((Damageable) meta).getDamage() - called.getRepaired()));
+				target.getItem().setItemMeta(meta);
 				Message.REPAIRED_ITEM
 						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
 						.send(player);

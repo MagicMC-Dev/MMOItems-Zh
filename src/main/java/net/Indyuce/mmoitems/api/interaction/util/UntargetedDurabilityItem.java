@@ -9,8 +9,9 @@ public class UntargetedDurabilityItem extends DurabilityItem {
 	private final EquipmentSlot slot;
 
 	/*
-	 * allows to delete items when they are right clicked while using the same
-	 * durability system as vanilla items
+	 * Allows to handle custom durability for target weapons when they are
+	 * left/right click while using the same durability system for both weapon
+	 * types
 	 */
 	public UntargetedDurabilityItem(Player player, NBTItem item, EquipmentSlot slot) {
 		super(player, item);
@@ -22,7 +23,7 @@ public class UntargetedDurabilityItem extends DurabilityItem {
 	public UntargetedDurabilityItem decreaseDurability(int loss) {
 		return (UntargetedDurabilityItem) super.decreaseDurability(loss);
 	}
-	
+
 	public void update() {
 
 		if (isBroken() && isLostWhenBroken()) {

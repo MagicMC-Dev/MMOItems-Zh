@@ -31,7 +31,7 @@ import net.mmogroup.mmolib.api.util.AltChar;
 public class Elements extends ItemStat {
 	public Elements() {
 		super("ELEMENT", new ItemStack(Material.SLIME_BALL), "Elements", new String[] { "The elements of your item." },
-				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor" });
+				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
 	}
 
 	@Override

@@ -1,16 +1,26 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -19,16 +29,6 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Permission extends ItemStat implements ItemRestriction, ProperStat {
 	public Permission() {
@@ -44,56 +44,41 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 	}
 
 	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
-	}
-
-	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERMISSION).enable("Write in the chat the permission you want your item to require.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("permission")) {
-				List<String> requiredPerms = config.getConfig().getStringList(inv.getEdited().getId() + ".permission");
+			if (inv.getEditedSection().contains("permission")) {
+				List<String> requiredPerms = inv.getEditedSection().getStringList("permission");
 				if (requiredPerms.size() < 1)
 					return;
 
 				String last = requiredPerms.get(requiredPerms.size() - 1);
 				requiredPerms.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + ".permission", requiredPerms.size() == 0 ? null : requiredPerms);
-				inv.registerItemEdition(config);
-				inv.open();
+				inv.getEditedSection().set("permission", requiredPerms.size() == 0 ? null : requiredPerms);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if (message.contains("|")) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your perm node must not contain any | symbol.");
-			return false;
-		}
-
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("permission")
-				? config.getConfig().getStringList(inv.getEdited().getId() + ".permission")
-				: new ArrayList<>();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		Validate.isTrue(!message.contains("|"), "Your perm node must not contain any | symbol.");
+		List<String> lore = inv.getEditedSection().contains("permission") ? inv.getEditedSection().getStringList("permission") : new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set(inv.getEdited().getId() + ".permission", lore);
-		inv.registerItemEdition(config);
-		inv.open();
+		inv.getEditedSection().set("permission", lore);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) mmoitem.getData(this);
+			StringListData data = (StringListData) optional.get();
 			data.getList().forEach(el -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + el));
 
 		} else
@@ -105,7 +90,7 @@ public class Permission extends ItemStat implements ItemRestriction, ProperStat 
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_PERMISSION", String.join("|", ((StringListData) data).getList())));
 	}
 

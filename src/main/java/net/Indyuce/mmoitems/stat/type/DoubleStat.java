@@ -1,20 +1,9 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,25 +12,35 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class DoubleStat extends ItemStat implements Upgradable {
+	private static final DecimalFormat digit = new DecimalFormat("0.####");
+
 	public DoubleStat(String id, ItemStack item, String name, String[] lore) {
 		super(id, item, name, lore, new String[] { "!miscellaneous", "!block", "all" });
 	}
 
 	public DoubleStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
-
 		super(id, item, name, lore, types, materials);
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		return new DoubleData(object);
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 
 		if (object instanceof Number)
 			return new NumericStatFormula(Double.valueOf(object.toString()), 0, 0, 0);
@@ -53,8 +52,8 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
-		double value = ((DoubleData) data).generateNewValue();
+	public void whenApplied(ItemStackBuilder item, StatData data) {
+		double value = ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag(getNBTPath(), value));
 		if (value > 0)
 			item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
@@ -63,48 +62,37 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			ConfigFile config = inv.getEdited().getType().getConfigFile();
-			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-			inv.registerItemEdition(config);
-			inv.open();
+			inv.getEditedSection().set(getPath(), null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
 			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
-				"Or write [MIN-VALUE]=[MAX-VALUE] to make the stat random.");
+				"Second Format: {Base} {Scaling Value} {Spread} {Max Spread}");
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		String[] split = message.split("\\=");
-		double value = 0;
-		double value1 = 0;
-		try {
-			value = Double.parseDouble(split[0]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid number.");
-			return false;
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		String[] split = message.split("\\ ");
+		double base = MMOUtils.parseDouble(split[0]);
+		double scale = split.length > 1 ? MMOUtils.parseDouble(split[1]) : 0;
+		double spread = split.length > 2 ? MMOUtils.parseDouble(split[2]) : 0;
+		double maxSpread = split.length > 3 ? MMOUtils.parseDouble(split[3]) : 0;
+
+		// save as number
+		if (scale == 0 && spread == 0 && maxSpread == 0)
+			inv.getEditedSection().set(getPath(), base);
+
+		else {
+			inv.getEditedSection().set(getPath() + ".base", base);
+			inv.getEditedSection().set(getPath() + ".scale", scale == 0 ? null : scale);
+			inv.getEditedSection().set(getPath() + ".spread", spread == 0 ? null : spread);
+			inv.getEditedSection().set(getPath() + ".maxSpread", maxSpread == 0 ? null : maxSpread);
 		}
 
-		// second value
-		if (split.length > 1)
-			try {
-				value1 = Double.parseDouble(split[1]);
-			} catch (Exception e1) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number.");
-				return false;
-			}
-
-		// STRING if length == 2
-		// DOUBLE if length == 1
-		config.getConfig().set(inv.getEdited().getId() + "." + getPath(), split.length > 1 ? value + "=" + value1 : value);
-		if (value == 0 && value1 == 0)
-			config.getConfig().set(inv.getEdited().getId() + "." + getPath(), null);
-		inv.registerItemEdition(config);
-		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to "
-				+ (value1 != 0 ? "{between " + value + " and " + value1 + "}" : "" + value) + ".");
-		return true;
+		inv.registerTemplateEdition();
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to {" + base + " - " + scale + " - " + spread
+				+ " - " + maxSpread + "}");
 	}
 
 	@Override
@@ -114,14 +102,19 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		DoubleData data;
-		String format = mmoitem.hasData(this)
-				? ((data = (DoubleData) mmoitem.getData(this)).hasMax() ? data.getMin() + " -> " + data.getMax() : "" + data.getMin())
-				: "0";
+		if (optional.isPresent()) {
+			NumericStatFormula data = (NumericStatFormula) optional.get();
+			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + digit.format(data.getBase())
+					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
+			if (data.getSpread() > 0)
+				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.GREEN + digit.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
+						+ ChatColor.GREEN + digit.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
 
-		lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + format);
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");
+
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
@@ -157,7 +150,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 				throw new IllegalArgumentException("Couldn't read amount");
 
 			relative = str.toCharArray()[str.length() - 1] == '%';
-			amount = relative ? Double.parseDouble(str.substring(0, str.length() - 1)) / 100 : Double.parseDouble(str);
+			amount = relative ? MMOUtils.parseDouble(str.substring(0, str.length() - 1)) / 100 : MMOUtils.parseDouble(str);
 		}
 
 		public double getAmount() {

@@ -3,8 +3,7 @@ package net.Indyuce.mmoitems.stat.data.random;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -25,7 +24,7 @@ public class RandomAbilityListData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		AbilityListData list = new AbilityListData();
 		abilities.forEach(random -> list.add(random.randomize(builder)));
 		return list;

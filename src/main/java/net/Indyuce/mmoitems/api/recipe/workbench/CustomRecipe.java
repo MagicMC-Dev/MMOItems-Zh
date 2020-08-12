@@ -33,7 +33,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 				recipe = Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR");
 			}
 			for (int i = 0; i < 9; i++) {
-				ItemStack stack = MMOItems.plugin.parseStack(recipe.get(i));
+				ItemStack stack = MMOItems.plugin.getRecipes().parseStack(recipe.get(i));
 				if (stack == null || stack.getType() == Material.AIR)
 					continue;
 				ingredients.put(i, WorkbenchIngredient.getAutomatically(stack));
@@ -49,7 +49,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 				while (line.size() < 3)
 					line.add("AIR");
 
-				ItemStack stack = MMOItems.plugin.parseStack(line.get(i % 3));
+				ItemStack stack = MMOItems.plugin.getRecipes().parseStack(line.get(i % 3));
 				if (stack == null || stack.getType() == Material.AIR)
 					ingredients.put(i, new AirIngredient());
 				else

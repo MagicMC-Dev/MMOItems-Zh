@@ -1,6 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.inventory.ItemStack;
+
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -10,10 +15,6 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
 
 public class MaximumDurability extends DoubleStat implements ItemRestriction, ProperStat {
 	public MaximumDurability() {
@@ -24,8 +25,8 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Pr
 	 * initializes the custom durability mecanism on an item.
 	 */
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
-		double value = ((DoubleData) data).generateNewValue();
+	public void whenApplied(ItemStackBuilder item, StatData data) {
+		int value = (int) ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag("MMOITEMS_MAX_DURABILITY", value), new ItemTag("MMOITEMS_DURABILITY", value));
 	}
 

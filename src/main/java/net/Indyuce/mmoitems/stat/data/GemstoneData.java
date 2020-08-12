@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class GemstoneData {

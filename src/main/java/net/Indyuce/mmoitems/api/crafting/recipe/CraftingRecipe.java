@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
+import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
-import net.Indyuce.mmoitems.api.event.crafting.PlayerUseCraftingStationEvent;
-import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.api.util.SmartGive;
@@ -61,7 +61,7 @@ public class CraftingRecipe extends Recipe {
 				return;
 
 			if (hasOption(RecipeOption.OUTPUT_ITEM))
-				new SmartGive(data.getPlayer()).give(getOutput().generate());
+				new SmartGive(data.getPlayer()).give(getOutput().generate(data.getRPG()));
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 			if (!hasOption(RecipeOption.SILENT_CRAFT))
 				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);

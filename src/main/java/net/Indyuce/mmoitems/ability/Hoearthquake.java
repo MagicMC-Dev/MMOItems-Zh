@@ -16,7 +16,6 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
 
 public class Hoearthquake extends Ability {
 	public Hoearthquake() {
@@ -25,9 +24,6 @@ public class Hoearthquake extends Ability {
 		addModifier("cooldown", 10);
 		addModifier("mana", 0);
 		addModifier("stamina", 0);
-
-		if (!MMOLib.plugin.getVersion().isBelowOrEqual(1, 12))
-			disable();
 	}
 
 	@Override

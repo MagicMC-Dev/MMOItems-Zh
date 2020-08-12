@@ -1,25 +1,33 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.util.MushroomState;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.MultipleFacing;
 
-import java.util.*;
-import java.util.logging.Level;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.MushroomState;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class BlockManager {
 	private final static List<Integer> downIds = Arrays.asList(new Integer[] { 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
-			91, 92, 93, 94, 95, 96, 97, 98, 99, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149,
-			150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160 });
+			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
+			90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148,
+			149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160 });
 	private final static List<Integer> eastIds = Arrays
 			.asList(new Integer[] { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
 					59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 115, 116, 117, 118, 119, 120,
@@ -102,20 +110,17 @@ public class BlockManager {
 		customBlocks.clear();
 		mushroomStateValue.clear();
 
-		for (String blockItemId : Type.BLOCK.getConfigFile().getConfig().getKeys(false)) {
-			MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(Type.BLOCK, blockItemId).clone();
-			int id = (mmoitem.hasData(ItemStat.BLOCK_ID)) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).generateNewValue() : 0;
-			if (id > 0 && id < 161 && id != 54) {
-				MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id),
-						eastIds.contains(id), southIds.contains(id), northIds.contains(id));
-				CustomBlock customBlock = new CustomBlock(state, mmoitem);
-				register(customBlock);
+		for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(Type.BLOCK)) {
+			MMOItem mmoitem = template.newBuilder(0, null).build();
+			int id = mmoitem.hasData(ItemStat.BLOCK_ID) ? (int) ((DoubleData) mmoitem.getData(ItemStat.BLOCK_ID)).getValue() : 0;
+			if (id > 0 && id < 161 && id != 54)
 				try {
-
+					MushroomState state = new MushroomState(getType(id), upIds.contains(id), downIds.contains(id), westIds.contains(id),
+							eastIds.contains(id), southIds.contains(id), northIds.contains(id));
+					register(new CustomBlock(state, mmoitem));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block '" + blockItemId + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block '" + id + "': " + exception.getMessage());
 				}
-			}
 		}
 	}
 

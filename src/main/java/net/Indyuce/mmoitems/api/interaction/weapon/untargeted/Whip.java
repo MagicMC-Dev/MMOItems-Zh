@@ -9,7 +9,6 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
@@ -21,15 +20,16 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Whip extends UntargetedWeapon {
-	public Whip(Player player, NBTItem item, Type type) {
-		super(player, item, type, WeaponType.LEFT_CLICK);
+	public Whip(Player player, NBTItem item) {
+		super(player, item, WeaponType.LEFT_CLICK);
 	}
 
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")), CooldownType.ATTACK, false))
+		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+				CooldownType.ATTACK, false))
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
@@ -42,10 +42,13 @@ public class Whip extends UntargetedWeapon {
 		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range, entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
+		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
+				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
 		if (trace.hasHit())
-			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats, getNBTItem(), trace.getHit());
-		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2, (tick) -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
+			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats,
+					getNBTItem(), trace.getHit());
+		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,
+				(tick) -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 2);
 	}
 }

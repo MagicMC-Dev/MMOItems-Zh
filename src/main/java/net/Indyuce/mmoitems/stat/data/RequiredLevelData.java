@@ -5,12 +5,8 @@ import org.apache.commons.lang.Validate;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class RequiredLevelData extends DoubleData {
-	public RequiredLevelData(Object object) {
-		super(object);
-	}
-
-	public RequiredLevelData(double min, double max) {
-		super(min, max);
+	public RequiredLevelData(double value) {
+		super(value);
 	}
 
 	/*
@@ -21,7 +17,6 @@ public class RequiredLevelData extends DoubleData {
 	@Override
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof RequiredLevelData, "Cannot merge two different stat data types");
-
-		setMin(Math.max(((DoubleData) data).getMin(), getMin()));
+		setValue(Math.max(getValue(), ((DoubleData) data).getValue()));
 	}
 }

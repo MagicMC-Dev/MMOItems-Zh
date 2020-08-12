@@ -15,17 +15,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class RecipeEdition extends EditionInventory {
 	private final boolean shapeless;
 
-	public RecipeEdition(Player player, MMOItem mmoitem, boolean shapeless) {
-		super(player, mmoitem);
+	public RecipeEdition(Player player, MMOItemTemplate template, boolean shapeless) {
+		super(player, template);
 
 		this.shapeless = shapeless;
 	}
@@ -36,20 +35,19 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapedInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Recipe Editor: " + mmoitem.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "Recipe Editor: " + template.getId());
 
-		ConfigFile config = mmoitem.getType().getConfigFile();
-		if (!config.getConfig().contains(mmoitem.getId() + ".crafting.shaped.1")) {
-			config.getConfig().set(mmoitem.getId() + ".crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
-			registerItemEdition(config);
+		if (!getEditedSection().contains("crafting.shaped.1")) {
+			getEditedSection().set("crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
+			registerTemplateEdition();
 		}
-		List<String> recipe = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shaped.1");
+		List<String> recipe = getEditedSection().getStringList("crafting.shaped.1");
 		if (recipe.size() < 3) {
 			while (recipe.size() < 3)
 				recipe.add("AIR AIR AIR");
 
-			config.getConfig().set(mmoitem.getId() + ".crafting.shaped.1", recipe);
-			registerItemEdition(config);
+			getEditedSection().set("crafting.shaped.1", recipe);
+			registerTemplateEdition();
 		}
 		for (int j = 0; j < 9; j++) {
 			int slot = intToSlot(j);
@@ -57,11 +55,14 @@ public class RecipeEdition extends EditionInventory {
 			while (line.size() < 3)
 				line.add("AIR");
 
-			ItemStack element = MMOItems.plugin.parseStack(line.get(j % 3));
-			if(element == null) element = new ItemStack(Material.BARRIER);
-			if(element.getType() == Material.AIR) element.setType(Material.BARRIER);
+			ItemStack element = MMOItems.plugin.getRecipes().parseStack(line.get(j % 3));
+			if (element == null)
+				element = new ItemStack(Material.BARRIER);
+			if (element.getType() == Material.AIR)
+				element.setType(Material.BARRIER);
 			ItemMeta elementMeta = element.getItemMeta();
-			if(element.getType() == Material.BARRIER) elementMeta.setDisplayName(ChatColor.RED + "Empty");
+			if (element.getType() == Material.BARRIER)
+				elementMeta.setDisplayName(ChatColor.RED + "Empty");
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
 			elementLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this ingredient.");
@@ -77,23 +78,24 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapelessInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Recipe Editor: " + mmoitem.getId());
-		ConfigFile config = mmoitem.getType().getConfigFile();
-		if (!config.getConfig().contains(mmoitem.getId() + ".crafting.shapeless.1")) {
-			config.getConfig().set(mmoitem.getId() + ".crafting.shapeless.1",
-				Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR"));
-			registerItemEdition(config);
+		Inventory inv = Bukkit.createInventory(this, 54, "Recipe Editor: " + template.getId());
+		if (!getEditedSection().contains("crafting.shapeless.1")) {
+			getEditedSection().set("crafting.shapeless.1", Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR"));
+			registerTemplateEdition();
 		}
-		List<String> ingredients = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shapeless.1");
-		if(ingredients.size() == 9)
+		List<String> ingredients = getEditedSection().getStringList("crafting.shapeless.1");
+		if (ingredients.size() == 9)
 			for (int j = 0; j < 9; j++) {
 				int slot = intToSlot(j);
 
-				ItemStack element = MMOItems.plugin.parseStack(ingredients.get(j));
-				if(element == null) element = new ItemStack(Material.BARRIER);
-				if(element.getType() == Material.AIR) element.setType(Material.BARRIER);
+				ItemStack element = MMOItems.plugin.getRecipes().parseStack(ingredients.get(j));
+				if (element == null)
+					element = new ItemStack(Material.BARRIER);
+				if (element.getType() == Material.AIR)
+					element.setType(Material.BARRIER);
 				ItemMeta elementMeta = element.getItemMeta();
-				if(element.getType() == Material.BARRIER) elementMeta.setDisplayName(ChatColor.RED + "Empty");
+				if (element.getType() == Material.BARRIER)
+					elementMeta.setDisplayName(ChatColor.RED + "Empty");
 				List<String> elementLore = new ArrayList<>();
 				elementLore.add("");
 				elementLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this ingredient.");
@@ -103,7 +105,8 @@ public class RecipeEdition extends EditionInventory {
 
 				inv.setItem(slot, element);
 			}
-		else MMOItems.plugin.getLogger().warning("Couldn't load shapeless recipe for '" + mmoitem.getId() + "'!");
+		else
+			MMOItems.plugin.getLogger().warning("Couldn't load shapeless recipe for '" + template.getId() + "'!");
 
 		addEditionInventoryItems(inv, true);
 		return inv;
@@ -138,25 +141,21 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private void deleteShaped(int slot) {
-		ConfigFile config = mmoitem.getType().getConfigFile();
-		List<String> newList = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shaped.1");
+		List<String> newList = getEditedSection().getStringList("crafting.shaped.1");
 		String[] newArray = newList.get((int) Math.floor(slot / 3)).split("\\ ");
 		newArray[slot % 3] = "AIR";
 		newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
-		config.getConfig().set(mmoitem.getId() + ".crafting.shaped.1", newList);
-		registerItemEdition(config);
-		open();
+		getEditedSection().set("crafting.shaped.1", newList);
+		registerTemplateEdition();
 	}
 
 	private void deleteShapeless(int slot) {
-		ConfigFile config = mmoitem.getType().getConfigFile();
-		if(config.getConfig().contains(mmoitem.getId() + ".crafting.shapeless.1")) {
-			List<String> newList = config.getConfig().getStringList(mmoitem.getId() + ".crafting.shapeless.1");
+		if (getEditedSection().contains("crafting.shapeless.1")) {
+			List<String> newList = getEditedSection().getStringList("crafting.shapeless.1");
 			newList.set(slot, "AIR");
-			config.getConfig().set(mmoitem.getId() + ".crafting.shapeless.1", newList);
-			registerItemEdition(config);
-			open();
+			getEditedSection().set("crafting.shapeless.1", newList);
+			registerTemplateEdition();
 		}
 	}
 }

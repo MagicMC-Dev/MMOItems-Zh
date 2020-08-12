@@ -3,9 +3,8 @@ package net.Indyuce.mmoitems.stat.data.random;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.RestoreData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -33,7 +32,7 @@ public class RandomRestoreData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return new RestoreData(health.calculate(builder.getLevel()), food.calculate(builder.getLevel()), saturation.calculate(builder.getLevel()));
 	}
 }

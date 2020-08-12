@@ -11,7 +11,13 @@ public class RandomAmount {
 		this.min = min;
 		this.max = max;
 	}
-	
+
+	/**
+	 * Reads random amount from a string formatted "{min}-{max}"
+	 * 
+	 * @param str
+	 *            String to extract the random amount from
+	 */
 	public RandomAmount(String str) {
 		String[] split = str.split("\\-");
 		min = Integer.valueOf(split[0]);

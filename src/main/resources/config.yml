@@ -1,8 +1,3 @@
-# --------------------------------------------------------------
-#
-# Thanks for using MMOItems!
-#
-# --------------------------------------------------------------
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -27,6 +22,22 @@ disable-abilities-in-offhand: false
 # By default, all player inventories will be updated every
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10
+
+# When generating an item, the item level
+# must match approximately the player level
+# otherwise the player cannot use items/get useless items.
+#
+# The item level is always somewhere in the
+# interval [playerLevel - spread, playerLevel + spread]
+item-level-spread: 2
+
+# When an item is generated with no tier,
+# this is the capacity formula it will use.
+default-item-capacity:
+    base: 3
+    scale: 0
+    spread: 0
+    max-spread: 0
 
 # Changes the default value for some stats.
 default:

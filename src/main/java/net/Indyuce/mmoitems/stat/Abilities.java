@@ -1,27 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.AbilityListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomAbilityData;
-import net.Indyuce.mmoitems.stat.data.random.RandomAbilityListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,9 +12,28 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.Indyuce.mmoitems.stat.data.AbilityListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomAbilityData;
+import net.Indyuce.mmoitems.stat.data.random.RandomAbilityListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.###");
@@ -42,23 +44,9 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
-
-		AbilityListData list = new AbilityListData();
-
-		for (String key : config.getKeys(false))
-			list.add(new AbilityData(config.getConfigurationSection(key)));
-
-		return list;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
 		RandomAbilityListData list = new RandomAbilityListData();
 
 		for (String key : config.getKeys(false))
@@ -68,7 +56,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		List<String> abilityLore = new ArrayList<>();
 		boolean splitter = !MMOItems.plugin.getLanguage().abilitySplitter.equals("");
 
@@ -100,72 +88,47 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String configKey = (String) info[0];
 		String edited = (String) info[1];
 
 		if (edited.equals("ability")) {
 			String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
-			if (!MMOItems.plugin.getAbilities().hasAbility(format)) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid ability!");
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all abilities: /mi list ability.");
-				return false;
-			}
-
+			Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(format),
+					"format is not a valid ability! You may check the ability list using /mi list ability.");
 			Ability ability = MMOItems.plugin.getAbilities().getAbility(format);
 
-			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey, null);
-			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".type", format);
-			inv.registerItemEdition(config);
-			inv.open();
+			inv.getEditedSection().set("ability." + configKey, null);
+			inv.getEditedSection().set("ability." + configKey + ".type", format);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
 					MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + ability.getName() + ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
 		if (edited.equals("mode")) {
-			CastingMode castMode = CastingMode.safeValueOf(message);
-			if (castMode == null) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Make sure you enter a valid casting mode.");
-				return false;
-			}
+			CastingMode castMode = CastingMode.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
+			Ability ability = MMOItems.plugin.getAbilities().getAbility(inv.getEditedSection().getString("ability." + configKey + ".type")
+					.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
+			Validate.isTrue(ability.isAllowedMode(castMode), "This ability does not support this casting mode.");
 
-			Ability ability = MMOItems.plugin.getAbilities()
-					.getAbility(config.getConfig().getString(inv.getEdited().getId() + ".ability." + configKey + ".type").toUpperCase()
-							.replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
-			if (!ability.isAllowedMode(castMode)) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "This ability does not support this casting mode.");
-				return false;
-			}
-
-			config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + ".mode", castMode.name());
-			inv.registerItemEdition(config);
-			inv.open();
+			inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
 					+ ChatColor.GRAY + ".");
-			return true;
+			return;
 		}
 
-		double value = 0;
-		try {
-			value = Double.parseDouble(message);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".ability." + configKey + "." + edited, value);
-		inv.registerItemEdition(config);
-		inv.open();
+		new NumericStatFormula(message).fillConfigurationSection(inv.getEditedSection(), "ability." + configKey + "." + edited);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
 				+ " successfully added.");
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
-		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GREEN
-				+ (mmoitem.hasData(this) ? ((AbilityListData) mmoitem.getData(this)).getAbilities().size() : "0"));
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GOLD
+				+ (optional.isPresent() ? ((RandomAbilityListData) optional.get()).getAbilities().size() : 0));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}

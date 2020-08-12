@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -11,12 +12,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ColorData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
@@ -30,48 +30,43 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
+	public RandomStatData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof String, "Must specify a string");
+		return new ColorData((String) object);
+	}
+
+	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.POTION_COLOR).enable("Write in the chat the RGB color you want.",
-					ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
+					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getEdited().getId() + ".potion-color", null);
-			inv.registerItemEdition(config);
-			inv.open();
+			inv.getEditedSection().set("potion-color", null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
 		}
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 3) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "" + message + " is not a valid [RED] [GREEN] [BLUE].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: '75 0 130' stands for Indigo Purple.");
-			return false;
-		}
-		for (String str : split)
-			try {
-				int k = Integer.parseInt(str);
-				Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
-			} catch (IllegalArgumentException exception) {
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + str + " is not a valid number (must be between 0 and 255).");
-				return false;
-			}
+		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
 
-		config.getConfig().set(inv.getEdited().getId() + ".potion-color", message);
-		inv.registerItemEdition(config);
-		inv.open();
+		for (String str : split) {
+			int k = Integer.parseInt(str);
+			Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
+		}
+
+		inv.getEditedSection().set("potion-color", message);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + message + ".");
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		lore.add(mmoitem.hasData(this) ? ChatColor.GREEN + mmoitem.getData(this).toString() : ChatColor.RED + "Uncolored");
+		lore.add(optional.isPresent() ? ChatColor.GREEN + optional.get().toString() : ChatColor.RED + "Uncolored");
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -79,13 +74,7 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof String, "Must specify a string");
-		return new ColorData((String) object);
-	}
-
-	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			((PotionMeta) item.getMeta()).setColor(((ColorData) data).getColor());
 	}

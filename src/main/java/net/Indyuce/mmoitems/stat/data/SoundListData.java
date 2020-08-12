@@ -7,8 +7,8 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.api.CustomSound;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -35,8 +35,8 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 		return sounds.get(sound);
 	}
 
-	public void set(CustomSound type, String sound, double volume, double pitch) {
-		this.sounds.put(type, new SoundData(sound, volume, pitch));
+	public void set(CustomSound type, SoundData data) {
+		this.sounds.put(type, data);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return new SoundListData(new HashMap<>(sounds));
 	}
 }

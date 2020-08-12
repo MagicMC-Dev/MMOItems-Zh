@@ -1,253 +1,166 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import java.util.Set;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
+import net.Indyuce.mmoitems.api.item.template.NameModifier;
+import net.Indyuce.mmoitems.api.item.template.NameModifier.ModifierType;
+import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.StoredTagsData;
 import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MMOItemBuilder {
-	private MMOItem mmoitem;
+	private final MMOItem mmoitem;
+	private final int level;
+	private final ItemTier tier;
 
-	private final ItemStack item;
-	private final ItemMeta meta;
-	private final MMOItemLore lore = new MMOItemLore();
-	private final List<ItemTag> tags = new ArrayList<>();
-
-	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
-			"mmoitemsDecoy", 0, Operation.ADD_NUMBER);
-
-	/***
-	 * Used to build an MMOItem into an ItemStack
-	 * 
-	 * @param mmoitem
-	 *            The mmoitem you want to build
+	/**
+	 * Capacity is not final as it keeps lowering as modifiers are selected and
+	 * applied
 	 */
-	public MMOItemBuilder(MMOItem mmoitem) {
-		this.mmoitem = mmoitem;
+	private double capacity;
 
-		item = new ItemStack(
-				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
-		meta = item.getItemMeta();
-		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+	/**
+	 * Name modifiers, prefixes or suffixes, with priorities. They are saved
+	 * because they must be applied after the modifier selection process
+	 */
+	private final Set<NameModifier> nameModifiers = new HashSet<>();
 
-		tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoitem.getType().getId()));
-		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
+	/**
+	 * Instance which is created everytime an mmoitem is being randomly
+	 * generated
+	 * 
+	 * @param template
+	 *            The mmoitem template used to generate an item.
+	 * @param level
+	 *            Specified item level.
+	 * @param tier
+	 *            Specified item tier which determines how many capacity it will
+	 *            have. If no tier is given, item uses the default capacity
+	 *            formula given in the main config file
+	 */
+	public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
+		this.level = level;
+		this.tier = tier;
+		this.capacity = (tier != null ? tier.getCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
+		this.mmoitem = new MMOItem(template.getType(), template.getId());
 
-		if (MMOItems.plugin.getUpdater().hasData(mmoitem))
-			tags.add(new ItemTag("MMOITEMS_ITEM_UUID", MMOItems.plugin.getUpdater().getData(mmoitem).getUniqueId().toString()));
-	}
+		// apply base item data
+		template.getBaseItemData().forEach((stat, random) -> applyData(stat, random.randomize(this)));
 
-	public MMOItemLore getLore() {
-		return lore;
-	}
+		if (tier != null)
+			mmoitem.setData(ItemStat.TIER, new StringData(tier.getId()));
+		mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
 
-	public MMOItem getMMOItem() {
-		return mmoitem;
-	}
+		// roll item gen modifiers
+		for (TemplateModifier modifier : rollModifiers(template)) {
 
-	public ItemStack getItemStack() {
-		return item;
-	}
+			// roll modifier chance
+			// only apply if enough item weight
+			if (!modifier.rollChance() && modifier.getWeight() > capacity)
+				continue;
 
-	public ItemMeta getMeta() {
-		return meta;
-	}
-
-	public void addItemTag(ItemTag... itemTags) {
-		for (ItemTag itemTag : itemTags)
-			tags.add(itemTag);
-	}
-
-	public NBTItem buildNBT() {
-		this.mmoitem = new StatLore(mmoitem).generateNewItem();
-
-		for (ItemStat stat : mmoitem.getStats())
-			try {
-				stat.whenApplied(this, mmoitem.getData(stat));
-			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '" + mmoitem.getId() + "' with stat '"
-						+ stat.getId() + "': " + exception.getMessage());
-			}
-
-		// lore
-		if (mmoitem.getType() == Type.GEM_STONE)
-			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
-		lore.insert("item-type",
-				ItemStat.translate("item-type").replace("#",
-						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE) ? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
-								: mmoitem.getType().getName()));
-
-		meta.setLore(lore.build().toStringList());
-
-		/*
-		 * this tag is added to entirely override default vanilla item attribute
-		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the
-		 * holder. since 4.7 attributes are handled via custom calculations
-		 */
-		try {
-
-			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
-			item.setItemMeta(meta);
-			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
-
-			/*
-			 * on legacy spigot, it is not required to add a fake modifier to
-			 * the modifier list, so just override the string tag and it works
-			 * fine.
-			 */
-		} catch (NoSuchMethodError exception) {
-			item.setItemMeta(meta);
-			@SuppressWarnings("deprecation")
-			NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).cancelVanillaAttributeModifiers();
-			return nbt.addTag(tags);
+			capacity -= modifier.getWeight();
+			if (modifier.hasNameModifier())
+				addModifier(modifier.getNameModifier());
+			modifier.getItemData().forEach((stat, data) -> applyData(stat, data.randomize(this)));
 		}
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public double getRemainingCapacity() {
+		return capacity;
+	}
+
+	public ItemTier getTier() {
+		return tier;
 	}
 
 	/**
-	 * @return Builds an ItemStack
+	 * Calculates the item display name after applying name modifiers. If name
+	 * modifiers are specified but the item has no display name, MMOItems uses
+	 * "Item"
+	 * 
+	 * @return Built MMOItem instance
 	 */
-	public ItemStack build() {
-		return buildNBT().toItem();
+	public MMOItem build() {
+
+		if (!nameModifiers.isEmpty()) {
+			String displayName = mmoitem.hasData(ItemStat.NAME) ? mmoitem.getData(ItemStat.NAME).toString() : "Item";
+			for (NameModifier mod : nameModifiers) {
+				if (mod.getType() == ModifierType.PREFIX)
+					displayName = mod.getFormat() + " " + displayName;
+				if (mod.getType() == ModifierType.SUFFIX)
+					displayName += " " + mod.getFormat();
+			}
+
+			mmoitem.setData(ItemStat.NAME, new StringData(displayName));
+		}
+
+		return mmoitem;
 	}
 
-	public class StatLore {
-		private final MMOItem mmoitem;
-
-		private final UpgradeData upgradeData;
-
-		/***
-		 * @deprecated will be improved with mmoitems 6
-		 * 
-		 * @param mmoitem
-		 */
-		public StatLore(MMOItem mmoitem) {
-			this.mmoitem = mmoitem.clone();
-			this.upgradeData = ((UpgradeData) mmoitem.getData(ItemStat.UPGRADE));
-		}
-
-		public MMOItem getMMOItem() {
-			return mmoitem;
-		}
-
-		public boolean isUpgradable() {
-			if (upgradeData != null)
-				return upgradeData.getTemplate() != null;
-			return false;
-		}
-
-		public MMOItem generateNewItem() {
-			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false) && isUpgradable()) {
-				if (upgradeData.getLevel() > 0)
-					for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
-						UpgradeInfo upgradeInfo = upgradeData.getTemplate().getUpgradeInfo(stat);
-						if (upgradeInfo instanceof DoubleStat.DoubleUpgradeInfo) {
-
-							DoubleStat.DoubleUpgradeInfo info = ((DoubleStat.DoubleUpgradeInfo) upgradeInfo);
-							int level = upgradeData.getLevel();
-
-							if (!mmoitem.hasData(stat))
-								mmoitem.setData(stat, new DoubleData(0));
-
-							calculateBase(stat, info, level);
-
-							updateStat(stat, info, level);
-
-							double value = getValue(stat);
-
-							if (value > 0)
-								lore.insert(stat.getPath(),
-										stat.formatNumericStat(value, "#", new StatFormat("##").format(value)) + MMOLib.plugin.parseColors(
-												MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
-														.replace("#stat#", new StatFormat("##").format(value - getBase(stat)))));
-						}
-					}
-			}
-			return mmoitem;
-		}
-
-		public void calculateBase(ItemStat stat, DoubleStat.DoubleUpgradeInfo info, int level) {
-			if (!hasBase(stat)) {
-				ItemTag tag;
-				String key = "BASE_" + stat.getNBTPath();
-				double value = getValue(stat);
-
-				// does inverse math to get the base
-				if (info.isRelative()) {
-					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate().getUpgradeInfo(stat)).getAmount();
-
-					for (int i = 1; i <= level; i++) {
-						value /= 1 + upgradeAmount;
-					}
-
-					tag = new ItemTag(key, value);
-				} else {
-					tag = new ItemTag(key, Math.max(0, value - (info.getAmount() * level)));
-				}
-				StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
-
-				tagsData.addTag(tag);
-				mmoitem.replaceData(ItemStat.STORED_TAGS, tagsData);
-			}
-		}
-
-		// sets the mmoitem data to reflect current upgrade
-		public void updateStat(ItemStat stat, DoubleStat.DoubleUpgradeInfo info, int level) {
-			double base = getBase(stat);
-			if (info.isRelative()) {
-				for (int i = 1; i <= level; i++) {
-					base *= 1 + info.getAmount();
-				}
-				mmoitem.replaceData(stat, new DoubleData(base));
-			} else {
-				mmoitem.replaceData(stat, new DoubleData((info.getAmount() * level) + base));
-			}
-		}
-
-		public HashMap<String, ItemTag> getStoredTags() {
-			HashMap<String, ItemTag> map = new HashMap<>();
-			StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
-
-			for (ItemTag tag : tagsData.getTags())
-				map.put(tag.getPath(), tag);
-			return map;
-		}
-
-		public double getValue(ItemStat stat) {
-			return ((DoubleData) mmoitem.getData(stat)).generateNewValue();
-		}
-
-		public boolean hasBase(ItemStat stat) {
-			return getStoredTags().containsKey("BASE_" + stat.getNBTPath());
-		}
-
-		public double getBase(ItemStat stat) {
-			return Double.parseDouble(getStoredTags().get("BASE_" + stat.getNBTPath()).getValue().toString());
-		}
+	/**
+	 * Applies statData to the builder, either merges it if statData is
+	 * mergeable like lore, abilities.. or entirely replaces current data
+	 * 
+	 * @param stat
+	 *            Stat owning the data
+	 * @param data
+	 *            StatData to apply
+	 */
+	public void applyData(ItemStat stat, StatData data) {
+		if (mmoitem.hasData(stat) && data instanceof Mergeable)
+			((Mergeable) mmoitem.getData(stat)).merge(data);
+		else
+			mmoitem.setData(stat, data);
 	}
 
+	/**
+	 * Adds a modifier only if there aren't already modifier of the same type
+	 * with strictly higher priority. If there are none, adds modifier and
+	 * clears less priority modifiers
+	 * 
+	 * @param modifier
+	 *            Name modifier which needs to be added
+	 */
+	public void addModifier(NameModifier modifier) {
+
+		for (NameModifier current : nameModifiers)
+			if (current.getType() == modifier.getType() && current.getPriority() > modifier.getPriority())
+				return;
+
+		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
+		nameModifiers.add(modifier);
+	}
+
+	/**
+	 * @param template
+	 *            The template to list modifiers from
+	 * @return A sorted (or unsorted depending on the template options) list of
+	 *         modifiers that can be later rolled and applied to the builder
+	 */
+	private Collection<TemplateModifier> rollModifiers(MMOItemTemplate template) {
+		if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
+			return template.getModifiers().values();
+
+		List<TemplateModifier> modifiers = new ArrayList<>(template.getModifiers().values());
+		Collections.shuffle(modifiers);
+		return modifiers;
+	}
 }

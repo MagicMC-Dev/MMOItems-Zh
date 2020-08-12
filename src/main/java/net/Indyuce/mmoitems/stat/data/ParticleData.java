@@ -14,11 +14,11 @@ import org.bukkit.util.Vector;
 import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
 
@@ -143,7 +143,7 @@ public class ParticleData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

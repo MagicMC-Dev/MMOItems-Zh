@@ -1,25 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.PotionEffectData;
-import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
-import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,9 +14,25 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.PotionEffectData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
+import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
 
 public class PermanentEffects extends ItemStat {
 	public PermanentEffects() {
@@ -40,23 +41,7 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		PotionEffectListData effects = new PotionEffectListData();
-
-		for (String effect : config.getKeys(false)) {
-			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.notNull(type, "Could not find potion effect type named '" + effect + "'");
-			effects.add(new PotionEffectData(type, config.getInt(effect)));
-		}
-
-		return effects;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -73,20 +58,18 @@ public class PermanentEffects extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
-					"Format: [POTION_EFFECT] [AMPLIFIER]");
+					ChatColor.AQUA + "Format: {Effect Name} {Amplifier Numeric Formula}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("perm-effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".perm-effects").getKeys(false);
+			if (inv.getEditedSection().contains("perm-effects")) {
+				Set<String> set = inv.getEditedSection().getConfigurationSection("perm-effects").getKeys(false);
 				String last = new ArrayList<>(set).get(set.size() - 1);
-				config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + last, null);
+				inv.getEditedSection().set("perm-effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getEdited().getId() + ".perm-effects", null);
-				inv.registerItemEdition(config);
-				inv.open();
+					inv.getEditedSection().set("perm-effects", null);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + "�7.");
 			}
@@ -94,52 +77,31 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
-		if (split.length != 2) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [POTION_EFFECT] [AMPLIFIER].");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'INCREASE_DAMAGE 4' stands for Strength 4.");
-			return false;
-		}
+		Validate.isTrue(split.length >= 2, "Use this format: {Effect Name} {Effect Amplifier Numeric Formula}. Example: 'speed 1 0.3' "
+				+ "stands for Speed 1, plus 0.3 level per item level (rounded up to lower int)");
 
-		PotionEffectType effect = null;
-		for (PotionEffectType effect1 : PotionEffectType.values())
-			if (effect1 != null && effect1.getName().equalsIgnoreCase(split[0].replace("-", "_"))) {
-				effect = effect1;
-				break;
-			}
+		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_"));
+		Validate.notNull(effect, split[0] + " is not a valid potion effect. All potion effects can be found here: "
+				+ "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		if (effect == null) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid potion effect.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED
-					+ "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
-			return false;
-		}
-
-		int amplifier = 0;
-		try {
-			amplifier = (int) Double.parseDouble(split[1]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".perm-effects." + effect.getName(), amplifier);
-		inv.registerItemEdition(config);
-		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
-		return true;
+		NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
+		formula.fillConfigurationSection(inv.getEditedSection(), "perm-effects." + effect.getName());
+		inv.registerTemplateEdition();
+		inv.getPlayer().sendMessage(
+				MMOItems.plugin.getPrefix() + ChatColor.GOLD + effect.getName() + " " + formula + ChatColor.GRAY + " successfully added.");
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			PotionEffectListData data = (PotionEffectListData) mmoitem.getData(this);
-			for (PotionEffectData effect : data.getEffects())
+			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
+			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
-						+ " " + MMOUtils.intToRoman(effect.getLevel()));
+						+ " " + effect.getAmplifier().toString());
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
@@ -150,7 +112,7 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		JsonObject object = new JsonObject();
 		List<String> lore = new ArrayList<>();
 

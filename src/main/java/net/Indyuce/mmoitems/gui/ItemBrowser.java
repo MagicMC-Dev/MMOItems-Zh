@@ -1,17 +1,11 @@
 package net.Indyuce.mmoitems.gui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.edition.NewItemEdition;
-import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,7 +18,18 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.edition.NewItemEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.gui.edition.ItemEdition;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
@@ -40,6 +45,7 @@ public class ItemBrowser extends PluginInventory {
 
 	public ItemBrowser(Player player, Type type) {
 		super(player);
+
 		this.type = type;
 	}
 
@@ -54,11 +60,11 @@ public class ItemBrowser extends PluginInventory {
 		 * by the player
 		 */
 		if (type == null) {
-			Inventory inv = Bukkit.createInventory(this, 54, ChatColor.UNDERLINE + "Item Explorer");
+			Inventory inv = Bukkit.createInventory(this, 54, "Item Explorer");
 			List<Type> types = new ArrayList<>(MMOItems.plugin.getTypes().getAll());
 			for (int j = min; j < Math.min(max, types.size()); j++) {
 				Type type = types.get(j);
-				int items = type.getConfigFile().getConfig().getKeys(false).size();
+				int items = MMOItems.plugin.getTemplates().getTemplates(type).size();
 
 				ItemStack item = type.getItem();
 				item.setAmount(Math.max(1, Math.min(64, items)));
@@ -93,15 +99,6 @@ public class ItemBrowser extends PluginInventory {
 			ItemStack switchBrowse = new ItemStack(Material.STONE);
 			ItemMeta switchMeta = switchBrowse.getItemMeta();
 			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
-
-			if (!MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-				List<String> lore = new ArrayList<String>();
-				lore.add("");
-				lore.add("&cThis feature is disabled.");
-				lore.add("&cUpdating to 1.13+ is recommended.");
-				switchMeta.setLore(lore);
-			}
-
 			switchBrowse.setItemMeta(switchMeta);
 
 			while (n < slots.length)
@@ -123,20 +120,20 @@ public class ItemBrowser extends PluginInventory {
 		errorMeta.setLore(errorLore);
 		error.setItemMeta(errorMeta);
 
-		List<String> itemIds = new ArrayList<>(type.getConfigFile().getConfig().getKeys(false));
+		List<MMOItemTemplate> templates = new ArrayList<>(MMOItems.plugin.getTemplates().getTemplates(type));
 
 		/*
 		 * displays every item in a specific type. items are cached inside the
 		 * map at the top to reduce performance impact and are directly rendered
 		 */
 		Inventory inv = Bukkit.createInventory(this, 54,
-				(deleteMode ? (ChatColor.UNDERLINE + "DELETE MODE: ") : (ChatColor.UNDERLINE + "Item Explorer: ")) + type.getName());
-		for (int j = min; j < Math.min(max, itemIds.size()); j++) {
-			String id = itemIds.get(j);
-			if (!cached.containsKey(id)) {
-				ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
+				(deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
+		for (int j = min; j < Math.min(max, templates.size()); j++) {
+			MMOItemTemplate template = templates.get(j);
+			if (!cached.containsKey(template.getId())) {
+				ItemStack item = template.newBuilder(getPlayerData().getRPG()).build().newBuilder().build();
 				if (item == null || item.getType() == Material.AIR) {
-					cached.put(id, error);
+					cached.put(template.getId(), error);
 					inv.setItem(slots[n++], error);
 					continue;
 				}
@@ -154,10 +151,10 @@ public class ItemBrowser extends PluginInventory {
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 
-				cached.put(id, item);
+				cached.put(template.getId(), item);
 			}
 
-			inv.setItem(slots[n++], cached.get(id));
+			inv.setItem(slots[n++], cached.get(template.getId()));
 		}
 
 		ItemStack noItem = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
@@ -194,7 +191,9 @@ public class ItemBrowser extends PluginInventory {
 			ItemStack downloadPack = new ItemStack(Material.HOPPER);
 			ItemMeta downloadMeta = downloadPack.getItemMeta();
 			downloadMeta.setDisplayName(ChatColor.GREEN + "Download Default Resourcepack");
-			downloadMeta.setLore(Arrays.asList(ChatColor.LIGHT_PURPLE + "Only seeing stone blocks?", "", ChatColor.RED + "By downloading the default resourcepack you can", ChatColor.RED + "edit the blocks however you want.", ChatColor.RED + "You will still have to add it to your server!"));
+			downloadMeta.setLore(Arrays.asList(ChatColor.LIGHT_PURPLE + "Only seeing stone blocks?", "",
+					ChatColor.RED + "By downloading the default resourcepack you can", ChatColor.RED + "edit the blocks however you want.",
+					ChatColor.RED + "You will still have to add it to your server!"));
 			downloadPack.setItemMeta(downloadMeta);
 			inv.setItem(45, downloadPack);
 		}
@@ -206,7 +205,7 @@ public class ItemBrowser extends PluginInventory {
 		inv.setItem(47, delete);
 		inv.setItem(49, back);
 		inv.setItem(18, page > 1 ? previous : null);
-		inv.setItem(26, max >= itemIds.size() ? null : next);
+		inv.setItem(26, max >= templates.size() ? null : next);
 		return inv;
 	}
 
@@ -225,54 +224,40 @@ public class ItemBrowser extends PluginInventory {
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
 				page++;
 				open();
-				return;
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
 				page--;
 				open();
-				return;
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
-				new ItemBrowser(player).open();
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
+				new ItemBrowser(getPlayer()).open();
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer")) {
-				if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12))
-					new ItemBrowser(player, Type.BLOCK).open();
-				else
-					player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
-				return;
-			}
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer"))
+				new ItemBrowser(getPlayer(), Type.BLOCK).open();
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
 				deleteMode = false;
 				open();
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Create New"))
 				new NewItemEdition(this).enable("Write in the chat the text you want.");
 
-			if (type != null && item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Delete Item")) {
+			else if (type != null && item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Delete Item")) {
 				deleteMode = true;
 				open();
 			}
 
-			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
-				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
-				player.closeInventory();
-				return;
+			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
+				MMOLib.plugin.getVersion().getWrapper().sendJson(getPlayer(),
+						"[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
+				getPlayer().closeInventory();
 			}
 
-			if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -")) {
-				Type type = MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"));
-				if (type == Type.BLOCK && !MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-					player.sendMessage(ChatColor.RED + "Blocks are only for 1.13+.");
-					return;
-				}
-
-				new ItemBrowser(player, type).open();
-			}
+			else if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- No type -"))
+				new ItemBrowser(getPlayer(), MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"))).open();
 		}
 
 		String id = NBTItem.get(item).getString("MMOITEMS_ITEM_ID");
@@ -289,15 +274,14 @@ public class ItemBrowser extends PluginInventory {
 		} else {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				// this refreshes the item if it's unstackable
-				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE"))
-						? MMOItems.plugin.getItems().getMMOItem(type, id).clone().newBuilder().build()
+				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE")) ? MMOItems.plugin.getItem(type, id, playerData)
 						: removeLastLoreLines(item, 3);
-				player.getInventory().addItem(generatedItem);
-				player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
+				getPlayer().getInventory().addItem(generatedItem);
+				getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
 			}
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF)
-				new ItemEdition(player, MMOItems.plugin.getItems().getMMOItem(type, id), removeLastLoreLines(item, 3)).open();
+				new ItemEdition(getPlayer(), MMOItems.plugin.getTemplates().getTemplate(type, id)).open();
 		}
 	}
 

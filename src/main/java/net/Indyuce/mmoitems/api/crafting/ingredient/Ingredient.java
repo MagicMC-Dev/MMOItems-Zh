@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMode;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public abstract class Ingredient {
@@ -49,7 +50,7 @@ public abstract class Ingredient {
 	 */
 	public abstract String formatLoreDisplay(String string);
 
-	public abstract ItemStack generateItemStack();
+	public abstract ItemStack generateItemStack(RPGPlayer player);
 
 	public CheckedIngredient newIngredientInfo(IngredientInventory inv) {
 		return new CheckedIngredient(this, inv.getIngredient(this, IngredientLookupMode.BASIC));

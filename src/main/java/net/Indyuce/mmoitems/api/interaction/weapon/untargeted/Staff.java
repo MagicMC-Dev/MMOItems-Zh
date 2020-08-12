@@ -12,7 +12,6 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
@@ -25,8 +24,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Staff extends UntargetedWeapon {
-	public Staff(Player player, NBTItem item, Type type) {
-		super(player, item, type, WeaponType.LEFT_CLICK);
+	public Staff(Player player, NBTItem item) {
+		super(player, item, WeaponType.LEFT_CLICK);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -7,8 +8,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
@@ -20,14 +22,15 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemStone extends UseItem {
 
-	public GemStone(Player player, NBTItem item, Type type) {
-		super(player, item, type);
+	public GemStone(Player player, NBTItem item) {
+		super(player, item);
 	}
 
 	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
 
 		/*
-		 * loads all stats and calculates EVERY piece of the lore again.
+		 * Entirely loads the MMOItem and checks if it has the required empty
+		 * socket for the gem
 		 */
 		MMOItem targetMMO = new LiveMMOItem(target);
 		if (!targetMMO.hasData(ItemStat.GEM_SOCKETS))
@@ -40,7 +43,7 @@ public class GemStone extends UseItem {
 			return new ApplyResult(ResultType.NONE);
 
 		/*
-		 * checks if the gem supports the item type, or the item set, or a
+		 * Checks if the gem supports the item type, or the item set, or a
 		 * weapon
 		 */
 		String appliableTypes = getNBTItem().getString("MMOITEMS_ITEM_TYPE_RESTRICTION");
@@ -50,17 +53,21 @@ public class GemStone extends UseItem {
 
 		// check for success rate
 		double successRate = getNBTItem().getStat(ItemStat.SUCCESS_RATE);
-		if (successRate != 0)
-			if (random.nextDouble() < 1 - successRate / 100) {
-				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-				Message.GEM_STONE_BROKE
-						.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))
-						.send(player);
-				return new ApplyResult(ResultType.FAILURE);
-			}
+		if (successRate != 0 && random.nextDouble() > successRate / 100) {
+			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+			Message.GEM_STONE_BROKE
+					.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))
+					.send(player);
+			return new ApplyResult(ResultType.FAILURE);
+		}
+
+		ApplyGemStoneEvent called = new ApplyGemStoneEvent(playerData, mmoitem, targetMMO);
+		Bukkit.getPluginManager().callEvent(called);
+		if (called.isCancelled())
+			return new ApplyResult(ResultType.NONE);
 
 		/*
-		 * gem stone can be successfully applied. apply stats then abilities and
+		 * Gem stone can be successfully applied. apply stats then abilities and
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
@@ -68,7 +75,7 @@ public class GemStone extends UseItem {
 		sockets.apply(gemType, gemData);
 
 		/*
-		 * only applies NON PROPER and MERGEABLE item stats
+		 * Only applies NON PROPER and MERGEABLE item stats
 		 */
 		for (ItemStat stat : mmoitem.getStats())
 			if (!(stat instanceof ProperStat)) {

@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -10,14 +11,12 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
@@ -36,37 +35,25 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
-	}
-
-	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new StatEdition(inv, ItemStat.MATERIAL).enable("Write in the chat the material you want.");
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		Material material = null;
-		String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		try {
-			material = Material.valueOf(format);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid material!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
-					+ "All materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html");
-			return false;
+			Material material = Material.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
+			inv.getEditedSection().set("material", material.name());
+			inv.registerTemplateEdition();
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + material.name() + ".");
+		} catch (IllegalArgumentException exception) {
+			throw new IllegalArgumentException(
+					exception.getMessage() + " (all materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html)");
 		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".material", material.name());
-		inv.registerItemEdition(config);
-		inv.open();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + material.name() + ".");
-		return true;
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		/*
 		 * material is set handled directly in the MMOBuilder constructor
 		 * therefore nothing needs to be done here
@@ -79,12 +66,11 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
 		lore.add(ChatColor.GRAY + "Current Value: "
-				+ (mmoitem.hasData(this)
-						? ChatColor.GREEN
-								+ MMOUtils.caseOnWords(((MaterialData) mmoitem.getData(this)).getMaterial().name().toLowerCase().replace("_", " "))
+				+ (optional.isPresent()
+						? ChatColor.GREEN + MMOUtils.caseOnWords(((MaterialData) optional.get()).getMaterial().name().toLowerCase().replace("_", " "))
 						: ChatColor.RED + "None"));
 
 		lore.add("");

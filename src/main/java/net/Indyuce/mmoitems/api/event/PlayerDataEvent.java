@@ -12,6 +12,7 @@ public abstract class PlayerDataEvent extends PlayerEvent implements Cancellable
 
 	public PlayerDataEvent(PlayerData playerData) {
 		super(playerData.getPlayer());
+
 		this.playerData = playerData;
 	}
 

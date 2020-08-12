@@ -1,8 +1,26 @@
 package net.Indyuce.mmoitems;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
-import net.Indyuce.mmoitems.api.item.MMOItem;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.command.MMOItemsCommand;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
@@ -17,7 +35,11 @@ import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
 import net.Indyuce.mmoitems.comp.flags.WorldGuardFlags;
-import net.Indyuce.mmoitems.comp.holograms.*;
+import net.Indyuce.mmoitems.comp.holograms.CMIPlugin;
+import net.Indyuce.mmoitems.comp.holograms.HologramSupport;
+import net.Indyuce.mmoitems.comp.holograms.HologramsPlugin;
+import net.Indyuce.mmoitems.comp.holograms.HolographicDisplaysPlugin;
+import net.Indyuce.mmoitems.comp.holograms.TrHologramPlugin;
 import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
@@ -35,40 +57,45 @@ import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
-import net.Indyuce.mmoitems.listener.*;
-import net.Indyuce.mmoitems.listener.version.Listener_v1_13;
-import net.Indyuce.mmoitems.manager.*;
-import net.Indyuce.mmoitems.manager.recipe.RecipeManager;
-import net.Indyuce.mmoitems.manager.recipe.RecipeManagerDefault;
-import net.Indyuce.mmoitems.manager.recipe.RecipeManagerLegacy;
-import net.mmogroup.mmolib.MMOLib;
+import net.Indyuce.mmoitems.listener.CraftingListener;
+import net.Indyuce.mmoitems.listener.CustomBlockListener;
+import net.Indyuce.mmoitems.listener.CustomSoundListener;
+import net.Indyuce.mmoitems.listener.DisableInteractions;
+import net.Indyuce.mmoitems.listener.DurabilityListener;
+import net.Indyuce.mmoitems.listener.ElementListener;
+import net.Indyuce.mmoitems.listener.ItemUse;
+import net.Indyuce.mmoitems.listener.PlayerListener;
+import net.Indyuce.mmoitems.manager.AbilityManager;
+import net.Indyuce.mmoitems.manager.BlockManager;
+import net.Indyuce.mmoitems.manager.ConfigManager;
+import net.Indyuce.mmoitems.manager.CraftingManager;
+import net.Indyuce.mmoitems.manager.DropTableManager;
+import net.Indyuce.mmoitems.manager.EntityManager;
+import net.Indyuce.mmoitems.manager.ItemManager;
+import net.Indyuce.mmoitems.manager.PluginUpdateManager;
+import net.Indyuce.mmoitems.manager.RecipeManager;
+import net.Indyuce.mmoitems.manager.SetManager;
+import net.Indyuce.mmoitems.manager.StatManager;
+import net.Indyuce.mmoitems.manager.TemplateManager;
+import net.Indyuce.mmoitems.manager.TierManager;
+import net.Indyuce.mmoitems.manager.TypeManager;
+import net.Indyuce.mmoitems.manager.UpdaterManager;
+import net.Indyuce.mmoitems.manager.UpgradeManager;
+import net.Indyuce.mmoitems.manager.WorldGenManager;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
- 
+
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
 	private final AbilityManager abilityManager = new AbilityManager();
-	private final ItemGenManager itemGenerator = new ItemGenManager();
 	private final EntityManager entityManager = new EntityManager();
 	private final TypeManager typeManager = new TypeManager();
- 
+	private final TemplateManager templateManager = new TemplateManager();
+	private final ItemManager itemManager = new ItemManager();
+
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
 	private UpgradeManager upgradeManager;
@@ -78,7 +105,6 @@ public class MMOItems extends JavaPlugin {
 	private BlockManager blockManager;
 	private TierManager tierManager;
 	private StatManager statManager;
-	private ItemManager itemManager;
 	private SetManager setManager;
 
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
@@ -92,7 +118,7 @@ public class MMOItems extends JavaPlugin {
 		plugin = this;
 
 		try {
-			if (getServer().getPluginManager().getPlugin("WorldGuard") != null && MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
+			if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
 				flagPlugin = new WorldGuardFlags();
 				getLogger().log(Level.INFO, "Hooked onto WorldGuard");
 			}
@@ -120,17 +146,14 @@ public class MMOItems extends JavaPlugin {
 
 		abilityManager.initialize();
 		configManager = new ConfigManager();
-		itemManager = new ItemManager();
+		templateManager.reload();
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();
-		itemGenerator.reload();
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-			worldGenManager = new WorldGenManager();
-			blockManager = new BlockManager();
-		}
+		worldGenManager = new WorldGenManager();
+		blockManager = new BlockManager();
 
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
 			new VaultSupport();
@@ -151,10 +174,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 12)) {
-			Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
-			Bukkit.getPluginManager().registerEvents(new Listener_v1_13(), this);
-		}
+		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 
 		/*
 		 * this class implements the Listener, if the option
@@ -172,7 +192,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			@Override
 			public void run() {
-				for(Player player : Bukkit.getOnlinePlayers())
+				for (Player player : Bukkit.getOnlinePlayers())
 					PlayerData.get(player).checkForInventoryUpdate();
 			}
 		}, 100, getConfig().getInt("inventory-update-delay"));
@@ -247,7 +267,7 @@ public class MMOItems extends JavaPlugin {
 
 		// advanced recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
-		recipeManager = MMOLib.plugin.getVersion().isStrictlyHigher(1, 12) ? new RecipeManagerDefault() : new RecipeManagerLegacy();
+		recipeManager = new RecipeManager();
 
 		// commands
 		getCommand("mmoitems").setExecutor(new MMOItemsCommand());
@@ -266,7 +286,7 @@ public class MMOItems extends JavaPlugin {
 		// save item updater data
 		ConfigFile updater = new ConfigFile("/dynamic", "updater");
 		updater.getConfig().getKeys(false).forEach(key -> updater.getConfig().set(key, null));
-		dynamicUpdater.getActive().forEach(data -> {
+		dynamicUpdater.collectActive().forEach(data -> {
 			updater.getConfig().createSection(data.getPath());
 			data.save(updater.getConfig().getConfigurationSection(data.getPath()));
 		});
@@ -282,7 +302,7 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public String getPrefix() {
-		return ChatColor.YELLOW + "MI" + ChatColor.DARK_GRAY + "> " + ChatColor.GRAY;
+		return ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "MMMOItems" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
 	}
 
 	public File getJarFile() {
@@ -305,10 +325,6 @@ public class MMOItems extends JavaPlugin {
 		return flagPlugin;
 	}
 
-	public ItemGenManager getItemGenerator() {
-		return itemGenerator;
-	}
-
 	public void setFlags(FlagPlugin value) {
 		flagPlugin = value;
 	}
@@ -317,6 +333,14 @@ public class MMOItems extends JavaPlugin {
 		return rpgPlugin;
 	}
 
+	/**
+	 * The RPGHandler interface lets MMOItems fetch and manipulate RPG data like
+	 * player level, class, resources like mana and stamina for item or skill
+	 * costs, item restrictions, etc.
+	 * 
+	 * @param handler
+	 *            Your RPGHandler instance
+	 */
 	public void setRPG(RPGHandler handler) {
 		Validate.notNull(handler, "RPGHandler cannot be null");
 
@@ -337,6 +361,18 @@ public class MMOItems extends JavaPlugin {
 		return inventory;
 	}
 
+	/**
+	 * The PlayerInventory interface lets MMOItems knows what items to look for
+	 * in player inventories when doing inventory updates. By default, it only
+	 * checks held items + armor slots. However other plugins like MMOInv do
+	 * implement custom slots and therefore must register a custom
+	 * PlayerInventory instance.
+	 * 
+	 * Default instance is DefaultPlayerInventory in comp.inventory
+	 * 
+	 * @param value
+	 *            The player inventory subclass
+	 */
 	public void setPlayerInventory(PlayerInventory value) {
 		inventory = value;
 	}
@@ -393,6 +429,11 @@ public class MMOItems extends JavaPlugin {
 		return hologramSupport;
 	}
 
+	public TemplateManager getTemplates() {
+		return templateManager;
+	}
+
+	@Deprecated
 	public ItemManager getItems() {
 		return itemManager;
 	}
@@ -415,56 +456,44 @@ public class MMOItems extends JavaPlugin {
 		setRPG(new DefaultHook());
 	}
 
-	public boolean isBlacklisted(Material material) {
-		return getConfig().getStringList("block-blacklist").contains(material.name());
-	}
-
-	/***
-	 * Parses an ItemStack from a string. Can be used to both get a vanilla
-	 * material or an MMOItem. Used by the recipe manager.
+	/**
+	 * @return Generates an item given an item template. The item level will
+	 *         scale according to the player RPG level
 	 */
-	public ItemStack parseStack(String parse) {
-		ItemStack stack = null;
-		String[] split = parse.split("\\:");
-		String input = split[0];
-
-		if (input.contains(".")) {
-			String[] typeId = input.split("\\.");
-			String typeFormat = typeId[0].toUpperCase().replace("-", "_").replace(" ", "_");
-			Validate.isTrue(getTypes().has(typeFormat), "Could not find type " + typeFormat);
-
-			MMOItem mmo = getItems().getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
-			if (mmo != null)
-				stack = mmo.newBuilder().build();
-		} else {
-			Material mat = Material.AIR;
-			try {
-				mat = Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_"));
-			} catch (IllegalArgumentException e) {
-				getLogger().warning("Couldn't parse material from '" + parse + "'!");
-			}
-
-			if (mat != Material.AIR)
-				stack = new ItemStack(mat);
-		}
-
-		try {
-			if (stack != null && split.length > 1)
-				stack.setAmount(Integer.parseInt(split[1]));
-		} catch (NumberFormatException e) {
-			getLogger().warning("Couldn't parse amount from '" + parse + "'!");
-		}
-
-		return stack;
+	public MMOItem getMMOItem(Type type, String id, PlayerData player) {
+		return templateManager.getTemplate(type, id).newBuilder(player.getRPG()).build();
 	}
 
-	public void debug(Object... message) {
-		if (!getConfig().getBoolean("debug"))
-			return;
+	public ItemStack getItem(Type type, String id, PlayerData player) {
+		return getMMOItem(type, id, player).newBuilder().build();
+	}
 
-		for (Object line : message) {
-			getLogger().log(Level.INFO, "Debug> " + line.toString());
-			Bukkit.getOnlinePlayers().forEach(online -> online.sendMessage(ChatColor.YELLOW + "Debug> " + ChatColor.WHITE + line.toString()));
-		}
+	/**
+	 * @param itemLevel
+	 *            The desired item level
+	 * @param itemTier
+	 *            The desired item tier
+	 * @return Generates an item given an item template with a specific item
+	 *         level and item tier. The item tier can be null
+	 */
+	public MMOItem getMMOItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
+		return templateManager.getTemplate(type, id).newBuilder(itemLevel, itemTier).build();
+	}
+
+	public ItemStack getItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
+		return getMMOItem(type, id, itemLevel, itemTier).newBuilder().build();
+	}
+
+	/**
+	 * @return Generates an item given an item template. The item level will be
+	 *         0 and the item will have no item tier unless one is specified in
+	 *         the base item data.
+	 */
+	public MMOItem getMMOItem(Type type, String id) {
+		return templateManager.getTemplate(type, id).newBuilder(0, null).build();
+	}
+
+	public ItemStack getItem(Type type, String id) {
+		return getMMOItem(type, id).newBuilder().build();
 	}
 }

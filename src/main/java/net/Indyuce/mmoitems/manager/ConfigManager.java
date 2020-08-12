@@ -1,20 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.item.plugin.ConfigItem;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
-import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.util.AltChar;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.potion.PotionEffectType;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,46 +7,50 @@ import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Random;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffectType;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.util.AltChar;
+
 public class ConfigManager {
 
 	// cached config files
-	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, namePlaceholders;
+	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects;
 
 	// cached config options
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
+	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
+	public NumericStatFormula defaultItemCapacity;
 
-	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage;
-
-	private static final Random random = new Random();
 	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
 	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
 
 	// try to setup non existing languages
 	public ConfigManager() {
-		File mainLanguageFolder = new File(MMOItems.plugin.getDataFolder() + "/language");
-		if (!mainLanguageFolder.exists())
-			mainLanguageFolder.mkdir();
 
-		File itemFolder = new File(MMOItems.plugin.getDataFolder() + "/item");
-		if (!itemFolder.exists())
-			itemFolder.mkdir();
-
-		File dynamicFolder = new File(MMOItems.plugin.getDataFolder() + "/dynamic");
-		if (!dynamicFolder.exists())
-			dynamicFolder.mkdir();
-
-		if (!new File(MMOItems.plugin.getDataFolder() + "/generator").exists()) {
-			new File(MMOItems.plugin.getDataFolder() + "/generator").mkdir();
-			new File(MMOItems.plugin.getDataFolder() + "/generator/templates").mkdir();
-			new File(MMOItems.plugin.getDataFolder() + "/generator/modifiers").mkdir();
-		}
+		mkdir("item");
+		mkdir("dynamic");
+		mkdir("language");
+		mkdir("modifiers");
 
 		File craftingStationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
 		if (!craftingStationsFolder.exists()) {
@@ -72,8 +61,7 @@ public class ConfigManager {
 					String name = entries.nextElement().getName();
 					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
 						Files.copy(MMOItems.plugin.getResource(name),
-								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2])
-										.toPath());
+								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
 				}
 				jarFile.close();
 			} catch (IOException exception) {
@@ -184,7 +172,6 @@ public class ConfigManager {
 		potionEffects = new ConfigFile("/language", "potion-effects");
 		stats = new ConfigFile("/language", "stats");
 		attackEffects = new ConfigFile("/language", "attack-effects");
-		namePlaceholders = new ConfigFile("name-placeholders");
 
 		/*
 		 * reload cached config options for quicker access - these options are
@@ -203,9 +190,23 @@ public class ConfigManager {
 		soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
 		soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
 		upgradeRequirementsCheck = MMOItems.plugin.getConfig().getBoolean("item-upgrade-requirements-check");
+		levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
+
+		try {
+			defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));
+		} catch (IllegalArgumentException exception) {
+			defaultItemCapacity = new NumericStatFormula(5, .05, .1, .3);
+			MMOItems.plugin.getLogger().log(Level.INFO,
+					"An error occured while trying to load default capacity formula for the item generator, using default: "
+							+ exception.getMessage());
+		}
 
 		for (ConfigItem item : ConfigItem.values)
 			item.update(items.getConfig().getConfigurationSection(item.getId()));
+	}
+
+	public boolean isBlacklisted(Material material) {
+		return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(material.name());
 	}
 
 	public String getStatFormat(String path) {
@@ -238,20 +239,25 @@ public class ConfigManager {
 		return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));
 	}
 
-	public String getNamePlaceholder(String path) {
-		if (!namePlaceholders.getConfig().contains(path))
-			return null;
-
-		List<String> possible = namePlaceholders.getConfig().getStringList(path);
-		return possible.get(random.nextInt(possible.size()));
-	}
-
 	public String getLuteAttackEffectName(LuteAttackEffect effect) {
 		return attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-"));
 	}
 
 	public String getStaffSpiritName(StaffSpirit spirit) {
 		return attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-"));
+	}
+
+	/**
+	 * Creates an empty directory in the MMOItems plugin folder if it does not
+	 * exist
+	 * 
+	 * @param path
+	 *            The path of your folder
+	 */
+	private void mkdir(String path) {
+		File folder = new File(MMOItems.plugin.getDataFolder() + "/" + path);
+		if (!folder.exists())
+			folder.mkdir();
 	}
 
 	/*
@@ -263,23 +269,14 @@ public class ConfigManager {
 		// default general config files -> /MMOItems
 		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
 		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
-		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
 		DROPS("drops.yml", "", "drops.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
-		NAME_PLACEHOLDERS("name-placeholders.yml", "", "name-placeholders.yml"),
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
-
-		// LEGACY_CONFIGS("legacy-configs.zip", "", "legacy-configs.zip", true),
-		// Not included in the jar anymore
+		EXAMPLE_MODIFIERS("modifiers/example-modifiers.yml", "modifiers", "example-modifiers.yml"),
 
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
-
-		// item generator
-		EXAMPLE_GEN_TEMPLATES("generator/templates/example-templates.yml", "generator/templates", "example-templates.yml"),
-		EXAMPLE_GEN_MODIFIERS("generator/modifiers/example-modifiers.yml", "generator/modifiers", "example-modifiers.yml"),
-		ITEM_GEN_CONFIG("generator/config.yml", "generator", "config.yml"),
 
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),
@@ -344,6 +341,7 @@ public class ConfigManager {
 				}
 		}
 	}
+
 	public static class YamlConverter {
 		private File file;
 
@@ -357,7 +355,10 @@ public class ConfigManager {
 
 		public boolean convert() throws IOException {
 			if (!file.exists())
-				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) { // this converts old custom-blocks.yml
+				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) { // this
+																																			// converts
+																																			// old
+																																			// custom-blocks.yml
 					file.createNewFile(); // creates the file
 
 					YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
@@ -367,10 +368,14 @@ public class ConfigManager {
 					for (String id : oldConfig.getKeys(false)) {
 						ConfigurationSection section = newConfig.getConfigurationSection(id);
 						section.set("material", "STONE"); // adds material
-						section.set("block-id", Integer.parseInt(id)); // adds block id
+						section.set("block-id", Integer.parseInt(id)); // adds
+																		// block
+																		// id
 						for (String node : section.getKeys(false)) {
 							Object value = section.get(node);
-							if (node.equalsIgnoreCase("display-name")) { // converts name format
+							if (node.equalsIgnoreCase("display-name")) { // converts
+																			// name
+																			// format
 								section.set("display-name", null);
 								section.set("name", value);
 							}

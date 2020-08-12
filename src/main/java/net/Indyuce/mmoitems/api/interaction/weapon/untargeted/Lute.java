@@ -15,7 +15,6 @@ import org.bukkit.util.Vector;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
@@ -27,8 +26,8 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Lute extends UntargetedWeapon {
-	public Lute(Player player, NBTItem item, Type type) {
-		super(player, item, type, WeaponType.RIGHT_CLICK);
+	public Lute(Player player, NBTItem item) {
+		super(player, item, WeaponType.RIGHT_CLICK);
 	}
 
 	@Override
@@ -75,7 +74,8 @@ public class Lute extends UntargetedWeapon {
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(getPlayer(), loc, target)) {
-							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC).applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target);
+							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC)
+									.applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target);
 							cancel();
 							return;
 						}

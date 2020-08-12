@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
@@ -22,16 +23,16 @@ import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -46,48 +47,25 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		ConfigurationSection config = (ConfigurationSection) object;
-
-		PotionEffectListData effects = new PotionEffectListData();
-
-		for (String effect : config.getKeys(false)) {
-			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.isTrue(type != null, "Could not find potion effect type named '" + effect + "'");
-
-			String[] split = config.getString(effect).split("\\,");
-			double duration = Double.parseDouble(split[0]);
-
-			int amplifier = Integer.parseInt(split[1]);
-			effects.add(new PotionEffectData(type, duration, amplifier));
-		}
-
-		return effects;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
-					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
+					ChatColor.AQUA + "Format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("effects")) {
-				Set<String> set = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".effects").getKeys(false);
+			if (inv.getEditedSection().contains("effects")) {
+				Set<String> set = inv.getEditedSection().getConfigurationSection("effects").getKeys(false);
 				String last = Arrays.asList(set.toArray(new String[0])).get(set.size() - 1);
-				config.getConfig().set(inv.getEdited().getId() + ".effects." + last, null);
+				inv.getEditedSection().set("effects." + last, null);
 				if (set.size() <= 1)
-					config.getConfig().set(inv.getEdited().getId() + ".effects", null);
-				inv.registerItemEdition(config);
-				inv.open();
+					inv.getEditedSection().set("effects", null);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
 			}
@@ -95,64 +73,33 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		String[] split = message.split("\\ ");
-		if (split.length != 3) {
-			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER].");
-			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
-			return false;
-		}
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		String[] split = message.split("\\|");
+		Validate.isTrue(split.length > 1, "Use this format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}.");
 
-		PotionEffectType effect = null;
-		for (PotionEffectType effect1 : PotionEffectType.values())
-			if (effect1 != null)
-				if (effect1.getName().equalsIgnoreCase(split[0].replace("-", "_"))) {
-					effect = effect1;
-					break;
-				}
+		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_").replace(" ", "_").toUpperCase());
+		Validate.notNull(effect, split[0] + " is not a valid potion effect. All potion effects "
+				+ "can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
-		if (effect == null) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[0] + " is not a valid potion effect!");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix()
-					+ "All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
-			return false;
-		}
+		NumericStatFormula duration = new NumericStatFormula(split[1]);
+		NumericStatFormula amplifier = split.length > 2 ? new NumericStatFormula(split[2]) : new NumericStatFormula(1, 0, 0, 0);
 
-		double duration = 0;
-		try {
-			duration = Double.parseDouble(split[1]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[1] + " is not a valid number!");
-			return false;
-		}
-
-		int amplifier = 0;
-		try {
-			amplifier = (int) Double.parseDouble(split[2]);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + split[2] + " is not a valid number!");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".effects." + effect.getName(), duration + "," + amplifier);
-		inv.registerItemEdition(config);
-		inv.open();
+		duration.fillConfigurationSection(inv.getEditedSection(), "effects." + effect.getName() + ".duration");
+		amplifier.fillConfigurationSection(inv.getEditedSection(), "effects." + effect.getName() + ".amplifier");
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			PotionEffectListData data = (PotionEffectListData) mmoitem.getData(this);
-			for (PotionEffectData effect : data.getEffects())
+			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
+			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
-						+ " " + MMOUtils.intToRoman(effect.getLevel()) + " " + ChatColor.GRAY + "(" + ChatColor.GREEN
-						+ durationFormat.format(effect.getDuration()) + ChatColor.GRAY + "s)");
+						+ ChatColor.GRAY + " Level: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
+						+ effect.getDuration());
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
@@ -162,7 +109,7 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		List<String> lore = new ArrayList<>();
 		JsonArray array = new JsonArray();
 

@@ -63,7 +63,8 @@ public class StatEdition implements Edition {
 		 * default chat edition feature
 		 */
 		new ChatEdition(this);
-		MMOLib.plugin.getVersion().getWrapper().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
+		MMOLib.plugin.getVersion().getWrapper().sendTitle(inv.getPlayer(), ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40,
+				10);
 	}
 
 	@Override
@@ -73,17 +74,20 @@ public class StatEdition implements Edition {
 		for (StringInputParser parser : MMOItems.plugin.getStringInputParsers())
 			input = parser.parseInput(inv.getPlayer(), input);
 
-		if (input.equals("cancel"))
+		// if cancel, open back inventory
+		if (input.equals("cancel")) {
+			inv.open();
 			return true;
-
-		try {
-
-		} catch (IllegalArgumentException exception) {
-			return false;
 		}
 
-		return input.equals("cancel")
-				|| stat.whenInput((EditionInventory) inv, ((EditionInventory) inv).getEdited().getType().getConfigFile(), input, info);
+		try {
+			stat.whenInput(inv, input, info);
+			return true;
+
+		} catch (IllegalArgumentException exception) {
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + exception.getMessage());
+			return false;
+		}
 	}
 
 	@Override

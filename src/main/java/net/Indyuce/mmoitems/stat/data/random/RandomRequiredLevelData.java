@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -15,7 +15,7 @@ public class RandomRequiredLevelData extends NumericStatFormula {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return new RequiredLevelData(calculate(builder.getLevel()));
 	}
 }

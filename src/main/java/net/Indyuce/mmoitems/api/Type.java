@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.plugin.identify.UnidentifiedItem;
+import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;

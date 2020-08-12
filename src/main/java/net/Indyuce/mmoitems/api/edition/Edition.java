@@ -32,5 +32,6 @@ public interface Edition {
 	 * @return If the previously opened GUI should be opened right after edition
 	 *         ends or if it should be ignored
 	 */
+	@Deprecated
 	public boolean shouldGoBack();
 }

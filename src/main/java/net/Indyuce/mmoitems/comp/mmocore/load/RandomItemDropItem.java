@@ -5,12 +5,14 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.loot.LootBuilder;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.itemgen.loot.restriction.ClassFilter;
-import net.Indyuce.mmoitems.api.itemgen.loot.restriction.TypeFilter;
-import net.Indyuce.mmoitems.api.itemgen.tier.RolledTier;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.loot.ClassFilter;
+import net.Indyuce.mmoitems.api.item.template.loot.TypeFilter;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.data.SoulboundData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class RandomItemDropItem extends ItemGenerationDropItem {
@@ -38,11 +40,11 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 	public void collect(LootBuilder builder) {
 		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
 
-		int itemLevel = MMOItems.plugin.getItemGenerator().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
-		RolledTier itemTier = this.tier != null ? new RolledTier(MMOItems.plugin.getItemGenerator().getTierInfo(this.tier), itemLevel)
-				: MMOItems.plugin.getItemGenerator().rollTier(itemLevel);
+		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
+		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getTemplates().rollTier();
 
-		net.Indyuce.mmoitems.api.itemgen.loot.LootBuilder loot = new net.Indyuce.mmoitems.api.itemgen.loot.LootBuilder(itemLevel, itemTier);
+		net.Indyuce.mmoitems.api.item.template.loot.LootBuilder loot = new net.Indyuce.mmoitems.api.item.template.loot.LootBuilder(itemLevel,
+				itemTier);
 
 		if (matchClass)
 			loot.applyFilter(new ClassFilter(rpgPlayer));
@@ -56,8 +58,11 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 		if (rolled == null)
 			return;
 
-		ItemStack gen = rolled.newBuilder().build();
-		gen.setAmount(rollAmount());
-		builder.addLoot(gen);
+		if (rollSoulbound())
+			rolled.setData(ItemStat.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));
+
+		ItemStack stack = rollUnidentification(rolled);
+		stack.setAmount(rollAmount());
+		builder.addLoot(stack);
 	}
 }

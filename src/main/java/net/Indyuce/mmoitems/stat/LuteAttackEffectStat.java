@@ -1,12 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.BruteLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.CircularLuteAttack;
@@ -14,7 +12,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.LuteAttackHan
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SimpleLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SlashLuteAttack;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.WaveLuteAttack;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -31,39 +29,24 @@ public class LuteAttackEffectStat extends StringStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			config.getConfig().set(inv.getEdited().getId() + ".lute-attack-effect", null);
-			inv.registerItemEdition(config);
-			inv.open();
+			inv.getEditedSection().set("lute-attack-effect", null);
+			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
-			return;
-		}
-
-		new StatEdition(inv, this).enable("Write in the chat the text you want.");
+		} else
+			new StatEdition(inv, this).enable("Write in the chat the text you want.");
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		LuteAttackEffect effect = null;
-		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
-		try {
-			effect = LuteAttackEffect.valueOf(format);
-		} catch (Exception e1) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + format + " is not a valid lute attack effect.");
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See all lute attack effects here: /mi list lute.");
-			return false;
-		}
-
-		config.getConfig().set(inv.getEdited().getId() + ".lute-attack-effect", effect.name());
-		inv.registerItemEdition(config);
-		inv.open();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		LuteAttackEffect effect = LuteAttackEffect.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
+		inv.getEditedSection().set("lute-attack-effect", effect.name());
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + effect.getDefaultName() + ".");
-		return true;
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		LuteAttackEffect effect = LuteAttackEffect.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
 		item.getLore().insert("lute-attack-effect", effect.getName());

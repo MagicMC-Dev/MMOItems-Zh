@@ -1,22 +1,23 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.inventory.ItemStack;
+
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomRequiredLevelData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
 
 public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
@@ -31,20 +32,15 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
-		int lvl = (int) ((DoubleData) data).generateNewValue();
+	public void whenApplied(ItemStackBuilder item, StatData data) {
+		int lvl = (int) ((DoubleData) data).getValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_LEVEL", lvl));
 		item.getLore().insert("required-level", formatNumericStat(lvl, "#", "" + lvl));
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		return new RequiredLevelData(object);
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		return new RandomRequiredLevelData(object);
 	}
 

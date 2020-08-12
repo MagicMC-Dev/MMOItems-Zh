@@ -10,8 +10,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class RandomAbilityData {
@@ -28,12 +28,11 @@ public class RandomAbilityData {
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
 		castMode = CastingMode.valueOf(modeFormat);
-
 		Validate.isTrue(ability.isAllowedMode(castMode), "Ability " + ability.getID() + " does not support cast mode " + castMode.name());
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
-				modifiers.put(key, new NumericStatFormula(config.getConfigurationSection(key)));
+				modifiers.put(key, new NumericStatFormula(config.get(key)));
 	}
 
 	public RandomAbilityData(Ability ability, CastingMode castMode) {
@@ -65,7 +64,7 @@ public class RandomAbilityData {
 		return modifiers.get(path);
 	}
 
-	public AbilityData randomize(GeneratedItemBuilder builder) {
+	public AbilityData randomize(MMOItemBuilder builder) {
 		AbilityData data = new AbilityData(ability, castMode);
 		modifiers.forEach((key, formula) -> data.setModifier(key, formula.calculate(builder.getLevel())));
 		return data;

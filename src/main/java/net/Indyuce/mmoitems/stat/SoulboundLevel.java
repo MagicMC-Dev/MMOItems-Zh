@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
@@ -17,8 +17,8 @@ public class SoulboundLevel extends DoubleStat {
 
 	// writes soulbound level with roman writing in lore
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
-		int value = (int) ((DoubleData) data).generateNewValue();
+	public void whenApplied(ItemStackBuilder item, StatData data) {
+		int value = (int) ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", value));
 		item.getLore().insert("soulbound-level", formatNumericStat(value, "#", MMOUtils.intToRoman(value)));
 	}

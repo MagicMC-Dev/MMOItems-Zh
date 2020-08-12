@@ -1,23 +1,7 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.interaction.*;
-import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.text.DecimalFormat;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -39,7 +23,28 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import java.text.DecimalFormat;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.TypeSet;
+import net.Indyuce.mmoitems.api.interaction.Consumable;
+import net.Indyuce.mmoitems.api.interaction.GemStone;
+import net.Indyuce.mmoitems.api.interaction.ItemSkin;
+import net.Indyuce.mmoitems.api.interaction.Tool;
+import net.Indyuce.mmoitems.api.interaction.UseItem;
+import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ItemUse implements Listener {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
@@ -86,7 +91,7 @@ public class ItemUse implements Listener {
 
 			if (useItem instanceof Consumable) {
 				event.setCancelled(true);
-				if (((Consumable) useItem).useWithoutItem(true))
+				if (((Consumable) useItem).useWithoutItem())
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
 			}
 		}
@@ -127,10 +132,8 @@ public class ItemUse implements Listener {
 		NBTItem offhandItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInOffHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
-		if (item.hasType()) {
-			if (item.getType() == Type.BLOCK)
-				return;
-			Weapon weapon = new Weapon(playerData, item, item.getType());
+		if (item.hasType() && item.getType() != Type.BLOCK) {
+			Weapon weapon = new Weapon(playerData, item);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);
@@ -148,10 +151,8 @@ public class ItemUse implements Listener {
 				return;
 			}
 		}
-		if (offhandItem.hasType()) {
-			if (item.getType() == Type.BLOCK)
-				return;
-			Weapon weapon = new Weapon(playerData, offhandItem, offhandItem.getType());
+		if (offhandItem.hasType() && item.getType() != Type.BLOCK) {
+			Weapon weapon = new Weapon(playerData, offhandItem);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);
@@ -183,7 +184,7 @@ public class ItemUse implements Listener {
 		if (!item.hasType())
 			return;
 
-		Tool tool = new Tool(player, item, item.getType());
+		Tool tool = new Tool(player, item);
 		if (!tool.canBeUsed()) {
 			event.setCancelled(true);
 			return;
@@ -287,7 +288,7 @@ public class ItemUse implements Listener {
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
 		if (type != null)
-			if (!new Weapon(playerData, item, type).canBeUsed()) {
+			if (!new Weapon(playerData, item).canBeUsed()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -319,7 +320,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!((Consumable) useItem).useWithoutItem(true)) {
+			if (!((Consumable) useItem).useWithoutItem()) {
 				event.setCancelled(true);
 				return;
 			}

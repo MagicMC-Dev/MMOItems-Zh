@@ -20,7 +20,7 @@ import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.droptable.DropItem;
+import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
@@ -101,8 +101,9 @@ public class MythicMobsHook implements Listener {
 		public LootBag get(DropMetadata metadata) {
 			LootBag loot = new LootBag(metadata);
 			if (dropItem != null)
+				// TODO fix null
 				loot.add(new ItemDrop(this.getLine(), (MythicLineConfig) this.getConfig(),
-						new BukkitItemStack(dropItem.getItem(1))));
+						new BukkitItemStack(dropItem.getItem(null, 1))));
 			return loot;
 		}
 	}

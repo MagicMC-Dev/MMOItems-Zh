@@ -1,18 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ItemSet;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,6 +7,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemSet;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {
@@ -42,7 +43,7 @@ public class ItemSetStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		String path = data.toString();
 
 		ItemSet set = MMOItems.plugin.getSets().get(path);
@@ -62,14 +63,10 @@ public class ItemSetStat extends StringStat {
 		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
 
 		ItemSet set = MMOItems.plugin.getSets().get(format);
-		if (set == null) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find the set named " + format + ".");
-			return false;
-		}
+		Validate.notNull(set, "Couldn't find the set named '" + format + "'.");
 
-		config.getConfig().set(inv.getEdited().getId() + ".set", format);
-		inv.registerItemEdition(config);
-		inv.open();
+		config.getConfig().set("set", format);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Set successfully changed to " + set.getName() + ChatColor.GRAY + ".");
 		return true;
 	}

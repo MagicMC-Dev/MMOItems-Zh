@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -13,14 +14,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.ProperStat;
@@ -42,27 +41,20 @@ public class Lore extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
-	}
-
-	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-		ConfigFile config = inv.getEdited().getType().getConfigFile();
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStat.LORE).enable("Write in the chat the lore line you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("lore")) {
-				List<String> lore = config.getConfig().getStringList(inv.getEdited().getId() + ".lore");
+			if (inv.getEditedSection().contains("lore")) {
+				List<String> lore = inv.getEditedSection().getStringList("lore");
 				if (lore.size() < 1)
 					return;
 
 				String last = lore.get(lore.size() - 1);
 				lore.remove(last);
-				config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
-				inv.registerItemEdition(config);
-				inv.open();
+				inv.getEditedSection().set("lore", lore);
+				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(
 						MMOItems.plugin.getPrefix() + "Successfully removed '" + MMOLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
 			}
@@ -70,24 +62,20 @@ public class Lore extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		List<String> lore = config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("lore")
-				? config.getConfig().getStringList(inv.getEdited().getId() + ".lore")
-				: new ArrayList<>();
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		List<String> lore = inv.getEditedSection().contains("lore") ? inv.getEditedSection().getStringList("lore") : new ArrayList<>();
 		lore.add(message);
-		config.getConfig().set(inv.getEdited().getId() + ".lore", lore);
-		inv.registerItemEdition(config);
-		inv.open();
+		inv.getEditedSection().set("lore", lore);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore successfully added.");
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 
-		if (mmoitem.hasData(this)) {
+		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) mmoitem.getData(this);
+			StringListData data = (StringListData) optional.get();
 			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(element)));
 
 		} else
@@ -99,7 +87,7 @@ public class Lore extends ItemStat implements ProperStat {
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		List<String> lore = new ArrayList<>();
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(line -> {

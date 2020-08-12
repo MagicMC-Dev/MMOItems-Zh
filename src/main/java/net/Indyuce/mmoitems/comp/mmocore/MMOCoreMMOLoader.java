@@ -22,8 +22,6 @@ import net.Indyuce.mmoitems.comp.mmocore.crafting.ExperienceCraftingTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;
 import net.Indyuce.mmoitems.comp.mmocore.load.ItemTemplateDropItem;
-//import net.Indyuce.mmoitems.comp.mmocore.load.ItemTemplateDropItem;
-import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemsBlockType;
 import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
@@ -91,10 +89,7 @@ public class MMOCoreMMOLoader extends MMOLoader {
 	@Override
 	public DropItem loadDropItem(MMOLineConfig config) {
 
-		if (config.getKey().equals("mmoitem"))
-			return new MMOItemDropItem(config);
-
-		if (config.getKey().equals("gentemplate"))
+		if (config.getKey().equals("mmoitem") || config.getKey().equals("mmoitemtemplate"))
 			return new ItemTemplateDropItem(config);
 
 		if (config.getKey().equals("miloot"))

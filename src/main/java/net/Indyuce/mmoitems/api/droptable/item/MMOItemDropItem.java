@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.droptable.DropItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.RandomAmount;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -49,8 +49,8 @@ public class MMOItemDropItem extends DropItem {
 	}
 
 	@Override
-	public ItemStack getItem(int amount) {
-		ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
+	public ItemStack getItem(PlayerData player, int amount) {
+		ItemStack item = MMOItems.plugin.getItem(type, id, player);
 		if (item == null || item.getType() == Material.AIR)
 			return null;
 

@@ -9,20 +9,27 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.droptable.DropTable;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
 import net.mmogroup.mmolib.MMOLib;
 
 public class ItemTier {
 	private final String name, id;
+
+	// unidentification
 	private final UnidentificationInfo unidentificationInfo;
+
+	// deconstruction
 	private final DropTable deconstruct;
 
-	/*
-	 * item glow. color is an object because we cant let this class import the
-	 * GlowAPI.Color enum since plugin is not a hard dependency.
-	 */
+	// item glow options
 	private final TierColor color;
 	private final boolean hint;
+
+	// item generation
+	private final double chance;
+	private final NumericStatFormula capacity;
 
 	private static final Random random = new Random();
 	private static final boolean glow = Bukkit.getPluginManager().getPlugin("GlowAPI") != null;
@@ -39,6 +46,9 @@ public class ItemTier {
 		} catch (NoClassDefFoundError | IllegalAccessException | NoSuchFieldException | SecurityException exception) {
 			throw new IllegalArgumentException("Could not load tier color: " + exception.getMessage());
 		}
+
+		chance = config.getDouble("generation.chance");
+		capacity = config.contains("generation.capacity") ? new NumericStatFormula(config.getConfigurationSection("")) : null;
 	}
 
 	public String getId() {
@@ -69,15 +79,37 @@ public class ItemTier {
 		return hint;
 	}
 
+	/**
+	 * @return The chance of being chosen when a random tier is selected while
+	 *         calling an mmoitem template to generate an item.
+	 */
+	public double getGenerationChance() {
+		return chance;
+	}
+
+	/**
+	 * @return If the item tier has capacity ie if this tier can be applied onto
+	 *         item templates.
+	 */
+	public boolean hasCapacity() {
+		return capacity != null;
+	}
+
+	public NumericStatFormula getCapacity() {
+		return capacity;
+	}
+
 	public UnidentificationInfo getUnidentificationInfo() {
 		return unidentificationInfo;
 	}
 
-	/*
-	 * reads a random item in the drop table.
+	/**
+	 * @return Reads the deconstruction drop table. This may return a list
+	 *         containing multiple items and they should all be added to the
+	 *         player's inventory
 	 */
-	public List<ItemStack> generateDeconstructedItem() {
-		return hasDropTable() ? deconstruct.read(false) : new ArrayList<>();
+	public List<ItemStack> getDeconstructedLoot(PlayerData player) {
+		return hasDropTable() ? deconstruct.read(player, false) : new ArrayList<>();
 	}
 
 	public class UnidentificationInfo {

@@ -9,7 +9,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -20,12 +19,12 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Weapon extends UseItem {
-	public Weapon(Player player, NBTItem item, Type type) {
-		this(PlayerData.get(player), item, type);
+	public Weapon(Player player, NBTItem item) {
+		this(PlayerData.get(player), item);
 	}
 
-	public Weapon(PlayerData playerData, NBTItem item, Type type) {
-		super(playerData, item, type);
+	public Weapon(PlayerData playerData, NBTItem item) {
+		super(playerData, item);
 	}
 
 	@Override

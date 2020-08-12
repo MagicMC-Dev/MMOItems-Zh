@@ -1,56 +1,111 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.*;
-import net.Indyuce.mmoitems.stat.block.*;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.Abilities;
+import net.Indyuce.mmoitems.stat.Armor;
+import net.Indyuce.mmoitems.stat.ArmorToughness;
+import net.Indyuce.mmoitems.stat.ArrowParticles;
+import net.Indyuce.mmoitems.stat.AttackDamage;
+import net.Indyuce.mmoitems.stat.AttackSpeed;
+import net.Indyuce.mmoitems.stat.Commands;
+import net.Indyuce.mmoitems.stat.CompatibleTypes;
+import net.Indyuce.mmoitems.stat.Crafting;
+import net.Indyuce.mmoitems.stat.CraftingPermission;
+import net.Indyuce.mmoitems.stat.CustomModelData;
+import net.Indyuce.mmoitems.stat.CustomSounds;
+import net.Indyuce.mmoitems.stat.DisableAdvancedEnchantments;
+import net.Indyuce.mmoitems.stat.DisplayName;
+import net.Indyuce.mmoitems.stat.DyeColor;
+import net.Indyuce.mmoitems.stat.Effects;
+import net.Indyuce.mmoitems.stat.Elements;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.GemColor;
+import net.Indyuce.mmoitems.stat.GemSockets;
+import net.Indyuce.mmoitems.stat.HideEnchants;
+import net.Indyuce.mmoitems.stat.HidePotionEffects;
+import net.Indyuce.mmoitems.stat.Inedible;
+import net.Indyuce.mmoitems.stat.ItemDamage;
+import net.Indyuce.mmoitems.stat.ItemLevel;
+import net.Indyuce.mmoitems.stat.ItemParticles;
+import net.Indyuce.mmoitems.stat.ItemSetStat;
+import net.Indyuce.mmoitems.stat.ItemTierStat;
+import net.Indyuce.mmoitems.stat.ItemTypeRestriction;
+import net.Indyuce.mmoitems.stat.KnockbackResistance;
+import net.Indyuce.mmoitems.stat.Lore;
+import net.Indyuce.mmoitems.stat.LostWhenBroken;
+import net.Indyuce.mmoitems.stat.LuteAttackEffectStat;
+import net.Indyuce.mmoitems.stat.LuteAttackSoundStat;
+import net.Indyuce.mmoitems.stat.MaterialStat;
+import net.Indyuce.mmoitems.stat.MaxHealth;
+import net.Indyuce.mmoitems.stat.MaximumDurability;
+import net.Indyuce.mmoitems.stat.MovementSpeed;
+import net.Indyuce.mmoitems.stat.NBTTags;
+import net.Indyuce.mmoitems.stat.PermanentEffects;
+import net.Indyuce.mmoitems.stat.Permission;
+import net.Indyuce.mmoitems.stat.PickaxePower;
+import net.Indyuce.mmoitems.stat.PotionColor;
+import net.Indyuce.mmoitems.stat.PotionEffects;
+import net.Indyuce.mmoitems.stat.RequiredClass;
+import net.Indyuce.mmoitems.stat.RequiredLevel;
+import net.Indyuce.mmoitems.stat.ShieldPatternStat;
+import net.Indyuce.mmoitems.stat.SkullTextureStat;
+import net.Indyuce.mmoitems.stat.Soulbound;
+import net.Indyuce.mmoitems.stat.SoulboundLevel;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat;
+import net.Indyuce.mmoitems.stat.StoredTags;
+import net.Indyuce.mmoitems.stat.SuccessRate;
+import net.Indyuce.mmoitems.stat.Unbreakable;
+import net.Indyuce.mmoitems.stat.Unstackable;
+import net.Indyuce.mmoitems.stat.UpgradeStat;
+import net.Indyuce.mmoitems.stat.VanillaEatingAnimation;
+import net.Indyuce.mmoitems.stat.block.BlockID;
+import net.Indyuce.mmoitems.stat.block.GenTemplate;
+import net.Indyuce.mmoitems.stat.block.MaxXP;
+import net.Indyuce.mmoitems.stat.block.MinXP;
+import net.Indyuce.mmoitems.stat.block.RequiredPower;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public abstract class ItemStat {
-	public static final ItemStat MATERIAL = new MaterialStat(),
-			DURABILITY = MMOLib.plugin.getVersion().isBelowOrEqual(1, 12) ? new LegacyDurability() : new DefaultDurability(),
-			CUSTOM_MODEL_DATA = new CustomModelData(), MAX_DURABILITY = new MaximumDurability(), WILL_BREAK = new LostWhenBroken();
+	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = new ItemDamage(), CUSTOM_MODEL_DATA = new CustomModelData(),
+			MAX_DURABILITY = new MaximumDurability(), WILL_BREAK = new LostWhenBroken();
 	public static final ItemStat NAME = new DisplayName(), LORE = new Lore(), NBT_TAGS = new NBTTags();
 
 	// block stats
-	public static final ItemStat BLOCK_ID = new BlockID(), REQUIRED_POWER = new RequiredPower(), MIN_XP = new MinXP(),
-	MAX_XP = new MaxXP(), GEN_TEMPLATE = new GenTemplate();
+	public static final ItemStat BLOCK_ID = new BlockID(), REQUIRED_POWER = new RequiredPower(), MIN_XP = new MinXP(), MAX_XP = new MaxXP(),
+			GEN_TEMPLATE = new GenTemplate();
 
-	public static final ItemStat DISPLAYED_TYPE = new StringStat("DISPLAYED_TYPE", VersionMaterial.OAK_SIGN.toItem(),
-			"Displayed Type", new String[] { "This option will only affect the", "type displayed on the item lore." },
-			new String[] { "all" });
-	public static final ItemStat ENCHANTS = new Enchants(), HIDE_ENCHANTS = new HideEnchants(),
-			PERMISSION = new Permission(), ITEM_PARTICLES = new ItemParticles(), ARROW_PARTICLES = new ArrowParticles();
-	public static final ItemStat DISABLE_INTERACTION = new DisableStat("INTERACTION",
-			VersionMaterial.GRASS_BLOCK.toMaterial(), "Disable Interaction", new String[] { "!block", "all" }, "Disable any unwanted interaction:",
-			"block placement, item use...");
-	public static final ItemStat DISABLE_CRAFTING = new DisableStat("CRAFTING",
-			VersionMaterial.CRAFTING_TABLE.toMaterial(), "Disable Crafting",
+	public static final ItemStat DISPLAYED_TYPE = new StringStat("DISPLAYED_TYPE", VersionMaterial.OAK_SIGN.toItem(), "Displayed Type",
+			new String[] { "This option will only affect the", "type displayed on the item lore." }, new String[] { "all" });
+	public static final ItemStat ENCHANTS = new Enchants(), HIDE_ENCHANTS = new HideEnchants(), PERMISSION = new Permission(),
+			ITEM_PARTICLES = new ItemParticles(), ARROW_PARTICLES = new ArrowParticles();
+	public static final ItemStat DISABLE_INTERACTION = new DisableStat("INTERACTION", VersionMaterial.GRASS_BLOCK.toMaterial(), "Disable Interaction",
+			new String[] { "!block", "all" }, "Disable any unwanted interaction:", "block placement, item use...");
+	public static final ItemStat DISABLE_CRAFTING = new DisableStat("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "Disable Crafting",
 			"Players can't use this item while crafting.");
 	public static final ItemStat DISABLE_SMELTING = new DisableStat("SMELTING", Material.FURNACE, "Disable Smelting",
 			"Players can't use this item in furnaces.");
-	public static final ItemStat DISABLE_SMITHING = new DisableStat("SMITHING", Material.DAMAGED_ANVIL,
-			"Disable Smithing", "Players can't smith this item in smithing tables.");
-	public static final ItemStat DISABLE_ENCHANTING = new DisableStat("ENCHANTING",
-			VersionMaterial.ENCHANTING_TABLE.toMaterial(), "Disable Enchanting", new String[] { "!block", "all" }, "Players can't enchant this item."),
+	public static final ItemStat DISABLE_SMITHING = new DisableStat("SMITHING", Material.DAMAGED_ANVIL, "Disable Smithing",
+			"Players can't smith this item in smithing tables.");
+	public static final ItemStat DISABLE_ENCHANTING = new DisableStat("ENCHANTING", VersionMaterial.ENCHANTING_TABLE.toMaterial(),
+			"Disable Enchanting", new String[] { "!block", "all" }, "Players can't enchant this item."),
 			DISABLE_ADVANCED_ENCHANTS = new DisableAdvancedEnchantments();
-	public static final ItemStat DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "Disable Repairing",  new String[] { "!block", "all" },
-			"Players can't use this item in anvils.");
+	public static final ItemStat DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "Disable Repairing",
+			new String[] { "!block", "all" }, "Players can't use this item in anvils.");
 	public static final ItemStat DISABLE_ARROW_SHOOTING = new DisableStat("ARROW_SHOOTING", Material.ARROW, "Disable Arrow Shooting",
 			new Material[] { Material.ARROW }, "Players can't shoot this", "item using a bow.");
 	public static final ItemStat DISABLE_ATTACK_PASSIVE = new DisableStat("ATTACK_PASSIVE", Material.BARRIER, "Disable Attack Passive",
@@ -58,41 +113,33 @@ public abstract class ItemStat {
 	public static final ItemStat DISABLE_RIGHT_CLICK_CONSUME = new DisableStat("RIGHT_CLICK_CONSUME", Material.BARRIER, "Disable Right Click Consume",
 			new String[] { "consumable" }, "This item will not be consumed", "when eaten by players.");
 
-	public static final ItemStat REQUIRED_LEVEL = new RequiredLevel(), REQUIRED_CLASS = new RequiredClass(),
-			ATTACK_DAMAGE = new AttackDamage(), ATTACK_SPEED = new AttackSpeed();
-	public static final ItemStat CRITICAL_STRIKE_CHANCE = new DoubleStat("CRITICAL_STRIKE_CHANCE",
-			new ItemStack(Material.NETHER_STAR), "Critical Strike Chance",
-			new String[] { "Critical Strikes deal more damage.", "In % chance." },
+	public static final ItemStat REQUIRED_LEVEL = new RequiredLevel(), REQUIRED_CLASS = new RequiredClass(), ATTACK_DAMAGE = new AttackDamage(),
+			ATTACK_SPEED = new AttackSpeed();
+	public static final ItemStat CRITICAL_STRIKE_CHANCE = new DoubleStat("CRITICAL_STRIKE_CHANCE", new ItemStack(Material.NETHER_STAR),
+			"Critical Strike Chance", new String[] { "Critical Strikes deal more damage.", "In % chance." },
 			new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat CRITICAL_STRIKE_POWER = new DoubleStat("CRITICAL_STRIKE_POWER",
-			new ItemStack(Material.NETHER_STAR), "Critical Strike Power",
-			new String[] { "The extra damage weapon crits deals.", "(Stacks with default value)", "In %." },
+	public static final ItemStat CRITICAL_STRIKE_POWER = new DoubleStat("CRITICAL_STRIKE_POWER", new ItemStack(Material.NETHER_STAR),
+			"Critical Strike Power", new String[] { "The extra damage weapon crits deals.", "(Stacks with default value)", "In %." },
 			new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat BLOCK_POWER = new DoubleStat("BLOCK_POWER", new ItemStack(Material.IRON_HELMET),
-			"Block Power", new String[] { "The % of the damage your", "armor/shield can block.", "Default: 25%" },
+	public static final ItemStat BLOCK_POWER = new DoubleStat("BLOCK_POWER", new ItemStack(Material.IRON_HELMET), "Block Power",
+			new String[] { "The % of the damage your", "armor/shield can block.", "Default: 25%" },
 			new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat BLOCK_RATING = new DoubleStat("BLOCK_RATING", new ItemStack(Material.IRON_HELMET),
-			"Block Rating", new String[] { "The chance your piece of armor", "has to block any entity attack." },
-			new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat BLOCK_COOLDOWN_REDUCTION = new DoubleStat("BLOCK_COOLDOWN_REDUCTION",
-			new ItemStack(Material.IRON_HELMET), "Block Cooldown Reduction",
-			new String[] { "Reduces the blocking cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat DODGE_RATING = new DoubleStat("DODGE_RATING", new ItemStack(Material.FEATHER),
-			"Dodge Rating",
+	public static final ItemStat BLOCK_RATING = new DoubleStat("BLOCK_RATING", new ItemStack(Material.IRON_HELMET), "Block Rating",
+			new String[] { "The chance your piece of armor", "has to block any entity attack." }, new String[] { "!miscellaneous", "!block", "all" });
+	public static final ItemStat BLOCK_COOLDOWN_REDUCTION = new DoubleStat("BLOCK_COOLDOWN_REDUCTION", new ItemStack(Material.IRON_HELMET),
+			"Block Cooldown Reduction", new String[] { "Reduces the blocking cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
+	public static final ItemStat DODGE_RATING = new DoubleStat("DODGE_RATING", new ItemStack(Material.FEATHER), "Dodge Rating",
 			new String[] { "The chance to dodge an attack.", "Dodging completely negates", "the attack damage." },
 			new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat DODGE_COOLDOWN_REDUCTION = new DoubleStat("DODGE_COOLDOWN_REDUCTION",
-			new ItemStack(Material.FEATHER), "Dodge Cooldown Reduction",
-			new String[] { "Reduces the dodging cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat PARRY_RATING = new DoubleStat(
-			"PARRY_RATING", new ItemStack(Material.BUCKET), "Parry Rating", new String[] {
-					"The chance to parry an attack.", "Parrying negates the damage", "and knocks the attacker back." },
+	public static final ItemStat DODGE_COOLDOWN_REDUCTION = new DoubleStat("DODGE_COOLDOWN_REDUCTION", new ItemStack(Material.FEATHER),
+			"Dodge Cooldown Reduction", new String[] { "Reduces the dodging cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
+	public static final ItemStat PARRY_RATING = new DoubleStat("PARRY_RATING", new ItemStack(Material.BUCKET), "Parry Rating",
+			new String[] { "The chance to parry an attack.", "Parrying negates the damage", "and knocks the attacker back." },
 			new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat PARRY_COOLDOWN_REDUCTION = new DoubleStat("PARRY_COOLDOWN_REDUCTION",
-			new ItemStack(Material.BUCKET), "Parry Cooldown Reduction",
-			new String[] { "Reduces the parrying cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
-	public static final ItemStat COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", new ItemStack(Material.BOOK),
-			"Cooldown Reduction", new String[] { "Reduces cooldowns of item skills (%)." });
+	public static final ItemStat PARRY_COOLDOWN_REDUCTION = new DoubleStat("PARRY_COOLDOWN_REDUCTION", new ItemStack(Material.BUCKET),
+			"Parry Cooldown Reduction", new String[] { "Reduces the parrying cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
+	public static final ItemStat COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", new ItemStack(Material.BOOK), "Cooldown Reduction",
+			new String[] { "Reduces cooldowns of item skills (%)." });
 	public static final ItemStat RANGE = new DoubleStat("RANGE", new ItemStack(Material.STICK), "Range",
 			new String[] { "The range of your item attacks." }, new String[] { "staff", "whip", "wand", "musket" });
 	public static final ItemStat MANA_COST = new DoubleStat("MANA_COST", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Cost",
@@ -153,7 +200,12 @@ public abstract class ItemStat {
 			new String[] { "If set to true, a player will be", "significantly slower if holding two", "items, one being Two Handed." },
 			new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool" });
 
-	public static final ItemStat RESTORE = new Restore();
+	public static final ItemStat RESTORE_HEALTH = new DoubleStat("RESTORE_HEALTH", VersionMaterial.RED_DYE.toItem(), "Health Restoration",
+			new String[] { "Health given when consumed." }, new String[] { "consumable" });
+	public static final ItemStat RESTORE_FOOD = new DoubleStat("RESTORE_FOOD", VersionMaterial.PORKCHOP.toItem(), "Food Restoration",
+			new String[] { "Food units given when consumed." }, new String[] { "consumable" });
+	public static final ItemStat RESTORE_SATURATION = new DoubleStat("RESTORE_SATURATION", new ItemStack(Material.GOLDEN_CARROT),
+			"Saturation Restoration", new String[] { "Saturation given when consumed." }, new String[] { "consumable" });
 	public static final ItemStat RESTORE_MANA = new DoubleStat("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toItem(), "Restore Mana",
 			new String[] { "The amount of mana", "your consumable restores." }, new String[] { "consumable" });
 	public static final ItemStat RESTORE_STAMINA = new DoubleStat("RESTORE_STAMINA", VersionMaterial.LIGHT_GRAY_DYE.toItem(), "Restore Stamina",
@@ -172,18 +224,18 @@ public abstract class ItemStat {
 					"soulbound when drag & drop'd on it.", "This chance is lowered depending", "on the soulbound's level." },
 			new String[] { "consumable" });
 	public static final ItemStat SOULBOUND_LEVEL = new SoulboundLevel();
-	public static final ItemStat ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", new ItemStack(Material.COOKED_CHICKEN),
-			"Item Cooldown", new String[] { "This cooldown applies for consumables", "as well as for item commands." },
+	public static final ItemStat ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", new ItemStack(Material.COOKED_CHICKEN), "Item Cooldown",
+			new String[] { "This cooldown applies for consumables", "as well as for item commands." },
 			new String[] { "!armor", "!gem_stone", "!block", "all" });
-	public static final ItemStat VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(), INEDIBLE = new Inedible(),
-			GEM_COLOR = new GemColor(), ITEM_TYPE_RESTRICTION = new ItemTypeRestriction();
-	public static final ItemStat MAX_CONSUME = new DoubleStat("MAX_CONSUME", new ItemStack(Material.BLAZE_POWDER),
-			"Max Consume", new String[] { "Max amount of usage before", "item disappears." },
-			new String[] { "consumable" });
+	public static final ItemStat VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(), INEDIBLE = new Inedible(), GEM_COLOR = new GemColor(),
+			ITEM_TYPE_RESTRICTION = new ItemTypeRestriction();
+	public static final ItemStat MAX_CONSUME = new DoubleStat("MAX_CONSUME", new ItemStack(Material.BLAZE_POWDER), "Max Consume",
+			new String[] { "Max amount of usage before", "item disappears." }, new String[] { "consumable" });
 
 	public static final ItemStat SUCCESS_RATE = new SuccessRate();
 	public static final ItemStat COMPATIBLE_TYPES = new CompatibleTypes();
 
+	@SuppressWarnings("deprecation")
 	public static final ItemStat CRAFTING = new Crafting(), CRAFT_PERMISSION = new CraftingPermission(),
 			CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", new ItemStack(Material.WOODEN_AXE), "Crafted Amount",
 					new String[] { "The stack count for", "this item when crafted." }, new String[] { "all" });
@@ -222,6 +274,7 @@ public abstract class ItemStat {
 	 */
 	public static final Soulbound SOULBOUND = new Soulbound();
 	public static final ItemStat STORED_TAGS = new StoredTags();
+	public static final ItemStat ITEM_LEVEL = new ItemLevel();
 
 	private final String id, name;
 	private final ItemStack item;
@@ -230,8 +283,8 @@ public abstract class ItemStat {
 	private final List<String> compatibleTypes;
 	private final List<Material> compatibleMaterials;
 
-	/*
-	 * the stat can be enabled or not, depending on the server version to
+	/**
+	 * The stat can be enabled or not, depending on the server version to
 	 * prevent from displaying useless editable stats in the edition menu.
 	 */
 	private boolean enabled = true;
@@ -265,22 +318,13 @@ public abstract class ItemStat {
 	}
 
 	/**
-	 * When stat data is being read from a /item config file
-	 *
-	 * @param object
-	 *            Could be a config section, a string, a string list, etc.
-	 * @return Stat data read from config, or throws an IAE
-	 */
-	public abstract StatData whenInitialized(Object object);
-
-	/**
 	 * When random stat data is being read from a config file
 	 * 
 	 * @param object
 	 *            Could be a config section, a string, a string list, etc.
 	 * @return Random stat data read from config, or throws an IAE
 	 */
-	public abstract RandomStatData whenInitializedGeneration(Object object);
+	public abstract RandomStatData whenInitialized(Object object);
 
 	/**
 	 * Called when applying a stat onto an mmoitem builder instance. Applies
@@ -291,7 +335,7 @@ public abstract class ItemStat {
 	 * @param data
 	 *            Stat data being applied
 	 */
-	public abstract void whenApplied(MMOItemBuilder item, StatData data);
+	public abstract void whenApplied(ItemStackBuilder item, StatData data);
 
 	/**
 	 * Called when the stat item is clicked in the item edition menu
@@ -306,7 +350,9 @@ public abstract class ItemStat {
 
 	/**
 	 * When inputing data using chat or anvil input in order to edit the edit in
-	 * the GUI editor
+	 * the GUI editor. IAE are handled and exception messages are sent back to
+	 * the player. Stat edition is not canceled until a right input is given or
+	 * the player inputs 'cancel'
 	 * 
 	 * @param inv
 	 *            Previously opened edition menu
@@ -318,9 +364,8 @@ public abstract class ItemStat {
 	 *            Extra information given by the stat when instanciating
 	 *            StatEdition given to this method to identify what is being
 	 *            edited
-	 * @return
 	 */
-	public abstract boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info);
+	public abstract void whenInput(EditionInventory inv, String message, Object... info);
 
 	/**
 	 * Called when stat data is read from an ItemStack in a player inventory
@@ -331,14 +376,18 @@ public abstract class ItemStat {
 	public abstract void whenLoaded(ReadMMOItem mmoitem);
 
 	/**
-	 * Called when stat data is displayed in the edition GUI
+	 * Called when stat data is displayed in the edition GUI. We cannot use
+	 * MMOItemTemplate as input here because we need to know if we are editing a
+	 * modifier or base item data. It is much easier to display RandomStatData
+	 * if it exists
 	 * 
 	 * @param lore
 	 *            Current item lore which must be completed
-	 * @param mmoitem
-	 *            MMOItem being read
+	 * @param data
+	 *            Stat data being displayed, optional is empty if there is no
+	 *            stat data
 	 */
-	public abstract void whenDisplayed(List<String> lore, MMOItem mmoitem);
+	public abstract void whenDisplayed(List<String> lore, Optional<RandomStatData> optional);
 
 	public String getName() {
 		return name;

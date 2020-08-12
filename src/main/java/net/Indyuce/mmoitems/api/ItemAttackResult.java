@@ -37,13 +37,31 @@ public class ItemAttackResult extends AttackResult {
 		return (ItemAttackResult) super.multiplyDamage(coef);
 	}
 
+	/**
+	 * Applies on-hit effects and deals damage to the target
+	 * 
+	 * @param stats
+	 *            Player doing the attack
+	 * @param item
+	 *            The item being used
+	 * @param target
+	 *            The entity target
+	 */
 	public void applyEffectsAndDamage(CachedStats stats, NBTItem item, LivingEntity target) {
 		MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, applyEffects(stats, item, target));
 	}
 
-	/*
-	 * this methods makes applying ALL effects including elemental damage easier
-	 * for untargeted weapons like staffs.
+	/**
+	 * Applies all necessary on-hit effects for any type of damage. Makes things
+	 * much easier for untargeted weapons like staffs
+	 * 
+	 * @param stats
+	 *            Player doing the attack
+	 * @param item
+	 *            The item being used
+	 * @param target
+	 *            The entity target
+	 * @return The unedited attack result
 	 */
 	public ItemAttackResult applyEffects(CachedStats stats, NBTItem item, LivingEntity target) {
 		if (hasType(DamageType.WEAPON)) {
@@ -53,14 +71,32 @@ public class ItemAttackResult extends AttackResult {
 		return this;
 	}
 
+	/**
+	 * Applies weapon specific on-hit effects like elemental damage.
+	 * 
+	 * @param stats
+	 *            Player doing the attack
+	 * @param item
+	 *            The item being used
+	 * @param target
+	 *            The entity target
+	 * @return The unedited attack result
+	 */
 	public ItemAttackResult applyElementalEffects(CachedStats stats, NBTItem item, LivingEntity target) {
 		new ElementalAttack(item, this, target).apply(stats);
 		return this;
 	}
 
-	/*
-	 * vanilla melee weapons have no NBT tags so this method only provides for
-	 * non-weapon specific effects like critical strikes and extra stat damage
+	/**
+	 * This method is called when a player uses ANY weapon, vanilla or custom.
+	 * It does not take into input any weapon as it just applies non weapon
+	 * specific on-hit effects
+	 * 
+	 * @param stats
+	 *            Player doing the attack
+	 * @param target
+	 *            The entity target
+	 * @return The unedited attack result
 	 */
 	public ItemAttackResult applyOnHitEffects(CachedStats stats, LivingEntity target) {
 		stats.getData().castAbilities(stats, target, this, CastingMode.ON_HIT);

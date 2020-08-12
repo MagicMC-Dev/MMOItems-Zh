@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.item.BlockDropItem;
+import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class DropTable {
 	private static final Random random = new Random();
@@ -45,13 +49,13 @@ public class DropTable {
 		return subtablesList.get(random.nextInt(subtablesList.size()));
 	}
 
-	public List<ItemStack> read(boolean silkTouch) {
+	public List<ItemStack> read(@Nullable PlayerData player, boolean silkTouch) {
 		List<ItemStack> dropped = new ArrayList<>();
 
 		String randomSubtable = getRandomSubtable();
 		for (DropItem dropItem : getSubtable(randomSubtable).getDropItems(silkTouch))
 			if (dropItem.rollDrop()) {
-				ItemStack drop = dropItem.getItem();
+				ItemStack drop = dropItem.getItem(player);
 				if (drop == null)
 					MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't read the subtable item " + dropItem.getKey());
 				else

@@ -9,27 +9,37 @@ public class InteractItem {
 	private final EquipmentSlot slot;
 	private final ItemStack item;
 
-	/*
-	 * determines in which hand the player has a specific item, prioritizing the
-	 * main hand. it is used to easily replace one of the player's hand items
-	 * when he uses tools like flint & steel, shears, bows, etc.
+	/**
+	 * Used to determine in which hand a player has a specific item prioritizing
+	 * the main hand just like vanilla MC. For example, this is used when
+	 * throwing tridents to register weapon effects on the trident
+	 * 
+	 * @param player
+	 *            Player doing the action
+	 * @param material
+	 *            Item to look for
 	 */
 	public InteractItem(Player player, Material material) {
-		this.slot = hasItem(player.getInventory().getItemInMainHand(), material) ? EquipmentSlot.HAND : hasItem(player.getInventory().getItemInOffHand(), material) ? EquipmentSlot.OFF_HAND : null;
+		this.slot = hasItem(player.getInventory().getItemInMainHand(), material) ? EquipmentSlot.HAND
+				: hasItem(player.getInventory().getItemInOffHand(), material) ? EquipmentSlot.OFF_HAND : null;
 		this.item = slot == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
 	}
 
-	/*
-	 * works the same but with a material suffit like _HOE which allows to use
-	 * that class for any tool made with any ingot/material
+	/**
+	 * Used to determine in which hand a player has a specific item prioritizing
+	 * the main hand just like vanilla MC. For example, this is used when
+	 * throwing tridents to register weapon effects on the trident
+	 * 
+	 * @param player
+	 *            Player doing the action
+	 * @param suffix
+	 *            Material suffix to look for eg "_HOE" looks for a hoe in the
+	 *            player hands
 	 */
+	@Deprecated
 	public InteractItem(Player player, String suffix) {
-		this.slot = hasItem(player.getInventory().getItemInMainHand(), suffix) ? EquipmentSlot.HAND : hasItem(player.getInventory().getItemInOffHand(), suffix) ? EquipmentSlot.OFF_HAND : null;
-		this.item = slot == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
-	}
-
-	public InteractItem(Player player, EquipmentSlot slot) {
-		this.slot = slot;
+		this.slot = hasItem(player.getInventory().getItemInMainHand(), suffix) ? EquipmentSlot.HAND
+				: hasItem(player.getInventory().getItemInOffHand(), suffix) ? EquipmentSlot.OFF_HAND : null;
 		this.item = slot == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
 	}
 
@@ -47,10 +57,5 @@ public class InteractItem {
 
 	private boolean hasItem(ItemStack item, String suffix) {
 		return item != null && item.getType().name().endsWith(suffix);
-	}
-
-	public void setItem(ItemStack item) {
-		if (item != null && hasItem())
-			this.item.setItemMeta(item.getItemMeta());
 	}
 }

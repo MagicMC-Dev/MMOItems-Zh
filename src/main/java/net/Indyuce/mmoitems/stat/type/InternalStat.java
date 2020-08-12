@@ -1,16 +1,14 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 
 public abstract class InternalStat extends ItemStat {
 
@@ -24,13 +22,7 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public StatData whenInitialized(Object object) {
-		// not supported
-		return null;
-	}
-
-	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
+	public RandomStatData whenInitialized(Object object) {
 		// not supported
 		return null;
 	}
@@ -41,13 +33,12 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
 		// not supported
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		// not supported
 	}
 }

@@ -38,8 +38,8 @@ public abstract class EditionProcess {
 		if (!edition.processInput(input))
 			return;
 
-		if (edition.shouldGoBack())
-			edition.getInventory().open();
+//		if (edition.shouldGoBack())
+//			edition.getInventory().open();
 		close();
 	}
 

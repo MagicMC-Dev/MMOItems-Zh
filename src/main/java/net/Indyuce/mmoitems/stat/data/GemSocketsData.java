@@ -11,8 +11,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -77,7 +77,7 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return new GemSocketsData(new ArrayList<>(emptySlots));
 	}
 }

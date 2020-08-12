@@ -4,16 +4,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.EquipmentSlot;
 
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public abstract class UntargetedWeapon extends Weapon {
-
 	protected final WeaponType weaponType;
 
-	public UntargetedWeapon(Player player, NBTItem item, Type type, WeaponType weaponType) {
-		super(player, item, type);
+	public UntargetedWeapon(Player player, NBTItem item, WeaponType weaponType) {
+		super(player, item);
 
 		this.weaponType = weaponType;
 	}
@@ -33,7 +31,8 @@ public abstract class UntargetedWeapon extends Weapon {
 		LEFT_CLICK;
 
 		public boolean corresponds(Action action) {
-			return (this == RIGHT_CLICK && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) || (this == LEFT_CLICK && (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK));
+			return (this == RIGHT_CLICK && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK))
+					|| (this == LEFT_CLICK && (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK));
 		}
 	}
 }

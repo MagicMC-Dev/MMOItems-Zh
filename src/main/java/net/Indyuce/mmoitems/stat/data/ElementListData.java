@@ -53,8 +53,8 @@ public class ElementListData implements StatData, Mergeable {
 		ElementListData extra = (ElementListData) data;
 
 		for (Element element : extra.damage.keySet())
-			damage.put(element, extra.damage.get(element) + (damage.containsKey(element) ? damage.get(element) : 0));
+			damage.put(element, extra.damage.get(element) + damage.getOrDefault(element, 0d));
 		for (Element element : extra.defense.keySet())
-			defense.put(element, extra.defense.get(element) + (defense.containsKey(element) ? defense.get(element) : 0));
+			defense.put(element, extra.defense.get(element) + defense.getOrDefault(element, 0d));
 	}
 }

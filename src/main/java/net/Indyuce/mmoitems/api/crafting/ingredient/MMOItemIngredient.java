@@ -1,21 +1,19 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.stat.DisplayName;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MMOItemIngredient extends Ingredient {
-	private final Type type;
-	private final String id;
+	private final MMOItemTemplate template;
 
 	// TODO check level code.
 	private final int level;
@@ -25,11 +23,8 @@ public class MMOItemIngredient extends Ingredient {
 		super("mmoitem", config);
 
 		config.validate("type", "id");
-		type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
-
-		id = config.getString("id").toUpperCase().replace("-", "_").replace(" ", "_");
-
-		Validate.isTrue(MMOItems.plugin.getItems().hasMMOItem(type, id), "Could not find MMOItem with ID '" + id + "'");
+		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
+		template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, config.getString("id"));
 
 		level = config.getInt("level", 0);
 		display = config.contains("display") ? config.getString("display") : findName();
@@ -38,19 +33,18 @@ public class MMOItemIngredient extends Ingredient {
 	public MMOItemIngredient(ConfigMMOItem mmoitem) {
 		super("mmoitem", mmoitem.getAmount());
 
-		type = mmoitem.getType();
-		id = mmoitem.getId();
+		template = mmoitem.getTemplate();
 		level = 0;
 		display = findName();
 	}
 
-	@Override
-	public String getKey() {
-		return "mmoitem:" + type.getId().toLowerCase() + (level != 0 ? "-" + level : "") + "_" + id.toLowerCase();
+	public MMOItemTemplate getTemplate() {
+		return template;
 	}
 
-	public Type getType() {
-		return type;
+	@Override
+	public String getKey() {
+		return "mmoitem:" + template.getType().getId().toLowerCase() + (level != 0 ? "-" + level : "") + "_" + template.getId().toLowerCase();
 	}
 
 	@Override
@@ -59,8 +53,8 @@ public class MMOItemIngredient extends Ingredient {
 	}
 
 	@Override
-	public ItemStack generateItemStack() {
-		ItemStack item = MMOItems.plugin.getItems().getItem(type, id);
+	public ItemStack generateItemStack(RPGPlayer player) {
+		ItemStack item = template.newBuilder(player).build().newBuilder().build();
 		item.setAmount(getAmount());
 		return item;
 	}
@@ -71,11 +65,11 @@ public class MMOItemIngredient extends Ingredient {
 	}
 
 	private String findName() {
-		MMOItem mmoitem = MMOItems.plugin.getItems().getMMOItem(type, id);
-		if (mmoitem.hasData(ItemStat.NAME))
-			return ((DisplayName) ItemStat.NAME).getDisplayName(mmoitem.getData(ItemStat.NAME));
-		if (mmoitem.hasData(ItemStat.MATERIAL))
-			return MMOUtils.caseOnWords(((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
+		if (template.getBaseItemData().containsKey(ItemStat.NAME))
+			return template.getBaseItemData().get(ItemStat.NAME).toString();
+		if (template.getBaseItemData().containsKey(ItemStat.MATERIAL))
+			return MMOUtils.caseOnWords(
+					((MaterialData) template.getBaseItemData().get(ItemStat.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 		return "Unrecognized Item";
 	}
 }

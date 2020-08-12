@@ -12,8 +12,6 @@ public class AbilityUseEvent extends PlayerDataEvent {
 	private final AbilityData ability;
 	private final LivingEntity target;
 
-	private boolean cancelled;
-
 	public AbilityUseEvent(PlayerData playerData, AbilityData ability) {
 		this(playerData, ability, null);
 	}
@@ -30,16 +28,6 @@ public class AbilityUseEvent extends PlayerDataEvent {
 
 	public LivingEntity getTarget() {
 		return target;
-	}
-
-	@Override
-	public void setCancelled(boolean bool) {
-		cancelled = bool;
-	}
-
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
 	}
 
 	public HandlerList getHandlers() {

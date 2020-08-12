@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -56,7 +56,7 @@ public class UpgradeData implements StatData, RandomStatData {
 	}
 
 	public boolean canLevelUp() {
-		return !hasMaxUpgrades() || level < max;
+		return max == 0 || level < max;
 	}
 
 	public boolean destroysOnFail() {
@@ -72,11 +72,11 @@ public class UpgradeData implements StatData, RandomStatData {
 	}
 
 	public void upgrade(MMOItem mmoitem) {
-		if(!MMOItems.plugin.getUpgrades().hasTemplate(template)) {
+		if (!MMOItems.plugin.getUpgrades().hasTemplate(template)) {
 			MMOItems.plugin.getLogger().warning("Couldn't find upgrade template '" + template + "'. Does it exist?");
 			return;
 		}
-		
+
 		// change display name
 		String suffix = MMOLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
@@ -123,7 +123,7 @@ public class UpgradeData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

@@ -10,11 +10,10 @@ import org.bukkit.potion.PotionEffectType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import net.Indyuce.mmoitems.api.Type;
 
 public class Gauntlet extends Weapon {
-	public Gauntlet(Player player, NBTItem item, Type type) {
-		super(player, item, type);
+	public Gauntlet(Player player, NBTItem item) {
+		super(player, item);
 	}
 
 	public void specialAttack(LivingEntity target) {

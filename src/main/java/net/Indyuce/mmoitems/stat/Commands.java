@@ -1,32 +1,34 @@
 package net.Indyuce.mmoitems.stat;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.item.MMOItem;
-import net.Indyuce.mmoitems.api.item.ReadMMOItem;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
-import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.CommandData;
-import net.Indyuce.mmoitems.stat.data.CommandListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.CommandListEdition;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.CommandData;
+import net.Indyuce.mmoitems.stat.data.CommandListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Commands extends ItemStat {
 	private static final int max = 15;
@@ -53,23 +55,18 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public RandomStatData whenInitializedGeneration(Object object) {
-		return whenInitialized(object);
-	}
-
-	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		new CommandListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 	}
 
 	@Override
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		if (config.getConfig().getConfigurationSection(inv.getEdited().getId()).contains("commands"))
-			if (config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".commands").getKeys(false).size() >= max) {
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		if (inv.getEditedSection().contains("commands"))
+			if (inv.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= max) {
 				// max command number = 8
 				inv.open();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your item has reached the " + max + " commands limit.");
-				return false;
+				return;
 			}
 
 		double delay = 0;
@@ -79,11 +76,7 @@ public class Commands extends ItemStat {
 		for (int j = 0; j < split.length && split[j].startsWith("-"); j++) {
 			String arg = split[j];
 			if (arg.startsWith("-d:")) {
-				try {
-					delay = Double.parseDouble(arg.substring(3));
-				} catch (NumberFormatException e) {
-					// cant read delay.
-				}
+				delay = MMOUtils.parseDouble(arg.substring(3));
 				message = message.replaceFirst(arg + " ", "");
 				continue;
 			} else if (arg.equalsIgnoreCase("-c")) {
@@ -101,7 +94,7 @@ public class Commands extends ItemStat {
 		 * determine the command ID based on the command IDs which have been
 		 * registered before.
 		 */
-		ConfigurationSection commands = config.getConfig().getConfigurationSection(inv.getEdited().getId() + ".commands");
+		ConfigurationSection commands = inv.getEditedSection().getConfigurationSection("commands");
 		String path = "cmd" + (max + 1);
 		if (commands == null)
 			path = "cmd0";
@@ -112,26 +105,24 @@ public class Commands extends ItemStat {
 					break;
 				}
 
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".format", message);
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".delay", delay);
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".console", console ? console : null);
-		config.getConfig().set(inv.getEdited().getId() + ".commands." + path + ".op", op ? op : null);
-		inv.registerItemEdition(config);
-		inv.open();
+		inv.getEditedSection().set("commands." + path + ".format", message);
+		inv.getEditedSection().set("commands." + path + ".delay", delay);
+		inv.getEditedSection().set("commands." + path + ".console", console ? console : null);
+		inv.getEditedSection().set("commands." + path + ".op", op ? op : null);
+		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
-		return true;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, MMOItem mmoitem) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
 		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
-				+ (mmoitem.hasData(this) ? ((CommandListData) mmoitem.getData(this)).getCommands().size() : "0"));
+				+ (optional.isPresent() ? ((CommandListData) optional.get()).getCommands().size() : "0"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit item commands.");
 	}
 
 	@Override
-	public void whenApplied(MMOItemBuilder item, StatData data) {
+	public void whenApplied(ItemStackBuilder item, StatData data) {
 		JsonArray array = new JsonArray();
 		List<String> lore = new ArrayList<>();
 

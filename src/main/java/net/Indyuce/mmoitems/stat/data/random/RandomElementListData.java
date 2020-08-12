@@ -8,9 +8,8 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.api.Element;
-import net.Indyuce.mmoitems.api.itemgen.GeneratedItemBuilder;
-import net.Indyuce.mmoitems.api.itemgen.NumericStatFormula;
-import net.Indyuce.mmoitems.api.itemgen.RandomStatData;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.ElementListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
@@ -27,6 +26,14 @@ public class RandomElementListData implements StatData, RandomStatData {
 			if (config.contains(key + ".defense"))
 				defense.put(element, new NumericStatFormula(config.get(key + ".defense")));
 		}
+	}
+
+	public boolean hasDamage(Element element) {
+		return damage.containsKey(element);
+	}
+
+	public boolean hasDefense(Element element) {
+		return defense.containsKey(element);
 	}
 
 	public NumericStatFormula getDefense(Element element) {
@@ -54,7 +61,7 @@ public class RandomElementListData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(GeneratedItemBuilder builder) {
+	public StatData randomize(MMOItemBuilder builder) {
 		ElementListData elements = new ElementListData();
 		damage.forEach((element, formula) -> elements.setDamage(element, formula.calculate(builder.getLevel())));
 		defense.forEach((element, formula) -> elements.setDefense(element, formula.calculate(builder.getLevel())));

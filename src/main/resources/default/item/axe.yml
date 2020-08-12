@@ -1,88 +1,116 @@
 BUTCHER_AXE:
-  material: IRON_AXE
-  name: '&cButcher&f''s Axe'
-  tier: UNCOMMON
-  critical-strike-chance: 5.0
-  critical-strike-power: 248.0
-  attack-damage: 6.0
-  attack-speed: 0.7
-  ability:
-    right-click:
-      type: CIRCULAR_SLASH
-      mode: RIGHT_CLICK
-      knockback: 3.0
-      cooldown: 39.0
-      damage: 6.0
-  element:
-    darkness:
-      damage: 3.2
-  gem-sockets:
-  - Uncolored
-  crafting:
-    shaped:
-      '2':
-      - AIR IRON_BLOCK IRON_BLOCK
-      - AIR STICK IRON_BLOCK
-      - AIR STICK AIR
-      '1':
-      - IRON_BLOCK IRON_BLOCK AIR
-      - IRON_BLOCK STICK AIR
-      - AIR STICK AIR
+  base:
+    material: IRON_AXE
+    name: '&cButcher&f''s Axe'
+    tier: UNCOMMON
+    critical-strike-chance: 5.0
+    critical-strike-power: 248.0
+    attack-damage: 6.0
+    attack-speed: 0.7
+    ability:
+      right-click:
+        type: CIRCULAR_SLASH
+        mode: RIGHT_CLICK
+        knockback: 3.0
+        cooldown: 39.0
+        damage: 6.0
+    element:
+      ice:
+        damage: 3.2
+    gem-sockets:
+    - Uncolored
+    crafting:
+      shaped:
+        '2':
+        - AIR IRON_BLOCK IRON_BLOCK
+        - AIR STICK IRON_BLOCK
+        - AIR STICK AIR
+        '1':
+        - IRON_BLOCK IRON_BLOCK AIR
+        - IRON_BLOCK STICK AIR
+        - AIR STICK AIR
 BONE_CRACKER:
-  material: STONE_AXE
-  disable-repairing: true
-  disable-enchanting: true
-  unbreakable: false
-  two-handed: true
-  tier: COMMON
-  armor-toughness: 2.0
-  gem-sockets:
-  - Uncolored
-  name: '&fBone Cracker'
-  attack-damage: 10.0=12.0
-  attack-speed: 0.4=0.5
-  required-level: 4.0
-  durability: 10.0=100.0
+  base:
+    material: STONE_AXE
+    disable-repairing: true
+    disable-enchanting: true
+    unbreakable: false
+    two-handed: true
+    tier: COMMON
+    armor-toughness: 2.0
+    gem-sockets:
+    - Uncolored
+    name: '&fBone Cracker'
+    attack-damage:
+      base: 11.0
+      spread: 0.027
+      max-spread: 0.083
+    attack-speed:
+      base: 0.45
+      spread: 0.033
+      max-spread: 0.01
+    required-level: 4.0
+    durability:
+      base: 55.0
+      spread: 0.15
+      max-spread: 0.45
 SKULL_BREAKER:
-  material: IRON_AXE
-  attack-damage: 16.0=18.0
-  attack-speed: 0.3=0.4
-  name: '&f&lSKULL BREAKER'
-  tier: COMMON
-  two-handed: true
-  movement-speed: -0.02
-  lore:
-  - '&7Its large blade &cslow&7 its targets'
-  - '&7when smashing it on their skull.'
-  required-level: 9.0
-  required-class:
-  - Brute
-  - Warrior
+  base:
+    material: IRON_AXE
+    attack-damage:
+      base: 17.0
+      spread: 0.019
+      max-spread: 0.056
+    attack-speed:
+      base: 0.35
+      spread: 0.042
+      max-spread: 0.13
+    name: '&f&lSKULL BREAKER'
+    tier: COMMON
+    two-handed: true
+    movement-speed: -0.02
+    lore:
+    - '&7Its large blade &cslow&7 its targets'
+    - '&7when smashing it on their skull.'
+    required-level: 9.0
+    required-class:
+    - Brute
+    - Warrior
 SILVER_AXE:
-  material: IRON_AXE
-  custom-model-data: 1.0
-  name: '&fSilver Axe'
-  attack-damage: 9.0=10.0
-  attack-speed: 0.9=1.0
-  critical-strike-chance: 5.0=7.0
-  ability:
-    ability1:
-      type: CIRCULAR_SLASH
-      damage: 6.0
-      cooldown: 20.0
-      mode: SHIFT_RIGHT_CLICK
-  lore:
-  - '&7Every &c20 &7seconds, shift and'
-  - '&7right-click to perform a devastating'
-  - '&7circular slash, dealing &c6 &7damage'
-  - '&7and knocking back nearby targets.'
-  crafting:
-    shaped:
-      '2':
-      - AIR MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT
-      - AIR STICK MATERIAL.SILVER_INGOT
-      - AIR STICK AIR
-      '1':
-      - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
-      - MATERIAL.SILVER_INGOT STICK AIR
-      - AIR STICK AIR
+  base:
+    material: IRON_AXE
+    custom-model-data: 1.0
+    name: '&fSilver Axe'
+    attack-damage:
+      base: 9.5
+      spread: 0.017
+      max-spread: 0.05
+    attack-speed:
+      base: 0.95
+      spread: 0.017
+      max-spread: 0.05
+    critical-strike-chance:
+      base: 6.0
+      spread: 0.05
+      max-spread: 0.14
+    ability:
+      ability1:
+        type: CIRCULAR_SLASH
+        damage: 6.0
+        cooldown: 20.0
+        mode: SHIFT_RIGHT_CLICK
+    lore:
+    - '&7Every &c20 &7seconds, shift and'
+    - '&7right-click to perform a devastating'
+    - '&7circular slash, dealing &c6 &7damage'
+    - '&7and knocking back nearby targets.'
+    crafting:
+      shaped:
+        '2':
+        - AIR MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT
+        - AIR STICK MATERIAL.SILVER_INGOT
+        - AIR STICK AIR
+        '1':
+        - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
+        - MATERIAL.SILVER_INGOT STICK AIR
+        - AIR STICK AIR

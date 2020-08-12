@@ -47,7 +47,7 @@ public class RealDualWieldHook implements Listener {
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType()) {
-			Weapon weapon = new Weapon(playerData, item, item.getType());
+			Weapon weapon = new Weapon(playerData, item);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);
@@ -66,7 +66,7 @@ public class RealDualWieldHook implements Listener {
 			}
 		}
 		if (offhandItem.hasType()) {
-			Weapon weapon = new Weapon(playerData, offhandItem, offhandItem.getType());
+			Weapon weapon = new Weapon(playerData, offhandItem);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
 				event.setCancelled(true);

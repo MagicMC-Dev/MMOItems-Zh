@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class GemStone extends UseItem {
@@ -78,7 +78,7 @@ public class GemStone extends UseItem {
 		 * Only applies NON PROPER and MERGEABLE item stats
 		 */
 		for (ItemStat stat : mmoitem.getStats())
-			if (!(stat instanceof ProperStat)) {
+			if (!(stat instanceof GemStoneStat)) {
 				StatData data = mmoitem.getData(stat);
 				if (data instanceof Mergeable) {
 					if (targetMMO.hasData(stat))

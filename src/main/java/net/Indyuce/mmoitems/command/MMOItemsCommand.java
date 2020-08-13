@@ -36,7 +36,6 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.loot.ClassFilter;
 import net.Indyuce.mmoitems.api.item.template.loot.LootBuilder;
 import net.Indyuce.mmoitems.api.item.template.loot.TypeFilter;
@@ -97,7 +96,6 @@ public class MMOItemsCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.RED + "-level:<level> " + ChatColor.GRAY + "uses a specific item level");
 				sender.sendMessage(ChatColor.RED + "-tier:<tier> " + ChatColor.GRAY + "uses a specific item tier");
 				sender.sendMessage(ChatColor.RED + "-type:<type> " + ChatColor.GRAY + "finds an item with a specific item type");
-				sender.sendMessage(ChatColor.RED + "-id:<id> " + ChatColor.GRAY + "finds a specific item");
 				return true;
 			}
 
@@ -119,22 +117,6 @@ public class MMOItemsCommand implements CommandExecutor {
 				final ItemTier itemTier = handler.hasArgument("tier")
 						? MMOItems.plugin.getTiers().getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_"))
 						: MMOItems.plugin.getTemplates().rollTier();
-
-				// no need to use a LootBuilder
-				if (handler.hasArgument("id")) {
-					Validate.isTrue(handler.hasArgument("type"), "You must specify a type as well.");
-					String format = handler.getValue("type");
-					Validate.isTrue(Type.isValid(format), "Could not find type with ID '" + format + "'");
-					Type type = Type.get(format);
-
-					String id = handler.getValue("id").toUpperCase().replace("-", "_");
-					Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find gen item with ID '" + id + "'");
-					MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, id);
-					ItemStack item = template.newBuilder(itemLevel, itemTier).build().newBuilder().build();
-					Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate gen item with ID '" + id + "'");
-					new SmartGive(give).give(item);
-					return true;
-				}
 
 				LootBuilder builder = new LootBuilder(itemLevel, itemTier);
 				if (handler.hasArgument("matchclass"))

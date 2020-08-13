@@ -22,13 +22,13 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class Lore extends ItemStat implements ProperStat {
+public class Lore extends ItemStat implements GemStoneStat {
 	public Lore() {
 		super("LORE", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Lore", new String[] { "The item lore." }, new String[] { "all" });
 	}

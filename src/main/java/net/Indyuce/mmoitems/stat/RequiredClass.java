@@ -24,13 +24,13 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
-public class RequiredClass extends ItemStat implements ItemRestriction, ProperStat {
+public class RequiredClass extends ItemStat implements ItemRestriction, GemStoneStat {
 	public RequiredClass() {
 		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class",
 				new String[] { "The class you need to", "profess to use your item." }, new String[] { "!block", "all" });

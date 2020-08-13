@@ -15,7 +15,7 @@ import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 
 public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
@@ -109,7 +109,7 @@ public class StatManager {
 
 		stats.put(stat.getId(), stat);
 
-		if (stat instanceof DoubleStat && !(stat instanceof ProperStat) && stat.isCompatible(Type.GEM_STONE))
+		if (stat instanceof DoubleStat && !(stat instanceof GemStoneStat) && stat.isCompatible(Type.GEM_STONE))
 			numeric.add((DoubleStat) stat);
 
 		if (stat instanceof AttributeStat)

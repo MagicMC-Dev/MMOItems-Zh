@@ -23,11 +23,11 @@ import net.Indyuce.mmoitems.stat.data.SoundListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
-public class CustomSounds extends ItemStat implements ProperStat {
+public class CustomSounds extends ItemStat implements GemStoneStat {
 	public CustomSounds() {
 		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." },
 				new String[] { "all" });

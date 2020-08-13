@@ -4,9 +4,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ProperStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 
-public class SuccessRate extends DoubleStat implements ProperStat {
+public class SuccessRate extends DoubleStat implements GemStoneStat {
 
 	/*
 	 * in a different class because Success Rate is meant to be a proper stat

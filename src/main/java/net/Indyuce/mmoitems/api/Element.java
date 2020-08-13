@@ -25,7 +25,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public enum Element {
-	FIRE(Material.BLAZE_POWDER, "Fire", ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), new ElementHandler() {
+	FIRE(Material.BLAZE_POWDER, ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), new ElementHandler() {
 		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, target.getHeight() / 2, 0), 14);
 			target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, .8f);
@@ -34,7 +34,7 @@ public enum Element {
 		}
 	}, 19, 25),
 
-	ICE(VersionMaterial.SNOWBALL.toMaterial(), "Ice", ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE),
+	ICE(VersionMaterial.SNOWBALL.toMaterial(), ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE),
 			new ElementHandler() {
 				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 					new BukkitRunnable() {
@@ -57,7 +57,7 @@ public enum Element {
 				}
 			}, 20, 24),
 
-	WIND(Material.FEATHER, "Wind", ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), new ElementHandler() {
+	WIND(Material.FEATHER, ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), new ElementHandler() {
 		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDER_DRAGON_GROWL.toSound(), 2, 2f);
 			Vector vec = target.getLocation().subtract(stats.getPlayer().getLocation()).toVector().normalize().multiply(1.7).setY(.5);
@@ -74,7 +74,7 @@ public enum Element {
 		}
 	}, 28, 34),
 
-	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), "Earth", ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT),
+	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT),
 			new ElementHandler() {
 				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 					target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
@@ -89,23 +89,21 @@ public enum Element {
 				}
 			}, 29, 33),
 
-	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), "Thunder", ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8),
-			new ElementHandler() {
-				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-					target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
-					for (Entity entity : target.getNearbyEntities(3, 2, 3))
-						if (MMOUtils.canDamage(stats.getPlayer(), entity))
-							new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(),
-									(LivingEntity) entity);
+	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8), new ElementHandler() {
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
+			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
+			for (Entity entity : target.getNearbyEntities(3, 2, 3))
+				if (MMOUtils.canDamage(stats.getPlayer(), entity))
+					new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(), (LivingEntity) entity);
 
-					result.addDamage(absolute);
-					for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
-						target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0,
-								Math.cos(k), .01, Math.sin(k), .18);
-				}
-			}, 30, 32),
+			result.addDamage(absolute);
+			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
+				target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
+						Math.sin(k), .18);
+		}
+	}, 30, 32),
 
-	WATER(VersionMaterial.LILY_PAD.toMaterial(), "Water", ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER),
+	WATER(VersionMaterial.LILY_PAD.toMaterial(), ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER),
 			new ElementHandler() {
 				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
 					ElementListener.weaken(target);
@@ -123,7 +121,28 @@ public enum Element {
 						}
 					}.runTaskTimer(MMOItems.plugin, 0, 1);
 				}
-			}, 37, 43);
+			}, 37, 43),
+
+	LIGHTNESS(Material.GLOWSTONE_DUST, ChatColor.WHITE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WHITE_WOOL),
+			new ElementHandler() {
+
+				@Override
+				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute) {
+					// TODO Auto-generated method stub
+
+				}
+			}, 38, 42),
+
+	DARKNESS(Material.COAL, ChatColor.DARK_GRAY, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.COAL_BLOCK), new ElementHandler() {
+
+		@Override
+		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute) {
+			// TODO Auto-generated method stub
+
+		}
+	}, 39, 41),
+
+	;
 
 	private final ItemStack item;
 	private final String name;
@@ -132,12 +151,12 @@ public enum Element {
 	private final ElementHandler handler;
 	private final int damageGuiSlot, defenseGuiSlot;
 
-	private Element(Material material, String name, ChatColor color, ElementParticle particle, ElementHandler handler, int damageGuiSlot,
-			int defenseGuiSlot) {
+	private Element(Material material, ChatColor color, ElementParticle particle, ElementHandler handler, int damageGuiSlot, int defenseGuiSlot) {
 		this.item = new ItemStack(material);
-		this.name = name;
+		this.name = MMOUtils.caseOnWords(name().toLowerCase());
 		this.color = color;
 		this.particle = particle;
+
 		this.handler = handler;
 		this.damageGuiSlot = damageGuiSlot;
 		this.defenseGuiSlot = defenseGuiSlot;

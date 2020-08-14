@@ -20,7 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -265,9 +264,7 @@ public class ItemBrowser extends PluginInventory {
 			return;
 
 		if (deleteMode) {
-			ConfigFile config = type.getConfigFile();
-			config.getConfig().set(id, null);
-			config.save();
+			MMOItems.plugin.getTemplates().deleteTemplate(type, id);
 			deleteMode = false;
 			open();
 

@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.command;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.Validate;
@@ -18,11 +16,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffectType;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -660,14 +655,14 @@ public class MMOItemsCommand implements CommandExecutor {
 			}
 		}
 		// ==================================================================================================================================
-		else if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("load")) {
+		else if (args[0].equalsIgnoreCase("create")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command is only for players.");
 				return true;
 			}
 
 			if (args.length < 3) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi " + args[0] + " <type> <item-id>");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Usage: /mi create <type> <item-id>");
 				return false;
 			}
 
@@ -687,42 +682,13 @@ public class MMOItemsCommand implements CommandExecutor {
 				return true;
 			}
 
-			ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
-			if (args[0].equalsIgnoreCase("load")) {
-				if (item == null || item.getType() == Material.AIR) {
-					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please hold something in your hand.");
-					return true;
-				}
-
-				if (item.hasItemMeta()) {
-					if (item.getItemMeta() instanceof Damageable)
-						config.getConfig().set(name + ".durability", ((Damageable) item.getItemMeta()).getDamage());
-					if (item.getItemMeta().hasDisplayName())
-						config.getConfig().set(name + ".name", item.getItemMeta().getDisplayName().replace("§", "&"));
-					if (item.getItemMeta().hasLore()) {
-						List<String> lore = new ArrayList<>();
-						for (String line : item.getItemMeta().getLore())
-							lore.add(line.replace("§", "&"));
-						config.getConfig().set(name + ".lore", lore);
-					}
-					if (item.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS))
-						config.getConfig().set(name + ".hide-enchants", true);
-					String skullTextureUrl = MMOUtils.getSkullTextureURL(item);
-					if (!skullTextureUrl.equals(""))
-						config.getConfig().set(name + ".skull-texture", skullTextureUrl);
-				}
-				if (MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getBoolean("Unbreakable"))
-					config.getConfig().set(name + ".unbreakable", true);
-				for (Enchantment enchant : item.getEnchantments().keySet())
-					config.getConfig().set(name + ".enchants." + enchant.getKey().getKey(),
-							item.getEnchantmentLevel(enchant));
-			}
-			config.getConfig().set(name + ".material", args[0].equalsIgnoreCase("load") ? item.getType().name() : type.getItem().getType().name());
-
+			config.getConfig().set(name + ".base.material", type.getItem().getType().name());
 			config.save();
+			MMOItems.plugin.getTemplates().requestTemplateUpdate(type, name);
+
 			if (sender instanceof Player)
 				new ItemEdition((Player) sender, MMOItems.plugin.getTemplates().getTemplate(type, name)).open();
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully " + args[0].replace("d", "de") + "d " + name + "!");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully created " + name + "!");
 		}
 		// ==================================================================================================================================
 		else if (args[0].equalsIgnoreCase("drop")) {
@@ -840,23 +806,12 @@ public class MMOItemsCommand implements CommandExecutor {
 
 			Type type = Type.get(args[1]);
 			String id = args[2].toUpperCase().replace("-", "_");
-
-			ConfigFile config = type.getConfigFile();
-			if (!config.getConfig().contains(id)) {
+			if (!MMOItems.plugin.getTemplates().hasTemplate(type, id)) {
 				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + id + ".");
 				return true;
 			}
 
-			config.getConfig().set(id, null);
-			config.save();
-
-			/*
-			 * remove the item updater data and uuid data from the plugin to
-			 * prevent other severe issues from happening that could potentially
-			 * spam your console
-			 */
-			MMOItems.plugin.getUpdater().disable(type, id);
-
+			MMOItems.plugin.getTemplates().deleteTemplate(type, id);
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully deleted " + id + ".");
 		}
 		// ==================================================================================================================================

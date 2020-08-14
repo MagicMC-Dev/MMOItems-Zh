@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -73,7 +74,8 @@ public class TemplateManager {
 
 	/**
 	 * Unregisters a template from mmoitem registery. Must be used when an item
-	 * is removed from the config files.
+	 * is removed from the config files. Also disables the dynamic updater for
+	 * that item
 	 * 
 	 * @param type
 	 *            The item type
@@ -86,9 +88,29 @@ public class TemplateManager {
 	}
 
 	/**
+	 * Unregisters a template from mmoitem registery and clears it from the
+	 * config file
+	 * 
+	 * @param type
+	 *            The item type
+	 * @param id
+	 *            The item ID
+	 */
+	public void deleteTemplate(Type type, String id) {
+		unregisterTemplate(type, id);
+
+		ConfigFile config = type.getConfigFile();
+		config.getConfig().set(id, null);
+		config.save();
+	}
+
+	/**
 	 * Used whenever an item is created or edited through the GUI edition. This
 	 * method unregisters the current template and loads it again from the
 	 * configuration file.
+	 * 
+	 * Can also be used right after creating a template after the config file
+	 * has been initialized in order to load the newly created item
 	 * 
 	 * @param type
 	 *            The item type
@@ -108,14 +130,6 @@ public class TemplateManager {
 					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
 			return null;
 		}
-	}
-
-	/**
-	 * @deprecated Use hasTemplate(Type, String) instead
-	 */
-	@Deprecated
-	public boolean hasMMOItem(Type type, String id) {
-		return hasTemplate(type, id);
 	}
 
 	/**

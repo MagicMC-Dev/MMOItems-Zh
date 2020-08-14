@@ -80,7 +80,6 @@ public class PluginHelp {
 		LIST("mi list", "Some useful things when editing items."),
 		RELOAD("mi reload (adv-recipes/stations)", "Reloads a specific/every plugin system."),
 		CREATE("mi create <type> <id>", "Creates a new item."),
-		LOAD("mi load <type> <id>", "Loads in the plugin the item you are holding."),
 		COPY("mi copy <type> <target-id> <new-item-id>", "Duplicates an existing item."),
 		DELETE("mi delete <type> <id>", "Removes an item from the plugin."),
 		EDIT("mi edit <type> <id>", "Brings up the item edition menu."),
@@ -111,8 +110,8 @@ public class PluginHelp {
 
 		private void sendAsJson(Player player) {
 			if (isCommand())
-				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY + " /" + usage
-						+ "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + help + "\"}}}");
+				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY
+						+ " /" + usage + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + help + "\"}}}");
 			else
 				player.sendMessage(ChatColor.LIGHT_PURPLE + usage);
 		}

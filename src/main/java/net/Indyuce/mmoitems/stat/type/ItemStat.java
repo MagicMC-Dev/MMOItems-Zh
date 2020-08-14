@@ -139,7 +139,7 @@ public abstract class ItemStat {
 	public static final ItemStat PARRY_COOLDOWN_REDUCTION = new DoubleStat("PARRY_COOLDOWN_REDUCTION", new ItemStack(Material.BUCKET),
 			"Parry Cooldown Reduction", new String[] { "Reduces the parrying cooldown (%)." }, new String[] { "!miscellaneous", "!block", "all" });
 	public static final ItemStat COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", new ItemStack(Material.BOOK), "Cooldown Reduction",
-			new String[] { "Reduces cooldowns of item skills (%)." });
+			new String[] { "Reduces cooldowns of item and player skills (%)." });
 	public static final ItemStat RANGE = new DoubleStat("RANGE", new ItemStack(Material.STICK), "Range",
 			new String[] { "The range of your item attacks." }, new String[] { "staff", "whip", "wand", "musket" });
 	public static final ItemStat MANA_COST = new DoubleStat("MANA_COST", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Cost",

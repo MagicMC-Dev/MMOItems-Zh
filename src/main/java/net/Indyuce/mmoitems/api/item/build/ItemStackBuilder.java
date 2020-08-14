@@ -72,6 +72,13 @@ public class ItemStackBuilder {
 		return mmoitem;
 	}
 
+	/**
+	 * @return Does NOT return the built item stack. It returns only returns the
+	 *         default item stack with material applied. Built item stack is
+	 *         given by build(). This method should only be used to check if the
+	 *         item is of a specific material (like the Shield Pattern stat
+	 *         which checks if the item is a shield)
+	 */
 	public ItemStack getItemStack() {
 		return item;
 	}
@@ -85,6 +92,10 @@ public class ItemStackBuilder {
 			tags.add(itemTag);
 	}
 
+	/**
+	 * 
+	 * @return Returns built NBTItem with applied tags and lore
+	 */
 	public NBTItem buildNBT() {
 		this.mmoitem = new StatLore(mmoitem).generateNewItem();
 
@@ -126,7 +137,7 @@ public class ItemStackBuilder {
 	}
 
 	/**
-	 * @return Builds an ItemStack
+	 * @return Builds the item
 	 */
 	public ItemStack build() {
 		return buildNBT().toItem();

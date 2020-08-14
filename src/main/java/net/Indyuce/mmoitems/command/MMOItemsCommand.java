@@ -165,7 +165,7 @@ public class MMOItemsCommand implements CommandExecutor {
 				sender.sendMessage("");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi update list" + ChatColor.WHITE + " lists available config updates.");
 				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi update info <id>" + ChatColor.WHITE + " displays info about an update.");
-				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi update apply <id> <id>" + ChatColor.WHITE + " applies a config update.");
+				sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi update apply <id>" + ChatColor.WHITE + " applies a config update.");
 				return true;
 			}
 

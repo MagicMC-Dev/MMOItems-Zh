@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -110,22 +111,27 @@ public class DropTableManager implements Listener {
 					if (called.isCancelled())
 						return;
 
-					for (ItemStack drop : drops) {
-						Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), drop);
-						item.setVelocity(item.getVelocity().multiply(0.5f));
-					}
+					for (ItemStack drop : drops)
+						drop(block, drop);
 				}, 2);
 		}
 
 		else if (blocks.containsKey(block.getType())) {
 			final Material type = block.getType();
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-				for (ItemStack drop : blocks.get(type).read(PlayerData.get(player), hasSilkTouchTool(player))) {
-					Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), drop);
-					item.setVelocity(item.getVelocity().multiply(0.5f));
-				}
+				for (ItemStack drop : blocks.get(type).read(PlayerData.get(player), hasSilkTouchTool(player)))
+					drop(block, drop);
 			}, 2);
 		}
+	}
+	
+	private void drop(Block block, ItemStack drop) {
+		Block above = block.getRelative(BlockFace.UP);
+		if(above.isEmpty() || above.isLiquid() || above.isPassable()) {
+			Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), drop);
+			item.setVelocity(item.getVelocity().multiply(0.5f));
+		}
+		else block.getWorld().dropItemNaturally(block.getLocation().add(.5, 0, .5), drop);
 	}
 
 	// public Collection<ItemStack> getBlockDrops(Block block, Player player) {

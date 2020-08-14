@@ -271,6 +271,7 @@ public class ConfigManager {
 		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
 		DROPS("drops.yml", "", "drops.yml"),
 		ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
+		GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
 		EXAMPLE_MODIFIERS("modifiers/example-modifiers.yml", "modifiers", "example-modifiers.yml"),
 

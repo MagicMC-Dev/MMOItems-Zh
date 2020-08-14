@@ -61,6 +61,6 @@ public class CustomBlock {
 	}
 
 	public ItemStack getItem() {
-		return mmoitem.newBuilder().getItemStack();
+		return mmoitem.newBuilder().build();
 	}
 }

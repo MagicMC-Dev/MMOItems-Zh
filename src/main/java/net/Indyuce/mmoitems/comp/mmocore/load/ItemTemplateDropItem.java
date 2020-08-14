@@ -35,8 +35,8 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
 	public void collect(LootBuilder builder) {
 		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
 
-		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(matchLevel ? rpgPlayer.getLevel() : this.level);
-		ItemTier itemTier = this.tier != null ? this.tier : MMOItems.plugin.getTemplates().rollTier();
+		int itemLevel = matchLevel ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : this.level;
+		ItemTier itemTier = this.tier != null ? this.tier : this.tiered ? MMOItems.plugin.getTemplates().rollTier() : null;
 
 		MMOItem mmoitem = template.newBuilder(itemLevel, itemTier).build();
 

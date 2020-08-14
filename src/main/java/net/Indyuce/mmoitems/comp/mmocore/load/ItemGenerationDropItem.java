@@ -10,7 +10,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public abstract class ItemGenerationDropItem extends DropItem {
-	protected final boolean matchLevel;
+	protected final boolean matchLevel, tiered;
 	protected final int level;
 	protected final ItemTier tier;
 
@@ -21,7 +21,8 @@ public abstract class ItemGenerationDropItem extends DropItem {
 		super(config);
 
 		matchLevel = config.getBoolean("match-level", false);
-		level = config.getInt("level", 1);
+		level = config.getInt("level", 0);
+		tiered = config.getBoolean("tiered");
 
 		if (config.contains("tier")) {
 			String format = config.getString("tier").toUpperCase().replace("-", "_").replace(" ", "_");

@@ -22,7 +22,7 @@ public abstract class ItemGenerationDropItem extends DropItem {
 
 		matchLevel = config.getBoolean("match-level", false);
 		level = config.getInt("level", 0);
-		tiered = config.getBoolean("tiered");
+		tiered = config.getBoolean("tiered", false);
 
 		if (config.contains("tier")) {
 			String format = config.getString("tier").toUpperCase().replace("-", "_").replace(" ", "_");

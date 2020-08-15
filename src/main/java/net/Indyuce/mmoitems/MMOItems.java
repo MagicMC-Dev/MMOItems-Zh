@@ -16,6 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.worldedit.WorldEdit;
+
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
@@ -30,6 +32,7 @@ import net.Indyuce.mmoitems.comp.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
 import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
 import net.Indyuce.mmoitems.comp.RealDualWieldHook;
+import net.Indyuce.mmoitems.comp.WECustomBlockInputParser;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
@@ -124,6 +127,15 @@ public class MMOItems extends JavaPlugin {
 			}
 		} catch (Exception e) {
 			getLogger().log(Level.WARNING, "Could not initialize support with WorldGuard 7+");
+		}
+
+		try {
+			if (getServer().getPluginManager().getPlugin("WorldEdit") != null) {
+				WorldEdit.getInstance().getBlockFactory().register(new WECustomBlockInputParser());
+				getLogger().log(Level.INFO, "Hooked onto WorldEdit");
+			}
+		} catch (Exception e) {
+			getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7+");
 		}
 
 		/*

@@ -52,4 +52,24 @@ public class MushroomState {
 
 		return blockData;
 	}
+	
+	public boolean getSide(String side) {
+		side = side.toLowerCase();
+		switch(side) {
+			case "up":
+				return up;
+			case "down":
+				return down;
+			case "north":
+				return north;
+			case "south":
+				return south;
+			case "east":
+				return east;
+			case "west":
+				return west;
+			default:
+				return false;
+		}
+	}
 }

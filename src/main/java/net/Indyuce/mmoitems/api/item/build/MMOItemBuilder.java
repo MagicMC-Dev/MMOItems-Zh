@@ -62,7 +62,8 @@ public class MMOItemBuilder {
 
 		if (tier != null)
 			mmoitem.setData(ItemStat.TIER, new StringData(tier.getId()));
-		mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
+		if (level > 0)
+			mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
 
 		// roll item gen modifiers
 		for (TemplateModifier modifier : rollModifiers(template)) {

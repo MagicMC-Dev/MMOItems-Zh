@@ -466,7 +466,9 @@ public class MMOItems extends JavaPlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will
-	 *         scale according to the player RPG level
+	 *         scale according to the player RPG level if the template has the
+	 *         'level-item' option. The item will pick a random tier if the
+	 *         template has the 'tiered' option
 	 */
 	public MMOItem getMMOItem(Type type, String id, PlayerData player) {
 		return templateManager.getTemplate(type, id).newBuilder(player.getRPG()).build();
@@ -480,9 +482,9 @@ public class MMOItems extends JavaPlugin {
 	 * @param itemLevel
 	 *            The desired item level
 	 * @param itemTier
-	 *            The desired item tier
+	 *            The desired item tier, can be null
 	 * @return Generates an item given an item template with a specific item
-	 *         level and item tier. The item tier can be null
+	 *         level and item tier
 	 */
 	public MMOItem getMMOItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
 		return templateManager.getTemplate(type, id).newBuilder(itemLevel, itemTier).build();

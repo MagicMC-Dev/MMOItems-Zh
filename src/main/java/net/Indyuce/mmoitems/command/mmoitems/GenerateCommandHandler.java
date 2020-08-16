@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.command;
+package net.Indyuce.mmoitems.command.mmoitems;
 
 import java.util.HashSet;
 import java.util.Set;

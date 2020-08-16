@@ -140,10 +140,25 @@ public class MMOItemTemplate implements ItemReference {
 
 	public enum TemplateOption {
 
-		/*
-		 * when the item is being generated, modifiers are rolled in a random
-		 * order so you never the same modifiers again and again
+		/**
+		 * When the item is being generated, modifiers are rolled in a random
+		 * order so you never the same modifiers again and again.
 		 */
-		ROLL_MODIFIER_CHECK_ORDER;
+		ROLL_MODIFIER_CHECK_ORDER,
+
+		/**
+		 * When building an item based on this template, if no tier is
+		 * specified, a random tier will be chosen for the item. By default, the
+		 * item has no tier OR has the tier given in the config file.
+		 */
+		TIERED,
+
+		/**
+		 * When building an item based on this template, if no level is
+		 * specified, a random level will be rolled based on the player's level
+		 * or 0 if no player is specified. By default, items are generated with
+		 * level 0
+		 */
+		LEVEL_ITEM;
 	}
 }

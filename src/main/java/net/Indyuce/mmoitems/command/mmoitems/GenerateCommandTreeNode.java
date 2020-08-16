@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 
 import org.apache.commons.lang.Validate;
@@ -14,10 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.template.loot.ClassFilter;
-import net.Indyuce.mmoitems.api.item.template.loot.LootBuilder;
-import net.Indyuce.mmoitems.api.item.template.loot.TypeFilter;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.explorer.ClassFilter;
+import net.Indyuce.mmoitems.api.item.template.explorer.TemplateExplorer;
+import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.util.SmartGive;
@@ -54,7 +55,7 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
 					? MMOItems.plugin.getTiers().getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_"))
 					: MMOItems.plugin.getTemplates().rollTier();
 
-			LootBuilder builder = new LootBuilder(itemLevel, itemTier);
+			TemplateExplorer builder = new TemplateExplorer();
 			if (handler.hasArgument("matchclass"))
 				builder.applyFilter(new ClassFilter(rpgPlayer));
 			if (handler.hasArgument("class"))
@@ -65,11 +66,11 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
 				builder.applyFilter(new TypeFilter(Type.get(format)));
 			}
 
-			MMOItem mmoitem = builder.rollLoot();
-			Validate.notNull(mmoitem, "No item matched your criterias.");
+			Optional<MMOItemTemplate> optional = builder.rollLoot();
+			Validate.isTrue(optional.isPresent(), "No item matched your criterias.");
 
-			ItemStack item = mmoitem.newBuilder().build();
-			Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate item with ID '" + mmoitem.getId() + "'");
+			ItemStack item = optional.get().newBuilder(itemLevel, itemTier).build().newBuilder().build();
+			Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate item with ID '" + optional.get().getId() + "'");
 			new SmartGive(give).give(item);
 			return CommandResult.SUCCESS;
 

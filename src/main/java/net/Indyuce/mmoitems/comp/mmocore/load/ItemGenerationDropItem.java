@@ -6,11 +6,14 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmocore.api.droptable.dropitem.DropItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public abstract class ItemGenerationDropItem extends DropItem {
-	protected final boolean matchLevel, tiered;
 	protected final int level;
 	protected final ItemTier tier;
 
@@ -20,9 +23,7 @@ public abstract class ItemGenerationDropItem extends DropItem {
 	public ItemGenerationDropItem(MMOLineConfig config) {
 		super(config);
 
-		matchLevel = config.getBoolean("match-level", false);
 		level = config.getInt("level", 0);
-		tiered = config.getBoolean("tiered", false);
 
 		if (config.contains("tier")) {
 			String format = config.getString("tier").toUpperCase().replace("-", "_").replace(" ", "_");
@@ -33,6 +34,13 @@ public abstract class ItemGenerationDropItem extends DropItem {
 
 		unidentified = config.getDouble("unidentified", 0);
 		soulbound = config.getDouble("soulbound", 0);
+	}
+
+	public MMOItem rollMMOItem(MMOItemTemplate template, RPGPlayer rpgPlayer) {
+		int itemLevel = level > 0 ? level
+				: template.hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : 0;
+		ItemTier itemTier = tier != null ? tier : template.hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
+		return new MMOItemBuilder(template, itemLevel, itemTier).build();
 	}
 
 	public ItemStack rollUnidentification(MMOItem mmoitem) {

@@ -1,15 +1,18 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
+import java.util.Optional;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.loot.LootBuilder;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.template.loot.ClassFilter;
-import net.Indyuce.mmoitems.api.item.template.loot.TypeFilter;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.explorer.ClassFilter;
+import net.Indyuce.mmoitems.api.item.template.explorer.TemplateExplorer;
+import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -40,23 +43,20 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 	public void collect(LootBuilder builder) {
 		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
 
-		int itemLevel = matchLevel ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : this.level;
-		ItemTier itemTier = this.tier != null ? this.tier : this.tiered ? MMOItems.plugin.getTemplates().rollTier() : null;
-
-		net.Indyuce.mmoitems.api.item.template.loot.LootBuilder loot = new net.Indyuce.mmoitems.api.item.template.loot.LootBuilder(itemLevel,
-				itemTier);
-
+		TemplateExplorer explorer = new TemplateExplorer();
 		if (matchClass)
-			loot.applyFilter(new ClassFilter(rpgPlayer));
+			explorer.applyFilter(new ClassFilter(rpgPlayer));
 		else if (!profess.isEmpty())
-			loot.applyFilter(new ClassFilter(profess));
+			explorer.applyFilter(new ClassFilter(profess));
 
 		if (type != null)
-			loot.applyFilter(new TypeFilter(type));
+			explorer.applyFilter(new TypeFilter(type));
 
-		MMOItem rolled = loot.rollLoot();
-		if (rolled == null)
+		Optional<MMOItemTemplate> optional = explorer.rollLoot();
+		if (!optional.isPresent())
 			return;
+
+		MMOItem rolled = rollMMOItem(optional.get(), rpgPlayer);
 
 		if (rollSoulbound())
 			rolled.setData(ItemStat.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));

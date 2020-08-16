@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.item.template.loot;
+package net.Indyuce.mmoitems.api.item.template.explorer;
 
 import java.util.function.Predicate;
 

@@ -5,7 +5,6 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.loot.LootBuilder;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -34,11 +33,7 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
 	@Override
 	public void collect(LootBuilder builder) {
 		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
-
-		int itemLevel = matchLevel ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : this.level;
-		ItemTier itemTier = this.tier != null ? this.tier : this.tiered ? MMOItems.plugin.getTemplates().rollTier() : null;
-
-		MMOItem mmoitem = template.newBuilder(itemLevel, itemTier).build();
+		MMOItem mmoitem = rollMMOItem(template, rpgPlayer);
 
 		if (rollSoulbound())
 			mmoitem.setData(ItemStat.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));

@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -21,6 +20,7 @@ import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsAbility;
 
 public class AbilityManager {
 	private final Map<String, Ability> abilities = new HashMap<>();
+	
 	private boolean registration = true;
 
 	public Ability getAbility(String id) {
@@ -33,10 +33,6 @@ public class AbilityManager {
 
 	public Collection<Ability> getAll() {
 		return abilities.values();
-	}
-
-	public Set<String> getAbilityKeys() {
-		return abilities.keySet();
 	}
 
 	public void registerAbility(Ability ability) {

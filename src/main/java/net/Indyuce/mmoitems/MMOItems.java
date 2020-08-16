@@ -22,9 +22,8 @@ import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.command.MMOItemsCommand;
+import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
-import net.Indyuce.mmoitems.command.completion.MMOItemsCompletion;
 import net.Indyuce.mmoitems.command.completion.UpdateItemCompletion;
 import net.Indyuce.mmoitems.comp.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
@@ -96,13 +95,13 @@ public class MMOItems extends JavaPlugin {
 	private final TypeManager typeManager = new TypeManager();
 	private final TemplateManager templateManager = new TemplateManager();
 	private final ItemManager itemManager = new ItemManager();
+	private final RecipeManager recipeManager = new RecipeManager();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
 	private UpgradeManager upgradeManager;
 	private UpdaterManager dynamicUpdater;
 	private ConfigManager configManager;
-	private RecipeManager recipeManager;
 	private BlockManager blockManager;
 	private TierManager tierManager;
 	private StatManager statManager;
@@ -275,14 +274,15 @@ public class MMOItems extends JavaPlugin {
 
 		// advanced recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
-		recipeManager = new RecipeManager();
+		recipeManager.loadRecipes();
 
-		// commands
-		getCommand("mmoitems").setExecutor(new MMOItemsCommand());
+		// main command
+		MMOItemsCommandTreeRoot mmoitemsCommand = new MMOItemsCommandTreeRoot();
+		getCommand("mmoitems").setExecutor(mmoitemsCommand);
+		getCommand("mmoitems").setTabCompleter(mmoitemsCommand);
+
+		// update item command
 		getCommand("updateitem").setExecutor(new UpdateItemCommand());
-
-		// tab completion
-		getCommand("mmoitems").setTabCompleter(new MMOItemsCompletion());
 		getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
 	}
 

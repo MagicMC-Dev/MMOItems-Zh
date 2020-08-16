@@ -16,8 +16,8 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CustomRecipe implements Comparable<CustomRecipe> {
-	private final boolean shapeless;
 	private final ItemStack output;
+	private final boolean shapeless;
 	private final Map<Integer, WorkbenchIngredient> ingredients = new HashMap<>(9);
 
 	public CustomRecipe(NBTItem output, List<String> recipe, boolean isShapeless) {
@@ -28,20 +28,19 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 
 		if (shapeless) {
 			if (recipe.size() != 9) {
-				MMOItems.plugin.getLogger().warning("Invalid shapeless recipe for '" + output.getType().getId() + "."
-						+ output.getString("MMOITEMS_ITEM_ID") + "'");
+				MMOItems.plugin.getLogger()
+						.warning("Invalid shapeless recipe for '" + output.getType().getId() + "." + output.getString("MMOITEMS_ITEM_ID") + "'");
 				recipe = Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR");
 			}
 			for (int i = 0; i < 9; i++) {
 				ItemStack stack = MMOItems.plugin.getRecipes().parseStack(recipe.get(i));
-				if (stack == null || stack.getType() == Material.AIR)
-					continue;
-				ingredients.put(i, WorkbenchIngredient.getAutomatically(stack));
+				if (stack != null && stack.getType() != Material.AIR)
+					ingredients.put(i, WorkbenchIngredient.getAutomatically(stack));
 			}
 		} else {
 			if (recipe.size() != 3) {
-				MMOItems.plugin.getLogger().warning("Invalid shaped recipe for '" + output.getType().getId() + "."
-						+ output.getString("MMOITEMS_ITEM_ID") + "'");
+				MMOItems.plugin.getLogger()
+						.warning("Invalid shaped recipe for '" + output.getType().getId() + "." + output.getString("MMOITEMS_ITEM_ID") + "'");
 				recipe = Arrays.asList("AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR");
 			}
 			for (int i = 0; i < 9; i++) {
@@ -50,10 +49,8 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 					line.add("AIR");
 
 				ItemStack stack = MMOItems.plugin.getRecipes().parseStack(line.get(i % 3));
-				if (stack == null || stack.getType() == Material.AIR)
-					ingredients.put(i, new AirIngredient());
-				else
-					ingredients.put(i, WorkbenchIngredient.getAutomatically(stack));
+				ingredients.put(i,
+						stack == null || stack.getType() == Material.AIR ? new AirIngredient() : WorkbenchIngredient.getAutomatically(stack));
 			}
 		}
 	}
@@ -63,13 +60,10 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	}
 
 	public boolean fitsPlayerCrafting() {
-		boolean check = true;
 		for (int value : ingredients.keySet())
-			if (value > 3) {
-				check = false;
-				break;
-			}
-		return check;
+			if (value > 3)
+				return false;
+		return true;
 	}
 
 	public boolean isEmpty() {

@@ -31,22 +31,27 @@ import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
 
 public class RecipeManager {
+
+	/**
+	 * Custom recipes which are handled by MMOItems
+	 */
 	private final Set<CustomRecipe> craftingRecipes = new HashSet<>();
-	private final Set<LoadedRecipe> loadedRecipes = new HashSet<>();
 
-	public RecipeManager() {
-		reload();
-	}
+	/**
+	 * Recipes which are handled by the vanilla spigot API. All recipes
+	 * registered here are Keyed
+	 */
+	private final Set<Recipe> loadedRecipes = new HashSet<>();
 
-	public void reload() {
-		clearCustomRecipes();
+	public void loadRecipes() {
+		craftingRecipes.clear();
 
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(type))
-				if (config.contains(template.getId() + ".crafting"))
+				if (config.contains(template.getId() + ".base.crafting"))
 					try {
-						ConfigurationSection section = config.getConfigurationSection(template.getId() + ".crafting");
+						ConfigurationSection section = config.getConfigurationSection(template.getId() + ".base.crafting");
 
 						if (section.contains("shaped"))
 							section.getConfigurationSection("shaped").getKeys(false)
@@ -77,14 +82,14 @@ public class RecipeManager {
 		}
 
 		sortRecipes();
-		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe.getRecipe())));
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe)));
 	}
 
 	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info, String recipeId) {
 		NamespacedKey key = getRecipeKey(type, id, recipeType.getPath(), recipeId);
 		Recipe recipe = recipeType.provideRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
 				info.getBurnTime());
-		registerRecipe(key, recipe);
+		loadedRecipes.add(recipe);
 	}
 
 	public void registerShapedRecipe(Type type, String id, List<String> list) {
@@ -106,16 +111,12 @@ public class RecipeManager {
 		return choice.isVanilla() ? new RecipeChoice.MaterialChoice(choice.getItem().getType()) : new RecipeChoice.ExactChoice(choice.getItem());
 	}
 
-	public void registerRecipe(NamespacedKey key, Recipe recipe) {
-		loadedRecipes.add(new LoadedRecipe(key, recipe));
-	}
-
 	public void registerRecipe(CustomRecipe recipe) {
 		if (!recipe.isEmpty())
 			craftingRecipes.add(recipe);
 	}
 
-	public Set<LoadedRecipe> getLoadedRecipes() {
+	public Set<Recipe> getLoadedRecipes() {
 		return loadedRecipes;
 	}
 
@@ -124,7 +125,7 @@ public class RecipeManager {
 	}
 
 	public Set<NamespacedKey> getNamespacedKeys() {
-		return loadedRecipes.stream().map(recipe -> recipe.getKey()).collect(Collectors.toSet());
+		return loadedRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).collect(Collectors.toSet());
 	}
 
 	public void sortRecipes() {
@@ -134,14 +135,13 @@ public class RecipeManager {
 		craftingRecipes.addAll(temporary.stream().sorted().collect(Collectors.toList()));
 	}
 
-	public void clearCustomRecipes() {
-		craftingRecipes.clear();
-	}
-
 	public NamespacedKey getRecipeKey(Type type, String id, String recipeType, String number) {
 		return new NamespacedKey(MMOItems.plugin, recipeType + "_" + type.getId() + "_" + id + "_" + number);
 	}
 
+	/**
+	 * Unregisters bukkit recipes and loads everything again
+	 */
 	public void reloadRecipes() {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
 
@@ -153,7 +153,7 @@ public class RecipeManager {
 			}
 
 			loadedRecipes.clear();
-			reload();
+			loadRecipes();
 		});
 	}
 
@@ -228,30 +228,11 @@ public class RecipeManager {
 		Recipe provide(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime);
 	}
 
-	/*
-	 * used because spigot API does not let us access namespaced key of a Recipe
-	 * instance.
-	 */
-	public class LoadedRecipe {
-		private final Recipe recipe;
-		private final NamespacedKey key;
-
-		public LoadedRecipe(NamespacedKey key, Recipe recipe) {
-			this.recipe = recipe;
-			this.key = key;
-		}
-
-		public NamespacedKey getKey() {
-			return key;
-		}
-
-		public Recipe getRecipe() {
-			return recipe;
-		}
-	}
-
-	/*
-	 * blast furnace, smoker, campfire and furnace recipes have extra parameters
+	/**
+	 * Used to handle furnace/smoker/campifire/furnace extra crafting recipe
+	 * parameters
+	 * 
+	 * @author ASangarin
 	 */
 	public class BurningRecipeInformation {
 		private final MMORecipeChoice choice;

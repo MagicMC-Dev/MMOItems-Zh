@@ -39,7 +39,7 @@ public class Earthquake extends Ability {
 
 	@Override
 	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
-		return stats.getPlayer().isOnGround() ? new VectorAbilityResult(ability, stats.getPlayer(), target) : new SimpleAbilityResult(ability, false);
+		return ((LivingEntity) stats.getPlayer()).isOnGround() ? new VectorAbilityResult(ability, stats.getPlayer(), target) : new SimpleAbilityResult(ability, false);
 	}
 
 	@Override

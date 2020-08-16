@@ -40,7 +40,7 @@ public class Arcane_Rift extends Ability {
 
 	@Override
 	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
-		if (!stats.getPlayer().isOnGround())
+		if (!((LivingEntity) stats.getPlayer()).isOnGround())
 			return new SimpleAbilityResult(ability, false);
 
 		return new VectorAbilityResult(ability, stats.getPlayer(), target);

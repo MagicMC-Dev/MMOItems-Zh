@@ -26,7 +26,7 @@ public class Leap extends Ability {
 
 	@Override
 	public AbilityResult whenRan(CachedStats stats, LivingEntity target, AbilityData ability, ItemAttackResult result) {
-		return new SimpleAbilityResult(ability, stats.getPlayer().isOnGround());
+		return new SimpleAbilityResult(ability, ((LivingEntity) stats.getPlayer()).isOnGround());
 	}
 
 	@Override

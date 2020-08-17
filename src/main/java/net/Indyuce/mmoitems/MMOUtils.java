@@ -249,20 +249,6 @@ public class MMOUtils {
 		return format;
 	}
 
-	// @Deprecated
-	// public static boolean areSimilar(ItemStack item1, ItemStack iitem2) {
-	// if (item1.getType() == VersionMaterial.PLAYER_HEAD.toMaterial() &&
-	// iitem2.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-	// ItemMeta meta1 = item1.getItemMeta();
-	// ItemMeta meta2 = iitem2.getItemMeta();
-	//
-	// if (meta1.hasDisplayName() && meta2.hasDisplayName())
-	// return meta1.getDisplayName().equalsIgnoreCase(meta2.getDisplayName());
-	// }
-	//
-	// return item1.isSimilar(iitem2);
-	// }
-
 	public static double truncation(double x, int n) {
 		double pow = Math.pow(10.0, n);
 		return Math.floor(x * pow) / pow;

@@ -19,6 +19,8 @@ import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
@@ -108,29 +110,26 @@ public class CraftingStationPreview extends PluginInventory {
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
 		event.setCancelled(true);
-
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.CONFIRM.getItem())) {
+		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+		if (nbtItem.getString("ItemId").equals("CONFIRM")) {
 			previous.processRecipe(recipe);
 			previous.open();
-			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_PAGE.getItem())) {
+		else if (nbtItem.getString("ItemId").equals("PREVIOUS_PAGE")) {
 			page--;
 			open();
-			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_PAGE.getItem())) {
+		else if (nbtItem.getString("ItemId").equals("NEXT_PAGE")) {
 			page++;
 			open();
-			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.BACK.getItem()))
+		else if (nbtItem.getString("ItemId").equals("BACK"))
 			previous.open();
 	}
 }

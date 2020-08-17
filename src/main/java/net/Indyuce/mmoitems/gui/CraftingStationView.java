@@ -134,29 +134,29 @@ public class CraftingStationView extends PluginInventory {
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
 		event.setCancelled(true);
-
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_IN_QUEUE.getItem())) {
+		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+		if (nbtItem.getString("ItemId").equals("PREVIOUS_IN_QUEUE")) {
 			queueOffset--;
 			open();
 			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_IN_QUEUE.getItem())) {
+		if (nbtItem.getString("ItemId").equals("NEXT_IN_QUEUE")) {
 			queueOffset++;
 			open();
 			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.NEXT_PAGE.getItem())) {
+		if (nbtItem.getString("ItemId").equals("NEXT_PAGE")) {
 			page++;
 			open();
 			return;
 		}
 
-		if (event.getCurrentItem().isSimilar(ConfigItem.PREVIOUS_PAGE.getItem())) {
+		if (nbtItem.getString("ItemId").equals("PREVIOUS_PAGE")) {
 			page--;
 			open();
 			return;

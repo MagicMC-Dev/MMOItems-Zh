@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.api.item.util.crafting.CraftingRecipeDisplay;
 import net.Indyuce.mmoitems.api.item.util.crafting.QueueItemDisplay;
 import net.Indyuce.mmoitems.api.item.util.crafting.UpgradingRecipeDisplay;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ConfigItem {
@@ -105,8 +106,7 @@ public class ConfigItem {
 		}
 
 		item.setItemMeta(meta);
-		// item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new
-		// ItemTag("itemId", id)).toItem();
+		item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("ItemId", id)).toItem();
 	}
 
 	public Material getMaterial() {

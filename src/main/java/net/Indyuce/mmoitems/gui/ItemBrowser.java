@@ -95,17 +95,10 @@ public class ItemBrowser extends PluginInventory {
 			previousMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
 			previous.setItemMeta(previousMeta);
 
-			ItemStack switchBrowse = new ItemStack(Material.STONE);
-			ItemMeta switchMeta = switchBrowse.getItemMeta();
-			switchMeta.setDisplayName(ChatColor.GREEN + "Switch to Block Explorer");
-			switchBrowse.setItemMeta(switchMeta);
-
 			while (n < slots.length)
 				inv.setItem(slots[n++], glass);
 			inv.setItem(18, page > 1 ? previous : null);
 			inv.setItem(26, max >= MMOItems.plugin.getTypes().getAll().size() ? null : next);
-
-			inv.setItem(53, switchBrowse);
 
 			return inv;
 		}
@@ -125,8 +118,7 @@ public class ItemBrowser extends PluginInventory {
 		 * displays every item in a specific type. items are cached inside the
 		 * map at the top to reduce performance impact and are directly rendered
 		 */
-		Inventory inv = Bukkit.createInventory(this, 54,
-				(deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
+		Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
 		for (int j = min; j < Math.min(max, templates.size()); j++) {
 			MMOItemTemplate template = templates.get(j);
 			if (!cached.containsKey(template.getId())) {
@@ -232,9 +224,6 @@ public class ItemBrowser extends PluginInventory {
 
 			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back"))
 				new ItemBrowser(getPlayer()).open();
-
-			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Switch to Block Explorer"))
-				new ItemBrowser(getPlayer(), Type.BLOCK).open();
 
 			else if (item.getItemMeta().getDisplayName().equals(ChatColor.RED + "Cancel Deletion")) {
 				deleteMode = false;

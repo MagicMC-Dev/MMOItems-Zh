@@ -149,7 +149,7 @@ public class ItemStackBuilder {
 		private final UpgradeData upgradeData;
 
 		/**
-		 * @deprecated Will be improved with MMOItems 6. Currently used to
+		 * @deprecated Will be improved with MMOItems 7. Currently used to
 		 *             display upgrade stats in the lore. Should be improved to
 		 *             be more OOP friendly. NO MODIFICATIONS ALLOWED BEFORE A
 		 *             REWRITE
@@ -256,5 +256,4 @@ public class ItemStackBuilder {
 			return Double.parseDouble(getStoredTags().get("BASE_" + stat.getNBTPath()).getValue().toString());
 		}
 	}
-
 }

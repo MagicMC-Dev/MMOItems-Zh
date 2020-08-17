@@ -15,6 +15,7 @@ import com.mojang.authlib.properties.Property;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class CustomSkull extends ConfigItem {
@@ -53,5 +54,6 @@ public class CustomSkull extends ConfigItem {
 		}
 
 		getItem().setItemMeta(meta);
+		setItem(MMOLib.plugin.getVersion().getWrapper().getNBTItem(getItem()).addTag(new ItemTag("ItemId", getId())).toItem());
 	}
 }

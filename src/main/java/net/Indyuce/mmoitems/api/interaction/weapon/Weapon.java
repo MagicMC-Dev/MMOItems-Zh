@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -67,7 +66,7 @@ public class Weapon extends UseItem {
 		return true;
 	}
 
-	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, EquipmentSlot slot, ItemAttackResult result) {
+	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, ItemAttackResult result) {
 
 		// cooldown
 		double attackSpeed = getNBTItem().getStat(ItemStat.ATTACK_SPEED);
@@ -75,7 +74,7 @@ public class Weapon extends UseItem {
 		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, true))
 			return result.setSuccessful(false);
 
-		if (!getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE"))
+		if (!getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE") && getMMOItem().getType().getItemSet().hasAttackEffect())
 			getMMOItem().getType().getItemSet().applyAttackEffect(stats, target, this, result);
 
 		return result;

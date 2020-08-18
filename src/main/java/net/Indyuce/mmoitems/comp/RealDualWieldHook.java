@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.EquipmentSlot;
 
 import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 
@@ -59,7 +58,7 @@ public class RealDualWieldHook implements Listener {
 				return;
 			}
 
-			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, EquipmentSlot.HAND, result.setSuccessful(true));
+			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, result);
 			if (!result.isSuccessful()) {
 				event.setCancelled(true);
 				return;

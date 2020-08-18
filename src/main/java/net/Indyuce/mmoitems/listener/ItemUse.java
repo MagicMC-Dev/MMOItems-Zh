@@ -145,7 +145,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, EquipmentSlot.HAND, result.setSuccessful(true));
+			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, result);
 			if (!result.isSuccessful()) {
 				event.setCancelled(true);
 				return;
@@ -169,7 +169,6 @@ public class ItemUse implements Listener {
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
 		result.applyEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, item, target);
-
 		event.setDamage(result.getDamage());
 	}
 

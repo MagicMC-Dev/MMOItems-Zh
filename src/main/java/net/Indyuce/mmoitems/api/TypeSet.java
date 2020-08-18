@@ -135,6 +135,10 @@ public enum TypeSet {
 		this.attackHandler = attackHandler;
 	}
 
+	public boolean hasAttackEffect() {
+		return attackHandler != null;
+	}
+
 	public void applyAttackEffect(CachedStats playerStats, LivingEntity target, Weapon weapon, ItemAttackResult result) {
 		attackHandler.apply(playerStats, target, weapon, result);
 	}

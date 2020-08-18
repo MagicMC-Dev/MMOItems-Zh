@@ -4,9 +4,7 @@ NATURES_GIFT:
     disable-crafting: true
     name: '&9Magical Catalyst'
     lore:
-    - '&7No one knows where it was'
-    - '&7found. Hold it in your hands'
-    - '&7to &bdouble &7your regeneration!'
+    - '&7No one knows where it was found.'
     magic-damage:
       base: 15.0
       spread: 0.084
@@ -18,10 +16,6 @@ NATURES_GIFT:
     hide-enchants: true
     enchants:
       unbreaking: 1
-    health-regeneration:
-      base: 100.0
-      spread: 0.03
-      max-spread: 0.09
 LUCKY_CHARM:
   base:
     material: RABBIT_FOOT
@@ -37,7 +31,6 @@ WARRIOR_AMULET:
     enchants:
       unbreaking: 1
     damage-reduction: 5.0
-    health-regeneration: 8.0
 FORGOTTEN_IDOL:
   base:
     material: GOLD_NUGGET

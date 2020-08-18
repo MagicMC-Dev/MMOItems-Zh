@@ -54,10 +54,6 @@ CANDY_CANE_SWORD:
     - '&7Hit a monster to release it!'
     - ''
     - '&eEarned during X-Mas 2018!'
-    health-regeneration:
-      base: 35.0
-      spread: 0.04
-      max-spread: 0.13
     critical-strike-chance: 20.0
     critical-strike-power: 60.0
     ability:

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,15 +36,12 @@ public class CraftingListener implements Listener {
 
 	@EventHandler
 	public void getResult(InventoryClickEvent e) {
-		if (!(e.getView().getPlayer() instanceof Player) ||
-			!(e.getInventory() instanceof CraftingInventory)) return;
+		if (!(e.getView().getPlayer() instanceof Player) || !(e.getInventory() instanceof CraftingInventory))
+			return;
 		if (e.getSlotType() == SlotType.CRAFTING && e.getAction() == InventoryAction.PLACE_ONE)
-			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, new Runnable() {
-				@Override
-				public void run() {
-					handleCustomCrafting((CraftingInventory) e.getInventory(), (Player) e.getView().getPlayer());
-				}
-			}, 1);
+			Bukkit.getScheduler().runTaskLater(MMOItems.plugin,
+					() -> handleCustomCrafting((CraftingInventory) e.getInventory(), (Player) e.getView().getPlayer()),
+					1);
 		else if (e.getSlotType() == SlotType.RESULT) {
 			CraftingInventory inv = (CraftingInventory) e.getInventory();
 			if (e.getCurrentItem() == null || !cachedRecipe.containsKey(e.getWhoClicked().getUniqueId()))
@@ -55,7 +52,7 @@ public class CraftingListener implements Listener {
 			}
 			CachedRecipe cached = cachedRecipe.get(e.getWhoClicked().getUniqueId());
 			cachedRecipe.remove(e.getWhoClicked().getUniqueId());
-			
+
 			if (!cached.isValid(inv.getMatrix())) {
 				e.setCancelled(true);
 				return;
@@ -76,25 +73,41 @@ public class CraftingListener implements Listener {
 						inv.setMatrix(newMatrix);
 				}
 			}, 1);
-			e.setCurrentItem(cached.getResult());
+			// e.setCurrentItem(cached.getResult());
 		}
 	}
 
 	public void handleCustomCrafting(CraftingInventory inv, Player player) {
 		cachedRecipe.remove(player.getUniqueId());
-		for (CustomRecipe recipe : MMOItems.plugin.getRecipes().getCustomRecipes()) {
-			if (!recipe.fitsPlayerCrafting() && inv.getMatrix().length == 4)
-				continue;
-			int airCount = 0;
 
-			for(Entry<Integer, WorkbenchIngredient> ingredient : recipe.getIngredients()){
-				if(ingredient.getValue().matches(new ItemStack(Material.AIR))){
-					airCount++;
+		Optional<CachedRecipe> recipe = checkRecipes(player, inv.getMatrix());
+		if (recipe.isPresent()) {
+			cachedRecipe.put(player.getUniqueId(), recipe.get());
+			inv.setResult(recipe.get().getResult());
+			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, new Runnable() {
+				@Override
+				public void run() {
+					inv.setItem(0, recipe.get().getResult());
+					player.updateInventory();
+				}
+			}, 1);
+		}
+	}
+
+	public Optional<CachedRecipe> checkRecipes(Player player, ItemStack[] matrix) {
+		for (CustomRecipe recipe : MMOItems.plugin.getRecipes().getCustomRecipes()) {
+			if ((!recipe.fitsPlayerCrafting() && matrix.length == 4) || !recipe.permCheck(player))
+				continue;
+
+			boolean empty = true;
+			for (int i = 0; i < matrix.length; i++) {
+				if (matrix[i] != null) {
+					empty = false;
+					break;
 				}
 			}
-			if(recipe.isEmpty() || airCount > 8){
-				continue;
-			}
+			if(empty) return Optional.empty();
+
 			CachedRecipe cached = new CachedRecipe();
 			boolean matches = true;
 			List<Integer> slotsChecked = new ArrayList<>();
@@ -102,10 +115,10 @@ public class CraftingListener implements Listener {
 				if (recipe.isShapeless()) {
 					boolean check = false;
 					int nonnullcount = 0;
-					for (int i = 0; i < inv.getMatrix().length; i++) {
+					for (int i = 0; i < matrix.length; i++) {
 						if (slotsChecked.contains(i))
 							continue;
-						ItemStack item = inv.getMatrix()[i];
+						ItemStack item = matrix[i];
 						if (item == null) {
 							slotsChecked.add(i);
 							continue;
@@ -124,27 +137,22 @@ public class CraftingListener implements Listener {
 					if (!check)
 						matches = false;
 				} else {
-					if (!ingredients.getValue().matches(inv.getMatrix()[ingredients.getKey()]))
+					if (!ingredients.getValue().matches(matrix[ingredients.getKey()]))
 						matches = false;
-					else cached.add(ingredients.getKey(), ingredients.getValue().getAmount());
+					else
+						cached.add(ingredients.getKey(), ingredients.getValue().getAmount());
 				}
 
-				if (!matches) break;
+				if (!matches)
+					break;
 			}
 
 			if (matches) {
-				cached.setResult(recipe.getResult());
-				cachedRecipe.put(player.getUniqueId(), cached);
-				inv.setResult(recipe.getResult());
-				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, new Runnable() {
-					@Override
-					public void run() {
-						inv.setItem(0, recipe.getResult());
-						player.updateInventory();
-					}
-				}, 1);
-				break;
+				cached.setResult(recipe.getResult(player));
+				return Optional.of(cached);
 			}
 		}
+
+		return Optional.empty();
 	}
 }

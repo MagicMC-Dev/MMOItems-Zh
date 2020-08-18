@@ -48,10 +48,6 @@ NATURE_GIFT:
     material: EMERALD
     name: '&fNature''s Gift'
     displayed-type: Green Gem Stone
-    health-regeneration:
-      base: 60.0
-      spread: 0.05
-      max-spread: 0.14
     fire-damage-reduction:
       base: 25.0
       spread: 0.06

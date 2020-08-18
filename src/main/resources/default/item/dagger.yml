@@ -50,10 +50,6 @@ DRACULA_DAGGER:
       max-spread: 0.03
     critical-strike-chance: 15.0
     fall-damage-reduction: 43.0
-    health-regeneration:
-      base: 42.5
-      spread: 0.019
-      max-spread: 0.06
     gem-sockets:
     - Uncolored
     - Red

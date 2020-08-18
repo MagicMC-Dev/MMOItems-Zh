@@ -23,7 +23,6 @@ import net.Indyuce.mmoitems.stat.AttackSpeed;
 import net.Indyuce.mmoitems.stat.Commands;
 import net.Indyuce.mmoitems.stat.CompatibleTypes;
 import net.Indyuce.mmoitems.stat.Crafting;
-import net.Indyuce.mmoitems.stat.CraftingPermission;
 import net.Indyuce.mmoitems.stat.CustomModelData;
 import net.Indyuce.mmoitems.stat.CustomSounds;
 import net.Indyuce.mmoitems.stat.DisableAdvancedEnchantments;
@@ -236,8 +235,9 @@ public abstract class ItemStat {
 	public static final ItemStat COMPATIBLE_TYPES = new CompatibleTypes();
 
 	@SuppressWarnings("deprecation")
-	public static final ItemStat CRAFTING = new Crafting(), CRAFT_PERMISSION = new CraftingPermission(),
-			CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", new ItemStack(Material.WOODEN_AXE), "Crafted Amount",
+	public static final ItemStat CRAFTING = new Crafting(), CRAFT_PERMISSION = new StringStat("CRAFT_PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()),
+			"Crafting Recipe Permission", new String[] { "The permission needed to craft this item.", "Changing this value requires &o/mi reload recipes&7." }, new String[] { "all" }),
+		CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", new ItemStack(Material.WOODEN_AXE), "Crafted Amount",
 					new String[] { "The stack count for", "this item when crafted." }, new String[] { "all" });
 	public static final ItemStat AUTOSMELT = new BooleanStat("AUTOSMELT", new ItemStack(Material.COAL), "Autosmelt",
 			new String[] { "If set to true, your tool will", "automaticaly smelt mined ores." }, new String[] { "tool" });

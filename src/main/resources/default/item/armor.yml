@@ -275,7 +275,6 @@ GINGERBREAD_HELM:
     parry-rating: 5.0
     max-health: 2.0
     armor: 2.0
-    health-regeneration: 10.0
     item-particles:
       type: OFFSET
       particle: REDSTONE
@@ -295,7 +294,6 @@ GINGERBREAD_TUNIC:
     parry-rating: 5.0
     max-health: 2.0
     armor: 6.0
-    health-regeneration: 10.0
     item-particles:
       type: OFFSET
       particle: REDSTONE
@@ -315,7 +313,6 @@ GINGERBREAD_LEGGINGS:
     parry-rating: 5.0
     max-health: 2.0
     armor: 5.0
-    health-regeneration: 10.0
     item-particles:
       type: OFFSET
       particle: REDSTONE
@@ -335,7 +332,6 @@ GINGERBREAD_BOOTS:
     parry-rating: 5.0
     max-health: 2.0
     armor: 2.0
-    health-regeneration: 10.0
     item-particles:
       type: OFFSET
       particle: REDSTONE

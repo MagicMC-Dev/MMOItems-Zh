@@ -50,7 +50,7 @@ public class MMOItemDropItem extends DropItem {
 
 	@Override
 	public ItemStack getItem(PlayerData player, int amount) {
-		ItemStack item = MMOItems.plugin.getItem(type, id, player);
+		ItemStack item = player == null ? MMOItems.plugin.getItem(type, id) : MMOItems.plugin.getItem(type, id, player);
 		if (item == null || item.getType() == Material.AIR)
 			return null;
 

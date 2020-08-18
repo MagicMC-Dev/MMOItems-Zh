@@ -93,11 +93,11 @@ public class RecipeManager {
 	}
 
 	public void registerShapedRecipe(Type type, String id, List<String> list) {
-		registerRecipe(new CustomRecipe(MMOItems.plugin.getMMOItem(type, id).newBuilder().buildNBT(), list, false));
+		registerRecipe(new CustomRecipe(type, id, list, false));
 	}
 
 	public void registerShapelessRecipe(Type type, String id, List<String> list) {
-		registerRecipe(new CustomRecipe(MMOItems.plugin.getMMOItem(type, id).newBuilder().buildNBT(), list, true));
+		registerRecipe(new CustomRecipe(type, id, list, true));
 	}
 
 	/*

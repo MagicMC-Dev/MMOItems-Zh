@@ -420,7 +420,6 @@ TRAVEL_BOOTS:
   base:
     material: LEATHER_BOOTS
     name: §fTravel boots
-    tier: NORMAL
     movement-speed: 0.005
     dye-color: 187 118 126
     will-break: true

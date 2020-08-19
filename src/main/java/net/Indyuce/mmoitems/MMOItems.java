@@ -1,21 +1,5 @@
 package net.Indyuce.mmoitems;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
@@ -25,21 +9,13 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
 import net.Indyuce.mmoitems.command.completion.UpdateItemCompletion;
-import net.Indyuce.mmoitems.comp.AdvancedEnchantmentsHook;
-import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
-import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
-import net.Indyuce.mmoitems.comp.RealDualWieldHook;
-import net.Indyuce.mmoitems.comp.WorldEditSupport;
+import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
 import net.Indyuce.mmoitems.comp.flags.WorldGuardFlags;
-import net.Indyuce.mmoitems.comp.holograms.CMIPlugin;
-import net.Indyuce.mmoitems.comp.holograms.HologramSupport;
-import net.Indyuce.mmoitems.comp.holograms.HologramsPlugin;
-import net.Indyuce.mmoitems.comp.holograms.HolographicDisplaysPlugin;
-import net.Indyuce.mmoitems.comp.holograms.TrHologramPlugin;
+import net.Indyuce.mmoitems.comp.holograms.*;
 import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
@@ -57,33 +33,24 @@ import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
-import net.Indyuce.mmoitems.listener.CraftingListener;
-import net.Indyuce.mmoitems.listener.CustomBlockListener;
-import net.Indyuce.mmoitems.listener.CustomSoundListener;
-import net.Indyuce.mmoitems.listener.DisableInteractions;
-import net.Indyuce.mmoitems.listener.DurabilityListener;
-import net.Indyuce.mmoitems.listener.ElementListener;
-import net.Indyuce.mmoitems.listener.ItemUse;
-import net.Indyuce.mmoitems.listener.PlayerListener;
-import net.Indyuce.mmoitems.manager.AbilityManager;
-import net.Indyuce.mmoitems.manager.BlockManager;
-import net.Indyuce.mmoitems.manager.ConfigManager;
-import net.Indyuce.mmoitems.manager.CraftingManager;
-import net.Indyuce.mmoitems.manager.DropTableManager;
-import net.Indyuce.mmoitems.manager.EntityManager;
-import net.Indyuce.mmoitems.manager.ItemManager;
-import net.Indyuce.mmoitems.manager.PluginUpdateManager;
-import net.Indyuce.mmoitems.manager.RecipeManager;
-import net.Indyuce.mmoitems.manager.SetManager;
-import net.Indyuce.mmoitems.manager.StatManager;
-import net.Indyuce.mmoitems.manager.TemplateManager;
-import net.Indyuce.mmoitems.manager.TierManager;
-import net.Indyuce.mmoitems.manager.TypeManager;
-import net.Indyuce.mmoitems.manager.UpdaterManager;
-import net.Indyuce.mmoitems.manager.UpgradeManager;
-import net.Indyuce.mmoitems.manager.WorldGenManager;
+import net.Indyuce.mmoitems.listener.*;
+import net.Indyuce.mmoitems.manager.*;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
@@ -153,7 +120,17 @@ public class MMOItems extends JavaPlugin {
 
 		abilityManager.initialize();
 		configManager = new ConfigManager();
+
+		// registering here so the stats will load with the templates
+		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
+			new MythicMobsLoader();
+			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
+		}
+
+		findRpgPlugin();
+
 		templateManager.reload();
+
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
@@ -261,13 +238,6 @@ public class MMOItems extends JavaPlugin {
 			new MMOItemsRewardTypes().register();
 			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
 		}
-
-		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			new MythicMobsLoader();
-			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
-		}
-
-		findRpgPlugin();
 
 		// compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player)));

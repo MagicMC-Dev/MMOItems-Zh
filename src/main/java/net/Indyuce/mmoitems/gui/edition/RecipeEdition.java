@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,11 +56,13 @@ public class RecipeEdition extends EditionInventory {
 			while (line.size() < 3)
 				line.add("AIR");
 
-			ItemStack element = MMOItems.plugin.getRecipes().parseStack(line.get(j % 3));
-			if (element == null)
+			ItemStack element;
+			try {
+				element = MMOItems.plugin.getRecipes().getWorkbenchIngredient(line.get(j % 3)).generateItem();
+				Validate.isTrue(element != null && element.getType() != Material.AIR);
+			} catch (IllegalArgumentException exception) {
 				element = new ItemStack(Material.BARRIER);
-			if (element.getType() == Material.AIR)
-				element.setType(Material.BARRIER);
+			}
 			ItemMeta elementMeta = element.getItemMeta();
 			if (element.getType() == Material.BARRIER)
 				elementMeta.setDisplayName(ChatColor.RED + "Empty");
@@ -88,11 +91,13 @@ public class RecipeEdition extends EditionInventory {
 			for (int j = 0; j < 9; j++) {
 				int slot = intToSlot(j);
 
-				ItemStack element = MMOItems.plugin.getRecipes().parseStack(ingredients.get(j));
-				if (element == null)
+				ItemStack element;
+				try {
+					element = MMOItems.plugin.getRecipes().getWorkbenchIngredient(ingredients.get(j)).generateItem();
+					Validate.isTrue(element != null && element.getType() != Material.AIR);
+				} catch (IllegalArgumentException exception) {
 					element = new ItemStack(Material.BARRIER);
-				if (element.getType() == Material.AIR)
-					element.setType(Material.BARRIER);
+				}
 				ItemMeta elementMeta = element.getItemMeta();
 				if (element.getType() == Material.BARRIER)
 					elementMeta.setDisplayName(ChatColor.RED + "Empty");

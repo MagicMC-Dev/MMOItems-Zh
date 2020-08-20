@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bukkit.Material;
+import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
@@ -27,7 +27,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	private final String id;
 	private final boolean shapeless;
 	private final Map<Integer, WorkbenchIngredient> ingredients = new HashMap<>(9);
-	private Permission perm = null;
+	private Permission permission;
 
 	public CustomRecipe(Type type, String id, List<String> recipe, boolean isShapeless) {
 		this.shapeless = isShapeless;
@@ -35,31 +35,22 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		this.id = id;
 
 		if (shapeless) {
-			if (recipe.size() != 9) {
-				MMOItems.plugin.getLogger()
-						.warning("Invalid shapeless recipe for '" + type.getId() + "." + id + "'");
-				recipe = Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR");
-			}
+			Validate.isTrue(recipe.size() == 9, "Invalid shapeless recipe");
 			for (int i = 0; i < 9; i++) {
-				ItemStack stack = MMOItems.plugin.getRecipes().parseStack(recipe.get(i));
-				if (stack != null && stack.getType() != Material.AIR)
-					ingredients.put(i, WorkbenchIngredient.getAutomatically(stack));
+				WorkbenchIngredient ingredient = MMOItems.plugin.getRecipes().getWorkbenchIngredient(recipe.get(i));
+				if (!(ingredient instanceof AirIngredient))
+					ingredients.put(i, ingredient);
 			}
-		} else {
-			if (recipe.size() != 3) {
-				MMOItems.plugin.getLogger()
-						.warning("Invalid shaped recipe for '" + type.getId() + "." + id + "'");
-				recipe = Arrays.asList("AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR");
-			}
-			for (int i = 0; i < 9; i++) {
-				List<String> line = Arrays.asList(recipe.get(i / 3).split("\\ "));
-				while (line.size() < 3)
-					line.add("AIR");
+			return;
+		}
 
-				ItemStack stack = MMOItems.plugin.getRecipes().parseStack(line.get(i % 3));
-				ingredients.put(i,
-						stack == null || stack.getType() == Material.AIR ? new AirIngredient() : WorkbenchIngredient.getAutomatically(stack));
-			}
+		Validate.isTrue(recipe.size() == 3, "Invalid shaped recipe");
+		for (int i = 0; i < 9; i++) {
+			List<String> line = Arrays.asList(recipe.get(i / 3).split("\\ "));
+			while (line.size() < 3)
+				line.add("AIR");
+
+			ingredients.put(i, MMOItems.plugin.getRecipes().getWorkbenchIngredient(line.get(i % 3)));
 		}
 	}
 
@@ -81,20 +72,19 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	public boolean isShapeless() {
 		return shapeless;
 	}
-	
-	public boolean permCheck(Player player) {
-		if(perm == null) return true;
-		else return player.hasPermission(perm);
+
+	public boolean checkPermission(Player player) {
+		return permission == null || player.hasPermission(permission);
 	}
 
 	public ItemStack getResult(Player p) {
 		PlayerData player = PlayerData.get(p);
 		MMOItem mmo = MMOItems.plugin.getMMOItem(type, id, player);
 		ItemStack stack = mmo.newBuilder().build();
-		if(mmo.hasData(ItemStat.CRAFT_AMOUNT))
+		if (mmo.hasData(ItemStat.CRAFT_AMOUNT))
 			stack.setAmount((int) ((DoubleData) mmo.getData(ItemStat.CRAFT_AMOUNT)).getValue());
-		if(mmo.hasData(ItemStat.CRAFT_PERMISSION))
-			perm = new Permission(mmo.getData(ItemStat.CRAFT_PERMISSION).toString(), PermissionDefault.FALSE);
+		if (mmo.hasData(ItemStat.CRAFT_PERMISSION))
+			permission = new Permission(mmo.getData(ItemStat.CRAFT_PERMISSION).toString(), PermissionDefault.FALSE);
 		return stack;
 	}
 

@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -25,10 +24,12 @@ import org.bukkit.inventory.SmokingRecipe;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.recipe.MMORecipeChoice;
 import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 
 public class RecipeManager {
 
@@ -87,7 +88,7 @@ public class RecipeManager {
 
 	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info, String recipeId) {
 		NamespacedKey key = getRecipeKey(type, id, recipeType.getPath(), recipeId);
-		Recipe recipe = recipeType.provideRecipe(key, MMOItems.plugin.getItem(type, id), toBukkit(info.getChoice()), info.getExp(),
+		Recipe recipe = recipeType.provideRecipe(key, MMOItems.plugin.getItem(type, id), info.getChoice().toBukkit(), info.getExp(),
 				info.getBurnTime());
 		loadedRecipes.add(recipe);
 	}
@@ -98,17 +99,6 @@ public class RecipeManager {
 
 	public void registerShapelessRecipe(Type type, String id, List<String> list) {
 		registerRecipe(new CustomRecipe(type, id, list, true));
-	}
-
-	/*
-	 * TODO When Bukkit changes their 'RecipeChoice.ExactChoice' API we can
-	 * remove the suppressed warnings, but right now it works despite being
-	 * marked as deprecated. It is just draft API and probably subject to
-	 * change.
-	 */
-	@SuppressWarnings("deprecation")
-	public RecipeChoice toBukkit(MMORecipeChoice choice) {
-		return choice.isVanilla() ? new RecipeChoice.MaterialChoice(choice.getItem().getType()) : new RecipeChoice.ExactChoice(choice.getItem());
 	}
 
 	public void registerRecipe(CustomRecipe recipe) {
@@ -157,43 +147,22 @@ public class RecipeManager {
 		});
 	}
 
-	/***
-	 * Parses an ItemStack from a string. Can be used to both get a vanilla
-	 * material or an MMOItem
-	 */
-	public ItemStack parseStack(String parse) {
-		ItemStack stack = null;
-		String[] split = parse.split("\\:");
-		String input = split[0];
+	public WorkbenchIngredient getWorkbenchIngredient(String input) {
+		String[] split = input.split("\\:");
+		int amount = split.length > 1 ? Integer.parseInt(split[1]) : 1;
 
-		if (input.contains(".")) {
-			String[] typeId = input.split("\\.");
-			String typeFormat = typeId[0].toUpperCase().replace("-", "_").replace(" ", "_");
-			Validate.isTrue(MMOItems.plugin.getTypes().has(typeFormat), "Could not find type " + typeFormat);
-
-			MMOItem mmo = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(typeFormat), typeId[1]);
-			if (mmo != null)
-				stack = mmo.newBuilder().build();
-		} else {
-			Material mat = Material.AIR;
-			try {
-				mat = Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_"));
-			} catch (IllegalArgumentException e) {
-				MMOItems.plugin.getLogger().warning("Couldn't parse material from '" + parse + "'!");
-			}
-
-			if (mat != Material.AIR)
-				stack = new ItemStack(mat);
+		if (split[0].contains(".")) {
+			String[] split1 = split[0].split("\\.");
+			Type type = MMOItems.plugin.getTypes().getOrThrow(split1[0].toUpperCase().replace("-", "_").replace(" ", "_"));
+			MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type,
+					split1[1].toUpperCase().replace("-", "_").replace(" ", "_"));
+			return new MMOItemIngredient(type, template.getId(), amount);
 		}
 
-		try {
-			if (stack != null && split.length > 1)
-				stack.setAmount(Integer.parseInt(split[1]));
-		} catch (NumberFormatException e) {
-			MMOItems.plugin.getLogger().warning("Couldn't parse amount from '" + parse + "'!");
-		}
+		if (split[0].equalsIgnoreCase("air"))
+			return new AirIngredient();
 
-		return stack;
+		return new VanillaIngredient(Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_")), amount);
 	}
 
 	/**
@@ -235,12 +204,12 @@ public class RecipeManager {
 	 * @author ASangarin
 	 */
 	public class BurningRecipeInformation {
-		private final MMORecipeChoice choice;
+		private final WorkbenchIngredient choice;
 		private final float exp;
 		private final int burnTime;
 
-		protected BurningRecipeInformation(ConfigurationSection config) {
-			choice = new MMORecipeChoice(config.getString("item"));
+		public BurningRecipeInformation(ConfigurationSection config) {
+			choice = getWorkbenchIngredient(config.getString("item"));
 			exp = (float) config.getDouble("exp", 0.35);
 			burnTime = config.getInt("time", 200);
 		}
@@ -249,7 +218,7 @@ public class RecipeManager {
 			return burnTime;
 		}
 
-		public MMORecipeChoice getChoice() {
+		public WorkbenchIngredient getChoice() {
 			return choice;
 		}
 

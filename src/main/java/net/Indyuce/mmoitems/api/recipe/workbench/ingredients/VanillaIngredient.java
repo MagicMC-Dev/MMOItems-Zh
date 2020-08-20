@@ -2,19 +2,31 @@ package net.Indyuce.mmoitems.api.recipe.workbench.ingredients;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class VanillaIngredient extends WorkbenchIngredient {
-	private final Material mat;
-	
-	public VanillaIngredient(Material mat) {
-		this.mat = mat;
+	private final Material material;
+
+	public VanillaIngredient(Material material, int amount) {
+		super(amount);
+
+		this.material = material;
 	}
 
 	@Override
-	public boolean matchStack(ItemStack stack) {
-		if(NBTItem.get(stack).hasType()) return false;
-		return stack.getType() == mat;
+	public boolean corresponds(ItemStack stack) {
+		return !NBTItem.get(stack).hasType() && stack.getType() == material;
+	}
+
+	@Override
+	public ItemStack generateItem() {
+		return new ItemStack(material);
+	}
+
+	@Override
+	public RecipeChoice toBukkit() {
+		return new RecipeChoice.MaterialChoice(material);
 	}
 }

@@ -12,7 +12,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 
 public class UpgradeManager {
-	private Map<String, UpgradeTemplate> templates = new HashMap<>();
+	private final Map<String, UpgradeTemplate> templates = new HashMap<>();
 
 	public UpgradeManager() {
 		reload();

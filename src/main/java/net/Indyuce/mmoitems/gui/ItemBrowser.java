@@ -1,11 +1,16 @@
 package net.Indyuce.mmoitems.gui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.edition.NewItemEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.gui.edition.ItemEdition;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,17 +23,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.edition.NewItemEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.*;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
@@ -240,7 +235,7 @@ public class ItemBrowser extends PluginInventory {
 
 			else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Download Default Resourcepack")) {
 				MMOLib.plugin.getVersion().getWrapper().sendJson(getPlayer(),
-						"[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://mythiccraft.io/resources/MICustomBlockPack.zip\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
+						"[{\"text\":\"Click to download!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"https://drive.google.com/uc?id=1FjV7y-2cn8qzSiktZ2CUXmkdjepXdj5N\",\"italic\":true,\"color\":\"white\"}]}}]");
 				getPlayer().closeInventory();
 			}
 

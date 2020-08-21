@@ -107,6 +107,7 @@ public class MMOItems extends JavaPlugin {
 
 		saveDefaultConfig();
 		statManager = new StatManager();
+
 		typeManager.reload();
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)

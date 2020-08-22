@@ -73,7 +73,7 @@ public class CraftingListener implements Listener {
 						inv.setMatrix(newMatrix);
 				}
 			}, 1);
-			// e.setCurrentItem(cached.getResult());
+			e.setCurrentItem(cached.getResult());
 		}
 	}
 

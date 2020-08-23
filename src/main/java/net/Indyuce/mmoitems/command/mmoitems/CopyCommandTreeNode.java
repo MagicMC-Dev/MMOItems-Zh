@@ -48,6 +48,8 @@ public class CopyCommandTreeNode extends CommandTreeNode {
 
 		config.getConfig().set(id2, config.getConfig().getConfigurationSection(id1));
 		config.save();
+		MMOItems.plugin.getTemplates().requestTemplateUpdate(type, id2);
+		
 		if (sender instanceof Player)
 			new ItemEdition((Player) sender, MMOItems.plugin.getTemplates().getTemplate(type, id2)).open();
 		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + id1 + " to " + id2 + "!");

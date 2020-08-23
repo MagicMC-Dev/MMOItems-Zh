@@ -5,13 +5,14 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.AddonMessage;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook.MMOCoreRPGPlayer;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
-public class Required_Attribute extends DoubleStat implements ItemRestriction {
+public class Required_Attribute extends DoubleStat implements ItemRestriction, GemStoneStat {
 	private final PlayerAttribute attribute;
 
 	public Required_Attribute(PlayerAttribute attribute) {

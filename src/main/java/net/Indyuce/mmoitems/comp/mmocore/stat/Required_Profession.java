@@ -1,18 +1,20 @@
 package net.Indyuce.mmoitems.comp.mmocore.stat;
 
-import net.Indyuce.mmocore.api.experience.Profession;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.message.AddonMessage;
-import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
-public class Required_Profession extends DoubleStat implements ItemRestriction {
+import net.Indyuce.mmocore.api.experience.Profession;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.message.AddonMessage;
+import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import net.mmogroup.mmolib.api.item.NBTItem;
+
+public class Required_Profession extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final Profession profession;
 
     public Required_Profession(Profession profession) {

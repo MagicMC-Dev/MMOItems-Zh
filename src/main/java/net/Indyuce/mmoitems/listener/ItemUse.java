@@ -270,11 +270,11 @@ public class ItemUse implements Listener {
 			event.setCurrentItem(result.getResult());
 		}
 
-		if (useItem instanceof Consumable && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-			event.setCancelled(true);
-			if (((Consumable) useItem).useOnItem(event, MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem())))
+		if (useItem instanceof Consumable && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR)
+			if (((Consumable) useItem).useOnItem(event, MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem()))) {
+				event.setCancelled(true);
 				event.getCursor().setAmount(event.getCursor().getAmount() - 1);
-		}
+			}
 	}
 
 	@EventHandler

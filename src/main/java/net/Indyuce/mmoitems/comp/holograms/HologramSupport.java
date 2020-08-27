@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -49,7 +50,8 @@ public abstract class HologramSupport {
 				public void a(EntityRegainHealthEvent event) {
 
 					Entity entity = event.getEntity();
-					if (!(entity instanceof LivingEntity) || event.getAmount() <= 0)
+					if (!(entity instanceof LivingEntity) || event.getAmount() <= 0
+							|| ((LivingEntity) entity).getHealth() >= ((LivingEntity) entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
 						return;
 
 					/*

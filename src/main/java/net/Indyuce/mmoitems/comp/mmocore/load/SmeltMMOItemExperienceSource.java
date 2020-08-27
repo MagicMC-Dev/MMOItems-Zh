@@ -32,23 +32,21 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
 	public ExperienceManager<SmeltMMOItemExperienceSource> newManager() {
 		return new ExperienceManager<SmeltMMOItemExperienceSource>() {
 
-			@EventHandler(priority = EventPriority.HIGH)
+			@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 			public void a(BlockCookEvent event) {
-				if (!event.isCancelled()) {
-					Optional<Player> player = getNearbyPlayer(event.getBlock().getLocation(), 10);
-					if (!player.isPresent())
-						return;
+				Optional<Player> player = getNearbyPlayer(event.getBlock().getLocation(), 10);
+				if (!player.isPresent())
+					return;
 
-					ItemStack caught = event.getResult();
-					NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(caught);
-					if (!nbt.hasType())
-						return;
+				ItemStack caught = event.getResult();
+				NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(caught);
+				if (!nbt.hasType())
+					return;
 
-					PlayerData data = PlayerData.get(player.get());
-					for (SmeltMMOItemExperienceSource source : getSources())
-						if (source.matches(data, nbt))
-							source.giveExperience(data, event.getBlock().getLocation().add(.5, 1, .5));
-				}
+				PlayerData data = PlayerData.get(player.get());
+				for (SmeltMMOItemExperienceSource source : getSources())
+					if (source.matches(data, nbt))
+						source.giveExperience(data, 1, event.getBlock().getLocation().add(.5, 1, .5));
 			}
 		};
 	}

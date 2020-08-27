@@ -51,7 +51,7 @@ public class MineMIBlockExperienceSource extends SpecificExperienceSource<Intege
 						continue;
 
 					if (source.matches(data, customBlock.get().getId()))
-						source.giveExperience(data, event.getBlock().getLocation());
+						source.giveExperience(data, 1, event.getBlock().getLocation());
 				}
 			}
 		};

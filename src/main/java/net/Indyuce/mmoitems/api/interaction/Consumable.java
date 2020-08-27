@@ -148,7 +148,7 @@ public class Consumable extends UseItem {
 			if (MMOItems.plugin.getLanguage().upgradeRequirementsCheck && !playerData.getRPG().canUse(result, false)) {
 				Message.UPGRADE_REQUIREMENT_SAFE_CHECK.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
-				return true;
+				return false;
 			}
 
 			if (random.nextDouble() > consumableSharpening.getSuccess() * targetSharpening.getSuccess()) {

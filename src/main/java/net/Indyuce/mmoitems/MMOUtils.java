@@ -1,32 +1,25 @@
 package net.Indyuce.mmoitems;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import net.mmogroup.mmolib.MMOLib;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
-import net.mmogroup.mmolib.MMOLib;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class MMOUtils {
 	public static String getSkullTextureURL(ItemStack item) {
@@ -301,5 +294,11 @@ public class MMOUtils {
 					entities.add(entity);
 
 		return entities;
+	}
+
+	public static ItemStack readIcon(String string) throws IllegalArgumentException {
+		String[] split = string.split("\\:");
+		Material material = Material.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
+		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 }

@@ -1,20 +1,19 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
+import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
+import net.Indyuce.mmoitems.api.crafting.CraftingStation;
+import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
+import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
+import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.mmogroup.mmolib.api.util.SmartGive;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
-import net.Indyuce.mmoitems.api.crafting.CraftingStation;
-import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
-import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.mmogroup.mmolib.api.util.SmartGive;
 
 public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
@@ -64,7 +63,7 @@ public class CraftingRecipe extends Recipe {
 				new SmartGive(data.getPlayer()).give(getOutput().generate(data.getRPG()));
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 			if (!hasOption(RecipeOption.SILENT_CRAFT))
-				data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+				data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 			/*
 			 * if recipe not instant, add item to crafting queue, either way
 			 * RELOAD inventory data and reopen inventory!
@@ -73,7 +72,7 @@ public class CraftingRecipe extends Recipe {
 			data.getCrafting().getQueue(station).add(this);
 
 		if (!isInstant())
-			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+			data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 	}
 
 	@Override

@@ -1,10 +1,9 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 public class ReloadCommandTreeNode extends CommandTreeNode {
 	public ReloadCommandTreeNode(CommandTreeNode parent) {
@@ -25,6 +24,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 		MMOItems.plugin.getTemplates().reload();
 		MMOItems.plugin.getWorldGen().reload();
 		MMOItems.plugin.getCustomBlocks().reload();
+		MMOItems.plugin.getLayouts().reload();
 		sender.sendMessage(
 				MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
 		sender.sendMessage(
@@ -59,6 +59,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 
 		@Override
 		public CommandResult execute(CommandSender sender, String[] args) {
+			MMOItems.plugin.getLayouts().reload();
 			MMOItems.plugin.getCrafting().reload();
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().getAll().size() + ChatColor.GRAY

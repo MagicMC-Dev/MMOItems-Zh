@@ -1,21 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.text.DecimalFormat;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.potion.PotionEffectType;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -28,6 +12,21 @@ import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffectType;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
 
 public class ConfigManager {
 
@@ -47,6 +46,7 @@ public class ConfigManager {
 	// try to setup non existing languages
 	public ConfigManager() {
 
+		mkdir("layouts");
 		mkdir("item");
 		mkdir("dynamic");
 		mkdir("language");
@@ -197,7 +197,7 @@ public class ConfigManager {
 		} catch (IllegalArgumentException exception) {
 			defaultItemCapacity = new NumericStatFormula(5, .05, .1, .3);
 			MMOItems.plugin.getLogger().log(Level.INFO,
-					"An error occured while trying to load default capacity formula for the item generator, using default: "
+					"An error occurred while trying to load default capacity formula for the item generator, using default: "
 							+ exception.getMessage());
 		}
 
@@ -278,6 +278,9 @@ public class ConfigManager {
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
+
+		// station layouts
+		DEFAULT_LAYOUT("layouts/default.yml", "layouts", "default.yml"),
 
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),

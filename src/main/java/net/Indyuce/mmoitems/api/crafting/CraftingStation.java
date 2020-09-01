@@ -1,16 +1,5 @@
 package net.Indyuce.mmoitems.api.crafting;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
@@ -20,9 +9,18 @@ import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.PostLoadObject;
 import net.mmogroup.mmolib.MMOLib;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.*;
+import java.util.logging.Level;
 
 public class CraftingStation extends PostLoadObject {
 	private final String id, name;
+	private final Layout layout;
+	private final Sound sound;
 	private final StationItemOptions itemOptions;
 	private final int maxQueueSize;
 	private final Map<String, Recipe> recipes = new LinkedHashMap<>();
@@ -34,27 +32,32 @@ public class CraftingStation extends PostLoadObject {
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
 		this.name = MMOLib.plugin.parseColors(config.getString("name"));
+		this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
+		this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 
 		for (String key : config.getConfigurationSection("recipes").getKeys(false))
 			try {
 				registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.INFO,
-						"An issue occured registering recipe '" + key + "' from crafting station '" + id + "': " + exception.getMessage());
+						"An issue occurred registering recipe '" + key + "' from crafting station '" + id + "': " + exception.getMessage());
 			}
 
 		itemOptions = new StationItemOptions(config.getConfigurationSection("items"));
 		maxQueueSize = Math.max(1, Math.min(config.getInt("max-queue-size"), 64));
 	}
 
-	public CraftingStation(String id, String name, StationItemOptions itemOptions, int maxQueueSize, CraftingStation parent) {
+	public CraftingStation(String id, String name, Layout layout, Sound sound, StationItemOptions itemOptions, int maxQueueSize, CraftingStation parent) {
 		super(null);
 
 		Validate.notNull(id, "Crafting station ID must not be null");
 		Validate.notNull(name, "Crafting station name must not be null");
+		Validate.notNull(sound, "Crafting station sound must not be null");
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
 		this.name = MMOLib.plugin.parseColors(name);
+		this.layout = layout;
+		this.sound = sound;
 		this.itemOptions = itemOptions;
 		this.maxQueueSize = maxQueueSize;
 		this.parent = parent;
@@ -66,6 +69,14 @@ public class CraftingStation extends PostLoadObject {
 
 	public String getName() {
 		return name;
+	}
+
+	public Layout getLayout() {
+		return layout;
+	}
+
+	public Sound getSound() {
+		return sound;
 	}
 
 	public CraftingStation getParent() {
@@ -121,7 +132,7 @@ public class CraftingStation extends PostLoadObject {
 	}
 
 	public int getMaxPage() {
-		return Math.max(1, (int) Math.ceil((double) recipes.size() / 14));
+		return Math.max(1, (int) Math.ceil((double) recipes.size() / getLayout().getRecipeSlots().size()));
 	}
 
 	@Override

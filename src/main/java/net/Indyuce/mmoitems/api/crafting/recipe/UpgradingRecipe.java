@@ -1,12 +1,5 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
-import java.util.Random;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
@@ -22,6 +15,12 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 
 public class UpgradingRecipe extends Recipe {
 	private final ConfigMMOItem item;
@@ -51,7 +50,7 @@ public class UpgradingRecipe extends Recipe {
 
 		uncastRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());
-		data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+		data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 	}
 
 	@Override

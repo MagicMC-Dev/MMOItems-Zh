@@ -63,6 +63,7 @@ public class MMOItems extends JavaPlugin {
 	private final TemplateManager templateManager = new TemplateManager();
 	private final ItemManager itemManager = new ItemManager();
 	private final RecipeManager recipeManager = new RecipeManager();
+	private final LayoutManager layoutManager = new LayoutManager();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -146,6 +147,7 @@ public class MMOItems extends JavaPlugin {
 		}
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
+		layoutManager.reload();
 		stationRecipeManager.reload();
 
 		Bukkit.getPluginManager().registerEvents(entityManager, this);
@@ -290,6 +292,10 @@ public class MMOItems extends JavaPlugin {
 
 	public CraftingManager getCrafting() {
 		return stationRecipeManager;
+	}
+
+	public LayoutManager getLayouts() {
+		return layoutManager;
 	}
 
 	public UpdaterManager getUpdater() {

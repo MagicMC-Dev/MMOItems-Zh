@@ -5,7 +5,19 @@ name: 'Mythical Forge (#page#/#max#)'
 
 # The maximum amount of items in the crafting queue ie. the
 # max number of items players are able to craft simultaneously.
+# Must be between 1 and 64.
 max-queue-size: 10
+
+# The sound that plays whenever an action is
+# completed in the crafting station.
+# GET SOUND NAMES HERE:
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+sound: ENTITY_EXPERIENCE_ORB_PICKUP
+
+# This is how the gui looks. You can define your own
+# in crafting-stations/layouts by creating a new
+# file with the name of the file as the id.
+layout: default
 
 # Crafting station parent. This station will inherit of
 # all the recipes of the specified crafting station

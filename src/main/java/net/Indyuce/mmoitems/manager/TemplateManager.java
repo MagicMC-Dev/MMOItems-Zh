@@ -1,16 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -18,6 +7,16 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Level;
 
 public class TemplateManager {
 
@@ -209,6 +208,23 @@ public class TemplateManager {
 					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
+				}
+		}
+	}
+	// this loads dummy items for on load so
+	// plugins that enable before mmoitems that use
+	// items (mmocore) don't error out and need
+	// a reload
+	public void loadCompatibility() {
+		templates.clear();
+
+		for (Type type : MMOItems.plugin.getTypes().getAll()) {
+			FileConfiguration config = type.getConfigFile().getConfig();
+			for (String key : config.getKeys(false))
+				try {
+					registerTemplate(new MMOItemTemplate(type, key));
+				} catch (IllegalArgumentException ignored) {
+
 				}
 		}
 	}

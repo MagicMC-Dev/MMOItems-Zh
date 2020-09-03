@@ -111,6 +111,8 @@ public class MMOItems extends JavaPlugin {
 
 		typeManager.reload();
 
+		templateManager.loadCompatibility(); // explained why here in method
+
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
 	}

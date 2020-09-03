@@ -281,6 +281,7 @@ public class ConfigManager {
 
 		// station layouts
 		DEFAULT_LAYOUT("layouts/default.yml", "layouts", "default.yml"),
+		EXPANDED_LAYOUT("layouts/expanded.yml", "layouts", "expanded.yml"),
 
 		// default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),

@@ -162,7 +162,7 @@ public class RecipeManager {
 		if (split[0].equalsIgnoreCase("air"))
 			return new AirIngredient();
 
-		return new VanillaIngredient(Material.valueOf(input.toUpperCase().replace("-", "_").replace(" ", "_")), amount);
+		return new VanillaIngredient(Material.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_")), amount);
 	}
 
 	/**

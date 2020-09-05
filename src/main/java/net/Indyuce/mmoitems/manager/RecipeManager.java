@@ -39,8 +39,8 @@ public class RecipeManager {
 	private final Set<CustomRecipe> craftingRecipes = new HashSet<>();
 
 	/**
-	 * Recipes which are handled by the vanilla spigot API. All recipes
-	 * registered here are Keyed
+	 * Recipes which are handled by the vanilla spigot API.
+	 * All recipes registered here are Keyed
 	 */
 	private final Set<Recipe> loadedRecipes = new HashSet<>();
 

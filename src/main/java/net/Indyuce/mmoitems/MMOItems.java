@@ -285,7 +285,7 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public String getPrefix() {
-		return ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "MMMOItems" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
+		return ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "MMOItems" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
 	}
 
 	public File getJarFile() {

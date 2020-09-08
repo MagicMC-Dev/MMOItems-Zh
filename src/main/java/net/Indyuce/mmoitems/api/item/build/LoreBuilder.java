@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.item.build;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,12 +114,21 @@ public class LoreBuilder {
 		}
 
 		/*
-		 * clear bar codes and chat colors only ONCE the bars have been
-		 * successfully calculated
+		 * clear bar codes and parse chat colors only ONCE
+		 * the bars have been successfully calculated
+		 * 
+		 * NEW: also finalize the lore by breaking
+		 * lines with the \n escape character
 		 */
-		for (int n = 0; n < lore.size(); n++)
-			lore.set(n, MMOLib.plugin.parseColors(lore.get(n).replace("{bar}", "").replace("{sbar}", "")));
-
+		final List<String> finalLore = new ArrayList<>();	
+		for (int i = 0; i < lore.size(); i++) {
+			for(final String s : MMOLib.plugin.parseColors(lore.get(i)
+					.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n"))
+				finalLore.add(s);
+		}
+		
+		lore.clear();
+		lore.addAll(finalLore);
 		return this;
 	}
 

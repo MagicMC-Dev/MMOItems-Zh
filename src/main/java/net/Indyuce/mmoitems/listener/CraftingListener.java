@@ -20,6 +20,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.event.CraftMMOItemEvent;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
 import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
@@ -38,9 +40,11 @@ public class CraftingListener implements Listener {
 	public void getResult(InventoryClickEvent e) {
 		if (!(e.getView().getPlayer() instanceof Player) || !(e.getInventory() instanceof CraftingInventory))
 			return;
+		Player player = (Player) e.getView().getPlayer();
+		
 		if (e.getSlotType() == SlotType.CRAFTING && e.getAction() == InventoryAction.PLACE_ONE)
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin,
-					() -> handleCustomCrafting((CraftingInventory) e.getInventory(), (Player) e.getView().getPlayer()),
+					() -> handleCustomCrafting((CraftingInventory) e.getInventory(), player),
 					1);
 		else if (e.getSlotType() == SlotType.RESULT) {
 			CraftingInventory inv = (CraftingInventory) e.getInventory();
@@ -57,6 +61,14 @@ public class CraftingListener implements Listener {
 				e.setCancelled(true);
 				return;
 			}
+			CraftMMOItemEvent event = new CraftMMOItemEvent(PlayerData.get(player),
+					cached.getResult());
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled()) {
+				e.setCancelled(true);
+				return;
+			}
+			
 			ItemStack[] newMatrix = cached.generateMatrix(inv.getMatrix());
 			inv.setMatrix(new ItemStack[] { null, null, null, null, null, null, null, null, null });
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, new Runnable() {
@@ -68,12 +80,12 @@ public class CraftingListener implements Listener {
 							check = false;
 					if (check) {
 						inv.setMatrix(new ItemStack[] { null, null, null, null, null, null, null, null, null });
-						((Player) e.getView().getPlayer()).updateInventory();
 					} else
 						inv.setMatrix(newMatrix);
 				}
 			}, 1);
-			e.setCurrentItem(cached.getResult());
+			e.setCurrentItem(event.getResult());
+			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> player.updateInventory(), 1);
 		}
 	}
 

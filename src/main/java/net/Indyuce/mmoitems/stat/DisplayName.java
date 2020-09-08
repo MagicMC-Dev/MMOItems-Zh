@@ -43,9 +43,9 @@ public class DisplayName extends StringStat {
 		}
 
 		private String parse() {
-			name = name.replace("<tier-name>", (mmoitem.hasData(ItemStat.TIER))
+			name = name.replace("<tier-name>", (mmoitem.hasData(ItemStat.TIER) && MMOItems.plugin.getTiers().findTier(mmoitem) != null)
 					? stripColorCodes(MMOItems.plugin.getTiers().findTier(mmoitem).getName()) : "");
-			name = name.replace("<tier-color>", (mmoitem.hasData(ItemStat.TIER))
+			name = name.replace("<tier-color>", (mmoitem.hasData(ItemStat.TIER) && MMOItems.plugin.getTiers().findTier(mmoitem) != null)
 					?  stripText(MMOItems.plugin.getTiers().findTier(mmoitem).getName()) : "&f");
 			name = name.replace("<type-name>", (mmoitem.hasData(ItemStat.DISPLAYED_TYPE))
 					?  stripColorCodes(mmoitem.getData(ItemStat.DISPLAYED_TYPE).toString()) : stripColorCodes(mmoitem.getType().getName()));

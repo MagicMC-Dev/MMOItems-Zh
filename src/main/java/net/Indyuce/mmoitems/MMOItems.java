@@ -23,6 +23,7 @@ import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
+import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
 import net.Indyuce.mmoitems.comp.parse.IridescentParser;
 import net.Indyuce.mmoitems.comp.parse.StringInputParser;
@@ -111,7 +112,7 @@ public class MMOItems extends JavaPlugin {
 
 		typeManager.reload();
 
-		templateManager.loadCompatibility(); // explained why here in method
+		templateManager.loadCompatibility(); // explained why in method
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
@@ -130,6 +131,12 @@ public class MMOItems extends JavaPlugin {
 			new MythicMobsLoader();
 			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
 		}
+
+		if (Bukkit.getPluginManager().getPlugin("MMOInventory") != null) {
+			new MMOInventorySupport();
+			getLogger().log(Level.INFO, "Hooked onto MMOInventory");
+		}
+
 
 		findRpgPlugin();
 

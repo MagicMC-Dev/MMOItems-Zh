@@ -5,6 +5,7 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.comp.mythicmobs.stat.FactionDamage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -22,9 +23,10 @@ public class MythicMobsLoader {
 
     private Collection<String> getFactions(){
         Collection<String> allFactions = new LinkedList<>();
-        for (MythicMob mob : MythicMobs.inst().getMobManager().getMobTypes()) {
-            if (mob.getFaction() != null) {
-                if (!allFactions.contains(mob.getFaction()))
+        Collection<MythicMob> mobs = new ArrayList<>(MythicMobs.inst().getMobManager().getVanillaTypes());
+        mobs.addAll(MythicMobs.inst().getMobManager().getMobTypes());
+        for (MythicMob mob : mobs) {
+            if (mob.getFaction() != null && !allFactions.contains(mob.getFaction())) {
                     allFactions.add(mob.getFaction());
             }
         }

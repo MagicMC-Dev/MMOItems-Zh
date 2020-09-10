@@ -151,20 +151,6 @@ public class DisableInteractions implements Listener {
 			event.setCancelled(true);
 	}
 
-	@EventHandler
-	public void k(ProjectileLaunchEvent event) {
-		if(!(event.getEntity().getShooter() instanceof Player))
-			return;
-
-		Player player = (Player) event.getEntity().getShooter();
-		NBTItem item = NBTItem.get(player.getInventory().getItemInMainHand());
-		NBTItem item2 = NBTItem.get(player.getInventory().getItemInOffHand());
-		
-		if(item.getBoolean("MMOITEMS_DISABLE_INTERACTION") ||
-			item2.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
-			event.setCancelled(true);
-	}
-
         private int firstArrow(Player player) {
 
                 // check offhand first

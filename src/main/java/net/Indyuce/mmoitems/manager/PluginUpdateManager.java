@@ -1,25 +1,19 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpdaterData;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
 
 public class PluginUpdateManager {
 
@@ -156,6 +150,29 @@ public class PluginUpdateManager {
 									if (!statKey.equals("base"))
 										config.getConfig().set(id + "." + statKey, null);
 							}
+							// simple path changes
+							rename(config.getConfig().getConfigurationSection(id + ".base"), "regeneration", "health-regeneration");
+							rename(config.getConfig().getConfigurationSection(id + ".base"), "element.light", "element.lightness");
+
+							// sound changes
+							if (config.getConfig().getConfigurationSection(id + ".base").contains("consume-sound")) {
+								rename(config.getConfig().getConfigurationSection(id + ".base"), "consume-sound", "sounds.on-consume.sound");
+								config.getConfig().set(id + ".base.sounds.on-consume.volume", 1.0D);
+								config.getConfig().set(id + ".base.sounds.on-consume.pitch", 1.0D);
+							}
+
+							// effects changes
+							if (config.getConfig().getConfigurationSection(id + ".base").contains("effects")) {
+								for (String effect : config.getConfig().getConfigurationSection(id + ".base.effects").getKeys(false)) {
+									String[] split = config.getConfig().getString(id + ".base.effects." + effect).split(",");
+									if (split.length > 1) {
+										config.getConfig().set(id + ".base.new-effects." + effect + ".duration", Double.parseDouble(split[0]));
+										config.getConfig().set(id + ".base.new-effects." + effect + ".amplifier", Double.parseDouble(split[1]));
+									}
+								}
+								config.getConfig().set(id + ".base.effects", null);
+								rename(config.getConfig().getConfigurationSection(id + ".base"), "new-effects", "effects");
+							}
 
 							if (config.getConfig().getConfigurationSection(id + ".base").contains("restore")) {
 								config.getConfig().set(id + ".base.restore-health", config.getConfig().getDouble(id + ".base.restore.health"));
@@ -210,4 +227,13 @@ public class PluginUpdateManager {
 	public Collection<PluginUpdate> getAll() {
 		return updates.values();
 	}
+
+	private void rename(ConfigurationSection config, String oldPath, String newPath) {
+		if (config.contains(oldPath)) {
+			Object temp = config.get(oldPath);
+			config.set(oldPath, null);
+			config.set(newPath, temp);
+		}
+	}
+
 }

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.Arrow;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -42,7 +43,10 @@ public class ArrowParticles extends BukkitRunnable {
 		}
 
 		if (color != null)
-			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, color);
+			if (particle.getDataType() == DustOptions.class)
+				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, new Particle.DustOptions(color, 1));
+			else
+				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, color);
 		else
 			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
 	}

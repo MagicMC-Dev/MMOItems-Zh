@@ -83,7 +83,7 @@ public class DropTableManager implements Listener {
 		LivingEntity entity = event.getEntity();
 		if (monsters.containsKey(entity.getType()))
 			event.getDrops()
-					.addAll(monsters.get(entity.getType()).read(entity.getKiller() != null ? PlayerData.get(entity.getKiller()) : null, false));
+					.addAll(monsters.get(entity.getType()).read(entity.getKiller() != null && !entity.hasMetadata("NPC") ? PlayerData.get(entity.getKiller()) : null, false));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

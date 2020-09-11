@@ -1,2 +1,4 @@
-Private repo for MMOItems Premium. Management, issues, wiki & tickets is handled on the GitHub page
-https://git.lumine.io/mythiccraft/mmoitems/-/wikis/home
+Private repository for MMOItems Premium.
+
+Issues: https://git.lumine.io/mythiccraft/mmoitems/-/issues
+Wiki: https://git.lumine.io/mythiccraft/mmoitems/-/wikis/home

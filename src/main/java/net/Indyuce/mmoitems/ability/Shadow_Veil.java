@@ -118,6 +118,7 @@ public class Shadow_Veil extends Ability implements Listener {
 
 		@EventHandler
 		public void cancelMobTarget(EntityTargetEvent event) {
+		    // FIXME NPE for some reason, not sure if getTarget or player is null. Doubt its getTarget but you never know. https://git.lumine.io/mythiccraft/mmoitems/-/issues/126
 			if (event.getTarget().equals(player))
 				event.setCancelled(true);
 		}

@@ -81,9 +81,11 @@ public class DropTableManager implements Listener {
 	@EventHandler
 	public void blockDrops(EntityDeathEvent event) {
 		LivingEntity entity = event.getEntity();
+		Player killer = entity.getKiller();
+		if (killer != null && killer.hasMetadata("NPC"))
+			return;
 		if (monsters.containsKey(entity.getType()))
-			event.getDrops()
-					.addAll(monsters.get(entity.getType()).read(entity.getKiller() != null && !entity.hasMetadata("NPC") ? PlayerData.get(entity.getKiller()) : null, false));
+			event.getDrops().addAll(monsters.get(entity.getType()).read(killer != null ? PlayerData.get(killer) : null, false));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -172,7 +172,7 @@ public class ItemUse implements Listener {
 		event.setDamage(result.getDamage());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void c(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();

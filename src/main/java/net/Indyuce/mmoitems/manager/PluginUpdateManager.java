@@ -153,6 +153,7 @@ public class PluginUpdateManager {
 							// simple path changes
 							rename(config.getConfig().getConfigurationSection(id + ".base"), "regeneration", "health-regeneration");
 							rename(config.getConfig().getConfigurationSection(id + ".base"), "element.light", "element.lightness");
+							rename(config.getConfig().getConfigurationSection(id + ".base"), "consume-cooldown", "item-cooldown");
 
 							// sound changes
 							if (config.getConfig().getConfigurationSection(id + ".base").contains("consume-sound")) {

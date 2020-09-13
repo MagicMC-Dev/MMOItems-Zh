@@ -42,11 +42,9 @@ public class ArrowParticles extends BukkitRunnable {
 			return;
 		}
 
-		if (color != null)
-			if (particle.getDataType() == DustOptions.class)
-				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, new Particle.DustOptions(color, 1));
-			else
-				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, color);
+		if (color != null && particle.getDataType() == DustOptions.class)
+			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset,
+					new Particle.DustOptions(color, 1));
 		else
 			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
 	}

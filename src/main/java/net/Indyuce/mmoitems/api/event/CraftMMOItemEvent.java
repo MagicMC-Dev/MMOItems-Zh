@@ -8,21 +8,22 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 public class CraftMMOItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
-	private ItemStack stack;
-	
-	public CraftMMOItemEvent(PlayerData playerData, ItemStack stack) {
+	private ItemStack result;
+
+	public CraftMMOItemEvent(PlayerData playerData, ItemStack result) {
 		super(playerData);
-		this.stack = stack;
-	}
-	
-	public ItemStack getResult() {
-		return stack;
+
+		this.result = result;
 	}
 
-	public void setStack(ItemStack stack) {
-		this.stack = stack;
+	public ItemStack getResult() {
+		return result;
 	}
-	
+
+	public void setResult(ItemStack result) {
+		this.result = result;
+	}
+
 	public HandlerList getHandlers() {
 		return handlers;
 	}

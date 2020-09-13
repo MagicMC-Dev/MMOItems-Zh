@@ -79,7 +79,7 @@ public class DropTableManager implements Listener {
 	}
 
 	@EventHandler
-	public void blockDrops(EntityDeathEvent event) {
+	public void entityDrops(EntityDeathEvent event) {
 		LivingEntity entity = event.getEntity();
 		Player killer = entity.getKiller();
 		if (killer != null && killer.hasMetadata("NPC"))
@@ -89,7 +89,7 @@ public class DropTableManager implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void entityDrops(BlockBreakEvent event) {
+	public void blockDrops(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if (player == null || player.getGameMode() == GameMode.CREATIVE)
 			return;

@@ -51,11 +51,10 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	@Override
 	public String onRequest(@Nullable OfflinePlayer player, @NotNull String identifier) {
 		// registering before identifier.startsWith("stat_") to prevent issues
-		// i don't register it in the starts with condition because it will mess with
-		// substring
+		// i don't register it in the starts with condition because it will mess
+		// with substring
 		if (identifier.equals("stat_defense_percent"))
-			return twoDigits.format(
-					new DamageReduction.DefenseCalculator(MMOPlayerData.get(player)).getReductionPercent()) + "%";
+			return twoDigits.format(100 - new DamageReduction.DefenseCalculator(MMOPlayerData.get(player)).getAppliedDamage(100)) + "%";
 		if (identifier.startsWith("stat_")) {
 			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
 			if (stat != null)
@@ -64,8 +63,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 
 		if (identifier.startsWith("ability_cd_")) {
 			PlayerData data = PlayerData.get(player);
-			return data.hasCooldownInfo(identifier.substring(11))
-					? oneDigit.format(data.getCooldownInfo(identifier.substring(11)).getRemaining())
+			return data.hasCooldownInfo(identifier.substring(11)) ? oneDigit.format(data.getCooldownInfo(identifier.substring(11)).getRemaining())
 					: "0";
 		}
 

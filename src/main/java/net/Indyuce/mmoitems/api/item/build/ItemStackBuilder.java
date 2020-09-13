@@ -124,7 +124,7 @@ public class ItemStackBuilder {
 			lore.insert("lore", parsed);
 		}
 
-		meta.setLore(lore.build().toStringList());
+		meta.setLore(lore.build());
 
 		/*
 		 * This tag is added to entirely override default vanilla item attribute

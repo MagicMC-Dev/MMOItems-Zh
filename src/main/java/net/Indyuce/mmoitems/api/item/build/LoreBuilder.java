@@ -91,7 +91,7 @@ public class LoreBuilder {
 	 *         have been inserted in the lore. It cleans all unused lore format
 	 *         # lines as well as lore bars
 	 */
-	public LoreBuilder build() {
+	public List<String> build() {
 
 		/*
 		 * loops backwards to remove all unused bars in one iteration only,
@@ -114,29 +114,21 @@ public class LoreBuilder {
 		}
 
 		/*
-		 * clear bar codes and parse chat colors only ONCE
-		 * the bars have been successfully calculated
+		 * clear bar codes and parse chat colors only ONCE the bars have been
+		 * successfully calculated
 		 * 
-		 * NEW: also finalize the lore by breaking
-		 * lines with the \n escape character
+		 * NEW: also finalize the lore by breaking lines with the \n escape
+		 * character
 		 */
-		final List<String> finalLore = new ArrayList<>();	
-		for (int i = 0; i < lore.size(); i++) {
-			for(final String s : MMOLib.plugin.parseColors(lore.get(i)
-					.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n"))
-				finalLore.add(s);
-		}
-		
-		lore.clear();
-		lore.addAll(finalLore);
-		return this;
+		final List<String> cleaned = new ArrayList<>();
+		for (int i = 0; i < lore.size(); i++)
+			for (final String s : MMOLib.plugin.parseColors(lore.get(i).replace("{bar}", "").replace("{sbar}", "")).split("\\\\n"))
+				cleaned.add(s);
+
+		return cleaned;
 	}
 
 	private boolean isBar(String str) {
 		return str.startsWith("{bar}") || str.startsWith("{sbar}");
-	}
-
-	public List<String> toStringList() {
-		return lore;
 	}
 }

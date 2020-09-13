@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang.Validate;
 
@@ -76,6 +77,17 @@ public class TemplateMap<C> {
 		if (!typeMap.containsKey(type.getId()))
 			typeMap.put(type.getId(), new Submap());
 		typeMap.get(type.getId()).idMap.put(id, value);
+	}
+
+	/**
+	 * Applies a specific consumer for every template. This is used to postload
+	 * all templates when MMOItems enables
+	 * 
+	 * @param action
+	 *            Action performed for every registered template
+	 */
+	public void forEach(Consumer<C> action) {
+		typeMap.values().forEach(submap -> submap.idMap.values().forEach(action));
 	}
 
 	/**

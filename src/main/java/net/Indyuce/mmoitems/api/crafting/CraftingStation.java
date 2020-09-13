@@ -1,5 +1,17 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
@@ -7,15 +19,8 @@ import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.PostLoadObject;
 import net.mmogroup.mmolib.MMOLib;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.*;
-import java.util.logging.Level;
+import net.mmogroup.mmolib.api.util.PostLoadObject;
 
 public class CraftingStation extends PostLoadObject {
 	private final String id, name;

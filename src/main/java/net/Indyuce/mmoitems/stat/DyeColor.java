@@ -1,15 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -21,12 +11,21 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import java.util.List;
+import java.util.Optional;
 
 public class DyeColor extends ItemStat {
 	public DyeColor() {
 		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color",
-				new String[] { "The color of your item", "(for leather armor sets).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
-				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS);
+				new String[] { "The color of your item", "(for dyeable items).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
+				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.LEATHER_HORSE_ARMOR);
 	}
 
 	@Override

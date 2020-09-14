@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -54,11 +55,9 @@ public class MMOItemTemplate implements ItemReference {
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
 
 		if (config.contains("option"))
-			for (String key : config.getConfigurationSection("option").getKeys(false)) {
-				TemplateOption opt = TemplateOption.valueOf(key.toUpperCase().replace("-", "_").replace(" ", "_"));
-				if (config.getBoolean("option." + key))
-					options.add(opt);
-			}
+			for (TemplateOption option : TemplateOption.values())
+				if (config.getBoolean("option." + option.name().toLowerCase().replace("_", "-")))
+					options.add(option);
 
 		if (config.contains("modifiers"))
 			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
@@ -118,18 +117,28 @@ public class MMOItemTemplate implements ItemReference {
 	}
 
 	/**
+	 * By default, item templates have item level 0 and no random tier. If the
+	 * template has the 'tiered' recipe option, a random tier will be picked. If
+	 * the template has the 'level-item' option, a random level will be picked
+	 *
 	 * @param player
-	 *            The rpg info about the player whom you want to give a random
-	 *            item to
-	 * @return A random item builder which scales on the player's level.
+	 *            The player for whom you are generating the itme
+	 * @return Item builder with random level and tier?
 	 */
 	public MMOItemBuilder newBuilder(RPGPlayer player) {
-		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(player.getLevel());
-		ItemTier itemTier = MMOItems.plugin.getTemplates().rollTier();
-		return newBuilder(itemLevel, itemTier);
+		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
+		ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
+		return new MMOItemBuilder(this, itemLevel, itemTier);
 	}
 
-	public MMOItemBuilder newBuilder(int itemLevel, ItemTier itemTier) {
+	/**
+	 * @param itemLevel
+	 *            The desired item level
+	 * @param itemTier
+	 *            The desired item tier, can be null
+	 * @return Item builder with specific item level and tier
+	 */
+	public MMOItemBuilder newBuilder(int itemLevel, @Nullable ItemTier itemTier) {
 		return new MMOItemBuilder(this, itemLevel, itemTier);
 	}
 

@@ -102,24 +102,23 @@ public class MMOItems extends JavaPlugin {
 				getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: " + exception.getMessage());
 			}
 
-		saveDefaultConfig();
-
 		/*
-		 * Stat manager must be initialized before MMOCore compatibility
-		 * initializes so that MMOCore can register its stats. Types and item
-		 * templates are also loaded as soon as MI is loaded so that other
-		 * plugins can load template references
+		 * stat manager must be initialized before MMOCore compatibility
+		 * initializes so that MMOCore can register its stats
 		 */
+
+		saveDefaultConfig();
 		statManager = new StatManager();
+
 		typeManager.reload();
-		templateManager.preloadTemplates();
+
+		templateManager.loadCompatibility(); // explained why in method
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
 	}
 
 	public void onEnable() {
-
 		new SpigotPlugin(39267, this).checkForUpdate();
 
 		new MMOItemsMetrics();
@@ -138,13 +137,14 @@ public class MMOItems extends JavaPlugin {
 			getLogger().log(Level.INFO, "Hooked onto MMOInventory");
 		}
 
+
 		findRpgPlugin();
+
+		templateManager.reload();
 
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
-		templateManager.reload(); // should be postload()  but it's broken waiting for indy to fix
-
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();
 		worldGenManager = new WorldGenManager();
@@ -331,7 +331,7 @@ public class MMOItems extends JavaPlugin {
 	 * The RPGHandler interface lets MMOItems fetch and manipulate RPG data like
 	 * player level, class, resources like mana and stamina for item or skill
 	 * costs, item restrictions, etc.
-	 * 
+	 *
 	 * @param handler
 	 *            Your RPGHandler instance
 	 */
@@ -361,9 +361,9 @@ public class MMOItems extends JavaPlugin {
 	 * checks held items + armor slots. However other plugins like MMOInv do
 	 * implement custom slots and therefore must register a custom
 	 * PlayerInventory instance.
-	 * 
+	 *
 	 * Default instance is DefaultPlayerInventory in comp.inventory
-	 * 
+	 *
 	 * @param value
 	 *            The player inventory subclass
 	 */

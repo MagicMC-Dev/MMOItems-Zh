@@ -43,7 +43,7 @@ public class TemplateManager {
 
 	/**
 	 * Used in class constructors to easily
-	 * 
+	 *
 	 * @param type
 	 *            The item type
 	 * @param id
@@ -61,7 +61,7 @@ public class TemplateManager {
 
 	/**
 	 * Registers an MMOItem template internally. Can be done at any time
-	 * 
+	 *
 	 * @param template
 	 *            Template to register
 	 */
@@ -75,7 +75,7 @@ public class TemplateManager {
 	 * Unregisters a template from mmoitem registery. Must be used when an item
 	 * is removed from the config files. Also disables the dynamic updater for
 	 * that item
-	 * 
+	 *
 	 * @param type
 	 *            The item type
 	 * @param id
@@ -89,7 +89,7 @@ public class TemplateManager {
 	/**
 	 * Unregisters a template from mmoitem registery and clears it from the
 	 * config file
-	 * 
+	 *
 	 * @param type
 	 *            The item type
 	 * @param id
@@ -107,10 +107,10 @@ public class TemplateManager {
 	 * Used whenever an item is created or edited through the GUI edition. This
 	 * method unregisters the current template and loads it again from the
 	 * configuration file.
-	 * 
+	 *
 	 * Can also be used right after creating a template after the config file
 	 * has been initialized in order to load the newly created item
-	 * 
+	 *
 	 * @param type
 	 *            The item type
 	 * @param id
@@ -208,24 +208,6 @@ public class TemplateManager {
 					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
-				}
-		}
-	}
-	// this loads dummy items for on load so
-	// plugins that enable before mmoitems that use
-	// items (mmocore) don't error out and need
-	// a reload
-	public void loadCompatibility() {
-
-		templates.clear();
-
-		for (Type type : MMOItems.plugin.getTypes().getAll()) {
-			FileConfiguration config = type.getConfigFile().getConfig();
-			for (String key : config.getKeys(false))
-				try {
-					registerTemplate(new MMOItemTemplate(type, key));
-				} catch (IllegalArgumentException ignored) {
-
 				}
 		}
 	}

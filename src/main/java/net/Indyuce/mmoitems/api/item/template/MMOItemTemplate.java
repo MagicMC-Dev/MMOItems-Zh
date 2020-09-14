@@ -8,15 +8,13 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.util.PostLoadObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 
-public class MMOItemTemplate extends PostLoadObject implements ItemReference {
+public class MMOItemTemplate implements ItemReference {
 	private final Type type;
 	private final String id;
 
@@ -29,7 +27,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	/**
 	 * Public constructor which can be used to register extra item templates
 	 * using other addons or plugins
-	 * 
+	 *
 	 * @param type
 	 *            The item type of your template
 	 * @param id
@@ -37,33 +35,30 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 *            different item types share the same ID
 	 */
 	public MMOItemTemplate(Type type, String id) {
-		super(null);
-
 		this.type = type;
 		this.id = id;
 	}
 
 	/**
 	 * Used to load mmoitem templates from config files
-	 * 
+	 *
 	 * @param type
 	 *            The item type of your template
 	 * @param config
 	 *            The config file read to load the template
 	 */
 	public MMOItemTemplate(Type type, ConfigurationSection config) {
-		super(config);
+		Validate.notNull(config, "Could not load template config");
 
 		this.type = type;
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
-	}
 
-	@Override
-	protected void whenPostLoaded(ConfigurationSection config) {
 		if (config.contains("option"))
-			for (TemplateOption option : TemplateOption.values())
-				if (config.getBoolean("option." + option.name().toLowerCase().replace("_", "-")))
-					options.add(option);
+			for (String key : config.getConfigurationSection("option").getKeys(false)) {
+				TemplateOption opt = TemplateOption.valueOf(key.toUpperCase().replace("-", "_").replace(" ", "_"));
+				if (config.getBoolean("option." + key))
+					options.add(opt);
+			}
 
 		if (config.contains("modifiers"))
 			for (String key : config.getConfigurationSection("modifiers").getKeys(false))
@@ -123,28 +118,18 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	}
 
 	/**
-	 * By default, item templates have item level 0 and no random tier. If the
-	 * template has the 'tiered' recipe option, a random tier will be picked. If
-	 * the template has the 'level-item' option, a random level will be picked
-	 * 
 	 * @param player
-	 *            The player for whom you are generating the itme
-	 * @return Item builder with random level and tier?
+	 *            The rpg info about the player whom you want to give a random
+	 *            item to
+	 * @return A random item builder which scales on the player's level.
 	 */
 	public MMOItemBuilder newBuilder(RPGPlayer player) {
-		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
-		ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
-		return new MMOItemBuilder(this, itemLevel, itemTier);
+		int itemLevel = MMOItems.plugin.getTemplates().rollLevel(player.getLevel());
+		ItemTier itemTier = MMOItems.plugin.getTemplates().rollTier();
+		return newBuilder(itemLevel, itemTier);
 	}
 
-	/**
-	 * @param itemLevel
-	 *            The desired item level
-	 * @param itemTier
-	 *            The desired item tier, can be null
-	 * @return Item builder with specific item level and tier
-	 */
-	public MMOItemBuilder newBuilder(int itemLevel, @Nullable ItemTier itemTier) {
+	public MMOItemBuilder newBuilder(int itemLevel, ItemTier itemTier) {
 		return new MMOItemBuilder(this, itemLevel, itemTier);
 	}
 

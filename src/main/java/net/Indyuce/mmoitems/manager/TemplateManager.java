@@ -211,4 +211,21 @@ public class TemplateManager {
 				}
 		}
 	}
+	// this loads dummy items for on load so
+	// plugins that enable before mmoitems that use
+	// items (mmocore) don't error out and need
+	// a reload
+	public void loadCompatibility() {
+		templates.clear();
+
+		for (Type type : MMOItems.plugin.getTypes().getAll()) {
+			FileConfiguration config = type.getConfigFile().getConfig();
+			for (String key : config.getKeys(false))
+				try {
+					registerTemplate(new MMOItemTemplate(type, key));
+				} catch (IllegalArgumentException ignored) {
+
+				}
+		}
+	}
 }

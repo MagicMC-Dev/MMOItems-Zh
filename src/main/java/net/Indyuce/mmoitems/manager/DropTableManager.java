@@ -1,11 +1,12 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.Indyuce.mmoitems.api.droptable.DropTable;
+import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -24,13 +25,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.Indyuce.mmoitems.api.droptable.DropTable;
-import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.listener.CustomBlockListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
 
 public class DropTableManager implements Listener {
 	private final Map<EntityType, DropTable> monsters = new HashMap<>();
@@ -79,7 +78,7 @@ public class DropTableManager implements Listener {
 	}
 
 	@EventHandler
-	public void blockDrops(EntityDeathEvent event) {
+	public void entityDrops(EntityDeathEvent event) {
 		LivingEntity entity = event.getEntity();
 		Player killer = entity.getKiller();
 		if (killer != null && killer.hasMetadata("NPC"))
@@ -89,7 +88,7 @@ public class DropTableManager implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void entityDrops(BlockBreakEvent event) {
+	public void blockDrops(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if (player == null || player.getGameMode() == GameMode.CREATIVE)
 			return;

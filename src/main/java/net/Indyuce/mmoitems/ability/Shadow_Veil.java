@@ -1,5 +1,13 @@
 package net.Indyuce.mmoitems.ability;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.mmogroup.mmolib.version.VersionSound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -11,15 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.AbilityResult;
-import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.version.VersionSound;
 
 public class Shadow_Veil extends Ability implements Listener {
 	public Shadow_Veil() {
@@ -118,8 +117,7 @@ public class Shadow_Veil extends Ability implements Listener {
 
 		@EventHandler
 		public void cancelMobTarget(EntityTargetEvent event) {
-		    // FIXME NPE for some reason, not sure if getTarget or player is null. Doubt its getTarget but you never know. https://git.lumine.io/mythiccraft/mmoitems/-/issues/126
-			if (event.getTarget().equals(player))
+			if (player.equals(event.getTarget()))
 				event.setCancelled(true);
 		}
 	}

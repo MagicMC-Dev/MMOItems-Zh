@@ -1,5 +1,16 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Level;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -7,16 +18,6 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
 
 public class TemplateManager {
 
@@ -184,6 +185,59 @@ public class TemplateManager {
 		return (int) found;
 	}
 
+	/**
+	 * Templates must be loaded whenever MMOItems enables so that other plugins
+	 * like MMOCore can load template references in drop items or other objects.
+	 * Template data is only loaded when MMOItems enables, once sets, tiers..
+	 * are initialized
+	 */
+	public void preloadTemplates() {
+		templates.clear();
+
+		for (Type type : MMOItems.plugin.getTypes().getAll()) {
+			FileConfiguration config = type.getConfigFile().getConfig();
+			for (String key : config.getKeys(false))
+				try {
+					registerTemplate(new MMOItemTemplate(type, key));
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.INFO, "Could not preload item template '" + key + "': " + exception.getMessage());
+				}
+		}
+	}
+
+	/**
+	 * Loads item generator modifiers and post load item templates.
+	 */
+	public void postload() {
+
+		MMOItems.plugin.getLogger().log(Level.INFO, "Loading template modifiers, please wait..");
+		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
+			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			for (String key : config.getKeys(false))
+				try {
+					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
+					modifiers.put(modifier.getId(), modifier);
+				} catch (IllegalArgumentException exception) {
+					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load template modifier '" + key + "': " + exception.getMessage());
+				}
+		}
+
+		MMOItems.plugin.getLogger().log(Level.INFO, "Loading item templates, please wait..");
+		templates.forEach(template -> {
+			try {
+				template.postLoad();
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + template.getId() + "': " + exception.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * Reloads the item templates. This is the method used to reload the manager
+	 * when the server is already running. It clears all the maps and loads
+	 * everything again. Template references in other plugins like MMOCore must
+	 * be refreshed afterwards.
+	 */
 	public void reload() {
 		templates.clear();
 		modifiers.clear();
@@ -208,24 +262,6 @@ public class TemplateManager {
 					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
-				}
-		}
-	}
-	// this loads dummy items for on load so
-	// plugins that enable before mmoitems that use
-	// items (mmocore) don't error out and need
-	// a reload
-	public void loadCompatibility() {
-
-		templates.clear();
-
-		for (Type type : MMOItems.plugin.getTypes().getAll()) {
-			FileConfiguration config = type.getConfigFile().getConfig();
-			for (String key : config.getKeys(false))
-				try {
-					registerTemplate(new MMOItemTemplate(type, key));
-				} catch (IllegalArgumentException ignored) {
-
 				}
 		}
 	}

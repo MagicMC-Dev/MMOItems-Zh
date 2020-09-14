@@ -1,15 +1,10 @@
 package net.Indyuce.mmoitems.api.util;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
+import net.Indyuce.mmoitems.api.Type;
 import org.apache.commons.lang.Validate;
 
-import net.Indyuce.mmoitems.api.Type;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Allows the use of two nested maps to efficiently store data about mmoitem
@@ -76,6 +71,17 @@ public class TemplateMap<C> {
 		if (!typeMap.containsKey(type.getId()))
 			typeMap.put(type.getId(), new Submap());
 		typeMap.get(type.getId()).idMap.put(id, value);
+	}
+
+	/**
+	 * Applies a specific consumer for every template. This is used to postload
+	 * all templates when MMOItems enables
+	 * 
+	 * @param action
+	 *            Action performed for every registered template
+	 */
+	public void forEach(Consumer<C> action) {
+		typeMap.values().forEach(submap -> submap.idMap.values().forEach(action));
 	}
 
 	/**

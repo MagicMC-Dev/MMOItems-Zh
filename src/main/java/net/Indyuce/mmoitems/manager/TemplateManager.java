@@ -216,6 +216,7 @@ public class TemplateManager {
 	// items (mmocore) don't error out and need
 	// a reload
 	public void loadCompatibility() {
+
 		templates.clear();
 
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {

@@ -1,16 +1,14 @@
 package net.Indyuce.mmoitems.api;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.Indyuce.mmoitems.MMOItems;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.Arrow;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class ArrowParticles extends BukkitRunnable {
 	private final Arrow arrow;
@@ -42,11 +40,9 @@ public class ArrowParticles extends BukkitRunnable {
 			return;
 		}
 
-		if (color != null)
-			if (particle.getDataType() == DustOptions.class)
-				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, new Particle.DustOptions(color, 1));
-			else
-				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, color);
+		if (color != null && particle.getDataType() == DustOptions.class)
+			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset,
+					new Particle.DustOptions(color, 1));
 		else
 			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
 	}

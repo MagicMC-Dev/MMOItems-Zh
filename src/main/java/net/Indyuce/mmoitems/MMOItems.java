@@ -55,7 +55,7 @@ import java.util.logging.Level;
 
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
- 
+
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
 	private final AbilityManager abilityManager = new AbilityManager();
@@ -102,17 +102,17 @@ public class MMOItems extends JavaPlugin {
 				getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: " + exception.getMessage());
 			}
 
-		/*
-		 * stat manager must be initialized before MMOCore compatibility
-		 * initializes so that MMOCore can register its stats
-		 */
-
 		saveDefaultConfig();
+
+		/*
+		 * Stat manager must be initialized before MMOCore compatibility
+		 * initializes so that MMOCore can register its stats. Types and item
+		 * templates are also loaded as soon as MI is loaded so that other
+		 * plugins can load template references
+		 */
 		statManager = new StatManager();
-
 		typeManager.reload();
-
-		templateManager.loadCompatibility(); // explained why in method
+		templateManager.preloadTemplates();
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
@@ -137,14 +137,13 @@ public class MMOItems extends JavaPlugin {
 			getLogger().log(Level.INFO, "Hooked onto MMOInventory");
 		}
 
-
 		findRpgPlugin();
-
-		templateManager.reload();
 
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
+		templateManager.reload(); // should be postload()  but it's broken waiting for indy to fix
+
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();
 		worldGenManager = new WorldGenManager();

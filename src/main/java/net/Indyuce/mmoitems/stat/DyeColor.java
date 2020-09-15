@@ -25,7 +25,7 @@ public class DyeColor extends ItemStat {
 	public DyeColor() {
 		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color",
 				new String[] { "The color of your item", "(for dyeable items).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
-				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.LEATHER_HORSE_ARMOR);
+				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 	}
 
 	@Override

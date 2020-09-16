@@ -21,7 +21,10 @@ public class UpdaterData {
 	 * they don't match, the item needs to be updated. UUID not final because it
 	 * must be changed
 	 */
-	private final MMOItemTemplate template;
+
+	private final Type type;
+
+	private final String id;
 
 	private UUID uuid;
 
@@ -36,7 +39,8 @@ public class UpdaterData {
 	}
 
 	public UpdaterData(MMOItemTemplate template, UUID uuid, KeepOption... options) {
-		this.template = template;
+		this.id = template.getId();
+		this.type = template.getType();
 		this.uuid = uuid;
 		this.options.addAll(Arrays.asList(options));
 	}
@@ -56,15 +60,15 @@ public class UpdaterData {
 	}
 
 	public String getPath() {
-		return template.getType().getId() + "." + template.getId();
+		return type.getId() + "." + id;
 	}
 
 	public Type getType() {
-		return template.getType();
+		return type;
 	}
 
 	public String getId() {
-		return template.getId();
+		return id;
 	}
 
 	public UUID getUniqueId() {

@@ -39,9 +39,11 @@ public class UpdaterManager implements Listener {
 		for (String typeFormat : config.getKeys(false))
 			try {
 				Type type = MMOItems.plugin.getTypes().getOrThrow(typeFormat);
-				for (String id : config.getConfigurationSection(typeFormat).getKeys(false))
-					enable(new UpdaterData(MMOItems.plugin.getTemplates().getTemplate(type, id), config.getConfigurationSection(typeFormat + "." + id)));
-			} catch (IllegalArgumentException exception) {
+				for (String id : config.getConfigurationSection(typeFormat).getKeys(false)) {
+					MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, id);
+					enable(new UpdaterData(template, config.getConfigurationSection(typeFormat + "." + id)));
+				}
+				} catch (IllegalArgumentException | NullPointerException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						"An issue occurred while trying to load dynamic updater data: " + exception.getMessage());
 			}
@@ -116,11 +118,6 @@ public class UpdaterManager implements Listener {
 	}
 
 	public ItemStack getUpdated(ItemStack item, Player target) {
-		if (item == null) {
-			return null;
-		}
-		if (item.getType() == Material.AIR)
-			return item;
 		return getUpdated(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item), target);
 	}
 
@@ -130,10 +127,12 @@ public class UpdaterManager implements Listener {
 		* If the item type is null, then it is not an mmoitem and it does not
 		* need to be updated
 		*/
-		if (item.getType() == null)
+		Type type = item.getType();
+
+		if (type == null)
 			return item.getItem();
 
-		if (!data.hasValue(item.getType(), item.getString("MMOITEMS_ITEM_ID")))
+		if (!data.hasValue(type, item.getString("MMOITEMS_ITEM_ID")))
 			return item.getItem();
 
 
@@ -141,11 +140,11 @@ public class UpdaterManager implements Listener {
 		* check the internal UUID of the item, if it does not make the one
 		* stored in the item updater data then the item is outdated.
 		*/
-		UpdaterData did = data.getValue(item.getType(), item.getString("MMOITEMS_ITEM_ID"));
+		UpdaterData did = data.getValue(type, item.getString("MMOITEMS_ITEM_ID"));
 		if (did.matches(item))
 			return item.getItem();
 
-		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(item.getType(), item.getString("MMOITEMS_ITEM_ID"));
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, item.getString("MMOITEMS_ITEM_ID"));
 		MMOItem newMMOItem = template.newBuilder(PlayerData.get(target).getRPG()).build();
 
 		 /*

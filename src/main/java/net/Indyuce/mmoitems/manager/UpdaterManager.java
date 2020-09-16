@@ -1,11 +1,18 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpdaterData;
+import net.Indyuce.mmoitems.api.item.ItemReference;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.TemplateMap;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,15 +22,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.UpdaterData;
-import net.Indyuce.mmoitems.api.item.ItemReference;
-import net.Indyuce.mmoitems.api.util.TemplateMap;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class UpdaterManager implements Listener {
 	private final TemplateMap<UpdaterData> data = new TemplateMap<>();
@@ -34,10 +40,10 @@ public class UpdaterManager implements Listener {
 			try {
 				Type type = MMOItems.plugin.getTypes().getOrThrow(typeFormat);
 				for (String id : config.getConfigurationSection(typeFormat).getKeys(false))
-					enable(new UpdaterData(type, id, config.getConfigurationSection(typeFormat + "." + id)));
+					enable(new UpdaterData(MMOItems.plugin.getTemplates().getTemplate(type, id), config.getConfigurationSection(typeFormat + "." + id)));
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"An issue occured while trying to load dynamic updater data: " + exception.getMessage());
+						"An issue occurred while trying to load dynamic updater data: " + exception.getMessage());
 			}
 	}
 
@@ -54,11 +60,12 @@ public class UpdaterManager implements Listener {
 	}
 
 	public void enable(ItemReference template) {
-		this.data.setValue(template.getType(), template.getId(), new UpdaterData(template.getType(), template.getId(), UUID.randomUUID()));
+		this.data.setValue(template.getType(), template.getId(), new UpdaterData(MMOItems.plugin.getTemplates()
+				.getTemplate(template.getType(), template.getId()), UUID.randomUUID()));
 	}
 
 	public void enable(Type type, String id) {
-		this.data.setValue(type, id, new UpdaterData(type, id, UUID.randomUUID()));
+		this.data.setValue(type, id, new UpdaterData(MMOItems.plugin.getTemplates().getTemplate(type, id), UUID.randomUUID()));
 	}
 
 	public void enable(UpdaterData data) {
@@ -86,7 +93,7 @@ public class UpdaterManager implements Listener {
 		if (item == null || item.getType() == Material.AIR)
 			return;
 
-		ItemStack newItem = getUpdated(item);
+		ItemStack newItem = getUpdated(item, (Player) event.getWhoClicked());
 		if (!newItem.equals(item))
 			event.setCurrentItem(newItem);
 	}
@@ -98,119 +105,112 @@ public class UpdaterManager implements Listener {
 	public void updateOnJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 
-		player.getEquipment().setHelmet(getUpdated(player.getEquipment().getHelmet()));
-		player.getEquipment().setChestplate(getUpdated(player.getEquipment().getChestplate()));
-		player.getEquipment().setLeggings(getUpdated(player.getEquipment().getLeggings()));
-		player.getEquipment().setBoots(getUpdated(player.getEquipment().getBoots()));
+		player.getEquipment().setHelmet(getUpdated(player.getEquipment().getHelmet(), player));
+		player.getEquipment().setChestplate(getUpdated(player.getEquipment().getChestplate(), player));
+		player.getEquipment().setLeggings(getUpdated(player.getEquipment().getLeggings(), player));
+		player.getEquipment().setBoots(getUpdated(player.getEquipment().getBoots(), player));
 
 		for (int j = 0; j < 9; j++)
-			player.getInventory().setItem(j, getUpdated(player.getInventory().getItem(j)));
-		player.getEquipment().setItemInOffHand(getUpdated(player.getEquipment().getItemInOffHand()));
+			player.getInventory().setItem(j, getUpdated(player.getInventory().getItem(j), player));
+		player.getEquipment().setItemInOffHand(getUpdated(player.getEquipment().getItemInOffHand(), player));
 	}
 
-	public ItemStack getUpdated(ItemStack item) {
-		return getUpdated(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
+	public ItemStack getUpdated(ItemStack item, Player target) {
+		if (item == null) {
+			return null;
+		}
+		if (item.getType() == Material.AIR)
+			return item;
+		return getUpdated(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item), target);
 	}
 
-	public ItemStack getUpdated(NBTItem item) {
+	public ItemStack getUpdated(NBTItem item, Player target) {
 
 		/*
-		 * If the item type is null, then it is not an mmoitem and it does not
-		 * need to be updated
-		 */
-		Type type = item.getType();
-		if (type == null)
+		* If the item type is null, then it is not an mmoitem and it does not
+		* need to be updated
+		*/
+		if (item.getType() == null)
 			return item.getItem();
 
-		return item.getItem();
+		if (!data.hasValue(item.getType(), item.getString("MMOITEMS_ITEM_ID")))
+			return item.getItem();
 
-		// String id = item.getString("MMOITEMS_ITEM_ID");
-		// String path = type.getId() + "." + id;
-		// if (!data.containsKey(path))
-		// return item.getItem();
-		//
-		// /*
-		// * check the internal UUID of the item, if it does not make the one
-		// * stored in the item updater data then the item is outdated.
-		// */
-		// UpdaterData did = data.get(path);
-		// if (did.matches(item))
-		// return item.getItem();
-		//
-		// // (funny bug fix) CLONE THE MMOITEM
-		// MMOItem newItemMMO = MMOItems.plugin.getItems().getMMOItem(type,
-		// id).clone();
-		//
-		// /*
-		// * apply older gem stones, using a light MMOItem so the item does not
-		// * calculate every stat data from the older item.
-		// */
-		// MMOItem itemMMO = new VolatileMMOItem(item);
-		// if (did.hasOption(KeepOption.KEEP_GEMS) &&
-		// itemMMO.hasData(ItemStat.GEM_SOCKETS))
-		// newItemMMO.setData(ItemStat.GEM_SOCKETS,
-		// itemMMO.getData(ItemStat.GEM_SOCKETS));
-		//
-		// if (did.hasOption(KeepOption.KEEP_SOULBOUND) &&
-		// itemMMO.hasData(ItemStat.SOULBOUND))
-		// newItemMMO.setData(ItemStat.SOULBOUND,
-		// itemMMO.getData(ItemStat.SOULBOUND));
-		//
-		// // if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
-		//
-		// // apply amount
-		// ItemStack newItem = newItemMMO.newBuilder().build();
-		// newItem.setAmount(item.getItem().getAmount());
-		//
-		// ItemMeta newItemMeta = newItem.getItemMeta();
-		// List<String> lore = newItemMeta.getLore();
-		//
-		// /*
-		// * add old enchants to the item. warning - if enabled the item will
-		// * remember of ANY enchant on the old item, even the enchants that
-		// were
-		// * removed!
-		// */
-		// if (did.hasOption(KeepOption.KEEP_ENCHANTS))
-		// item.getItem().getItemMeta().getEnchants().forEach((enchant, level)
-		// -> newItemMeta.addEnchant(enchant, level, true));
-		//
-		// /*
-		// * keepLore is used to save enchants from custom enchants plugins that
-		// * only use lore to save enchant data
-		// */
-		// if (did.hasOption(KeepOption.KEEP_LORE)) {
-		// int n = 0;
-		// for (String s : item.getItem().getItemMeta().getLore()) {
-		// if (!s.startsWith(ChatColor.GRAY + ""))
-		// break;
-		// lore.add(n++, s);
-		// }
-		// }
-		//
-		// /*
-		// * keep durability can be used for tools to save their durability so
-		// * users do not get extra durability when the item is updated
-		// */
-		// VersionWrapper wrapper = MMOLib.plugin.getVersion().getWrapper();
-		// if (did.hasOption(KeepOption.KEEP_DURABILITY) &&
-		// wrapper.isDamageable(item.getItem()) &&
-		// wrapper.isDamageable(newItem))
-		// wrapper.applyDurability(newItem, newItemMeta,
-		// wrapper.getDurability(item.getItem(), item.getItem().getItemMeta()));
-		//
-		// /*
-		// * keep name so players who renamed the item in the anvil does not
-		// have
-		// * to rename it again
-		// */
-		// if (did.hasOption(KeepOption.KEEP_NAME) &&
-		// item.getItem().getItemMeta().hasDisplayName())
-		// newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
-		//
-		// newItemMeta.setLore(lore);
-		// newItem.setItemMeta(newItemMeta);
-		// return newItem;
+
+		/*
+		* check the internal UUID of the item, if it does not make the one
+		* stored in the item updater data then the item is outdated.
+		*/
+		UpdaterData did = data.getValue(item.getType(), item.getString("MMOITEMS_ITEM_ID"));
+		if (did.matches(item))
+			return item.getItem();
+
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(item.getType(), item.getString("MMOITEMS_ITEM_ID"));
+		MMOItem newMMOItem = template.newBuilder(PlayerData.get(target).getRPG()).build();
+
+		 /*
+		 * apply older gem stones, using a light MMOItem so the item does not
+		 * calculate every stat data from the older item.
+		 */
+		 MMOItem volatileItem = new VolatileMMOItem(item);
+		 if (did.hasOption(KeepOption.KEEP_GEMS) && volatileItem.hasData(ItemStat.GEM_SOCKETS))
+		 	newMMOItem.replaceData(ItemStat.GEM_SOCKETS, volatileItem.getData(ItemStat.GEM_SOCKETS));
+
+		 if (did.hasOption(KeepOption.KEEP_SOULBOUND) && volatileItem.hasData(ItemStat.SOULBOUND))
+		 	newMMOItem.replaceData(ItemStat.SOULBOUND, volatileItem.getData(ItemStat.SOULBOUND));
+
+		 // if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
+
+		 // apply amount
+		 ItemStack newItem = newMMOItem.newBuilder().build();
+		 newItem.setAmount(item.getItem().getAmount());
+
+		 ItemMeta newItemMeta = newItem.getItemMeta();
+		 List<String> lore = newItemMeta.getLore();
+
+		 /*
+		 * add old enchants to the item. warning - if enabled the item will
+		 * remember of ANY enchant on the old item, even the enchants that
+		 were
+		 * removed!
+		 */
+		 if (did.hasOption(KeepOption.KEEP_ENCHANTS))
+		 	item.getItem().getItemMeta().getEnchants().forEach((enchant, level) -> newItemMeta.addEnchant(enchant, level, true));
+
+		 /*
+		 * keepLore is used to save enchants from custom enchants plugins that
+		 * only use lore to save enchant data
+		 */
+		 if (did.hasOption(KeepOption.KEEP_LORE)) {
+		 	int n = 0;
+		 	for (String s : item.getItem().getItemMeta().getLore()) {
+		 		if (!s.startsWith(ChatColor.GRAY + ""))
+		 			break;
+		 		lore.add(n++, s);
+		 	}
+		 }
+
+		 /*
+		 * keep durability can be used for tools to save their durability so
+		 * users do not get extra durability when the item is updated
+		 */
+		 ;
+		 if (did.hasOption(KeepOption.KEEP_DURABILITY) && item.getItem().getItemMeta() instanceof Damageable && newItemMeta instanceof Damageable) {
+			 ((Damageable) newItemMeta).setDamage(((Damageable) item.getItem().getItemMeta()).getDamage());
+		}
+
+
+		 /*
+		 * keep name so players who renamed the item in the anvil does not
+		 have
+		 * to rename it again
+		 */
+		 if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
+		 	newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
+
+		 newItemMeta.setLore(lore);
+		 newItem.setItemMeta(newItemMeta);
+		 return newItem;
 	}
 
 	public enum KeepOption {
@@ -222,7 +222,6 @@ public class UpdaterManager implements Listener {
 		KEEP_GEMS("The item keeps its empty gem", "sockets and applied gems."),
 		KEEP_SOULBOUND("The item keeps its soulbound data."),
 		// KEEP_SKIN("Keep the item applied skins."),
-
 		;
 
 		private final List<String> lore;

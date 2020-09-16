@@ -129,7 +129,7 @@ public class PluginUpdateManager {
 				new String[] { "Enables the item updater for every item.", "&cNot recommended unless you know what you are doing." }, sender -> {
 					for (Type type : MMOItems.plugin.getTypes().getAll())
 						for (String id : type.getConfigFile().getConfig().getKeys(false))
-							MMOItems.plugin.getUpdater().enable(new UpdaterData(type, id, UUID.randomUUID(), true));
+							MMOItems.plugin.getUpdater().enable(new UpdaterData(MMOItems.plugin.getTemplates().getTemplate(type, id), UUID.randomUUID(), true));
 				}));
 
 		register(new PluginUpdate(4,

@@ -1,21 +1,19 @@
 package net.Indyuce.mmoitems.api;
 
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
-import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
-import net.mmogroup.mmolib.api.item.NBTItem;
-
 public class UpdaterData {
 
 	// TODO change this to MMOItemTemplate
-	private final Type type;
-	private final String id;
 
 	/*
 	 * two UUIDs can be found : one on the itemStack in the nbttags, and one in
@@ -23,27 +21,28 @@ public class UpdaterData {
 	 * they don't match, the item needs to be updated. UUID not final because it
 	 * must be changed
 	 */
+	private final MMOItemTemplate template;
+
 	private UUID uuid;
 
 	private final Set<KeepOption> options = new HashSet<>();
 
-	public UpdaterData(Type type, String id, ConfigurationSection config) {
-		this(type, id, UUID.fromString(config.getString("uuid")));
+	public UpdaterData(MMOItemTemplate template, ConfigurationSection config) {
+		this(template, UUID.fromString(config.getString("uuid")));
 
 		for (KeepOption option : KeepOption.values())
 			if (config.getBoolean(option.getPath()))
 				options.add(option);
 	}
 
-	public UpdaterData(Type type, String id, UUID uuid, KeepOption... options) {
+	public UpdaterData(MMOItemTemplate template, UUID uuid, KeepOption... options) {
+		this.template = template;
 		this.uuid = uuid;
-		this.type = type;
-		this.id = id;
 		this.options.addAll(Arrays.asList(options));
 	}
 
-	public UpdaterData(Type type, String id, UUID uuid, boolean enableAllOptions) {
-		this(type, id, uuid);
+	public UpdaterData(MMOItemTemplate template, UUID uuid, boolean enableAllOptions) {
+		this(template, uuid);
 
 		if (enableAllOptions)
 			options.addAll(Arrays.asList(KeepOption.values()));
@@ -57,15 +56,15 @@ public class UpdaterData {
 	}
 
 	public String getPath() {
-		return type.getId() + "." + id;
+		return template.getType().getId() + "." + template.getId();
 	}
 
 	public Type getType() {
-		return type;
+		return template.getType();
 	}
 
 	public String getId() {
-		return id;
+		return template.getId();
 	}
 
 	public UUID getUniqueId() {

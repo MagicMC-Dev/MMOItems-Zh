@@ -1,5 +1,11 @@
 package net.Indyuce.mmoitems.command;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.gui.edition.ItemUpdaterEdition;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -7,13 +13,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.gui.edition.ItemUpdaterEdition;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class UpdateItemCommand implements CommandExecutor {
 	@Override
@@ -36,7 +35,7 @@ public class UpdateItemCommand implements CommandExecutor {
 				return true;
 			}
 
-			ItemStack newItem = MMOItems.plugin.getUpdater().getUpdated(item.getItem());
+			ItemStack newItem = MMOItems.plugin.getUpdater().getUpdated(item.getItem(), player);
 			if (newItem == null || newItem.getType() == Material.AIR) {
 				sender.sendMessage(ChatColor.RED + "Could not update your item.");
 				return true;

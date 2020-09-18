@@ -134,10 +134,10 @@ public class ParticleData implements StatData, RandomStatData {
 		return object;
 	}
 
-	// TODO change this after 1.12 not supported
+	// TODO Change this and ArrowParticles to allow NOTE/SPELL_BOT/SPELL_MOB_AMBIENT to be colored and also allow BLOCK_DUST/ITEM_DUST to be able to pick a block/item.
 	public static boolean isColorable(Particle particle) {
-		// || particle == Particle.NOTE
-		return particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || particle == Particle.REDSTONE;
+		// particle == Particle.NOTE || particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT || 
+		return particle == Particle.REDSTONE;
 	}
 
 	@Override

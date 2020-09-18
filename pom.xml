@@ -142,7 +142,7 @@
         <dependency>
             <groupId>org.black_ixx</groupId>
             <artifactId>BossShop</artifactId>
-            <version>2.0.8</version>
+            <version>2.0.9</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/BossShopPro.jar</systemPath>
         </dependency>

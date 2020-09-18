@@ -86,9 +86,9 @@ public class CommandListEdition extends EditionInventory {
 			return;
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Register a command...")) {
-			new StatEdition(this, ItemStat.COMMANDS).enable("Write in the chat the command you want to add.", "", "To add a delay, use &c-d:<delay>",
-					"To make the command cast itself w/ console, use &c-c", "To make the command cast w/ OP perms, use &c-op", "",
-					"&eEx: -d:10.3 -op bc Hello, this is a test command.");
+			new StatEdition(this, ItemStat.COMMANDS).enable("Write in the chat the command you want to add.", "", "To add a delay, use " + ChatColor.RED + "-d:<delay>",
+					"To make the command cast itself w/ console, use " + ChatColor.RED + "-c", "To make the command cast w/ OP perms, use " + ChatColor.RED + "-op", "",
+					ChatColor.YELLOW + "Ex: -d:10.3 -op bc Hello, this is a test command.");
 			return;
 		}
 

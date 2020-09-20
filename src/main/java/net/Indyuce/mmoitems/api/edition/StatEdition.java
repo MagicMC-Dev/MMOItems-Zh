@@ -47,7 +47,7 @@ public class StatEdition implements Edition {
 
 		inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
 		for (String line : message)
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + line);
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', line));
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
 
 		/*

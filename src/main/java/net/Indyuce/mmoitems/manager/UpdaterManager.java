@@ -43,7 +43,7 @@ public class UpdaterManager implements Listener {
 					MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, id);
 					enable(new UpdaterData(template, config.getConfigurationSection(typeFormat + "." + id)));
 				}
-				} catch (IllegalArgumentException | NullPointerException exception) {
+			} catch (IllegalArgumentException | NullPointerException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						"An issue occurred while trying to load dynamic updater data: " + exception.getMessage());
 			}
@@ -62,8 +62,8 @@ public class UpdaterManager implements Listener {
 	}
 
 	public void enable(ItemReference template) {
-		this.data.setValue(template.getType(), template.getId(), new UpdaterData(MMOItems.plugin.getTemplates()
-				.getTemplate(template.getType(), template.getId()), UUID.randomUUID()));
+		this.data.setValue(template.getType(), template.getId(),
+				new UpdaterData(MMOItems.plugin.getTemplates().getTemplate(template.getType(), template.getId()), UUID.randomUUID()));
 	}
 
 	public void enable(Type type, String id) {
@@ -124,22 +124,18 @@ public class UpdaterManager implements Listener {
 	public ItemStack getUpdated(NBTItem item, Player target) {
 
 		/*
-		* If the item type is null, then it is not an mmoitem and it does not
-		* need to be updated
-		*/
+		 * If the item type is null, then it is not an mmoitem and it does not
+		 * need to be updated
+		 */
 		Type type = item.getType();
 
-		if (type == null)
+		if (type == null || !data.hasValue(type, item.getString("MMOITEMS_ITEM_ID")))
 			return item.getItem();
-
-		if (!data.hasValue(type, item.getString("MMOITEMS_ITEM_ID")))
-			return item.getItem();
-
 
 		/*
-		* check the internal UUID of the item, if it does not make the one
-		* stored in the item updater data then the item is outdated.
-		*/
+		 * check the internal UUID of the item, if it does not make the one
+		 * stored in the item updater data then the item is outdated.
+		 */
 		UpdaterData did = data.getValue(type, item.getString("MMOITEMS_ITEM_ID"));
 		if (did.matches(item))
 			return item.getItem();
@@ -147,69 +143,64 @@ public class UpdaterManager implements Listener {
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, item.getString("MMOITEMS_ITEM_ID"));
 		MMOItem newMMOItem = template.newBuilder(PlayerData.get(target).getRPG()).build();
 
-		 /*
+		/*
 		 * apply older gem stones, using a light MMOItem so the item does not
 		 * calculate every stat data from the older item.
 		 */
-		 MMOItem volatileItem = new VolatileMMOItem(item);
-		 if (did.hasOption(KeepOption.KEEP_GEMS) && volatileItem.hasData(ItemStat.GEM_SOCKETS))
-		 	newMMOItem.replaceData(ItemStat.GEM_SOCKETS, volatileItem.getData(ItemStat.GEM_SOCKETS));
+		MMOItem volatileItem = new VolatileMMOItem(item);
+		if (did.hasOption(KeepOption.KEEP_GEMS) && volatileItem.hasData(ItemStat.GEM_SOCKETS))
+			newMMOItem.replaceData(ItemStat.GEM_SOCKETS, volatileItem.getData(ItemStat.GEM_SOCKETS));
 
-		 if (did.hasOption(KeepOption.KEEP_SOULBOUND) && volatileItem.hasData(ItemStat.SOULBOUND))
-		 	newMMOItem.replaceData(ItemStat.SOULBOUND, volatileItem.getData(ItemStat.SOULBOUND));
+		if (did.hasOption(KeepOption.KEEP_SOULBOUND) && volatileItem.hasData(ItemStat.SOULBOUND))
+			newMMOItem.replaceData(ItemStat.SOULBOUND, volatileItem.getData(ItemStat.SOULBOUND));
 
-		 // if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
+		// if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
 
-		 // apply amount
-		 ItemStack newItem = newMMOItem.newBuilder().build();
-		 newItem.setAmount(item.getItem().getAmount());
+		// apply amount
+		ItemStack newItem = newMMOItem.newBuilder().build();
+		newItem.setAmount(item.getItem().getAmount());
 
-		 ItemMeta newItemMeta = newItem.getItemMeta();
-		 List<String> lore = newItemMeta.getLore();
+		ItemMeta newItemMeta = newItem.getItemMeta();
+		List<String> lore = newItemMeta.getLore();
 
-		 /*
+		/*
 		 * add old enchants to the item. warning - if enabled the item will
-		 * remember of ANY enchant on the old item, even the enchants that
-		 were
+		 * remember of ANY enchant on the old item, even the enchants that were
 		 * removed!
 		 */
-		 if (did.hasOption(KeepOption.KEEP_ENCHANTS))
-		 	item.getItem().getItemMeta().getEnchants().forEach((enchant, level) -> newItemMeta.addEnchant(enchant, level, true));
+		if (did.hasOption(KeepOption.KEEP_ENCHANTS))
+			item.getItem().getItemMeta().getEnchants().forEach((enchant, level) -> newItemMeta.addEnchant(enchant, level, true));
 
-		 /*
+		/*
 		 * keepLore is used to save enchants from custom enchants plugins that
 		 * only use lore to save enchant data
 		 */
-		 if (did.hasOption(KeepOption.KEEP_LORE)) {
-		 	int n = 0;
-		 	for (String s : item.getItem().getItemMeta().getLore()) {
-		 		if (!s.startsWith(ChatColor.GRAY + ""))
-		 			break;
-		 		lore.add(n++, s);
-		 	}
-		 }
+		if (did.hasOption(KeepOption.KEEP_LORE)) {
+			int n = 0;
+			for (String s : item.getItem().getItemMeta().getLore()) {
+				if (!s.startsWith(ChatColor.GRAY + ""))
+					break;
+				lore.add(n++, s);
+			}
+		}
 
-		 /*
+		/*
 		 * keep durability can be used for tools to save their durability so
 		 * users do not get extra durability when the item is updated
 		 */
-		 ;
-		 if (did.hasOption(KeepOption.KEEP_DURABILITY) && item.getItem().getItemMeta() instanceof Damageable && newItemMeta instanceof Damageable) {
-			 ((Damageable) newItemMeta).setDamage(((Damageable) item.getItem().getItemMeta()).getDamage());
-		}
+		if (did.hasOption(KeepOption.KEEP_DURABILITY) && item.getItem().getItemMeta() instanceof Damageable && newItemMeta instanceof Damageable)
+			((Damageable) newItemMeta).setDamage(((Damageable) item.getItem().getItemMeta()).getDamage());
 
-
-		 /*
-		 * keep name so players who renamed the item in the anvil does not
-		 have
+		/*
+		 * keep name so players who renamed the item in the anvil does not have
 		 * to rename it again
 		 */
-		 if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
-		 	newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
+		if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
+			newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
 
-		 newItemMeta.setLore(lore);
-		 newItem.setItemMeta(newItemMeta);
-		 return newItem;
+		newItemMeta.setLore(lore);
+		newItem.setItemMeta(newItemMeta);
+		return newItem;
 	}
 
 	public enum KeepOption {

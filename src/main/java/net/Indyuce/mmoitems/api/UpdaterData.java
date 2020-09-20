@@ -1,31 +1,31 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
+import net.mmogroup.mmolib.api.item.NBTItem;
+
 public class UpdaterData {
 
-	// TODO change this to MMOItemTemplate
-
-	/*
-	 * two UUIDs can be found : one on the itemStack in the nbttags, and one in
-	 * the UpdaterData instance. if the two match, the item is up to date. if
-	 * they don't match, the item needs to be updated. UUID not final because it
-	 * must be changed
+	/**
+	 * The item reference
 	 */
-
 	private final Type type;
-
 	private final String id;
 
+	/**
+	 * Two UUIDs can be found: one on the itemStack in the NBTTags, and one in
+	 * the UpdaterData instance. If the UUIDs match, the item is up to date. If
+	 * they don't match, the item needs to be updated. UUID not final because it
+	 * is updated everytime the item is edited using the editor GUI
+	 */
 	private UUID uuid;
 
 	private final Set<KeepOption> options = new HashSet<>();

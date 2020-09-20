@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -25,6 +26,8 @@ public class Tool extends UseItem {
 	}
 
 	public boolean miningEffects(Block block) {
+		boolean cancel = false;
+		
 		if (mmoitem.getNBT().getBoolean("MMOITEMS_AUTOSMELT"))
 			if (block.getType() == Material.IRON_ORE || block.getType() == Material.GOLD_ORE) {
 				ItemStack item = new ItemStack(Material.valueOf(block.getType().name().replace("_ORE", "") + "_INGOT"));
@@ -33,7 +36,7 @@ public class Tool extends UseItem {
 				block.setType(Material.AIR);
 				block.getWorld().dropItemNaturally(loc, item);
 				block.getWorld().spawnParticle(Particle.CLOUD, loc.add(0, .5, 0), 0);
-				return true;
+				cancel = true;
 			}
 
 		if (mmoitem.getNBT().getBoolean("MMOITEMS_BOUNCING_CRACK"))
@@ -56,6 +59,14 @@ public class Tool extends UseItem {
 					loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 1);
 				}
 			}.runTaskTimer(MMOItems.plugin, 0, 1);
-		return false;
+			
+		if (mmoitem.getNBT().hasTag("MMOITEMS_BREAK_SIZE")) {
+			int breakSize = mmoitem.getNBT().getInteger("MMOITEMS_BREAK_SIZE");
+			if(breakSize % 2 != 0) {
+				BlockFace face = player.getFacing();
+				System.out.println("Debug: Facing - " + face);
+			}
+		}
+		return cancel;
 	}
 }

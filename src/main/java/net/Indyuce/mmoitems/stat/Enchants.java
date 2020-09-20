@@ -60,13 +60,19 @@ public class Enchants extends ItemStat {
 		}
 	}
 
+	/*
+	 * getByName is deprecated, but it's safe to
+	 * use and will make the user experience better
+	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String[] split = message.split("\\ ");
 		Validate.isTrue(split.length >= 2, "Use this format: {Enchant Name} {Enchant Level Numeric Formula}. Example: 'sharpness 5 0.3' "
 				+ "stands for Sharpness 5, plus 0.3 level per item level (rounded up to lower integer)");
 
-		Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(split[0].replace("-", "_")));
+		Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(split[0].toLowerCase().replace("-", "_")));		
+		if(enchant == null) enchant = Enchantment.getByName(split[0].toUpperCase());
 		Validate.notNull(enchant, split[0]
 				+ " is not a valid enchantment! All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
 

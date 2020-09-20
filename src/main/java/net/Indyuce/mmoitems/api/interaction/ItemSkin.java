@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -81,6 +82,8 @@ public class ItemSkin extends UseItem {
 			if (meta instanceof Damageable && skinMeta instanceof Damageable)
 				((Damageable) meta).setDamage(((Damageable) skinMeta).getDamage());
 		}
+		if(skinMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
+			((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
 		if (getMMOItem().hasData(ItemStat.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
 				&& getNBTItem().getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
 			try {

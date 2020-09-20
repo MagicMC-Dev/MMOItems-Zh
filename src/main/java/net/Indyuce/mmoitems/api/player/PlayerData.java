@@ -514,9 +514,6 @@ public class PlayerData {
 
 	public enum CooldownType {
 
-		// either for consumables or for commands
-		ITEM,
-
 		// simple attack cooldown
 		ATTACK,
 

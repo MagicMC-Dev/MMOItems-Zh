@@ -1,5 +1,23 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
@@ -13,23 +31,6 @@ import net.Indyuce.mmoitems.api.util.TemplateMap;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
 
 public class UpdaterManager implements Listener {
 	private final TemplateMap<UpdaterData> data = new TemplateMap<>();
@@ -43,7 +44,7 @@ public class UpdaterManager implements Listener {
 					MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, id);
 					enable(new UpdaterData(template, config.getConfigurationSection(typeFormat + "." + id)));
 				}
-			} catch (IllegalArgumentException | NullPointerException exception) {
+			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						"An issue occurred while trying to load dynamic updater data: " + exception.getMessage());
 			}
@@ -128,7 +129,6 @@ public class UpdaterManager implements Listener {
 		 * need to be updated
 		 */
 		Type type = item.getType();
-
 		if (type == null || !data.hasValue(type, item.getString("MMOITEMS_ITEM_ID")))
 			return item.getItem();
 

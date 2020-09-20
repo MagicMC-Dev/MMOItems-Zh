@@ -1,16 +1,17 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
-import org.apache.commons.lang.Validate;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.Validate;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
 
 public class TypeManager {
 	private final Map<String, Type> map = new LinkedHashMap<>();
@@ -71,7 +72,6 @@ public class TypeManager {
 			register(type);
 	}
 
-	// TODO minor refactor, use Optional<Type>
 	public Type get(String id) {
 		return map.get(id);
 	}

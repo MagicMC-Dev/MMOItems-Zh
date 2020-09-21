@@ -142,14 +142,17 @@ public class PluginUpdateManager {
 						ConfigFile config = type.getConfigFile();
 						for (String id : config.getConfig().getKeys(false)) {
 
-							// translates items into templates
-							if (!config.getConfig().getConfigurationSection(id).contains("base")) {
-
-								config.getConfig().createSection(id + ".base", config.getConfig().getConfigurationSection(id).getValues(false));
-								for (String statKey : config.getConfig().getConfigurationSection(id).getKeys(false))
-									if (!statKey.equals("base"))
-										config.getConfig().set(id + "." + statKey, null);
+							// if item has base it will not convert
+							if (config.getConfig().getConfigurationSection(id).contains("base")) {
+								continue;
 							}
+
+							// translates items into templates
+							config.getConfig().createSection(id + ".base", config.getConfig().getConfigurationSection(id).getValues(false));
+							for (String statKey : config.getConfig().getConfigurationSection(id).getKeys(false))
+								if (!statKey.equals("base"))
+									config.getConfig().set(id + "." + statKey, null);
+
 							// simple path changes
 							rename(config.getConfig().getConfigurationSection(id + ".base"), "regeneration", "health-regeneration");
 							rename(config.getConfig().getConfigurationSection(id + ".base"), "element.light", "element.lightness");

@@ -28,6 +28,7 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.RecipeBookUtil;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -36,6 +37,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void loadPlayerData(PlayerJoinEvent event) {
+		RecipeBookUtil.refresh(event.getPlayer());
 		PlayerData.load(event.getPlayer());
 	}
 

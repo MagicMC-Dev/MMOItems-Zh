@@ -141,6 +141,7 @@ public class CraftingListener implements Listener {
 							slotsChecked.add(i);
 							check = true;
 						}
+						cached.clean();
 						if (nonnullcount > recipe.getIngredients().size()) {
 							check = false;
 							break;

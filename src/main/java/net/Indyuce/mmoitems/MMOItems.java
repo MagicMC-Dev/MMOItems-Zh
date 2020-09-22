@@ -97,13 +97,13 @@ public class MMOItems extends JavaPlugin {
 
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
+	private final TemplateManager templateManager = new TemplateManager();
 	private final AbilityManager abilityManager = new AbilityManager();
 	private final EntityManager entityManager = new EntityManager();
-	private final TypeManager typeManager = new TypeManager();
-	private final TemplateManager templateManager = new TemplateManager();
-	private final ItemManager itemManager = new ItemManager();
 	private final RecipeManager recipeManager = new RecipeManager();
 	private final LayoutManager layoutManager = new LayoutManager();
+	private final TypeManager typeManager = new TypeManager();
+	private final ItemManager itemManager = new ItemManager();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -115,10 +115,10 @@ public class MMOItems extends JavaPlugin {
 	private StatManager statManager;
 	private SetManager setManager;
 
+	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
 	private PlayerInventory inventory = new DefaultPlayerInventory();
 	private FlagPlugin flagPlugin = new DefaultFlags();
-	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private HologramSupport hologramSupport;
 	private RPGHandler rpgPlugin;
 

@@ -130,14 +130,12 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		Recipe recipe;
 		if (shapeless) {
 			ShapelessRecipe r = new ShapelessRecipe(key, getResult(null));
-			r.setGroup("mmoitems");
 			for (WorkbenchIngredient ingredient : ingredients.values())
 				if (!(ingredient instanceof AirIngredient))
 					r.addIngredient(ingredient.toBukkit());
 			recipe = r;
 		} else {
 			ShapedRecipe r = new ShapedRecipe(key, getResult(null));
-			r.setGroup("mmoitems");
 			char[] characters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 			List<Integer> list = new ArrayList<>(ingredients.keySet());
 			StringBuilder firstRow = new StringBuilder();

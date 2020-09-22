@@ -3,14 +3,14 @@ package net.Indyuce.mmoitems.api.event.item;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class BreakSoulboundEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
-	private final MMOItem consumable;
+	private final VolatileMMOItem consumable;
 	private final NBTItem target;
 
 	/**
@@ -23,14 +23,14 @@ public class BreakSoulboundEvent extends PlayerDataEvent {
 	 * @param target
 	 *            Item with soulbound
 	 */
-	public BreakSoulboundEvent(PlayerData playerData, MMOItem consumable, NBTItem target) {
+	public BreakSoulboundEvent(PlayerData playerData, VolatileMMOItem consumable, NBTItem target) {
 		super(playerData);
 
 		this.consumable = consumable;
 		this.target = target;
 	}
 
-	public MMOItem getConsumable() {
+	public VolatileMMOItem getConsumable() {
 		return consumable;
 	}
 

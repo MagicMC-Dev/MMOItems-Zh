@@ -110,7 +110,7 @@ public class Consumable extends UseItem {
 		 * Upgrading an item, it is sbetter not to repair an item while
 		 * upgrading it.
 		 */
-		if (getNBTItem().hasTag("MMOITEMS_UPGRADE") && target.hasTag("MMOITEMS_UPGRADE")) {
+		if (mmoitem.hasData(ItemStat.UPGRADE) && target.hasTag("MMOITEMS_UPGRADE")) {
 			if (target.getItem().getAmount() > 1) {
 				Message.CANT_UPGRADED_STACK.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);

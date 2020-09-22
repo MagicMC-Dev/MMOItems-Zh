@@ -4,13 +4,15 @@ import org.bukkit.event.HandlerList;
 
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 
 public class UpgradeItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
-	private final MMOItem consumable, target;
+	private final VolatileMMOItem consumable;
+	private final MMOItem target;
 	private final UpgradeData consumableData, targetData;
 
 	/**
@@ -27,7 +29,7 @@ public class UpgradeItemEvent extends PlayerDataEvent {
 	 * @param targetData
 	 *            Upgrade info about the target item
 	 */
-	public UpgradeItemEvent(PlayerData playerData, MMOItem consumable, MMOItem target, UpgradeData consumableData, UpgradeData targetData) {
+	public UpgradeItemEvent(PlayerData playerData, VolatileMMOItem consumable, MMOItem target, UpgradeData consumableData, UpgradeData targetData) {
 		super(playerData);
 
 		this.consumable = consumable;
@@ -36,7 +38,7 @@ public class UpgradeItemEvent extends PlayerDataEvent {
 		this.targetData = targetData;
 	}
 
-	public MMOItem getConsumable() {
+	public VolatileMMOItem getConsumable() {
 		return consumable;
 	}
 

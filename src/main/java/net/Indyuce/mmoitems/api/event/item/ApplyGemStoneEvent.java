@@ -4,12 +4,14 @@ import org.bukkit.event.HandlerList;
 
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class ApplyGemStoneEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
-	private final MMOItem gemStone, targetItem;
+	private final VolatileMMOItem gemStone;
+	private final MMOItem targetItem;
 
 	/**
 	 * Called when a player tries to apply a gem stone onto an item
@@ -21,14 +23,14 @@ public class ApplyGemStoneEvent extends PlayerDataEvent {
 	 * @param target
 	 *            Item on which the gem is being applied
 	 */
-	public ApplyGemStoneEvent(PlayerData playerData, MMOItem gemStone, MMOItem targetItem) {
+	public ApplyGemStoneEvent(PlayerData playerData, VolatileMMOItem gemStone, MMOItem targetItem) {
 		super(playerData);
 
 		this.gemStone = gemStone;
 		this.targetItem = targetItem;
 	}
 
-	public MMOItem getGemStone() {
+	public VolatileMMOItem getGemStone() {
 		return gemStone;
 	}
 

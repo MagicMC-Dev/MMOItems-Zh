@@ -3,14 +3,14 @@ package net.Indyuce.mmoitems.api.event.item;
 import org.bukkit.event.HandlerList;
 
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class RepairItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
-	private final MMOItem consumable;
+	private final VolatileMMOItem consumable;
 	private final NBTItem target;
 
 	private int repaired;
@@ -27,7 +27,7 @@ public class RepairItemEvent extends PlayerDataEvent {
 	 * @param repaired
 	 *            Amount of durability being repaired
 	 */
-	public RepairItemEvent(PlayerData playerData, MMOItem consumable, NBTItem target, int repaired) {
+	public RepairItemEvent(PlayerData playerData, VolatileMMOItem consumable, NBTItem target, int repaired) {
 		super(playerData);
 
 		this.consumable = consumable;
@@ -35,7 +35,7 @@ public class RepairItemEvent extends PlayerDataEvent {
 		this.repaired = repaired;
 	}
 
-	public MMOItem getConsumable() {
+	public VolatileMMOItem getConsumable() {
 		return consumable;
 	}
 

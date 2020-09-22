@@ -6,14 +6,14 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class DeconstructItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 
-	private final MMOItem consumable;
+	private final VolatileMMOItem consumable;
 	private final NBTItem deconstructed;
 	private final List<ItemStack> loot;
 
@@ -30,7 +30,7 @@ public class DeconstructItemEvent extends PlayerDataEvent {
 	 *            Items which will be given to the player if the item is
 	 *            successfully deconstructed
 	 */
-	public DeconstructItemEvent(PlayerData playerData, MMOItem consumable, NBTItem deconstructed, List<ItemStack> loot) {
+	public DeconstructItemEvent(PlayerData playerData, VolatileMMOItem consumable, NBTItem deconstructed, List<ItemStack> loot) {
 		super(playerData);
 
 		this.consumable = consumable;
@@ -38,7 +38,7 @@ public class DeconstructItemEvent extends PlayerDataEvent {
 		this.loot = loot;
 	}
 
-	public MMOItem getConsumable() {
+	public VolatileMMOItem getConsumable() {
 		return consumable;
 	}
 

@@ -71,20 +71,21 @@ public class GemStone extends UseItem {
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
-		GemstoneData gemData = new GemstoneData(mmoitem);
+		LiveMMOItem mmo = new LiveMMOItem(nbt);
+		GemstoneData gemData = new GemstoneData(mmo);
 		sockets.apply(gemType, gemData);
 
 		/*
 		 * Only applies NON PROPER and MERGEABLE item stats
 		 */
-		for (ItemStat stat : mmoitem.getStats())
+		for (ItemStat stat : mmo.getStats())
 			if (!(stat instanceof GemStoneStat)) {
-				StatData data = mmoitem.getData(stat);
+				StatData data = mmo.getData(stat);
 				if (data instanceof Mergeable) {
 					if (targetMMO.hasData(stat))
-						((Mergeable) targetMMO.getData(stat)).merge(mmoitem.getData(stat));
+						((Mergeable) targetMMO.getData(stat)).merge(mmo.getData(stat));
 					else
-						targetMMO.setData(stat, mmoitem.getData(stat));
+						targetMMO.setData(stat, mmo.getData(stat));
 				}
 			}
 

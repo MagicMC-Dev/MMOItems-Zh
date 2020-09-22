@@ -89,6 +89,10 @@ import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
 
 public class MMOItems extends JavaPlugin {
+	/* Introducing: The commit comment!
+	 * Just change this a tiny bit each time you
+	 * need to push a new build. It's convenient!
+	 */
 	public static MMOItems plugin;
 
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();

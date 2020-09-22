@@ -140,14 +140,12 @@ public class MMOItems extends JavaPlugin {
 		saveDefaultConfig();
 
 		/*
-		 * Stat manager must be initialized before MMOCore compatibility
-		 * initializes so that MMOCore and other plugins can register their
-		 * stats. After types are loaded, templates are loaded so that other
-		 * plugins when enabling can load MI template references
+		 * stat manager must be initialized before MMOCore compatibility
+		 * initializes so that MMOCore can register its stats
 		 */
 		statManager = new StatManager();
 		typeManager.reload();
-		templateManager.preloadTemplates();
+		templateManager.loadCompatibility();
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
@@ -174,6 +172,8 @@ public class MMOItems extends JavaPlugin {
 
 		findRpgPlugin();
 
+		templateManager.reload();
+		
 		/*
 		 * After tiers, sets and upgrade templates are loaded, MI template data
 		 * CAN be fully loaded
@@ -181,7 +181,6 @@ public class MMOItems extends JavaPlugin {
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
-		templateManager.postloadTemplates();
 
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();

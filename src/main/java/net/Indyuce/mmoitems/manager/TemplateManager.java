@@ -26,8 +26,8 @@ public class TemplateManager {
 	private final TemplateMap<MMOItemTemplate> templates = new TemplateMap<>();
 
 	/*
-	 * bank of item modifiers which can be used anywhere in generation templates
-	 * to make item generation easier.
+	 * bank of item modifiers which can be used anywhere in generation templates to
+	 * make item generation easier.
 	 */
 	private final Map<String, TemplateModifier> modifiers = new HashMap<>();
 
@@ -44,10 +44,8 @@ public class TemplateManager {
 	/**
 	 * Used in class constructors to easily
 	 *
-	 * @param type
-	 *            The item type
-	 * @param id
-	 *            The item ID
+	 * @param type The item type
+	 * @param id   The item ID
 	 * @return MMOItem template if it exists, or throws an IAE otherwise
 	 */
 	public MMOItemTemplate getTemplateOrThrow(Type type, String id) {
@@ -62,8 +60,7 @@ public class TemplateManager {
 	/**
 	 * Registers an MMOItem template internally. Can be done at any time
 	 *
-	 * @param template
-	 *            Template to register
+	 * @param template Template to register
 	 */
 	public void registerTemplate(MMOItemTemplate template) {
 		Validate.notNull(template, "MMOItem template cannot be null");
@@ -72,14 +69,12 @@ public class TemplateManager {
 	}
 
 	/**
-	 * Unregisters a template from mmoitem registery. Must be used when an item
-	 * is removed from the config files. Also disables the dynamic updater for
-	 * that item
+	 * Unregisters a template from mmoitem registery. Must be used when an item is
+	 * removed from the config files. Also disables the dynamic updater for that
+	 * item
 	 *
-	 * @param type
-	 *            The item type
-	 * @param id
-	 *            The item ID
+	 * @param type The item type
+	 * @param id   The item ID
 	 */
 	public void unregisterTemplate(Type type, String id) {
 		templates.removeValue(type, id);
@@ -87,13 +82,11 @@ public class TemplateManager {
 	}
 
 	/**
-	 * Unregisters a template from mmoitem registery and clears it from the
-	 * config file
+	 * Unregisters a template from mmoitem registery and clears it from the config
+	 * file
 	 *
-	 * @param type
-	 *            The item type
-	 * @param id
-	 *            The item ID
+	 * @param type The item type
+	 * @param id   The item ID
 	 */
 	public void deleteTemplate(Type type, String id) {
 		unregisterTemplate(type, id);
@@ -108,32 +101,31 @@ public class TemplateManager {
 	 * method unregisters the current template and loads it again from the
 	 * configuration file.
 	 *
-	 * Can also be used right after creating a template after the config file
-	 * has been initialized in order to load the newly created item
+	 * Can also be used right after creating a template after the config file has
+	 * been initialized in order to load the newly created item
 	 *
-	 * @param type
-	 *            The item type
-	 * @param id
-	 *            The item ID
+	 * @param type The item type
+	 * @param id   The item ID
 	 */
 	public MMOItemTemplate requestTemplateUpdate(Type type, String id) {
 		templates.removeValue(type, id);
 
 		try {
-			MMOItemTemplate template = new MMOItemTemplate(type, type.getConfigFile().getConfig().getConfigurationSection(id));
+			MMOItemTemplate template = new MMOItemTemplate(type,
+					type.getConfigFile().getConfig().getConfigurationSection(id));
 			registerTemplate(template);
 			return template;
 
 		} catch (IllegalArgumentException exception) {
-			MMOItems.plugin.getLogger().log(Level.INFO,
-					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
+			MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to reload item gen template '"
+					+ id + "': " + exception.getMessage());
 			return null;
 		}
 	}
 
 	/**
-	 * @return Collects all existing mmoitem templates into a set so that it can
-	 *         be filtered afterwards to generate random loot
+	 * @return Collects all existing mmoitem templates into a set so that it can be
+	 *         filtered afterwards to generate random loot
 	 */
 	public Collection<MMOItemTemplate> collectTemplates() {
 		return templates.collectValues();
@@ -166,12 +158,10 @@ public class TemplateManager {
 	}
 
 	/**
-	 * @param playerLevel
-	 *            Input player level
-	 * @return Generates a randomly chosen item level. The level spread
-	 *         (editable in the main config file) corresponding to the standard
-	 *         deviation of a gaussian distribution centered on the player level
-	 *         (input)
+	 * @param playerLevel Input player level
+	 * @return Generates a randomly chosen item level. The level spread (editable in
+	 *         the main config file) corresponding to the standard deviation of a
+	 *         gaussian distribution centered on the player level (input)
 	 */
 	public int rollLevel(int playerLevel) {
 		double spread = MMOItems.plugin.getLanguage().levelSpread;
@@ -184,57 +174,6 @@ public class TemplateManager {
 		return (int) found;
 	}
 
-	/**
-	 * Templates must be loaded whenever MMOItems enables so that other plugins
-	 * like MMOCore can load template references in drop items or other objects.
-	 * Template data is only loaded when MMOItems enables, once sets, tiers..
-	 * are initialized
-	 */
-	public void preloadTemplates() {
-		for (Type type : MMOItems.plugin.getTypes().getAll()) {
-			FileConfiguration config = type.getConfigFile().getConfig();
-			for (String key : config.getKeys(false))
-				try {
-					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Could not preload item template '" + key + "': " + exception.getMessage());
-				}
-		}
-	}
-
-	/**
-	 * Loads item generator modifiers and post load item templates.
-	 */
-	public void postloadTemplates() {
-
-		MMOItems.plugin.getLogger().log(Level.INFO, "Loading template modifiers, please wait..");
-		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
-			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-			for (String key : config.getKeys(false))
-				try {
-					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
-					modifiers.put(modifier.getId(), modifier);
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load template modifier '" + key + "': " + exception.getMessage());
-				}
-		}
-
-		MMOItems.plugin.getLogger().log(Level.INFO, "Loading item templates, please wait..");
-		templates.forEach(template -> {
-			try {
-				template.postLoad();
-			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + template.getId() + "': " + exception.getMessage());
-			}
-		});
-	}
-
-	/**
-	 * Reloads the item templates. This is the method used to reload the manager
-	 * when the server is already running. It clears all the maps and loads
-	 * everything again. Template references in other plugins like MMOCore must
-	 * be refreshed afterwards.
-	 */
 	public void reload() {
 		templates.clear();
 		modifiers.clear();
@@ -247,7 +186,8 @@ public class TemplateManager {
 					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
 					modifiers.put(modifier.getId(), modifier);
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load template modifier '" + key + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.INFO,
+							"Could not load template modifier '" + key + "': " + exception.getMessage());
 				}
 		}
 
@@ -258,7 +198,26 @@ public class TemplateManager {
 				try {
 					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.INFO,
+							"Could not load item template '" + key + "': " + exception.getMessage());
+				}
+		}
+	}
+
+	// this loads dummy items for on load so
+	// plugins that enable before mmoitems that use
+	// items (mmocore) don't error out and need
+	// a reload
+	public void loadCompatibility() {
+		templates.clear();
+
+		for (Type type : MMOItems.plugin.getTypes().getAll()) {
+			FileConfiguration config = type.getConfigFile().getConfig();
+			for (String key : config.getKeys(false))
+				try {
+					registerTemplate(new MMOItemTemplate(type, key));
+				} catch (IllegalArgumentException ignored) {
+
 				}
 		}
 	}

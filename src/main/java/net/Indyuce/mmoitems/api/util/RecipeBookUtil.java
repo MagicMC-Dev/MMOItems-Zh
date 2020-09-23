@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.mmogroup.mmolib.MMOLib;
 
 public class RecipeBookUtil {
 	private static boolean amounts = false;
@@ -25,15 +26,22 @@ public class RecipeBookUtil {
 
 	public static void refresh(Player player) {
 		if(!enabled) return;
-		
-		for (NamespacedKey key : player.getDiscoveredRecipes())
-			if (key.getNamespace().equals("mmoitems")
-					&& !MMOItems.plugin.getRecipes().getNamespacedKeys().contains(key))
-				player.undiscoverRecipe(key);
+
+		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
+			for (NamespacedKey key : player.getDiscoveredRecipes())
+				if (key.getNamespace().equals("mmoitems")
+						&& !MMOItems.plugin.getRecipes().getNamespacedKeys().contains(key))
+					player.undiscoverRecipe(key);
+
+			for (NamespacedKey recipe : MMOItems.plugin.getRecipes().getNamespacedKeys())
+				if (!player.hasDiscoveredRecipe(recipe))
+					player.discoverRecipe(recipe);
+			
+			return;
+		}
 
 		for (NamespacedKey recipe : MMOItems.plugin.getRecipes().getNamespacedKeys())
-			if (!player.hasDiscoveredRecipe(recipe))
-				player.discoverRecipe(recipe);
+			player.discoverRecipe(recipe);
 	}
 
 	public static void refreshOnline() {

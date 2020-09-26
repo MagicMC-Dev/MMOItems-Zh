@@ -22,7 +22,6 @@ import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.RecipeBookUtil;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
 import net.Indyuce.mmoitems.command.completion.UpdateItemCompletion;
@@ -296,13 +295,21 @@ public class MMOItems extends JavaPlugin {
 		// compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player)));
 
-		if (getConfig().getBoolean("recipes.recipe-amounts")) {
-			RecipeBookUtil.enableAmounts();
-			Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
+		boolean book = getConfig().getBoolean("recipes.use-recipe-book");
+		boolean amounts = getConfig().getBoolean("recipes.recipe-amounts");
+		
+		if(book && amounts) {
+			getLogger().warning("Tried to enable recipe book while amounts are active!");
+			getLogger().warning("Please use only ONE of these options!");
+			getLogger().warning("Disabling both options for now...");
+			book = false;
+			amounts = false;
 		}
-		if (getConfig().getBoolean("recipes.use-recipe-book"))
-			RecipeBookUtil.enableBook();
-
+		
+		recipeManager.load(book, amounts);
+		if(amounts)
+			Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
+		
 		// amount and bukkit recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
 		recipeManager.loadRecipes();

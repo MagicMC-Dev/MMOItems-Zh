@@ -47,6 +47,7 @@ public class GetMMOItemObjective extends Objective {
 		@EventHandler
 		public void a(CitizenInteractEvent event) {
 			Player player = event.getPlayer();
+			if(!getQuestProgress().getPlayer().isOnline()) return;
 			if (player.equals(getQuestProgress().getPlayer().getPlayer()) && event.getNPC().getId() == npcId && player.getInventory().getItemInMainHand() != null) {
 				NBTItem item = NBTItem.get(player.getInventory().getItemInMainHand());
 				int amount;

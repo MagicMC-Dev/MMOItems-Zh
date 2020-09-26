@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -29,7 +30,7 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
-import net.Indyuce.mmoitems.api.util.RecipeBookUtil;
+import net.mmogroup.mmolib.MMOLib;
 
 public class RecipeManager {
 	/**
@@ -43,6 +44,18 @@ public class RecipeManager {
 	 */
 	private final Set<Recipe> loadedRecipes = new HashSet<>();
 
+	private boolean book = false;
+	private boolean amounts = false;
+
+	public void load(boolean book, boolean amounts) {
+		this.book = book;
+		this.amounts = amounts;
+	}
+	
+	public boolean isAmounts() {
+		return amounts;
+	}
+	
 	public void loadRecipes() {
 		craftingRecipes.clear();
 
@@ -98,7 +111,7 @@ public class RecipeManager {
 	public void registerShapedRecipe(Type type, String id, List<String> list, String number) {
 		CustomRecipe recipe = new CustomRecipe(type, id, list, false);
 
-		if (RecipeBookUtil.isAmounts())
+		if (amounts)
 			registerRecipe(recipe);
 		else
 			registerBukkitRecipe(recipe, number);
@@ -106,7 +119,7 @@ public class RecipeManager {
 
 	public void registerShapelessRecipe(Type type, String id, List<String> list, String number) {
 		CustomRecipe recipe = new CustomRecipe(type, id, list, true);
-		if (RecipeBookUtil.isAmounts())
+		if (amounts)
 			registerRecipe(recipe);
 		else
 			registerBukkitRecipe(recipe, number);
@@ -152,11 +165,34 @@ public class RecipeManager {
 	 */
 	public void reloadRecipes() {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-			RecipeBookUtil.clear();
+			for (NamespacedKey recipe : getNamespacedKeys())
+				Bukkit.removeRecipe(recipe);
 			loadedRecipes.clear();
 			loadRecipes();
-			RecipeBookUtil.refreshOnline();
+			if(book)
+				for (Player player : Bukkit.getOnlinePlayers())
+					refreshRecipeBook(player);
 		});
+	}
+
+	public void refreshRecipeBook(Player player) {
+		if(!book) return;
+
+		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
+			for (NamespacedKey key : player.getDiscoveredRecipes())
+				if (key.getNamespace().equals("mmoitems")
+						&& !getNamespacedKeys().contains(key))
+					player.undiscoverRecipe(key);
+
+			for (NamespacedKey recipe : getNamespacedKeys())
+				if (!player.hasDiscoveredRecipe(recipe))
+					player.discoverRecipe(recipe);
+			
+			return;
+		}
+
+		for (NamespacedKey recipe : getNamespacedKeys())
+			player.discoverRecipe(recipe);
 	}
 
 	public WorkbenchIngredient getWorkbenchIngredient(String input) {

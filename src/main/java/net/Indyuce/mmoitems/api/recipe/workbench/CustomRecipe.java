@@ -26,7 +26,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
-import net.Indyuce.mmoitems.api.util.RecipeBookUtil;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -47,7 +46,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			for (int i = 0; i < 9; i++) {
 				WorkbenchIngredient ingredient = MMOItems.plugin.getRecipes().getWorkbenchIngredient(recipe.get(i));
 				// Only add AirIngredients if the amount system is enabled
-				if (RecipeBookUtil.isAmounts() || !(ingredient instanceof AirIngredient))
+				if (MMOItems.plugin.getRecipes().isAmounts() || !(ingredient instanceof AirIngredient))
 					ingredients.put(i, ingredient);
 			}
 			return;

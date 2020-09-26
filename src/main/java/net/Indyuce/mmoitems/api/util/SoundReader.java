@@ -4,21 +4,16 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class SoundReader {
-	private Sound sound;
-	private boolean valid;
+	private final Sound sound;
 
 	public SoundReader(String tag, Sound defaultSound) {
-		if (tag.equals("")) {
-			sound = defaultSound;
-			return;
-		}
-
+		Sound sound;
 		try {
 			sound = Sound.valueOf(tag);
-			valid = true;
 		} catch (Exception e) {
 			sound = defaultSound;
 		}
+		this.sound = sound;
 	}
 
 	public Sound getSound() {
@@ -30,7 +25,6 @@ public class SoundReader {
 	}
 
 	public void play(Player player, float vol, float pitch) {
-		if (valid)
-			player.playSound(player.getLocation(), sound, vol, pitch);
+		player.playSound(player.getLocation(), sound, vol, pitch);
 	}
 }

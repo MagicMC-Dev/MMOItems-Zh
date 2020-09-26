@@ -89,9 +89,10 @@ import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
 
 public class MMOItems extends JavaPlugin {
-	/* Introducing: The commit comment!
-	 * Just change this a tiny bit each time you
-	 * need to push a new build. It's convenient!
+
+	/*
+	 * Introducing: The commit comment! Just change this a tiny bit each time
+	 * you need to push a new build. It's convenient!
 	 */
 	public static MMOItems plugin;
 
@@ -149,7 +150,7 @@ public class MMOItems extends JavaPlugin {
 		 */
 		statManager = new StatManager();
 		typeManager.reload();
-		templateManager.loadCompatibility();
+		templateManager.preloadTemplates();
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
@@ -177,14 +178,15 @@ public class MMOItems extends JavaPlugin {
 		findRpgPlugin();
 
 		templateManager.reload();
-		
+
 		/*
 		 * After tiers, sets and upgrade templates are loaded, MI template data
-		 * CAN be fully loaded
+		 * can be fully loaded
 		 */
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
+		templateManager.postloadTemplates();
 
 		dropTableManager = new DropTableManager();
 		dynamicUpdater = new UpdaterManager();
@@ -294,14 +296,13 @@ public class MMOItems extends JavaPlugin {
 		// compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player)));
 
-		if(getConfig().getBoolean("recipes.recipe-amounts")) {
+		if (getConfig().getBoolean("recipes.recipe-amounts")) {
 			RecipeBookUtil.enableAmounts();
 			Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
 		}
-		if(getConfig().getBoolean("recipes.use-recipe-book"))
+		if (getConfig().getBoolean("recipes.use-recipe-book"))
 			RecipeBookUtil.enableBook();
 
-		
 		// amount and bukkit recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
 		recipeManager.loadRecipes();

@@ -28,7 +28,7 @@ public class Tool extends UseItem {
 	public boolean miningEffects(Block block) {
 		boolean cancel = false;
 		
-		if (nbt.getBoolean("MMOITEMS_AUTOSMELT"))
+		if (getNBTItem().getBoolean("MMOITEMS_AUTOSMELT"))
 			if (block.getType() == Material.IRON_ORE || block.getType() == Material.GOLD_ORE) {
 				ItemStack item = new ItemStack(Material.valueOf(block.getType().name().replace("_ORE", "") + "_INGOT"));
 
@@ -39,7 +39,7 @@ public class Tool extends UseItem {
 				cancel = true;
 			}
 
-		if (nbt.getBoolean("MMOITEMS_BOUNCING_CRACK"))
+		if (getNBTItem().getBoolean("MMOITEMS_BOUNCING_CRACK"))
 			new BukkitRunnable() {
 				Vector v = player.getEyeLocation().getDirection().multiply(.5);
 				Location loc = block.getLocation().clone().add(.5, .5, .5);
@@ -60,8 +60,8 @@ public class Tool extends UseItem {
 				}
 			}.runTaskTimer(MMOItems.plugin, 0, 1);
 			
-		if (nbt.hasTag("MMOITEMS_BREAK_SIZE")) {
-			int breakSize = nbt.getInteger("MMOITEMS_BREAK_SIZE");
+		if (getNBTItem().hasTag("MMOITEMS_BREAK_SIZE")) {
+			int breakSize = getNBTItem().getInteger("MMOITEMS_BREAK_SIZE");
 			if(breakSize % 2 != 0) {
 				BlockFace face = player.getFacing();
 				System.out.println("Debug: Facing - " + face);

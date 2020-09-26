@@ -71,7 +71,7 @@ public class GemStone extends UseItem {
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
-		LiveMMOItem mmo = new LiveMMOItem(nbt);
+		LiveMMOItem mmo = new LiveMMOItem(getNBTItem());
 		GemstoneData gemData = new GemstoneData(mmo);
 		sockets.apply(gemType, gemData);
 

@@ -217,7 +217,7 @@ public class RecipeManager {
 	}
 
 	/**
-	 * Used to handle furnace/smoker/campifire/furnace extra crafting recipe
+	 * Used to handle furnace/smoker/campfire/furnace extra crafting recipe
 	 * parameters
 	 * 
 	 * @author ASangarin

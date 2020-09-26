@@ -43,12 +43,14 @@ public class UnidentifiedItem extends ConfigItem {
 	 * allows to build an unidentified item based on the given NBTItem.
 	 */
 	public class ItemBuilder {
+		private final int amount;
 		private final NBTItem item;
 
 		private String name = new String(getName());
 		private List<String> lore = new ArrayList<>(getLore());
 
 		public ItemBuilder(NBTItem item) {
+			this.amount = item.getItem().getAmount();
 			this.item = item;
 		}
 
@@ -102,8 +104,10 @@ public class UnidentifiedItem extends ConfigItem {
 			/*
 			 * apply changes to item
 			 */
+			item.getItem().setAmount(1);
 			ItemStack unidentified = MMOLib.plugin.getVersion().getWrapper().copyTexture(item)
 					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
+			unidentified.setAmount(amount);
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);

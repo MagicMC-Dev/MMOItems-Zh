@@ -28,7 +28,6 @@ public class UseItem {
 	protected final Player player;
 	protected final PlayerData playerData;
 	protected final VolatileMMOItem mmoitem;
-	protected final NBTItem nbt;
 
 	protected static final Random random = new Random();
 
@@ -40,7 +39,6 @@ public class UseItem {
 		this.player = playerData.getPlayer();
 		this.playerData = playerData;
 		this.mmoitem = new VolatileMMOItem(nbtItem);
-		this.nbt = nbtItem;
 	}
 
 	public Player getPlayer() {
@@ -56,15 +54,15 @@ public class UseItem {
 	}
 
 	public NBTItem getNBTItem() {
-		return nbt;
+		return mmoitem.getNBT();
 	}
 
 	public ItemStack getItem() {
-		return nbt.getItem();
+		return mmoitem.getNBT().getItem();
 	}
 
 	public boolean canBeUsed() {
-		return playerData.getRPG().canUse(nbt, true);
+		return playerData.getRPG().canUse(mmoitem.getNBT(), true);
 	}
 
 	public void executeCommands() {

@@ -177,8 +177,6 @@ public class MMOItems extends JavaPlugin {
 
 		findRpgPlugin();
 
-		templateManager.reload();
-
 		/*
 		 * After tiers, sets and upgrade templates are loaded, MI template data
 		 * can be fully loaded

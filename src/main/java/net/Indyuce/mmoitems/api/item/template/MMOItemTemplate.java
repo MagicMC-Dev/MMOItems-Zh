@@ -20,8 +20,9 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.util.PostLoadObject;
 
-public class MMOItemTemplate implements ItemReference {
+public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	private final Type type;
 	private final String id;
 
@@ -42,6 +43,8 @@ public class MMOItemTemplate implements ItemReference {
 	 *            different item types share the same ID
 	 */
 	public MMOItemTemplate(Type type, String id) {
+		super(null);
+
 		this.type = type;
 		this.id = id;
 	}
@@ -55,11 +58,15 @@ public class MMOItemTemplate implements ItemReference {
 	 *            The config file read to load the template
 	 */
 	public MMOItemTemplate(Type type, ConfigurationSection config) {
+		super(config);
 		Validate.notNull(config, "Could not load template config");
 
 		this.type = type;
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
+	}
 
+	@Override
+	protected void whenPostLoaded(ConfigurationSection config) {
 		if (config.contains("option"))
 			for (TemplateOption option : TemplateOption.values())
 				if (config.getBoolean("option." + option.name().toLowerCase().replace("_", "-")))

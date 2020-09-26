@@ -66,7 +66,7 @@ public class MMOItemIngredient extends Ingredient {
 
 	private String findName() {
 		if (template.getBaseItemData().containsKey(ItemStat.NAME))
-			return template.getBaseItemData().get(ItemStat.NAME).toString();
+			return template.getBaseItemData().get(ItemStat.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "");
 		if (template.getBaseItemData().containsKey(ItemStat.MATERIAL))
 			return MMOUtils.caseOnWords(
 					((MaterialData) template.getBaseItemData().get(ItemStat.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));

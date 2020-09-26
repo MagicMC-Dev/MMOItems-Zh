@@ -10,6 +10,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import net.mmogroup.mmolib.command.api.Parameter;
 
 public class CopyCommandTreeNode extends CommandTreeNode {
 	public CopyCommandTreeNode(CommandTreeNode parent) {
@@ -17,6 +18,8 @@ public class CopyCommandTreeNode extends CommandTreeNode {
 
 		addParameter(MMOItemsCommandTreeRoot.TYPE);
 		addParameter(MMOItemsCommandTreeRoot.ID_2);
+		addParameter(new Parameter("<new-id>", (a, b) -> {
+		}));
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class CopyCommandTreeNode extends CommandTreeNode {
 		config.getConfig().set(id2, config.getConfig().getConfigurationSection(id1));
 		config.save();
 		MMOItems.plugin.getTemplates().requestTemplateUpdate(type, id2);
-		
+
 		if (sender instanceof Player)
 			new ItemEdition((Player) sender, MMOItems.plugin.getTemplates().getTemplate(type, id2)).open();
 		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + id1 + " to " + id2 + "!");

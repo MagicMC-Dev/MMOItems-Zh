@@ -67,9 +67,10 @@ public class ItemParticles extends ItemStat {
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD
 					+ particleType.getDefaultName() + ChatColor.GRAY + ".");
+			return;
 		}
 
-		else if (edited.equals("particle-color")) {
+		if (edited.equals("particle-color")) {
 			String[] split = message.split("\\ ");
 			int red = Integer.parseInt(split[0]), green = Integer.parseInt(split[1]), blue = Integer.parseInt(split[2]);
 
@@ -81,9 +82,10 @@ public class ItemParticles extends ItemStat {
 					.sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to " + ChatColor.RED + ChatColor.BOLD + red
 							+ ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green + ChatColor.GRAY + " - " + ChatColor.BLUE
 							+ ChatColor.BOLD + blue + ChatColor.GRAY + ".");
+			return;
 		}
 
-		else if (edited.equals("particle")) {
+		if (edited.equals("particle")) {
 			String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
 			Particle particle = Particle.valueOf(format);
 

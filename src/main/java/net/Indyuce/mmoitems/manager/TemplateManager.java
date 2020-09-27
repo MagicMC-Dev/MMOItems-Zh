@@ -248,7 +248,9 @@ public class TemplateManager {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			for (String key : config.getKeys(false))
 				try {
-					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
+					MMOItemTemplate template = new MMOItemTemplate(type, config.getConfigurationSection(key));
+					template.postLoad();
+					registerTemplate(template);
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
 				}

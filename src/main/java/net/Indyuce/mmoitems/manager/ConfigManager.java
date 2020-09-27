@@ -31,7 +31,7 @@ import java.util.logging.Level;
 public class ConfigManager {
 
 	// cached config files
-	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects;
+	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
 
 	// cached config options
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
@@ -172,6 +172,7 @@ public class ConfigManager {
 		potionEffects = new ConfigFile("/language", "potion-effects");
 		stats = new ConfigFile("/language", "stats");
 		attackEffects = new ConfigFile("/language", "attack-effects");
+		dynLore = new ConfigFile("/language", "dynamic-lore");
 
 		/*
 		 * reload cached config options for quicker access - these options are
@@ -246,6 +247,10 @@ public class ConfigManager {
 	public String getStaffSpiritName(StaffSpirit spirit) {
 		return attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-"));
 	}
+	
+	public String getDynLoreFormat(String input) {
+		return dynLore.getConfig().getString("format." + input);
+	}
 
 	/**
 	 * Creates an empty directory in the MMOItems plugin folder if it does not
@@ -259,7 +264,7 @@ public class ConfigManager {
 		if (!folder.exists())
 			folder.mkdir();
 	}
-
+	
 	/*
 	 * all config files that have a default configuration are stored here, they
 	 * get copied into the plugin folder when the plugin enables
@@ -278,6 +283,7 @@ public class ConfigManager {
 		// default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
+		DYN_LORE("dynamic-lore.yml", "language", "dynamic-lore.yml"),
 
 		// station layouts
 		DEFAULT_LAYOUT("layouts/default.yml", "layouts", "default.yml"),

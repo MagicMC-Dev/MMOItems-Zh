@@ -1,13 +1,14 @@
 package net.Indyuce.mmoitems.api.item.build;
 
-import com.google.common.collect.Lists;
-import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Lists;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.mmogroup.mmolib.MMOLib;
 
 public class LoreBuilder {
 	private final List<String> lore = MMOItems.plugin.getLanguage().getDefaultLoreFormat();

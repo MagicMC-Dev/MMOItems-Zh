@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -115,7 +116,6 @@ public class DurabilityItem {
 	}
 
 	public ItemStack toItem() {
-
 		/*
 		 * Cross multiplication to display the current item durability on the
 		 * item durability bar. (1 - ratio) because minecraft works with item
@@ -130,6 +130,6 @@ public class DurabilityItem {
 				: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
 		nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability), new ItemTag("Damage", damage));
 
-		return nbtItem.toItem();
+		return new DynamicLore(nbtItem).build();
 	}
 }

@@ -61,7 +61,7 @@ public class NBTTags extends ItemStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		Validate.isTrue(message.split("\\ ").length > 2, "Use this format: {Tag Name} {Tag Value}");
+		Validate.isTrue(message.split("\\ ").length > 1, "Use this format: {Tag Name} {Tag Value}");
 		List<String> customNbt = inv.getEditedSection().contains("custom-nbt") ? inv.getEditedSection().getStringList("custom-nbt")
 				: new ArrayList<>();
 		customNbt.add(message);
@@ -73,7 +73,6 @@ public class NBTTags extends ItemStat {
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
-
 		if (optional.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
 			StringListData data = (StringListData) optional.get();
@@ -113,8 +112,11 @@ public class NBTTags extends ItemStat {
 		try {
 			int value = Integer.parseInt(input);
 			return (Integer) value;
-		} catch (NumberFormatException e) {
-		}
+		} catch (NumberFormatException e) {}
+		try {
+			double value = Double.parseDouble(input);
+			return (Double) value;
+		} catch (NumberFormatException e) {}
 		if (input.contains("[") && input.contains("]")) {
 			List<String> entries = new ArrayList<>();
 			for (String s : input.replace("[", "").replace("]", "").split("\\,"))

@@ -1,7 +1,16 @@
 package net.Indyuce.mmoitems.comp.parse.placeholders;
 
+import java.text.DecimalFormat;
+
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -9,13 +18,6 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.listener.DamageReduction;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.text.DecimalFormat;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
@@ -66,6 +68,25 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 					: "0";
 		}
 
+		if(identifier.startsWith("type_")) {
+			String t = identifier.substring(5, identifier.lastIndexOf("_")).toUpperCase();
+			if(!MMOItems.plugin.getTypes().has(t)) return "Invalid type";
+			Type type = Type.get(t);
+			String pholder = identifier.substring(6 + t.length()).toLowerCase();
+			switch(pholder) {
+				case "total":
+					return "" + MMOItems.plugin.getTemplates().getTemplates(type).size();
+				default:
+					return type.getName();
+			}
+		}
+		
+		if(identifier.startsWith("tier_")) {
+			String t = identifier.substring(5).toUpperCase();
+			if(!MMOItems.plugin.getTiers().has(t)) return "Invalid tier";
+			return MMOItems.plugin.getTiers().get(t).getName();
+		}
+		
 		if (!player.isOnline())
 			return null;
 

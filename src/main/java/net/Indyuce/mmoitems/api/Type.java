@@ -98,7 +98,7 @@ public class Type {
 	}
 
 	public Type(TypeManager manager, ConfigurationSection config) {
-		id = config.getName();
+		id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
 
 		parent = manager.get(config.getString("parent").toUpperCase().replace("-", "_").replace(" ", "_"));
 		set = parent.set;

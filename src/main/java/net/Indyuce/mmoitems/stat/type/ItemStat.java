@@ -33,6 +33,7 @@ import net.Indyuce.mmoitems.stat.Elements;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.GemColor;
 import net.Indyuce.mmoitems.stat.GemSockets;
+import net.Indyuce.mmoitems.stat.HideDye;
 import net.Indyuce.mmoitems.stat.HideEnchants;
 import net.Indyuce.mmoitems.stat.HidePotionEffects;
 import net.Indyuce.mmoitems.stat.Inedible;
@@ -266,7 +267,7 @@ public abstract class ItemStat {
 			new String[] { "Corresponds to the shooting innacuracy." }, new String[] { "musket" });
 
 	public static final ItemStat ABILITIES = new Abilities(), UPGRADE = new UpgradeStat();
-	public static final ItemStat SKULL_TEXTURE = new SkullTextureStat(), DYE_COLOR = new DyeColor(), POTION_EFFECTS = new PotionEffects(),
+	public static final ItemStat SKULL_TEXTURE = new SkullTextureStat(), DYE_COLOR = new DyeColor(), HIDE_DYE = new HideDye(), POTION_EFFECTS = new PotionEffects(),
 			POTION_COLOR = new PotionColor(), SHIELD_PATTERN = new ShieldPatternStat(), HIDE_POTION_EFFECTS = new HidePotionEffects();
 
 	/*

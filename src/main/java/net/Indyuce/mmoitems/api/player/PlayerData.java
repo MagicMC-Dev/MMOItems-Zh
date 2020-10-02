@@ -495,6 +495,13 @@ public class PlayerData {
 	 * initialized
 	 */
 	public static void load(Player player) {
+		
+		/*
+		 * Double check they are online, for some reason even if this is fired 
+		 * from the join event the player can be offline if they left in the same tick or something.
+		 */
+		if (!player.isOnline())
+			return;
 
 		MMOPlayerData mmoData = MMOPlayerData.get(player.getUniqueId());
 

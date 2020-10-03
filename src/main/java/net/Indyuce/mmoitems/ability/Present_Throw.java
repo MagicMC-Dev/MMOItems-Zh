@@ -23,7 +23,7 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
+import net.Indyuce.mmoitems.api.util.NoClipItem;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
@@ -69,7 +69,7 @@ public class Present_Throw extends Ability {
 		double damage = ability.getModifier("damage");
 		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
 
-		final NoInteractItemEntity item = new NoInteractItemEntity(stats.getPlayer().getLocation().add(0, 1.2, 0), present);
+		final NoClipItem item = new NoClipItem(stats.getPlayer().getLocation().add(0, 1.2, 0), present);
 		item.getEntity().setVelocity(stats.getPlayer().getEyeLocation().getDirection().multiply(1.5 * ability.getModifier("force")));
 
 		/*

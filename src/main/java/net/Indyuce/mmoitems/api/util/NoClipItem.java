@@ -7,11 +7,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 
-public class NoInteractItemEntity implements Listener {
+public class NoClipItem implements Listener {
 	private final Item item;
 
 	/**
@@ -23,7 +24,7 @@ public class NoInteractItemEntity implements Listener {
 	 * @param item
 	 *            ItemStack used to summon the entity
 	 */
-	public NoInteractItemEntity(Location loc, ItemStack item) {
+	public NoClipItem(Location loc, ItemStack item) {
 		item.setAmount(1);
 
 		this.item = loc.getWorld().dropItem(loc, item);
@@ -38,16 +39,20 @@ public class NoInteractItemEntity implements Listener {
 
 	public void close() {
 		item.remove();
+
 		EntityPortalEnterEvent.getHandlerList().unregister(this);
+		InventoryPickupItemEvent.getHandlerList().unregister(this);
 	}
 
-	// @EventHandler(priority = EventPriority.LOWEST)
-	// public void a(InventoryPickupItemEvent event) {
-	// if (event.getItem().equals(item))
-	// event.setCancelled(true);
-	// }
+	@EventHandler(ignoreCancelled = false, priority = EventPriority.LOWEST)
+	public void a(InventoryPickupItemEvent event) {
+		if (event.getItem().equals(item)) {
+			event.setCancelled(true);
+			close();
+		}
+	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(ignoreCancelled = false, priority = EventPriority.LOWEST)
 	public void b(EntityPortalEnterEvent event) {
 		if (event.getEntity().equals(item))
 			close();

@@ -16,7 +16,7 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
+import net.Indyuce.mmoitems.api.util.NoClipItem;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageType;
@@ -45,7 +45,7 @@ public class Item_Throw extends Ability implements Listener {
 			return;
 		}
 
-		final NoInteractItemEntity item = new NoInteractItemEntity(stats.getPlayer().getLocation().add(0, 1.2, 0), itemStack);
+		final NoClipItem item = new NoClipItem(stats.getPlayer().getLocation().add(0, 1.2, 0), itemStack);
 		item.getEntity().setVelocity(((VectorAbilityResult) ability).getTarget().multiply(1.5 * ability.getModifier("force")));
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
 		new BukkitRunnable() {

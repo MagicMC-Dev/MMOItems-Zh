@@ -18,7 +18,7 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.SimpleAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.util.NoInteractItemEntity;
+import net.Indyuce.mmoitems.api.util.NoClipItem;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
@@ -65,7 +65,7 @@ public class Throw_Up extends Ability implements Listener {
 
 				loc.getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1, 1);
 
-				NoInteractItemEntity item = new NoInteractItemEntity(stats.getPlayer().getLocation().add(0, 1.2, 0), MMOLib.plugin.getVersion().getWrapper().getNBTItem(new ItemStack(Material.ROTTEN_FLESH)).addTag(new ItemTag("noStack", random.nextInt(1000))).toItem());
+				NoClipItem item = new NoClipItem(stats.getPlayer().getLocation().add(0, 1.2, 0), MMOLib.plugin.getVersion().getWrapper().getNBTItem(new ItemStack(Material.ROTTEN_FLESH)).addTag(new ItemTag("noStack", random.nextInt(1000))).toItem());
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> item.close(), 40);
 				item.getEntity().setVelocity(loc.getDirection().multiply(.8));
 				stats.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, stats.getPlayer().getLocation().add(0, 1.2, 0), 0, loc.getDirection().getX(), loc.getDirection().getY(), loc.getDirection().getZ(), 1);

@@ -119,7 +119,7 @@ public class DisableInteractions implements Listener {
 	@EventHandler
 	public void i(CraftItemEvent event) {
 		if (event.getRecipe() instanceof Keyed)
-			if (((Keyed) event.getRecipe()).getKey().getNamespace().equalsIgnoreCase("mmoitems"))
+			if (((Keyed) event.getRecipe()).getKey().getNamespace().equals("mmoitems"))
 				return;
 
 		boolean disableCrafting = MMOItems.plugin.getConfig().getBoolean("disable-interactions.craft");

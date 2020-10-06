@@ -24,11 +24,12 @@ public class CraftingStatus {
 	private final Map<String, CraftingQueue> queues = new HashMap<>();
 
 	public void load(PlayerData data, ConfigurationSection config) {
-
+		String name = data.isOnline() ? data.getPlayer().getName() : "Unknown Player";
+		
 		for (String stationId : config.getKeys(false)) {
 			if (!MMOItems.plugin.getCrafting().hasStation(stationId)) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"An error occured while trying to load crafting station recipe data of '" + data.getPlayer().getName() + "': "
+						"An error occured while trying to load crafting station recipe data of '" + name + "': "
 								+ "could not find crafting station with ID '" + stationId
 								+ "', make sure you backup that player data file before the user logs off.");
 				continue;
@@ -42,7 +43,7 @@ public class CraftingStatus {
 				String recipeId = config.getString(stationId + "." + recipeConfigId + ".recipe");
 				if (recipeId == null || !station.hasRecipe(recipeId)) {
 					MMOItems.plugin.getLogger().log(Level.WARNING,
-							"An error occured while trying to load crafting station recipe data of '" + data.getPlayer().getName() + "': "
+							"An error occured while trying to load crafting station recipe data of '" + name + "': "
 									+ "could not find recipe with ID '" + recipeId
 									+ "', make sure you backup that player data file before the user logs off.");
 					continue;
@@ -51,7 +52,7 @@ public class CraftingStatus {
 				Recipe recipe = station.getRecipe(recipeId);
 				if (!(recipe instanceof CraftingRecipe)) {
 					MMOItems.plugin.getLogger().log(Level.WARNING, "An error occured while trying to load crafting station recipe data of '"
-							+ data.getPlayer().getName() + "': " + "recipe '" + recipe.getId() + "' is not a CRAFTING recipe.");
+							+ name + "': " + "recipe '" + recipe.getId() + "' is not a CRAFTING recipe.");
 					continue;
 				}
 

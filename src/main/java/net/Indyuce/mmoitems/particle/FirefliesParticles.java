@@ -23,7 +23,7 @@ public class FirefliesParticles extends ParticleRunnable {
 	}
 
 	@Override
-	public void run() {
+	public void createParticles() {
 		Location loc = player.getPlayer().getLocation();
 		for (int k = 0; k < amount; k++) {
 			double a = j + Math.PI * 2 * k / amount;

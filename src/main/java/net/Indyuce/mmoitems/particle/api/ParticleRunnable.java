@@ -15,5 +15,10 @@ public abstract class ParticleRunnable extends BukkitRunnable {
 	}
 
 	@Override
-	public abstract void run();
+	public void run() {
+		if(!player.isOnline()) return;
+		createParticles();
+	}
+	
+	public abstract void createParticles();
 }

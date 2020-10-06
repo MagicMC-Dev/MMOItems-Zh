@@ -22,7 +22,7 @@ public class DoubleRingsParticles extends ParticleRunnable {
 	}
 
 	@Override
-	public void run() {
+	public void createParticles() {
 		Location loc = player.getPlayer().getLocation();
 		for (double k = 0; k < 2; k++) {
 			double a = j + k * Math.PI;

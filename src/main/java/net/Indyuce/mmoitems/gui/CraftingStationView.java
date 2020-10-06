@@ -132,6 +132,7 @@ public class CraftingStationView extends PluginInventory {
 
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
+		if(!data.isOnline()) return;
 		event.setCancelled(true);
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
@@ -186,16 +187,16 @@ public class CraftingStationView extends PluginInventory {
 				if (!called.isCancelled()) {
 					recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 					ItemStack craftedItem = recipe.getOutput().generate(playerData.getRPG());
-					CustomSoundListener.stationCrafting(craftedItem, data.getPlayer());
+					CustomSoundListener.stationCrafting(craftedItem, getPlayer());
 					if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
-						data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+						getPlayer().playSound(getPlayer().getLocation(), station.getSound(), 1, 1);
 					if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
-						new SmartGive(data.getPlayer()).give(craftedItem);
+						new SmartGive(getPlayer()).give(craftedItem);
 				}
 			} else {
-				data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+				getPlayer().playSound(getPlayer().getLocation(), station.getSound(), 1, 1);
 				for (Ingredient ingredient : craft.getRecipe().getIngredients())
-					new SmartGive(data.getPlayer()).give(ingredient.generateItemStack(playerData.getRPG()));
+					new SmartGive(getPlayer()).give(ingredient.generateItemStack(playerData.getRPG()));
 			}
 
 			updateData();

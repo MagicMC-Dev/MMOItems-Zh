@@ -15,6 +15,7 @@ public class FoodCondition extends Condition {
 
 	@Override
 	public boolean isMet(PlayerData data) {
+		if(!data.isOnline()) return false;
 		return data.getPlayer().getFoodLevel() >= amount;
 	}
 
@@ -25,6 +26,7 @@ public class FoodCondition extends Condition {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
+		if(!data.isOnline()) return;
 		data.getPlayer().setFoodLevel(Math.max(0, data.getPlayer().getFoodLevel() - amount));
 	}
 }

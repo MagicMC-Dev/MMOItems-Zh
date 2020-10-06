@@ -49,6 +49,7 @@ public class CraftingRecipe extends Recipe {
 
 	@Override
 	public void whenUsed(PlayerData data, IngredientInventory inv, RecipeInfo recipe, CraftingStation station) {
+		if(!data.isOnline()) return;
 		/*
 		 * if the recipe is an instant recipe, just take off the ingredients add
 		 * directly add the ingredients to the player inventory
@@ -82,6 +83,7 @@ public class CraftingRecipe extends Recipe {
 
 		CraftingQueue queue = data.getCrafting().getQueue(station);
 		if (queue.isFull(station)) {
+			if(!data.isOnline()) return false;
 			Message.CRAFTING_QUEUE_FULL.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return false;

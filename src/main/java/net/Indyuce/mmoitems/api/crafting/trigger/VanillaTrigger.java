@@ -21,6 +21,7 @@ public class VanillaTrigger extends Trigger {
 
     @Override
     public void whenCrafting(PlayerData data) {
+    	if(!data.isOnline()) return;
         new SmartGive(data.getPlayer()).give(new ItemStack(material, amount));
     }
 }

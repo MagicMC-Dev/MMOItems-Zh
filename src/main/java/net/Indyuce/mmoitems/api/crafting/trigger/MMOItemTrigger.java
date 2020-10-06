@@ -30,6 +30,7 @@ public class MMOItemTrigger extends Trigger {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
+		if(!data.isOnline()) return;
 		ItemStack item = template.newBuilder(data.getRPG()).build().newBuilder().build();
 		if (item == null || item.getType() == Material.AIR)
 			return;

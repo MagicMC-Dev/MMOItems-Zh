@@ -16,6 +16,7 @@ public class MessageTrigger extends Trigger {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
+		if(!data.isOnline()) return;
 		data.getPlayer().sendMessage(MMOItems.plugin.getPlaceholderParser().parse(data.getPlayer(), message));
 	}
 }

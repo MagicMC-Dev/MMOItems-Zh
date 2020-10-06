@@ -24,7 +24,7 @@ public class VortexParticles extends ParticleRunnable {
 	}
 
 	@Override
-	public void run() {
+	public void createParticles() {
 		Location loc = player.getPlayer().getLocation();
 		double r = j / Math.PI / 2;
 		for (int k = 0; k < amount; k++) {

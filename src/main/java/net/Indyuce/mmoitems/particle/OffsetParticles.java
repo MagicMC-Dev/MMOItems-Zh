@@ -19,7 +19,7 @@ public class OffsetParticles extends ParticleRunnable {
 	}
 
 	@Override
-	public void run() {
+	public void createParticles() {
 		particle.display(player.getPlayer().getLocation().add(0, height, 0), amount, h_offset, v_offset, h_offset, speed);
 	}
 }

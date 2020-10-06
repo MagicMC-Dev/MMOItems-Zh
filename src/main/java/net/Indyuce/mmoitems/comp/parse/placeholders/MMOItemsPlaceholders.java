@@ -15,9 +15,9 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.math.EvaluatedFormula;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.listener.DamageReduction;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
@@ -55,7 +55,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		// i don't register it in the starts with condition because it will mess
 		// with substring
 		if (identifier.equals("stat_defense_percent"))
-			return twoDigits.format(100 - new DamageReduction.DefenseCalculator(MMOPlayerData.get(player)).getAppliedDamage(100)) + "%";
+			return twoDigits.format(100 - calculateDefense(MMOPlayerData.get(player))) + "%";
 		if (identifier.startsWith("stat_")) {
 			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
 			if (stat != null)
@@ -116,6 +116,13 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		return null;
 	}
 
+	private double calculateDefense(MMOPlayerData data) {
+		String formula = MMOLib.plugin.getConfig().getString("defense-application", "#damage# * (1 - (#defense# / (#defense# + 100)))");
+		formula = formula.replace("#defense#", String.valueOf(data.getStatMap().getStat("DEFENSE")));
+		formula = formula.replace("#damage#", String.valueOf(100));
+		return Math.max(0, new EvaluatedFormula(formula).evaluate());
+	}
+	
 	private String getCurrentDurabilityBar(ItemStack item, String barChar, int length) {
 		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
 		double durability = nbtItem.getDouble("MMOITEMS_DURABILITY");

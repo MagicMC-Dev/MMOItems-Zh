@@ -19,6 +19,7 @@ public class CommandTrigger extends Trigger {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
+		if(!data.isOnline()) return;
 		dispatchCommand(data.getPlayer(), sender.equals("CONSOLE"), sender.equals("OP"));
 	}
 	

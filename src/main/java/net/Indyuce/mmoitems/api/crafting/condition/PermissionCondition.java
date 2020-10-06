@@ -18,6 +18,7 @@ public class PermissionCondition extends Condition {
 
 	@Override
 	public boolean isMet(PlayerData data) {
+		if(!data.isOnline()) return false;
 		for (String permission : permissions)
 			if (!data.getPlayer().hasPermission(permission))
 				return false;

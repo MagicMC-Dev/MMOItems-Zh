@@ -49,6 +49,7 @@ public class UpgradingRecipe extends Recipe {
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
 		uncastRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
+		if(!data.isOnline()) return;
 		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());
 		data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 	}
@@ -64,6 +65,7 @@ public class UpgradingRecipe extends Recipe {
 		 */
 		PlayerIngredient upgraded = inv.getIngredient(ingredient, IngredientLookupMode.IGNORE_ITEM_LEVEL);
 		if (upgraded == null) {
+			if(!data.isOnline()) return false;
 			Message.NOT_HAVE_ITEM_UPGRADE.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 			return false;
@@ -74,17 +76,19 @@ public class UpgradingRecipe extends Recipe {
 			return false;
 
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStat.UPGRADE)).canLevelUp()) {
+			if(!data.isOnline()) return false;
 			Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 			return false;
 		}
 
 		if (random.nextDouble() > recipe.getUpgradeData().getSuccess()) {
-			Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(data.getPlayer());
 			if (recipe.getUpgradeData().destroysOnFail())
 				recipe.getUpgraded().setAmount(recipe.getUpgraded().getAmount() - 1);
 
 			recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
+			if(!data.isOnline()) return false;
+			Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 2);
 			return false;
 		}

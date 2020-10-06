@@ -19,6 +19,7 @@ public class MoneyCondition extends Condition {
 
 	@Override
 	public boolean isMet(PlayerData data) {
+		if(!data.isOnline()) return false;
 		return economy.has(data.getPlayer(), amount);
 	}
 
@@ -29,6 +30,7 @@ public class MoneyCondition extends Condition {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
+		if(!data.isOnline()) return;
 		economy.withdrawPlayer(data.getPlayer(), amount);
 	}
 }

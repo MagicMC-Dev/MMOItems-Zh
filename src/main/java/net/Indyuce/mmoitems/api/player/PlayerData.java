@@ -115,6 +115,10 @@ public class PlayerData {
 		return mmoData.getUniqueId();
 	}
 
+	public boolean isOnline() {
+		return mmoData.isOnline();
+	}
+	
 	public Player getPlayer() {
 		return mmoData.getPlayer();
 	}
@@ -133,6 +137,7 @@ public class PlayerData {
 	}
 
 	public void checkForInventoryUpdate() {
+		if(!mmoData.isOnline()) return;
 		PlayerInventory inv = getPlayer().getInventory();
 		if (!equals(helmet, inv.getHelmet()) || !equals(chestplate, inv.getChestplate()) || !equals(leggings, inv.getLeggings())
 				|| !equals(boots, inv.getBoots()) || !equals(hand, inv.getItemInMainHand()) || !equals(offhand, inv.getItemInOffHand()))
@@ -158,6 +163,7 @@ public class PlayerData {
 	 * one two handed item and one other item at the same time. this will
 	 */
 	public boolean areHandsFull() {
+		if(!mmoData.isOnline()) return false;
 		NBTItem main = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
 		NBTItem off = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
 		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
@@ -165,7 +171,7 @@ public class PlayerData {
 	}
 
 	public void updateInventory() {
-
+		if(!mmoData.isOnline()) return;
 		/*
 		 * very important, clear particle data AFTER canceling the runnable
 		 * otherwise it cannot cancel and the runnable keeps going (severe)
@@ -298,6 +304,7 @@ public class PlayerData {
 	}
 
 	public void updateEffects() {
+		if(!mmoData.isOnline()) return;
 
 		// perm effects
 		permanentEffects.keySet().forEach(effect -> {
@@ -364,6 +371,7 @@ public class PlayerData {
 	}
 
 	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
+		if(!mmoData.isOnline()) return result;
 
 		/*
 		 * if ability has target, check for ability flag at location of target

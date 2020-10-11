@@ -26,6 +26,7 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
@@ -160,7 +161,7 @@ public class Consumable extends UseItem {
 			}
 
 			Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
-			event.getCurrentItem().setItemMeta(result.toItem().getItemMeta());
+			event.getCurrentItem().setItemMeta(new DynamicLore(result).build().getItemMeta());
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			return true;
 		}

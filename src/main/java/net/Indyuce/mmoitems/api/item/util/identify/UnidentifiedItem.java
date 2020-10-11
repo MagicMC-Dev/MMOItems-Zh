@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
@@ -106,7 +107,7 @@ public class UnidentifiedItem extends ConfigItem {
 			 */
 			item.getItem().setAmount(1);
 			ItemStack unidentified = MMOLib.plugin.getVersion().getWrapper().copyTexture(item)
-					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.getItem()))).toItem();
+					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(new DynamicLore(item).build()))).toItem();
 			unidentified.setAmount(amount);
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());

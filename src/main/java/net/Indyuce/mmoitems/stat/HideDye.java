@@ -18,7 +18,7 @@ public class HideDye extends BooleanStat {
 		super("HIDE_DYE", new ItemStack(Material.CYAN_DYE), "Hide Dyed", new String[] { "Enable to hide the 'Dyed' tag from the item." }, new String[] { "all" },
 			Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 
-		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 15, 2))
+		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 16, 1))
 			disable();
 	}
 

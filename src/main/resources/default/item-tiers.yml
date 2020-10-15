@@ -11,7 +11,8 @@ TRASH:
         range: 6
         name: 'Trash'
         prefix: '&8'
-
+    # This tier has no generation options specified.
+    # In that case, it'll use the default values set in config.yml
 COMMON:
     name: '&7&lCOMMON'
     parent: TRASH
@@ -19,6 +20,8 @@ COMMON:
         range: 6
         name: 'Common'
         prefix: '&7'
+    # This tier has no generation options specified.
+    # In that case, it'll use the default values set in config.yml
 UNCOMMON:
 
     # Tier name displayed in the item lore. 
@@ -77,10 +80,10 @@ RARE:
         range: 6
         prefix: '&6'
     generation:
-        chance: 0.01
+        chance: 0.06
         capacity:
-            base: 12
-            scale: .2
+            base: 9
+            scale: .15
             spread: .1
             max-spread: .3
     deconstruct-item:
@@ -111,6 +114,13 @@ VERY_RARE:
             items:
                 MATERIAL:
                     WEAPON_POWDER: 100,1-1,0
+    generation:
+        chance: 0.03
+        capacity:
+            base: 10
+            scale: .17
+            spread: .1
+            max-spread: .3
 LEGENDARY:
     name: '&b&lLEGENDARY'
     unidentification:
@@ -128,6 +138,13 @@ LEGENDARY:
             items:
                 MATERIAL:
                     WEAPON_POWDER: 100,1-1,0
+    generation:
+        chance: 0.01
+        capacity:
+            base: 12
+            scale: .2
+            spread: .1
+            max-spread: .3
 MYTHICAL:
     name: '&5&lMYTHICAL'
     unidentification:
@@ -169,7 +186,8 @@ EPIC:
             items:
                 MATERIAL:
                     WEAPON_POWDER: 100,1-1,0
-
+    # This tier has no generation options specified.
+    # In that case, it'll use the default values set in config.yml
 MAGICAL:
     name: '&2&lMAGICAL'
     unidentification:
@@ -187,6 +205,8 @@ MAGICAL:
             items:
                 MATERIAL:
                     WEAPON_POWDER: 100,1-1,0
+    # This tier has no generation options specified.
+    # In that case, it'll use the default values set in config.yml
 UNIQUE:
     name: '&c&lUNIQUE'
     unidentification:
@@ -204,3 +224,5 @@ UNIQUE:
             items:
                 MATERIAL:
                     WEAPON_POWDER: 100,1-1,0
+    # This tier has no generation options specified.
+    # In that case, it'll use the default values set in config.yml

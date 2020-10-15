@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.explorer.ClassFilter;
+import net.Indyuce.mmoitems.api.item.template.explorer.IDFilter;
 import net.Indyuce.mmoitems.api.item.template.explorer.TemplateExplorer;
 import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -39,6 +40,7 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		try {
+			if(args.length < 2) return CommandResult.THROW_USAGE;
 			final Player target = Bukkit.getPlayer(args[1]);
 			Validate.notNull(target, "Could not find player called " + args[1] + ".");
 
@@ -60,10 +62,15 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
 				builder.applyFilter(new ClassFilter(rpgPlayer));
 			if (handler.hasArgument("class"))
 				builder.applyFilter(new ClassFilter(handler.getValue("class").replace("-", " ").replace("_", " ")));
+			String type = null;
 			if (handler.hasArgument("type")) {
-				String format = handler.getValue("type");
-				Validate.isTrue(Type.isValid(format), "Could not find type with ID '" + format + "'");
-				builder.applyFilter(new TypeFilter(Type.get(format)));
+				type = handler.getValue("type");
+				Validate.isTrue(Type.isValid(type), "Could not find type with ID '" + type + "'");
+				builder.applyFilter(new TypeFilter(Type.get(type)));
+			}
+			if (handler.hasArgument("id")) {
+				Validate.isTrue(type != null, "You have to specify a type if using the id option!");
+				builder.applyFilter(new IDFilter(handler.getValue("id")));
 			}
 
 			Optional<MMOItemTemplate> optional = builder.rollLoot();

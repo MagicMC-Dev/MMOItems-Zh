@@ -54,7 +54,7 @@ public class MMOItemBuilder {
 	public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
 		this.level = level;
 		this.tier = tier;
-		this.capacity = (tier != null ? tier.getCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
+		this.capacity = (tier != null && tier.hasCapacity() ? tier.getCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
 		this.mmoitem = new MMOItem(template.getType(), template.getId());
 
 		// apply base item data

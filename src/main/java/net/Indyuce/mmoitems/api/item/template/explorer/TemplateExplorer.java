@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.item.template.explorer;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Predicate;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -19,6 +20,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
  *
  */
 public class TemplateExplorer {
+	private final Random random = new Random();
 
 	/*
 	 * Not defined at the beginning to save extra performance, if there are 100+
@@ -36,14 +38,20 @@ public class TemplateExplorer {
 	}
 
 	public Optional<MMOItemTemplate> rollLoot() {
-		return all.stream().findAny();
+		switch (count()) {
+			case 0:
+				return Optional.empty();
+			case 1:
+				return all.stream().findFirst();
+			default:
+				return all.stream().skip(random.nextInt(count() - 1)).findFirst();
+		}
 	}
 
 	/**
 	 * Util method to easily generate random MI loot
 	 * 
-	 * @param player
-	 *            The player
+	 * @param player The player
 	 * @return Random item with random tier and item level which matches the
 	 *         player's level
 	 */

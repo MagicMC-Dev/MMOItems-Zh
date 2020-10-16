@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.weight.WeightedContainer;
 
 public class MMOItemBuilder {
 	private final MMOItem mmoitem;
@@ -65,9 +66,14 @@ public class MMOItemBuilder {
 		if (level > 0)
 			mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
 
+		
+		//TODO: Rewrite weightedcontainer to support double values
+		//TODO: Rewrite weightedcontainer to support no shuffle
+		
+		WeightedContainer<TemplateModifier> weighted = new WeightedContainer<>();
 		// roll item gen modifiers
 		for (TemplateModifier modifier : rollModifiers(template)) {
-
+			weighted.add(modifier.getWeight(), modifier);
 			// roll modifier chance
 			// only apply if enough item weight
 			if (!modifier.rollChance() && modifier.getWeight() > capacity)

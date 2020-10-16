@@ -66,6 +66,7 @@ additional-experience: '&7■ Additional Experience: &f<plus>#%'
 perm-effect: '&7■ Permanent &f#'
 command: '&7■ Command: &f#c &7(&f#d&7s)'
 item-cooldown: '&7■ &f#&7s Cooldown'
+arrow-potion-effects: '&7■ Arrow Effect: &f#'
 
 # Consumables
 restore-health: '&7■ Restores &f# &7Health'

@@ -61,6 +61,14 @@ public class ItemSet {
 									config.getInt("bonuses." + j + "." + key) - 1, true, false));
 							continue;
 						}
+						
+						if (key.startsWith("arrow-effect-")) {
+							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("arrow-effect-".length()));
+							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
+							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
+									config.getInt("bonuses." + j + "." + key) - 1, true, false));
+							continue;
+						}
 
 						// particle effect
 						if (key.startsWith("particle-")) {
@@ -163,7 +171,7 @@ public class ItemSet {
 			for (PotionEffect effect : bonuses.getPotionEffects())
 				if (!permEffects.containsKey(effect.getType()) || permEffects.get(effect.getType()).getAmplifier() < effect.getAmplifier())
 					permEffects.put(effect.getType(), effect);
-
+			
 			bonuses.getAbilities().forEach(ability -> abilities.add(ability));
 		}
 	}

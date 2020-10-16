@@ -27,7 +27,7 @@ HELL_BOW:
       infinity: 1
     hide-enchants: true
     unbreakable: true
-    tier: '&6Rare'
+    tier: RARE
     attack-damage:
       base: 11.5
       spread: 0.038

@@ -93,6 +93,9 @@ public class EntityManager implements Listener {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
 	}
 
+	/*
+	 * Projectile Damage and Effects
+	 */
 	@EventHandler(ignoreCancelled = true)
 	public void b(EntityDamageByEntityEvent event) {
 		if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
@@ -108,7 +111,9 @@ public class EntityManager implements Listener {
 
 		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(),
 				DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
-
+		
+		data.applyEffects(target);
+		
 		/*
 		 * only modify the damage when the bow used is a custom weapon.
 		 */

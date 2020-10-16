@@ -239,7 +239,7 @@ public class PlayerData {
 					if (getPermanentPotionEffectAmplifier(effect.getType()) < effect.getLevel() - 1)
 						permanentEffects.put(effect.getType(), effect.toEffect());
 				});
-
+			
 			/*
 			 * apply item particles
 			 */

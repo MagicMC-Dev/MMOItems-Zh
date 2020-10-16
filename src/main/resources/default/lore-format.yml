@@ -120,6 +120,7 @@ lore-format:
 - '#commands#'
 # - '{bar}&8&m--------&b&l &nEffects&8 &m---------------'
 # - '#perm-effects#'
+# - '#arrow-potion-effects#'
 # - '{bar}&8&m--------&e&l &nGem Stones&8 &m-----------'
 - '{bar}'
 - '#gem-stones#'

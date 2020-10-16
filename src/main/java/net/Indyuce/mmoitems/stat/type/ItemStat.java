@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.stat.Abilities;
 import net.Indyuce.mmoitems.stat.Armor;
 import net.Indyuce.mmoitems.stat.ArmorToughness;
 import net.Indyuce.mmoitems.stat.ArrowParticles;
+import net.Indyuce.mmoitems.stat.ArrowPotionEffects;
 import net.Indyuce.mmoitems.stat.AttackDamage;
 import net.Indyuce.mmoitems.stat.AttackSpeed;
 import net.Indyuce.mmoitems.stat.Commands;
@@ -148,7 +149,8 @@ public abstract class ItemStat {
 	public static final ItemStat STAMINA_COST = new DoubleStat("STAMINA_COST", VersionMaterial.LIGHT_GRAY_DYE.toItem(), "Stamina Cost",
 			new String[] { "Stamina spent by your weapon to be used." }, new String[] { "piercing", "slashing", "blunt", "range" });
 	public static final ItemStat ARROW_VELOCITY = new DoubleStat("ARROW_VELOCITY", new ItemStack(Material.ARROW), "Arrow Velocity",
-			new String[] { "Determins how far your", "crossbow can shoot.", "Default: 1.0" }, new String[] { "bow", "crossbow" });
+			new String[] { "Determins how far your", "weapon can shoot.", "Default: 1.0" }, new String[] { "bow", "crossbow" });
+	public static final ItemStat ARROW_POTION_EFFECTS = new ArrowPotionEffects();
 	public static final ItemStat PVE_DAMAGE = new DoubleStat("PVE_DAMAGE", VersionMaterial.PORKCHOP.toItem(), "PvE Damage",
 			new String[] { "Additional damage against", "non human entities in %." },
 			new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "gem_stone", "accessory" });

@@ -41,7 +41,9 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.milkbowl.vault.permission.Permission;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -78,6 +80,7 @@ public class PlayerData {
 	private Set<ParticleRunnable> itemParticles = new HashSet<>();
 	private ParticleRunnable overridingItemParticles = null;
 	private Set<AbilityData> itemAbilities = new HashSet<>();
+	private Set<String> permissions = new HashSet<>();
 	private boolean fullHands = false;
 	private SetBonuses setBonuses = null;
 	private final PlayerStats stats;
@@ -99,6 +102,13 @@ public class PlayerData {
 	}
 
 	public void save() {
+		if(MMOItems.plugin.hasVault()) {
+			Permission perms = MMOItems.plugin.getVault().getPermissions();
+			permissions.forEach(perm -> {
+				if(perms.has(getPlayer(), perm))
+					perms.playerRemove(getPlayer(), perm);
+			});
+		}
 		cancelRunnables();
 
 		ConfigFile config = new ConfigFile("/userdata", getUniqueId().toString());
@@ -182,6 +192,14 @@ public class PlayerData {
 		cancelRunnables();
 		itemParticles.clear();
 		overridingItemParticles = null;
+		if(MMOItems.plugin.hasVault()) {
+			Permission perms = MMOItems.plugin.getVault().getPermissions();
+			permissions.forEach(perm -> {
+				if(perms.has(getPlayer(), perm))
+					perms.playerRemove(getPlayer(), perm);
+			});
+		}
+		permissions.clear();
 
 		/*
 		 * updates the full-hands boolean, this way it can be cached and used in
@@ -248,6 +266,12 @@ public class PlayerData {
 				} else
 					((AbilityListData) item.getData(ItemStat.ABILITIES)).getAbilities().forEach(ability -> itemAbilities.add(ability));
 			}
+			
+			/*
+			 * apply permissions if vault exists
+			 */
+			if (MMOItems.plugin.hasVault() && item.hasData(ItemStat.GRANTED_PERMISSIONS))
+				permissions.addAll(((StringListData) item.getData(ItemStat.GRANTED_PERMISSIONS)).getList());
 		}
 
 		/*
@@ -303,7 +327,7 @@ public class PlayerData {
 		offhand = getPlayer().getInventory().getItemInOffHand();
 	}
 
-	public void updateEffects() {
+	public void updateStats() {
 		if(!mmoData.isOnline()) return;
 
 		// perm effects
@@ -316,6 +340,15 @@ public class PlayerData {
 		if (fullHands) {
 			getPlayer().removePotionEffect(PotionEffectType.SLOW);
 			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
+		}
+		
+		// permissions
+		if(MMOItems.plugin.hasVault()) {
+			Permission perms = MMOItems.plugin.getVault().getPermissions();
+			permissions.forEach(perm -> {
+				if(!perms.has(getPlayer(), perm))
+					perms.playerAdd(getPlayer(), perm);
+			});
 		}
 	}
 

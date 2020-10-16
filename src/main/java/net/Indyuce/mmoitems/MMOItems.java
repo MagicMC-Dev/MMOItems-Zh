@@ -120,6 +120,7 @@ public class MMOItems extends JavaPlugin {
 	private PlayerInventory inventory = new DefaultPlayerInventory();
 	private FlagPlugin flagPlugin = new DefaultFlags();
 	private HologramSupport hologramSupport;
+	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
 	public void onLoad() {
@@ -190,10 +191,8 @@ public class MMOItems extends JavaPlugin {
 		worldGenManager = new WorldGenManager();
 		blockManager = new BlockManager();
 
-		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-			new VaultSupport();
-			getLogger().log(Level.INFO, "Hooked onto Vault");
-		}
+		if (Bukkit.getPluginManager().getPlugin("Vault") != null)
+			vaultSupport = new VaultSupport();
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
 		layoutManager.reload();
@@ -217,7 +216,7 @@ public class MMOItems extends JavaPlugin {
 		 * effects and this class will be registered as a listener. starts with
 		 * a 5s delay to let the other plugins time to load nicely
 		 */
-		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateEffects()), 100, 20);
+		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
 
 		/*
 		 * this tasks updates twice a second player inventories on the server.
@@ -486,6 +485,17 @@ public class MMOItems extends JavaPlugin {
 		return itemManager;
 	}
 
+	/*
+	 * External API's
+	 */
+	public boolean hasVault() {
+		return vaultSupport != null;
+	}
+	
+	public VaultSupport getVault() {
+		return vaultSupport;
+	}
+	
 	public List<StringInputParser> getStringInputParsers() {
 		return stringInputParsers;
 	}

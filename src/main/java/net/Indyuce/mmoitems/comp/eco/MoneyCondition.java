@@ -1,26 +1,24 @@
 package net.Indyuce.mmoitems.comp.eco;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.milkbowl.vault.economy.Economy;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MoneyCondition extends Condition {
 	private final double amount;
-	private final Economy economy;
 
-	public MoneyCondition(Economy economy, MMOLineConfig config) {
+	public MoneyCondition(MMOLineConfig config) {
 		super("money");
 
 		config.validate("amount");
 		amount = config.getDouble("amount");
-		this.economy = economy;
 	}
 
 	@Override
 	public boolean isMet(PlayerData data) {
 		if(!data.isOnline()) return false;
-		return economy.has(data.getPlayer(), amount);
+		return MMOItems.plugin.getVault().getEconomy().has(data.getPlayer(), amount);
 	}
 
 	@Override
@@ -31,6 +29,6 @@ public class MoneyCondition extends Condition {
 	@Override
 	public void whenCrafting(PlayerData data) {
 		if(!data.isOnline()) return;
-		economy.withdrawPlayer(data.getPlayer(), amount);
+		MMOItems.plugin.getVault().getEconomy().withdrawPlayer(data.getPlayer(), amount);
 	}
 }

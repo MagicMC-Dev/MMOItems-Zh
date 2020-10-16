@@ -33,6 +33,7 @@ import net.Indyuce.mmoitems.stat.Elements;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.GemColor;
 import net.Indyuce.mmoitems.stat.GemSockets;
+import net.Indyuce.mmoitems.stat.GrantedPermissions;
 import net.Indyuce.mmoitems.stat.HideDye;
 import net.Indyuce.mmoitems.stat.HideEnchants;
 import net.Indyuce.mmoitems.stat.HidePotionEffects;
@@ -215,7 +216,7 @@ public abstract class ItemStat {
 	public static final ItemStat CAN_DECONSTRUCT = new BooleanStat("CAN_DECONSTRUCT", new ItemStack(Material.PAPER), "Can Deconstruct?",
 			new String[] { "Players can deconstruct their item", "using this consumable, creating", "another random item." },
 			new String[] { "consumable" });
-	public static final ItemStat EFFECTS = new Effects(), PERM_EFFECTS = new PermanentEffects();
+	public static final ItemStat EFFECTS = new Effects(), PERM_EFFECTS = new PermanentEffects(), GRANTED_PERMISSIONS = new GrantedPermissions();
 	public static final ItemStat SOULBINDING_CHANCE = new DoubleStat("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toItem(), "Soulbinding Chance",
 			new String[] { "Defines the chance your item has to", "link another item to your soul,", "preventing other players from using it." },
 			new String[] { "consumable" });

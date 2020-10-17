@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.command.mmoitems;
+package net.Indyuce.mmoitems.command.item;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

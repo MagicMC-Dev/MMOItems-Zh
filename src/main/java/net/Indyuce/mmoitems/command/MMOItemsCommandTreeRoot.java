@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.command;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.command.item.ItemCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.AbilityCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.AllItemsCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.BrowseCommandTreeNode;
@@ -13,9 +14,7 @@ import net.Indyuce.mmoitems.command.mmoitems.EditCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.GenerateCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.GiveAllCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.GiveCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.IdentifyCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.ReloadCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.UnidentifyCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.debug.DebugCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.list.ListCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.stations.StationsCommandTreeNode;
@@ -55,8 +54,7 @@ public class MMOItemsCommandTreeRoot extends CommandTreeRoot {
 		addChild(new DropCommandTreeNode(this));
 		addChild(new AbilityCommandTreeNode(this));
 		addChild(new GiveAllCommandTreeNode(this));
-
-		addChild(new IdentifyCommandTreeNode(this));
-		addChild(new UnidentifyCommandTreeNode(this));
+		
+		addChild(new ItemCommandTreeNode(this));
 	}
 }

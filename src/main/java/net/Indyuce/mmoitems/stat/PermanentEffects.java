@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -132,9 +133,14 @@ public class PermanentEffects extends ItemStat {
 		if (mmoitem.getNBT().hasTag(getNBTPath())) {
 			PotionEffectListData effects = new PotionEffectListData();
 
-			JsonObject json = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_PERM_EFFECTS")).getAsJsonObject();
-			json.entrySet()
-					.forEach(entry -> effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+			JsonElement element = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_PERM_EFFECTS"));
+			if(!element.isJsonObject()) {
+				MMOItems.plugin.getLogger().warning("Couldn't load perm effects from " + mmoitem.getType()
+					+ "." + mmoitem.getId() + ", the NBTData isn't a json object!");
+				return;
+			}
+			element.getAsJsonObject().entrySet().forEach(entry ->
+				effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 
 			mmoitem.setData(ItemStat.PERM_EFFECTS, effects);
 		}

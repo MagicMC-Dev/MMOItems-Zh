@@ -64,12 +64,12 @@ public class MMOItemBuilder {
 			mmoitem.setData(ItemStat.TIER, new StringData(tier.getId()));
 		if (level > 0)
 			mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
-		
+
 		// roll item gen modifiers
 		for (TemplateModifier modifier : rollModifiers(template)) {
 			// roll modifier chance
 			// only apply if enough item weight
-			if (!modifier.rollChance() && modifier.getWeight() > capacity)
+			if (!modifier.rollChance() || modifier.getWeight() > capacity)
 				continue;
 
 			capacity -= modifier.getWeight();

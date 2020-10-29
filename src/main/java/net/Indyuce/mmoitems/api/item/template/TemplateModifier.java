@@ -60,7 +60,6 @@ public class TemplateModifier {
 			weight = config.getDouble("weight", parent.weight);
 			nameModifier = parent.nameModifier;
 			data = parent.data;
-			System.out.println("Got modifier from file.");
 			return;
 		}
 

@@ -24,12 +24,12 @@ public class CheckTagCommandTreeNode extends CommandTreeNode {
 		}
 
 		Player player = (Player) sender;
-		String tag = args[2].contains("#") ? args[2].substring(1) : "MMOITEMS_" + args[2];
 		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		String tag = item.hasTag(args[2]) ? args[2] : "MMOITEMS_" + args[2].toUpperCase().replace("-", "_");
 		player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-		player.sendMessage(ChatColor.AQUA + "Boolean = " + ChatColor.RESET + item.getBoolean(tag.toUpperCase().replace("-", "_")));
-		player.sendMessage(ChatColor.AQUA + "Double = " + ChatColor.RESET + item.getDouble(tag.toUpperCase().replace("-", "_")));
-		player.sendMessage(ChatColor.AQUA + "String = " + ChatColor.RESET + item.getString(tag.toUpperCase().replace("-", "_")));
+		player.sendMessage(ChatColor.AQUA + "Boolean = " + ChatColor.RESET + item.getBoolean(tag));
+		player.sendMessage(ChatColor.AQUA + "Double = " + ChatColor.RESET + item.getDouble(tag));
+		player.sendMessage(ChatColor.AQUA + "String = " + ChatColor.RESET + item.getString(tag));
 		return CommandResult.SUCCESS;
 	}
 }

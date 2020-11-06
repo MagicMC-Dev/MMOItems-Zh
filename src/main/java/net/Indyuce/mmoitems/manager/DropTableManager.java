@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-public class DropTableManager implements Listener {
+public class DropTableManager implements Listener, Reloadable {
 	private final Map<EntityType, DropTable> monsters = new HashMap<>();
 	private final Map<Material, DropTable> blocks = new HashMap<>();
 	private final Map<Integer, DropTable> customBlocks = new HashMap<>();

@@ -2,11 +2,10 @@ package net.Indyuce.mmoitems.command.mmoitems;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.mmogroup.mmolib.command.api.CommandTreeNode;
-
-import java.util.function.Consumer;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.function.Consumer;
 
 public class ReloadCommandTreeNode extends CommandTreeNode {
 	public ReloadCommandTreeNode(CommandTreeNode parent) {
@@ -65,7 +64,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 	}
 
 	public void reloadRecipes(CommandSender sender) {
-		MMOItems.plugin.getRecipes().reloadRecipes();
+		MMOItems.plugin.getRecipes().reload();
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
 						+ (MMOItems.plugin.getRecipes().getLoadedRecipes().size()

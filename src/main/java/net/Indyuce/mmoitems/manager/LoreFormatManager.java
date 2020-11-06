@@ -1,5 +1,9 @@
 package net.Indyuce.mmoitems.manager;
 
+import net.Indyuce.mmoitems.MMOItems;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,12 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.apache.commons.lang3.Validate;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import net.Indyuce.mmoitems.MMOItems;
-
-public class LoreFormatManager {
+public class LoreFormatManager implements Reloadable {
 	private final Map<String, List<String>> formats = new HashMap<>();
 
 	public void reload() {

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
-public class TemplateManager {
+public class TemplateManager implements Reloadable {
 
 	/*
 	 * registered mmoitem templates

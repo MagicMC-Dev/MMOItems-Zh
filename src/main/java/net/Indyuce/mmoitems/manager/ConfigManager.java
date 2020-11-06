@@ -28,7 +28,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
-public class ConfigManager {
+public class ConfigManager implements Reloadable {
 
 	// cached config files
 	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;

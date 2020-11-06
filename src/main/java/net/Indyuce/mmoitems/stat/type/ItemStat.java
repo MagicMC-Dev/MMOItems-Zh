@@ -47,6 +47,7 @@ import net.Indyuce.mmoitems.stat.ItemTierStat;
 import net.Indyuce.mmoitems.stat.ItemTypeRestriction;
 import net.Indyuce.mmoitems.stat.KnockbackResistance;
 import net.Indyuce.mmoitems.stat.Lore;
+import net.Indyuce.mmoitems.stat.LoreFormat;
 import net.Indyuce.mmoitems.stat.LostWhenBroken;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat;
 import net.Indyuce.mmoitems.stat.LuteAttackSoundStat;
@@ -85,7 +86,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 public abstract class ItemStat {
 	public static final ItemStat MATERIAL = new MaterialStat(), DURABILITY = new ItemDamage(), CUSTOM_MODEL_DATA = new CustomModelData(),
 			MAX_DURABILITY = new MaximumDurability(), WILL_BREAK = new LostWhenBroken();
-	public static final ItemStat NAME = new DisplayName(), LORE = new Lore(), NBT_TAGS = new NBTTags();
+	public static final ItemStat NAME = new DisplayName(), LORE = new Lore(), NBT_TAGS = new NBTTags(), LORE_FORMAT = new LoreFormat();
 
 	// block stats
 	public static final ItemStat BLOCK_ID = new BlockID(), REQUIRED_POWER = new RequiredPower(), MIN_XP = new MinXP(), MAX_XP = new MaxXP(),

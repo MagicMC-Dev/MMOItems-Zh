@@ -39,23 +39,26 @@ public class ItemStackBuilder {
 
 	private final ItemStack item;
 	private final ItemMeta meta;
-	private final LoreBuilder lore = new LoreBuilder();
+	private final LoreBuilder lore;
 	private final List<ItemTag> tags = new ArrayList<>();
 
-	private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
-			"mmoitemsDecoy", 0, Operation.ADD_NUMBER);
+	private static final AttributeModifier fakeModifier = new AttributeModifier(
+			UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
 	/**
 	 * Used to build an MMOItem into an ItemStack
 	 * 
-	 * @param mmoitem
-	 *            The mmoitem you want to build
+	 * @param mmoitem The mmoitem you want to build
 	 */
 	public ItemStackBuilder(MMOItem mmoitem) {
 		this.mmoitem = mmoitem;
 
 		item = new ItemStack(
-				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
+				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial()
+						: Material.DIAMOND_SWORD);
+		lore = new LoreBuilder(mmoitem.hasData(ItemStat.LORE_FORMAT)
+				? MMOItems.plugin.getFormats().getFormat(mmoitem.getData(ItemStat.LORE_FORMAT).toString())
+				: MMOItems.plugin.getLanguage().getDefaultLoreFormat());
 		meta = item.getItemMeta();
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
@@ -77,10 +80,10 @@ public class ItemStackBuilder {
 
 	/**
 	 * @return Does NOT return the built item stack. It returns only returns the
-	 *         default item stack with material applied. Built item stack is
-	 *         given by build(). This method should only be used to check if the
-	 *         item is of a specific material (like the Shield Pattern stat
-	 *         which checks if the item is a shield)
+	 *         default item stack with material applied. Built item stack is given
+	 *         by build(). This method should only be used to check if the item is
+	 *         of a specific material (like the Shield Pattern stat which checks if
+	 *         the item is a shield)
 	 */
 	public ItemStack getItemStack() {
 		return item;
@@ -106,8 +109,8 @@ public class ItemStackBuilder {
 			try {
 				stat.whenApplied(this, mmoitem.getData(stat));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '" + mmoitem.getId() + "' with stat '"
-						+ stat.getId() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '"
+						+ mmoitem.getId() + "' with stat '" + stat.getId() + "': " + exception.getMessage());
 			}
 
 		// Display gem stone lore
@@ -117,27 +120,29 @@ public class ItemStackBuilder {
 		// Display item type
 		lore.insert("item-type",
 				ItemStat.translate("item-type").replace("#",
-						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE) ? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
+						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE)
+								? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
 								: mmoitem.getType().getName()));
 
 		// Calculate lore with placeholders
 		if (mmoitem.hasData(ItemStat.LORE)) {
 			List<String> parsed = new ArrayList<>();
-			((StringListData) mmoitem.getData(ItemStat.LORE)).getList().forEach(str -> parsed.add(lore.applyLorePlaceholders(str)));
+			((StringListData) mmoitem.getData(ItemStat.LORE)).getList()
+					.forEach(str -> parsed.add(lore.applyLorePlaceholders(str)));
 			lore.insert("lore", parsed);
 		}
 
 		final List<String> list = lore.build();
 		JsonArray array = new JsonArray();
 		for (String s : list)
-		    array.add(s);
+			array.add(s);
 		tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
 		meta.setLore(list);
-		
+
 		/*
 		 * This tag is added to entirely override default vanilla item attribute
-		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the
-		 * holder. Since 4.7 attributes are handled via custom calculations
+		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the holder.
+		 * Since 4.7 attributes are handled via custom calculations
 		 */
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 		item.setItemMeta(meta);
@@ -157,10 +162,9 @@ public class ItemStackBuilder {
 		private final UpgradeData upgradeData;
 
 		/**
-		 * @deprecated Will be improved with MMOItems 7. Currently used to
-		 *             display upgrade stats in the lore. Should be improved to
-		 *             be more OOP friendly. NO MODIFICATIONS ALLOWED BEFORE A
-		 *             REWRITE
+		 * @deprecated Will be improved with MMOItems 7. Currently used to display
+		 *             upgrade stats in the lore. Should be improved to be more OOP
+		 *             friendly. NO MODIFICATIONS ALLOWED BEFORE A REWRITE
 		 */
 		public StatLore(MMOItem mmoitem) {
 			this.mmoitem = mmoitem.clone();
@@ -176,7 +180,8 @@ public class ItemStackBuilder {
 		}
 
 		public MMOItem generateNewItem() {
-			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false) && isUpgradable()) {
+			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false)
+					&& isUpgradable()) {
 				if (upgradeData.getLevel() > 0)
 					for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
 						UpgradeInfo upgradeInfo = upgradeData.getTemplate().getUpgradeInfo(stat);
@@ -195,10 +200,11 @@ public class ItemStackBuilder {
 							double value = getValue(stat);
 
 							if (value > 0)
-								lore.insert(stat.getPath(),
-										stat.formatNumericStat(value, "#", new StatFormat("##").format(value)) + MMOLib.plugin.parseColors(
-												MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &e(+#stat#)")
-														.replace("#stat#", new StatFormat("##").format(value - getBase(stat)))));
+								lore.insert(stat.getPath(), stat.formatNumericStat(value, "#",
+										new StatFormat("##").format(value))
+										+ MMOLib.plugin.parseColors(MMOItems.plugin.getConfig()
+												.getString("item-upgrading.stat-change-suffix", " &e(+#stat#)").replace(
+														"#stat#", new StatFormat("##").format(value - getBase(stat)))));
 						}
 					}
 			}
@@ -213,7 +219,8 @@ public class ItemStackBuilder {
 
 				// does inverse math to get the base
 				if (info.isRelative()) {
-					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate().getUpgradeInfo(stat)).getAmount();
+					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate()
+							.getUpgradeInfo(stat)).getAmount();
 
 					for (int i = 1; i <= level; i++) {
 						value /= 1 + upgradeAmount;

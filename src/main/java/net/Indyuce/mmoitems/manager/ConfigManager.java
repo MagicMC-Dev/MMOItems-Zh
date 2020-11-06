@@ -50,6 +50,7 @@ public class ConfigManager {
 		mkdir("item");
 		mkdir("dynamic");
 		mkdir("language");
+		mkdir("language/lore-formats");
 		mkdir("modifiers");
 
 		File craftingStationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");

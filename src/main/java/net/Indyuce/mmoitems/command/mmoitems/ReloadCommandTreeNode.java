@@ -49,10 +49,11 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 		MMOItems.plugin.getTiers().reload();
 		MMOItems.plugin.getSets().reload();
 		MMOItems.plugin.getUpgrades().reload();
-		MMOItems.plugin.getTemplates().reload();
 		MMOItems.plugin.getWorldGen().reload();
 		MMOItems.plugin.getCustomBlocks().reload();
 		MMOItems.plugin.getLayouts().reload();
+		MMOItems.plugin.getFormats().reload();
+		MMOItems.plugin.getTemplates().reload();
 		sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " "
 				+ MMOItems.plugin.getDescription().getVersion() + " reloaded.");
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED

@@ -74,6 +74,7 @@ import net.Indyuce.mmoitems.manager.DropTableManager;
 import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.manager.ItemManager;
 import net.Indyuce.mmoitems.manager.LayoutManager;
+import net.Indyuce.mmoitems.manager.LoreFormatManager;
 import net.Indyuce.mmoitems.manager.PluginUpdateManager;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import net.Indyuce.mmoitems.manager.SetManager;
@@ -97,6 +98,7 @@ public class MMOItems extends JavaPlugin {
 
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
+	private final LoreFormatManager formatManager = new LoreFormatManager();
 	private final TemplateManager templateManager = new TemplateManager();
 	private final AbilityManager abilityManager = new AbilityManager();
 	private final EntityManager entityManager = new EntityManager();
@@ -181,6 +183,7 @@ public class MMOItems extends JavaPlugin {
 		 * After tiers, sets and upgrade templates are loaded, MI template data
 		 * can be fully loaded
 		 */
+		formatManager.reload();
 		tierManager = new TierManager();
 		setManager = new SetManager();
 		upgradeManager = new UpgradeManager();
@@ -480,6 +483,10 @@ public class MMOItems extends JavaPlugin {
 		return templateManager;
 	}
 
+	public LoreFormatManager getFormats() {
+		return formatManager;
+	}
+	
 	@Deprecated
 	public ItemManager getItems() {
 		return itemManager;

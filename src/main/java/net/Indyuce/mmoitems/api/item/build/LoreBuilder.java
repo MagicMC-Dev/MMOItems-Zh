@@ -7,12 +7,15 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.mmogroup.mmolib.MMOLib;
 
 public class LoreBuilder {
-	private final List<String> lore = MMOItems.plugin.getLanguage().getDefaultLoreFormat();
+	private final List<String> lore;
 	private final Map<String, String> placeholders = new HashMap<>();
+
+	public LoreBuilder(List<String> format) {
+		this.lore = format;
+	}
 
 	/**
 	 * Registers a placeholder. All placeholders registered will be parsed when

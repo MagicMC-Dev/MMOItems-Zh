@@ -1,21 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ability.Ability;
@@ -34,6 +21,17 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.#");
@@ -82,7 +80,7 @@ public class Abilities extends ItemStat {
 			abilityLore.remove(abilityLore.size() - 1);
 
 		item.getLore().insert("abilities", abilityLore);
-		item.addItemTag(new ItemTag("MMOITEMS_ABILITIES", jsonArray.toString()));
+		item.addItemTag(new ItemTag(getNBTPath(), jsonArray.toString()));
 	}
 
 	@Override
@@ -138,10 +136,10 @@ public class Abilities extends ItemStat {
 
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_ABILITIES"))
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
 			try {
 				AbilityListData list = new AbilityListData();
-				new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ABILITIES")).getAsJsonArray()
+				new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()
 						.forEach(obj -> list.add(new AbilityData(obj.getAsJsonObject())));
 				mmoitem.setData(ItemStat.ABILITIES, list);
 			} catch (JsonSyntaxException | IllegalStateException exception) {

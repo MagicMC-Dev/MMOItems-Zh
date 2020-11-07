@@ -1,18 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Particle;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -27,6 +17,14 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.List;
+import java.util.Optional;
 
 public class ArrowParticles extends ItemStat {
 	public ArrowParticles() {
@@ -53,14 +51,14 @@ public class ArrowParticles extends ItemStat {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("MMOITEMS_ARROW_PARTICLES", data.toString()));
+		item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
 	}
 
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_ARROW_PARTICLES"))
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
 			try {
-				JsonObject json = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ARROW_PARTICLES")).getAsJsonObject();
+				JsonObject json = new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonObject();
 
 				Particle particle = Particle.valueOf(json.get("Particle").getAsString());
 				int amount = json.get("Amount").getAsInt();

@@ -1,20 +1,9 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -29,6 +18,15 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class Commands extends ItemStat {
 	private static final int max = 15;
@@ -140,16 +138,16 @@ public class Commands extends ItemStat {
 		});
 
 		item.getLore().insert("commands", lore);
-		item.addItemTag(new ItemTag("MMOITEMS_COMMANDS", array.toString()));
+		item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
 	}
 
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_COMMANDS"))
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
 			try {
 				CommandListData commands = new CommandListData();
 
-				new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_COMMANDS")).getAsJsonArray().forEach(element -> {
+				new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray().forEach(element -> {
 					JsonObject key = element.getAsJsonObject();
 					commands.add(new CommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(), key.get("Console").getAsBoolean(),
 							key.get("Op").getAsBoolean()));

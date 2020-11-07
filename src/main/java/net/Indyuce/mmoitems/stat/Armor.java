@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.attribute.Attribute;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -10,6 +7,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.inventory.ItemStack;
 
 public class Armor extends AttributeStat {
 	public Armor() {
@@ -22,7 +21,7 @@ public class Armor extends AttributeStat {
 		double value = ((DoubleData) data).getValue();
 		// for (String slot : item.getMMOItem().getType().getSlots())
 		// item.addItemAttribute(new Attribute("armor", value, slot));
-		item.addItemTag(new ItemTag("MMOITEMS_ARMOR", value));
-		item.getLore().insert("armor", formatNumericStat(value, "#", new StatFormat("##").format(value)));
+		item.addItemTag(new ItemTag(getNBTPath(), value));
+		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}
 }

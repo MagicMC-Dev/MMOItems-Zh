@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 
@@ -58,7 +59,9 @@ public class RecipeEdition extends EditionInventory {
 
 			ItemStack element;
 			try {
-				element = MMOItems.plugin.getRecipes().getWorkbenchIngredient(line.get(j % 3)).generateItem();
+				WorkbenchIngredient ingredient = MMOItems.plugin.getRecipes().getWorkbenchIngredient(line.get(j % 3));
+				element = ingredient.generateItem();
+				element.setAmount(ingredient.getAmount());
 				Validate.isTrue(element != null && element.getType() != Material.AIR);
 			} catch (IllegalArgumentException exception) {
 				element = new ItemStack(Material.BARRIER);
@@ -93,7 +96,9 @@ public class RecipeEdition extends EditionInventory {
 
 				ItemStack element;
 				try {
-					element = MMOItems.plugin.getRecipes().getWorkbenchIngredient(ingredients.get(j)).generateItem();
+					WorkbenchIngredient ingredient = MMOItems.plugin.getRecipes().getWorkbenchIngredient(ingredients.get(j));
+					element = ingredient.generateItem();
+					element.setAmount(ingredient.getAmount());
 					Validate.isTrue(element != null && element.getType() != Material.AIR);
 				} catch (IllegalArgumentException exception) {
 					element = new ItemStack(Material.BARRIER);

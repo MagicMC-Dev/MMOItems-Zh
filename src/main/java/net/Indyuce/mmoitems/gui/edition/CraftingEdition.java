@@ -23,8 +23,6 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.util.AltChar;
 
 public class CraftingEdition extends EditionInventory {
-	private static final int[] slots = { 21, 22, 23, 30, 31, 32 };
-
 	public CraftingEdition(Player player, MMOItemTemplate template) {
 		super(player, template);
 	}
@@ -33,8 +31,6 @@ public class CraftingEdition extends EditionInventory {
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, MMOLib.plugin.getVersion().isStrictlyHigher(1, 14) ? 45 : 36,
 				"Crafting Recipes: " + template.getId());
-
-		int n = 0;
 
 		for (CraftingType ctype : CraftingType.values()) {
 			if (!ctype.shouldAdd())
@@ -55,8 +51,7 @@ public class CraftingEdition extends EditionInventory {
 			craftingEventItem.setLore(eventLore);
 			craftingEvent.setItemMeta(craftingEventItem);
 
-			inv.setItem(slots[n], craftingEvent);
-			n += 1;
+			inv.setItem(ctype.getSlot(), craftingEvent);
 		}
 
 		addEditionInventoryItems(inv, true);
@@ -77,8 +72,12 @@ public class CraftingEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
-			if (event.getSlot() == 21 || event.getSlot() == 22)
-				new RecipeEdition(player, template, event.getSlot() == 22).open(getPreviousPage());
+			if (corresponding == CraftingType.SHAPELESS || corresponding == CraftingType.SHAPED)
+				new RecipeEdition(player, template,  corresponding == CraftingType.SHAPELESS).open(getPreviousPage());
+			else if(corresponding == CraftingType.SMITHING)
+				new StatEdition(this, ItemStat.CRAFTING, "smithing").enable(
+						"Write in the chat the items required to craft this.", "Format: '[ITEM] [ITEM]'",
+						"[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 			else
 				new StatEdition(this, ItemStat.CRAFTING, "item", corresponding.name().toLowerCase()).enable(
 						"Write in the chat the item, tickspeed and exp you want.", "Format: '[ITEM] [TICKS] [EXP]'",

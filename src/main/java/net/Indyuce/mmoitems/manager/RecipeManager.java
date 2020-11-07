@@ -1,5 +1,29 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.BlastingRecipe;
+import org.bukkit.inventory.CampfireRecipe;
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.SmithingRecipe;
+import org.bukkit.inventory.SmokingRecipe;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -9,21 +33,6 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.mmogroup.mmolib.MMOLib;
-import org.bukkit.Bukkit;
-import org.bukkit.Keyed;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class RecipeManager implements Reloadable {
 	/**
@@ -82,6 +91,9 @@ public class RecipeManager implements Reloadable {
 									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.CAMPFIRE, type,
 													template.getId(), new BurningRecipeInformation(
 															section.getConfigurationSection("campfire." + recipe)), recipe));
+						if (section.contains("smithing")) section.getConfigurationSection("smithing").getKeys(false)
+									.forEach(recipe -> registerSmithingRecipe(type, template.getId(),
+											section.getConfigurationSection("smithing." + recipe), recipe));
 					} catch (IllegalArgumentException exception) {
 						MMOItems.plugin.getLogger().log(Level.WARNING,
 								"Could not load recipe of '" + template.getId() + "': " + exception.getMessage());
@@ -116,6 +128,16 @@ public class RecipeManager implements Reloadable {
 			registerRecipe(recipe);
 		else
 			registerBukkitRecipe(recipe, number);
+	}
+	
+	public void registerSmithingRecipe(Type type, String id, ConfigurationSection section, String number) {
+		Validate.isTrue(section.isString("input1") && section.isString("input2"),
+				"Invalid smithing recipe for '" + type.getId() + " . " + id + "'");
+		WorkbenchIngredient input1 = getWorkbenchIngredient(section.getString("input1"));
+		WorkbenchIngredient input2 = getWorkbenchIngredient(section.getString("input2"));
+		SmithingRecipe recipe = new SmithingRecipe(getRecipeKey(type, id, "smithing", number),
+			MMOItems.plugin.getItem(type, id), input1.toBukkit(), input2.toBukkit());
+		loadedRecipes.add(recipe);
 	}
 
 	public void registerRecipe(CustomRecipe recipe) {

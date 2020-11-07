@@ -72,13 +72,24 @@ public class Crafting extends ItemStat {
 					newArray[slot % 3] = message;
 					newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
-					inv.getEditedSection().set("crafting.shaped.1", newList);
-					inv.registerTemplateEdition();
+					for(String s : newList) {
+						if(s.equals("AIR AIR AIR"))
+							continue;
+						inv.getEditedSection().set("crafting.shaped.1", newList);
+						inv.registerTemplateEdition();
+						break;
+					}
 				} else {
 					List<String> newList = inv.getEditedSection().getStringList("crafting.shapeless.1");
 					newList.set(slot, message);
-					inv.getEditedSection().set("crafting.shapeless.1", newList);
-					inv.registerTemplateEdition();
+
+					for(String s : newList) {
+						if(s.equals("AIR"))
+							continue;
+						inv.getEditedSection().set("crafting.shapeless.1", newList);
+						inv.registerTemplateEdition();
+						break;
+					}
 				}
 			}
 		} else if (type.equals("item")) {
@@ -91,6 +102,14 @@ public class Crafting extends ItemStat {
 			inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
 			inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
 			inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
+			inv.registerTemplateEdition();
+		} else if (type.equals("smithing")) {
+			String[] args = message.split("\\ ");
+			Validate.isTrue(args.length == 2, "Invalid format");
+			Validate.isTrue(validate(inv.getPlayer(), args[0]) && validate(inv.getPlayer(), args[1]));
+
+			inv.getEditedSection().set("crafting.smithing.1.input1", args[0]);
+			inv.getEditedSection().set("crafting.smithing.1.input2", args[1]);
 			inv.registerTemplateEdition();
 		} else
 			MMOItems.plugin.getLogger().warning("Something went wrong!");

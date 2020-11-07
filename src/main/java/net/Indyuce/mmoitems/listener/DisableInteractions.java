@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -27,12 +28,12 @@ public class DisableInteractions implements Listener {
 	@EventHandler
 	public void a(InventoryClickEvent event) {
 		Inventory inv = event.getClickedInventory();
-		if (inv == null || inv.getType() != InventoryType.ANVIL || event.getSlot() != 2)
+		if (inv == null || inv.getType() != InventoryType.ANVIL || event.getSlotType() != SlotType.RESULT)
 			return;
 
-		NBTItem item = NBTItem.get(event.getCurrentItem());
-		if (item.hasType()
-				&& (MMOItems.plugin.getConfig().getBoolean("disable-interactions.repair") || item.getBoolean("MMOITEMS_DISABLE_REPAIRING")))
+		if(isDisabled(NBTItem.get(event.getCurrentItem()), "repair"))
+			event.setCancelled(true);
+		else if(inv.getItem(1) != null && isDisabled(NBTItem.get(inv.getItem(1)), "repair"))
 			event.setCancelled(true);
 	}
 
@@ -43,12 +44,10 @@ public class DisableInteractions implements Listener {
 			return;
 
 		Inventory inv = event.getClickedInventory();
-		if (inv == null || inv.getType() != InventoryType.GRINDSTONE || event.getSlot() != 2)
+		if (inv == null || inv.getType() != InventoryType.GRINDSTONE || event.getSlotType() != SlotType.RESULT)
 			return;
 
-		NBTItem item = NBTItem.get(event.getCurrentItem());
-		if (item.hasType()
-				&& (MMOItems.plugin.getConfig().getBoolean("disable-interactions.repair") || item.getBoolean("MMOITEMS_DISABLE_REPAIRING")))
+		if(isDisabled(NBTItem.get(inv.getItem(0)), "repair") || isDisabled(NBTItem.get(inv.getItem(1)), "repair"))
 			event.setCancelled(true);
 	}
 
@@ -59,28 +58,27 @@ public class DisableInteractions implements Listener {
 			return;
 
 		Inventory inv = event.getClickedInventory();
-		if (inv == null || inv.getType() != InventoryType.SMITHING || event.getSlot() != 2)
+		if (inv == null || inv.getType() != InventoryType.SMITHING || event.getSlotType() != SlotType.RESULT)
 			return;
 
-		NBTItem item = NBTItem.get(event.getCurrentItem());
-		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smith") || item.getBoolean("MMOITEMS_DISABLE_SMITHING")))
+		if(NBTItem.get(event.getCurrentItem()).hasType())
+			return;
+		
+		if(isDisabled(NBTItem.get(inv.getItem(0)), "smith") || isDisabled(NBTItem.get(inv.getItem(1)), "smith"))
 			event.setCancelled(true);
 	}
 
 	// enchanting tables
 	@EventHandler
 	public void d(EnchantItemEvent event) {
-		NBTItem item = NBTItem.get(event.getItem());
-		if (item.hasType()
-				&& (MMOItems.plugin.getConfig().getBoolean("disable-interactions.enchant") || item.getBoolean("MMOITEMS_DISABLE_ENCHANTING")))
+		if (isDisabled(NBTItem.get(event.getItem()), "enchant"))
 			event.setCancelled(true);
 	}
 
 	// smelting
 	@EventHandler
 	public void e(FurnaceSmeltEvent event) {
-		NBTItem item = NBTItem.get(event.getSource());
-		if (item.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.smelt") || item.getBoolean("MMOITEMS_DISABLE_SMELTING")))
+		if (isDisabled(NBTItem.get(event.getSource()), "smelt"))
 			event.setCancelled(true);
 	}
 
@@ -122,12 +120,11 @@ public class DisableInteractions implements Listener {
 			if (((Keyed) event.getRecipe()).getKey().getNamespace().equals("mmoitems"))
 				return;
 
-		boolean disableCrafting = MMOItems.plugin.getConfig().getBoolean("disable-interactions.craft");
 		for (ItemStack item : event.getInventory().getMatrix()) {
-			NBTItem nbtItem = NBTItem.get(item);
-			if (nbtItem.getType() != null)
-				if (disableCrafting || nbtItem.getBoolean("MMOITEMS_DISABLE_CRAFTING"))
-					event.setCancelled(true);
+			if(isDisabled(NBTItem.get(item), "craft")) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 
 		if (MMOItems.plugin.getConfig().getStringList("disable-vanilla-recipes").contains(event.getCurrentItem().getType().name()))
@@ -169,5 +166,10 @@ public class DisableInteractions implements Listener {
 				return j;
 		}
 		return -1;
+	}
+	
+	private boolean isDisabled(NBTItem nbt, String type) {
+		return nbt.hasType() && MMOItems.plugin.getConfig().getBoolean("disable-interactions." + type)
+				|| nbt.getBoolean("MMOITEMS_DISABLE_" + type.toUpperCase().replace("-", "_") + "ING");
 	}
 }

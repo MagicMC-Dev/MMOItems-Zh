@@ -8,27 +8,28 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionMaterial;
 
 public enum CraftingType {
-	SHAPED(21, "The C. Table Recipe (Shaped) for this item", VersionMaterial.CRAFTING_TABLE, true),
-	SHAPELESS(22, "The C. Table Recipe (Shapeless) for this item", VersionMaterial.CRAFTING_TABLE, true),
-	FURNACE(23, "The Furnace Recipe for this item", Material.FURNACE, true),
-	BLAST(30, "The Blast Furnace Recipe for this item", VersionMaterial.BLAST_FURNACE, false),
-	SMOKER(31, "The Smoker Recipe for this item", VersionMaterial.SMOKER, false),
-	CAMPFIRE(32, "The Campfire Recipe for this item", VersionMaterial.CAMPFIRE, false);
+	SHAPED(21, "The C. Table Recipe (Shaped) for this item", VersionMaterial.CRAFTING_TABLE),
+	SHAPELESS(22, "The C. Table Recipe (Shapeless) for this item", VersionMaterial.CRAFTING_TABLE),
+	FURNACE(23, "The Furnace Recipe for this item", Material.FURNACE),
+	BLAST(29, "The Blast Furnace Recipe for this item", VersionMaterial.BLAST_FURNACE, 1, 14),
+	SMOKER(30, "The Smoker Recipe for this item", VersionMaterial.SMOKER, 1, 14),
+	CAMPFIRE(32, "The Campfire Recipe for this item", VersionMaterial.CAMPFIRE, 1, 14),
+	SMITHING(33, "The Smithing Recipe for this item", VersionMaterial.SMITHING_TABLE, 1, 15);
 
 	private final int slot;
 	private final String lore;
 	private final Material material;
-	private final boolean old;
+	private final int[] mustBeHigher;
 
-	private CraftingType(int slot, String lore, VersionMaterial material, boolean old) {
-		this(slot, lore, material.toMaterial(), old);
+	private CraftingType(int slot, String lore, VersionMaterial material, int... mustBeHigher) {
+		this(slot, lore, material.toMaterial(), mustBeHigher);
 	}
 
-	private CraftingType(int slot, String lore, Material material, boolean old) {
+	private CraftingType(int slot, String lore, Material material, int... mustBeHigher) {
 		this.slot = slot;
 		this.lore = lore;
 		this.material = material;
-		this.old = old;
+		this.mustBeHigher = mustBeHigher;
 	}
 
 	public ItemStack getItem() {
@@ -48,7 +49,7 @@ public enum CraftingType {
 	}
 
 	public boolean shouldAdd() {
-		return MMOLib.plugin.getVersion().isStrictlyHigher(1, 14) || old;
+		return mustBeHigher.length < 1 || MMOLib.plugin.getVersion().isStrictlyHigher(mustBeHigher);
 	}
 
 	public static CraftingType getBySlot(int slot) {

@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.api.event;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.event.HandlerList;
-
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.apache.commons.lang.Validate;
+import org.bukkit.event.HandlerList;
 
 public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	private final Recipe recipe;
@@ -45,7 +44,7 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	 *            The player interacting with the crafting station
 	 * @param station
 	 *            The crafting station being used
-	 * @param recipeInfo
+	 * @param recipe
 	 *            The recipe being used to craft the item
 	 */
 	public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation station, Recipe recipe) {

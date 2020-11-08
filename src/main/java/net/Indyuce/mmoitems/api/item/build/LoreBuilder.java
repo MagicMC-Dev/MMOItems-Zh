@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,11 @@ import com.google.common.collect.Lists;
 import net.mmogroup.mmolib.MMOLib;
 
 public class LoreBuilder {
-	private final List<String> lore;
+	private final List<String> lore = new ArrayList<>();
 	private final Map<String, String> placeholders = new HashMap<>();
 
-	public LoreBuilder(List<String> format) {
-		this.lore = format;
+	public LoreBuilder(Collection<String> format) {
+		lore.addAll(format);
 	}
 
 	/**

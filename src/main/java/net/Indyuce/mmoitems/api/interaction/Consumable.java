@@ -1,27 +1,8 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import com.google.gson.JsonObject;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemTier;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.event.item.*;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.util.DynamicLore;
-import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import net.Indyuce.mmoitems.stat.data.*;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.SmartGive;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.lang.reflect.Field;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,8 +14,38 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.lang.reflect.Field;
-import java.util.List;
+import com.google.gson.JsonObject;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.ApplySoulboundEvent;
+import net.Indyuce.mmoitems.api.event.item.BreakSoulboundEvent;
+import net.Indyuce.mmoitems.api.event.item.DeconstructItemEvent;
+import net.Indyuce.mmoitems.api.event.item.IdentifyItemEvent;
+import net.Indyuce.mmoitems.api.event.item.RepairItemEvent;
+import net.Indyuce.mmoitems.api.event.item.UpgradeItemEvent;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
+import net.Indyuce.mmoitems.stat.data.ParticleData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.SkullTextureData;
+import net.Indyuce.mmoitems.stat.data.SoulboundData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.SmartGive;
+import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item) {
@@ -307,8 +318,8 @@ public class Consumable extends UseItem {
 			target.removeTag("MMOITEMS_SKIN_ID");
 
 			MMOItemTemplate targetTemplate = MMOItems.plugin.getTemplates().getTemplateOrThrow(targetType, targetItemId);
-			MMOItem originalMmoitem = targetTemplate.newBuilder(playerData.get(player).getRPG()).build();
-			ItemStack originalItem = targetTemplate.newBuilder(playerData.get(player).getRPG()).build().newBuilder().build();
+			MMOItem originalMmoitem = targetTemplate.newBuilder(playerData.getRPG()).build();
+			ItemStack originalItem = targetTemplate.newBuilder(playerData.getRPG()).build().newBuilder().build();
 
 			int originalCustomModelData = originalItem.getItemMeta().hasCustomModelData() ? originalItem.getItemMeta().getCustomModelData() : -1;
 			if(originalCustomModelData != -1) {
@@ -357,7 +368,7 @@ public class Consumable extends UseItem {
 
 			// Give back skin item
 			MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(Type.SKIN, skinId);
-			MMOItem mmoitem = template.newBuilder(playerData.get(player).getRPG()).build();
+			MMOItem mmoitem = template.newBuilder(playerData.getRPG()).build();
 			ItemStack item = mmoitem.newBuilder().build();
 
 			new SmartGive(player).give(item);

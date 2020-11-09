@@ -78,6 +78,7 @@ effect: '&7■ Grants &f#e &7for &f#d&7s'
 repair: '&7■ Repair: &f#'
 can-identify: '&7■ Can identify items.'
 can-deconstruct: '&7■ Can deconstruct tiered items.'
+can-deskin: '&7■ Can de-skin skinned items.'
 success-rate: '&7■ Success Rate: &a&l#%'
 max-consume: '&7■ Max Consume: &f# &7uses'
 

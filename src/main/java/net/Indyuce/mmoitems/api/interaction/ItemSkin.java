@@ -66,6 +66,7 @@ public class ItemSkin extends UseItem {
 
 		// Apply skin
 		target.addTag(new ItemTag("MMOITEMS_HAS_SKIN", true));
+		target.addTag(new ItemTag("MMOITEMS_SKIN_ID", getNBTItem().getString("MMOITEMS_ITEM_ID")));
 		if (getNBTItem().getInteger("CustomModelData") != 0)
 			target.addTag(new ItemTag("CustomModelData", getNBTItem().getInteger("CustomModelData")));
 		if (!getNBTItem().getString("MMOITEMS_ITEM_PARTICLES").isEmpty())

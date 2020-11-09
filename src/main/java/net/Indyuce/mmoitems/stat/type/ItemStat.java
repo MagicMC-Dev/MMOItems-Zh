@@ -155,6 +155,9 @@ public abstract class ItemStat {
 	public static final ItemStat CAN_DECONSTRUCT = new BooleanStat("CAN_DECONSTRUCT", new ItemStack(Material.PAPER), "Can Deconstruct?",
 			new String[] { "Players can deconstruct their item", "using this consumable, creating", "another random item." },
 			new String[] { "consumable" });
+	public static final ItemStat CAN_DESKIN = new BooleanStat("CAN_DESKIN", new ItemStack(Material.LEATHER), "Can Deskin?",
+			new String[] { "Players can deskin their item", "and get their skin back", "from the item." },
+			new String[] { "consumable" });
 	public static final ItemStat EFFECTS = new Effects(), PERM_EFFECTS = new PermanentEffects(), GRANTED_PERMISSIONS = new GrantedPermissions();
 	public static final ItemStat SOULBINDING_CHANCE = new DoubleStat("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toItem(), "Soulbinding Chance",
 			new String[] { "Defines the chance your item has to", "link another item to your soul,", "preventing other players from using it." },

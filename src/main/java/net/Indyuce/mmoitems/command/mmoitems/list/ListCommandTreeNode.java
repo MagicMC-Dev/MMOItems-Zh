@@ -14,6 +14,7 @@ public class ListCommandTreeNode extends CommandTreeNode {
 		addChild(new AbilityCommandTreeNode(this));
 		addChild(new MIAbilityCommandTreeNode(this));
 		addChild(new MMAbilityCommandTreeNode(this));
+		addChild(new TPAbilityCommandTreeNode(this));
 		addChild(new LuteAttackCommandTreeNode(this));
 		addChild(new StaffSpiritCommandTreeNode(this));
 		addChild(new TypeCommandTreeNode(this));
@@ -29,6 +30,7 @@ public class ListCommandTreeNode extends CommandTreeNode {
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list ability " + ChatColor.WHITE + "shows all available abilities");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list miability " + ChatColor.WHITE + "shows all available MMOItems abilities");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list mmability " + ChatColor.WHITE + "shows all available MythicMobs abilities");
+		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list tpability " + ChatColor.WHITE + "shows all available Third Party abilities");
 		if (sender instanceof Player) {
 			sender.sendMessage("");
 			sender.sendMessage("Spigot Javadoc Links:");

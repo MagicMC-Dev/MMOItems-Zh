@@ -222,7 +222,8 @@ public class ConfigManager implements Reloadable {
 	}
 
 	public String getAbilityName(Ability ability) {
-		return abilities.getConfig().getString("ability." + ability.getLowerCaseID());
+		String configName = abilities.getConfig().getString("ability." + ability.getLowerCaseID());
+		return configName != null ? configName : ability.getName();
 	}
 
 	public String getCastingModeName(CastingMode mode) {

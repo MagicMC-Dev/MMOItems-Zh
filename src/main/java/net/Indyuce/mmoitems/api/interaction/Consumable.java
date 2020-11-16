@@ -1,21 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-
 import com.google.gson.JsonObject;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -33,6 +18,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
+import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
@@ -46,6 +32,19 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.SmartGive;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item) {
@@ -418,9 +417,11 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
-		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME"))
-			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"),
+		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME")) {
+			Sound sound = new SoundReader(nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"), Sound.ENTITY_GENERIC_EAT).getSound();
+			player.getWorld().playSound(player.getLocation(), sound,
 					(float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
+		}
 		else
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
 

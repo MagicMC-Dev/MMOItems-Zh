@@ -18,7 +18,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
-import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
@@ -417,11 +416,9 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
-		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME")) {
-			Sound sound = new SoundReader(nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"), Sound.ENTITY_GENERIC_EAT).getSound();
-			player.getWorld().playSound(player.getLocation(), sound,
+		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME"))
+			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME").toLowerCase(),
 					(float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
-		}
 		else
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
 

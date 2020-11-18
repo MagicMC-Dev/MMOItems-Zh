@@ -105,6 +105,6 @@ public class CustomSoundListener implements Listener {
 
 		NBTItem nbt = NBTItem.get(item);
 		if (nbt.hasTag("MMOITEMS_SOUND_" + sound))
-			world.playSound(loc, nbt.getString("MMOITEMS_SOUND_" + sound), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_PIT"));
+			world.playSound(loc, nbt.getString("MMOITEMS_SOUND_" + sound).toLowerCase(), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_PIT"));
 	}
 }

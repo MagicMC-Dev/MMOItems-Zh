@@ -1,10 +1,12 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.CustomSound;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.api.util.AltChar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,13 +17,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.CustomSound;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SoundsEdition extends EditionInventory {
 	public static Map<Integer, String> correspondingSlot = new HashMap<>();
@@ -46,7 +45,7 @@ public class SoundsEdition extends EditionInventory {
 			ItemMeta soundEventMeta = soundEvent.getItemMeta();
 			soundEventMeta.addItemFlags(ItemFlag.values());
 			soundEventMeta.setDisplayName(ChatColor.GREEN + sound.getName());
-			List<String> eventLore = new ArrayList<String>();
+			List<String> eventLore = new ArrayList<>();
 			for (String lore : sound.getLore())
 				eventLore.add(ChatColor.GRAY + lore);
 			eventLore.add("");
@@ -87,7 +86,8 @@ public class SoundsEdition extends EditionInventory {
 		if (correspondingSlot.containsKey(event.getSlot())) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
 				new StatEdition(this, ItemStat.CUSTOM_SOUNDS, event.getSlot()).enable("Write in the chat the custom sound you want to add.",
-						ChatColor.AQUA + "Format: [SOUND NAME] [VOLUME] [PITCH]");
+						ChatColor.AQUA + "Format: [SOUND NAME] [VOLUME] [PITCH]",
+						ChatColor.AQUA + "Example: entity.generic.drink 1 1");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
 				String soundPath = correspondingSlot.get(event.getSlot());

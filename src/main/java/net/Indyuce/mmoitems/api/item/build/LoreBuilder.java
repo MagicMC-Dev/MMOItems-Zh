@@ -1,14 +1,9 @@
 package net.Indyuce.mmoitems.api.item.build;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Lists;
-
 import net.mmogroup.mmolib.MMOLib;
+
+import java.util.*;
 
 public class LoreBuilder {
 	private final List<String> lore = new ArrayList<>();
@@ -78,7 +73,7 @@ public class LoreBuilder {
 	 * @param path
 	 *            The path of the stat, used to locate where to insert the stat
 	 *            in the lore
-	 * @param add
+	 * @param list
 	 *            The lines you want to add
 	 */
 	public void insert(String path, List<String> list) {

@@ -1,11 +1,18 @@
 package net.Indyuce.mmoitems.api.item.build;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-
+import com.google.gson.JsonArray;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.stat.data.*;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -14,25 +21,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.google.gson.JsonArray;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.util.DynamicLore;
-import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.StoredTagsData;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class ItemStackBuilder {
 	private MMOItem mmoitem;
@@ -145,6 +138,7 @@ public class ItemStackBuilder {
 		 * Since 4.7 attributes are handled via custom calculations
 		 */
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
+
 		item.setItemMeta(meta);
 		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
 	}

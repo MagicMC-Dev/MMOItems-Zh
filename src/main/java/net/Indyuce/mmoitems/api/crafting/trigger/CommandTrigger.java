@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class CommandTrigger extends Trigger {
-	private final String command;
+	private String command;
 	private final String sender;
 
 	public CommandTrigger(MMOLineConfig config) {
@@ -26,7 +26,7 @@ public class CommandTrigger extends Trigger {
 	private void dispatchCommand(Player player, boolean console, boolean op) {
 
 		// Adds back using "%player%" in the command trigger string.
-		command.replaceAll("%(?i)player%", player.getName());
+		command = command.replaceAll("(?i)%player%", player.getName());
 
 		if (console) {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);

@@ -24,6 +24,7 @@ public class CommandTrigger extends Trigger {
 	}
 	
 	private void dispatchCommand(Player player, boolean console, boolean op) {
+
 		// Adds back using "%player%" in the command trigger string.
 		command.replaceAll("%(?i)player%", player.getName());
 

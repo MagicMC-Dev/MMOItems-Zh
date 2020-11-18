@@ -86,7 +86,7 @@ public class CustomBlockListener implements Listener {
 		if (event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.SPREAD) {
 			BlockFace[] faces = { BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST };
 			for (BlockFace face : faces)
-				if (MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getRelative(face).getBlockData()) != null)
+				if (MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getRelative(face).getBlockData()).isPresent())
 					event.setCancelled(true);
 		}
 	}

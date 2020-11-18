@@ -1,17 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-
+import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -26,11 +15,15 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
+import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
+import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -38,6 +31,20 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.SmartGive;
+import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item) {
@@ -295,6 +302,81 @@ public class Consumable extends UseItem {
 			}
 		}
 
+		/*
+		 * Item Deskinning
+		 * Sets the target item into its original Custom Model Data
+		 * and returning skin item to the player
+		 */
+		String skinId = target.getString("MMOITEMS_SKIN_ID");
+		if(getNBTItem().getBoolean("MMOITEMS_CAN_DESKIN") && !skinId.isEmpty()) {
+			Player player = (Player) event.getWhoClicked();
+
+			//Set target item to default skin
+			String targetItemId = target.getString("MMOITEMS_ITEM_ID");
+			target.removeTag("MMOITEMS_HAS_SKIN");
+			target.removeTag("MMOITEMS_SKIN_ID");
+
+			MMOItemTemplate targetTemplate = MMOItems.plugin.getTemplates().getTemplateOrThrow(targetType, targetItemId);
+			MMOItem originalMmoitem = targetTemplate.newBuilder(playerData.getRPG()).build();
+			ItemStack originalItem = targetTemplate.newBuilder(playerData.getRPG()).build().newBuilder().build();
+
+			int originalCustomModelData = originalItem.getItemMeta().hasCustomModelData() ? originalItem.getItemMeta().getCustomModelData() : -1;
+			if(originalCustomModelData != -1) {
+				target.addTag(new ItemTag("CustomModelData", originalCustomModelData));
+			} else {
+				target.removeTag("CustomModelData");
+			}
+
+			if(originalMmoitem.hasData(ItemStat.ITEM_PARTICLES)) {
+				JsonObject itemParticles = ((ParticleData) originalMmoitem.getData(ItemStat.ITEM_PARTICLES)).toJson();
+				target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", itemParticles.toString()));
+			} else {
+				target.removeTag("MMOITEMS_ITEM_PARTICLES");
+			}
+
+			ItemStack targetItem = target.toItem();
+			ItemMeta targetItemMeta = targetItem.getItemMeta();
+			ItemMeta originalItemMeta = originalItem.getItemMeta();
+
+			if(targetItemMeta.isUnbreakable()) {
+				targetItemMeta.setUnbreakable(originalItemMeta.isUnbreakable());
+				if(targetItemMeta instanceof Damageable && originalItemMeta instanceof Damageable)
+					((Damageable) targetItemMeta).setDamage(((Damageable) originalItemMeta).getDamage());
+			}
+
+			if(targetItemMeta instanceof LeatherArmorMeta && originalItemMeta instanceof LeatherArmorMeta)
+				((LeatherArmorMeta) targetItemMeta).setColor(((LeatherArmorMeta) originalItemMeta).getColor());
+
+			if (target.hasTag("SkullOwner") && (targetItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
+					&& (originalItem.getType() == VersionMaterial.PLAYER_HEAD.toMaterial())) {
+				try {
+					Field profileField = targetItemMeta.getClass().getDeclaredField("profile");
+					profileField.setAccessible(true);
+					profileField.set(targetItemMeta,
+							((SkullTextureData) originalMmoitem.getData(ItemStat.SKULL_TEXTURE)).getGameProfile());
+				} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+					MMOItems.plugin.getLogger().warning("Could not read skull texture");
+				}
+			}
+
+			targetItem.setItemMeta(targetItemMeta);
+			targetItem.setType(originalItem.getType());
+			event.getCurrentItem().setAmount(0);
+			new SmartGive(player).give(targetItem);
+
+
+			// Give back skin item
+			MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(Type.SKIN, skinId);
+			MMOItem mmoitem = template.newBuilder(playerData.getRPG()).build();
+			ItemStack item = mmoitem.newBuilder().build();
+
+			new SmartGive(player).give(item);
+			Message.SKIN_REMOVED
+					.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(targetItem))
+					.send(player);
+			return true;
+		}
+
 		return false;
 	}
 
@@ -335,9 +417,11 @@ public class Consumable extends UseItem {
 				player.addPotionEffect(effect.toEffect());
 			});
 
-		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME"))
-			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"),
+		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME")) {
+			Sound sound = new SoundReader(nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME"), Sound.ENTITY_GENERIC_EAT).getSound();
+			player.getWorld().playSound(player.getLocation(), sound,
 					(float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
+		}
 		else
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
 

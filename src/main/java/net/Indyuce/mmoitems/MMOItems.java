@@ -226,12 +226,9 @@ public class MMOItems extends JavaPlugin {
 		 * allows now to use a glitchy itemEquipEvent. must be called after
 		 * loading the config since it checks for a config option
 		 */
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-			@Override
-			public void run() {
-				for (Player player : Bukkit.getOnlinePlayers())
-					PlayerData.get(player).checkForInventoryUpdate();
-			}
+		Bukkit.getScheduler().runTaskTimer(this, () -> {
+			for (Player player : Bukkit.getOnlinePlayers())
+				PlayerData.get(player).checkForInventoryUpdate();
 		}, 100, getConfig().getInt("inventory-update-delay"));
 
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
@@ -293,7 +290,7 @@ public class MMOItems extends JavaPlugin {
 		}
 
 		// compatibility with /reload
-		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.load(player)));
+		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));
 
 		boolean book = getConfig().getBoolean("recipes.use-recipe-book");
 		boolean amounts = getConfig().getBoolean("recipes.recipe-amounts");
@@ -339,7 +336,7 @@ public class MMOItems extends JavaPlugin {
 		updater.save();
 
 		// drop abandonned soulbound items
-		SoulboundInfo.getAbandonnedInfo().forEach(info -> info.dropItems());
+		SoulboundInfo.getAbandonnedInfo().forEach(SoulboundInfo::dropItems);
 
 		// close inventories
 		for (Player player : Bukkit.getOnlinePlayers())

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.Indyuce</groupId>
 	<artifactId>MMOItems</artifactId>
-	<version>6.2.4</version>
+	<version>6.2.5</version>
 	<name>MMOItems</name>
 	<description>A great item solution for your RPG server.</description>
 
@@ -44,11 +44,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<junitArtifactName>junit:junit</junitArtifactName>
 					<encoding>UTF-8</encoding>
-					<inputEncoding>UTF-8</inputEncoding>
-					<outputEncoding>UTF-8</outputEncoding>
-					<argLine>-ea -Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

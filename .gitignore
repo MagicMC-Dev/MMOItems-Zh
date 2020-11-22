@@ -2,6 +2,7 @@
 /target/
 /.settings/
 /.idea/
+/.m2/
 .classpath
 .project
 MMOItems.eml

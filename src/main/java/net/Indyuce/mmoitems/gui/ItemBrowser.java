@@ -10,6 +10,7 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.api.util.ItemMetaLore;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,7 +24,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
@@ -125,17 +130,18 @@ public class ItemBrowser extends PluginInventory {
 				}
 
 				ItemMeta meta = item.getItemMeta();
-				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
-				lore.add("");
+
+				List<String> newLore = new ArrayList<>();
+				newLore.add("");
 				if (deleteMode) {
-					lore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
+					newLore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
 					meta.setDisplayName(ChatColor.RED + "DELETE: " + meta.getDisplayName());
 				} else {
-					lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
-					lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
+					newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
+					newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
 				}
-				meta.setLore(lore);
 				item.setItemMeta(meta);
+				ItemMetaLore.addLoreLines(item, newLore);
 
 				cached.put(template.getId(), item);
 			}
@@ -256,7 +262,7 @@ public class ItemBrowser extends PluginInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				// this refreshes the item if it's unstackable
 				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE")) ? MMOItems.plugin.getItem(type, id, playerData)
-						: removeLastLoreLines(item, 3);
+						: ItemMetaLore.removeLoreLines(item, 3);
 				getPlayer().getInventory().addItem(generatedItem);
 				getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
 			}

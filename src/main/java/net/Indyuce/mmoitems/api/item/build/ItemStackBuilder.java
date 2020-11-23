@@ -6,7 +6,12 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.*;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.StoredTagsData;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -140,7 +145,15 @@ public class ItemStackBuilder {
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
 		item.setItemMeta(meta);
-		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
+		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
+		nbtItem.addTag(tags);
+
+		if (nbtItem.getDisplayNameComponent() != null) {
+			nbtItem.setDisplayNameComponent(MMOLib.plugin.getComponentBuilder().parse(nbtItem.getDisplayNameComponent()));
+
+		}
+
+		return nbtItem;
 	}
 
 	/**

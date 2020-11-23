@@ -1,17 +1,15 @@
 package net.Indyuce.mmoitems.api.item.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DynamicLore {
 	private final NBTItem item;
@@ -33,6 +31,12 @@ public class DynamicLore {
 			ItemMeta meta = stack.getItemMeta();
 			meta.setLore(lore);
 			stack.setItemMeta(meta);
+
+			NBTItem nbt = NBTItem.get(stack);
+			if (nbt.getLoreComponents() != null) {
+				nbt.setLoreComponents(MMOLib.plugin.getComponentBuilder().parse(nbt.getLoreComponents()));
+			}
+			stack = nbt.toItem();
 		}
 		return stack;
 	}

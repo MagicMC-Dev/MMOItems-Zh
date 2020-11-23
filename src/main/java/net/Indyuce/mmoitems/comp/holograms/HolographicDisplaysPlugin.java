@@ -20,6 +20,6 @@ public class HolographicDisplaysPlugin extends HologramSupport {
 		hologram.appendTextLine(format);
 		if (player != null)
 			hologram.getVisibilityManager().hideTo(player);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> hologram.delete(), 20);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, hologram::delete, 20);
 	}
 }

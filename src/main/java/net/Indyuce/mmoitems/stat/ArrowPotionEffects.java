@@ -1,25 +1,9 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -36,6 +20,20 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class ArrowPotionEffects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
@@ -54,7 +52,7 @@ public class ArrowPotionEffects extends ItemStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.ARROW_POTION_EFFECTS).enable("Write in the chat the potion effect you want to add.",
+			new StatEdition(inv, ItemStats.ARROW_POTION_EFFECTS).enable("Write in the chat the potion effect you want to add.",
 					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -73,7 +71,7 @@ public class ArrowPotionEffects extends ItemStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split("\\ ");
+		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3,
 				message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER]. Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
 
@@ -98,10 +96,10 @@ public class ArrowPotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
-		if (optional.isPresent()) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
+			RandomPotionEffectListData data = (RandomPotionEffectListData) statData;
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
 				+ ChatColor.GRAY + " Level: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
@@ -147,7 +145,7 @@ public class ArrowPotionEffects extends ItemStat {
 					object.get("duration").getAsDouble(), object.get("level").getAsInt()));
 			}
 
-			mmoitem.setData(ItemStat.ARROW_POTION_EFFECTS, effects);
+			mmoitem.setData(ItemStats.ARROW_POTION_EFFECTS, effects);
 		}
 	}
 }

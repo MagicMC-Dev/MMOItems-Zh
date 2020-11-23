@@ -16,7 +16,7 @@ public interface Upgradable {
 	 * double or a configuration section. the method must check if this argument
 	 * is of the right type. this method ONLY handles IllegalArgumentExceptions
 	 */
-	public UpgradeInfo loadUpgradeInfo(Object obj);
+	UpgradeInfo loadUpgradeInfo(Object obj);
 
-	public void apply(MMOItem mmoitem, UpgradeInfo info);
+	void apply(MMOItem mmoitem, UpgradeInfo info);
 }

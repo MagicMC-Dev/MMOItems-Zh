@@ -1,20 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -28,6 +14,19 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class Enchants extends ItemStat {
 	public Enchants() {
@@ -43,7 +42,7 @@ public class Enchants extends ItemStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.ENCHANTS).enable("Write in the chat the enchant you want to add.",
+			new StatEdition(inv, ItemStats.ENCHANTS).enable("Write in the chat the enchant you want to add.",
 					ChatColor.AQUA + "Format: {Enchant Name} {Enchant Level Numeric Formula}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -67,7 +66,7 @@ public class Enchants extends ItemStat {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split("\\ ");
+		String[] split = message.split(" ");
 		Validate.isTrue(split.length >= 2, "Use this format: {Enchant Name} {Enchant Level Numeric Formula}. Example: 'sharpness 5 0.3' "
 				+ "stands for Sharpness 5, plus 0.3 level per item level (rounded up to lower integer)");
 
@@ -83,11 +82,11 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomEnchantListData data = (RandomEnchantListData) optional.get();
+			RandomEnchantListData data = (RandomEnchantListData) statData;
 			data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(enchant.getKey().getKey().replace("_", " "))
 					+ " " + data.getLevel(enchant).toString()));
 
@@ -105,7 +104,7 @@ public class Enchants extends ItemStat {
 		mmoitem.getNBT().getItem().getItemMeta().getEnchants().keySet()
 				.forEach(enchant -> enchants.addEnchant(enchant, mmoitem.getNBT().getItem().getItemMeta().getEnchantLevel(enchant)));
 		if (enchants.getEnchants().size() > 0)
-			mmoitem.setData(ItemStat.ENCHANTS, enchants);
+			mmoitem.setData(ItemStats.ENCHANTS, enchants);
 	}
 
 	@Override

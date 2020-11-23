@@ -18,13 +18,13 @@ import net.Indyuce.mmoitems.particle.VortexParticles;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 
 public enum ParticleType {
-	OFFSET((particle, player) -> new OffsetParticles(particle, player), false, 5, "Some particles randomly spawning around your body.", new StringValue("amount", 5), new StringValue("vertical-offset", .5), new StringValue("horizontal-offset", .3), new StringValue("speed", 0), new StringValue("height", 1)),
-	FIREFLIES((particle, player) -> new FirefliesParticles(particle, player), true, 1, "Particles dashing around you at the same height.", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("radius", 1.3), new StringValue("height", 1)),
-	VORTEX((particle, player) -> new VortexParticles(particle, player), true, 1, "Particles flying around you in a cone shape.", new StringValue("radius", 1.5), new StringValue("height", 2.4), new StringValue("speed", 0), new StringValue("y-speed", 1), new StringValue("rotation-speed", 1), new StringValue("amount", 3)),
-	GALAXY((particle, player) -> new GalaxyParticles(particle, player), true, 1, "Particles flying around you in spiral arms.", new StringValue("height", 1), new StringValue("speed", 1), new StringValue("y-coord", 0), new StringValue("rotation-speed", 1), new StringValue("amount", 6)),
-	DOUBLE_RINGS((particle, player) -> new DoubleRingsParticles(particle, player), true, 1, "Particles drawing two rings around you.", new StringValue("radius", .8), new StringValue("y-offset", .4), new StringValue("height", 1), new StringValue("speed", 0), new StringValue("rotation-speed", 1)),
-	HELIX((particle, player) -> new HelixParticles(particle, player), true, 1, "Particles drawing a sphere around you.", new StringValue("radius", .8), new StringValue("height", .6), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("amount", 4), new StringValue("speed", 0)),
-	AURA((particle, player) -> new AuraParticles(particle, player), true, 1, "Particles dashing around you (height can differ).", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("y-offset", .7), new StringValue("radius", 1.3), new StringValue("height", 1));
+	OFFSET(OffsetParticles::new, false, 5, "Some particles randomly spawning around your body.", new StringValue("amount", 5), new StringValue("vertical-offset", .5), new StringValue("horizontal-offset", .3), new StringValue("speed", 0), new StringValue("height", 1)),
+	FIREFLIES(FirefliesParticles::new, true, 1, "Particles dashing around you at the same height.", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("radius", 1.3), new StringValue("height", 1)),
+	VORTEX(VortexParticles::new, true, 1, "Particles flying around you in a cone shape.", new StringValue("radius", 1.5), new StringValue("height", 2.4), new StringValue("speed", 0), new StringValue("y-speed", 1), new StringValue("rotation-speed", 1), new StringValue("amount", 3)),
+	GALAXY(GalaxyParticles::new, true, 1, "Particles flying around you in spiral arms.", new StringValue("height", 1), new StringValue("speed", 1), new StringValue("y-coord", 0), new StringValue("rotation-speed", 1), new StringValue("amount", 6)),
+	DOUBLE_RINGS(DoubleRingsParticles::new, true, 1, "Particles drawing two rings around you.", new StringValue("radius", .8), new StringValue("y-offset", .4), new StringValue("height", 1), new StringValue("speed", 0), new StringValue("rotation-speed", 1)),
+	HELIX(HelixParticles::new, true, 1, "Particles drawing a sphere around you.", new StringValue("radius", .8), new StringValue("height", .6), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("amount", 4), new StringValue("speed", 0)),
+	AURA(AuraParticles::new, true, 1, "Particles dashing around you (height can differ).", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("y-offset", .7), new StringValue("radius", 1.3), new StringValue("height", 1));
 
 	private final BiFunction<ParticleData, PlayerData, ParticleRunnable> func;
 	private final boolean override;
@@ -47,8 +47,8 @@ public enum ParticleType {
 	 *            particle effect. They are displayed in the effect editor once
 	 *            the particle type is chosen
 	 */
-	private ParticleType(BiFunction<ParticleData, PlayerData, ParticleRunnable> func, boolean override, long period, String lore,
-			StringValue... modifiers) {
+	ParticleType(BiFunction<ParticleData, PlayerData, ParticleRunnable> func, boolean override, long period, String lore,
+				 StringValue... modifiers) {
 		this.func = func;
 		this.override = override;
 		this.period = period;

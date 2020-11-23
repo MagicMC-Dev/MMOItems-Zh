@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.comp.mmocore.load;
 
 import java.util.Optional;
 
+import net.Indyuce.mmoitems.ItemStats;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,7 +16,6 @@ import net.Indyuce.mmoitems.api.item.template.explorer.TemplateExplorer;
 import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class RandomItemDropItem extends ItemGenerationDropItem {
@@ -59,7 +59,7 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 		MMOItem rolled = rollMMOItem(optional.get(), rpgPlayer);
 
 		if (rollSoulbound())
-			rolled.setData(ItemStat.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));
+			rolled.setData(ItemStats.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));
 
 		ItemStack stack = rollUnidentification(rolled);
 		stack.setAmount(rollAmount());

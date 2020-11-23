@@ -15,7 +15,7 @@ import com.sainttx.holograms.api.line.TextLine;
 import net.Indyuce.mmoitems.MMOItems;
 
 public class HologramsPlugin extends HologramSupport {
-	private HologramManager hologramManager = JavaPlugin.getPlugin(HologramPlugin.class).getHologramManager();
+	private final HologramManager hologramManager = JavaPlugin.getPlugin(HologramPlugin.class).getHologramManager();
 
 	public HologramsPlugin() {
 		super();

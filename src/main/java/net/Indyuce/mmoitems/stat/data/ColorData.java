@@ -11,7 +11,7 @@ public class ColorData implements StatData, RandomStatData {
 	private final int red, green, blue;
 
 	public ColorData(String string) {
-		String[] split = string.split("\\ ");
+		String[] split = string.split(" ");
 		Validate.isTrue(split.length > 2, "Must specify 3 numbers for red, green and blue");
 
 		red = Math.min(255, Math.max(0, Integer.parseInt(split[0])));

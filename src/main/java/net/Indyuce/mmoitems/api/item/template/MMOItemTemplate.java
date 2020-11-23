@@ -176,6 +176,6 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		 * or 0 if no player is specified. By default, items are generated with
 		 * level 0
 		 */
-		LEVEL_ITEM;
+		LEVEL_ITEM
 	}
 }

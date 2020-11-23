@@ -46,7 +46,7 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 
 		stack.setAmount(stack.getAmount() - 1);
 		player.getInventory().setItemInMainHand(stack);
-		for (ItemStack drop : player.getInventory().addItem(loot.toArray(new ItemStack[loot.size()])).values())
+		for (ItemStack drop : player.getInventory().addItem(loot.toArray(new ItemStack[0])).values())
 			player.getWorld().dropItem(player.getLocation(), drop);
 
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully deconstructed the item you are holding.");

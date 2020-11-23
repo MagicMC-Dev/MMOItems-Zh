@@ -47,7 +47,7 @@ public class Magical_Path extends Ability {
 		new MagicalPathHandler(stats.getPlayer(), ability.getModifier("duration"));
 	}
 
-	public class MagicalPathHandler extends BukkitRunnable implements Listener {
+	public static class MagicalPathHandler extends BukkitRunnable implements Listener {
 		private final Player player;
 		private final long duration;
 

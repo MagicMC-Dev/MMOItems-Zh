@@ -20,7 +20,7 @@ public class ApplyGemStoneEvent extends PlayerDataEvent {
 	 *            Player applying the gem stone
 	 * @param gemStone
 	 *            Gem stone being applied
-	 * @param target
+	 * @param targetItem
 	 *            Item on which the gem is being applied
 	 */
 	public ApplyGemStoneEvent(PlayerData playerData, VolatileMMOItem gemStone, MMOItem targetItem) {

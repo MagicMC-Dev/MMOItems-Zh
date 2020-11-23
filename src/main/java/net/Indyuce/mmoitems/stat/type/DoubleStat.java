@@ -1,17 +1,5 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -27,6 +15,16 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.text.DecimalFormat;
+import java.util.List;
 
 public class DoubleStat extends ItemStat implements Upgradable {
 	private static final DecimalFormat digit = new DecimalFormat("0.####");
@@ -43,10 +41,10 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	public RandomStatData whenInitialized(Object object) {
 
 		if (object instanceof Number)
-			return new NumericStatFormula(Double.valueOf(object.toString()), 0, 0, 0);
+			return new NumericStatFormula(Double.parseDouble(object.toString()), 0, 0, 0);
 
 		if (object instanceof ConfigurationSection)
-			return new NumericStatFormula((ConfigurationSection) object);
+			return new NumericStatFormula(object);
 
 		throw new IllegalArgumentException("Must specify a number or a config section");
 	}
@@ -73,7 +71,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split("\\ ");
+		String[] split = message.split(" ");
 		double base = MMOUtils.parseDouble(split[0]);
 		double scale = split.length > 1 ? MMOUtils.parseDouble(split[1]) : 0;
 		double spread = split.length > 2 ? MMOUtils.parseDouble(split[2]) : 0;
@@ -102,10 +100,10 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
-			NumericStatFormula data = (NumericStatFormula) optional.get();
+		if (statData.isPresent()) {
+			NumericStatFormula data = (NumericStatFormula) statData;
 			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + digit.format(data.getBase())
 					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
 			if (data.getSpread() > 0)
@@ -138,7 +136,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			mmoitem.setData(this, new DoubleData(doubleInfo.getAmount()));
 	}
 
-	public class DoubleUpgradeInfo implements UpgradeInfo {
+	public static class DoubleUpgradeInfo implements UpgradeInfo {
 		private final boolean relative;
 		private final double amount;
 

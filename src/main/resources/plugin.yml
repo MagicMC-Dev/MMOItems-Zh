@@ -1,4 +1,4 @@
-name: ${project.name}
+name: MMOItems
 version: ${project.version}
 main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce

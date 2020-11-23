@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
  * @author cympe
  *
  */
+@SuppressWarnings("UnusedReturnValue")
 public class TemplateExplorer {
 	private final Random random = new Random();
 

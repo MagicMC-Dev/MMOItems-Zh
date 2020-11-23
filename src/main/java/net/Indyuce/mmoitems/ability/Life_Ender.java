@@ -47,8 +47,8 @@ public class Life_Ender extends Ability {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, 1);
 		new BukkitRunnable() {
 			int ti = 0;
-			Location source = loc.clone().add(5 * Math.cos(random.nextDouble() * 2 * Math.PI), 20, 5 * Math.sin(random.nextDouble() * 2 * Math.PI));
-			Vector vec = loc.subtract(source).toVector().multiply((double) 1 / 30);
+			final Location source = loc.clone().add(5 * Math.cos(random.nextDouble() * 2 * Math.PI), 20, 5 * Math.sin(random.nextDouble() * 2 * Math.PI));
+			final Vector vec = loc.subtract(source).toVector().multiply((double) 1 / 30);
 
 			public void run() {
 				if (ti == 0)

@@ -41,8 +41,8 @@ public class Tool extends UseItem {
 
 		if (getNBTItem().getBoolean("MMOITEMS_BOUNCING_CRACK"))
 			new BukkitRunnable() {
-				Vector v = player.getEyeLocation().getDirection().multiply(.5);
-				Location loc = block.getLocation().clone().add(.5, .5, .5);
+				final Vector v = player.getEyeLocation().getDirection().multiply(.5);
+				final Location loc = block.getLocation().clone().add(.5, .5, .5);
 				int j = 0;
 
 				public void run() {

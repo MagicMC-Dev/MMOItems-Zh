@@ -17,7 +17,7 @@ public class UpdateItemCompletion implements TabCompleter {
 		if (!sender.hasPermission("mmoitems.update"))
 			return null;
 
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 
 		if (args.length == 1)
 			for (Type type : MMOItems.plugin.getTypes().getAll())

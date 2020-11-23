@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -19,7 +20,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.List;
-import java.util.Optional;
 
 public class DyeColor extends ItemStat {
 	public DyeColor() {
@@ -37,7 +37,7 @@ public class DyeColor extends ItemStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.DYE_COLOR).enable("Write in the chat the RGB color you want.",
+			new StatEdition(inv, ItemStats.DYE_COLOR).enable("Write in the chat the RGB color you want.",
 					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -49,7 +49,7 @@ public class DyeColor extends ItemStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split("\\ ");
+		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}.");
 		for (String str : split) {
 			int k = Integer.parseInt(str);
@@ -62,8 +62,8 @@ public class DyeColor extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
-		lore.add(ChatColor.GRAY + "Current Value: " + (optional.isPresent() ? ChatColor.GREEN + optional.get().toString() : ChatColor.RED + "None"));
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+		lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN + statData.toString() : ChatColor.RED + "None"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the dye color.");
@@ -72,7 +72,7 @@ public class DyeColor extends ItemStat {
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().getItem().getItemMeta() instanceof LeatherArmorMeta)
-			mmoitem.setData(ItemStat.DYE_COLOR, new ColorData(((LeatherArmorMeta) mmoitem.getNBT().getItem().getItemMeta()).getColor()));
+			mmoitem.setData(ItemStats.DYE_COLOR, new ColorData(((LeatherArmorMeta) mmoitem.getNBT().getItem().getItemMeta()).getColor()));
 	}
 
 	@Override

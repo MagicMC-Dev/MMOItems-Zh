@@ -45,8 +45,8 @@ public class Holy_Missile extends Ability {
 		
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
 		new BukkitRunnable() {
-			Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.45);
-			Location loc = stats.getPlayer().getLocation().clone().add(0, 1.3, 0);
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.45);
+			final Location loc = stats.getPlayer().getLocation().clone().add(0, 1.3, 0);
 			double ti = 0;
 
 			public void run() {

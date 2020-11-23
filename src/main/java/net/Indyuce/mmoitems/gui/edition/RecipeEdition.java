@@ -1,9 +1,11 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
+import net.mmogroup.mmolib.api.util.AltChar;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,12 +17,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RecipeEdition extends EditionInventory {
 	private final boolean shapeless;
@@ -53,7 +52,7 @@ public class RecipeEdition extends EditionInventory {
 		}
 		for (int j = 0; j < 9; j++) {
 			int slot = intToSlot(j);
-			List<String> line = Arrays.asList(recipe.get(j / 3).split("\\ "));
+			List<String> line = Arrays.asList(recipe.get(j / 3).split(" "));
 			while (line.size() < 3)
 				line.add("AIR");
 
@@ -139,7 +138,7 @@ public class RecipeEdition extends EditionInventory {
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			if (slotToInt(event.getRawSlot()) >= 0)
-				new StatEdition(this, ItemStat.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot()))
+				new StatEdition(this, ItemStats.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot()))
 						.enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[TYPE].[ID]'");
 
 		} else if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -152,9 +151,9 @@ public class RecipeEdition extends EditionInventory {
 
 	private void deleteShaped(int slot) {
 		List<String> newList = getEditedSection().getStringList("crafting.shaped.1");
-		String[] newArray = newList.get((int) Math.floor(slot / 3)).split("\\ ");
+		String[] newArray = newList.get(slot / 3).split(" ");
 		newArray[slot % 3] = "AIR";
-		newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
+		newList.set(slot / 3, (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
 		getEditedSection().set("crafting.shaped.1", newList);
 		registerTemplateEdition();

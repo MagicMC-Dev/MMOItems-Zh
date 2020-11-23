@@ -1,11 +1,18 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpdaterData;
+import net.Indyuce.mmoitems.api.item.ItemReference;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.TemplateMap;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,19 +25,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.UpdaterData;
-import net.Indyuce.mmoitems.api.item.ItemReference;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.TemplateMap;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class UpdaterManager implements Listener {
 	private final TemplateMap<UpdaterData> data = new TemplateMap<>();
@@ -148,11 +147,11 @@ public class UpdaterManager implements Listener {
 		 * calculate every stat data from the older item.
 		 */
 		MMOItem volatileItem = new VolatileMMOItem(item);
-		if (did.hasOption(KeepOption.KEEP_GEMS) && volatileItem.hasData(ItemStat.GEM_SOCKETS))
-			newMMOItem.replaceData(ItemStat.GEM_SOCKETS, volatileItem.getData(ItemStat.GEM_SOCKETS));
+		if (did.hasOption(KeepOption.KEEP_GEMS) && volatileItem.hasData(ItemStats.GEM_SOCKETS))
+			newMMOItem.replaceData(ItemStats.GEM_SOCKETS, volatileItem.getData(ItemStats.GEM_SOCKETS));
 
-		if (did.hasOption(KeepOption.KEEP_SOULBOUND) && volatileItem.hasData(ItemStat.SOULBOUND))
-			newMMOItem.replaceData(ItemStat.SOULBOUND, volatileItem.getData(ItemStat.SOULBOUND));
+		if (did.hasOption(KeepOption.KEEP_SOULBOUND) && volatileItem.hasData(ItemStats.SOULBOUND))
+			newMMOItem.replaceData(ItemStats.SOULBOUND, volatileItem.getData(ItemStats.SOULBOUND));
 
 		// if (did.hasOption(KeepOption.KEEP_SKIN) && itemMMO.hasData(stat))
 
@@ -216,7 +215,7 @@ public class UpdaterManager implements Listener {
 
 		private final List<String> lore;
 
-		private KeepOption(String... lore) {
+		KeepOption(String... lore) {
 			this.lore = Arrays.asList(lore);
 		}
 

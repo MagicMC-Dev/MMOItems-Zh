@@ -1,14 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.lang.reflect.Field;
-import java.util.UUID;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -16,9 +10,13 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+
+import java.lang.reflect.Field;
+import java.util.UUID;
 
 public class SkullTextureStat extends StringStat {
 	public SkullTextureStat() {
@@ -70,8 +68,7 @@ public class SkullTextureStat extends StringStat {
 		try {
 			Field profileField = mmoitem.getNBT().getItem().getItemMeta().getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
-			mmoitem.setData(ItemStat.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(mmoitem.getNBT().getItem().getItemMeta())));
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
-		}
+			mmoitem.setData(ItemStats.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(mmoitem.getNBT().getItem().getItemMeta())));
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {}
 	}
 }

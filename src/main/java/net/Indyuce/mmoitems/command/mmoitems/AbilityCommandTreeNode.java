@@ -27,7 +27,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 				try {
 					Ability ability = MMOItems.plugin.getAbilities().getAbility(explorer.getArguments()[1].toUpperCase().replace("-", "_"));
 					list.addAll(ability.getModifiers());
-				} catch (Exception exception) {
+				} catch (Exception ignored) {
 				}
 			}));
 			addParameter(new Parameter("<value>", (explorer, list) -> list.add("0")));

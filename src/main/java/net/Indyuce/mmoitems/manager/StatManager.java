@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
@@ -33,7 +34,7 @@ public class StatManager {
 	 * fields in the ItemStat and register them as stat instances
 	 */
 	public StatManager() {
-		for (Field field : ItemStat.class.getFields())
+		for (Field field : ItemStats.class.getFields())
 			try {
 				if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
 					register((ItemStat) field.get(null));
@@ -91,6 +92,7 @@ public class StatManager {
 	 *             use StatManager#register(ItemStat) instead
 	 */
 	@Deprecated
+	@SuppressWarnings("unused")
 	public void register(String id, ItemStat stat) {
 		register(stat);
 	}

@@ -13,7 +13,7 @@ public class ClassCondition extends Condition {
 		super("class");
 
 		config.validate("list");
-		classes = Arrays.asList(config.getString("list").split("\\,"));
+		classes = Arrays.asList(config.getString("list").split(","));
 	}
 
 	@Override

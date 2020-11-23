@@ -38,23 +38,23 @@ public class CraftingManager implements Reloadable {
 
 	public CraftingManager() {
 		// conditions
-		registerCondition("level", config -> new LevelCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
-		registerCondition("permission", config -> new PermissionCondition(config), null);
-		registerCondition("mana", config -> new ManaCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
-		registerCondition("stamina", config -> new StaminaCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
-		registerCondition("food", config -> new FoodCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
-		registerCondition("class", config -> new ClassCondition(config), new ConditionalDisplay("&a" + AltChar.check + " Required Class: #class#", "&c" + AltChar.cross + " Required Class: #class#"));
+		registerCondition("level", LevelCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
+		registerCondition("permission", PermissionCondition::new, null);
+		registerCondition("mana", ManaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
+		registerCondition("stamina", StaminaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
+		registerCondition("food", FoodCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
+		registerCondition("class", ClassCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Required Class: #class#", "&c" + AltChar.cross + " Required Class: #class#"));
 
 		// triggers
-		registerTrigger("command", config -> new CommandTrigger(config));
-		registerTrigger("message", config -> new MessageTrigger(config));
-		registerTrigger("sound", config -> new SoundTrigger(config));
-		registerTrigger("vanilla", config -> new VanillaTrigger(config));
-		registerTrigger("mmoitem", config -> new MMOItemTrigger(config));
+		registerTrigger("command", CommandTrigger::new);
+		registerTrigger("message", MessageTrigger::new);
+		registerTrigger("sound", SoundTrigger::new);
+		registerTrigger("vanilla", VanillaTrigger::new);
+		registerTrigger("mmoitem", MMOItemTrigger::new);
 
 		// ingredients
-		registerIngredient("vanilla", config -> new VanillaIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, item -> item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null));
-		registerIngredient("mmoitem", config -> new MMOItemIngredient(config), new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level##item#", "&c" + AltChar.cross + " &7#amount# #level##item#"), nbt -> nbt.hasType(), item -> {
+		registerIngredient("vanilla", VanillaIngredient::new, new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, item -> item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null));
+		registerIngredient("mmoitem", MMOItemIngredient::new, new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level##item#", "&c" + AltChar.cross + " &7#amount# #level##item#"), NBTItem::hasType, item -> {
 			String upgradeString = item.getString("MMOITEMS_UPGRADE");
 			int level = !upgradeString.isEmpty() ? new JsonParser().parse(upgradeString).getAsJsonObject().get("Level").getAsInt() : 0;
 			return item.getString("MMOITEMS_ITEM_TYPE").toLowerCase() + (level != 0 ? "-" + level : "") + "_" + item.getString("MMOITEMS_ITEM_ID").toLowerCase();
@@ -62,10 +62,10 @@ public class CraftingManager implements Reloadable {
 
 		// mm comp
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			registerIngredient("mythicitem", config -> new MythicItemIngredient(config),
+			registerIngredient("mythicitem", MythicItemIngredient::new,
 					new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
 					nbt -> nbt.hasTag("MYTHIC_TYPE"), nbt -> nbt.getString("MYTHIC_TYPE").toLowerCase());
-			registerTrigger("mmskill", config -> new MythicMobsSkillTrigger(config));
+			registerTrigger("mmskill", MythicMobsSkillTrigger::new);
 		}
 	}
 
@@ -187,15 +187,11 @@ public class CraftingManager implements Reloadable {
 		triggers.add(new LoadedObject<>(id, function, null));
 	}
 
-	public void registerStation(CraftingStation station) {
-		stations.put(station.getId(), station);
-	}
-
 	public Collection<CraftingStation> getAll() {
 		return stations.values();
 	}
 
-	public class LoadedObject<C> {
+	public static class LoadedObject<C> {
 		private final String id;
 		private final Function<MMOLineConfig, C> function;
 
@@ -228,7 +224,7 @@ public class CraftingManager implements Reloadable {
 		}
 	}
 
-	public class IngredientType extends LoadedObject<Ingredient> {
+	public static class IngredientType extends LoadedObject<Ingredient> {
 		private final Predicate<NBTItem> check;
 		private final Function<NBTItem, String> read;
 

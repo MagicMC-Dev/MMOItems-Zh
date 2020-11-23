@@ -61,7 +61,7 @@ public class Snowman_Turret extends Ability {
 		new BukkitRunnable() {
 			int ti = 0;
 			double j = 0;
-			TurretHandler turret = new TurretHandler(ability.getModifier("damage"));
+			final TurretHandler turret = new TurretHandler(ability.getModifier("damage"));
 
 			public void run() {
 				if (ti++ > duration || stats.getPlayer().isDead() || snowman == null || snowman.isDead()) {
@@ -91,7 +91,7 @@ public class Snowman_Turret extends Ability {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 
-	public class TurretHandler extends TemporaryListener {
+	public static class TurretHandler extends TemporaryListener {
 		private final List<UUID> entities = new ArrayList<>();
 		private final double damage;
 

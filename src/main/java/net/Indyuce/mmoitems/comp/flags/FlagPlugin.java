@@ -4,13 +4,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public interface FlagPlugin {
-	public boolean isPvpAllowed(Location loc);
+	boolean isPvpAllowed(Location loc);
 
-	public boolean isFlagAllowed(Player player, CustomFlag flag);
+	boolean isFlagAllowed(Player player, CustomFlag flag);
 
-	public boolean isFlagAllowed(Location loc, CustomFlag flag);
+	boolean isFlagAllowed(Location loc, CustomFlag flag);
 
-	public enum CustomFlag {
+	enum CustomFlag {
 		MI_ABILITIES,
 		MI_WEAPONS,
 		MI_COMMANDS,

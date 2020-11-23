@@ -1,16 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Element;
@@ -27,6 +17,15 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class Elements extends ItemStat {
 	public Elements() {
@@ -76,11 +75,11 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomElementListData data = (RandomElementListData) optional.get();
+			RandomElementListData data = (RandomElementListData) statData;
 			data.getDamageElements().forEach(
 					element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + ChatColor.RED + data.getDamage(element) + " (%)"));
 			data.getDefenseElements().forEach(
@@ -125,6 +124,6 @@ public class Elements extends ItemStat {
 		}
 
 		if (elements.total() > 0)
-			mmoitem.setData(ItemStat.ELEMENTS, elements);
+			mmoitem.setData(ItemStats.ELEMENTS, elements);
 	}
 }

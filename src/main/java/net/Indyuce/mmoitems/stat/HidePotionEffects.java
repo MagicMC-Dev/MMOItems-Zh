@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 
 public class HidePotionEffects extends BooleanStat {
 	public HidePotionEffects() {
@@ -25,6 +24,6 @@ public class HidePotionEffects extends BooleanStat {
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
-			mmoitem.setData(ItemStat.HIDE_POTION_EFFECTS, new BooleanData(true));
+			mmoitem.setData(ItemStats.HIDE_POTION_EFFECTS, new BooleanData(true));
 	}
 }

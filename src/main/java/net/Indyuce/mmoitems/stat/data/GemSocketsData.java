@@ -60,7 +60,7 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 		JsonObject object = new JsonObject();
 
 		JsonArray empty = new JsonArray();
-		getEmptySlots().forEach(slot -> empty.add(slot));
+		getEmptySlots().forEach(empty::add);
 		object.add("EmptySlots", empty);
 
 		JsonArray array = new JsonArray();

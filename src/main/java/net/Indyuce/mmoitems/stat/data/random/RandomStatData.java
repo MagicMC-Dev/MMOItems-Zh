@@ -10,12 +10,15 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
  * @author cympe
  */
 public interface RandomStatData {
-
 	/**
 	 * @param builder
 	 *            The builder of the random item being generated
 	 * @return A random stat data instance which will then be merged onto the
 	 *         base item template
 	 */
-	public StatData randomize(MMOItemBuilder builder);
+	StatData randomize(MMOItemBuilder builder);
+
+	default boolean isPresent() {
+		return true;
+	}
 }

@@ -35,7 +35,7 @@ public class NumericStatFormula implements RandomStatData {
 		Validate.notNull(object, "Config must not be null");
 
 		if (object instanceof String) {
-			String[] split = object.toString().split("\\ ");
+			String[] split = object.toString().split(" ");
 			base = Double.parseDouble(split[0]);
 			scale = split.length > 1 ? Double.parseDouble(split[1]) : 0;
 			spread = split.length > 2 ? Double.parseDouble(split[2]) : 0;
@@ -44,7 +44,7 @@ public class NumericStatFormula implements RandomStatData {
 		}
 
 		if (object instanceof Number) {
-			base = Double.valueOf(object.toString());
+			base = Double.parseDouble(object.toString());
 			scale = 0;
 			spread = 0;
 			maxSpread = 0;

@@ -39,7 +39,7 @@ public class WorldGenTemplate {
 		chunkChance = config.getDouble("chunk-chance");
 		slimeChunk = config.getBoolean("slime-chunk", false);
 
-		String[] depth = config.getString("depth").split("\\=");
+		String[] depth = config.getString("depth").split("=");
 		minDepth = Integer.parseInt(depth[0]);
 		maxDepth = Integer.parseInt(depth[1]);
 
@@ -106,9 +106,7 @@ public class WorldGenTemplate {
 		}
 		
 		if(!notBordering.isEmpty()) {
-            if(!checkIfNotBorderingBlocks(pos)) {
-                return false;
-            }
+			return checkIfNotBorderingBlocks(pos);
         }
 		
 		// can generate if no restrictions applied
@@ -139,11 +137,8 @@ public class WorldGenTemplate {
         if(!canBorder(pos.getBlock().getRelative(BlockFace.UP).getType())) {
             return false;
         }
-        if(!canBorder(pos.getBlock().getRelative(BlockFace.DOWN).getType())) {
-            return false;
-        }
-        return true;
-    }
+		return canBorder(pos.getBlock().getRelative(BlockFace.DOWN).getType());
+	}
 	
 	public boolean canNotBorder(Material type) {
         return !notBordering.isEmpty() && notBordering.contains(type);
@@ -165,9 +160,6 @@ public class WorldGenTemplate {
         if(canNotBorder(pos.getBlock().getRelative(BlockFace.UP).getType())) {
             return false;
         }
-        if(canNotBorder(pos.getBlock().getRelative(BlockFace.DOWN).getType())) {
-            return false;
-        }
-        return true;
-    }
+		return !canNotBorder(pos.getBlock().getRelative(BlockFace.DOWN).getType());
+	}
 }

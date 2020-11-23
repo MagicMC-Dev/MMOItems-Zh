@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.listener;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -64,7 +63,7 @@ public class CustomSoundListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void f(FurnaceSmeltEvent event) {
-		playSound(event.getResult(), "ON_CRAFT", event.getBlock());
+		playSound(event.getResult(), "ON_CRAFT", event.getBlock().getWorld(), event.getBlock().getLocation());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -93,10 +92,6 @@ public class CustomSoundListener implements Listener {
 
 	private void playSound(ItemStack item, String sound, Player player) {
 		playSound(item, sound, player.getWorld(), player.getLocation());
-	}
-
-	private void playSound(ItemStack item, String sound, Block block) {
-		playSound(item, sound, block.getWorld(), block.getLocation());
 	}
 
 	private void playSound(ItemStack item, String sound, World world, Location loc) {

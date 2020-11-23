@@ -19,7 +19,7 @@ public class RPGPlayerLevelingHook implements RPGHandler {
 	 * levels up.
 	 */
 
-	public class RPGPlayerLevelingPlayer extends RPGPlayer {
+	public static class RPGPlayerLevelingPlayer extends RPGPlayer {
 		/*
 		 * API not adapted to RPGPlayer
 		 */

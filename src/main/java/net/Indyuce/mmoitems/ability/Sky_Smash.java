@@ -50,7 +50,7 @@ public class Sky_Smash extends Ability {
 				new AttackResult(damage, DamageType.SKILL, DamageType.PHYSICAL).damage(stats.getPlayer(), (LivingEntity) entity);
 				Location loc1 = stats.getPlayer().getEyeLocation().clone();
 				loc1.setPitch(-70);
-				((LivingEntity) entity).setVelocity(loc1.getDirection().multiply(1.2 * knockUp));
+				entity.setVelocity(loc1.getDirection().multiply(1.2 * knockUp));
 			}
 	}
 }

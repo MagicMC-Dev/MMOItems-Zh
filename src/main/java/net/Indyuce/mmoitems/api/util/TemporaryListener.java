@@ -5,6 +5,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import net.Indyuce.mmoitems.MMOItems;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class TemporaryListener implements Listener {
 
@@ -29,7 +30,7 @@ public abstract class TemporaryListener implements Listener {
 	 * used to close the temporary listener after some delay
 	 */
 	public void close(long duration) {
-		Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> close(), duration);
+		Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (@NotNull Runnable) this::close, duration);
 	}
 
 	public void close() {

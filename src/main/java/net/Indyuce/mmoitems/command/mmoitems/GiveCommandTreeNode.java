@@ -1,16 +1,6 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -21,10 +11,19 @@ import net.Indyuce.mmoitems.api.util.RandomAmount;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.SmartGive;
 import net.mmogroup.mmolib.command.api.CommandTreeNode;
 import net.mmogroup.mmolib.command.api.Parameter;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
+import java.util.Random;
 
 public class GiveCommandTreeNode extends CommandTreeNode {
 	private static final Random random = new Random();
@@ -70,7 +69,7 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 
 			// roll soulbound
 			if (random.nextDouble() < soulbound)
-				mmoitem.setData(ItemStat.SOULBOUND, new SoulboundData(target, 1));
+				mmoitem.setData(ItemStats.SOULBOUND, new SoulboundData(target, 1));
 
 			// generate item
 			ItemStack item = random.nextDouble() < unidentify ? type.getUnidentifiedTemplate().newBuilder(mmoitem.newBuilder().buildNBT()).build()

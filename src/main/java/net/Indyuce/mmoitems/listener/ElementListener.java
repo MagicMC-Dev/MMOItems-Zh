@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.listener;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -13,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class ElementListener implements Listener {
-	private static Map<Integer, Long> waterWeakness = new HashMap<>();
+	private static final Map<Integer, Long> waterWeakness = new HashMap<>();
 
 	private static final long waterWeaknessDuration = 1000 * 6;
 	private static final double waterWeaknessDamageIncrease = 0.3;
@@ -27,10 +25,7 @@ public class ElementListener implements Listener {
 	}
 
 	void flush() {
-		Iterator<Entry<Integer, Long>> iterator = waterWeakness.entrySet().iterator();
-		while (iterator.hasNext())
-			if (iterator.next().getValue() + waterWeaknessDuration < System.currentTimeMillis())
-				iterator.remove();
+		waterWeakness.entrySet().removeIf(integerLongEntry -> integerLongEntry.getValue() + waterWeaknessDuration < System.currentTimeMillis());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

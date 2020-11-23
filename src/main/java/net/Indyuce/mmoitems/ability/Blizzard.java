@@ -49,7 +49,7 @@ public class Blizzard extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			SnowballThrower handler = new SnowballThrower(ability.getModifier("damage"));
+			final SnowballThrower handler = new SnowballThrower(ability.getModifier("damage"));
 
 			public void run() {
 				if (j++ > duration) {
@@ -70,7 +70,7 @@ public class Blizzard extends Ability {
 		}.runTaskTimer(MMOItems.plugin, 0, 2);
 	}
 
-	public class SnowballThrower extends TemporaryListener {
+	public static class SnowballThrower extends TemporaryListener {
 		private final List<UUID> entities = new ArrayList<>();
 		private final double damage;
 

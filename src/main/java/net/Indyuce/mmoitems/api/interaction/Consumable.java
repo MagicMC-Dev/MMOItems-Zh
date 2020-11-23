@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction;
 
 import com.google.gson.JsonObject;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -20,12 +21,12 @@ import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
+import net.Indyuce.mmoitems.stat.Soulbound;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -106,7 +107,7 @@ public class Consumable extends UseItem {
 
 				Message.SUCCESSFULLY_DECONSTRUCTED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
 				event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-				for (ItemStack drop : player.getInventory().addItem(loot.toArray(new ItemStack[loot.size()])).values())
+				for (ItemStack drop : player.getInventory().addItem(loot.toArray(new ItemStack[0])).values())
 					player.getWorld().dropItem(player.getLocation(), drop);
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				return true;
@@ -117,7 +118,7 @@ public class Consumable extends UseItem {
 		 * Upgrading an item, it is sbetter not to repair an item while
 		 * upgrading it.
 		 */
-		if (mmoitem.hasData(ItemStat.UPGRADE) && target.hasTag("MMOITEMS_UPGRADE")) {
+		if (mmoitem.hasData(ItemStats.UPGRADE) && target.hasTag("MMOITEMS_UPGRADE")) {
 			if (target.getItem().getAmount() > 1) {
 				Message.CANT_UPGRADED_STACK.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
@@ -125,14 +126,14 @@ public class Consumable extends UseItem {
 			}
 
 			MMOItem targetMMO = new LiveMMOItem(target);
-			UpgradeData targetSharpening = (UpgradeData) targetMMO.getData(ItemStat.UPGRADE);
+			UpgradeData targetSharpening = (UpgradeData) targetMMO.getData(ItemStats.UPGRADE);
 			if (!targetSharpening.canLevelUp()) {
 				Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 				return false;
 			}
 
-			UpgradeData consumableSharpening = (UpgradeData) mmoitem.getData(ItemStat.UPGRADE);
+			UpgradeData consumableSharpening = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE);
 			if (!consumableSharpening.matchesReference(targetSharpening)) {
 				Message.WRONG_UPGRADE_REFERENCE.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
@@ -176,7 +177,7 @@ public class Consumable extends UseItem {
 		 * applying a soulbound onto an item. it does not work if the item
 		 * already has a soulbound, and it has a chance to successfully apply.
 		 */
-		double soulbindingChance = getNBTItem().getStat(ItemStat.SOULBINDING_CHANCE);
+		double soulbindingChance = getNBTItem().getStat(ItemStats.SOULBINDING_CHANCE);
 		if (soulbindingChance > 0) {
 			if (target.getItem().getAmount() > 1) {
 				Message.CANT_BIND_STACKED.format(ChatColor.RED).send(player, "soulbound");
@@ -184,8 +185,8 @@ public class Consumable extends UseItem {
 			}
 
 			MMOItem targetMMO = new VolatileMMOItem(target);
-			if (targetMMO.hasData(ItemStat.SOULBOUND)) {
-				SoulboundData data = (SoulboundData) targetMMO.getData(ItemStat.SOULBOUND);
+			if (targetMMO.hasData(ItemStats.SOULBOUND)) {
+				SoulboundData data = (SoulboundData) targetMMO.getData(ItemStats.SOULBOUND);
 				Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player,
 						"soulbound");
 				return false;
@@ -198,9 +199,9 @@ public class Consumable extends UseItem {
 				if (called.isCancelled())
 					return false;
 
-				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStat.SOULBOUND_LEVEL));
-				(targetMMO = new LiveMMOItem(target)).setData(ItemStat.SOULBOUND,
-						ItemStat.SOULBOUND.newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
+				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL));
+				(targetMMO = new LiveMMOItem(target)).setData(ItemStats.SOULBOUND,
+						((Soulbound) ItemStats.SOULBOUND).newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
 				Message.SUCCESSFULLY_BIND_ITEM
 						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#level#", MMOUtils.intToRoman(soulboundLevel))
@@ -220,19 +221,19 @@ public class Consumable extends UseItem {
 		 * have at least the soulbound's level to be able to break the item
 		 * soulbound.
 		 */
-		double soulboundBreakChance = getNBTItem().getStat(ItemStat.SOULBOUND_BREAK_CHANCE);
+		double soulboundBreakChance = getNBTItem().getStat(ItemStats.SOULBOUND_BREAK_CHANCE);
 		if (soulboundBreakChance > 0) {
 			MMOItem targetMMO = new VolatileMMOItem(target);
-			if (!targetMMO.hasData(ItemStat.SOULBOUND)) {
+			if (!targetMMO.hasData(ItemStats.SOULBOUND)) {
 				Message.NO_SOULBOUND.format(ChatColor.RED).send(player, "soulbound");
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 				return false;
 			}
 
-			SoulboundData soulbound = (SoulboundData) targetMMO.getData(ItemStat.SOULBOUND);
+			SoulboundData soulbound = (SoulboundData) targetMMO.getData(ItemStats.SOULBOUND);
 
 			// check for soulbound level
-			if (Math.max(1, getNBTItem().getStat(ItemStat.SOULBOUND_LEVEL)) < soulbound.getLevel()) {
+			if (Math.max(1, getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL)) < soulbound.getLevel()) {
 				Message.LOW_SOULBOUND_LEVEL.format(ChatColor.RED, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player, "soulbound");
 				return false;
 			}
@@ -244,7 +245,7 @@ public class Consumable extends UseItem {
 				if (called.isCancelled())
 					return false;
 
-				(targetMMO = new LiveMMOItem(target)).removeData(ItemStat.SOULBOUND);
+				(targetMMO = new LiveMMOItem(target)).removeData(ItemStats.SOULBOUND);
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
 				Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player,
 						"soulbound");
@@ -261,7 +262,7 @@ public class Consumable extends UseItem {
 		 * Item repairing, does not apply if there's no repair power or if the
 		 * item still has all its uses left
 		 */
-		int repairPower = (int) getNBTItem().getStat(ItemStat.REPAIR);
+		int repairPower = (int) getNBTItem().getStat(ItemStats.REPAIR);
 		if (repairPower > 0) {
 
 			// custom durability
@@ -326,8 +327,8 @@ public class Consumable extends UseItem {
 				target.removeTag("CustomModelData");
 			}
 
-			if(originalMmoitem.hasData(ItemStat.ITEM_PARTICLES)) {
-				JsonObject itemParticles = ((ParticleData) originalMmoitem.getData(ItemStat.ITEM_PARTICLES)).toJson();
+			if(originalMmoitem.hasData(ItemStats.ITEM_PARTICLES)) {
+				JsonObject itemParticles = ((ParticleData) originalMmoitem.getData(ItemStats.ITEM_PARTICLES)).toJson();
 				target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", itemParticles.toString()));
 			} else {
 				target.removeTag("MMOITEMS_ITEM_PARTICLES");
@@ -352,7 +353,7 @@ public class Consumable extends UseItem {
 					Field profileField = targetItemMeta.getClass().getDeclaredField("profile");
 					profileField.setAccessible(true);
 					profileField.set(targetItemMeta,
-							((SkullTextureData) originalMmoitem.getData(ItemStat.SKULL_TEXTURE)).getGameProfile());
+							((SkullTextureData) originalMmoitem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 				} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 					MMOItems.plugin.getLogger().warning("Could not read skull texture");
 				}
@@ -410,8 +411,8 @@ public class Consumable extends UseItem {
 			playerData.getRPG().giveStamina(stamina);
 
 		// potion effects
-		if (mmoitem.hasData(ItemStat.EFFECTS))
-			((PotionEffectListData) mmoitem.getData(ItemStat.EFFECTS)).getEffects().forEach(effect -> {
+		if (mmoitem.hasData(ItemStats.EFFECTS))
+			((PotionEffectListData) mmoitem.getData(ItemStats.EFFECTS)).getEffects().forEach(effect -> {
 				player.removePotionEffect(effect.getType());
 				player.addPotionEffect(effect.toEffect());
 			});

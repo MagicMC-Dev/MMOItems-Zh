@@ -47,8 +47,8 @@ public class Ice_Crystal extends Ability {
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
 		new BukkitRunnable() {
-			Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.45);
-			Location loc = stats.getPlayer().getEyeLocation().clone().add(0, -.3, 0);
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.45);
+			final Location loc = stats.getPlayer().getEyeLocation().clone().add(0, -.3, 0);
 			int ti = 0;
 
 			public void run() {

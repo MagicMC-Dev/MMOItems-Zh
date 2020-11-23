@@ -29,7 +29,7 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Weaken_Target extends Ability implements Listener {
-	public Map<UUID, WeakenedInfo> marked = new HashMap<>();
+	public final Map<UUID, WeakenedInfo> marked = new HashMap<>();
 
 	public Weaken_Target() {
 		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT);
@@ -59,7 +59,7 @@ public class Weaken_Target extends Ability implements Listener {
 		 * the mark from the entity
 		 */
 		new BukkitRunnable() {
-			long duration = (long) (ability.getModifier("duration") * 1000);
+			final long duration = (long) (ability.getModifier("duration") * 1000);
 
 			public void run() {
 				if (!marked.containsKey(target.getUniqueId()) || marked.get(target.getUniqueId()).date + duration < System.currentTimeMillis()) {
@@ -116,7 +116,7 @@ public class Weaken_Target extends Ability implements Listener {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 
-	public class WeakenedInfo {
+	public static class WeakenedInfo {
 		private final long date = System.currentTimeMillis();
 		private final double extraDamage;
 

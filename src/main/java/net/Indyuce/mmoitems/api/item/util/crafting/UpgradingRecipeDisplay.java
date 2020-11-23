@@ -37,8 +37,8 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 		private final RecipeInfo recipe;
 		private final UpgradingRecipe upgradingRecipe;
 
-		private String name = new String(getName());
-		private List<String> lore = new ArrayList<>(getLore());
+		private final String name = getName();
+		private final List<String> lore = new ArrayList<>(getLore());
 
 		public ItemBuilder(RecipeInfo recipe) {
 			this.recipe = recipe;

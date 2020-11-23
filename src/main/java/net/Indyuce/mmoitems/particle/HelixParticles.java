@@ -7,8 +7,12 @@ import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 
 public class HelixParticles extends ParticleRunnable {
-	private float speed, height, radius, r_speed, y_speed;
-	private int amount;
+	private final float speed;
+	private final float height;
+	private final float radius;
+	private final float r_speed;
+	private final float y_speed;
+	private final int amount;
 
 	private double j = 0;
 

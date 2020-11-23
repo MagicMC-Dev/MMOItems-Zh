@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
@@ -25,8 +26,7 @@ public class RandomPotionEffectListData implements RandomStatData {
 	}
 
 	public void add(RandomPotionEffectData... effects) {
-		for (RandomPotionEffectData effect : effects)
-			this.effects.add(effect);
+		this.effects.addAll(Arrays.asList(effects));
 	}
 
 	public List<RandomPotionEffectData> getEffects() {

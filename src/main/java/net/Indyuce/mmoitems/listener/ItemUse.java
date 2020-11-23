@@ -1,7 +1,27 @@
 package net.Indyuce.mmoitems.listener;
 
-import java.text.DecimalFormat;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.TypeSet;
+import net.Indyuce.mmoitems.api.interaction.Consumable;
+import net.Indyuce.mmoitems.api.interaction.GemStone;
+import net.Indyuce.mmoitems.api.interaction.ItemSkin;
+import net.Indyuce.mmoitems.api.interaction.Tool;
+import net.Indyuce.mmoitems.api.interaction.UseItem;
+import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -23,28 +43,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.interaction.Consumable;
-import net.Indyuce.mmoitems.api.interaction.GemStone;
-import net.Indyuce.mmoitems.api.interaction.ItemSkin;
-import net.Indyuce.mmoitems.api.interaction.Tool;
-import net.Indyuce.mmoitems.api.interaction.UseItem;
-import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.text.DecimalFormat;
 
 public class ItemUse implements Listener {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
@@ -168,7 +167,7 @@ public class ItemUse implements Listener {
 		/*
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
-		result.applyEffects(stats == null ? stats = playerData.getStats().newTemporary() : stats, item, target);
+		result.applyEffects(stats == null ? playerData.getStats().newTemporary() : stats, item, target);
 		event.setDamage(result.getDamage());
 	}
 
@@ -293,9 +292,9 @@ public class ItemUse implements Listener {
 			}
 
 		Arrow arrow = (Arrow) event.getProjectile();
-		if (!(item.getStat(ItemStat.ARROW_VELOCITY) <= 0))
-			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStat.ARROW_VELOCITY) / 2)));
-		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), (Arrow) event.getProjectile(),
+		if (!(item.getStat(ItemStats.ARROW_VELOCITY) <= 0))
+			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStats.ARROW_VELOCITY) / 2)));
+		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), event.getProjectile(),
 				type != null, event.getForce());
 	}
 
@@ -324,7 +323,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat(ItemStat.ITEM_COOLDOWN));
+			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat(ItemStats.ITEM_COOLDOWN));
 			useItem.executeCommands();
 		}
 	}

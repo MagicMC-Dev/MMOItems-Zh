@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class CraftingListener implements Listener {
-    Map<UUID, CachedRecipe> cachedRecipe = new HashMap<>();
+    final Map<UUID, CachedRecipe> cachedRecipe = new HashMap<>();
 
     @EventHandler
     public void calculateCrafting(PrepareItemCraftEvent e) {

@@ -40,7 +40,7 @@ public class LoreBuilder {
 
 		while (str.contains("{") && str.substring(str.indexOf("{")).contains("}")) {
 			String holder = str.substring(str.indexOf("{") + 1, str.indexOf("}"));
-			str = str.replace("{" + holder + "}", placeholders.containsKey(holder) ? placeholders.get(holder) : "PHE");
+			str = str.replace("{" + holder + "}", placeholders.getOrDefault(holder, "PHE"));
 		}
 
 		return MMOLib.plugin.parseColors(str);
@@ -120,9 +120,8 @@ public class LoreBuilder {
 		 * character
 		 */
 		final List<String> cleaned = new ArrayList<>();
-		for (int i = 0; i < lore.size(); i++)
-			for (final String s : MMOLib.plugin.parseColors(lore.get(i).replace("{bar}", "").replace("{sbar}", "")).split("\\\\n"))
-				cleaned.add(s);
+		for (String s : lore)
+			cleaned.addAll(Arrays.asList(MMOLib.plugin.parseColors(s.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n")));
 
 		return cleaned;
 	}

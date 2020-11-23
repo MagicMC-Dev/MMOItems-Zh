@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import net.Indyuce.mmoitems.api.crafting.condition.Condition;
+import net.Indyuce.mmoitems.manager.CraftingManager;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -9,6 +11,8 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMod
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.MMOLineConfig;
+
+import java.util.Optional;
 
 public abstract class Ingredient {
 	private final String id;
@@ -36,7 +40,8 @@ public abstract class Ingredient {
 	 * the condition has not been registered.
 	 */
 	public ConditionalDisplay getDisplay() {
-		return MMOItems.plugin.getCrafting().getIngredients().stream().filter(type -> type.getId().equals(id)).findAny().get().getDisplay();
+		Optional<CraftingManager.LoadedObject<Condition>> optional = MMOItems.plugin.getCrafting().getConditions().stream().filter(type -> type.getId().equals(id)).findAny();
+		return optional.isPresent() ? optional.get().getDisplay() : new ConditionalDisplay("INVALID", "INVALID");
 	}
 
 	/*
@@ -61,7 +66,7 @@ public abstract class Ingredient {
 	 * station. ingredientInfo instances must be updated everytime the player's
 	 * inventory updates.
 	 */
-	public class CheckedIngredient {
+	public static class CheckedIngredient {
 		private final Ingredient inventory;
 		private final PlayerIngredient found;
 

@@ -1,11 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
@@ -16,9 +11,14 @@ import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class GemStone extends UseItem {
 
@@ -33,12 +33,12 @@ public class GemStone extends UseItem {
 		 * socket for the gem
 		 */
 		MMOItem targetMMO = new LiveMMOItem(target);
-		if (!targetMMO.hasData(ItemStat.GEM_SOCKETS))
+		if (!targetMMO.hasData(ItemStats.GEM_SOCKETS))
 			return new ApplyResult(ResultType.NONE);
 
 		String gemType = getNBTItem().getString("MMOITEMS_GEM_COLOR");
 
-		GemSocketsData sockets = (GemSocketsData) targetMMO.getData(ItemStat.GEM_SOCKETS);
+		GemSocketsData sockets = (GemSocketsData) targetMMO.getData(ItemStats.GEM_SOCKETS);
 		if (!sockets.canReceive(gemType))
 			return new ApplyResult(ResultType.NONE);
 
@@ -52,7 +52,7 @@ public class GemStone extends UseItem {
 			return new ApplyResult(ResultType.NONE);
 
 		// check for success rate
-		double successRate = getNBTItem().getStat(ItemStat.SUCCESS_RATE);
+		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE);
 		if (successRate != 0 && random.nextDouble() > successRate / 100) {
 			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 			Message.GEM_STONE_BROKE
@@ -97,7 +97,7 @@ public class GemStone extends UseItem {
 		return new ApplyResult(targetMMO.newBuilder().build());
 	}
 
-	public class ApplyResult {
+	public static class ApplyResult {
 		private final ResultType type;
 		private final ItemStack result;
 
@@ -124,7 +124,6 @@ public class GemStone extends UseItem {
 	}
 
 	public enum ResultType {
-
 		/*
 		 * when the gem stone is not successfully applied onto the item and when
 		 * it needs to be destroyed
@@ -142,6 +141,6 @@ public class GemStone extends UseItem {
 		 * when a gem stone is successfully applied onto an item without any
 		 * error
 		 */
-		SUCCESS;
+		SUCCESS
 	}
 }

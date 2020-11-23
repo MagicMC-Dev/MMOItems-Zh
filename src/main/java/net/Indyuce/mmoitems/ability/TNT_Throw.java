@@ -51,7 +51,7 @@ public class TNT_Throw extends Ability implements Listener {
 	/*
 	 * used to cancel team damage and other things
 	 */
-	public class CancelTeamDamage extends TemporaryListener {
+	public static class CancelTeamDamage extends TemporaryListener {
 		private final Player player;
 		private final TNTPrimed tnt;
 

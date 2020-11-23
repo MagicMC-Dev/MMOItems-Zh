@@ -1,8 +1,13 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ArrowParticles;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ProjectileData;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
@@ -15,14 +20,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ArrowParticles;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ProjectileData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EntityManager implements Listener {
 
@@ -46,8 +45,8 @@ public class EntityManager implements Listener {
 		 * bows to the pull force just like vanilla. it does not work with
 		 * tridents
 		 */
-		double damage = stats.getStat(ItemStat.ATTACK_DAMAGE);
-		stats.setStat(ItemStat.ATTACK_DAMAGE, (damage == 0 ? 7 : damage) * damageCoefficient);
+		double damage = stats.getStat(ItemStats.ATTACK_DAMAGE);
+		stats.setStat(ItemStats.ATTACK_DAMAGE, (damage == 0 ? 7 : damage) * damageCoefficient);
 
 		/*
 		 * load arrow particles if the entity is an arrow and if the item has
@@ -109,7 +108,7 @@ public class EntityManager implements Listener {
 		LivingEntity target = (LivingEntity) event.getEntity();
 		CachedStats stats = data.getPlayerStats();
 
-		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStat.ATTACK_DAMAGE) : event.getDamage(),
+		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStats.ATTACK_DAMAGE) : event.getDamage(),
 				DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
 		
 		data.applyEffects(target);

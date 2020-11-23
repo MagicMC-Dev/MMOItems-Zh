@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
@@ -9,11 +10,10 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -72,10 +72,10 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new LiveMMOItem(MMOLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem()))).hasData(ItemStat.UPGRADE))
+		if (!(recipe.mmoitem = new LiveMMOItem(MMOLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem()))).hasData(ItemStats.UPGRADE))
 			return false;
 
-		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStat.UPGRADE)).canLevelUp()) {
+		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStats.UPGRADE)).canLevelUp()) {
 			if(!data.isOnline()) return false;
 			Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
@@ -98,7 +98,7 @@ public class UpgradingRecipe extends Recipe {
 
 	@Override
 	public ItemStack display(RecipeInfo recipe) {
-		return ConfigItem.UPGRADING_RECIPE_DISPLAY.newBuilder(recipe).build();
+		return ConfigItems.UPGRADING_RECIPE_DISPLAY.newBuilder(recipe).build();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class UpgradingRecipe extends Recipe {
 		return new UpgradingRecipeInfo(this, data, inv);
 	}
 
-	public class UpgradingRecipeInfo extends RecipeInfo {
+	public static class UpgradingRecipeInfo extends RecipeInfo {
 		private LiveMMOItem mmoitem;
 		private UpgradeData upgradeData;
 

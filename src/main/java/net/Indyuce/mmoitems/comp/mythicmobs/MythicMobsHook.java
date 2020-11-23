@@ -65,7 +65,7 @@ public class MythicMobsHook implements Listener {
 						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
 	}
 
-	public class MMOItemsDrop extends Drop implements IMultiDrop {
+	public static class MMOItemsDrop extends Drop implements IMultiDrop {
 		private DropItem dropItem;
 
 		public MMOItemsDrop(MythicLineConfig config) {
@@ -89,7 +89,6 @@ public class MythicMobsHook implements Listener {
 
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load drop item: " + exception.getMessage());
-				return;
 			}
 		}
 

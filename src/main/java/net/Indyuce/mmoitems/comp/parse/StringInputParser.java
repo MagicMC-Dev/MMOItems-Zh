@@ -10,5 +10,5 @@ public interface StringInputParser {
 	 * and therefore all strings must be updated before being processed by stat
 	 * edition methods
 	 */
-	public String parseInput(Player player, String input);
+	String parseInput(Player player, String input);
 }

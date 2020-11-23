@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -30,7 +31,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class Effects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
@@ -49,7 +53,7 @@ public class Effects extends ItemStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
+			new StatEdition(inv, ItemStats.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
 					ChatColor.AQUA + "Format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}", ChatColor.DARK_RED + "Note: " + ChatColor.RED + "The '|' lines are literal.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -85,11 +89,11 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomPotionEffectListData data = (RandomPotionEffectListData) optional.get();
+			RandomPotionEffectListData data = (RandomPotionEffectListData) statData;
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
 						+ ChatColor.GRAY + " Level: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
@@ -138,7 +142,7 @@ public class Effects extends ItemStat {
 							key.get("Level").getAsInt()));
 				});
 
-				mmoitem.setData(ItemStat.EFFECTS, effects);
+				mmoitem.setData(ItemStats.EFFECTS, effects);
 			} catch (JsonSyntaxException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.

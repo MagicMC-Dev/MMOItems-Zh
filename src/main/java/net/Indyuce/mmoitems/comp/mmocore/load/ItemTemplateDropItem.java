@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
+import net.Indyuce.mmoitems.ItemStats;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,7 +11,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class ItemTemplateDropItem extends ItemGenerationDropItem {
@@ -36,7 +36,7 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
 		MMOItem mmoitem = rollMMOItem(template, rpgPlayer);
 
 		if (rollSoulbound())
-			mmoitem.setData(ItemStat.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));
+			mmoitem.setData(ItemStats.SOULBOUND, new SoulboundData(rpgPlayer.getPlayer(), 1));
 
 		ItemStack stack = rollUnidentification(mmoitem);
 		stack.setAmount(rollAmount());

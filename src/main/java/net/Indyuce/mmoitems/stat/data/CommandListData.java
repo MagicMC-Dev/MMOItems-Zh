@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +25,7 @@ public class CommandListData implements StatData, Mergeable, RandomStatData {
 	}
 
 	public void add(CommandData... commands) {
-		for (CommandData command : commands)
-			this.commands.add(command);
+		this.commands.addAll(Arrays.asList(commands));
 	}
 
 	public Set<CommandData> getCommands() {

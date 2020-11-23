@@ -95,11 +95,11 @@ public class PluginHelp {
 
 		private final String usage, help;
 
-		private PluginCommand(String line) {
+		PluginCommand(String line) {
 			this(line, null);
 		}
 
-		private PluginCommand(String usage, String help) {
+		PluginCommand(String usage, String help) {
 			this.usage = usage;
 			this.help = help == null ? null : ChatColor.translateAlternateColorCodes('&', help);
 		}

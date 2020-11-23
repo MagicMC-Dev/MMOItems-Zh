@@ -1,7 +1,15 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.lang.reflect.Field;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.data.SkullTextureData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -10,16 +18,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.data.SkullTextureData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.lang.reflect.Field;
 
 public class ItemSkin extends UseItem {
 	public ItemSkin(Player player, NBTItem item) {
@@ -38,8 +37,8 @@ public class ItemSkin extends UseItem {
 		}
 
 		boolean compatible = false;
-		if (getMMOItem().hasData(ItemStat.COMPATIBLE_TYPES)) {
-			for (String type : ((StringListData) getMMOItem().getData(ItemStat.COMPATIBLE_TYPES)).getList()) {
+		if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
+			for (String type : ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList()) {
 				if (type.equalsIgnoreCase(targetType.getId())) {
 					compatible = true;
 					break;
@@ -55,7 +54,7 @@ public class ItemSkin extends UseItem {
 		}
 
 		// check for success rate
-		double successRate = getNBTItem().getStat(ItemStat.SUCCESS_RATE);
+		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE);
 		if (successRate != 0)
 			if (random.nextDouble() < 1 - successRate / 100) {
 				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
@@ -85,13 +84,13 @@ public class ItemSkin extends UseItem {
 		}
 		if(skinMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
 			((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
-		if (getMMOItem().hasData(ItemStat.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
+		if (getMMOItem().hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
 				&& getNBTItem().getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
 			try {
 				Field profileField = meta.getClass().getDeclaredField("profile");
 				profileField.setAccessible(true);
 				profileField.set(meta,
-						((SkullTextureData) getMMOItem().getData(ItemStat.SKULL_TEXTURE)).getGameProfile());
+						((SkullTextureData) getMMOItem().getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
 			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 				MMOItems.plugin.getLogger().warning("Could not read skull texture");
 			}
@@ -104,7 +103,7 @@ public class ItemSkin extends UseItem {
 		return new ApplyResult(item);
 	}
 
-	public class ApplyResult {
+	public static class ApplyResult {
 		private final ResultType type;
 		private final ItemStack result;
 
@@ -131,6 +130,6 @@ public class ItemSkin extends UseItem {
 	}
 
 	public enum ResultType {
-		FAILURE, NONE, SUCCESS;
+		FAILURE, NONE, SUCCESS
 	}
 }

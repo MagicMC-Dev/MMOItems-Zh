@@ -54,7 +54,7 @@ public class Shadow_Veil extends Ability implements Listener {
 		new ShadowVeilHandler(stats.getPlayer(), duration);
 	}
 
-	public class ShadowVeilHandler extends BukkitRunnable implements Listener {
+	public static class ShadowVeilHandler extends BukkitRunnable implements Listener {
 		private final Player player;
 		private final double duration;
 		private final Location loc;

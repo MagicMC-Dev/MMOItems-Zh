@@ -82,7 +82,7 @@ public enum Message {
 
 	private final String defaultMessage, path;
 
-	private Message(String defaultMessage) {
+	Message(String defaultMessage) {
 		this.defaultMessage = defaultMessage;
 		this.path = name().toLowerCase().replace("_", "-");
 	}

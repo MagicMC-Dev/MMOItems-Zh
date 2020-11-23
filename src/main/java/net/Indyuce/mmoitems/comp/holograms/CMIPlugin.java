@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.comp.holograms;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,7 +20,7 @@ public class CMIPlugin extends HologramSupport {
 	@Override
 	public void displayIndicator(Location loc, String format, Player player) {
 		final CMIHologram hologram = new CMIHologram("MMOItems_" + UUID.randomUUID().toString(), loc);
-		hologram.setLines(Arrays.asList(format));
+		hologram.setLines(Collections.singletonList(format));
 		if (player != null)
 			hologram.hide(player.getUniqueId());
 		CMI.getInstance().getHologramManager().addHologram(hologram);

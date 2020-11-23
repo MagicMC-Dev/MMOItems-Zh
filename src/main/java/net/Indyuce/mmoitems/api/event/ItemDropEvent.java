@@ -14,14 +14,14 @@ public class ItemDropEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 
 	private boolean cancelled = false;
-	private DropCause cause;
-	private List<ItemStack> drops;
-	private LivingEntity player;
+	private final DropCause cause;
+	private final List<ItemStack> drops;
+	private final LivingEntity player;
 
 	// data that depends on drop cause
-	private Block block;
-	private Entity entity;
-	private String mythicMobName;
+	private final Block block;
+	private final Entity entity;
+	private final String mythicMobName;
 
 	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, DropCause cause, Block block) {
 		this(player, drops, cause, block, null, null);
@@ -88,6 +88,6 @@ public class ItemDropEvent extends Event implements Cancellable {
 	public enum DropCause {
 		BLOCK,
 		MONSTER,
-		MYTHIC_MOB;
+		MYTHIC_MOB
 	}
 }

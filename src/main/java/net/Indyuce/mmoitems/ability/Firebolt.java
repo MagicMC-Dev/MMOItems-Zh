@@ -42,8 +42,8 @@ public class Firebolt extends Ability {
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
 		new BukkitRunnable() {
-			Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.8);
-			Location loc = stats.getPlayer().getEyeLocation();
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(.8);
+			final Location loc = stats.getPlayer().getEyeLocation();
 			int ti = 0;
 
 			public void run() {

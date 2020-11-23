@@ -1,9 +1,17 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,18 +23,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AbilityEdition extends EditionInventory {
 	private final String configKey;
@@ -54,7 +53,7 @@ public class AbilityEdition extends EditionInventory {
 		ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 		ItemMeta abilityItemMeta = abilityItem.getItemMeta();
 		abilityItemMeta.setDisplayName(ChatColor.GREEN + "Ability");
-		List<String> abilityItemLore = new ArrayList<String>();
+		List<String> abilityItemLore = new ArrayList<>();
 		abilityItemLore.add(ChatColor.GRAY + "Choose what ability your weapon will cast.");
 		abilityItemLore.add("");
 		abilityItemLore.add(
@@ -74,7 +73,7 @@ public class AbilityEdition extends EditionInventory {
 			ItemStack castModeItem = new ItemStack(Material.ARMOR_STAND);
 			ItemMeta castModeItemMeta = castModeItem.getItemMeta();
 			castModeItemMeta.setDisplayName(ChatColor.GREEN + "Casting Mode");
-			List<String> castModeItemLore = new ArrayList<String>();
+			List<String> castModeItemLore = new ArrayList<>();
 			castModeItemLore.add(ChatColor.GRAY + "Choose what action the player needs to");
 			castModeItemLore.add(ChatColor.GRAY + "perform in order to cast your ability.");
 			castModeItemLore.add("");
@@ -95,7 +94,7 @@ public class AbilityEdition extends EditionInventory {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
-				List<String> modifierItemLore = new ArrayList<String>();
+				List<String> modifierItemLore = new ArrayList<>();
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is an ability modifier. Changing this");
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "value will slightly customize the ability.");
 				modifierItemLore.add("");
@@ -157,7 +156,7 @@ public class AbilityEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Ability")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.ABILITIES, configKey, "ability").enable("Write in the chat the ability you want.",
+				new StatEdition(this, ItemStats.ABILITIES, configKey, "ability").enable("Write in the chat the ability you want.",
 						"You can access the ability list by typing " + ChatColor.AQUA + "/mi list ability");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -176,7 +175,7 @@ public class AbilityEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Casting Mode")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				new StatEdition(this, ItemStat.ABILITIES, configKey, "mode").enable();
+				new StatEdition(this, ItemStats.ABILITIES, configKey, "mode").enable();
 
 				player.sendMessage("");
 				player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Available Casting Modes");
@@ -197,7 +196,7 @@ public class AbilityEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(this, ItemStat.ABILITIES, configKey, tag).enable("Write in the chat the value you want.");
+			new StatEdition(this, ItemStats.ABILITIES, configKey, tag).enable("Write in the chat the value you want.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (getEditedSection().contains("ability." + configKey + "." + tag)) {

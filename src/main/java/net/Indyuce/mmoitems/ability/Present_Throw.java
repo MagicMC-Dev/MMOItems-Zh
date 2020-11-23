@@ -31,7 +31,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public class Present_Throw extends Ability {
-	private ItemStack present = VersionMaterial.PLAYER_HEAD.toItem();
+	private final ItemStack present = VersionMaterial.PLAYER_HEAD.toItem();
 
 	public Present_Throw() {
 		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);

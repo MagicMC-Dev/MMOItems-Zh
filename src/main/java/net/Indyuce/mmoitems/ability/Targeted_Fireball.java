@@ -41,7 +41,7 @@ public class Targeted_Fireball extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			Location loc = stats.getPlayer().getLocation().add(0, 1.3, 0);
+			final Location loc = stats.getPlayer().getLocation().add(0, 1.3, 0);
 
 			public void run() {
 				j++;

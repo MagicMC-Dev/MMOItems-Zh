@@ -18,9 +18,11 @@ import org.bukkit.util.Vector;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class MMOUtils {
 	public static String getSkullTextureURL(ItemStack item) {
 		try {
@@ -28,7 +30,7 @@ public class MMOUtils {
 			Field profileField = meta.getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
 			Collection<Property> properties = ((GameProfile) profileField.get(item.getItemMeta())).getProperties().get("textures");
-			Property property = properties.toArray(new Property[properties.size()])[0];
+			Property property = properties.toArray(new Property[0])[0];
 			return new String(Base64.decodeBase64(property.getValue())).replace("{textures:{SKIN:{url:\"", "").replace("\"}}}", "");
 		} catch (Exception e) {
 			return "";
@@ -65,9 +67,9 @@ public class MMOUtils {
 	}
 
 	public static String getProgressBar(double ratio, int n, String barChar) {
-		String bar = "";
+		StringBuilder bar = new StringBuilder();
 		for (int k = 0; k < n; k++)
-			bar += barChar;
+			bar.append(barChar);
 		return bar.substring(0, (int) (ratio * n)) + ChatColor.WHITE + bar.substring((int) (ratio * n));
 	}
 
@@ -231,15 +233,15 @@ public class MMOUtils {
 		if (input < 1 || input > 3999)
 			throw new IllegalArgumentException("Input must be between 1 and 3999");
 
-		String format = "";
+		StringBuilder format = new StringBuilder();
 
 		for (int i = 0; i < romanChars.length; i++)
 			while (input >= romanValues[i]) {
-				format += romanChars[i];
+				format.append(romanChars[i]);
 				input -= romanValues[i];
 			}
 
-		return format;
+		return format.toString();
 	}
 
 	public static double truncation(double x, int n) {
@@ -290,14 +292,13 @@ public class MMOUtils {
 
 		for (int x = -1; x < 2; x++)
 			for (int z = -1; z < 2; z++)
-				for (Entity entity : loc.getWorld().getChunkAt(cx + x, cz + z).getEntities())
-					entities.add(entity);
+				entities.addAll(Arrays.asList(loc.getWorld().getChunkAt(cx + x, cz + z).getEntities()));
 
 		return entities;
 	}
 
 	public static ItemStack readIcon(String string) throws IllegalArgumentException {
-		String[] split = string.split("\\:");
+		String[] split = string.split(":");
 		Material material = Material.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
 		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}

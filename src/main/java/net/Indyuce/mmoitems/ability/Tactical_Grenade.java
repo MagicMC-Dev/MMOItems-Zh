@@ -44,10 +44,10 @@ public class Tactical_Grenade extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			Location loc = stats.getPlayer().getLocation().add(0, .1, 0);
-			double radius = ability.getModifier("radius");
-			double knockup = .7 * ability.getModifier("knock-up");
-			List<Integer> hit = new ArrayList<>();
+			final Location loc = stats.getPlayer().getLocation().add(0, .1, 0);
+			final double radius = ability.getModifier("radius");
+			final double knockup = .7 * ability.getModifier("knock-up");
+			final List<Integer> hit = new ArrayList<>();
 
 			public void run() {
 				j++;

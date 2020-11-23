@@ -42,8 +42,8 @@ public class Bouncy_Fireball extends Ability {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
 		new BukkitRunnable() {
 			int j = 0;
-			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).normalize().multiply(.5 * ability.getModifier("speed"));
-			Location loc = stats.getPlayer().getLocation().clone().add(0, 1.2, 0);
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).normalize().multiply(.5 * ability.getModifier("speed"));
+			final Location loc = stats.getPlayer().getLocation().clone().add(0, 1.2, 0);
 			int bounces = 0;
 
 			double y = .3;
@@ -83,7 +83,7 @@ public class Bouncy_Fireball extends Ability {
 						if (entity.getLocation().distanceSquared(loc) < radius * radius)
 							if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
 								new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE).damage(stats.getPlayer(), (LivingEntity) entity);
-								((LivingEntity) entity).setFireTicks((int) (ignite * 20));
+								entity.setFireTicks((int) (ignite * 20));
 							}
 
 					loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 12, 2, 2, 2, 0);

@@ -54,7 +54,7 @@ public class MMOCoreMMOLoader extends MMOLoader {
 		MMOCore.plugin.loadManager.registerLoader(this);
 		MMOCore.plugin.mineManager.registerBlockType(block -> {
 			Optional<CustomBlock> customBlock = MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData());
-			return customBlock.isPresent() ? Optional.of(new MMOItemsBlockType(customBlock.get())) : Optional.empty();
+			return customBlock.map(MMOItemsBlockType::new);
 		});
 
 		MMOItems.plugin.getStats().register(HEALTH_REGENERATION);
@@ -66,9 +66,9 @@ public class MMOCoreMMOLoader extends MMOLoader {
 		/*
 		 * register extra conditions for MMOItems crafting.
 		 */
-		MMOItems.plugin.getCrafting().registerCondition("profession", config -> new ProfessionCondition(config), new ConditionalDisplay(
+		MMOItems.plugin.getCrafting().registerCondition("profession", ProfessionCondition::new, new ConditionalDisplay(
 				"&a" + AltChar.check + " Requires #level# in #profession#", "&c" + AltChar.cross + " Requires #level# in #profession#"));
-		MMOItems.plugin.getCrafting().registerTrigger("exp", config -> new ExperienceCraftingTrigger(config));
+		MMOItems.plugin.getCrafting().registerTrigger("exp", ExperienceCraftingTrigger::new);
 	}
 
 	@Override

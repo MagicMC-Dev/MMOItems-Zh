@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
@@ -23,8 +24,7 @@ public class PotionEffectListData implements StatData, Mergeable {
 	}
 
 	public void add(PotionEffectData... effects) {
-		for (PotionEffectData effect : effects)
-			this.effects.add(effect);
+		this.effects.addAll(Arrays.asList(effects));
 	}
 
 	public List<PotionEffectData> getEffects() {

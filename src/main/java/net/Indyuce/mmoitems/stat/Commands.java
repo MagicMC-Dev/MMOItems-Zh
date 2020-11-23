@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -26,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Commands extends ItemStat {
 	private static final int max = 15;
@@ -70,21 +70,18 @@ public class Commands extends ItemStat {
 		double delay = 0;
 		boolean console = false, op = false;
 
-		String[] split = message.split("\\ ");
+		String[] split = message.split(" ");
 		for (int j = 0; j < split.length && split[j].startsWith("-"); j++) {
 			String arg = split[j];
 			if (arg.startsWith("-d:")) {
 				delay = MMOUtils.parseDouble(arg.substring(3));
 				message = message.replaceFirst(arg + " ", "");
-				continue;
 			} else if (arg.equalsIgnoreCase("-c")) {
 				console = true;
 				message = message.replaceFirst(arg + " ", "");
-				continue;
 			} else if (arg.equalsIgnoreCase("-op")) {
 				op = true;
 				message = message.replaceFirst(arg + " ", "");
-				continue;
 			}
 		}
 
@@ -112,9 +109,9 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
-				+ (optional.isPresent() ? ((CommandListData) optional.get()).getCommands().size() : "0"));
+				+ (statData.isPresent() ? ((CommandListData) statData).getCommands().size() : "0"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit item commands.");
 	}
@@ -153,7 +150,7 @@ public class Commands extends ItemStat {
 							key.get("Op").getAsBoolean()));
 				});
 
-				mmoitem.setData(ItemStat.COMMANDS, commands);
+				mmoitem.setData(ItemStats.COMMANDS, commands);
 			} catch (JsonSyntaxException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.

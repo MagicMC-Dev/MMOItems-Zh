@@ -22,7 +22,7 @@ public class MythicItemIngredient extends Ingredient {
 
 		config.validate("item");
 		Optional<MythicItem> mmitem = MythicMobs.inst().getItemManager().getItem(config.getString("item"));
-		Validate.isTrue(mmitem.isPresent(), "Could not find MM Item with ID '" + mmitem.get() + "'");
+		Validate.isTrue(mmitem.isPresent(), "Could not find MM Item with ID '" + config.getString("item") + "'");
 
 		display = config.contains("display") ? config.getString("display") : mmitem.get().getDisplayName();
 		mythicitem = mmitem.get();

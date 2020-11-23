@@ -1,21 +1,19 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.item.ItemTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
-import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class QueueItemDisplay extends ConfigItem {
 	private static final long[] ms = { 1000, 60 * 1000, 60 * 60 * 1000, 24 * 60 * 60 * 1000 };
@@ -35,8 +33,8 @@ public class QueueItemDisplay extends ConfigItem {
 		private final CraftingInfo crafting;
 		private final int position;
 
-		private String name = new String(getName());
-		private List<String> lore = new ArrayList<>(getLore());
+		private final String name = getName();
+		private final List<String> lore = new ArrayList<>(getLore());
 
 		public ItemBuilder(CraftingInfo crafting, int position) {
 			this.crafting = crafting;
@@ -72,7 +70,7 @@ public class QueueItemDisplay extends ConfigItem {
 			}
 
 			for (String key : replace.keySet())
-				lore.set(lore.indexOf(key), replace.get(key).replace("#left#", formatDelay(crafting.getLeft(), 2)));
+				lore.set(lore.indexOf(key), replace.get(key).replace("#left#", formatDelay(crafting.getLeft())));
 
 			/*
 			 * apply color to lore
@@ -80,7 +78,7 @@ public class QueueItemDisplay extends ConfigItem {
 			for (int n = 0; n < lore.size(); n++)
 				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
 
-			ItemStack item = ((CraftingRecipe) crafting.getRecipe()).getOutput().getPreview();
+			ItemStack item = crafting.getRecipe().getOutput().getPreview();
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
@@ -93,17 +91,17 @@ public class QueueItemDisplay extends ConfigItem {
 		}
 	}
 
-	private String formatDelay(long delay, int max) {
-		String format = "";
+	private String formatDelay(long delay) {
+		StringBuilder format = new StringBuilder();
 
 		int n = 0;
-		for (int j = ms.length - 1; j >= 0 && n < max; j--)
+		for (int j = ms.length - 1; j >= 0 && n < 2; j--)
 			if (delay >= ms[j]) {
-				format += (delay / ms[j]) + chars[j] + " ";
+				format.append(delay / ms[j]).append(chars[j]).append(" ");
 				delay = delay % ms[j];
 				n++;
 			}
 
-		return format.isEmpty() ? "1s" : format;
+		return (format.length() == 0) ? "1s" : format.toString();
 	}
 }

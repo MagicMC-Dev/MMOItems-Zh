@@ -76,14 +76,14 @@ public abstract class RPGPlayer {
 			CooldownInformation info = playerData.getCooldownInfo(data.getAbility());
 			if (!info.hasCooledDown()) {
 				if (data.getCastingMode().displaysMessage()) {
-					String progressBar = ChatColor.YELLOW + "";
+					StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
 					double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
 
 					String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
 					for (int j = 0; j < 10; j++)
-						progressBar += (progress >= j ? ChatColor.GREEN : ChatColor.WHITE) + barChar;
+						progressBar.append(progress >= j ? ChatColor.GREEN : ChatColor.WHITE).append(barChar);
 					Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(info.getRemaining()), "#progress#",
-							progressBar, "#s#", (info.getRemaining() >= 2 ? "s" : "")).send(player, "ability-cooldown");
+							progressBar.toString(), "#s#", (info.getRemaining() >= 2 ? "s" : "")).send(player, "ability-cooldown");
 				}
 				return false;
 			}

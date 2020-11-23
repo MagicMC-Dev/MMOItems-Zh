@@ -3,6 +3,9 @@ package net.Indyuce.mmoitems.api.crafting.condition;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.manager.CraftingManager;
+
+import java.util.Optional;
 
 public abstract class Condition {
 	private final String id;
@@ -20,7 +23,8 @@ public abstract class Condition {
 	 * the condition has not been registered.
 	 */
 	public ConditionalDisplay getDisplay() {
-		return MMOItems.plugin.getCrafting().getConditions().stream().filter(type -> type.getId().equals(id)).findAny().get().getDisplay();
+		Optional<CraftingManager.LoadedObject<Condition>> optional = MMOItems.plugin.getCrafting().getConditions().stream().filter(type -> type.getId().equals(id)).findAny();
+		return optional.isPresent() ? optional.get().getDisplay() : new ConditionalDisplay("INVALID", "INVALID");
 	}
 
 	public abstract boolean isMet(PlayerData data);
@@ -33,7 +37,7 @@ public abstract class Condition {
 		return new CheckedCondition(this, isMet(data));
 	}
 
-	public class CheckedCondition {
+	public static class CheckedCondition {
 		private final Condition condition;
 		private final boolean met;
 

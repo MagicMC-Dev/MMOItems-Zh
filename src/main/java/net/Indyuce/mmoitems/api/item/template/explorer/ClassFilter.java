@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.api.item.template.explorer;
 
-import java.util.function.Predicate;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+
+import java.util.function.Predicate;
 
 public class ClassFilter implements Predicate<MMOItemTemplate> {
 	private final String name;
@@ -20,11 +20,11 @@ public class ClassFilter implements Predicate<MMOItemTemplate> {
 
 	@Override
 	public boolean test(MMOItemTemplate template) {
-		if (!template.getBaseItemData().containsKey(ItemStat.REQUIRED_CLASS))
+		if (!template.getBaseItemData().containsKey(ItemStats.REQUIRED_CLASS))
 			return true;
 
 		// mandatory equalsIgnoreCase
-		for (String profess : ((StringListData) template.getBaseItemData().get(ItemStat.REQUIRED_CLASS)).getList())
+		for (String profess : ((StringListData) template.getBaseItemData().get(ItemStats.REQUIRED_CLASS)).getList())
 			if (profess.equalsIgnoreCase(name))
 				return true;
 

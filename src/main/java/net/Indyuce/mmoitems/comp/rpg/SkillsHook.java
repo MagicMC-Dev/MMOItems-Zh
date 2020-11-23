@@ -29,7 +29,7 @@ public class SkillsHook implements RPGHandler, Listener {
 		return new SkillsPlayer(data);
 	}
 
-	public class SkillsPlayer extends RPGPlayer {
+	public static class SkillsPlayer extends RPGPlayer {
 		private final PlayerInfo info;
 
 		public SkillsPlayer(PlayerData playerData) {

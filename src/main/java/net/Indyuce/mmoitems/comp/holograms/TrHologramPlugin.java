@@ -18,6 +18,6 @@ public class TrHologramPlugin extends HologramSupport {
 	@Override
 	public void displayIndicator(Location loc, String format, Player player) {
 		Hologram hologram = TrHologramAPI.createHologram(MMOItems.plugin, "mmoitems-"  + UUID.randomUUID().toString(), loc, format);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> hologram.delete(), 20);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, hologram::delete, 20);
 	}
 }

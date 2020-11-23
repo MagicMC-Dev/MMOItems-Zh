@@ -1,8 +1,13 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.recipe.CraftingType;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.util.AltChar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,14 +18,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.recipe.CraftingType;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftingEdition extends EditionInventory {
 	public CraftingEdition(Player player, MMOItemTemplate template) {
@@ -39,7 +38,7 @@ public class CraftingEdition extends EditionInventory {
 			ItemMeta craftingEventItem = craftingEvent.getItemMeta();
 			craftingEventItem.addItemFlags(ItemFlag.values());
 			craftingEventItem.setDisplayName(ChatColor.GREEN + ctype.getName());
-			List<String> eventLore = new ArrayList<String>();
+			List<String> eventLore = new ArrayList<>();
 			eventLore.add(ChatColor.GRAY + ctype.getLore());
 			if (!getEditedSection().contains("crafting." + ctype.name().toLowerCase())) {
 				eventLore.add("");
@@ -75,11 +74,11 @@ public class CraftingEdition extends EditionInventory {
 			if (corresponding == CraftingType.SHAPELESS || corresponding == CraftingType.SHAPED)
 				new RecipeEdition(player, template,  corresponding == CraftingType.SHAPELESS).open(getPreviousPage());
 			else if(corresponding == CraftingType.SMITHING)
-				new StatEdition(this, ItemStat.CRAFTING, "smithing").enable(
+				new StatEdition(this, ItemStats.CRAFTING, "smithing").enable(
 						"Write in the chat the items required to craft this.", "Format: '[ITEM] [ITEM]'",
 						"[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 			else
-				new StatEdition(this, ItemStat.CRAFTING, "item", corresponding.name().toLowerCase()).enable(
+				new StatEdition(this, ItemStats.CRAFTING, "item", corresponding.name().toLowerCase()).enable(
 						"Write in the chat the item, tickspeed and exp you want.", "Format: '[ITEM] [TICKS] [EXP]'",
 						"[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
 		}

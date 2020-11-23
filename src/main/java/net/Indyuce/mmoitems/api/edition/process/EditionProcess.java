@@ -14,9 +14,8 @@ public abstract class EditionProcess {
 
 	/**
 	 * Abstract class which lists all possible ways to retrieve player input
-	 * 
-	 * @param inv
-	 * @param edition
+	 *
+	 * @param edition The edition object
 	 */
 	public EditionProcess(Edition edition) {
 		this.edition = edition;

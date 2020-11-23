@@ -104,6 +104,6 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 		 * Called when a player claims the item from the crafting queue due to a
 		 * non instant crafting recipe
 		 */
-		CRAFTING_QUEUE;
+		CRAFTING_QUEUE
 	}
 }

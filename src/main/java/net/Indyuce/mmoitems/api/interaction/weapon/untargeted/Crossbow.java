@@ -1,5 +1,11 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
+import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
+import net.Indyuce.mmoitems.api.player.PlayerStats;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -7,13 +13,6 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
-import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class Crossbow extends UntargetedWeapon {
 	public Crossbow(Player player, NBTItem item) {
@@ -28,7 +27,7 @@ public class Crossbow extends UntargetedWeapon {
 			return;
 
 		PlayerStats stats = getPlayerData().getStats();
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK, false))
 			return;
 
@@ -43,7 +42,7 @@ public class Crossbow extends UntargetedWeapon {
 
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 		Arrow arrow = getPlayer().launchProjectile(Arrow.class);
-		arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStat.ARROW_VELOCITY), 1)));
+		arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY), 1)));
 		getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
 
 		MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats.newTemporary(), arrow, true);

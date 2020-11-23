@@ -41,6 +41,6 @@ public class SetManager implements Reloadable {
 	}
 
 	public ItemSet get(String id) {
-		return itemSets.containsKey(id) ? itemSets.get(id) : null;
+		return itemSets.getOrDefault(id, null);
 	}
 }

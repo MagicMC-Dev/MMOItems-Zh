@@ -49,10 +49,10 @@ public class Earthquake extends Ability {
 		double slowAmplifier = ability.getModifier("amplifier");
 
 		new BukkitRunnable() {
-			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0);
-			Location loc = stats.getPlayer().getLocation();
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0);
+			final Location loc = stats.getPlayer().getLocation();
 			int ti = 0;
-			List<Integer> hit = new ArrayList<>();
+			final List<Integer> hit = new ArrayList<>();
 
 			public void run() {
 				ti++;

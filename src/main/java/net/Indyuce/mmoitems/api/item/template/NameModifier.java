@@ -65,8 +65,8 @@ public class NameModifier {
 		return priority;
 	}
 
-	public static enum ModifierType {
+	public enum ModifierType {
 		PREFIX,
-		SUFFIX;
+		SUFFIX
 	}
 }

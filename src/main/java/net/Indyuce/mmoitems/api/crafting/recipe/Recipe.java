@@ -17,6 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public abstract class Recipe {
 	private final String id;
 	private final Map<RecipeOption, Boolean> options = new HashMap<>();
@@ -132,7 +133,7 @@ public abstract class Recipe {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj != null && obj instanceof Recipe && ((Recipe) obj).id.equals(id);
+		return obj instanceof Recipe && ((Recipe) obj).id.equals(id);
 	}
 
 	/*
@@ -166,7 +167,7 @@ public abstract class Recipe {
 
 		private final boolean def;
 
-		private RecipeOption(boolean def) {
+		RecipeOption(boolean def) {
 			this.def = def;
 		}
 

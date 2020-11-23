@@ -8,11 +8,11 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
 
 public interface RPGHandler {
-	public RPGPlayer getInfo(PlayerData data);
+	RPGPlayer getInfo(PlayerData data);
 
-	public void refreshStats(PlayerData data);
+	void refreshStats(PlayerData data);
 
-	public enum PluginEnum {
+	enum PluginEnum {
 		MMOCORE("MMOCore", MMOCoreHook.class),
 		HEROES("Heroes", HeroesHook.class),
 		SKILLAPI("SkillAPI", SkillAPIHook.class),
@@ -26,7 +26,7 @@ public interface RPGHandler {
 		private final Class<? extends RPGHandler> pluginClass;
 		private final String name;
 
-		private PluginEnum(String name, Class<? extends RPGHandler> pluginClass) {
+		PluginEnum(String name, Class<? extends RPGHandler> pluginClass) {
 			this.pluginClass = pluginClass;
 			this.name = name;
 		}

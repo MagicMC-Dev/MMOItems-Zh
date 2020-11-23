@@ -1,7 +1,12 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.Random;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.mmogroup.mmolib.version.VersionSound;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -10,13 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.version.VersionSound;
+import java.util.Random;
 
 public enum TypeSet {
 
@@ -81,9 +80,9 @@ public enum TypeSet {
 			stats.getData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.aoe.cooldown"));
 			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
 			target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
-			double bluntPower = stats.getStat(ItemStat.BLUNT_POWER);
+			double bluntPower = stats.getStat(ItemStats.BLUNT_POWER);
 			if (bluntPower > 0) {
-				double bluntRating = weapon.getValue(stats.getStat(ItemStat.BLUNT_RATING),
+				double bluntRating = weapon.getValue(stats.getStat(ItemStats.BLUNT_RATING),
 						MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
 				for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
 					if (MMOUtils.canDamage(stats.getPlayer(), entity) && !entity.equals(target))
@@ -127,11 +126,11 @@ public enum TypeSet {
 
 	private final SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler;
 
-	private TypeSet() {
+	TypeSet() {
 		this(null);
 	}
 
-	private TypeSet(SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {
+	TypeSet(SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {
 		this.attackHandler = attackHandler;
 	}
 

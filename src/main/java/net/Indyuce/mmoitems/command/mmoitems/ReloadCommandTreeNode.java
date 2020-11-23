@@ -11,8 +11,8 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 	public ReloadCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "reload");
 
-		addChild(new SubReloadCommandTreeNode("recipes", this, (sender) -> reloadRecipes(sender)));
-		addChild(new SubReloadCommandTreeNode("stations", this, (sender) -> reloadStations(sender)));
+		addChild(new SubReloadCommandTreeNode("recipes", this, this::reloadRecipes));
+		addChild(new SubReloadCommandTreeNode("stations", this, this::reloadStations));
 		addChild(new SubReloadCommandTreeNode("all", this, (sender) -> {
 			reloadMain(sender);
 			reloadRecipes(sender);
@@ -26,7 +26,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 		return CommandResult.SUCCESS;
 	}
 
-	public class SubReloadCommandTreeNode extends CommandTreeNode {
+	public static class SubReloadCommandTreeNode extends CommandTreeNode {
 		private final Consumer<CommandSender> action;
 		
 		public SubReloadCommandTreeNode(String sub, CommandTreeNode parent, Consumer<CommandSender> action) {

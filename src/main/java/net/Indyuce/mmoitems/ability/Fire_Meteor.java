@@ -43,8 +43,8 @@ public class Fire_Meteor extends Ability {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 1);
 		new BukkitRunnable() {
 			double ti = 0;
-			Location loc = stats.getPlayer().getLocation().clone().add(0, 10, 0);
-			Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(1.3).setY(-1).normalize();
+			final Location loc = stats.getPlayer().getLocation().clone().add(0, 10, 0);
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().multiply(1.3).setY(-1).normalize();
 
 			public void run() {
 				ti++;

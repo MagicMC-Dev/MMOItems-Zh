@@ -110,7 +110,6 @@ public class Explosive_Turkey extends Ability implements Listener {
 							entity.setVelocity(entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback)
 									.setY(.4 * knockback));
 						}
-					return;
 				}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
@@ -119,7 +118,7 @@ public class Explosive_Turkey extends Ability implements Listener {
 	/*
 	 * this fixes an issue where chickens sometimes drop
 	 */
-	public class ChickenHandler extends TemporaryListener {
+	public static class ChickenHandler extends TemporaryListener {
 		private final Chicken chicken;
 
 		public ChickenHandler(Chicken chicken) {

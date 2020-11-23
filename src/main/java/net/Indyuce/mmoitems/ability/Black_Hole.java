@@ -43,7 +43,7 @@ public class Black_Hole extends Ability {
 		loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 1);
 		new BukkitRunnable() {
 			int ti = 0;
-			double r = 4;
+			final double r = 4;
 
 			public void run() {
 				if (ti++ > Math.min(300, duration))

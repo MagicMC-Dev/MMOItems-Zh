@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -16,8 +17,7 @@ public class AbilityListData implements StatData, Mergeable {
 	}
 
 	public void add(AbilityData... abilities) {
-		for (AbilityData ability : abilities)
-			this.abilities.add(ability);
+		this.abilities.addAll(Arrays.asList(abilities));
 	}
 
 	public Set<AbilityData> getAbilities() {

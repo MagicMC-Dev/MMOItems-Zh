@@ -21,18 +21,18 @@ public class SlashLuteAttack implements LuteAttackHandler {
 	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
 		new BukkitRunnable() {
 			final Vector vec = stats.getPlayer().getEyeLocation().getDirection();
-			Location loc = stats.getPlayer().getLocation().add(0, 1.3, 0);
+			final Location loc = stats.getPlayer().getLocation().add(0, 1.3, 0);
 			double ti = 1;
 
 			public void run() {
 				if ((ti += .6) > 5)
 					cancel();
 
-				loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / 5));
+				loc.getWorld().playSound(loc, sound, 2, (float) (.5 + ti / 5));
 				for (int k = -30; k < 30; k += 3)
 					if (random.nextBoolean()) {
 						loc.setDirection(vec);
-						loc.setYaw((float) (loc.getYaw() + k));
+						loc.setYaw(loc.getYaw() + k);
 						loc.setPitch(stats.getPlayer().getEyeLocation().getPitch());
 						loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), 0);
 					}

@@ -1,8 +1,14 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.util.NamedItemStack;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,15 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.util.NamedItemStack;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpgradingEdition extends EditionInventory {
 	private static final ItemStack notAvailable = new NamedItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toMaterial(), "&cNot Available");
@@ -163,7 +162,7 @@ public class UpgradingEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Success Chance")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.UPGRADE, "rate").enable("Write in the chat the success rate you want.");
+				new StatEdition(this, ItemStats.UPGRADE, "rate").enable("Write in the chat the success rate you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.success")) {
 				getEditedSection().set("upgrade.success", null);
@@ -174,7 +173,7 @@ public class UpgradingEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Max Upgrades")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.UPGRADE, "max").enable("Write in the chat the number you want.");
+				new StatEdition(this, ItemStats.UPGRADE, "max").enable("Write in the chat the number you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.max")) {
 				getEditedSection().set("upgrade.max", null);
@@ -185,7 +184,7 @@ public class UpgradingEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Upgrade Template")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.UPGRADE, "template").enable("Write in the chat the upgrade template ID you want.");
+				new StatEdition(this, ItemStats.UPGRADE, "template").enable("Write in the chat the upgrade template ID you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.template")) {
 				getEditedSection().set("upgrade.template", null);
@@ -196,7 +195,7 @@ public class UpgradingEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Upgrade Reference")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.UPGRADE, "ref").enable("Write in the chat the upgrade reference (text) you want.");
+				new StatEdition(this, ItemStats.UPGRADE, "ref").enable("Write in the chat the upgrade reference (text) you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.reference")) {
 				getEditedSection().set("upgrade.reference", null);

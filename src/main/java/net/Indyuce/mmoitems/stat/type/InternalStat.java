@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -38,7 +37,7 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 		// not supported
 	}
 }

@@ -80,7 +80,7 @@ public class CraftingStatus {
 		return queues.get(station.getId());
 	}
 
-	public class CraftingQueue {
+	public static class CraftingQueue {
 		private final String station;
 		private final List<CraftingInfo> crafts = new ArrayList<>();
 
@@ -166,7 +166,7 @@ public class CraftingStatus {
 
 			@Override
 			public boolean equals(Object obj) {
-				return obj != null && obj instanceof CraftingInfo && ((CraftingInfo) obj).uuid.equals(uuid);
+				return obj instanceof CraftingInfo && ((CraftingInfo) obj).uuid.equals(uuid);
 			}
 		}
 	}

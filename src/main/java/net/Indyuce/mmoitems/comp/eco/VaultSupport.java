@@ -31,7 +31,7 @@ public class VaultSupport {
 		}
 
 		MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto Vault");
-		MMOItems.plugin.getCrafting().registerCondition("money", config -> new MoneyCondition(config),
+		MMOItems.plugin.getCrafting().registerCondition("money", MoneyCondition::new,
 				new ConditionalDisplay("&a" + AltChar.check + " Requires $#money#",
 						"&c" + AltChar.cross + " Requires $#money#"));
 	}
@@ -39,10 +39,7 @@ public class VaultSupport {
 	private boolean load() {
 		if (economy == null)
 			return false;
-		if (permissions == null)
-			return false;
-		
-		return true;
+		return permissions != null;
 	}
 	
 	public Permission getPermissions() {

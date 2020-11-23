@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
+import org.jetbrains.annotations.NotNull;
 
 public class Bunny_Mode extends Ability {
 	public Bunny_Mode() {
@@ -46,7 +47,7 @@ public class Bunny_Mode extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			BunnyHandler handler = new BunnyHandler(stats.getPlayer(), duration);
+			final BunnyHandler handler = new BunnyHandler(stats.getPlayer(), duration);
 
 			public void run() {
 				if (j++ > duration) {
@@ -68,7 +69,7 @@ public class Bunny_Mode extends Ability {
 
 	}
 
-	public class BunnyHandler extends TemporaryListener {
+	public static class BunnyHandler extends TemporaryListener {
 		private final Player player;
 
 		public BunnyHandler(Player player, double duration) {
@@ -76,7 +77,7 @@ public class Bunny_Mode extends Ability {
 
 			this.player = player;
 
-			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> close(), (long) (duration * 20));
+			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (@NotNull Runnable) this::close, (long) (duration * 20));
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

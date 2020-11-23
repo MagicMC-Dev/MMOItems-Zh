@@ -14,10 +14,10 @@ public interface ItemReference {
 	/**
 	 * @return The item type
 	 */
-	public Type getType();
+	Type getType();
 
 	/**
 	 * @return The item ID
 	 */
-	public String getId();
+	String getId();
 }

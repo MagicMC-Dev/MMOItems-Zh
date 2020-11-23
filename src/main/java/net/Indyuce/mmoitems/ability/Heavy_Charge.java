@@ -40,7 +40,7 @@ public class Heavy_Charge extends Ability {
 
 		new BukkitRunnable() {
 			double ti = 0;
-			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(-1);
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().setY(-1);
 
 			public void run() {
 				ti++;

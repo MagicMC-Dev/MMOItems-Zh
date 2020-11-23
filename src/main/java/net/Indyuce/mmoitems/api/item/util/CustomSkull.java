@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class CustomSkull extends ConfigItem {
-	private String textureValue;
+	private final String textureValue;
 
 	public CustomSkull(String id, String textureValue) {
 		this(id, textureValue, null);

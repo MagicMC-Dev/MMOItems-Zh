@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import de.tobiyas.racesandclasses.eventprocessing.events.leveling.LevelDownEvent;
 import de.tobiyas.racesandclasses.eventprocessing.events.leveling.LevelUpEvent;
 import de.tobiyas.racesandclasses.playermanagement.player.RaCPlayer;
 import de.tobiyas.racesandclasses.playermanagement.player.RaCPlayerManager;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 public class RacesAndClassesHook implements RPGHandler, Listener {
 
@@ -17,7 +16,7 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
 	public void refreshStats(PlayerData data) {
 		RaCPlayer info = ((RacePlayer) data.getRPG()).info;
 		info.getManaManager().removeMaxManaBonus("MMOItems");
-		info.getManaManager().addMaxManaBonus("MMOItems", data.getStats().getStat(ItemStat.MAX_MANA));
+		info.getManaManager().addMaxManaBonus("MMOItems", data.getStats().getStat(ItemStats.MAX_MANA));
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
 		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 
-	public class RacePlayer extends RPGPlayer {
+	public static class RacePlayer extends RPGPlayer {
 		private final RaCPlayer info;
 
 		public RacePlayer(PlayerData playerData) {

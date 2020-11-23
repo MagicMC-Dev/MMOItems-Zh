@@ -1,8 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-import java.util.Optional;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.ColorData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.mmogroup.mmolib.api.util.AltChar;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,16 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.ColorData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.util.List;
 
 public class PotionColor extends StringStat {
 	public PotionColor() {
@@ -38,7 +36,7 @@ public class PotionColor extends StringStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.POTION_COLOR).enable("Write in the chat the RGB color you want.",
+			new StatEdition(inv, ItemStats.POTION_COLOR).enable("Write in the chat the RGB color you want.",
 					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -50,7 +48,7 @@ public class PotionColor extends StringStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split("\\ ");
+		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
 
 		for (String str : split) {
@@ -64,9 +62,9 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		lore.add(optional.isPresent() ? ChatColor.GREEN + optional.get().toString() : ChatColor.RED + "Uncolored");
+		lore.add(statData.isPresent() ? ChatColor.GREEN + statData.toString() : ChatColor.RED + "Uncolored");
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");

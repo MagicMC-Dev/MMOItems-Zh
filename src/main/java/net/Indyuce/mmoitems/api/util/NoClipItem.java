@@ -59,7 +59,7 @@ public class NoClipItem implements Listener {
 	}
 
 	// Stops items from being picked up by hoppers/portals and then duping them.
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void a(InventoryPickupItemEvent event) {
 		if (event.getItem().equals(item)) {
 			event.setCancelled(true);
@@ -67,14 +67,14 @@ public class NoClipItem implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void b(EntityPortalEnterEvent event) {
 		if (event.getEntity().equals(item)) {
 			close();
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void c(EntityPickupItemEvent event) {
 		if (event.getItem().equals(item)) {
 			close();

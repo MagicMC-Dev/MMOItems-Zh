@@ -113,7 +113,7 @@ public class ItemSet {
 		return loreTag;
 	}
 
-	public class SetBonuses {
+	public static class SetBonuses {
 		private final Map<ItemStat, Double> stats;
 		private final Map<PotionEffectType, PotionEffect> permEffects;
 		private final Set<AbilityData> abilities;
@@ -124,13 +124,6 @@ public class ItemSet {
 			permEffects = new HashMap<>();
 			abilities = new HashSet<>();
 			particles = new HashSet<>();
-		}
-
-		public SetBonuses(SetBonuses bonuses) {
-			this.stats = new HashMap<>(bonuses.stats);
-			this.permEffects = new HashMap<>(bonuses.permEffects);
-			this.abilities = new HashSet<>(bonuses.abilities);
-			this.particles = new HashSet<>(bonuses.particles);
 		}
 
 		public void addStat(ItemStat stat, double value) {
@@ -149,16 +142,16 @@ public class ItemSet {
 			particles.add(particle);
 		}
 
-		public double getStat(ItemStat stat) {
-			return stats.containsKey(stat) ? stats.get(stat) : 0;
-		}
-
 		public Map<ItemStat, Double> getStats() {
 			return stats;
 		}
 
 		public Collection<PotionEffect> getPotionEffects() {
 			return permEffects.values();
+		}
+
+		public Set<ParticleData> getParticles() {
+			return particles;
 		}
 
 		public Set<AbilityData> getAbilities() {
@@ -171,8 +164,8 @@ public class ItemSet {
 			for (PotionEffect effect : bonuses.getPotionEffects())
 				if (!permEffects.containsKey(effect.getType()) || permEffects.get(effect.getType()).getAmplifier() < effect.getAmplifier())
 					permEffects.put(effect.getType(), effect);
-			
-			bonuses.getAbilities().forEach(ability -> abilities.add(ability));
+
+			abilities.addAll(bonuses.getAbilities());
 		}
 	}
 }

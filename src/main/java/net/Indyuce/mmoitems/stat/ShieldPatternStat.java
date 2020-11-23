@@ -1,25 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.block.Banner;
-import org.bukkit.block.banner.Pattern;
-import org.bukkit.block.banner.PatternType;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -29,9 +10,25 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ShieldPatternData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.block.Banner;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class ShieldPatternStat extends StringStat {
 	public ShieldPatternStat() {
@@ -76,7 +73,7 @@ public class ShieldPatternStat extends StringStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 			inv.getEditedSection().set("shield-pattern.color", null);
@@ -86,12 +83,12 @@ public class ShieldPatternStat extends StringStat {
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, ItemStat.SHIELD_PATTERN, 1).enable("Write in the chat the pattern you want to add.",
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("Write in the chat the pattern you want to add.",
 					ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT && inv.getEditedSection().contains("shield-pattern")) {
 			Set<String> set = inv.getEditedSection().getConfigurationSection("shield-pattern").getKeys(false);
-			String last = new ArrayList<String>(set).get(set.size() - 1);
+			String last = new ArrayList<>(set).get(set.size() - 1);
 			if (last.equalsIgnoreCase("color"))
 				return;
 
@@ -106,7 +103,7 @@ public class ShieldPatternStat extends StringStat {
 		int editedStatData = (int) info[0];
 
 		if (editedStatData == 1) {
-			String[] split = message.split("\\ ");
+			String[] split = message.split(" ");
 			Validate.isTrue(split.length == 2, message + " is not a valid [PATTERN_TYPE] [DYE_COLOR].");
 
 			PatternType patternType = PatternType.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
@@ -130,11 +127,11 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			ShieldPatternData data = (ShieldPatternData) optional.get();
+			ShieldPatternData data = (ShieldPatternData) statData;
 			lore.add(ChatColor.GRAY + "* Base Color: "
 					+ (data.getBaseColor() != null
 							? ChatColor.GREEN + MMOUtils.caseOnWords(data.getBaseColor().name().toLowerCase().replace("_", " "))
@@ -152,7 +149,7 @@ public class ShieldPatternStat extends StringStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Drop to remove the last pattern.");
 	}
 
-	@EventHandler
+	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().getItem().getItemMeta() instanceof BlockStateMeta
 				&& ((BlockStateMeta) mmoitem.getNBT().getItem().getItemMeta()).hasBlockState()
@@ -161,7 +158,7 @@ public class ShieldPatternStat extends StringStat {
 
 			ShieldPatternData shieldPattern = new ShieldPatternData(banner.getBaseColor());
 			shieldPattern.addAll(banner.getPatterns());
-			mmoitem.setData(ItemStat.SHIELD_PATTERN, shieldPattern);
+			mmoitem.setData(ItemStats.SHIELD_PATTERN, shieldPattern);
 		}
 	}
 

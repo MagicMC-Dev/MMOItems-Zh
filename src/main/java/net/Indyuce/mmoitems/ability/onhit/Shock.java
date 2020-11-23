@@ -39,7 +39,7 @@ public class Shock extends Ability {
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ZOMBIE_PIGMAN_ANGRY.toSound(), 1, 2);
 		new BukkitRunnable() {
 			final Location loc = target.getLocation();
-			double rads = Math.toRadians(stats.getPlayer().getEyeLocation().getYaw() - 90);
+			final double rads = Math.toRadians(stats.getPlayer().getEyeLocation().getYaw() - 90);
 			double ti = rads;
 
 			public void run() {

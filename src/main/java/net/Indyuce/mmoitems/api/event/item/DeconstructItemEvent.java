@@ -24,7 +24,7 @@ public class DeconstructItemEvent extends PlayerDataEvent {
 	 *            Player deconstructing the item
 	 * @param consumable
 	 *            Consumable used to deconstruct the item
-	 * @param unidentified
+	 * @param deconstructed
 	 *            Item being deconstructed
 	 * @param loot
 	 *            Items which will be given to the player if the item is

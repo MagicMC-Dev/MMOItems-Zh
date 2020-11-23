@@ -12,7 +12,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
@@ -42,10 +42,6 @@ public class CraftingStationView extends PluginInventory {
 	private IngredientInventory ingredients;
 
 	private int queueOffset;
-
-	public CraftingStationView(Player player, CraftingStation station) {
-		this(player, station, 1);
-	}
 
 	public CraftingStationView(Player player, CraftingStation station, int page) {
 		super(player);
@@ -82,9 +78,9 @@ public class CraftingStationView extends PluginInventory {
 		}
 
 		if (max < recipes.size())
-			inv.setItem(layout.getRecipeNextSlot(), ConfigItem.NEXT_PAGE.getItem());
+			inv.setItem(layout.getRecipeNextSlot(), ConfigItems.NEXT_PAGE.getItem());
 		if (page > 1)
-			inv.setItem(layout.getRecipePreviousSlot(), ConfigItem.PREVIOUS_PAGE.getItem());
+			inv.setItem(layout.getRecipePreviousSlot(), ConfigItems.PREVIOUS_PAGE.getItem());
 
 		CraftingQueue queue = data.getCrafting().getQueue(station);
 		for (int j = queueOffset; j < queueOffset + layout.getQueueSlots().size(); j++) {
@@ -94,12 +90,12 @@ public class CraftingStationView extends PluginInventory {
 				continue;
 			}
 
-			inv.setItem(layout.getQueueSlots().get(j - queueOffset), ConfigItem.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(j), j + 1).build());
+			inv.setItem(layout.getQueueSlots().get(j - queueOffset), ConfigItems.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(j), j + 1).build());
 		}
 		if (queueOffset + layout.getQueueSlots().size() < queue.getCrafts().size())
-			inv.setItem(layout.getQueueNextSlot(), ConfigItem.NEXT_IN_QUEUE.getItem());
+			inv.setItem(layout.getQueueNextSlot(), ConfigItems.NEXT_IN_QUEUE.getItem());
 		if (queueOffset > 0)
-			inv.setItem(layout.getQueuePreviousSlot(), ConfigItem.PREVIOUS_IN_QUEUE.getItem());
+			inv.setItem(layout.getQueuePreviousSlot(), ConfigItems.PREVIOUS_IN_QUEUE.getItem());
 
 		new BukkitRunnable() {
 			public void run() {
@@ -119,7 +115,7 @@ public class CraftingStationView extends PluginInventory {
 						inv.setItem(layout.getQueueSlots().get(j - queueOffset),
 								station.getItemOptions().hasNoQueueItem() ? station.getItemOptions().getNoQueueItem() : null);
 					else
-						inv.setItem(layout.getQueueSlots().get(j - queueOffset), ConfigItem.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(j), j + 1).build());
+						inv.setItem(layout.getQueueSlots().get(j - queueOffset), ConfigItems.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(j), j + 1).build());
 			}
 		}.runTaskTimerAsynchronously(MMOItems.plugin, 0, 20);
 		if (station.getItemOptions().hasFill())

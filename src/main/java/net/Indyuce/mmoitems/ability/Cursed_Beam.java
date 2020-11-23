@@ -46,9 +46,9 @@ public class Cursed_Beam extends Ability {
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
-			Vector dir = ((VectorAbilityResult) ability).getTarget().multiply(.3);
-			Location loc = stats.getPlayer().getEyeLocation().clone();
-			double r = 0.4;
+			final Vector dir = ((VectorAbilityResult) ability).getTarget().multiply(.3);
+			final Location loc = stats.getPlayer().getEyeLocation().clone();
+			final double r = 0.4;
 			int ti = 0;
 
 			public void run() {

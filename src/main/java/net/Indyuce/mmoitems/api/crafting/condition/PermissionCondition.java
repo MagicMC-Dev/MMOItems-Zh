@@ -13,7 +13,7 @@ public class PermissionCondition extends Condition {
 		super("permission");
 
 		config.validate("list");
-		permissions = Arrays.asList(config.getString("list").split("\\,"));
+		permissions = Arrays.asList(config.getString("list").split(","));
 	}
 
 	@Override

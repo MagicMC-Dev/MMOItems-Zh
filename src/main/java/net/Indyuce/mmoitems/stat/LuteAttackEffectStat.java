@@ -1,9 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.BruteLuteAttack;
@@ -14,12 +10,14 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SlashLuteAtta
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.WaveLuteAttack;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class LuteAttackEffectStat extends StringStat {
 	public LuteAttackEffectStat() {
@@ -47,7 +45,7 @@ public class LuteAttackEffectStat extends StringStat {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		LuteAttackEffect effect = LuteAttackEffect.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
+		LuteAttackEffect effect = LuteAttackEffect.valueOf(data.toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
 		item.getLore().insert("lute-attack-effect", effect.getName());
 	}
@@ -61,7 +59,7 @@ public class LuteAttackEffectStat extends StringStat {
 
 		private final LuteAttackHandler handler;
 
-		private LuteAttackEffect(LuteAttackHandler handler) {
+		LuteAttackEffect(LuteAttackHandler handler) {
 			this.handler = handler;
 		}
 
@@ -70,7 +68,7 @@ public class LuteAttackEffectStat extends StringStat {
 		}
 
 		public String getDefaultName() {
-			return name().substring(0, 1) + name().substring(1).toLowerCase();
+			return name().charAt(0) + name().substring(1).toLowerCase();
 		}
 
 		public String getName() {

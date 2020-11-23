@@ -50,6 +50,7 @@ public class ConfigFile {
 		}
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public void setup() {
 		try {
 			if (!new File(plugin.getDataFolder() + path).exists())

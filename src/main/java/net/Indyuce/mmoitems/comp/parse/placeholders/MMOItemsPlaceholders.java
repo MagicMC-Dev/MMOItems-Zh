@@ -73,12 +73,15 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 			if(!MMOItems.plugin.getTypes().has(t)) return "Invalid type";
 			Type type = Type.get(t);
 			String pholder = identifier.substring(6 + t.length()).toLowerCase();
-			switch(pholder) {
+			if ("total".equals(pholder))
+				return "" + MMOItems.plugin.getTemplates().getTemplates(type).size();
+			return type.getName();
+			/*switch(pholder) {
 				case "total":
 					return "" + MMOItems.plugin.getTemplates().getTemplates(type).size();
 				default:
 					return type.getName();
-			}
+			}*/
 		}
 		
 		if(identifier.startsWith("tier_")) {
@@ -128,9 +131,9 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		double durability = nbtItem.getDouble("MMOITEMS_DURABILITY");
 		double maxDurability = nbtItem.getDouble("MMOITEMS_MAX_DURABILITY");
 		long r = Math.round(durability / maxDurability * length);
-		String bar = "" + ChatColor.GREEN;
+		StringBuilder bar = new StringBuilder("" + ChatColor.GREEN);
 		for (int j = 0; j < length; j++)
-			bar += (j == r ? ChatColor.WHITE : "") + barChar;
-		return bar;
+			bar.append(j == r ? ChatColor.WHITE : "").append(barChar);
+		return bar.toString();
 	}
 }

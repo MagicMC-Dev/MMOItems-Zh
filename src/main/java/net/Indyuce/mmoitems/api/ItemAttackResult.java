@@ -82,6 +82,7 @@ public class ItemAttackResult extends AttackResult {
 	 *            The entity target
 	 * @return The unedited attack result
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public ItemAttackResult applyElementalEffects(CachedStats stats, NBTItem item, LivingEntity target) {
 		new ElementalAttack(item, this, target).apply(stats);
 		return this;

@@ -17,9 +17,9 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import net.Indyuce.mmoitems.MMOItems;
 
 public class WorldGuardFlags implements FlagPlugin {
-	private WorldGuard worldguard;
-	private WorldGuardPlugin worldguardPlugin;
-	private Map<String, StateFlag> flags = new HashMap<>();
+	private final WorldGuard worldguard;
+	private final WorldGuardPlugin worldguardPlugin;
+	private final Map<String, StateFlag> flags = new HashMap<>();
 
 	public WorldGuardFlags() {
 		this.worldguard = WorldGuard.getInstance();

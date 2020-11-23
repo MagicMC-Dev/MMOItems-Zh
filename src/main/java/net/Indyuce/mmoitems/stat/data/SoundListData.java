@@ -43,7 +43,7 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof SoundListData, "Cannot merge two different stat data types");
 		SoundListData cast = (SoundListData) data;
-		cast.sounds.forEach((sound, soundData) -> sounds.put(sound, soundData));
+		cast.sounds.forEach(sounds::put);
 	}
 
 	@Override

@@ -1,26 +1,20 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {
@@ -29,17 +23,19 @@ public class ItemSetStat extends StringStat {
 				new String[] { "!gem_stone", "!consumable", "!material", "!block", "!miscellaneous", "all" });
 	}
 
-	public boolean whenClicked(EditionInventory inv, InventoryClickEvent event, Player player, Type type, String path) {
-		if (event.getAction() == InventoryAction.PICKUP_ALL) {
-			new StatEdition(inv, ItemStat.SET).enable("Write in the chat the item set ID.");
-			player.sendMessage("");
+	@Override
+	public void whenClicked(EditionInventory inv, InventoryClickEvent e) {
+		super.whenClicked(inv, e);
+		if (e.getAction() != InventoryAction.PICKUP_HALF) {
+			inv.getPlayer().sendMessage(ChatColor.GREEN + "Available Item Sets:");
+			StringBuilder builder = new StringBuilder();
 			for (ItemSet set : MMOItems.plugin.getSets().getAll())
-				player.sendMessage(
-						ChatColor.GRAY + "* " + ChatColor.GREEN + set.getId() + ChatColor.GRAY + " (" + set.getName() + ChatColor.GRAY + ")");
-			return true;
+				builder.append(ChatColor.GREEN).append(set.getId()).append(ChatColor.GRAY)
+					.append(" (").append(set.getName()).append(ChatColor.GRAY).append("), ");
+			if(builder.length() > 1)
+				builder.setLength(builder.length() - 2);
+			inv.getPlayer().sendMessage(builder.toString());
 		}
-
-		return true;
 	}
 
 	@Override
@@ -59,15 +55,10 @@ public class ItemSetStat extends StringStat {
 			mmoitem.setData(this, new StringData(mmoitem.getNBT().getString("MMOITEMS_ITEM_SET")));
 	}
 
-	public boolean whenInput(EditionInventory inv, ConfigFile config, String message, Object... info) {
-		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
-
-		ItemSet set = MMOItems.plugin.getSets().get(format);
-		Validate.notNull(set, "Couldn't find the set named '" + format + "'.");
-
-		config.getConfig().set("set", format);
-		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Set successfully changed to " + set.getName() + ChatColor.GRAY + ".");
-		return true;
+	@Override
+	public void whenInput(EditionInventory inv, String message, Object... info) {
+		ItemSet set = MMOItems.plugin.getSets().get(message);
+		Validate.notNull(set, "Couldn't find the set named '" + message + "'.");
+		super.whenInput(inv, message, info);
 	}
 }

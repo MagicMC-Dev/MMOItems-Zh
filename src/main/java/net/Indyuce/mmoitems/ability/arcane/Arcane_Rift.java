@@ -54,10 +54,11 @@ public class Arcane_Rift extends Ability {
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_DEATH.toSound(), 2, .5f);
 		new BukkitRunnable() {
-			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).normalize().multiply(.5 * ability.getModifier("speed"));
-			Location loc = stats.getPlayer().getLocation();
-			int ti = 0, duration = (int) (20 * Math.min(ability.getModifier("duration"), 10.));
-			List<Integer> hit = new ArrayList<>();
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).normalize().multiply(.5 * ability.getModifier("speed"));
+			final Location loc = stats.getPlayer().getLocation();
+			int ti = 0;
+			final int duration = (int) (20 * Math.min(ability.getModifier("duration"), 10.));
+			final List<Integer> hit = new ArrayList<>();
 
 			public void run() {
 				if (ti++ > duration)

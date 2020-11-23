@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.manager;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 
 import java.util.Collection;
@@ -54,7 +54,7 @@ public class TierManager implements Reloadable {
 
 	public ItemTier findTier(MMOItem item) {
 		try {
-			return item.hasData(ItemStat.TIER) ? get(item.getData(ItemStat.TIER).toString()) : null;
+			return item.hasData(ItemStats.TIER) ? get(item.getData(ItemStats.TIER).toString()) : null;
 		} catch (IllegalArgumentException exception) {
 			return null;
 		}

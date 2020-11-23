@@ -40,7 +40,7 @@ public class Magma_Fissure extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			Location loc = stats.getPlayer().getLocation().add(0, .2, 0);
+			final Location loc = stats.getPlayer().getLocation().add(0, .2, 0);
 
 			public void run() {
 				j++;

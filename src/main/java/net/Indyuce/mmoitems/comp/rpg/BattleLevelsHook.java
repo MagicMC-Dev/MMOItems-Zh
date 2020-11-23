@@ -24,7 +24,7 @@ public class BattleLevelsHook implements RPGHandler, Listener {
 	public void refreshStats(PlayerData data) {
 	}
 
-	public class BattleLevelsPlayer extends RPGPlayer {
+	public static class BattleLevelsPlayer extends RPGPlayer {
 		public BattleLevelsPlayer(PlayerData playerData) {
 			super(playerData);
 		}

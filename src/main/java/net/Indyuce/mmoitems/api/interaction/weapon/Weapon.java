@@ -1,10 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction.weapon;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -14,8 +10,11 @@ import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 public class Weapon extends UseItem {
 	public Weapon(Player player, NBTItem item) {
@@ -44,7 +43,7 @@ public class Weapon extends UseItem {
 		if (!isSwing && getPlayerData().isOnCooldown(cooldown))
 			return false;
 
-		double manaCost = getNBTItem().getStat(ItemStat.MANA_COST), staminaCost = getNBTItem().getStat(ItemStat.STAMINA_COST);
+		double manaCost = getNBTItem().getStat(ItemStats.MANA_COST), staminaCost = getNBTItem().getStat(ItemStats.STAMINA_COST);
 
 		if (manaCost > 0 && playerData.getRPG().getMana() < manaCost) {
 			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(getPlayer(), "not-enough-mana");
@@ -66,10 +65,11 @@ public class Weapon extends UseItem {
 		return true;
 	}
 
+	// While we may never use the return value, external plugins may need to.
+	@SuppressWarnings("UnusedReturnValue")
 	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, ItemAttackResult result) {
-
 		// cooldown
-		double attackSpeed = getNBTItem().getStat(ItemStat.ATTACK_SPEED);
+		double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED);
 		attackSpeed = attackSpeed == 0 ? 1.493 : 1 / attackSpeed;
 		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, true))
 			return result.setSuccessful(false);

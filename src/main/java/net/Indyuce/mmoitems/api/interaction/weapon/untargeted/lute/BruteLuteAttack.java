@@ -22,8 +22,8 @@ public class BruteLuteAttack implements LuteAttackHandler {
 	@Override
 	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
 		new BukkitRunnable() {
-			Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
-			Location loc = stats.getPlayer().getEyeLocation();
+			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
+			final Location loc = stats.getPlayer().getEyeLocation();
 			int ti = 0;
 
 			public void run() {

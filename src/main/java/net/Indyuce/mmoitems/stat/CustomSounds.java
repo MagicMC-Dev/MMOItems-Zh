@@ -1,16 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.CustomSound;
@@ -22,10 +12,19 @@ import net.Indyuce.mmoitems.stat.data.SoundData;
 import net.Indyuce.mmoitems.stat.data.SoundListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class CustomSounds extends ItemStat implements GemStoneStat {
 	public CustomSounds() {
@@ -64,8 +63,8 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String soundsPath = SoundsEdition.correspondingSlot.get(info[0]);
-		String[] split = message.split("\\ ");
+		String soundsPath = (String) info[0];
+		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3, message + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
 
 		String soundName = split[0].replace("-", "_");
@@ -82,11 +81,11 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			SoundListData data = (SoundListData) optional.get();
+			SoundListData data = (SoundListData) statData;
 			data.mapData()
 					.forEach((sound,
 							soundData) -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN
@@ -126,6 +125,6 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 		}
 
 		if (sounds.getCustomSounds().size() > 0)
-			mmoitem.setData(ItemStat.CUSTOM_SOUNDS, sounds);
+			mmoitem.setData(ItemStats.CUSTOM_SOUNDS, sounds);
 	}
 }

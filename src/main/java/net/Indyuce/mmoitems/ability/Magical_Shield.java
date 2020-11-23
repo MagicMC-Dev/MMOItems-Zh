@@ -49,7 +49,7 @@ public class Magical_Shield extends Ability {
 		new MagicalShield(stats.getPlayer().getLocation().clone(), duration, radiusSquared, power);
 	}
 
-	public class MagicalShield extends BukkitRunnable implements Listener {
+	public static class MagicalShield extends BukkitRunnable implements Listener {
 		private final Location loc;
 		private final double duration, radius, power;
 

@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
-import java.util.Set;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -25,10 +22,10 @@ public class SunfireSpirit implements StaffAttackHandler {
 	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
-			Location target = getGround(stats.getPlayer().getTargetBlock((Set<Material>) null, (int) range * 2).getLocation()).add(0, 1.2, 0);
-			double a = random.nextDouble() * Math.PI * 2;
-			Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
-			Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
+			final Location target = getGround(stats.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
+			final double a = random.nextDouble() * Math.PI * 2;
+			final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
+			final Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
 			double ti = 0;
 
 			public void run() {

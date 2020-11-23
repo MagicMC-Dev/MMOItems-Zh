@@ -42,6 +42,7 @@ public class DynamicLore {
 	}
 	
 	private String replace(String input) {
+		//noinspection SwitchStatementWithTooFewBranches
 		switch(input.toLowerCase()) {
 			case "%durability%":
 				if(item.hasTag("MMOITEMS_DURABILITY") && item.hasTag("MMOITEMS_MAX_DURABILITY"))

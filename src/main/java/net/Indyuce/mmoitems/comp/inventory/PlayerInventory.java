@@ -11,9 +11,9 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public interface PlayerInventory {
-	public List<EquippedItem> getInventory(Player player);
+	List<EquippedItem> getInventory(Player player);
 
-	public class EquippedItem {
+	class EquippedItem {
 		private final NBTItem item;
 		private final EquipmentSlot slot;
 

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ability.Ability;
@@ -31,7 +32,6 @@ import org.bukkit.inventory.ItemStack;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.#");
@@ -93,8 +93,8 @@ public class Abilities extends ItemStat {
 		String configKey = (String) info[0];
 		String edited = (String) info[1];
 
+		String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
 		if (edited.equals("ability")) {
-			String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
 			Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(format),
 					"format is not a valid ability! You may check the ability list using /mi list ability.");
 			Ability ability = MMOItems.plugin.getAbilities().getAbility(format);
@@ -108,7 +108,7 @@ public class Abilities extends ItemStat {
 		}
 
 		if (edited.equals("mode")) {
-			CastingMode castMode = CastingMode.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
+			CastingMode castMode = CastingMode.valueOf(format);
 			Ability ability = MMOItems.plugin.getAbilities().getAbility(inv.getEditedSection().getString("ability." + configKey + ".type")
 					.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
 			Validate.isTrue(ability.isAllowedMode(castMode), "This ability does not support this casting mode.");
@@ -127,9 +127,9 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GOLD
-				+ (optional.isPresent() ? ((RandomAbilityListData) optional.get()).getAbilities().size() : 0));
+				+ (statData.isPresent() ? ((RandomAbilityListData) statData).getAbilities().size() : 0));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}
@@ -141,7 +141,7 @@ public class Abilities extends ItemStat {
 				AbilityListData list = new AbilityListData();
 				new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()
 						.forEach(obj -> list.add(new AbilityData(obj.getAsJsonObject())));
-				mmoitem.setData(ItemStat.ABILITIES, list);
+				mmoitem.setData(ItemStats.ABILITIES, list);
 			} catch (JsonSyntaxException | IllegalStateException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.

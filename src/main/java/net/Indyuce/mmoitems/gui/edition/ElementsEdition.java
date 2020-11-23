@@ -1,9 +1,14 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.Element;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.mmogroup.mmolib.api.util.AltChar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,15 +18,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Element;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ElementsEdition extends EditionInventory {
 	private static final int[] slots = { 19, 25, 20, 24, 28, 34, 29, 33, 30, 32, 37, 43, 38, 42, 39, 41 };
@@ -40,10 +38,10 @@ public class ElementsEdition extends EditionInventory {
 			ItemMeta attackMeta = attack.getItemMeta();
 			attackMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Damage");
 			List<String> attackLore = new ArrayList<>();
-			Optional<RandomStatData> optional = getEventualStatData(ItemStat.ELEMENTS);
+			RandomStatData statData = getEventualStatData(ItemStats.ELEMENTS);
 			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-					+ (optional.isPresent() && ((RandomElementListData) optional.get()).hasDamage(element)
-							? ((RandomElementListData) optional.get()).getDamage(element) + " (%)"
+					+ (statData.isPresent() && ((RandomElementListData) statData).hasDamage(element)
+							? ((RandomElementListData) statData).getDamage(element) + " (%)"
 							: "---"));
 			attackLore.add("");
 			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -56,8 +54,8 @@ public class ElementsEdition extends EditionInventory {
 			defenseMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Defense");
 			List<String> defenseLore = new ArrayList<>();
 			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-					+ (optional.isPresent() && ((RandomElementListData) optional.get()).hasDefense(element)
-							? ((RandomElementListData) optional.get()).getDefense(element) + " (%)"
+					+ (statData.isPresent() && ((RandomElementListData) statData).hasDefense(element)
+							? ((RandomElementListData) statData).getDefense(element) + " (%)"
 							: "---"));
 			defenseLore.add("");
 			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -88,7 +86,7 @@ public class ElementsEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(this, ItemStat.ELEMENTS, elementPath).enable("Write in the value you want.");
+			new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("Write in the value you want.");
 
 		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			getEditedSection().set("element." + elementPath, null);

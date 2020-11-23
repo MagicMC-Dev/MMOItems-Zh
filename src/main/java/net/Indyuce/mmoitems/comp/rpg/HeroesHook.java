@@ -1,28 +1,26 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.SkillUseInfo;
 import com.herocraftonline.heroes.api.events.ClassChangeEvent;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.skill.SkillType;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.AttackResult;
 import net.mmogroup.mmolib.api.DamageHandler;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.RegisteredAttack;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<SkillType, DamageType> damages = new HashMap<>();
@@ -43,15 +41,15 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	@Override
 	public RegisteredAttack getDamage(Entity entity) {
 		SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-		return new RegisteredAttack(new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(type -> damages.containsKey(type))
-				.map(type -> damages.get(type)).collect(Collectors.toSet())), info.getCharacter().getEntity());
+		return new RegisteredAttack(new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(damages::containsKey)
+				.map(damages::get).collect(Collectors.toSet())), info.getCharacter().getEntity());
 	}
 
 	@Override
 	public void refreshStats(PlayerData data) {
 		Hero hero = ((HeroesPlayer) data.getRPG()).hero;
 		hero.removeMaxMana("MMOItems");
-		hero.addMaxMana("MMOItems", (int) data.getStats().getStat(ItemStat.MAX_MANA));
+		hero.addMaxMana("MMOItems", (int) data.getStats().getStat(ItemStats.MAX_MANA));
 	}
 
 	@Override
@@ -95,7 +93,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 //				event.setDamage(event.getDamage() * (1 - PlayerData.get((Player) event.getDamager().getEntity()).getStats().getStat(ItemStat.PHYSICAL_DAMAGE_REDUCTION) / 100));
 //	}
 
-	public class HeroesPlayer extends RPGPlayer {
+	public static class HeroesPlayer extends RPGPlayer {
 		private final Hero hero;
 
 		public HeroesPlayer(PlayerData playerData) {

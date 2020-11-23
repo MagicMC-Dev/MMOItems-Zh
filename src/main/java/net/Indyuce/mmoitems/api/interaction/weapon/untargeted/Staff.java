@@ -1,5 +1,18 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
+import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
+import net.mmogroup.mmolib.MMOLib;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.MMORayTraceResult;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.version.VersionSound;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -8,20 +21,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
-import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.MMORayTraceResult;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.version.VersionSound;
 
 public class Staff extends UntargetedWeapon {
 	public Staff(Player player, NBTItem item) {
@@ -32,7 +31,7 @@ public class Staff extends UntargetedWeapon {
 	public void untargetedAttack(EquipmentSlot slot) {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStat.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK, false))
 			return;
 
@@ -40,8 +39,8 @@ public class Staff extends UntargetedWeapon {
 		if (durItem.isValid())
 			durItem.decreaseDurability(1).update();
 
-		double attackDamage = getValue(stats.getStat(ItemStat.ATTACK_DAMAGE), 1);
-		double range = getValue(getNBTItem().getStat(ItemStat.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));
+		double attackDamage = getValue(stats.getStat(ItemStats.ATTACK_DAMAGE), 1);
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));
 
 		StaffSpirit spirit = StaffSpirit.get(getNBTItem());
 		if (spirit != null) {

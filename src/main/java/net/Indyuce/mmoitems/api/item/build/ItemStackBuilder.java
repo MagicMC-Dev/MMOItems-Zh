@@ -1,17 +1,13 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.gson.JsonArray;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.StoredTagsData;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -27,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -52,10 +49,10 @@ public class ItemStackBuilder {
 		this.mmoitem = mmoitem;
 
 		item = new ItemStack(
-				mmoitem.hasData(ItemStat.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStat.MATERIAL)).getMaterial()
+				mmoitem.hasData(ItemStats.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStats.MATERIAL)).getMaterial()
 						: Material.DIAMOND_SWORD);
-		lore = new LoreBuilder(mmoitem.hasData(ItemStat.LORE_FORMAT)
-				? MMOItems.plugin.getFormats().getFormat(mmoitem.getData(ItemStat.LORE_FORMAT).toString())
+		lore = new LoreBuilder(mmoitem.hasData(ItemStats.LORE_FORMAT)
+				? MMOItems.plugin.getFormats().getFormat(mmoitem.getData(ItemStats.LORE_FORMAT).toString())
 				: MMOItems.plugin.getLanguage().getDefaultLoreFormat());
 		meta = item.getItemMeta();
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -92,8 +89,7 @@ public class ItemStackBuilder {
 	}
 
 	public void addItemTag(ItemTag... itemTags) {
-		for (ItemTag itemTag : itemTags)
-			tags.add(itemTag);
+		tags.addAll(Arrays.asList(itemTags));
 	}
 
 	/**
@@ -118,14 +114,14 @@ public class ItemStackBuilder {
 		// Display item type
 		lore.insert("item-type",
 				ItemStat.translate("item-type").replace("#",
-						mmoitem.getStats().contains(ItemStat.DISPLAYED_TYPE)
-								? ((StringData) mmoitem.getData(ItemStat.DISPLAYED_TYPE)).toString()
+						mmoitem.getStats().contains(ItemStats.DISPLAYED_TYPE)
+								? mmoitem.getData(ItemStats.DISPLAYED_TYPE).toString()
 								: mmoitem.getType().getName()));
 
 		// Calculate lore with placeholders
-		if (mmoitem.hasData(ItemStat.LORE)) {
+		if (mmoitem.hasData(ItemStats.LORE)) {
 			List<String> parsed = new ArrayList<>();
-			((StringListData) mmoitem.getData(ItemStat.LORE)).getList()
+			((StringListData) mmoitem.getData(ItemStats.LORE)).getList()
 					.forEach(str -> parsed.add(lore.applyLorePlaceholders(str)));
 			lore.insert("lore", parsed);
 		}
@@ -145,15 +141,7 @@ public class ItemStackBuilder {
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
 		item.setItemMeta(meta);
-		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
-		nbtItem.addTag(tags);
-
-		if (nbtItem.getDisplayNameComponent() != null) {
-			nbtItem.setDisplayNameComponent(MMOLib.plugin.getComponentBuilder().parse(nbtItem.getDisplayNameComponent()));
-
-		}
-
-		return nbtItem;
+		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(tags);
 	}
 
 	/**
@@ -175,7 +163,7 @@ public class ItemStackBuilder {
 		 */
 		public StatLore(MMOItem mmoitem) {
 			this.mmoitem = mmoitem.clone();
-			this.upgradeData = (UpgradeData) mmoitem.getData(ItemStat.UPGRADE);
+			this.upgradeData = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE);
 		}
 
 		public MMOItem getMMOItem() {
@@ -237,10 +225,10 @@ public class ItemStackBuilder {
 				} else {
 					tag = new ItemTag(key, Math.max(0, value - (info.getAmount() * level)));
 				}
-				StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
+				StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStats.STORED_TAGS);
 
 				tagsData.addTag(tag);
-				mmoitem.replaceData(ItemStat.STORED_TAGS, tagsData);
+				mmoitem.replaceData(ItemStats.STORED_TAGS, tagsData);
 			}
 		}
 
@@ -259,7 +247,7 @@ public class ItemStackBuilder {
 
 		public HashMap<String, ItemTag> getStoredTags() {
 			HashMap<String, ItemTag> map = new HashMap<>();
-			StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStat.STORED_TAGS);
+			StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStats.STORED_TAGS);
 
 			for (ItemTag tag : tagsData.getTags())
 				map.put(tag.getPath(), tag);

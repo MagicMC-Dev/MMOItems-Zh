@@ -80,7 +80,7 @@ public class IngredientInventory {
 		return found != null && found.getAmount() >= ingredient.getAmount();
 	}
 
-	public class PlayerIngredient {
+	public static class PlayerIngredient {
 
 		/*
 		 * stores items which correspond to a specific ingredient. when the
@@ -149,6 +149,6 @@ public class IngredientInventory {
 		/*
 		 * scans ingredient inventory considering item levels
 		 */
-		BASIC;
+		BASIC
 	}
 }

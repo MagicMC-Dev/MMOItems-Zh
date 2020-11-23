@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Type {
 
 	// slashing
@@ -206,13 +207,13 @@ public class Type {
 
 	@Override
 	public boolean equals(Object object) {
-		return object != null && object instanceof Type && ((Type) object).id.equals(id);
+		return object instanceof Type && ((Type) object).id.equals(id);
 	}
 
 	private ItemStack read(String str) {
 		Validate.notNull(str, "Input must not be null");
 
-		String[] split = str.split("\\:");
+		String[] split = str.split(":");
 		Material material = Material.valueOf(split[0]);
 		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}

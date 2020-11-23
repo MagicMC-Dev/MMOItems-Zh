@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.api.util.SmartGive;
@@ -93,6 +93,6 @@ public class CraftingRecipe extends Recipe {
 
 	@Override
 	public ItemStack display(RecipeInfo recipe) {
-		return ConfigItem.CRAFTING_RECIPE_DISPLAY.newBuilder(recipe).build();
+		return ConfigItems.CRAFTING_RECIPE_DISPLAY.newBuilder(recipe).build();
 	}
 }

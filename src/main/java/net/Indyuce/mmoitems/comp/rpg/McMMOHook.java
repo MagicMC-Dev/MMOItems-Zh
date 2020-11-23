@@ -18,9 +18,9 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class McMMOHook implements RPGHandler, Listener {
-	private final ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair", "Players can't repair this with McMMO.");
 
 	public McMMOHook() {
+		ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair", "Players can't repair this with McMMO.");
 		MMOItems.plugin.getStats().register(disableMcMMORepair);
 	}
 
@@ -50,7 +50,7 @@ public class McMMOHook implements RPGHandler, Listener {
 	public void refreshStats(PlayerData data) {
 	}
 
-	public class McMMOPlayer extends RPGPlayer {
+	public static class McMMOPlayer extends RPGPlayer {
 		public McMMOPlayer(PlayerData playerData) {
 			super(playerData);
 		}

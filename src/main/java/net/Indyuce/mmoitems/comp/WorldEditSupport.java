@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.comp;
 
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.internal.registry.InputParser;
 import com.sk89q.worldedit.registry.state.Property;
@@ -9,7 +8,6 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.util.MushroomState;
@@ -19,22 +17,22 @@ public class WorldEditSupport {
 		WorldEdit.getInstance().getBlockFactory().register(new WECustomBlockInputParser());
 	}
 
-	public class WECustomBlockInputParser extends InputParser<BaseBlock> {
+	public static class WECustomBlockInputParser extends InputParser<BaseBlock> {
 		public WECustomBlockInputParser() {
 			super(WorldEdit.getInstance());
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public BaseBlock parseFromInput(String input, ParserContext context) throws InputParseException {
+		public BaseBlock parseFromInput(String input, ParserContext context) {
 			input = input.toLowerCase();
-			BlockType type = null;
+			BlockType type;
 			if (!input.startsWith("mmoitems-"))
 				return null;
 
 			int id;
 			try {
-				id = Integer.parseInt(input.split("\\-")[1]);
+				id = Integer.parseInt(input.split("-")[1]);
 			} catch (NumberFormatException e) {
 				return null;
 			}

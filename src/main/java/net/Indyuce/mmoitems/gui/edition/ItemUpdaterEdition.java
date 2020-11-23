@@ -40,7 +40,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		ItemStack disable = VersionMaterial.RED_DYE.toItem();
 		ItemMeta disableMeta = disable.getItemMeta();
 		disableMeta.setDisplayName(ChatColor.RED + "Disable");
-		List<String> disableLore = new ArrayList<String>();
+		List<String> disableLore = new ArrayList<>();
 		disableLore.add(ChatColor.RED + "Your item will not be dynamically updated.");
 		disableLore.add("");
 		disableLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to disable the item updater.");
@@ -50,7 +50,7 @@ public class ItemUpdaterEdition extends EditionInventory {
 		ItemStack enable = VersionMaterial.LIME_DYE.toItem();
 		ItemMeta enableMeta = enable.getItemMeta();
 		enableMeta.setDisplayName(ChatColor.GREEN + "Enable");
-		List<String> enableLore = new ArrayList<String>();
+		List<String> enableLore = new ArrayList<>();
 		enableLore.add(ChatColor.GREEN + "Your item will be dynamically updated.");
 		enableLore.add("");
 		enableLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to enable the item updater.");

@@ -30,6 +30,6 @@ public class StringValue {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj != null && obj instanceof StringValue && ((StringValue) obj).name.equals(name) && ((StringValue) obj).value == value;
+		return obj instanceof StringValue && ((StringValue) obj).name.equals(name) && ((StringValue) obj).value == value;
 	}
 }

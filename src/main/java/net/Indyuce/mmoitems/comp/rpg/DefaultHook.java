@@ -23,7 +23,7 @@ public class DefaultHook implements RPGHandler, Listener {
 		return new DefaultRPGPlayer(data);
 	}
 
-	public class DefaultRPGPlayer extends RPGPlayer {
+	public static class DefaultRPGPlayer extends RPGPlayer {
 		public DefaultRPGPlayer(PlayerData playerData) {
 			super(playerData);
 		}

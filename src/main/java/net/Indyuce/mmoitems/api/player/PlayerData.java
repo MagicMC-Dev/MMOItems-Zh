@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.player;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -17,8 +18,11 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.comp.inventory.PlayerInventory.EquippedItem;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
-import net.Indyuce.mmoitems.stat.data.*;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.data.AbilityData;
+import net.Indyuce.mmoitems.stat.data.AbilityListData;
+import net.Indyuce.mmoitems.stat.data.ParticleData;
+import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.milkbowl.vault.permission.Permission;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
@@ -36,7 +40,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 public class PlayerData {
 
@@ -223,8 +235,8 @@ public class PlayerData {
             /*
              * apply permanent potion effects
              */
-            if (item.hasData(ItemStat.PERM_EFFECTS))
-                ((PotionEffectListData) item.getData(ItemStat.PERM_EFFECTS)).getEffects().forEach(effect -> {
+            if (item.hasData(ItemStats.PERM_EFFECTS))
+                ((PotionEffectListData) item.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(effect -> {
                     if (getPermanentPotionEffectAmplifier(effect.getType()) < effect.getLevel() - 1)
                         permanentEffects.put(effect.getType(), effect.toEffect());
                 });
@@ -232,8 +244,8 @@ public class PlayerData {
             /*
              * apply item particles
              */
-            if (item.hasData(ItemStat.ITEM_PARTICLES)) {
-                ParticleData particleData = (ParticleData) item.getData(ItemStat.ITEM_PARTICLES);
+            if (item.hasData(ItemStats.ITEM_PARTICLES)) {
+                ParticleData particleData = (ParticleData) item.getData(ItemStats.ITEM_PARTICLES);
 
                 if (particleData.getType().hasPriority()) {
                     if (overridingItemParticles == null)
@@ -245,7 +257,7 @@ public class PlayerData {
             /*
              * apply abilities
              */
-            if (item.hasData(ItemStat.ABILITIES)) {
+            if (item.hasData(ItemStats.ABILITIES)) {
                 // if the item with the abilities is in the players offhand AND
                 // its disabled in the config then just move on, else add the
                 // ability
@@ -253,14 +265,14 @@ public class PlayerData {
                         && MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
                     continue;
                 } else
-                    itemAbilities.addAll(((AbilityListData) item.getData(ItemStat.ABILITIES)).getAbilities());
+                    itemAbilities.addAll(((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities());
             }
 
             /*
              * apply permissions if vault exists
              */
-            if (MMOItems.plugin.hasVault() && item.hasData(ItemStat.GRANTED_PERMISSIONS))
-                permissions.addAll(((StringListData) item.getData(ItemStat.GRANTED_PERMISSIONS)).getList());
+            if (MMOItems.plugin.hasVault() && item.hasData(ItemStats.GRANTED_PERMISSIONS))
+                permissions.addAll(((StringListData) item.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
         }
 
         /*
@@ -374,6 +386,8 @@ public class PlayerData {
         return false;
     }
 
+    // While we may never use the return value, external plugins may need to.
+    @SuppressWarnings("UnusedReturnValue")
     public ItemAttackResult castAbilities(LivingEntity target, ItemAttackResult result, CastingMode castMode) {
         /*
          * performance improvement, do not cache the player stats into a
@@ -444,7 +458,7 @@ public class PlayerData {
         if (ability.hasModifier("stamina"))
             rpgPlayer.giveStamina(-abilityResult.getModifier("stamina"));
 
-        double cooldown = abilityResult.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStat.COOLDOWN_REDUCTION) / 100));
+        double cooldown = abilityResult.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStats.COOLDOWN_REDUCTION) / 100));
         if (cooldown > 0)
             applyAbilityCooldown(ability.getAbility(), cooldown);
 

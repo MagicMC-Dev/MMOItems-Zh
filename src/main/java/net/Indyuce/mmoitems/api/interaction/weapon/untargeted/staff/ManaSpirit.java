@@ -23,10 +23,10 @@ public class ManaSpirit implements StaffAttackHandler {
 	@Override
 	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
 		new BukkitRunnable() {
-			Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
-			Location loc = stats.getPlayer().getEyeLocation();
+			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
+			final Location loc = stats.getPlayer().getEyeLocation();
 			int ti = 0;
-			double r = .2;
+			final double r = .2;
 
 			public void run() {
 				if (ti++ > range)

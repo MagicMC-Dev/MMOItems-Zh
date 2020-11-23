@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 public class ItemDamage extends DoubleStat implements GemStoneStat {
 	public ItemDamage() {
@@ -27,6 +26,6 @@ public class ItemDamage extends DoubleStat implements GemStoneStat {
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().getItem().getItemMeta() instanceof Damageable)
-			mmoitem.setData(ItemStat.DURABILITY, new DoubleData(((Damageable) mmoitem.getNBT().getItem().getItemMeta()).getDamage()));
+			mmoitem.setData(ItemStats.DURABILITY, new DoubleData(((Damageable) mmoitem.getNBT().getItem().getItemMeta()).getDamage()));
 	}
 }

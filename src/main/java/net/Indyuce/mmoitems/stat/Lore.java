@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -11,7 +12,6 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringListStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -25,7 +25,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Lore extends StringListStat implements GemStoneStat {
 	public Lore() {
@@ -42,7 +41,7 @@ public class Lore extends StringListStat implements GemStoneStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.LORE).enable("Write in the chat the lore line you want to add.");
+			new StatEdition(inv, ItemStats.LORE).enable("Write in the chat the lore line you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("lore")) {
 			List<String> lore = inv.getEditedSection().getStringList("lore");
@@ -68,11 +67,11 @@ public class Lore extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) optional.get();
+			StringListData data = (StringListData) statData;
 			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(element)));
 
 		} else
@@ -94,13 +93,13 @@ public class Lore extends StringListStat implements GemStoneStat {
 		 */
 
 		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(line -> array.add(line));
+		((StringListData) data).getList().forEach(array::add);
 		item.addItemTag(new ItemTag("MMOITEMS_LORE", array.toString()));
 	}
 
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().hasTag("MMOITEMS_LORE"))
-			mmoitem.setData(ItemStat.LORE, new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_LORE")).getAsJsonArray()));
+			mmoitem.setData(ItemStats.LORE, new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_LORE")).getAsJsonArray()));
 	}
 }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -25,12 +26,6 @@ public class MMOItemBuilder {
 	private final MMOItem mmoitem;
 	private final int level;
 	private final ItemTier tier;
-
-	/**
-	 * Capacity is not final as it keeps lowering as modifiers are selected and
-	 * applied
-	 */
-	private double capacity;
 
 	/**
 	 * Name modifiers, prefixes or suffixes, with priorities. They are saved
@@ -54,16 +49,20 @@ public class MMOItemBuilder {
 	public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
 		this.level = level;
 		this.tier = tier;
-		this.capacity = (tier != null && tier.hasCapacity() ? tier.getCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
+		/*
+		 * Capacity is not final as it keeps lowering as modifiers are selected and
+		 * applied
+		 */
+		double capacity = (tier != null && tier.hasCapacity() ? tier.getCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
 		this.mmoitem = new MMOItem(template.getType(), template.getId());
 
 		// apply base item data
 		template.getBaseItemData().forEach((stat, random) -> applyData(stat, random.randomize(this)));
 
 		if (tier != null)
-			mmoitem.setData(ItemStat.TIER, new StringData(tier.getId()));
+			mmoitem.setData(ItemStats.TIER, new StringData(tier.getId()));
 		if (level > 0)
-			mmoitem.setData(ItemStat.ITEM_LEVEL, new DoubleData(level));
+			mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(level));
 
 		// roll item gen modifiers
 		for (TemplateModifier modifier : rollModifiers(template)) {
@@ -83,10 +82,6 @@ public class MMOItemBuilder {
 		return level;
 	}
 
-	public double getRemainingCapacity() {
-		return capacity;
-	}
-
 	public ItemTier getTier() {
 		return tier;
 	}
@@ -101,15 +96,15 @@ public class MMOItemBuilder {
 	public MMOItem build() {
 
 		if (!nameModifiers.isEmpty()) {
-			String displayName = mmoitem.hasData(ItemStat.NAME) ? mmoitem.getData(ItemStat.NAME).toString() : "Item";
+			StringBuilder displayName = new StringBuilder(mmoitem.hasData(ItemStats.NAME) ? mmoitem.getData(ItemStats.NAME).toString() : "Item");
 			for (NameModifier mod : nameModifiers) {
 				if (mod.getType() == ModifierType.PREFIX)
-					displayName = mod.getFormat() + " " + displayName;
+					displayName.insert(0, mod.getFormat() + " ");
 				if (mod.getType() == ModifierType.SUFFIX)
-					displayName += " " + mod.getFormat();
+					displayName.append(" ").append(mod.getFormat());
 			}
 
-			mmoitem.setData(ItemStat.NAME, new StringData(displayName));
+			mmoitem.setData(ItemStats.NAME, new StringData(displayName.toString()));
 		}
 
 		return mmoitem;

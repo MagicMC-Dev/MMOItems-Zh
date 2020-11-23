@@ -47,7 +47,7 @@ public class Contamination extends Ability {
 		new BukkitRunnable() {
 			double ti = 0;
 			int j = 0;
-			double dps = ability.getModifier("damage") / 2;
+			final double dps = ability.getModifier("damage") / 2;
 
 			public void run() {
 				j++;

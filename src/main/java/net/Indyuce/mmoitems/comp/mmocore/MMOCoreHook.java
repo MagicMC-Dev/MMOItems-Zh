@@ -57,7 +57,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
 	}
 
-	public class MMOCoreRPGPlayer extends RPGPlayer {
+	public static class MMOCoreRPGPlayer extends RPGPlayer {
 		private final PlayerData data;
 
 		public MMOCoreRPGPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {

@@ -73,7 +73,7 @@ public class DropTable {
 		return subtables.get(key);
 	}
 
-	public class Subtable {
+	public static class Subtable {
 		private final List<DropItem> items = new ArrayList<>();
 
 		/*

@@ -67,7 +67,7 @@ public class MythicMobsAbility extends Ability {
 		return new MythicMobsAbilityResult(data, target);
 	}
 
-	public class MythicMobsAbilityResult extends AbilityResult {
+	public static class MythicMobsAbilityResult extends AbilityResult {
 		private final LivingEntity target;
 
 		public MythicMobsAbilityResult(AbilityData ability, LivingEntity target) {

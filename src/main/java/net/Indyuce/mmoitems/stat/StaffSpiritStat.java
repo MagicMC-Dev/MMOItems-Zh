@@ -11,7 +11,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.VoidSpirit;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.XRaySpirit;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
@@ -38,7 +37,7 @@ public class StaffSpiritStat extends StringStat {
 
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
-		StaffSpirit staffSpirit = StaffSpirit.valueOf(((StringData) data).toString().toUpperCase().replace(" ", "_").replace("-", "_"));
+		StaffSpirit staffSpirit = StaffSpirit.valueOf(data.toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
 		item.getLore().insert("staff-spirit", staffSpirit.getName());
 	}
@@ -58,9 +57,9 @@ public class StaffSpiritStat extends StringStat {
 		private final String lore;
 		private final StaffAttackHandler handler;
 
-		private String name;
+		private final String name;
 
-		private StaffSpirit(String name, String lore, StaffAttackHandler handler) {
+		StaffSpirit(String name, String lore, StaffAttackHandler handler) {
 			this.name = name;
 			this.lore = lore;
 			this.handler = handler;

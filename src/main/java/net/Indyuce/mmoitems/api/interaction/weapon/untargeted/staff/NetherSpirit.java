@@ -22,8 +22,8 @@ public class NetherSpirit implements StaffAttackHandler {
 	@Override
 	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
 		new BukkitRunnable() {
-			Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.3);
-			Location loc = stats.getPlayer().getEyeLocation();
+			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.3);
+			final Location loc = stats.getPlayer().getEyeLocation();
 			int ti = 0;
 
 			public void run() {

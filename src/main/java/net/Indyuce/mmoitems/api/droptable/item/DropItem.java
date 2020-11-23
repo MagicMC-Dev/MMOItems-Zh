@@ -24,10 +24,10 @@ public abstract class DropItem {
 	 * used when loading drop tables from drops.yml
 	 */
 	public DropItem(String str) {
-		String[] argSplit = str.split("\\,");
+		String[] argSplit = str.split(",");
 		drop = Double.parseDouble(argSplit[0]) / 100;
 
-		String[] amountSplit = argSplit[1].split("\\-");
+		String[] amountSplit = argSplit[1].split("-");
 		min = Integer.parseInt(amountSplit[0]);
 		max = amountSplit.length > 1 ? Integer.parseInt(amountSplit[1]) : min;
 	}

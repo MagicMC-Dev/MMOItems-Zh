@@ -44,8 +44,8 @@ public class CraftingRecipeDisplay extends ConfigItem {
 		private final RecipeInfo recipe;
 		private final CraftingRecipe craftingRecipe;
 
-		private String name = new String(getName());
-		private List<String> lore = new ArrayList<>(getLore());
+		private final String name = getName();
+		private final List<String> lore = new ArrayList<>(getLore());
 
 		public ItemBuilder(RecipeInfo recipe) {
 			this.recipe = recipe;

@@ -32,7 +32,7 @@ public class MMOItemDropItem extends DropItem {
 		this.type = type;
 		this.id = id;
 
-		String[] argSplit = info.split("\\,");
+		String[] argSplit = info.split(",");
 		unidentification = Double.parseDouble(argSplit[2]) / 100;
 	}
 

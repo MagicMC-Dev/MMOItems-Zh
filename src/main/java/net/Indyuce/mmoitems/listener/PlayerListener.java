@@ -127,7 +127,7 @@ public class PlayerListener implements Listener {
 			return;
 		}
 
-		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), (Trident) event.getEntity(),
+		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), event.getEntity(),
 				type != null);
 	}
 }

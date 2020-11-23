@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SoundsEdition extends EditionInventory {
-	public static Map<Integer, String> correspondingSlot = new HashMap<>();
+	public static final Map<Integer, String> correspondingSlot = new HashMap<>();
 
 	static {
 		for (CustomSound sound : CustomSound.values())
@@ -85,7 +85,7 @@ public class SoundsEdition extends EditionInventory {
 
 		if (correspondingSlot.containsKey(event.getSlot())) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.CUSTOM_SOUNDS, event.getSlot()).enable("Write in the chat the custom sound you want to add.",
+				new StatEdition(this, ItemStats.CUSTOM_SOUNDS, correspondingSlot.get(event.getSlot())).enable("Write in the chat the custom sound you want to add.",
 						ChatColor.AQUA + "Format: [SOUND NAME] [VOLUME] [PITCH]",
 						ChatColor.AQUA + "Example: entity.generic.drink 1 1");
 

@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class StringListStat extends ItemStat {
     public StringListStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
@@ -39,7 +38,7 @@ public class StringListStat extends ItemStat {
     @Override
     public void whenApplied(ItemStackBuilder item, StatData data) {
         JsonArray array = new JsonArray();
-        ((StringListData) data).getList().forEach(line -> array.add(line));
+        ((StringListData) data).getList().forEach(array::add);
         item.addItemTag(new ItemTag(getPath(), array.toString()));
     }
 
@@ -79,10 +78,10 @@ public class StringListStat extends ItemStat {
     }
 
     @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
-        if (optional.isPresent()) {
+    public void whenDisplayed(List<String> lore, RandomStatData statData) {
+        if (statData.isPresent()) {
             lore.add(ChatColor.GRAY + "Current Value:");
-            StringListData data = (StringListData) optional.get();
+            StringListData data = (StringListData) statData;
             data.getList().forEach(element -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(element)));
 
         } else

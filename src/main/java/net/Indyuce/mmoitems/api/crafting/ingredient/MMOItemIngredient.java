@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import net.Indyuce.mmoitems.ItemStats;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -9,7 +10,6 @@ import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 
 public class MMOItemIngredient extends Ingredient {
@@ -65,11 +65,11 @@ public class MMOItemIngredient extends Ingredient {
 	}
 
 	private String findName() {
-		if (template.getBaseItemData().containsKey(ItemStat.NAME))
-			return template.getBaseItemData().get(ItemStat.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "");
-		if (template.getBaseItemData().containsKey(ItemStat.MATERIAL))
+		if (template.getBaseItemData().containsKey(ItemStats.NAME))
+			return template.getBaseItemData().get(ItemStats.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "");
+		if (template.getBaseItemData().containsKey(ItemStats.MATERIAL))
 			return MMOUtils.caseOnWords(
-					((MaterialData) template.getBaseItemData().get(ItemStat.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
+					((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 		return "Unrecognized Item";
 	}
 }

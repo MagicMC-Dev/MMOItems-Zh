@@ -1,15 +1,13 @@
 package net.Indyuce.mmoitems.api.recipe.workbench;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -20,14 +18,14 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
-import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class CustomRecipe implements Comparable<CustomRecipe> {
 	private final Type type;
@@ -54,7 +52,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 
 		Validate.isTrue(recipe.size() == 3, "Invalid shaped recipe");
 		for (int i = 0; i < 9; i++) {
-			List<String> line = Arrays.asList(recipe.get(i / 3).split("\\ "));
+			List<String> line = Arrays.asList(recipe.get(i / 3).split(" "));
 			while (line.size() < 3)
 				line.add("AIR");
 
@@ -113,10 +111,10 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		MMOItem mmo = p == null ? MMOItems.plugin.getMMOItem(type, id)
 				: MMOItems.plugin.getMMOItem(type, id, PlayerData.get(p));
 		ItemStack stack = mmo.newBuilder().build();
-		if (mmo.hasData(ItemStat.CRAFT_AMOUNT))
-			stack.setAmount((int) ((DoubleData) mmo.getData(ItemStat.CRAFT_AMOUNT)).getValue());
-		if (mmo.hasData(ItemStat.CRAFT_PERMISSION))
-			permission = new Permission(mmo.getData(ItemStat.CRAFT_PERMISSION).toString(), PermissionDefault.FALSE);
+		if (mmo.hasData(ItemStats.CRAFT_AMOUNT))
+			stack.setAmount((int) ((DoubleData) mmo.getData(ItemStats.CRAFT_AMOUNT)).getValue());
+		if (mmo.hasData(ItemStats.CRAFT_PERMISSION))
+			permission = new Permission(mmo.getData(ItemStats.CRAFT_PERMISSION).toString(), PermissionDefault.FALSE);
 		return stack;
 	}
 
@@ -147,11 +145,10 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 				secondRow.append(list.contains(4) ? "E" : " ");
 				secondRow.append(list.contains(5) ? "F" : " ");
 				if(!isTwoRows()) {
-					StringBuilder thirdRow = new StringBuilder();
-					thirdRow.append(list.contains(6) ? "G" : " ");
-					thirdRow.append(list.contains(7) ? "H" : " ");
-					thirdRow.append(list.contains(8) ? "I" : " ");
-					r.shape(firstRow.toString(), secondRow.toString(), thirdRow.toString());
+					r.shape(firstRow.toString(), secondRow.toString(),
+						(list.contains(6) ? "G" : " ") +
+						(list.contains(7) ? "H" : " ") +
+						(list.contains(8) ? "I" : " "));
 				}
 				else r.shape(firstRow.toString(), secondRow.toString());
 			}

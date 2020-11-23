@@ -85,9 +85,11 @@ public class MMOItem implements ItemReference {
 	 *         StatData instances! If you edit these statDatas, the previous
 	 *         mmoitem will be edited as well.
 	 */
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
+	@Override
 	public MMOItem clone() {
 		MMOItem clone = new MMOItem(type, id);
-		stats.forEach((stat, data) -> clone.stats.put(stat, data));
+		stats.forEach(clone.stats::put);
 		return clone;
 	}
 }

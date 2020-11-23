@@ -107,6 +107,7 @@ public class TemplateManager implements Reloadable {
 	 * @param type The item type
 	 * @param id   The item ID
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public MMOItemTemplate requestTemplateUpdate(Type type, String id) {
 		templates.removeValue(type, id);
 

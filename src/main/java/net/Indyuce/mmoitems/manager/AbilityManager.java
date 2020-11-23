@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsAbility;
 
+@SuppressWarnings("unused")
 public class AbilityManager {
 	// All abilities
 	private final Map<String, Ability> abilities = new HashMap<>();
@@ -94,7 +95,7 @@ public class AbilityManager {
 	 * Same as {@link #registerAbility(Ability ability)}
 	 * but for multiple abilities.
 	 * 
-	 * @param ability - A class that extends {@link Ability}
+	 * @param abilities - Refer to {@link #registerAbility(Ability ability)}
 	 */
 	public void registerAbilities(Ability... abilities) {
 		int count = 0;
@@ -163,7 +164,8 @@ public class AbilityManager {
 
 		File mythicMobs = new File(MMOItems.plugin.getDataFolder() + "/dynamic/mythic-mobs-abilities");
 		if (!mythicMobs.exists())
-			mythicMobs.mkdirs();
+			if(!mythicMobs.mkdirs())
+				MMOItems.plugin.getLogger().warning("Failed DIR generation!");
 
 		// Load MythicMobs addon skills
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {

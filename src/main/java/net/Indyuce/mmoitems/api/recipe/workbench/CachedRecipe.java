@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class CachedRecipe {
-	private Map<Integer, Integer> amounts = new HashMap<>();
+	private final Map<Integer, Integer> amounts = new HashMap<>();
 	private ItemStack stack;
 
 	public boolean isValid(ItemStack[] matrix) {

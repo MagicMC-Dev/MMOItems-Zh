@@ -21,11 +21,11 @@ public enum CraftingType {
 	private final Material material;
 	private final int[] mustBeHigher;
 
-	private CraftingType(int slot, String lore, VersionMaterial material, int... mustBeHigher) {
+	CraftingType(int slot, String lore, VersionMaterial material, int... mustBeHigher) {
 		this(slot, lore, material.toMaterial(), mustBeHigher);
 	}
 
-	private CraftingType(int slot, String lore, Material material, int... mustBeHigher) {
+	CraftingType(int slot, String lore, Material material, int... mustBeHigher) {
 		this.slot = slot;
 		this.lore = lore;
 		this.material = material;

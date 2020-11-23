@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.DyeColor;
@@ -16,8 +17,7 @@ public class ShieldPatternData implements StatData, RandomStatData {
 
 	public ShieldPatternData(DyeColor base, Pattern... patterns) {
 		this.base = base;
-		for (Pattern pattern : patterns)
-			this.patterns.add(pattern);
+		this.patterns.addAll(Arrays.asList(patterns));
 	}
 
 	public DyeColor getBaseColor() {

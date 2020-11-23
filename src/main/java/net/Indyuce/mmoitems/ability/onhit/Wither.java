@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
+@SuppressWarnings("unused")
 public class Wither extends Ability {
 	public Wither() {
 		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
@@ -52,7 +53,7 @@ public class Wither extends Ability {
 						double a = y * Math.PI + (j * Math.PI * 2 / 3);
 						double x = Math.cos(a) * (3 - y) / 2.5;
 						double z = Math.sin(a) * (3 - y) / 2.5;
-						loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(x, x, z), 1, new Particle.DustOptions(Color.BLACK, 1));
+						loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(x, y, z), 1, new Particle.DustOptions(Color.BLACK, 1));
 					}
 				}
 			}

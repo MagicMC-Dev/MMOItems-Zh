@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,7 +18,6 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -48,7 +48,7 @@ public class CraftingStationPreview extends PluginInventory {
 				sample.setAmount(64);
 				int amount = ing.getIngredient().getAmount();
 				// calculate how many full stacks there are
-				int stacks = (int) Math.floor(amount / 64);
+				int stacks = amount / 64;
 				// check for remainders
 				if ((stacks % 64) == 0)
 					// simply add the desired amount of ingredients
@@ -73,7 +73,7 @@ public class CraftingStationPreview extends PluginInventory {
 		}
 
 		for (int slot : fill)
-			inv.setItem(slot, ConfigItem.FILL.getItem());
+			inv.setItem(slot, ConfigItems.FILL.getItem());
 
 		if (recipe.getRecipe() instanceof CraftingRecipe) {
 			ItemStack item = ((CraftingRecipe) recipe.getRecipe()).getOutput().getPreview();
@@ -88,8 +88,8 @@ public class CraftingStationPreview extends PluginInventory {
 			inv.setItem(16, stack);
 		}
 
-		inv.setItem(10, ConfigItem.BACK.getItem());
-		inv.setItem(34, ConfigItem.CONFIRM.getItem());
+		inv.setItem(10, ConfigItems.BACK.getItem());
+		inv.setItem(34, ConfigItems.CONFIRM.getItem());
 		ItemStack book = recipe.display();
 		book.setType(Material.KNOWLEDGE_BOOK);
 		book.setAmount(1);
@@ -101,8 +101,8 @@ public class CraftingStationPreview extends PluginInventory {
 		book.setItemMeta(meta);
 		inv.setItem(28, book);
 
-		inv.setItem(20, page > 1 ? ConfigItem.PREVIOUS_PAGE.getItem() : ConfigItem.FILL.getItem());
-		inv.setItem(24, max < ingredients.size() ? ConfigItem.NEXT_PAGE.getItem() : ConfigItem.FILL.getItem());
+		inv.setItem(20, page > 1 ? ConfigItems.PREVIOUS_PAGE.getItem() : ConfigItems.FILL.getItem());
+		inv.setItem(24, max < ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());
 
 		return inv;
 	}
@@ -114,22 +114,22 @@ public class CraftingStationPreview extends PluginInventory {
 			return;
 
 		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
-		if (nbtItem.getString("ItemId").equals("CONFIRM")) {
-			previous.processRecipe(recipe);
-			previous.open();
+		switch (nbtItem.getString("ItemId")) {
+			case "CONFIRM":
+				previous.processRecipe(recipe);
+				previous.open();
+				break;
+			case "PREVIOUS_PAGE":
+				page--;
+				open();
+				break;
+			case "NEXT_PAGE":
+				page++;
+				open();
+				break;
+			case "BACK":
+				previous.open();
+				break;
 		}
-
-		else if (nbtItem.getString("ItemId").equals("PREVIOUS_PAGE")) {
-			page--;
-			open();
-		}
-
-		else if (nbtItem.getString("ItemId").equals("NEXT_PAGE")) {
-			page++;
-			open();
-		}
-
-		else if (nbtItem.getString("ItemId").equals("BACK"))
-			previous.open();
 	}
 }

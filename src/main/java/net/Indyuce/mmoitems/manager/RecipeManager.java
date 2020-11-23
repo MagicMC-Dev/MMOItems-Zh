@@ -102,7 +102,7 @@ public class RecipeManager implements Reloadable {
 
 		sortRecipes();
 		Bukkit.getScheduler().runTask(MMOItems.plugin,
-				() -> getLoadedRecipes().forEach(recipe -> Bukkit.addRecipe(recipe)));
+				() -> getLoadedRecipes().forEach(Bukkit::addRecipe));
 	}
 
 	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info,
@@ -165,8 +165,7 @@ public class RecipeManager implements Reloadable {
 	}
 
 	public void sortRecipes() {
-		List<CustomRecipe> temporary = new ArrayList<>();
-		temporary.addAll(craftingRecipes);
+		List<CustomRecipe> temporary = new ArrayList<>(craftingRecipes);
 		craftingRecipes.clear();
 		craftingRecipes.addAll(temporary.stream().sorted().collect(Collectors.toList()));
 	}
@@ -211,7 +210,7 @@ public class RecipeManager implements Reloadable {
 	}
 
 	public WorkbenchIngredient getWorkbenchIngredient(String input) {
-		String[] split = input.split("\\:");
+		String[] split = input.split(":");
 		int amount = split.length > 1 ? Integer.parseInt(split[1]) : 1;
 
 		if (split[0].contains(".")) {
@@ -237,18 +236,14 @@ public class RecipeManager implements Reloadable {
 	 * @author cympe
 	 */
 	public enum BurningRecipeType {
-		FURNACE((key, result, source, experience, cookTime) -> new FurnaceRecipe(key, result, source, experience,
-				cookTime)),
-		SMOKER((key, result, source, experience, cookTime) -> new SmokingRecipe(key, result, source, experience,
-				cookTime)),
-		CAMPFIRE((key, result, source, experience, cookTime) -> new CampfireRecipe(key, result, source, experience,
-				cookTime)),
-		BLAST((key, result, source, experience, cookTime) -> new BlastingRecipe(key, result, source, experience,
-				cookTime));
+		FURNACE(FurnaceRecipe::new),
+		SMOKER(SmokingRecipe::new),
+		CAMPFIRE(CampfireRecipe::new),
+		BLAST(BlastingRecipe::new);
 
 		private final RecipeProvider provider;
 
-		private BurningRecipeType(RecipeProvider provider) {
+		BurningRecipeType(RecipeProvider provider) {
 			this.provider = provider;
 		}
 

@@ -1,11 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
@@ -21,8 +16,12 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 
 public class UseItem {
 	protected final Player player;
@@ -66,8 +65,8 @@ public class UseItem {
 	}
 
 	public void executeCommands() {
-		if (MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_COMMANDS) && mmoitem.hasData(ItemStat.COMMANDS))
-			((CommandListData) mmoitem.getData(ItemStat.COMMANDS)).getCommands().forEach(command -> scheduleCommandExecution(command));
+		if (MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_COMMANDS) && mmoitem.hasData(ItemStats.COMMANDS))
+			((CommandListData) mmoitem.getData(ItemStats.COMMANDS)).getCommands().forEach(this::scheduleCommandExecution);
 	}
 
 	private void scheduleCommandExecution(CommandData command) {
@@ -90,8 +89,7 @@ public class UseItem {
 			player.setOp(true);
 			try {
 				Bukkit.dispatchCommand(player, parsed);
-			} catch (Exception e1) {
-			}
+			} catch (Exception ignored) {}
 			player.setOp(false);
 		} else
 			Bukkit.dispatchCommand(player, parsed);

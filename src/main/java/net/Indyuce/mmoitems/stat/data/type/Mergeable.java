@@ -7,5 +7,5 @@ public interface Mergeable {
 	 * which already has this type of item data, or when generating an item
 	 * randomly so that the item benefits from all modifiers
 	 */
-	public void merge(StatData data);
+	void merge(StatData data);
 }

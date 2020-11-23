@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
-import java.util.Optional;
 
+import net.Indyuce.mmoitems.ItemStats;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.google.gson.JsonParser;
@@ -51,7 +50,7 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to setup the item particles.");
 	}
 
@@ -59,8 +58,8 @@ public class ItemParticles extends ItemStat {
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String edited = (String) info[0];
 
+		String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
 		if (edited.equals("particle-type")) {
-			String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
 			ParticleType particleType = ParticleType.valueOf(format);
 
 			inv.getEditedSection().set("item-particles.type", particleType.name());
@@ -71,7 +70,7 @@ public class ItemParticles extends ItemStat {
 		}
 
 		if (edited.equals("particle-color")) {
-			String[] split = message.split("\\ ");
+			String[] split = message.split(" ");
 			int red = Integer.parseInt(split[0]), green = Integer.parseInt(split[1]), blue = Integer.parseInt(split[2]);
 
 			inv.getEditedSection().set("item-particles.color.red", red);
@@ -86,7 +85,6 @@ public class ItemParticles extends ItemStat {
 		}
 
 		if (edited.equals("particle")) {
-			String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
 			Particle particle = Particle.valueOf(format);
 
 			inv.getEditedSection().set("item-particles.particle", particle.name());
@@ -104,11 +102,11 @@ public class ItemParticles extends ItemStat {
 				+ " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
 	}
 
-	@EventHandler
+	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().hasTag("MMOITEMS_ITEM_PARTICLES"))
 			try {
-				mmoitem.setData(ItemStat.ITEM_PARTICLES,
+				mmoitem.setData(ItemStats.ITEM_PARTICLES,
 						new ParticleData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ITEM_PARTICLES")).getAsJsonObject()));
 			} catch (JsonSyntaxException exception) {
 				/*

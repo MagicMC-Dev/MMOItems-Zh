@@ -44,8 +44,8 @@ public class Light_Dash extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			Vector vec = stats.getPlayer().getEyeLocation().getDirection();
-			List<Integer> hit = new ArrayList<>();
+			final Vector vec = stats.getPlayer().getEyeLocation().getDirection();
+			final List<Integer> hit = new ArrayList<>();
 
 			public void run() {
 				if (j++ > 10 * Math.min(10, length))

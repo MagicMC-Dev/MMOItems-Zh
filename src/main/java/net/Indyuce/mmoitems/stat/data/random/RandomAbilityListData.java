@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,8 +16,7 @@ public class RandomAbilityListData implements RandomStatData {
 	}
 
 	public void add(RandomAbilityData... abilities) {
-		for (RandomAbilityData ability : abilities)
-			this.abilities.add(ability);
+		this.abilities.addAll(Arrays.asList(abilities));
 	}
 
 	public Set<RandomAbilityData> getAbilities() {

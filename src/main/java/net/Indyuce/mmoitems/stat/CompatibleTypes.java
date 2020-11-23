@@ -1,18 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -25,6 +15,14 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompatibleTypes extends ItemStat {
 	public CompatibleTypes() {
@@ -42,7 +40,7 @@ public class CompatibleTypes extends ItemStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStat.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
+			new StatEdition(inv, ItemStats.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("compatible-types")) {
@@ -70,11 +68,11 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 
-		if (optional.isPresent()) {
+		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			((StringListData) optional.get()).getList().forEach(str -> lore.add(ChatColor.GRAY + str));
+			((StringListData) statData).getList().forEach(str -> lore.add(ChatColor.GRAY + str));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
@@ -99,7 +97,7 @@ public class CompatibleTypes extends ItemStat {
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().hasTag("MMOITEMS_COMPATIBLE_TYPES"))
-			mmoitem.setData(ItemStat.COMPATIBLE_TYPES,
+			mmoitem.setData(ItemStats.COMPATIBLE_TYPES,
 					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_COMPATIBLE_TYPES")).getAsJsonArray()));
 	}
 }

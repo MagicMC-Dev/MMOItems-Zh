@@ -25,121 +25,101 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 import net.mmogroup.mmolib.version.VersionSound;
 
 public enum Element {
-	FIRE(Material.BLAZE_POWDER, ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, target.getHeight() / 2, 0), 14);
-			target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, .8f);
-			target.setFireTicks((int) (attack * 2));
-			result.addDamage(absolute);
-		}
+	FIRE(Material.BLAZE_POWDER, ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), (stats, result, target, attack, absolute) -> {
+		target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, target.getHeight() / 2, 0), 14);
+		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, .8f);
+		target.setFireTicks((int) (attack * 2));
+		result.addDamage(absolute);
 	}, 19, 25),
 
 	ICE(VersionMaterial.SNOWBALL.toMaterial(), ChatColor.AQUA, new ElementParticle(Particle.BLOCK_CRACK, .07f, 16, Material.ICE),
-			new ElementHandler() {
-				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-					new BukkitRunnable() {
-						double y = 0;
-						Location loc = target.getLocation();
+			(stats, result, target, attack, absolute) -> {
+				new BukkitRunnable() {
+					double y = 0;
+					final Location loc = target.getLocation();
 
-						public void run() {
-							for (int j = 0; j < 3; j++) {
-								if ((y += .07) >= 3)
-									cancel();
-								for (double k = 0; k < Math.PI * 2; k += Math.PI * 2 / 3)
-									loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5,
-											y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5), 1, new Particle.DustOptions(Color.WHITE, 1));
-							}
+					public void run() {
+						for (int j = 0; j < 3; j++) {
+							if ((y += .07) >= 3)
+								cancel();
+							for (double k = 0; k < Math.PI * 2; k += Math.PI * 2 / 3)
+								loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(y * Math.PI + k) * (3 - y) / 2.5,
+										y / 1.1, Math.sin(y * Math.PI + k) * (3 - y) / 2.5), 1, new Particle.DustOptions(Color.WHITE, 1));
 						}
-					}.runTaskTimer(MMOItems.plugin, 0, 1);
-					target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GLASS_BREAK, 2, 0);
-					target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (attack * 1.5), 5));
-					result.addDamage(absolute);
-				}
+					}
+				}.runTaskTimer(MMOItems.plugin, 0, 1);
+				target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GLASS_BREAK, 2, 0);
+				target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (attack * 1.5), 5));
+				result.addDamage(absolute);
 			}, 20, 24),
 
-	WIND(Material.FEATHER, ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDER_DRAGON_GROWL.toSound(), 2, 2f);
-			Vector vec = target.getLocation().subtract(stats.getPlayer().getLocation()).toVector().normalize().multiply(1.7).setY(.5);
-			target.setVelocity(vec);
-			for (Entity entity : target.getNearbyEntities(3, 1, 3))
-				if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
-					entity.playEffect(EntityEffect.HURT);
-					entity.setVelocity(vec);
-				}
-			result.addDamage(absolute);
-			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
-				target.getWorld().spawnParticle(Particle.CLOUD, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
-						Math.sin(k), .15);
-		}
+	WIND(Material.FEATHER, ChatColor.GRAY, new ElementParticle(Particle.EXPLOSION_NORMAL, .06f, 8), (stats, result, target, attack, absolute) -> {
+		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDER_DRAGON_GROWL.toSound(), 2, 2f);
+		Vector vec = target.getLocation().subtract(stats.getPlayer().getLocation()).toVector().normalize().multiply(1.7).setY(.5);
+		target.setVelocity(vec);
+		for (Entity entity : target.getNearbyEntities(3, 1, 3))
+			if (MMOUtils.canDamage(stats.getPlayer(), entity)) {
+				entity.playEffect(EntityEffect.HURT);
+				entity.setVelocity(vec);
+			}
+		result.addDamage(absolute);
+		for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
+			target.getWorld().spawnParticle(Particle.CLOUD, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
+					Math.sin(k), .15);
 	}, 28, 34),
 
 	EARTH(VersionMaterial.OAK_SAPLING.toMaterial(), ChatColor.GREEN, new ElementParticle(Particle.BLOCK_CRACK, .05f, 24, Material.DIRT),
-			new ElementHandler() {
-				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-					target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
-					target.getWorld().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1,
-							Material.DIRT.createBlockData());
-					result.addDamage(absolute);
+			(stats, result, target, attack, absolute) -> {
+				target.getWorld().playSound(target.getLocation(), Sound.BLOCK_GRASS_BREAK, 2, 0);
+				target.getWorld().spawnParticle(Particle.BLOCK_CRACK, target.getLocation().add(0, .1, 0), 64, 1, 0, 1,
+						Material.DIRT.createBlockData());
+				result.addDamage(absolute);
 
-					target.setVelocity(new Vector(0, 1, 0));
-					for (Entity entity : target.getNearbyEntities(3, 1, 3))
-						if (MMOUtils.canDamage(stats.getPlayer(), entity))
-							entity.setVelocity(new Vector(0, 1, 0));
-				}
+				target.setVelocity(new Vector(0, 1, 0));
+				for (Entity entity : target.getNearbyEntities(3, 1, 3))
+					if (MMOUtils.canDamage(stats.getPlayer(), entity))
+						entity.setVelocity(new Vector(0, 1, 0));
 			}, 29, 33),
 
-	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8), new ElementHandler() {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-			target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
-			for (Entity entity : target.getNearbyEntities(3, 2, 3))
-				if (MMOUtils.canDamage(stats.getPlayer(), entity))
-					new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(), (LivingEntity) entity);
+	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8), (stats, result, target, attack, absolute) -> {
+		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
+		for (Entity entity : target.getNearbyEntities(3, 2, 3))
+			if (MMOUtils.canDamage(stats.getPlayer(), entity))
+				new ItemAttackResult(result.getDamage() * attack / 100, DamageType.WEAPON).damage(stats.getPlayer(), (LivingEntity) entity);
 
-			result.addDamage(absolute);
-			for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
-				target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
-						Math.sin(k), .18);
-		}
+		result.addDamage(absolute);
+		for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)
+			target.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, target.getLocation().add(0, target.getHeight() / 2, 0), 0, Math.cos(k), .01,
+					Math.sin(k), .18);
 	}, 30, 32),
 
 	WATER(VersionMaterial.LILY_PAD.toMaterial(), ChatColor.BLUE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WATER),
-			new ElementHandler() {
-				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double attack, double absolute) {
-					ElementListener.weaken(target);
-					new BukkitRunnable() {
-						double step = Math.PI / 2;
-						Location loc = target.getLocation();
+			(stats, result, target, attack, absolute) -> {
+				ElementListener.weaken(target);
+				new BukkitRunnable() {
+					double step = Math.PI / 2;
+					final Location loc = target.getLocation();
 
-						public void run() {
-							if ((step -= Math.PI / 30) <= 0)
-								cancel();
+					public void run() {
+						if ((step -= Math.PI / 30) <= 0)
+							cancel();
 
-							for (double i = 0; i < Math.PI * 2; i += Math.PI / 16)
-								loc.getWorld().spawnParticle(Particle.WATER_DROP,
-										loc.clone().add(Math.cos(i) * Math.sin(step) * 2, Math.cos(step) * 2, 2 * Math.sin(i) * Math.sin(step)), 0);
-						}
-					}.runTaskTimer(MMOItems.plugin, 0, 1);
-				}
+						for (double i = 0; i < Math.PI * 2; i += Math.PI / 16)
+							loc.getWorld().spawnParticle(Particle.WATER_DROP,
+									loc.clone().add(Math.cos(i) * Math.sin(step) * 2, Math.cos(step) * 2, 2 * Math.sin(i) * Math.sin(step)), 0);
+					}
+				}.runTaskTimer(MMOItems.plugin, 0, 1);
 			}, 37, 43),
 
 	LIGHTNESS(Material.GLOWSTONE_DUST, ChatColor.WHITE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WHITE_WOOL),
-			new ElementHandler() {
+			(stats, result, target, damage, absolute) -> {
+				// TODO Auto-generated method stub
 
-				@Override
-				public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute) {
-					// TODO Auto-generated method stub
-
-				}
 			}, 38, 42),
 
-	DARKNESS(Material.COAL, ChatColor.DARK_GRAY, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.COAL_BLOCK), new ElementHandler() {
+	DARKNESS(Material.COAL, ChatColor.DARK_GRAY, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.COAL_BLOCK), (stats, result, target, damage, absolute) -> {
+		// TODO Auto-generated method stub
 
-		@Override
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute) {
-			// TODO Auto-generated method stub
-
-		}
 	}, 39, 41),
 
 	;
@@ -151,7 +131,7 @@ public enum Element {
 	private final ElementHandler handler;
 	private final int damageGuiSlot, defenseGuiSlot;
 
-	private Element(Material material, ChatColor color, ElementParticle particle, ElementHandler handler, int damageGuiSlot, int defenseGuiSlot) {
+	Element(Material material, ChatColor color, ElementParticle particle, ElementHandler handler, int damageGuiSlot, int defenseGuiSlot) {
 		this.item = new ItemStack(material);
 		this.name = MMOUtils.caseOnWords(name().toLowerCase());
 		this.color = color;
@@ -190,8 +170,8 @@ public enum Element {
 		return defenseGuiSlot;
 	}
 
-	public static interface ElementHandler {
-		public void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute);
+	public interface ElementHandler {
+		void elementAttack(CachedStats stats, ItemAttackResult result, LivingEntity target, double damage, double absolute);
 	}
 
 	public static class ElementParticle {

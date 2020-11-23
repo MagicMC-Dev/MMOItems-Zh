@@ -64,32 +64,30 @@ public class WorldGenManager implements Listener, Reloadable {
 	@EventHandler
 	public void a(ChunkLoadEvent event) {
 		if(event.isNewChunk()) {
-		    Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
-    			assigned.forEach((block, template) -> {
-    				if(random.nextDouble() < template.getChunkChance())
-    					for(int i = 0; i < template.getVeinCount(); i++) {
-    						int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();
-    						Location generatePoint = event.getChunk().getBlock(random.nextInt(16), y, random.nextInt(16)).getLocation();
-    
-    						if(template.canGenerate(generatePoint)) {
-    							Block modify = generatePoint.getWorld().getBlockAt(generatePoint);
-    
-    							for(int j = 0; j < template.getVeinSize(); j++) {
-    								if(template.canReplace(modify.getType())) {
-    								    final Block fModify = modify;
-    								    Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-    								        fModify.setType(block.getState().getType(), false);
-    								        fModify.setBlockData(block.getState().getBlockData(), false);
-    								    });
-    								}
-    
-    								BlockFace nextFace = faces[random.nextInt(faces.length)];
-    								modify = modify.getRelative(nextFace);
-    							}
-    						}
-    					}
-    			});
-		    });
+		    Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> assigned.forEach((block, template) -> {
+				if(random.nextDouble() < template.getChunkChance())
+					for(int i = 0; i < template.getVeinCount(); i++) {
+						int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();
+						Location generatePoint = event.getChunk().getBlock(random.nextInt(16), y, random.nextInt(16)).getLocation();
+
+						if(template.canGenerate(generatePoint)) {
+							Block modify = generatePoint.getWorld().getBlockAt(generatePoint);
+
+							for(int j = 0; j < template.getVeinSize(); j++) {
+								if(template.canReplace(modify.getType())) {
+									final Block fModify = modify;
+									Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
+										fModify.setType(block.getState().getType(), false);
+										fModify.setBlockData(block.getState().getBlockData(), false);
+									});
+								}
+
+								BlockFace nextFace = faces[random.nextInt(faces.length)];
+								modify = modify.getRelative(nextFace);
+							}
+						}
+					}
+			}));
 		}
 	}
 

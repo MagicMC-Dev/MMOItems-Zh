@@ -10,5 +10,5 @@ public interface ItemRestriction {
 	 * restrictions to MMOItems easily. if the method returns false, the item
 	 * cannot be used by the player.
 	 */
-	public boolean canUse(RPGPlayer player, NBTItem item, boolean message);
+	boolean canUse(RPGPlayer player, NBTItem item, boolean message);
 }

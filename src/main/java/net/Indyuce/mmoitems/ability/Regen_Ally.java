@@ -38,8 +38,8 @@ public class Regen_Ally extends Ability {
 		new BukkitRunnable() {
 			double ti = 0;
 			double a = 0;
-			double duration = Math.min(ability.getModifier("duration"), 60) * 20;
-			double hps = ability.getModifier("heal") / duration * 4;
+			final double duration = Math.min(ability.getModifier("duration"), 60) * 20;
+			final double hps = ability.getModifier("heal") / duration * 4;
 
 			public void run() {
 				ti++;
@@ -52,7 +52,7 @@ public class Regen_Ally extends Ability {
 				target.getWorld().spawnParticle(Particle.HEART, target.getLocation().add(1.3 * Math.cos(a), .3, 1.3 * Math.sin(a)), 0);
 
 				if (ti % 4 == 0)
-					MMOUtils.heal((Player) target, hps);
+					MMOUtils.heal(target, hps);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
@@ -60,7 +60,7 @@ public class Regen_Ally extends Ability {
 	/*
 	 * TargetAbilityResult but only targets players
 	 */
-	public class FriendlyTargetAbilityResult extends AbilityResult {
+	public static class FriendlyTargetAbilityResult extends AbilityResult {
 		private final LivingEntity target;
 
 		public FriendlyTargetAbilityResult(AbilityData ability, Player caster, LivingEntity target) {

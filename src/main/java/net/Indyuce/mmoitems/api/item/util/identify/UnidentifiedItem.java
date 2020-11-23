@@ -1,19 +1,6 @@
 package net.Indyuce.mmoitems.api.item.util.identify;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
@@ -22,10 +9,21 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UnidentifiedItem extends ConfigItem {
 	public UnidentifiedItem(Type type) {
@@ -47,8 +45,8 @@ public class UnidentifiedItem extends ConfigItem {
 		private final int amount;
 		private final NBTItem item;
 
-		private String name = new String(getName());
-		private List<String> lore = new ArrayList<>(getLore());
+		private String name = getName();
+		private final List<String> lore = new ArrayList<>(getLore());
 
 		public ItemBuilder(NBTItem item) {
 			this.amount = item.getItem().getAmount();
@@ -64,7 +62,7 @@ public class UnidentifiedItem extends ConfigItem {
 			 */
 			MMOItem mmoitem = new VolatileMMOItem(item);
 			ItemTier tier = MMOItems.plugin.getTiers().findTier(mmoitem);
-			int level = mmoitem.hasData(ItemStat.REQUIRED_LEVEL) ? (int) ((DoubleData) mmoitem.getData(ItemStat.REQUIRED_LEVEL)).getValue() : -1;
+			int level = mmoitem.hasData(ItemStats.REQUIRED_LEVEL) ? (int) ((DoubleData) mmoitem.getData(ItemStats.REQUIRED_LEVEL)).getValue() : -1;
 
 			/*
 			 * load placeholders
@@ -84,11 +82,7 @@ public class UnidentifiedItem extends ConfigItem {
 			/*
 			 * remove useless lore lines
 			 */
-			for (Iterator<String> iterator = lore.iterator(); iterator.hasNext();) {
-				String next = iterator.next();
-				if ((next.startsWith("{tier}") && tier == null) || (next.startsWith("{range}") && (tier == null || level < 0)))
-					iterator.remove();
-			}
+			lore.removeIf(s -> (s.startsWith("{tier}") && tier == null) || (s.startsWith("{range}") && (tier == null || level < 0)));
 
 			/*
 			 * apply placeholders

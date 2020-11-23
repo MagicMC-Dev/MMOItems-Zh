@@ -96,7 +96,7 @@ public class DropCommandTreeNode extends CommandTreeNode {
 			return CommandResult.FAILURE;
 		}
 
-		String[] splitAmount = args[8].split("\\-");
+		String[] splitAmount = args[8].split("-");
 		if (splitAmount.length != 2) {
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "The drop quantity format is incorrect.");
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Format: [min]-[max]");

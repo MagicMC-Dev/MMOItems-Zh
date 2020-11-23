@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.manager;
 
+import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
@@ -31,7 +33,7 @@ import java.util.logging.Level;
 public class ConfigManager implements Reloadable {
 
 	// cached config files
-	private ConfigFile abilities, items, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
+	private ConfigFile abilities, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
 
 	// cached config options
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
@@ -55,36 +57,37 @@ public class ConfigManager implements Reloadable {
 
 		File craftingStationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
 		if (!craftingStationsFolder.exists()) {
-			craftingStationsFolder.mkdir();
-			try {
-				JarFile jarFile = new JarFile(MMOItems.plugin.getJarFile());
-				for (Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
-					String name = entries.nextElement().getName();
-					if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
-						Files.copy(MMOItems.plugin.getResource(name),
-								new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("\\/")[2]).toPath());
+			if(craftingStationsFolder.mkdir()) {
+				try {
+					JarFile jarFile = new JarFile(MMOItems.plugin.getJarFile());
+					for (Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
+						String name = entries.nextElement().getName();
+						if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length())
+							Files.copy(MMOItems.plugin.getResource(name),
+									new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("/")[2]).toPath());
+					}
+					jarFile.close();
+				} catch (IOException exception) {
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
 				}
-				jarFile.close();
-			} catch (IOException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
-			}
+			} else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
 		}
 
 		for (String language : languages) {
 			File languageFolder = new File(MMOItems.plugin.getDataFolder() + "/language/" + language);
 			if (!languageFolder.exists())
-				languageFolder.mkdir();
-
-			for (String fileName : fileNames)
-				if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
-					try {
-						Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
-								new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(),
-								StandardCopyOption.REPLACE_EXISTING);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+				if(languageFolder.mkdir()) {
+					for (String fileName : fileNames)
+						if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
+							try {
+								Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
+										new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(),
+										StandardCopyOption.REPLACE_EXISTING);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+				} else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
 		}
 
 		// load files with default configuration
@@ -99,7 +102,7 @@ public class ConfigManager implements Reloadable {
 		MMOItems.plugin.getTypes().getAll().forEach(type -> type.getConfigFile().setup());
 
 		ConfigFile items = new ConfigFile("/language", "items");
-		for (ConfigItem item : ConfigItem.values) {
+		for (ConfigItem item : ConfigItems.values) {
 			if (!items.getConfig().contains(item.getId())) {
 				items.getConfig().createSection(item.getId());
 				item.setup(items.getConfig().getConfigurationSection(item.getId()));
@@ -167,7 +170,6 @@ public class ConfigManager implements Reloadable {
 		MMOItems.plugin.reloadConfig();
 
 		abilities = new ConfigFile("/language", "abilities");
-		items = new ConfigFile("/language", "items");
 		loreFormat = new ConfigFile("/language", "lore-format");
 		messages = new ConfigFile("/language", "messages");
 		potionEffects = new ConfigFile("/language", "potion-effects");
@@ -203,7 +205,8 @@ public class ConfigManager implements Reloadable {
 							+ exception.getMessage());
 		}
 
-		for (ConfigItem item : ConfigItem.values)
+		ConfigFile items = new ConfigFile("/language", "items");
+		for (ConfigItem item : ConfigItems.values)
 			item.update(items.getConfig().getConfigurationSection(item.getId()));
 	}
 
@@ -264,7 +267,8 @@ public class ConfigManager implements Reloadable {
 	private void mkdir(String path) {
 		File folder = new File(MMOItems.plugin.getDataFolder() + "/" + path);
 		if (!folder.exists())
-			folder.mkdir();
+			if(!folder.mkdir())
+				MMOCore.log(Level.WARNING, "Could not create directory!");
 	}
 	
 	/*
@@ -322,11 +326,11 @@ public class ConfigManager implements Reloadable {
 		 */
 		private final boolean manual;
 
-		private DefaultFile(String resourceName, String folderPath, String fileName) {
+		DefaultFile(String resourceName, String folderPath, String fileName) {
 			this(resourceName, folderPath, fileName, false);
 		}
 
-		private DefaultFile(String resourceName, String folderPath, String fileName, boolean manual) {
+		DefaultFile(String resourceName, String folderPath, String fileName, boolean manual) {
 			this.resourceName = resourceName;
 			this.folderPath = folderPath;
 			this.fileName = fileName;
@@ -356,7 +360,7 @@ public class ConfigManager implements Reloadable {
 	}
 
 	public static class YamlConverter {
-		private File file;
+		private final File file;
 
 		private final String fileName;
 
@@ -368,35 +372,31 @@ public class ConfigManager implements Reloadable {
 
 		public boolean convert() throws IOException {
 			if (!file.exists())
-				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) { // this
-																																			// converts
-																																			// old
-																																			// custom-blocks.yml
-					file.createNewFile(); // creates the file
+				if (fileName.equalsIgnoreCase("block.yml") && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()) {
+					// creates the file
+					if(file.createNewFile()) {
+						YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
 
-					YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
-
-					YamlConfiguration newConfig = oldConfig;
-
-					for (String id : oldConfig.getKeys(false)) {
-						ConfigurationSection section = newConfig.getConfigurationSection(id);
-						section.set("material", "STONE"); // adds material
-						section.set("block-id", Integer.parseInt(id)); // adds
-																		// block
-																		// id
-						for (String node : section.getKeys(false)) {
-							Object value = section.get(node);
-							if (node.equalsIgnoreCase("display-name")) { // converts
-																			// name
-																			// format
-								section.set("display-name", null);
-								section.set("name", value);
+						for (String id : config.getKeys(false)) {
+							ConfigurationSection section = config.getConfigurationSection(id);
+							section.set("material", "STONE"); // adds material
+							section.set("block-id", Integer.parseInt(id)); // adds
+							// block
+							// id
+							for (String node : section.getKeys(false)) {
+								Object value = section.get(node);
+								if (node.equalsIgnoreCase("display-name")) { // converts
+									// name
+									// format
+									section.set("display-name", null);
+									section.set("name", value);
+								}
 							}
 						}
+						config.save(file);
+						MMOItems.plugin.getLogger().log(Level.CONFIG, "Successfully converted custom-blocks.yml");
+						return true;
 					}
-					newConfig.save(file);
-					MMOItems.plugin.getLogger().log(Level.CONFIG, "Successfully converted custom-blocks.yml");
-					return true;
 				}
 			return false;
 		}

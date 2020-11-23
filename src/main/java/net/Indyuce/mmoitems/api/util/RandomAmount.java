@@ -19,9 +19,9 @@ public class RandomAmount {
 	 *            String to extract the random amount from
 	 */
 	public RandomAmount(String str) {
-		String[] split = str.split("\\-");
-		min = Integer.valueOf(split[0]);
-		max = split.length > 1 ? Integer.valueOf(split[1]) : 0;
+		String[] split = str.split("-");
+		min = Integer.parseInt(split[0]);
+		max = split.length > 1 ? Integer.parseInt(split[1]) : 0;
 	}
 
 	public int getMin() {

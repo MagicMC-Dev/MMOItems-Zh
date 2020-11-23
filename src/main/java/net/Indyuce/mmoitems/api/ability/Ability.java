@@ -153,11 +153,11 @@ public abstract class Ability {
 
 		private final boolean message;
 
-		private CastingMode() {
+		CastingMode() {
 			this(true);
 		}
 
-		private CastingMode(boolean message) {
+		CastingMode(boolean message) {
 			this.message = message;
 		}
 

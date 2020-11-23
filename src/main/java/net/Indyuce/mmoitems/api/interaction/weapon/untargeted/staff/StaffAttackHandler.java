@@ -8,9 +8,9 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public interface StaffAttackHandler {
-	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range);
+	void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range);
 
-	static final Random random = new Random();
+	Random random = new Random();
 
 	default Location getGround(Location loc) {
 		for (int j = 0; j < 20; j++) {

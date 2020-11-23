@@ -45,10 +45,10 @@ public class Shockwave extends Ability {
 		double length = ability.getModifier("length");
 
 		new BukkitRunnable() {
-			Vector vec = stats.getPlayer().getEyeLocation().getDirection().setY(0);
-			Location loc = stats.getPlayer().getLocation();
+			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().setY(0);
+			final Location loc = stats.getPlayer().getLocation();
 			int ti = 0;
-			List<Integer> hit = new ArrayList<>();
+			final List<Integer> hit = new ArrayList<>();
 
 			public void run() {
 				ti++;

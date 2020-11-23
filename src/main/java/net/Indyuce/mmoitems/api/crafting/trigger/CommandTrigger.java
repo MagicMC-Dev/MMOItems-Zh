@@ -37,7 +37,7 @@ public class CommandTrigger extends Trigger {
 			player.setOp(true);
 			try {
 				Bukkit.dispatchCommand(player, command);
-			} catch (Exception e1) {}
+			} catch (Exception ignored) {}
 			player.setOp(false);
 		} else
 			Bukkit.dispatchCommand(player, command);

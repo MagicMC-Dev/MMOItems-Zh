@@ -1,17 +1,15 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import org.bukkit.configuration.ConfigurationSection;
-
 import com.google.gson.JsonObject;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class UpgradeData implements StatData, RandomStatData {
 	private final String reference, template;
@@ -51,10 +49,6 @@ public class UpgradeData implements StatData, RandomStatData {
 		return max;
 	}
 
-	public boolean hasMaxUpgrades() {
-		return max != 0;
-	}
-
 	public boolean canLevelUp() {
 		return max == 0 || level < max;
 	}
@@ -80,19 +74,22 @@ public class UpgradeData implements StatData, RandomStatData {
 		// change display name
 		String suffix = MMOLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
-			if (mmoitem.hasData(ItemStat.NAME)) {
-				StringData nameData = (StringData) mmoitem.getData(ItemStat.NAME);
+			if (mmoitem.hasData(ItemStats.NAME)) {
+				StringData nameData = (StringData) mmoitem.getData(ItemStats.NAME);
 				nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1))
 						: nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
-			} else if (mmoitem.hasData(ItemStat.LORE)) {
-				StringListData loreData = (StringListData) mmoitem.getData(ItemStat.LORE);
+			}
+
+		/*TODO: implement this as a new dynamic lore type
+		else if (mmoitem.hasData(ItemStats.LORE)) {
+				StringListData loreData = (StringListData) mmoitem.getData(ItemStats.LORE);
 				loreData.getList().forEach(line -> {
 					if (line.contains("%upgrade_level%") || line.contains(suffix.replace("#lvl#", "" + level))) {
 						line.replace("%upgrade_level%", suffix.replace("#lvl#", "" + level + 1));
 						line.replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + level + 1));
 					}
 				});
-			}
+			}*/
 
 		// apply stat updates
 		getTemplate().upgrade(mmoitem);

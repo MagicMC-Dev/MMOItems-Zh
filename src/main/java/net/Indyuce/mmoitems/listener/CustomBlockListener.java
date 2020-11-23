@@ -126,7 +126,7 @@ public class CustomBlockListener implements Listener {
 		return (material == Material.BROWN_MUSHROOM_BLOCK || material == Material.MUSHROOM_STEM || material == Material.RED_MUSHROOM_BLOCK);
 	}
 
-	public class MushroomReplacer implements Listener {
+	public static class MushroomReplacer implements Listener {
 		@EventHandler(ignoreCancelled = true)
 		public void d(BlockBreakEvent event) {
 			if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getType())

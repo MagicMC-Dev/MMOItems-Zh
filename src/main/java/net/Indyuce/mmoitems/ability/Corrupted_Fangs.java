@@ -47,10 +47,10 @@ public class Corrupted_Fangs extends Ability implements Listener {
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
-			Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).multiply(2);
-			Location loc = stats.getPlayer().getLocation();
+			final Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).multiply(2);
+			final Location loc = stats.getPlayer().getLocation();
 			double ti = 0;
-			FangsHandler handler = new FangsHandler(stats, ability.getModifier("damage"));
+			final FangsHandler handler = new FangsHandler(stats, ability.getModifier("damage"));
 
 			public void run() {
 				if (ti++ > 6) {

@@ -28,11 +28,10 @@ public class LoreFormat extends StringStat {
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String format = message;
-		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(format), "Couldn't find lore format with ID '" + format + "'.");
+		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(message), "Couldn't find lore format with ID '" + message + "'.");
 
-		inv.getEditedSection().set(getPath(), format);
+		inv.getEditedSection().set(getPath(), message);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore Format successfully changed to " + format + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore Format successfully changed to " + message + ".");
 	}
 }

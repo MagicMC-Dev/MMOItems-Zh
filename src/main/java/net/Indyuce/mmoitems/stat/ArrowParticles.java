@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -24,7 +25,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ArrowParticles extends ItemStat {
 	public ArrowParticles() {
@@ -64,7 +64,7 @@ public class ArrowParticles extends ItemStat {
 				int amount = json.get("Amount").getAsInt();
 				double offset = json.get("Offset").getAsDouble();
 
-				mmoitem.setData(ItemStat.ARROW_PARTICLES,
+				mmoitem.setData(ItemStats.ARROW_PARTICLES,
 						ParticleData.isColorable(particle)
 								? new ArrowParticlesData(particle, amount, offset, json.get("Red").getAsInt(), json.get("Green").getAsInt(),
 										json.get("Blue").getAsInt())
@@ -86,7 +86,7 @@ public class ArrowParticles extends ItemStat {
 		String edited = (String) info[0];
 
 		if (edited.equals("color")) {
-			String[] split = message.split("\\ ");
+			String[] split = message.split(" ");
 			int red = Integer.parseInt(split[0]), green = Integer.parseInt(split[1]), blue = Integer.parseInt(split[2]);
 			inv.getEditedSection().set("arrow-particles.color.red", red);
 			inv.getEditedSection().set("arrow-particles.color.green", green);
@@ -124,13 +124,9 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
-
-		if (!optional.isPresent())
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
-
-		else {
-			ArrowParticlesData cast = (ArrowParticlesData) optional.get();
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+		if (statData.isPresent()) {
+			ArrowParticlesData cast = (ArrowParticlesData) statData;
 			lore.add(ChatColor.GRAY + "Current Value:");
 
 			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD
@@ -145,6 +141,7 @@ public class ArrowParticles extends ItemStat {
 			else
 				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + cast.getSpeed());
 		}
+		else lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit.");

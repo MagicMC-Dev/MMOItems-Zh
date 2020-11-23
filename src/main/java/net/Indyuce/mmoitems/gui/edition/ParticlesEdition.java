@@ -1,8 +1,16 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.particle.api.ParticleType;
+import net.Indyuce.mmoitems.stat.data.ParticleData;
+import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,17 +23,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.particle.api.ParticleType;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParticlesEdition extends EditionInventory {
 	public ParticlesEdition(Player player, MMOItemTemplate template) {
@@ -41,13 +40,12 @@ public class ParticlesEdition extends EditionInventory {
 		ParticleType particleType = null;
 		try {
 			particleType = ParticleType.valueOf(getEditedSection().getString("item-particles.type"));
-		} catch (Exception e) {
-		}
+		} catch (Exception ignored) {}
 
 		ItemStack particleTypeItem = VersionMaterial.PINK_STAINED_GLASS.toItem();
 		ItemMeta particleTypeItemMeta = particleTypeItem.getItemMeta();
 		particleTypeItemMeta.setDisplayName(ChatColor.GREEN + "Particle Pattern");
-		List<String> particleTypeItemLore = new ArrayList<String>();
+		List<String> particleTypeItemLore = new ArrayList<>();
 		particleTypeItemLore.add(ChatColor.GRAY + "The particle pattern defines how");
 		particleTypeItemLore.add(ChatColor.GRAY + "particles behave, what pattern they follow");
 		particleTypeItemLore.add(ChatColor.GRAY + "when displayed or what shape they form.");
@@ -66,8 +64,7 @@ public class ParticlesEdition extends EditionInventory {
 		Particle particle = null;
 		try {
 			particle = Particle.valueOf(getEditedSection().getString("item-particles.particle"));
-		} catch (Exception e) {
-		}
+		} catch (Exception ignored) {}
 
 		ItemStack particleItem = new ItemStack(Material.BLAZE_POWDER);
 		ItemMeta particleItemMeta = particleItem.getItemMeta();
@@ -90,7 +87,7 @@ public class ParticlesEdition extends EditionInventory {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
-				List<String> modifierItemLore = new ArrayList<String>();
+				List<String> modifierItemLore = new ArrayList<>();
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is a pattern modifier.");
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "Changing this value will slightly");
 				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "customize the particle pattern.");
@@ -154,7 +151,7 @@ public class ParticlesEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.ITEM_PARTICLES, "particle").enable("Write in the chat the particle you want.");
+				new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle").enable("Write in the chat the particle you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
 				if (getEditedSection().contains("item-particles.particle")) {
@@ -167,7 +164,7 @@ public class ParticlesEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Color")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.ITEM_PARTICLES, "particle-color").enable("Write in the chat the RGB color you want.",
+				new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-color").enable("Write in the chat the RGB color you want.",
 						ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -181,7 +178,7 @@ public class ParticlesEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Pattern")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				new StatEdition(this, ItemStat.ITEM_PARTICLES, "particle-type").enable("Write in the chat the particle type you want.");
+				new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-type").enable("Write in the chat the particle type you want.");
 				player.sendMessage("");
 				player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Available Particles Patterns");
 				for (ParticleType type : ParticleType.values())
@@ -208,7 +205,7 @@ public class ParticlesEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(this, ItemStat.ITEM_PARTICLES, tag).enable("Write in the chat the value you want.");
+			new StatEdition(this, ItemStats.ITEM_PARTICLES, tag).enable("Write in the chat the value you want.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (getEditedSection().contains("item-particles." + tag)) {

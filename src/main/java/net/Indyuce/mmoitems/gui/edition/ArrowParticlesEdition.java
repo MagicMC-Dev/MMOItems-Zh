@@ -1,8 +1,13 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.stat.data.ParticleData;
+import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,14 +20,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArrowParticlesEdition extends EditionInventory {
 	public ArrowParticlesEdition(Player player, MMOItemTemplate template) {
@@ -38,8 +37,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		Particle particle = null;
 		try {
 			particle = Particle.valueOf(getEditedSection().getString("arrow-particles.particle"));
-		} catch (Exception e) {
-		}
+		} catch (Exception ignored) {}
 
 		ItemStack particleItem = new ItemStack(Material.BLAZE_POWDER);
 		ItemMeta particleItemMeta = particleItem.getItemMeta();
@@ -139,7 +137,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.ARROW_PARTICLES, "particle").enable("Write in the chat the particle you want.");
+				new StatEdition(this, ItemStats.ARROW_PARTICLES, "particle").enable("Write in the chat the particle you want.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
 				if (getEditedSection().contains("arrow-particles.particle")) {
@@ -152,7 +150,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Color")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStat.ARROW_PARTICLES, "color").enable("Write in the chat the RGB color you want.",
+				new StatEdition(this, ItemStats.ARROW_PARTICLES, "color").enable("Write in the chat the RGB color you want.",
 						ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -167,7 +165,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 		for (String string : new String[] { "amount", "offset", "speed" })
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + MMOUtils.caseOnWords(string))) {
 				if (event.getAction() == InventoryAction.PICKUP_ALL)
-					new StatEdition(this, ItemStat.ARROW_PARTICLES, string).enable("Write in the chat the " + string + " you want.");
+					new StatEdition(this, ItemStats.ARROW_PARTICLES, string).enable("Write in the chat the " + string + " you want.");
 
 				if (event.getAction() == InventoryAction.PICKUP_HALF) {
 					if (getEditedSection().contains("arrow-particles." + string)) {

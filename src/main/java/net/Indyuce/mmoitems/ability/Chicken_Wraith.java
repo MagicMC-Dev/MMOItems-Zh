@@ -48,7 +48,7 @@ public class Chicken_Wraith extends Ability {
 
 		new BukkitRunnable() {
 			int j = 0;
-			EggHandler handler = new EggHandler(ability.getModifier("damage"));
+			final EggHandler handler = new EggHandler(ability.getModifier("damage"));
 
 			public void run() {
 				if (j++ > duration) {
@@ -70,7 +70,7 @@ public class Chicken_Wraith extends Ability {
 		}.runTaskTimer(MMOItems.plugin, 0, 2);
 	}
 
-	public class EggHandler extends TemporaryListener {
+	public static class EggHandler extends TemporaryListener {
 		private final List<Integer> entities = new ArrayList<>();
 		private final double damage;
 

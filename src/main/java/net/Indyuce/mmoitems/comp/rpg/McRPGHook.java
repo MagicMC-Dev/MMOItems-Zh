@@ -24,7 +24,7 @@ public class McRPGHook implements RPGHandler, Listener {
 	public void refreshStats(PlayerData data) {
 	}
 
-	public class McRPGPlayer extends RPGPlayer {
+	public static class McRPGPlayer extends RPGPlayer {
 		public McRPGPlayer(PlayerData playerData) {
 			super(playerData);
 		}

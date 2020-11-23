@@ -26,7 +26,7 @@ public class SoulboundInfo {
 	private final Location loc;
 	private final Player player;
 
-	private static Map<UUID, SoulboundInfo> info = new HashMap<>();
+	private static final Map<UUID, SoulboundInfo> info = new HashMap<>();
 
 	/**
 	 * Used when a player dies and when some items must not be dropped and needs

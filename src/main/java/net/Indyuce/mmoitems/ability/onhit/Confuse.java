@@ -35,7 +35,7 @@ public class Confuse extends Ability {
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_SHEEP_DEATH, 1, 2);
 		new BukkitRunnable() {
 			final Location loc = target.getLocation();
-			double rads = Math.toRadians(stats.getPlayer().getEyeLocation().getYaw() - 90);
+			final double rads = Math.toRadians(stats.getPlayer().getEyeLocation().getYaw() - 90);
 			double ti = rads;
 
 			public void run() {

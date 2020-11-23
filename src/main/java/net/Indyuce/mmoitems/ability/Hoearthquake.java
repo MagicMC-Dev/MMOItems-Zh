@@ -34,8 +34,8 @@ public class Hoearthquake extends Ability {
 	@Override
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		new BukkitRunnable() {
-			Vector vec = stats.getPlayer().getEyeLocation().getDirection().setY(0);
-			Location loc = stats.getPlayer().getLocation();
+			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().setY(0);
+			final Location loc = stats.getPlayer().getLocation();
 			int ti = 0;
 
 			public void run() {

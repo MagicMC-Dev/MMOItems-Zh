@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -28,10 +27,10 @@ import net.mmogroup.mmolib.version.VersionMaterial;
  * TODO Needs some cleanup
  * 
  * @author cympe
- *
  */
 public class Crafting extends ItemStat {
-	@Deprecated
+	// @Deprecated
+	// why was this deprecated??
 	public Crafting() {
 		super("CRAFTING", new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial()), "Crafting",
 				new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
@@ -53,7 +52,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> optional) {
+	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the crafting edition menu.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all crafting recipes.");
 	}
@@ -62,57 +61,65 @@ public class Crafting extends ItemStat {
 	public void whenInput(EditionInventory inv, String message, Object... info) {
 		String type = (String) info[0];
 
-		if (type.equals("recipe")) {
-			int slot = (int) info[2];
+		switch (type) {
+			case "recipe":
+				int slot = (int) info[2];
 
-			if (validate(inv.getPlayer(), message)) {
-				if (((String) info[1]).equals("shaped")) {
-					List<String> newList = inv.getEditedSection().getStringList("crafting.shaped.1");
-					String[] newArray = newList.get((int) Math.floor(slot / 3)).split("\\ ");
-					newArray[slot % 3] = message;
-					newList.set((int) Math.floor(slot / 3), (newArray[0] + " " + newArray[1] + " " + newArray[2]));
+				if (validate(inv.getPlayer(), message)) {
+					if ((info[1]).equals("shaped")) {
+						List<String> newList = inv.getEditedSection().getStringList("crafting.shaped.1");
+						String[] newArray = newList.get(slot / 3).split(" ");
+						newArray[slot % 3] = message;
+						newList.set(slot / 3, (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
-					for(String s : newList) {
-						if(s.equals("AIR AIR AIR"))
-							continue;
-						inv.getEditedSection().set("crafting.shaped.1", newList);
-						inv.registerTemplateEdition();
-						break;
-					}
-				} else {
-					List<String> newList = inv.getEditedSection().getStringList("crafting.shapeless.1");
-					newList.set(slot, message);
+						for (String s : newList) {
+							if (s.equals("AIR AIR AIR"))
+								continue;
+							inv.getEditedSection().set("crafting.shaped.1", newList);
+							inv.registerTemplateEdition();
+							break;
+						}
+					} else {
+						List<String> newList = inv.getEditedSection().getStringList("crafting.shapeless.1");
+						newList.set(slot, message);
 
-					for(String s : newList) {
-						if(s.equals("AIR"))
-							continue;
-						inv.getEditedSection().set("crafting.shapeless.1", newList);
-						inv.registerTemplateEdition();
-						break;
+						for (String s : newList) {
+							if (s.equals("AIR"))
+								continue;
+							inv.getEditedSection().set("crafting.shapeless.1", newList);
+							inv.registerTemplateEdition();
+							break;
+						}
 					}
 				}
+				break;
+			case "item": {
+				String[] args = message.split(" ");
+				Validate.isTrue(args.length == 3, "Invalid format");
+				Validate.isTrue(validate(inv.getPlayer(), args[0]));
+				int time = Integer.parseInt(args[1]);
+				double exp = MMOUtils.parseDouble(args[2]);
+
+				inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
+				inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
+				inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
+				inv.registerTemplateEdition();
+				break;
 			}
-		} else if (type.equals("item")) {
-			String[] args = message.split("\\ ");
-			Validate.isTrue(args.length == 3, "Invalid format");
-			Validate.isTrue(validate(inv.getPlayer(), args[0]));
-			int time = Integer.parseInt(args[1]);
-			double exp = MMOUtils.parseDouble(args[2]);
+			case "smithing": {
+				String[] args = message.split(" ");
+				Validate.isTrue(args.length == 2, "Invalid format");
+				Validate.isTrue(validate(inv.getPlayer(), args[0]) && validate(inv.getPlayer(), args[1]));
 
-			inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
-			inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
-			inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
-			inv.registerTemplateEdition();
-		} else if (type.equals("smithing")) {
-			String[] args = message.split("\\ ");
-			Validate.isTrue(args.length == 2, "Invalid format");
-			Validate.isTrue(validate(inv.getPlayer(), args[0]) && validate(inv.getPlayer(), args[1]));
-
-			inv.getEditedSection().set("crafting.smithing.1.input1", args[0]);
-			inv.getEditedSection().set("crafting.smithing.1.input2", args[1]);
-			inv.registerTemplateEdition();
-		} else
-			MMOItems.plugin.getLogger().warning("Something went wrong!");
+				inv.getEditedSection().set("crafting.smithing.1.input1", args[0]);
+				inv.getEditedSection().set("crafting.smithing.1.input2", args[1]);
+				inv.registerTemplateEdition();
+				break;
+			}
+			default:
+				MMOItems.plugin.getLogger().warning("Something went wrong!");
+				break;
+		}
 	}
 
 	@Override
@@ -130,7 +137,7 @@ public class Crafting extends ItemStat {
 
 	private boolean validate(Player player, String input) {
 		if (input.contains(":")) {
-			String[] count = input.split("\\:");
+			String[] count = input.split(":");
 
 			if (count.length != 2) {
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");

@@ -29,7 +29,7 @@ public class MMOItemsCommandTreeRoot extends CommandTreeRoot {
 		try {
 			Type type = Type.get(explorer.getArguments()[1]);
 			MMOItems.plugin.getTemplates().getTemplates(type).forEach(template -> list.add(template.getId()));
-		} catch (Exception exception) {
+		} catch (Exception ignored) {
 		}
 	});
 

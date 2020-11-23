@@ -52,10 +52,10 @@ public class PluginUpdateManager {
 								try {
 
 									List<String> ingredients = config.getStringList("recipes." + key + ".ingredients");
-									List<String> newest = new ArrayList<String>();
+									List<String> newest = new ArrayList<>();
 
 									for (String ingredient : ingredients) {
-										String[] split = ingredient.split("\\ ");
+										String[] split = ingredient.split(" ");
 										if (split[0].equals("mmoitem")) {
 											String format = "mmoitem{type=" + split[1] + ",id=" + split[2];
 											if (split.length > 3)
@@ -89,7 +89,7 @@ public class PluginUpdateManager {
 									newest = new ArrayList<>();
 
 									for (String condition : conditions) {
-										String[] split = condition.split("\\ ");
+										String[] split = condition.split(" ");
 										if (split[0].equalsIgnoreCase("class"))
 											newest.add("class{list=\"" + condition.replace(split[0] + " ", "").replace(" ", ",") + "\"}");
 										else if (split[0].equalsIgnoreCase("perms"))
@@ -192,7 +192,7 @@ public class PluginUpdateManager {
 								if (str != null)
 									try {
 
-										String[] split = str.split("\\=");
+										String[] split = str.split("=");
 										Validate.isTrue(split.length == 2);
 										double val1 = Double.parseDouble(split[0]);
 										double val2 = Double.parseDouble(split[1]);
@@ -205,7 +205,7 @@ public class PluginUpdateManager {
 										config.getConfig().set(id + ".base." + statKey + ".spread", rel / 3);
 										config.getConfig().set(id + ".base." + statKey + ".max-spread", rel);
 
-									} catch (Exception e) {
+									} catch (Exception ignored) {
 									}
 							}
 

@@ -6,8 +6,9 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.comp.mythicmobs.stat.FactionDamage;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*
  * this loads mmoitems comp for mythic mobs
@@ -16,19 +17,25 @@ import java.util.LinkedList;
 public class MythicMobsLoader {
 
     public MythicMobsLoader() {
-        for (String faction : this.getFactions()) {
-            MMOItems.plugin.getStats().register(new FactionDamage(faction));
-        }
+        // Gonna keep the try catch here for a safety net.
+        try {
+            for (String faction : this.getFactions()) {
+                MMOItems.plugin.getStats().register(new FactionDamage(faction));
+            }
+        } catch (NullPointerException ignored) {}
     }
 
-    private Collection<String> getFactions(){
-        Collection<String> allFactions = new LinkedList<>();
-        Collection<MythicMob> mobs = new ArrayList<>(MythicMobs.inst().getMobManager().getVanillaTypes());
+    private Set<String> getFactions(){
+        // Returned Set.
+        Set<String> allFactions = new HashSet<>();
+        // Collects all mythic mobs + edited vanilla mobs in mythic mobs.
+        List<MythicMob> mobs = new ArrayList<>(MythicMobs.inst().getMobManager().getVanillaTypes());
         mobs.addAll(MythicMobs.inst().getMobManager().getMobTypes());
+        // Adds their faction to the set if it is set.
         for (MythicMob mob : mobs) {
-            if (mob.getFaction() != null && !allFactions.contains(mob.getFaction())) {
-                    allFactions.add(mob.getFaction());
-            }
+            // Checks if it has a faction.
+            if (mob.hasFaction())
+                allFactions.add(mob.getFaction());
         }
         return allFactions;
     }

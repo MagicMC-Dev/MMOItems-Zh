@@ -130,7 +130,8 @@ public class ItemStackBuilder {
 		JsonArray array = new JsonArray();
 		for (String s : list)
 			array.add(s);
-		tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
+		if(array.size() != 0)
+			tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
 		meta.setLore(list);
 
 		/*

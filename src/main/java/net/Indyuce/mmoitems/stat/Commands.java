@@ -23,7 +23,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class Commands extends ItemStat {
 	private static final int max = 15;
 
 	public Commands() {
-		super("COMMANDS", new ItemStack(VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial()), "Commands",
+		super("COMMANDS", VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial(), "Commands",
 				new String[] { "The commands your item", "performs when right clicked." }, new String[] { "!armor", "!block", "!gem_stone", "all" });
 	}
 

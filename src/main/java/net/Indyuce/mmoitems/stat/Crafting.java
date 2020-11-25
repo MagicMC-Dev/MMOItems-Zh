@@ -1,15 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -22,6 +12,14 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.List;
 
 /**
  * TODO Needs some cleanup
@@ -32,7 +30,7 @@ public class Crafting extends ItemStat {
 	// @Deprecated
 	// why was this deprecated??
 	public Crafting() {
-		super("CRAFTING", new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial()), "Crafting",
+		super("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "Crafting",
 				new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
 	}
 

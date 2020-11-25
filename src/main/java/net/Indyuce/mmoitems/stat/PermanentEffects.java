@@ -26,7 +26,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.Set;
 
 public class PermanentEffects extends ItemStat {
 	public PermanentEffects() {
-		super("PERM_EFFECTS", new ItemStack(Material.POTION), "Permanent Effects",
+		super("PERM_EFFECTS", Material.POTION, "Permanent Effects",
 				new String[] { "The potion effects your", "item grants to the holder." }, new String[] { "!miscellaneous", "!block", "all" });
 	}
 

@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.JsonParser;
 
@@ -27,7 +26,7 @@ import net.mmogroup.mmolib.api.util.AltChar;
 
 public class UpgradeStat extends ItemStat {
 	public UpgradeStat() {
-		super("UPGRADE", new ItemStack(Material.FLINT), "Item Upgrading",
+		super("UPGRADE", Material.FLINT, "Item Upgrading",
 				new String[] { "Upgrading your item improves its", "current stats. It requires either a", "consumable or a specific crafting ",
 						"station. Upgrading may sometimes &cfail&7..." },
 				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "consumable", "accessory" });

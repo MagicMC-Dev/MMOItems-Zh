@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.stat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -18,7 +17,7 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat {
 	public MaximumDurability() {
-		super("MAX_DURABILITY", new ItemStack(Material.SHEARS), "Maximum Durability", new String[] { "The amount of uses before your", "item becomes unusable/breaks." }, new String[] { "!block", "all"});
+		super("MAX_DURABILITY", Material.SHEARS, "Maximum Durability", new String[] { "The amount of uses before your", "item becomes unusable/breaks." }, new String[] { "!block", "all"});
 	}
 
 	/*

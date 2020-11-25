@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.comp.mmocore.stat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -18,7 +17,7 @@ public class Required_Profession extends DoubleStat implements ItemRestriction, 
     private final Profession profession;
 
     public Required_Profession(Profession profession) {
-        super("PROFESSION_" + profession.getId().toUpperCase().replace("-", "_"), new ItemStack(Material.PINK_DYE), profession.getName() + " Requirement (MMOCore)", new String[] { "Amount of " + profession.getName() + " levels the", "player needs to use the item." }, new String[] { "!block", "all" });
+        super("PROFESSION_" + profession.getId().toUpperCase().replace("-", "_"), Material.PINK_DYE, profession.getName() + " Requirement (MMOCore)", new String[] { "Amount of " + profession.getName() + " levels the", "player needs to use the item." }, new String[] { "!block", "all" });
         this.profession = profession;
     }
 

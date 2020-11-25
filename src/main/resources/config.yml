@@ -1,3 +1,12 @@
+# ███    ███ ███    ███  ██████  ██ ████████ ███████ ███    ███ ███████ 
+# ████  ████ ████  ████ ██.  .██ ██    ██    ██      ████  ████ ██      
+# ██ ████ ██ ██ ████ ██ ██    ██ ██    ██    █████   ██ ████ ██ ███████ 
+# ██  ██  ██ ██  ██  ██ ██\__/██ ██    ██    ██      ██  ██  ██      ██ 
+# ██      ██ ██      ██  ██████  ██    ██    ███████ ██      ██ ███████ 
+# a Spigot Plugin by Team Requiem
+
+# DO NOT TOUCH
+config-version: 1.4
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -53,10 +62,9 @@ default:
 item-glow: true
 
 item-upgrading:
-
     # Display name suffix for upgraded items.
     name-suffix: '&f &e(+#lvl#)'
-    
+
     # Whether to display in Item Name or Lore
     # Disable if item renaming is available to players.
     # If set to 'false', remember to include
@@ -78,7 +86,23 @@ soulbound:
     damage:
         base: 1
         per-lvl: 1
-        
+    # Whether or not soulbound items should be
+    # kept when a player dies.
+    keep-on-death: true
+    # Whether or not soulbound item can be
+    # dropped by the player
+    can-drop: true
+    auto-bind:
+        # The default Soulbind level to apply
+        # when automatically soulbinding
+        level: 1
+        # Here you can disable individual events for when
+        # Items should automatically soulbind to the player
+        # (Requires the 'Auto-Bind' stat to be true)
+        disable-on-pickup: false
+        disable-on-craft: false
+        disable-on-click: false
+
 # Enable, disable, and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.
 item-ability:
@@ -107,19 +131,17 @@ item-ability:
         cooldown: 4
 
 gem-sockets:
-
     # Define the text you need to enter in the
     # item gem sockets if you want to create an
     # uncolored gem socket i.e a socket for any type of gem.
     uncolored: 'Uncolored'
 
 custom-blocks:
-
     # Whether or not custom blocks should
     # generate in the world according to
     # their generation template.
     enable-world-gen: false
-    
+
     # Whether or not to remove mushroom block drops
     # from the droplist when mining a mushroom block
     # with silk-touch.
@@ -171,22 +193,22 @@ game-indicators:
         enabled: true
         decimal-format: '0.#'
         format: '&c-#'
-#        format: '&c&l✦ #'
+        #format: '&c&l✦ #'
     heal:
         enabled: true
         decimal-format: '0.#'
         format: '&a+#'
-#        format: '&a&l❤ #'
+        #format: '&a&l❤ #'
 
 recipes:
-  # Allows you to use stack amounts for recipe ingredients.
-  # This will enable a custom crafting system which
-  # can cause lots of trouble. If you don't need specific
-  # ingredient amounts then DO NOT enable this!
-  recipe-amounts: false
-  # Enables the vanilla recipe book for MMOItem recipes!
-  # THIS IS NOT COMPATIBLE WITH RECIPE AMOUNTS!
-  use-recipe-book: true
+    # Allows you to use stack amounts for recipe ingredients.
+    # This will enable a custom crafting system which
+    # can cause lots of trouble. If you don't need specific
+    # ingredient amounts then DO NOT enable this!
+    recipe-amounts: false
+    # Enables the vanilla recipe book for MMOItem recipes!
+    # THIS IS NOT COMPATIBLE WITH RECIPE AMOUNTS!
+    use-recipe-book: true
 
 # "repair" prevents players from repairing MMOItems.
 # "smelt" prevents players from smelting MMOItems.
@@ -204,7 +226,7 @@ disable-interactions:
 
 # Block types that can't be broken by an ability/item effect
 block-blacklist:
-- OBSIDIAN
+    - OBSIDIAN
 
 # Allows/disables the permissions needed in order to use items/abilities.
 # General permission node for abilities: mmoitems.ability.ability-id
@@ -221,3 +243,8 @@ permissions:
 disable-vanilla-recipes: []
 # - DIAMOND_PICKAXE
 # - IRON_BLOCK
+
+
+
+# When I was a kid, I saw the Mona Lisa in my school art book...
+# The fist time I saw her, with her hands on her knee... how do I say this...

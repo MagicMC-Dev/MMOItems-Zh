@@ -8,11 +8,10 @@ import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.inventory.ItemStack;
 
 public class Armor extends AttributeStat {
 	public Armor() {
-		super("ARMOR", new ItemStack(VersionMaterial.GOLDEN_CHESTPLATE.toMaterial()), "Armor", new String[] { "The armor given to the holder." },
+		super("ARMOR", VersionMaterial.GOLDEN_CHESTPLATE.toMaterial(), "Armor", new String[] { "The armor given to the holder." },
 				Attribute.GENERIC_ARMOR);
 	}
 

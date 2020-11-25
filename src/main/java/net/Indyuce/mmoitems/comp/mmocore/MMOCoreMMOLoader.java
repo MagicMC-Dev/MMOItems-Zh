@@ -1,11 +1,5 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
-import java.util.Optional;
-
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmocore.api.droptable.condition.Condition;
@@ -26,25 +20,28 @@ import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemsBlockType;
 import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
 import net.Indyuce.mmoitems.comp.mmocore.load.RandomItemDropItem;
-//import net.Indyuce.mmoitems.comp.mmocore.load.RandomItemDropItem;
 import net.Indyuce.mmoitems.comp.mmocore.load.SmeltMMOItemExperienceSource;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.Optional;
 
 public class MMOCoreMMOLoader extends MMOLoader {
 
-	private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toItem(), "Mana Regeneration",
+	private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Mana Regeneration",
 			new String[] { "Increases mana regen." });
-	private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Max Stamina",
+	private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Max Stamina",
 			new String[] { "Adds stamina to your max stamina bar." });
-	private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toItem(),
+	private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(),
 			"Stamina Regeneration", new String[] { "Increases stamina regen." });
-	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toItem(),
+	private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(),
 			"Additional Experience", new String[] { "Additional MMOCore main class experience in %." });
-	private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", new ItemStack(Material.BREAD), "Health Regeneration",
+	private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", Material.BREAD, "Health Regeneration",
 			new String[] { "Increases MMOCore health regen.", "In %." });
 
 	/*

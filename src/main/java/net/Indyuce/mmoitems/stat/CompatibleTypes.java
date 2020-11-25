@@ -19,14 +19,13 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompatibleTypes extends ItemStat {
 	public CompatibleTypes() {
-		super("COMPATIBLE_TYPES", new ItemStack(VersionMaterial.COMMAND_BLOCK.toMaterial()), "Compatible Types",
+		super("COMPATIBLE_TYPES", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible Types",
 				new String[] { "The item types this skin is", "compatible with." }, new String[] { "skin" });
 	}
 

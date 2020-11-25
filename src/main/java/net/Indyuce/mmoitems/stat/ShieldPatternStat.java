@@ -23,7 +23,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ import java.util.Set;
 
 public class ShieldPatternStat extends StringStat {
 	public ShieldPatternStat() {
-		super("SHIELD_PATTERN", new ItemStack(Material.SHIELD), "Shield Pattern", new String[] { "The color & patterns", "of your shield." },
+		super("SHIELD_PATTERN", Material.SHIELD, "Shield Pattern", new String[] { "The color & patterns", "of your shield." },
 				new String[] { "all" }, Material.SHIELD);
 	}
 

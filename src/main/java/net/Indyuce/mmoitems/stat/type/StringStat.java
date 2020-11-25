@@ -15,13 +15,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class StringStat extends ItemStat {
-	public StringStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
-		super(id, item, name, lore, types, materials);
+	public StringStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
+		super(id, mat, name, lore, types, materials);
 	}
 
 	@Override

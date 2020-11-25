@@ -219,6 +219,7 @@ public class ItemUse implements Listener {
 			((Gauntlet) weapon).specialAttack(target);
 	}
 
+	// TODO: Rewrite this with a custom 'ApplyMMOItemEvent'?
 	@EventHandler
 	public void e(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();

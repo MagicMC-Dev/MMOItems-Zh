@@ -22,13 +22,12 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class CustomSounds extends ItemStat implements GemStoneStat {
 	public CustomSounds() {
-		super("SOUNDS", new ItemStack(Material.JUKEBOX), "Custom Sounds", new String[] { "The custom sounds your item will use." },
+		super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[] { "The custom sounds your item will use." },
 				new String[] { "all" });
 	}
 

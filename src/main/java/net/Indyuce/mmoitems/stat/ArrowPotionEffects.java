@@ -26,7 +26,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
@@ -39,7 +38,7 @@ public class ArrowPotionEffects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public ArrowPotionEffects() {
-		super("ARROW_POTION_EFFECTS", new ItemStack(Material.TIPPED_ARROW), "Arrow Potion Effects",
+		super("ARROW_POTION_EFFECTS", Material.TIPPED_ARROW, "Arrow Potion Effects",
 				new String[] { "The effects to be applied when", "entities are shot by this bow" }, new String[] { "bow", "crossbow" });
 	}
 

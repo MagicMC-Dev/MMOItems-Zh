@@ -78,7 +78,7 @@ public class PlayerListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void applySoulbound(PlayerDeathEvent event) {
-		if (event.getKeepInventory())
+		if (event.getKeepInventory() || !MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
 			return;
 
 		Player player = event.getEntity();
@@ -106,7 +106,8 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void readSoulbound(PlayerRespawnEvent event) {
-		SoulboundInfo.read(event.getPlayer());
+		if(MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
+			SoulboundInfo.read(event.getPlayer());
 	}
 
 	@EventHandler(ignoreCancelled = true)

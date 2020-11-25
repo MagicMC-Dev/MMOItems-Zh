@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -13,7 +12,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class LoreFormat extends StringStat {
 	public LoreFormat() {
-		super("LORE_FORMAT", new ItemStack(Material.MAP), "Lore Format", new String[] { "The lore format decides",
+		super("LORE_FORMAT", Material.MAP, "Lore Format", new String[] { "The lore format decides",
 				"where each stat goes.", "&9Formats can be configured in", "&9the lore-formats folder" },
 				new String[] { "all" });
 	}

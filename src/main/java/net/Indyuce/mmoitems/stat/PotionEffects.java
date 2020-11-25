@@ -21,7 +21,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 
@@ -34,7 +33,7 @@ public class PotionEffects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public PotionEffects() {
-		super("POTION_EFFECT", new ItemStack(Material.POTION), "Potion Effects",
+		super("POTION_EFFECT", Material.POTION, "Potion Effects",
 				new String[] { "The effects of your potion.", "(May have an impact on color)." }, new String[] { "all" }, Material.POTION,
 				Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}

@@ -27,7 +27,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.#");
 
 	public Abilities() {
-		super("ABILITY", new ItemStack(Material.BLAZE_POWDER), "Item Abilities",
+		super("ABILITY", Material.BLAZE_POWDER, "Item Abilities",
 				new String[] { "Make your item cast amazing abilities", "to kill monsters or buff yourself." }, new String[] { "!block", "all" });
 	}
 

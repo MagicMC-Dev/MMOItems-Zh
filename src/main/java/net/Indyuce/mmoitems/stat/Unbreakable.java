@@ -1,19 +1,17 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 
 public class Unbreakable extends BooleanStat {
 	public Unbreakable() {
-		super("UNBREAKABLE", new ItemStack(Material.ANVIL), "Unbreakable", new String[] { "Infinite durability if set to true." }, new String[] { "all" });
+		super("UNBREAKABLE", Material.ANVIL, "Unbreakable", new String[] { "Infinite durability if set to true." }, new String[] { "all" });
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -14,7 +13,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class RepairMaterial extends StringStat {
 	public RepairMaterial() {
-		super("REPAIR_MATERIAL", new ItemStack(Material.ANVIL), "Repair Material",
+		super("REPAIR_MATERIAL", Material.ANVIL, "Repair Material",
 				new String[] { "The material to be used when", "repairing this item in an anvil.", "", "Currently serves no purpose!" },
 				new String[] { "all" });
 

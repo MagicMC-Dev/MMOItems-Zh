@@ -21,14 +21,13 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Lore extends StringListStat implements GemStoneStat {
 	public Lore() {
-		super("LORE", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Lore", new String[] { "The item lore." }, new String[] { "all" });
+		super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[] { "The item lore." }, new String[] { "all" });
 	}
 
 	@Override

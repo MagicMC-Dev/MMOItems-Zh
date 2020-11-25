@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ArrowParticles extends ItemStat {
 	public ArrowParticles() {
-		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toItem(), "Arrow Particles",
+		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toMaterial(), "Arrow Particles",
 				new String[] { "Particles that display around", "the arrows your bow fires." }, new String[] { "bow", "crossbow" });
 	}
 

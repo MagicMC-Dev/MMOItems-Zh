@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -11,7 +10,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class PickaxePower extends DoubleStat {
 	public PickaxePower() {
-		super("PICKAXE_POWER", new ItemStack(Material.IRON_PICKAXE), "Pickaxe Power",
+		super("PICKAXE_POWER", Material.IRON_PICKAXE, "Pickaxe Power",
 				new String[] { "The breaking strength of the", "item when mining custom blocks." }, new String[] { "tool" });
 	}
 

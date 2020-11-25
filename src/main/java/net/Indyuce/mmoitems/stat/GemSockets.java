@@ -22,14 +22,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GemSockets extends ItemStat {
 	public GemSockets() {
-		super("GEM_SOCKETS", new ItemStack(Material.EMERALD), "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." },
+		super("GEM_SOCKETS", Material.EMERALD, "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." },
 				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
 	}
 

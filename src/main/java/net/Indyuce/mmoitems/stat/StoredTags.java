@@ -12,7 +12,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class StoredTags extends InternalStat implements GemStoneStat {
 	public StoredTags() {
-		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toItem(), "Stored Tags",
+		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toMaterial(), "Stored Tags",
 				new String[] { "You found a secret dev easter egg", "introduced during the 2020 epidemic!" }, new String[] { "all" });
 	}
 

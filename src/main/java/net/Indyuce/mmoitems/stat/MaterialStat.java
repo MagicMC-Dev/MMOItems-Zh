@@ -22,13 +22,12 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class MaterialStat extends ItemStat {
     public MaterialStat() {
-        super("MATERIAL", new ItemStack(VersionMaterial.GRASS_BLOCK.toMaterial()), "Material",
+        super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "Material",
                 new String[]{"Your item material."}, new String[]{"all"});
     }
 

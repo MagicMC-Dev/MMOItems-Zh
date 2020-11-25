@@ -10,7 +10,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class ItemLevel extends InternalStat {
 	public ItemLevel() {
-		super("ITEM_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toItem(), "Item Level", new String[] { "The item level" }, new String[] { "all" });
+		super("ITEM_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Item Level", new String[] { "The item level" }, new String[] { "all" });
 	}
 
 	@Override

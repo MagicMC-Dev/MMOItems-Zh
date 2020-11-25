@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -12,7 +10,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class SoulboundLevel extends DoubleStat {
 	public SoulboundLevel() {
-		super("SOULBOUND_LEVEL", new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbinding Level", new String[] { "The soulbound level defines how much", "damage players will take when trying", "to use a soulbound item. It also determines", "how hard it is to break the binding." }, new String[] { "consumable" });
+		super("SOULBOUND_LEVEL", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbinding Level", new String[] { "The soulbound level defines how much", "damage players will take when trying", "to use a soulbound item. It also determines", "how hard it is to break the binding." }, new String[] { "consumable" });
 	}
 
 	// writes soulbound level with roman writing in lore

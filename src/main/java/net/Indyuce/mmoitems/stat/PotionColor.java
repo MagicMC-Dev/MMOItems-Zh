@@ -15,14 +15,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import java.util.List;
 
 public class PotionColor extends StringStat {
 	public PotionColor() {
-		super("POTION_COLOR", new ItemStack(Material.POTION), "Potion Color",
+		super("POTION_COLOR", Material.POTION, "Potion Color",
 				new String[] { "The color of your potion.", "(Doesn't impact the effects)." }, new String[] { "all" }, Material.POTION,
 				Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}

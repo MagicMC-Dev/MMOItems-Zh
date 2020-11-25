@@ -17,7 +17,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -25,8 +24,8 @@ import java.util.List;
 public class BooleanStat extends ItemStat {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
 
-	public BooleanStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
-		super(id, item, name, lore, types, materials);
+	public BooleanStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
+		super(id, mat, name, lore, types, materials);
 	}
 
 	@Override

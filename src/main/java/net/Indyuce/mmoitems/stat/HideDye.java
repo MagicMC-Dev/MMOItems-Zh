@@ -9,11 +9,10 @@ import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 
 public class HideDye extends BooleanStat {
 	public HideDye() {
-		super("HIDE_DYE", new ItemStack(Material.CYAN_DYE), "Hide Dyed", new String[] { "Enable to hide the 'Dyed' tag from the item." }, new String[] { "all" },
+		super("HIDE_DYE", Material.CYAN_DYE, "Hide Dyed", new String[] { "Enable to hide the 'Dyed' tag from the item." }, new String[] { "all" },
 			Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 
 		try {

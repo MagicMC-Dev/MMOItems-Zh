@@ -23,7 +23,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +30,7 @@ import java.util.List;
 
 public class Permission extends StringListStat implements ItemRestriction, GemStoneStat {
 	public Permission() {
-		super("PERMISSION", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Permission",
+		super("PERMISSION", VersionMaterial.OAK_SIGN.toMaterial(), "Permission",
 				new String[] { "The permission needed to use this item." }, new String[] { "!block", "all" });
 	}
 

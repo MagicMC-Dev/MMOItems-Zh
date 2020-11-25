@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class SkullTextureStat extends StringStat {
 	public SkullTextureStat() {
-		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toItem(), "Skull Texture",
+		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "Skull Texture",
 				new String[] { "The head texture &nvalue&7.", "Can be found on heads databases." }, new String[] { "all" },
 				VersionMaterial.PLAYER_HEAD.toMaterial());
 	}

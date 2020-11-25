@@ -1,17 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-
-import net.Indyuce.mmoitems.ItemStats;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Particle;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -26,10 +17,17 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.List;
 
 public class ItemParticles extends ItemStat {
 	public ItemParticles() {
-		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toItem(), "Item Particles", new String[] { "The particles displayed when",
+		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toMaterial(), "Item Particles", new String[] { "The particles displayed when",
 				"holding/wearing your item.", "", ChatColor.BLUE + "A tutorial is available on the wiki." }, new String[] { "all", "!block" });
 	}
 

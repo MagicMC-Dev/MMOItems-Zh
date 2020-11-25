@@ -18,14 +18,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemTypeRestriction extends StringStat {
 	public ItemTypeRestriction() {
-		super("ITEM_TYPE_RESTRICTION", new ItemStack(Material.EMERALD), "Item Type Restriction",
+		super("ITEM_TYPE_RESTRICTION", Material.EMERALD, "Item Type Restriction",
 				new String[] { "This option defines the item types", "on which your gem can be applied." }, new String[] { "gem_stone" });
 	}
 

@@ -21,14 +21,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
-		super("GRANTED_PERMISSIONS", new ItemStack(Material.NAME_TAG), "Granted Permissions", new String[] { "A list of permissions that will,", "be granted by the item." }, new String[] { "all" });
+		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "Granted Permissions", new String[] { "A list of permissions that will,", "be granted by the item." }, new String[] { "all" });
 	}
 
 	@Override

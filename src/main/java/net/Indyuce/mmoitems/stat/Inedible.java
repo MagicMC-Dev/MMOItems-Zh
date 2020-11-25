@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
@@ -11,7 +10,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class Inedible extends BooleanStat {
 	public Inedible() {
-		super("INEDIBLE", new ItemStack(Material.POISONOUS_POTATO), "Inedible", new String[] { "Players won't be able to", "right-click this consumable." }, new String[] { "consumable" });
+		super("INEDIBLE", Material.POISONOUS_POTATO, "Inedible", new String[] { "Players won't be able to", "right-click this consumable." }, new String[] { "consumable" });
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class GemColor extends StringStat {
 	public GemColor() {
-		super("GEM_COLOR", VersionMaterial.LIGHT_BLUE_DYE.toItem(), "Gem Color", new String[] { "Defines the color of the socket in", "which the gem can be applied." }, new String[] { "gem_stone" });
+		super("GEM_COLOR", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Gem Color", new String[] { "Defines the color of the socket in", "which the gem can be applied." }, new String[] { "gem_stone" });
 	}
 
 	@Override

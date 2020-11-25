@@ -11,11 +11,10 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.ChatColor;
-import org.bukkit.inventory.ItemStack;
 
 public class DisplayName extends StringStat {
 	public DisplayName() {
-		super("NAME", new ItemStack(VersionMaterial.OAK_SIGN.toMaterial()), "Display Name", new String[] { "The item display name." },
+		super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "Display Name", new String[] { "The item display name." },
 				new String[] { "all" });
 	}
 

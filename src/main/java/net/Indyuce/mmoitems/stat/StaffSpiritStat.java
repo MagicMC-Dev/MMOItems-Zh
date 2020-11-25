@@ -19,7 +19,7 @@ import net.mmogroup.mmolib.version.VersionMaterial;
 
 public class StaffSpiritStat extends StringStat {
 	public StaffSpiritStat() {
-		super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toItem(), "Staff Spirit",
+		super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toMaterial(), "Staff Spirit",
 				new String[] { "Spirit changes the texture", "of the magic attack.", "&9Tip: /mi list spirit" }, new String[] { "staff", "wand" });
 	}
 

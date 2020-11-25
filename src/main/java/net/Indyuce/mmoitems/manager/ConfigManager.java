@@ -36,7 +36,7 @@ public class ConfigManager implements Reloadable {
 	private ConfigFile abilities, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
 
 	// cached config options
-	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck;
+	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
@@ -194,6 +194,7 @@ public class ConfigManager implements Reloadable {
 		soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
 		soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
 		upgradeRequirementsCheck = MMOItems.plugin.getConfig().getBoolean("item-upgrade-requirements-check");
+		keepSoulboundOnDeath = MMOItems.plugin.getConfig().getBoolean("");
 		levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
 
 		try {

@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.util.StatFormat;
@@ -13,7 +12,7 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class MaxHealth extends AttributeStat {
 	public MaxHealth() {
-		super("MAX_HEALTH", new ItemStack(Material.GOLDEN_APPLE), "Max Health",
+		super("MAX_HEALTH", Material.GOLDEN_APPLE, "Max Health",
 				new String[] { "The amount of health your", "item gives to the holder." }, Attribute.GENERIC_MAX_HEALTH);
 	}
 

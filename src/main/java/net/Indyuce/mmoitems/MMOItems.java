@@ -1,21 +1,5 @@
 package net.Indyuce.mmoitems;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
@@ -66,6 +50,7 @@ import net.Indyuce.mmoitems.listener.DurabilityListener;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.listener.PlayerListener;
+import net.Indyuce.mmoitems.listener.SoulbindingListener;
 import net.Indyuce.mmoitems.manager.AbilityManager;
 import net.Indyuce.mmoitems.manager.BlockManager;
 import net.Indyuce.mmoitems.manager.ConfigManager;
@@ -87,13 +72,22 @@ import net.Indyuce.mmoitems.manager.UpgradeManager;
 import net.Indyuce.mmoitems.manager.WorldGenManager;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
 import net.mmogroup.mmolib.version.SpigotPlugin;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class MMOItems extends JavaPlugin {
-
-	/*
-	 * Introducing: The commit comment! Just change this a tiny bit each time
-	 * you need to push a new build. It's convenient!
-	 */
 	public static MMOItems plugin;
 
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
@@ -160,6 +154,9 @@ public class MMOItems extends JavaPlugin {
 
 	public void onEnable() {
 		new SpigotPlugin(39267, this).checkForUpdate();
+		// Change this line if you change the config version!!!
+		if((int) (getConfig().getDouble("config-version") * 10) != 14)
+			getLogger().warning("You may be using an outdated config.yml!");
 
 		new MMOItemsMetrics();
 
@@ -212,6 +209,7 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
+		Bukkit.getPluginManager().registerEvents(new SoulbindingListener(), this);
 
 		/*
 		 * this class implements the Listener, if the option

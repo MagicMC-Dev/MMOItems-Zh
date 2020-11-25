@@ -8,12 +8,11 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 public class ItemDamage extends DoubleStat implements GemStoneStat {
 	public ItemDamage() {
-		super("DURABILITY", new ItemStack(Material.FISHING_ROD), "Item Damage",
+		super("DURABILITY", Material.FISHING_ROD, "Item Damage",
 				new String[] { "Default item damage. This does &cNOT", "impact the item's max durability." }, new String[] { "!block", "all" });
 	}
 

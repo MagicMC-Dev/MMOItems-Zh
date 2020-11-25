@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -16,8 +15,8 @@ public abstract class InternalStat extends ItemStat {
 	 * edited in the item edition GUI since they only exist once the item is
 	 * physically generated.
 	 */
-	public InternalStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
-		super(id, item, name, lore, types, materials);
+	public InternalStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
+		super(id, mat, name, lore, types, materials);
 	}
 
 	@Override

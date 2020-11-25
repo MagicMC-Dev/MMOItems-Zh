@@ -8,11 +8,10 @@ import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.inventory.ItemStack;
 
 public class AttackDamage extends AttributeStat {
 	public AttackDamage() {
-		super("ATTACK_DAMAGE", new ItemStack(Material.IRON_SWORD), "Attack Damage", new String[] { "The amount of damage", "your weapon deals." },
+		super("ATTACK_DAMAGE", Material.IRON_SWORD, "Attack Damage", new String[] { "The amount of damage", "your weapon deals." },
 				Attribute.GENERIC_ATTACK_DAMAGE, 1);
 	}
 

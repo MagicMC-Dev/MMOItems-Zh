@@ -18,14 +18,13 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Soulbound extends InternalStat implements ItemRestriction {
 	public Soulbound() {
-		super("SOULBOUND", new ItemStack(VersionMaterial.ENDER_EYE.toMaterial()), "Soulbound", new String[0], new String[] { "all" });
+		super("SOULBOUND", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbound", new String[0], new String[] { "all" });
 	}
 
 	@Override

@@ -18,7 +18,7 @@ import java.util.List;
 
 public abstract class ItemStat {
 	private final String id, name;
-	private final ItemStack item;
+	private final Material material;
 
 	private final String[] lore;
 	private final List<String> compatibleTypes;
@@ -36,8 +36,8 @@ public abstract class ItemStat {
 	 * @param id
 	 *            The item stat ID, used internally. Also determines the lower
 	 *            case path for config files
-	 * @param item
-	 *            The itemStack used to display the stat in the item edition GUI
+	 * @param material
+	 *            The material used to display the stat in the item edition GUI
 	 * @param name
 	 *            The stat name which has a translation in the language files
 	 * @param lore
@@ -49,9 +49,9 @@ public abstract class ItemStat {
 	 *            Materials compatible with the item stat (eg Shield Pattern),
 	 *            any if empty
 	 */
-	public ItemStat(String id, ItemStack item, String name, String[] lore, String[] types, Material... materials) {
+	public ItemStat(String id, Material material, String name, String[] lore, String[] types, Material... materials) {
 		this.id = id;
-		this.item = item;
+		this.material = material;
 		this.lore = lore == null ? new String[0] : lore;
 		this.compatibleTypes = types == null ? new ArrayList<>() : Arrays.asList(types);
 		this.name = name;
@@ -158,8 +158,8 @@ public abstract class ItemStat {
 		return "MMOITEMS_" + id;
 	}
 
-	public ItemStack getItem() {
-		return item.clone();
+	public Material getDisplayMaterial() {
+		return material;
 	}
 
 	public boolean isEnabled() {

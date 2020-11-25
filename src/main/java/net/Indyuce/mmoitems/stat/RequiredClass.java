@@ -22,7 +22,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.regex.Pattern;
 
 public class RequiredClass extends StringListStat implements ItemRestriction, GemStoneStat {
 	public RequiredClass() {
-		super("REQUIRED_CLASS", new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial()), "Required Class",
+		super("REQUIRED_CLASS", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Required Class",
 				new String[] { "The class you need to", "profess to use your item." }, new String[] { "!block", "all" });
 	}
 

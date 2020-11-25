@@ -17,11 +17,10 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class LuteAttackEffectStat extends StringStat {
 	public LuteAttackEffectStat() {
-		super("LUTE_ATTACK_EFFECT", new ItemStack(VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial()), "Lute Attack Effect",
+		super("LUTE_ATTACK_EFFECT", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "Lute Attack Effect",
 				new String[] { "Changes how your lute behaves", "when right clicked.", "&9Tip: /mi list lute" }, new String[] { "lute" });
 	}
 

@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.inventory.ItemStack;
 
 public abstract class AttributeStat extends DoubleStat {
 
@@ -12,12 +12,12 @@ public abstract class AttributeStat extends DoubleStat {
 	private final double offset;
 	private final Attribute attribute;
 
-	public AttributeStat(String id, ItemStack item, String name, String[] lore, Attribute attribute) {
-		this(id, item, name, lore, attribute, 0);
+	public AttributeStat(String id, Material mat, String name, String[] lore, Attribute attribute) {
+		this(id, mat, name, lore, attribute, 0);
 	}
 
-	public AttributeStat(String id, ItemStack item, String name, String[] lore, Attribute attribute, double offset) {
-		super(id, item, name, lore, new String[] { "!consumable", "!block", "!miscellaneous", "all" });
+	public AttributeStat(String id, Material mat, String name, String[] lore, Attribute attribute, double offset) {
+		super(id, mat, name, lore, new String[] { "!consumable", "!block", "!miscellaneous", "all" });
 
 		this.offset = offset;
 		this.attribute = attribute;

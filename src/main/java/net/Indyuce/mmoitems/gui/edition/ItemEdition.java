@@ -47,7 +47,7 @@ public class ItemEdition extends EditionInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, "Item Edition: " + getEdited().getId());
 		for (int j = min; j < Math.min(appliable.size(), max); j++) {
 			ItemStat stat = appliable.get(j);
-			ItemStack item = stat.getItem();
+			ItemStack item = new ItemStack(stat.getDisplayMaterial());
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setDisplayName(ChatColor.GREEN + stat.getName());

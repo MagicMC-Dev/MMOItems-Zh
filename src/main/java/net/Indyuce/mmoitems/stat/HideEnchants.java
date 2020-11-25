@@ -8,11 +8,10 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 
 public class HideEnchants extends BooleanStat {
 	public HideEnchants() {
-		super("HIDE_ENCHANTS", new ItemStack(Material.BOOK), "Hide Enchantments", new String[] { "Enable to completely hide your item", "enchants. You can still see the glowing effect." }, new String[] { "all" });
+		super("HIDE_ENCHANTS", Material.BOOK, "Hide Enchantments", new String[] { "Enable to completely hide your item", "enchants. You can still see the glowing effect." }, new String[] { "all" });
 	}
 
 	@Override

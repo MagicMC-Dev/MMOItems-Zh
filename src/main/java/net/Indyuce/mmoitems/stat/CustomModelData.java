@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -11,10 +8,11 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import org.bukkit.Material;
 
 public class CustomModelData extends DoubleStat implements GemStoneStat {
 	public CustomModelData() {
-		super("CUSTOM_MODEL_DATA", new ItemStack(Material.PAINTING), "Custom Model Data", new String[] { "Your 1.14+ model data." }, new String[] { "!block", "all" });
+		super("CUSTOM_MODEL_DATA", Material.PAINTING, "Custom Model Data", new String[] { "Your 1.14+ model data." }, new String[] { "!block", "all" });
 
 		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
 			disable();

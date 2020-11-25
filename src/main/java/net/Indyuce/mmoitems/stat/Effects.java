@@ -27,7 +27,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
@@ -40,7 +39,7 @@ public class Effects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public Effects() {
-		super("EFFECTS", new ItemStack(Material.POTION), "Effects", new String[] { "The potion effects your", "consumable item grants." },
+		super("EFFECTS", Material.POTION, "Effects", new String[] { "The potion effects your", "consumable item grants." },
 				new String[] { "consumable" });
 	}
 

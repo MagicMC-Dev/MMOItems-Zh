@@ -28,7 +28,7 @@ import java.util.*;
 public class ItemBrowser extends PluginInventory {
 	private final Map<String, ItemStack> cached = new HashMap<>();
 
-	private Type type;
+	private final Type type;
 	private boolean deleteMode;
 
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
@@ -256,7 +256,7 @@ public class ItemBrowser extends PluginInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				// this refreshes the item if it's unstackable
 				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE")) ? MMOItems.plugin.getItem(type, id, playerData)
-						: removeLastLoreLines(item, 3);
+						: removeLastLoreLines(item);
 				getPlayer().getInventory().addItem(generatedItem);
 				getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
 			}
@@ -266,10 +266,10 @@ public class ItemBrowser extends PluginInventory {
 		}
 	}
 
-	private ItemStack removeLastLoreLines(ItemStack item, int amount) {
+	private ItemStack removeLastLoreLines(ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		meta.setLore(lore.subList(0, lore.size() - amount));
+		meta.setLore(lore.subList(0, lore.size() - 3));
 
 		ItemStack item1 = item.clone();
 		item1.setItemMeta(meta);

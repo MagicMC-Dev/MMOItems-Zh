@@ -22,7 +22,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.Set;
 
 public class Enchants extends ItemStat {
 	public Enchants() {
-		super("ENCHANTS", new ItemStack(Material.ENCHANTED_BOOK), "Enchantments", new String[] { "The item enchants." }, new String[] { "all" });
+		super("ENCHANTS", Material.ENCHANTED_BOOK, "Enchantments", new String[] { "The item enchants." }, new String[] { "all" });
 	}
 
 	@Override

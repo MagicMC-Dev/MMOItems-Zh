@@ -193,7 +193,6 @@ public class Consumable extends UseItem {
 			}
 
 			if (random.nextDouble() < soulbindingChance / 100) {
-
 				ApplySoulboundEvent called = new ApplySoulboundEvent(playerData, mmoitem, target);
 				Bukkit.getPluginManager().callEvent(called);
 				if (called.isCancelled())

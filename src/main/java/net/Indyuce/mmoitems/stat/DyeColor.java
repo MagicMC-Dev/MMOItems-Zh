@@ -23,7 +23,7 @@ import java.util.List;
 
 public class DyeColor extends ItemStat {
 	public DyeColor() {
-		super("DYE_COLOR", VersionMaterial.RED_DYE.toItem(), "Dye Color",
+		super("DYE_COLOR", VersionMaterial.RED_DYE.toMaterial(), "Dye Color",
 				new String[] { "The color of your item", "(for dyeable items).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
 				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 	}

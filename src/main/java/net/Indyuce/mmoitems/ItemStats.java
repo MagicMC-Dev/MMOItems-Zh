@@ -49,6 +49,7 @@ import net.Indyuce.mmoitems.stat.PotionColor;
 import net.Indyuce.mmoitems.stat.PotionEffects;
 import net.Indyuce.mmoitems.stat.RequiredClass;
 import net.Indyuce.mmoitems.stat.RequiredLevel;
+import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.ShieldPatternStat;
 import net.Indyuce.mmoitems.stat.SkullTextureStat;
 import net.Indyuce.mmoitems.stat.Soulbound;
@@ -81,6 +82,7 @@ import org.bukkit.Material;
 public class ItemStats {
 	public static final ItemStat
 			// Main Item Stats
+			REVISION_ID = new RevisionID(),
 			MATERIAL = new MaterialStat(),
 			DURABILITY = new ItemDamage(),
 			CUSTOM_MODEL_DATA = new CustomModelData(),

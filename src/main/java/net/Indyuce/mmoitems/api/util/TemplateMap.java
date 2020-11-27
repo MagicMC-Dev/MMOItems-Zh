@@ -112,7 +112,7 @@ public class TemplateMap<C> {
 
 	/**
 	 * For memory leak purposes we cannot directly use a nested map into another
-	 * map (must resort to using an object). No method is required however
+	 * map (must resort to using an object). No methods are required however
 	 * because this class is completely private.
 	 * 
 	 * @author cympe

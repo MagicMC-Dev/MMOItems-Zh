@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,6 +40,10 @@ public class TemplateManager implements Reloadable {
 
 	public MMOItemTemplate getTemplate(Type type, String id) {
 		return templates.getValue(type, id);
+	}
+
+	public MMOItemTemplate getTemplate(NBTItem nbt) {
+		return getTemplate(nbt.getType(), nbt.getString("MMOITEMS_ITEM_ID"));
 	}
 
 	/**
@@ -78,7 +83,6 @@ public class TemplateManager implements Reloadable {
 	 */
 	public void unregisterTemplate(Type type, String id) {
 		templates.removeValue(type, id);
-		MMOItems.plugin.getUpdater().disable(type, id);
 	}
 
 	/**

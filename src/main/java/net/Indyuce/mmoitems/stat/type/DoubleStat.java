@@ -100,7 +100,6 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 	@Override
 	public void whenDisplayed(List<String> lore, RandomStatData statData) {
-
 		if (statData.isPresent()) {
 			NumericStatFormula data = (NumericStatFormula) statData;
 			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + digit.format(data.getBase())

@@ -91,7 +91,6 @@ public abstract class EditionInventory extends PluginInventory {
 	}
 
 	public void registerTemplateEdition() {
-
 		configFile.registerTemplateEdition(template);
 
 		/*

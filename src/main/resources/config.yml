@@ -6,7 +6,7 @@
 # a Spigot Plugin by Team Requiem
 
 # DO NOT TOUCH
-config-version: 1.4
+config-version: 1.5
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -99,9 +99,10 @@ soulbound:
         # Here you can disable individual events for when
         # Items should automatically soulbind to the player
         # (Requires the 'Auto-Bind' stat to be true)
-        disable-on-pickup: false
-        disable-on-craft: false
-        disable-on-click: false
+        disable-on:
+            pickup: false
+            craft: false
+            click: false
 
 # Enable, disable, and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.
@@ -240,10 +241,33 @@ permissions:
 
 # Disables non MMOItems from being crafted in the vanilla workbench.
 # Add [] if the list is empty.
-disable-vanilla-recipes: []
+disable-vanilla-recipes: [ ]
 # - DIAMOND_PICKAXE
 # - IRON_BLOCK
 
+# Options for the Item Revision System
+item-revision:
+    # You will most likely always want this to be one.
+    # This is simply to assign revision numbers to already
+    # existing items that do not already have one.
+    default-revision-number: 1
+    # Whether the updated items should reroll stats
+    # according to the players current level or if
+    # they should keep the level and tier from when
+    # the item was first generated.
+    reroll-when-updated: false
+    # Whether or not specific stats should be kept
+    # when an item is updated to latest revision.
+    keep-data:
+        gemstones: true
+        soulbound: true
+        upgrades: true
+    # Here you can disable individual events for when
+    # Items should update when a higher revision ID is found
+    disable-on:
+        join: true
+        pickup: true
+        click: true
 
 
 # When I was a kid, I saw the Mona Lisa in my school art book...

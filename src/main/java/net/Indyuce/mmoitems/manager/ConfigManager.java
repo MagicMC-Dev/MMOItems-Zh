@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -36,7 +37,7 @@ public class ConfigManager implements Reloadable {
 	private ConfigFile abilities, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
 
 	// cached config options
-	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath;
+	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
@@ -194,7 +195,8 @@ public class ConfigManager implements Reloadable {
 		soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
 		soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
 		upgradeRequirementsCheck = MMOItems.plugin.getConfig().getBoolean("item-upgrade-requirements-check");
-		keepSoulboundOnDeath = MMOItems.plugin.getConfig().getBoolean("");
+		keepSoulboundOnDeath = MMOItems.plugin.getConfig().getBoolean("soulbound.keep-on-death");
+		rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
 		levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
 
 		try {

@@ -77,9 +77,8 @@ public class ConfigFile {
 		 */
 		MMOItems.plugin.getTemplates().requestTemplateUpdate(ref.getType(), ref.getId());
 
-		// update the database UUID for the dynamic item updater
+		/* update the database UUID for the dynamic item updater
 		if (MMOItems.plugin.getUpdater().hasData(ref))
-			MMOItems.plugin.getUpdater().getData(ref).setUniqueId(UUID.randomUUID());
-
+			MMOItems.plugin.getUpdater().getData(ref).setUniqueId(UUID.randomUUID());*/
 	}
 }

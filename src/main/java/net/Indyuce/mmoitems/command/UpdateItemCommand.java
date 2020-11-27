@@ -1,18 +1,12 @@
 package net.Indyuce.mmoitems.command;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.gui.edition.ItemUpdaterEdition;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class UpdateItemCommand implements CommandExecutor {
 	@Override
@@ -22,15 +16,14 @@ public class UpdateItemCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (!sender.hasPermission("mmoitems.update"))
-			return true;
+		if (!sender.hasPermission("mmoitems.update")) return true;
 
 		Player player = (Player) sender;
-		if (args.length < 1) {
+		if (args.length < 1 || !player.hasPermission("mmoitems.admin")) {
 			NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 
 			// for items generated before 2.0
-			if (!item.hasTag("MMOITEMS_ITEM_TYPE")) {
+			/*if (!item.hasTag("MMOITEMS_ITEM_TYPE")) {
 				sender.sendMessage(ChatColor.RED + "Could not update your item.");
 				return true;
 			}
@@ -43,11 +36,15 @@ public class UpdateItemCommand implements CommandExecutor {
 
 			player.getInventory().setItemInMainHand(newItem);
 			sender.sendMessage(ChatColor.YELLOW + "Successfully updated your item.");
-			return true;
+			return true;*/
 		}
 
+		/*
+		 * TODO Cleanup
+		 * Commented this out to reuse some of the code, bear with it until this system has been cleaned!
+		 */
 		// toggles on/off item updater
-		if (!player.hasPermission("mmoitems.admin")) {
+		/*if () {
 			Message.NOT_ENOUGH_PERMS_COMMAND.format(ChatColor.RED).send(sender);
 			return true;
 		}
@@ -65,9 +62,8 @@ public class UpdateItemCommand implements CommandExecutor {
 		if (!MMOItems.plugin.getTemplates().hasTemplate(type, args[1])) {
 			player.sendMessage(ChatColor.RED + "Could not find an item template with ID '" + args[1] + "'");
 			return true;
-		}
+		}*/
 
-		new ItemUpdaterEdition(player, MMOItems.plugin.getTemplates().getTemplate(type, args[1])).open();
 		return true;
 	}
 }

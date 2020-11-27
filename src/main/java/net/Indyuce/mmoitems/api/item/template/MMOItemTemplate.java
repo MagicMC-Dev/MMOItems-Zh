@@ -1,17 +1,5 @@
 package net.Indyuce.mmoitems.api.item.template;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
@@ -21,10 +9,23 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.PostLoadObject;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 
 public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	private final Type type;
 	private final String id;
+
+	// Revision ID
+	private int revId = 1;
 
 	// base item data
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
@@ -67,6 +68,8 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 
 	@Override
 	protected void whenPostLoaded(ConfigurationSection config) {
+		revId = config.getInt("base.revision-id", 1);
+
 		if (config.contains("option"))
 			for (TemplateOption option : TemplateOption.values())
 				if (config.getBoolean("option." + option.name().toLowerCase().replace("_", "-")))
@@ -123,6 +126,10 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	public int getRevisionId() {
+		return revId;
 	}
 
 	public boolean hasOption(TemplateOption option) {

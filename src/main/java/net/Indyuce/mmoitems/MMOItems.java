@@ -48,9 +48,9 @@ import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.listener.DisableInteractions;
 import net.Indyuce.mmoitems.listener.DurabilityListener;
 import net.Indyuce.mmoitems.listener.ElementListener;
+import net.Indyuce.mmoitems.listener.ItemListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.listener.PlayerListener;
-import net.Indyuce.mmoitems.listener.SoulbindingListener;
 import net.Indyuce.mmoitems.manager.AbilityManager;
 import net.Indyuce.mmoitems.manager.BlockManager;
 import net.Indyuce.mmoitems.manager.ConfigManager;
@@ -67,7 +67,6 @@ import net.Indyuce.mmoitems.manager.StatManager;
 import net.Indyuce.mmoitems.manager.TemplateManager;
 import net.Indyuce.mmoitems.manager.TierManager;
 import net.Indyuce.mmoitems.manager.TypeManager;
-import net.Indyuce.mmoitems.manager.UpdaterManager;
 import net.Indyuce.mmoitems.manager.UpgradeManager;
 import net.Indyuce.mmoitems.manager.WorldGenManager;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
@@ -104,7 +103,6 @@ public class MMOItems extends JavaPlugin {
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
 	private UpgradeManager upgradeManager;
-	private UpdaterManager dynamicUpdater;
 	private ConfigManager configManager;
 	private BlockManager blockManager;
 	private TierManager tierManager;
@@ -187,7 +185,6 @@ public class MMOItems extends JavaPlugin {
 		templateManager.postloadTemplates();
 
 		dropTableManager = new DropTableManager();
-		dynamicUpdater = new UpdaterManager();
 		worldGenManager = new WorldGenManager();
 		blockManager = new BlockManager();
 
@@ -200,8 +197,8 @@ public class MMOItems extends JavaPlugin {
 
 		Bukkit.getPluginManager().registerEvents(entityManager, this);
 		Bukkit.getPluginManager().registerEvents(dropTableManager, this);
-		Bukkit.getPluginManager().registerEvents(dynamicUpdater, this);
 		Bukkit.getPluginManager().registerEvents(new ItemUse(), this);
+		Bukkit.getPluginManager().registerEvents(new ItemListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DurabilityListener(), this);
@@ -209,7 +206,6 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
-		Bukkit.getPluginManager().registerEvents(new SoulbindingListener(), this);
 
 		/*
 		 * this class implements the Listener, if the option
@@ -327,10 +323,6 @@ public class MMOItems extends JavaPlugin {
 		// save item updater data
 		ConfigFile updater = new ConfigFile("/dynamic", "updater");
 		updater.getConfig().getKeys(false).forEach(key -> updater.getConfig().set(key, null));
-		dynamicUpdater.collectActive().forEach(data -> {
-			updater.getConfig().createSection(data.getPath());
-			data.save(updater.getConfig().getConfigurationSection(data.getPath()));
-		});
 		updater.save();
 
 		// drop abandonned soulbound items
@@ -356,10 +348,6 @@ public class MMOItems extends JavaPlugin {
 
 	public LayoutManager getLayouts() {
 		return layoutManager;
-	}
-
-	public UpdaterManager getUpdater() {
-		return dynamicUpdater;
 	}
 
 	public SetManager getSets() {

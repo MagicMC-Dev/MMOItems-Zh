@@ -1,12 +1,14 @@
-# ███    ███ ███    ███  ██████  ██ ████████ ███████ ███    ███ ███████ 
-# ████  ████ ████  ████ ██.  .██ ██    ██    ██      ████  ████ ██      
-# ██ ████ ██ ██ ████ ██ ██    ██ ██    ██    █████   ██ ████ ██ ███████ 
-# ██  ██  ██ ██  ██  ██ ██\__/██ ██    ██    ██      ██  ██  ██      ██ 
-# ██      ██ ██      ██  ██████  ██    ██    ███████ ██      ██ ███████ 
+#
+# ███    ███ ███    ███  ██████  ██ ████████ ███████ ███    ███ ███████
+# ████  ████ ████  ████ ██.  .██ ██    ██    ██      ████  ████ ██
+# ██ ████ ██ ██ ████ ██ ██    ██ ██    ██    █████   ██ ████ ██ ███████
+# ██  ██  ██ ██  ██  ██ ██\__/██ ██    ██    ██      ██  ██  ██      ██
+# ██      ██ ██      ██  ██████  ██    ██    ███████ ██      ██ ███████
+#
 # a Spigot Plugin by Team Requiem
 
 # DO NOT TOUCH
-config-version: 1.5
+config-version: 3
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -103,6 +105,7 @@ soulbound:
             pickup: false
             craft: false
             click: false
+            join: true # 'true' recommended
 
 # Enable, disable, and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.
@@ -265,9 +268,10 @@ item-revision:
     # Here you can disable individual events for when
     # Items should update when a higher revision ID is found
     disable-on:
-        join: true
-        pickup: true
-        click: true
+        pickup: false
+        craft: true # 'true' recommended
+        click: false
+        join: false
 
 
 # When I was a kid, I saw the Mona Lisa in my school art book...

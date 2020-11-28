@@ -27,17 +27,17 @@ public class ItemModInstance {
 		this.nbtItem = nbt;
 	}
 
-	public ItemModInstance applySoulbound(Player p) {
-		return applySoulbound(p, MMOItems.plugin.getConfig().getInt("soulbound.auto-bind.level", 1));
+	public void applySoulbound(Player p) {
+		applySoulbound(p, MMOItems.plugin.getConfig().getInt("soulbound.auto-bind.level", 1));
 	}
 
-	public ItemModInstance applySoulbound(Player p, int level) {
-		getMMO().setData(ItemStats.SOULBOUND, ((Soulbound) ItemStats.SOULBOUND).newSoulboundData(p.getUniqueId(), p.getName(), level));
-		return this;
+	public void applySoulbound(Player p, int level) {
+		getMMO().setData(ItemStats.SOULBOUND, ((Soulbound) ItemStats.SOULBOUND)
+				.newSoulboundData(p.getUniqueId(), p.getName(), level));
 	}
 
-	public ItemModInstance reforge(Player p) {
-		return reforge(PlayerData.get(p).getRPG());
+	public void reforge(Player p) {
+		reforge(p == null ? null : PlayerData.get(p).getRPG());
 	}
 
 	/**
@@ -45,15 +45,15 @@ public class ItemModInstance {
 	 *               If empty, it will use the old items level
 	 *               and tier, or default values if needed.
 	 */
-	public ItemModInstance reforge(RPGPlayer player) {
+	public void reforge(RPGPlayer player) {
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(getMMO().getType(), getMMO().getId());
 		if(player == null) {
 			int level = getMMO().hasData(ItemStats.ITEM_LEVEL) ? (int)
 					((DoubleData) getMMO().getData(ItemStats.ITEM_LEVEL)).getValue() : 1;
-			ItemTier tier = MMOItems.plugin.getTiers().get(getMMO().getData(ItemStats.TIER).toString());
+			ItemTier tier = getMMO().hasData(ItemStats.TIER) ?
+					MMOItems.plugin.getTiers().get(getMMO().getData(ItemStats.TIER).toString()) : null;
 			mmoItem = template.newBuilder(level, tier).build();
 		} else mmoItem = template.newBuilder(player).build();
-		return this;
 	}
 
 	public boolean hasChanges() {
@@ -64,6 +64,7 @@ public class ItemModInstance {
 		return mmoItem.newBuilder().build();
 	}
 
+	/* Initialize the MMOItem if it's null, else get it */
 	private MMOItem getMMO() {
 		return mmoItem == null ? mmoItem = new VolatileMMOItem(nbtItem) : mmoItem;
 	}

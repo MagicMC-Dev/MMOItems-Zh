@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;

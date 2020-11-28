@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.listener;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.ItemModInstance;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.entity.EntityType;
@@ -11,60 +10,83 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	private void itemPickup(EntityPickupItemEvent e) {
 		if (!e.getEntity().getType().equals(EntityType.PLAYER)) return;
-		NBTItem nbt = NBTItem.get(e.getItem().getItemStack());
-		if (!nbt.hasType()) return;
-		ItemModInstance mod = new ItemModInstance(nbt);
-		if (shouldUpdate(nbt, "pickup")) mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? (Player) e.getEntity() : null);
-		if (shouldSoulbind(nbt, "pickup")) mod.applySoulbound((Player) e.getEntity());
 
-		if (mod.hasChanges()) e.getItem().setItemStack(mod.applySoulbound((Player) e.getEntity()).toStack());
+		ItemStack newItem = modifyItem(e.getItem().getItemStack(), (Player) e.getEntity(), "pickup");
+		if (newItem != null) e.getItem().setItemStack(newItem);
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	private void itemCraft(CraftItemEvent e) {
-		NBTItem nbt = NBTItem.get(e.getCurrentItem());
-		if (!nbt.hasType()) return;
-		ItemModInstance mod = new ItemModInstance(nbt);
-		if (shouldSoulbind(nbt, "craft")) mod.applySoulbound((Player) e.getWhoClicked());
-
-		if (mod.hasChanges()) e.setCurrentItem(mod.toStack());
+		if(!(e.getWhoClicked() instanceof Player)) return;
+		ItemStack newItem = modifyItem(e.getCurrentItem(), (Player) e.getWhoClicked(), "craft");
+		if (newItem != null) e.setCurrentItem(newItem);
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	private void inventoryMove(InventoryClickEvent e) {
-		NBTItem nbt = NBTItem.get(e.getCurrentItem());
-		if (!nbt.hasType()) return;
-		ItemModInstance mod = new ItemModInstance(nbt);
-		if (shouldUpdate(nbt, "click")) mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? (Player) e.getWhoClicked() : null);
-		if (shouldSoulbind(nbt, "click")) mod.applySoulbound((Player) e.getWhoClicked());
-
-		if (mod.hasChanges()) e.setCurrentItem(mod.toStack());
+		if (e.getInventory().getType() != InventoryType.CRAFTING || !(e.getWhoClicked() instanceof Player)) return;
+		ItemStack newItem = modifyItem(e.getCurrentItem(), (Player) e.getWhoClicked(), "click");
+		if (newItem != null) e.setCurrentItem(newItem);
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void dropItem(PlayerDropItemEvent event) {
+	private void dropItem(PlayerDropItemEvent event) {
 		NBTItem nbt = NBTItem.get(event.getItemDrop().getItemStack());
 		if (!MMOItems.plugin.getConfig().getBoolean("soulbound.can-drop") && nbt.hasTag("MMOITEMS_SOULBOUND"))
 			event.setCancelled(true);
 	}
 
+	@EventHandler(ignoreCancelled = true)
+	public void playerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+
+		ItemStack newItem = modifyItem(player.getEquipment().getHelmet(), player, "join");
+		if(newItem != null) player.getEquipment().setHelmet(newItem);
+		newItem = modifyItem(player.getEquipment().getChestplate(), player, "join");
+		if(newItem != null) player.getEquipment().setChestplate(newItem);
+		newItem = modifyItem(player.getEquipment().getLeggings(), player, "join");
+		if(newItem != null) player.getEquipment().setLeggings(newItem);
+		newItem = modifyItem(player.getEquipment().getBoots(), player, "join");
+		if(newItem != null) player.getEquipment().setBoots(newItem);
+
+		for (int j = 0; j < 9; j++) {
+			newItem = modifyItem(player.getInventory().getItem(j), player, "join");
+			if (newItem != null) player.getInventory().setItem(j, newItem);
+		}
+
+		newItem = modifyItem(player.getEquipment().getItemInOffHand(), player, "join");
+		if(newItem != null) player.getEquipment().setItemInOffHand(newItem);
+	}
+
+	private ItemStack modifyItem(ItemStack stack, Player player, String type) {
+		NBTItem nbt = NBTItem.get(stack);
+		if (!nbt.hasType()) return null;
+		ItemModInstance mod = new ItemModInstance(nbt);
+		if (shouldUpdate(nbt, type, player))
+			mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null);
+		if (shouldSoulbind(nbt, type)) mod.applySoulbound(player);
+		return mod.hasChanges() ? mod.toStack() : null;
+	}
+
 	/* Checks whether or not an item should be automatically soulbound */
 	private boolean shouldSoulbind(NBTItem nbt, String type) {
-		return nbt.getBoolean("MMOITEMS_AUTO_SOULBIND") && !nbt.hasTag("MMOITEMS_SOULBOUND") && !MMOItems.plugin.getConfig().getBoolean("soulbound.auto-bind.disable-on." + type);
+		return nbt.getBoolean("MMOITEMS_AUTO_SOULBIND") && !nbt.hasTag("MMOITEMS_SOULBOUND")
+				&& !MMOItems.plugin.getConfig().getBoolean("soulbound.auto-bind.disable-on." + type);
 	}
 
 	/* Whether or not data should be kept when updating an item to latest revision. */
-	private boolean shouldUpdate(NBTItem nbt, String type) {
-		//if()
-		final int templateRevId = MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId();
-		final int itemRevId = nbt.hasTag("MMOITEMS_REVISION_ID") ? nbt.getInteger("MMOITEMS_REVISION_ID") : 1;
-		System.out.println("REV ID: " + templateRevId + " | " + itemRevId);
-		return templateRevId <= itemRevId;
+	private boolean shouldUpdate(NBTItem nbt, String type, Player p) {
+		return !MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + type) &&
+			(MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() > (nbt.hasTag("MMOITEMS_REVISION_ID")
+					? nbt.getInteger("MMOITEMS_REVISION_ID") : 1));
 	}
 }

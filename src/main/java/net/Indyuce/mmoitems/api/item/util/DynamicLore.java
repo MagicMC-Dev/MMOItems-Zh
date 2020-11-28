@@ -32,13 +32,12 @@ public class DynamicLore {
 			meta.setLore(lore);
 			stack.setItemMeta(meta);
 
-			NBTItem nbt = NBTItem.get(stack);
-			if (nbt.getLoreComponents() != null) {
-				nbt.setLoreComponents(MMOLib.plugin.getComponentBuilder().parse(nbt.getLoreComponents()));
-			}
-			stack = nbt.toItem();
 		}
-		return stack;
+		NBTItem nbt = NBTItem.get(stack);
+		if (nbt.getLoreComponents() != null) {
+			nbt.setLoreComponents(MMOLib.plugin.getComponentBuilder().parse(nbt.getLoreComponents()));
+		}
+		return nbt.toItem();
 	}
 	
 	private String replace(String input) {

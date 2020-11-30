@@ -152,7 +152,6 @@ public class MMOItems extends JavaPlugin {
 
 	public void onEnable() {
 		new SpigotPlugin(39267, this).checkForUpdate();
-		// Change this line if you change the config version!!!
 		final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
 		final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
 		if(configVersion != defConfigVersion) {

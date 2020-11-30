@@ -10,21 +10,19 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.Soulbound;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemModInstance {
 	private final NBTItem nbtItem;
+	private final int amount;
 	// Not initialized at first for performance reasons
 	private MMOItem mmoItem;
 
-	public ItemModInstance(ItemStack stack) {
-		this(MMOLib.plugin.getVersion().getWrapper().getNBTItem(stack));
-	}
 	public ItemModInstance(NBTItem nbt) {
 		this.nbtItem = nbt;
+		this.amount = nbt.getItem().getAmount();
 	}
 
 	public void applySoulbound(Player p) {
@@ -61,7 +59,9 @@ public class ItemModInstance {
 	}
 
 	public ItemStack toStack() {
-		return mmoItem.newBuilder().build();
+		ItemStack stack = mmoItem.newBuilder().build();
+		stack.setAmount(amount);
+		return stack;
 	}
 
 	/* Initialize the MMOItem if it's null, else get it */

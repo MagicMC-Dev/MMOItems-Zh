@@ -71,16 +71,16 @@
 
 		<!-- MMOs -->
 		<dependency>
-			<groupId>net.Indyuce</groupId>
+			<groupId>net.mmogroup</groupId>
 			<artifactId>MMOLib</artifactId>
-			<version>1.4.0</version>
+			<version>1.0.9</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>mmocore</artifactId>
-			<version>1.4.2</version>
+			<version>1.4.12</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/MMOCore.jar</systemPath>
 		</dependency>
@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.12-R1-1.16-R2</version>
+			<version>amalgam</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/spigot.jar</systemPath>
 		</dependency>

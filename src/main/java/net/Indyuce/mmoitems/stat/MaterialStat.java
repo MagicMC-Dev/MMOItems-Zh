@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import com.google.common.base.Enums;
-import com.google.common.base.Optional;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -18,12 +16,14 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.mmogroup.mmolib.api.util.AltChar;
+import net.mmogroup.mmolib.api.util.EnumUtils;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MaterialStat extends ItemStat {
     public MaterialStat() {
@@ -44,9 +44,7 @@ public class MaterialStat extends ItemStat {
 
     @Override
     public void whenInput(EditionInventory inv, String message, Object... info) {
-    	//TODO: Make own getIfPresent for enums using Java optionals
-		@SuppressWarnings({"Guava", "UnstableApiUsage"})
-        Optional<Material> material = Enums.getIfPresent(Material.class,
+        Optional<Material> material = EnumUtils.getIfPresent(Material.class,
                 message.toUpperCase().replace("-", "_").replace(" ", "_"));
         if (material.isPresent()) {
             inv.getEditedSection().set("material", material.get().name());

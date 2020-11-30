@@ -74,7 +74,6 @@ public class MMOUtils {
 	}
 
 	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
-
 		/*
 		 * check direct damager
 		 */

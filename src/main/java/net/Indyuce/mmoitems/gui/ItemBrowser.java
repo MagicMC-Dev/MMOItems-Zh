@@ -141,7 +141,7 @@ public class ItemBrowser extends PluginInventory {
 					newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
 				}
 				item.setItemMeta(meta);
-				ItemMetaLore.addLoreLines(item, newLore);
+				item = ItemMetaLore.addLoreLines(item, newLore);
 
 				cached.put(template.getId(), item);
 			}

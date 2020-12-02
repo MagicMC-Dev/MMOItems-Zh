@@ -8,7 +8,7 @@
 # a Spigot Plugin by Team Requiem
 
 # DO NOT TOUCH
-config-version: 3
+config-version: 4
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -250,10 +250,12 @@ disable-vanilla-recipes: [ ]
 
 # Options for the Item Revision System
 item-revision:
-    # You will most likely always want this to be one.
-    # This is simply to assign revision numbers to already
-    # existing items that do not already have one.
-    default-revision-number: 1
+    # This is the value to set the Item Level to when
+    # items are updated by the revision system.
+    # This can be set to -1 to use the items previous level.
+    # Please note, that this value has no effect if
+    # ´reroll-when-updated´ is set to true.
+    default-item-level: -1
     # Whether the updated items should reroll stats
     # according to the players current level or if
     # they should keep the level and tier from when

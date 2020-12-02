@@ -46,8 +46,9 @@ public class ItemModInstance {
 	public void reforge(RPGPlayer player) {
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(getMMO().getType(), getMMO().getId());
 		if(player == null) {
-			int level = getMMO().hasData(ItemStats.ITEM_LEVEL) ? (int)
-					((DoubleData) getMMO().getData(ItemStats.ITEM_LEVEL)).getValue() : 0;
+			final int iLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -1);
+			int level = iLevel == -1 ? (getMMO().hasData(ItemStats.ITEM_LEVEL) ? (int)
+					((DoubleData) getMMO().getData(ItemStats.ITEM_LEVEL)).getValue() : 0) : iLevel;
 			ItemTier tier = getMMO().hasData(ItemStats.TIER) ?
 					MMOItems.plugin.getTiers().get(getMMO().getData(ItemStats.TIER).toString()) : null;
 			mmoItem = template.newBuilder(level, tier).build();

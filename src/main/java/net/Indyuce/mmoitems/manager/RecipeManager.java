@@ -7,6 +7,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -108,7 +111,12 @@ public class RecipeManager implements Reloadable {
 	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info,
 			String recipeId) {
 		NamespacedKey key = getRecipeKey(type, id, recipeType.getPath(), recipeId);
-		Recipe recipe = recipeType.provideRecipe(key, MMOItems.plugin.getItem(type, id), info.getChoice().toBukkit(),
+		MMOItem mmo = MMOItems.plugin.getMMOItem(type, id);
+		final int amount = mmo.hasData(ItemStats.CRAFT_AMOUNT)
+			? (int) ((DoubleData) mmo.getData(ItemStats.CRAFT_AMOUNT)).getValue() : 1;
+		ItemStack stack = mmo.newBuilder().build();
+		stack.setAmount(amount);
+		Recipe recipe = recipeType.provideRecipe(key, stack, info.getChoice().toBukkit(),
 				info.getExp(), info.getBurnTime());
 		loadedRecipes.add(recipe);
 	}
@@ -116,18 +124,14 @@ public class RecipeManager implements Reloadable {
 	public void registerShapedRecipe(Type type, String id, List<String> list, String number) {
 		CustomRecipe recipe = new CustomRecipe(type, id, list, false);
 
-		if (amounts)
-			registerRecipe(recipe);
-		else
-			registerBukkitRecipe(recipe, number);
+		if (amounts) registerRecipe(recipe);
+		else registerBukkitRecipe(recipe, number);
 	}
 
 	public void registerShapelessRecipe(Type type, String id, List<String> list, String number) {
 		CustomRecipe recipe = new CustomRecipe(type, id, list, true);
-		if (amounts)
-			registerRecipe(recipe);
-		else
-			registerBukkitRecipe(recipe, number);
+		if (amounts) registerRecipe(recipe);
+		else registerBukkitRecipe(recipe, number);
 	}
 	
 	public void registerSmithingRecipe(Type type, String id, ConfigurationSection section, String number) {
@@ -190,7 +194,12 @@ public class RecipeManager implements Reloadable {
 	}
 
 	public void refreshRecipeBook(Player player) {
-		if(!book) return;
+		if(!book) {
+			for (NamespacedKey key : player.getDiscoveredRecipes())
+				if (key.getNamespace().equals("mmoitems"))
+					player.undiscoverRecipe(key);
+			return;
+		}
 
 		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
 			for (NamespacedKey key : player.getDiscoveredRecipes())

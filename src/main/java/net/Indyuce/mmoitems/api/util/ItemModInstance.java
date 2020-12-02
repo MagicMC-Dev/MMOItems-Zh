@@ -47,7 +47,7 @@ public class ItemModInstance {
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(getMMO().getType(), getMMO().getId());
 		if(player == null) {
 			int level = getMMO().hasData(ItemStats.ITEM_LEVEL) ? (int)
-					((DoubleData) getMMO().getData(ItemStats.ITEM_LEVEL)).getValue() : 1;
+					((DoubleData) getMMO().getData(ItemStats.ITEM_LEVEL)).getValue() : 0;
 			ItemTier tier = getMMO().hasData(ItemStats.TIER) ?
 					MMOItems.plugin.getTiers().get(getMMO().getData(ItemStats.TIER).toString()) : null;
 			mmoItem = template.newBuilder(level, tier).build();

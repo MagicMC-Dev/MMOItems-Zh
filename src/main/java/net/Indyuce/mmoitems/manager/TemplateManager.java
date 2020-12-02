@@ -38,6 +38,10 @@ public class TemplateManager implements Reloadable {
 		return templates.hasValue(type, id);
 	}
 
+	public boolean hasTemplate(NBTItem nbt) {
+		return hasTemplate(nbt.getType(), nbt.getString("MMOITEMS_ITEM_ID"));
+	}
+
 	public MMOItemTemplate getTemplate(Type type, String id) {
 		return templates.getValue(type, id);
 	}

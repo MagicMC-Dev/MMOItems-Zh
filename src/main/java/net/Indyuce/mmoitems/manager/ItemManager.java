@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
  *
  */
 public class ItemManager {
-
 	/**
 	 * @param type
 	 *            The item type

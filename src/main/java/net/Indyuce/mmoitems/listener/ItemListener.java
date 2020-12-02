@@ -71,7 +71,7 @@ public class ItemListener implements Listener {
 		NBTItem nbt = NBTItem.get(stack);
 		if (!nbt.hasType()) return null;
 		ItemModInstance mod = new ItemModInstance(nbt);
-		if (shouldUpdate(nbt, type, player))
+		if (shouldUpdate(nbt, type))
 			mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null);
 		if (shouldSoulbind(nbt, type)) mod.applySoulbound(player);
 		return mod.hasChanges() ? mod.toStack() : null;
@@ -84,7 +84,8 @@ public class ItemListener implements Listener {
 	}
 
 	/* Whether or not data should be kept when updating an item to latest revision. */
-	private boolean shouldUpdate(NBTItem nbt, String type, Player p) {
+	private boolean shouldUpdate(NBTItem nbt, String type) {
+		if(!MMOItems.plugin.getTemplates().hasTemplate(nbt)) return false;
 		return !MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + type) &&
 			(MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() > (nbt.hasTag("MMOITEMS_REVISION_ID")
 					? nbt.getInteger("MMOITEMS_REVISION_ID") : 1));

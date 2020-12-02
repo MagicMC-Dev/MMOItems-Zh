@@ -19,7 +19,9 @@ import java.util.List;
 
 public class RevisionID extends ItemStat {
 	public RevisionID() {
-		super("REVISION_ID", Material.ITEM_FRAME, "Revision ID", new String[] { "" }, new String[] { "all" });
+		super("REVISION_ID", Material.ITEM_FRAME, "Revision ID", new String[] { "The Revision ID is used to determine",
+		"if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!"},
+				new String[] { "all" });
 	}
 
 	@Override
@@ -39,12 +41,12 @@ public class RevisionID extends ItemStat {
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		int id = inv.getEditedSection().getInt(getPath(), 1);
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			inv.getEditedSection().set(getPath(), Math.min(id + 1, Integer.MAX_VALUE));
+			inv.getEditedSection().set(getPath(), Math.max(id - 1, 1));
 			inv.registerTemplateEdition();
 			return;
 		}
 
-		inv.getEditedSection().set(getPath(), Math.max(id - 1, 1));
+		inv.getEditedSection().set(getPath(), Math.min(id + 1, Integer.MAX_VALUE));
 		inv.registerTemplateEdition();
 	}
 
@@ -66,7 +68,7 @@ public class RevisionID extends ItemStat {
 			lore.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + "1");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to decrease this value.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to increase this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to increase this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to decrease this value.");
 	}
 }

@@ -29,7 +29,7 @@
 	</distributionManagement>
 
 	<build>
-		<finalName>${project.name}</finalName>
+		<finalName>${project.name}-${project.version}</finalName>
 		<resources>
 			<resource>
 				<filtering>true</filtering>

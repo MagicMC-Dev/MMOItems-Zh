@@ -95,6 +95,10 @@ public class UseItem {
 			Bukkit.dispatchCommand(player, parsed);
 	}
 
+	public static UseItem getItem(Player player, NBTItem item, String type) {
+		return getItem(player, item, Type.get(type));
+	}
+
 	public static UseItem getItem(Player player, NBTItem item, Type type) {
 		if (type.corresponds(Type.CONSUMABLE))
 			return new Consumable(player, item);

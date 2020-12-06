@@ -43,7 +43,7 @@ public class Weapon extends UseItem {
 		if (!isSwing && getPlayerData().isOnCooldown(cooldown))
 			return false;
 
-		double manaCost = getNBTItem().getStat(ItemStats.MANA_COST), staminaCost = getNBTItem().getStat(ItemStats.STAMINA_COST);
+		double manaCost = getNBTItem().getStat(ItemStats.MANA_COST.getId()), staminaCost = getNBTItem().getStat(ItemStats.STAMINA_COST.getId());
 
 		if (manaCost > 0 && playerData.getRPG().getMana() < manaCost) {
 			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(getPlayer(), "not-enough-mana");
@@ -69,7 +69,7 @@ public class Weapon extends UseItem {
 	@SuppressWarnings("UnusedReturnValue")
 	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, ItemAttackResult result) {
 		// cooldown
-		double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED);
+		double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED.getId());
 		attackSpeed = attackSpeed == 0 ? 1.493 : 1 / attackSpeed;
 		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, true))
 			return result.setSuccessful(false);

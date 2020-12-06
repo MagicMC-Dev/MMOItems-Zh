@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.Indyuce.mmoitems.api.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,7 +49,7 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 		if (ornaments)
 			for (ItemStack item : player.getInventory().getContents()) {
 				NBTItem nbtItem;
-				if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
+				if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)
 					list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
 			}
 

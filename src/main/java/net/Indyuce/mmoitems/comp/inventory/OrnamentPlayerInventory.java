@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.Indyuce.mmoitems.api.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 
 		for (ItemStack item : player.getInventory().getContents()) {
 			NBTItem nbtItem;
-			if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && nbtItem.getType().getEquipmentType() == EquipmentSlot.ANY)
+			if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)
 				list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
 		}
 
@@ -45,7 +46,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 	public void a(EntityPickupItemEvent event) {
 		if (event.getEntityType() == EntityType.PLAYER) {
 			NBTItem nbt = NBTItem.get(event.getItem().getItemStack());
-			if (nbt.hasType() && nbt.getType().getEquipmentType() == EquipmentSlot.ANY)
+			if (nbt.hasType() && Type.get(nbt.getType()).getEquipmentType() == EquipmentSlot.ANY)
 				PlayerData.get((Player) event.getEntity()).updateInventory();
 		}
 	}
@@ -53,7 +54,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void b(PlayerDropItemEvent event) {
 		NBTItem nbt = NBTItem.get(event.getItemDrop().getItemStack());
-		if (nbt.hasType() && nbt.getType().getEquipmentType() == EquipmentSlot.ANY)
+		if (nbt.hasType() && Type.get(nbt.getType()).getEquipmentType() == EquipmentSlot.ANY)
 			PlayerData.get(event.getPlayer()).updateInventory();
 	}
 }

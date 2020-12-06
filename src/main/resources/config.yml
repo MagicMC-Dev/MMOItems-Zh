@@ -8,7 +8,7 @@
 # a Spigot Plugin by Team Requiem
 
 # DO NOT TOUCH
-config-version: 4
+config-version: 5
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -275,6 +275,15 @@ item-revision:
         click: false
         join: false
 
+# Offset is the distance traveled on X and Y coordinates
+# Height is the Y velocity coordinate. Lootsplosions
+# only trigger with MythicMobs monsters.
+# Requires a SERVER reload when changed.
+lootsplosion:
+    enabled: true
+    color: true
+    offset: .2
+    height: .6
 
 # When I was a kid, I saw the Mona Lisa in my school art book...
 # The fist time I saw her, with her hands on her knee... how do I say this...

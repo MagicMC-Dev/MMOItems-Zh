@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -270,7 +269,7 @@ public class ConfigManager implements Reloadable {
 		File folder = new File(MMOItems.plugin.getDataFolder() + "/" + path);
 		if (!folder.exists())
 			if(!folder.mkdir())
-				MMOCore.log(Level.WARNING, "Could not create directory!");
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
 	}
 	
 	/*

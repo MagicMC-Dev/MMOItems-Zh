@@ -39,7 +39,7 @@ public class TemplateManager implements Reloadable {
 	}
 
 	public boolean hasTemplate(NBTItem nbt) {
-		return hasTemplate(nbt.getType(), nbt.getString("MMOITEMS_ITEM_ID"));
+		return hasTemplate(Type.get(nbt.getType()), nbt.getString("MMOITEMS_ITEM_ID"));
 	}
 
 	public MMOItemTemplate getTemplate(Type type, String id) {
@@ -47,7 +47,7 @@ public class TemplateManager implements Reloadable {
 	}
 
 	public MMOItemTemplate getTemplate(NBTItem nbt) {
-		return getTemplate(nbt.getType(), nbt.getString("MMOITEMS_ITEM_ID"));
+		return getTemplate(Type.get(nbt.getType()), nbt.getString("MMOITEMS_ITEM_ID"));
 	}
 
 	/**

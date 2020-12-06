@@ -131,7 +131,7 @@ public class ItemUse implements Listener {
 		NBTItem offhandItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInOffHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
-		if (item.hasType() && item.getType() != Type.BLOCK) {
+		if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
 			Weapon weapon = new Weapon(playerData, item);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
@@ -150,7 +150,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 		}
-		if (offhandItem.hasType() && item.getType() != Type.BLOCK) {
+		if (offhandItem.hasType() && Type.get(item.getType()) != Type.BLOCK) {
 			Weapon weapon = new Weapon(playerData, offhandItem);
 
 			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
@@ -239,7 +239,7 @@ public class ItemUse implements Listener {
 			if (!picked.hasType())
 				return;
 
-			ItemSkin.ApplyResult result = ((ItemSkin) useItem).applyOntoItem(picked, picked.getType());
+			ItemSkin.ApplyResult result = ((ItemSkin) useItem).applyOntoItem(picked, Type.get(picked.getType()));
 			if (result.getType() == ItemSkin.ResultType.NONE)
 				return;
 
@@ -257,7 +257,7 @@ public class ItemUse implements Listener {
 			if (!picked.hasType())
 				return;
 
-			GemStone.ApplyResult result = ((GemStone) useItem).applyOntoItem(picked, picked.getType());
+			GemStone.ApplyResult result = ((GemStone) useItem).applyOntoItem(picked, Type.get(picked.getType()));
 			if (result.getType() == GemStone.ResultType.NONE)
 				return;
 
@@ -283,7 +283,7 @@ public class ItemUse implements Listener {
 			return;
 
 		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getBow());
-		Type type = item.getType();
+		Type type = Type.get(item.getType());
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
 		if (type != null)
@@ -293,8 +293,8 @@ public class ItemUse implements Listener {
 			}
 
 		Arrow arrow = (Arrow) event.getProjectile();
-		if (!(item.getStat(ItemStats.ARROW_VELOCITY) <= 0))
-			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStats.ARROW_VELOCITY) / 2)));
+		if (!(item.getStat(ItemStats.ARROW_VELOCITY.getId()) <= 0))
+			arrow.setVelocity(arrow.getVelocity().multiply(1 + (item.getStat(ItemStats.ARROW_VELOCITY.getId()) / 2)));
 		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), event.getProjectile(),
 				type != null, event.getForce());
 	}
@@ -324,7 +324,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat(ItemStats.ITEM_COOLDOWN));
+			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat(ItemStats.ITEM_COOLDOWN.getId()));
 			useItem.executeCommands();
 		}
 	}

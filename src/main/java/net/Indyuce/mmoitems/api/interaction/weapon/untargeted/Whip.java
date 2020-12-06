@@ -36,7 +36,7 @@ public class Whip extends UntargetedWeapon {
 			durItem.decreaseDurability(1).update();
 
 		double attackDamage = getValue(stats.getStat(ItemStats.ATTACK_DAMAGE), 1);
-		double range = getValue(getNBTItem().getStat(ItemStats.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 
 		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));

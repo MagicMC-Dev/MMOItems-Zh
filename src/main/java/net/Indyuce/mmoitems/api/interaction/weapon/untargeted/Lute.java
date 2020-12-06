@@ -42,8 +42,8 @@ public class Lute extends UntargetedWeapon {
 			durItem.decreaseDurability(1).update();
 
 		double attackDamage = getValue(stats.getStat(ItemStats.ATTACK_DAMAGE), 1);
-		double range = getValue(getNBTItem().getStat(ItemStats.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));
-		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT), 0);
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);
 
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
 		Sound sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound()).getSound();

@@ -17,12 +17,8 @@ import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 
 public class MMOCoreHook implements RPGHandler, Listener {
-
-	/*
-	 * called when MMOItems enables
-	 */
+	/* called when MMOItems enables */
 	public MMOCoreHook() {
-
 		/*
 		 * only works when the server is reloaded. needs /reload when changing
 		 * attributes or professions to refresh MMOItems stats
@@ -63,7 +59,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		public MMOCoreRPGPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
 			super(playerData);
 
-			data = playerData.getMMOPlayerData().getMMOCore();
+			data = PlayerData.get(playerData.getUniqueId());
 		}
 
 		public PlayerData getData() {

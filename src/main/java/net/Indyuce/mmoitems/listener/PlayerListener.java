@@ -120,7 +120,7 @@ public class PlayerListener implements Listener {
 			return;
 
 		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
-		Type type = nbtItem.getType();
+		Type type = Type.get(nbtItem.getType());
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
 		if (type != null && !new Weapon(playerData, nbtItem).canBeUsed()) {

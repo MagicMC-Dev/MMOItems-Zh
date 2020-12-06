@@ -72,7 +72,7 @@ public class Consumable extends UseItem {
 		 * Unidentified items do not have any type, so you must check if the
 		 * item has a type first.
 		 */
-		Type targetType = target.getType();
+		Type targetType = Type.get(target.getType());
 		if (targetType == null) {
 			if (getNBTItem().getBoolean("MMOITEMS_CAN_IDENTIFY") && target.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
 
@@ -177,7 +177,7 @@ public class Consumable extends UseItem {
 		 * applying a soulbound onto an item. it does not work if the item
 		 * already has a soulbound, and it has a chance to successfully apply.
 		 */
-		double soulbindingChance = getNBTItem().getStat(ItemStats.SOULBINDING_CHANCE);
+		double soulbindingChance = getNBTItem().getStat(ItemStats.SOULBINDING_CHANCE.getId());
 		if (soulbindingChance > 0) {
 			if (target.getItem().getAmount() > 1) {
 				Message.CANT_BIND_STACKED.format(ChatColor.RED).send(player, "soulbound");
@@ -198,7 +198,7 @@ public class Consumable extends UseItem {
 				if (called.isCancelled())
 					return false;
 
-				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL));
+				int soulboundLevel = (int) Math.max(1, getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL.getId()));
 				(targetMMO = new LiveMMOItem(target)).setData(ItemStats.SOULBOUND,
 						((Soulbound) ItemStats.SOULBOUND).newSoulboundData(player.getUniqueId(), player.getName(), soulboundLevel));
 				target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
@@ -220,7 +220,7 @@ public class Consumable extends UseItem {
 		 * have at least the soulbound's level to be able to break the item
 		 * soulbound.
 		 */
-		double soulboundBreakChance = getNBTItem().getStat(ItemStats.SOULBOUND_BREAK_CHANCE);
+		double soulboundBreakChance = getNBTItem().getStat(ItemStats.SOULBOUND_BREAK_CHANCE.getId());
 		if (soulboundBreakChance > 0) {
 			MMOItem targetMMO = new VolatileMMOItem(target);
 			if (!targetMMO.hasData(ItemStats.SOULBOUND)) {
@@ -232,7 +232,7 @@ public class Consumable extends UseItem {
 			SoulboundData soulbound = (SoulboundData) targetMMO.getData(ItemStats.SOULBOUND);
 
 			// check for soulbound level
-			if (Math.max(1, getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL)) < soulbound.getLevel()) {
+			if (Math.max(1, getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL.getId())) < soulbound.getLevel()) {
 				Message.LOW_SOULBOUND_LEVEL.format(ChatColor.RED, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player, "soulbound");
 				return false;
 			}
@@ -261,7 +261,7 @@ public class Consumable extends UseItem {
 		 * Item repairing, does not apply if there's no repair power or if the
 		 * item still has all its uses left
 		 */
-		int repairPower = (int) getNBTItem().getStat(ItemStats.REPAIR);
+		int repairPower = (int) getNBTItem().getStat(ItemStats.REPAIR.getId());
 		if (repairPower > 0) {
 
 			// custom durability

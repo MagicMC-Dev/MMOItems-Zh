@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mmocore.load;
 import java.util.Optional;
 
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,7 +42,7 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 
 	@Override
 	public void collect(LootBuilder builder) {
-		RPGPlayer rpgPlayer = builder.getEntity().getMMOPlayerData().getMMOItems().getRPG();
+		RPGPlayer rpgPlayer = PlayerData.get(builder.getEntity().getUniqueId()).getRPG();
 
 		TemplateExplorer explorer = new TemplateExplorer();
 		if (matchClass)

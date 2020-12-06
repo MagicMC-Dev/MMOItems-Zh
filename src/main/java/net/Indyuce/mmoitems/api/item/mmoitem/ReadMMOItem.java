@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
+import net.Indyuce.mmoitems.api.Type;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
 public abstract class ReadMMOItem extends MMOItem {
@@ -13,7 +14,7 @@ public abstract class ReadMMOItem extends MMOItem {
 	 *            The NBTItem being read to generate an MMOItem
 	 */
 	public ReadMMOItem(NBTItem item) {
-		super(item.getType(), item.getString("MMOITEMS_ITEM_ID"));
+		super(Type.get(item.getType()), item.getString("MMOITEMS_ITEM_ID"));
 
 		this.item = item;
 	}

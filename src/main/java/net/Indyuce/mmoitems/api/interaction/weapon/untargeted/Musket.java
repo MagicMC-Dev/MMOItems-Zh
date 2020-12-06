@@ -35,11 +35,11 @@ public class Musket extends UntargetedWeapon {
 			durItem.decreaseDurability(1).update();
 
 		double attackDamage = stats.getStat(ItemStats.ATTACK_DAMAGE);
-		double range = getValue(getNBTItem().getStat(ItemStats.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));
-		double recoil = getValue(getNBTItem().getStat(ItemStats.RECOIL), MMOItems.plugin.getConfig().getDouble("default.recoil"));
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+		double recoil = getValue(getNBTItem().getStat(ItemStats.RECOIL.getId()), MMOItems.plugin.getConfig().getDouble("default.recoil"));
 
 		// knockback
-		double knockback = getNBTItem().getStat(ItemStats.KNOCKBACK);
+		double knockback = getNBTItem().getStat(ItemStats.KNOCKBACK.getId());
 		if (knockback > 0)
 			getPlayer().setVelocity(getPlayer().getVelocity().add(getPlayer().getEyeLocation().getDirection().setY(0).normalize().multiply(-1 * knockback).setY(-.2)));
 

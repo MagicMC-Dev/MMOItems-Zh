@@ -54,7 +54,7 @@ public class ItemSkin extends UseItem {
 		}
 
 		// check for success rate
-		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE);
+		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
 		if (successRate != 0)
 			if (random.nextDouble() < 1 - successRate / 100) {
 				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);

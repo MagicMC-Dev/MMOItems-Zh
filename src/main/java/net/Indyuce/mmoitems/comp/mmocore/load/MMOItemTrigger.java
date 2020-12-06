@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
@@ -10,6 +7,8 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.mmogroup.mmolib.api.MMOLineConfig;
 import net.mmogroup.mmolib.api.util.SmartGive;
+import org.apache.commons.lang.Validate;
+import org.bukkit.inventory.ItemStack;
 
 public class MMOItemTrigger extends Trigger {
 	private final MMOItemTemplate template;
@@ -33,7 +32,7 @@ public class MMOItemTrigger extends Trigger {
 
 	@Override
 	public void apply(PlayerData player) {
-		ItemStack item = template.newBuilder(player.getMMOPlayerData().getMMOItems().getRPG()).build().newBuilder().build();
+		ItemStack item = template.newBuilder(net.Indyuce.mmoitems.api.player.PlayerData.get(player.getUniqueId()).getRPG()).build().newBuilder().build();
 		item.setAmount(amount);
 		new SmartGive(player.getPlayer()).give(item);
 	}

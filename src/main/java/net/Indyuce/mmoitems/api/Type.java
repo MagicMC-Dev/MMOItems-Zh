@@ -230,7 +230,7 @@ public class Type {
 	 */
 	@Deprecated
 	public static Type get(ItemStack item) {
-		return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getType();
+		return Type.get(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getType());
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class Type {
 	 * @return The type or NPE if it couldn't be found
 	 */
 	public static Type get(String id) {
-		return MMOItems.plugin.getTypes().get(id.toUpperCase().replace("-", "_").replace(" ", "_"));
+		return isValid(id) ? MMOItems.plugin.getTypes().get(id.toUpperCase().replace("-", "_").replace(" ", "_")) : null;
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class Type {
 	 * @return If a registered type with this ID could be found
 	 */
 	public static boolean isValid(String id) {
-		return MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
+		return id != null && MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}
 
 	public enum EquipmentSlot {

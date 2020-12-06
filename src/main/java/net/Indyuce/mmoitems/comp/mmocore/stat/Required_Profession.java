@@ -24,7 +24,7 @@ public class Required_Profession extends DoubleStat implements ItemRestriction, 
     @Override
     public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
         MMOCoreHook.MMOCoreRPGPlayer mmocore = (MMOCoreHook.MMOCoreRPGPlayer) player;
-        if (mmocore.getData().getCollectionSkills().getLevel(this.profession) < item.getStat(this)) {
+        if (mmocore.getData().getCollectionSkills().getLevel(this.profession) < item.getStat(getId())) {
             if (message) {
                 new AddonMessage("not-enough-profession").format(ChatColor.RED, "#profession#", profession.getName()).send(player.getPlayer(), "cant-use-item");
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);

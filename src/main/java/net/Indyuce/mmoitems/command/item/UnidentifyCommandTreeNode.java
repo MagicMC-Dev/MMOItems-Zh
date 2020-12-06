@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.command.item;
 
+import net.Indyuce.mmoitems.api.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,7 +34,7 @@ public class UnidentifyCommandTreeNode extends CommandTreeNode {
 			return CommandResult.FAILURE;
 		}
 
-		player.getInventory().setItemInMainHand(item.getType().getUnidentifiedTemplate().newBuilder(item).build());
+		player.getInventory().setItemInMainHand(Type.get(item.getType()).getUnidentifiedTemplate().newBuilder(item).build());
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully unidentified the item you are holding.");
 		return CommandResult.SUCCESS;
 	}

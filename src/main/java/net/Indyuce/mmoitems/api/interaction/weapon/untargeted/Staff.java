@@ -40,7 +40,7 @@ public class Staff extends UntargetedWeapon {
 			durItem.decreaseDurability(1).update();
 
 		double attackDamage = getValue(stats.getStat(ItemStats.ATTACK_DAMAGE), 1);
-		double range = getValue(getNBTItem().getStat(ItemStats.RANGE), MMOItems.plugin.getConfig().getDouble("default.range"));
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 
 		StaffSpirit spirit = StaffSpirit.get(getNBTItem());
 		if (spirit != null) {

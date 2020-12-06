@@ -87,13 +87,15 @@
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOCore</artifactId>
 			<version>1.5</version>
-			<scope>compile</scope>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/MMOCore.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOLib</artifactId>
 			<version>1.6</version>
-			<scope>provided</scope>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>
 
 		<!-- APIs -->

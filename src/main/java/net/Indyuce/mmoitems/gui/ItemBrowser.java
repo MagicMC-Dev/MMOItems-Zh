@@ -6,11 +6,12 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.api.util.ItemMetaLore;
 import net.mmogroup.mmolib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,12 +27,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ItemBrowser extends PluginInventory {
-	private final Map<String, ItemStack> cached = new HashMap<>();
+	private Map<String, ItemStack> cached = new LinkedHashMap<>();
 
 	private final Type type;
 	private boolean deleteMode;
@@ -121,30 +122,37 @@ public class ItemBrowser extends PluginInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
 		for (int j = min; j < Math.min(max, templates.size()); j++) {
 			MMOItemTemplate template = templates.get(j);
-			if (!cached.containsKey(template.getId())) {
-				ItemStack item = template.newBuilder(getPlayerData().getRPG()).build().newBuilder().build();
-				if (item == null || item.getType() == Material.AIR) {
-					cached.put(template.getId(), error);
-					inv.setItem(slots[n++], error);
-					continue;
-				}
-
-				ItemMeta meta = item.getItemMeta();
-
-				List<String> newLore = new ArrayList<>();
-				newLore.add("");
-				if (deleteMode) {
-					newLore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
-					meta.setDisplayName(ChatColor.RED + "DELETE: " + meta.getDisplayName());
-				} else {
-					newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
-					newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
-				}
-				item.setItemMeta(meta);
-				item = ItemMetaLore.addLoreLines(item, newLore);
-
-				cached.put(template.getId(), item);
+			ItemStack item = template.newBuilder(getPlayerData().getRPG()).build().newBuilder().build();
+			if (item == null || item.getType() == Material.AIR) {
+				cached.put(template.getId(), error);
+				inv.setItem(slots[n++], error);
+				continue;
 			}
+			NBTItem nbtItem = NBTItem.get(item);
+
+			List<BaseComponent> newLore = new ArrayList<>();
+			newLore.add(toComponent(""));
+			if (deleteMode) {
+				newLore.add(toComponent(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
+
+				BaseComponent display = nbtItem.getDisplayNameComponent();
+				if (display.getExtra() != null) {
+					List<BaseComponent> extra = new ArrayList<>(display.getExtra());
+					extra.add(0, toComponent(ChatColor.RED + "DELETE: "));
+					display.setExtra(extra);
+					nbtItem.setDisplayNameComponent(display);
+				}
+
+			} else {
+				newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
+				newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
+			}
+
+			List<BaseComponent> lore = nbtItem.getLoreComponents();
+			lore.addAll(newLore);
+			nbtItem.setLoreComponents(lore);
+
+			cached.put(template.getId(), nbtItem.toItem());
 
 			inv.setItem(slots[n++], cached.get(template.getId()));
 		}
@@ -262,7 +270,7 @@ public class ItemBrowser extends PluginInventory {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				// this refreshes the item if it's unstackable
 				ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE")) ? MMOItems.plugin.getItem(type, id, playerData)
-						: ItemMetaLore.removeLoreLines(item, 3);
+						: removeLastLoreLines(NBTItem.get(item));
 				getPlayer().getInventory().addItem(generatedItem);
 				getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
 			}
@@ -272,13 +280,14 @@ public class ItemBrowser extends PluginInventory {
 		}
 	}
 
-	private ItemStack removeLastLoreLines(ItemStack item) {
-		ItemMeta meta = item.getItemMeta();
-		List<String> lore = meta.getLore();
-		meta.setLore(lore.subList(0, lore.size() - 3));
-
-		ItemStack item1 = item.clone();
-		item1.setItemMeta(meta);
-		return item1;
+	private ItemStack removeLastLoreLines(NBTItem item) {
+		List<BaseComponent> lore = item.getLoreComponents();
+		item.setLoreComponents(lore.subList(0, lore.size() - 3));
+		return item.toItem();
+	}
+	private BaseComponent toComponent(String text) {
+		BaseComponent component = TextComponent.fromLegacyText(text)[0];
+		component.setItalic(false);
+		return component;
 	}
 }

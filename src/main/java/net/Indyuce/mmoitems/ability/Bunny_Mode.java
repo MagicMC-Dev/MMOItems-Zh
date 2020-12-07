@@ -77,7 +77,7 @@ public class Bunny_Mode extends Ability {
 
 			this.player = player;
 
-			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (@NotNull Runnable) this::close, (long) (duration * 20));
+			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (Runnable) this::close, (long) (duration * 20));
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

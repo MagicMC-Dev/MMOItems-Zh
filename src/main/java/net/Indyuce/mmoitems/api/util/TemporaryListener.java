@@ -30,7 +30,7 @@ public abstract class TemporaryListener implements Listener {
 	 * used to close the temporary listener after some delay
 	 */
 	public void close(long duration) {
-		Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (@NotNull Runnable) this::close, duration);
+		Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (Runnable) this::close, duration);
 	}
 
 	public void close() {

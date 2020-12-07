@@ -11,18 +11,25 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.Soulbound;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.mmogroup.mmolib.api.item.NBTItem;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemModInstance {
 	private final NBTItem nbtItem;
 	private final int amount;
+	private final Map<Enchantment,Integer> enchantments;
 	// Not initialized at first for performance reasons
 	private MMOItem mmoItem;
 
 	public ItemModInstance(NBTItem nbt) {
 		this.nbtItem = nbt;
 		this.amount = nbt.getItem().getAmount();
+		this.enchantments = nbt.getItem().getEnchantments();
 	}
 
 	public void applySoulbound(Player p) {
@@ -62,6 +69,7 @@ public class ItemModInstance {
 	public ItemStack toStack() {
 		ItemStack stack = mmoItem.newBuilder().build();
 		stack.setAmount(amount);
+		stack.addUnsafeEnchantments(this.enchantments);
 		return stack;
 	}
 

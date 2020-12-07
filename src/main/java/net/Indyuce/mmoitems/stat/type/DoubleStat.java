@@ -51,9 +51,16 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
 		double value = ((DoubleData) data).getValue();
-		item.addItemTag(new ItemTag(getNBTPath(), value));
-		if (value > 0)
+		// If value is not allowed to be negative it will not
+		// apply the stat or the lore.
+		if (value < 0 && !canNegative())
+			return;
+		// If the value is 0 the lore will not be applied
+		// but the stat will still be added to the nbt
+		if (value != 0)
 			item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
+		item.addItemTag(new ItemTag(getNBTPath(), value));
+
 	}
 
 	@Override

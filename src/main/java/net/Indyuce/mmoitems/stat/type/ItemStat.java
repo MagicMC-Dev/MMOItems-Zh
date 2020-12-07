@@ -210,4 +210,10 @@ public abstract class ItemStat {
 		String str = MMOItems.plugin.getLanguage().getStatFormat(path);
 		return str == null ? "<TranslationNotFound:" + path + ">" : str;
 	}
+
+	// Sets if the double value is allowed to be
+	// a negative.
+	public boolean canNegative() {
+		return true;
+	}
 }

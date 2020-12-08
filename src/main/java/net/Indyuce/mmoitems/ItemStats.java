@@ -25,6 +25,7 @@ import net.Indyuce.mmoitems.stat.HideDye;
 import net.Indyuce.mmoitems.stat.HideEnchants;
 import net.Indyuce.mmoitems.stat.HidePotionEffects;
 import net.Indyuce.mmoitems.stat.Inedible;
+import net.Indyuce.mmoitems.stat.InternalRevisionID;
 import net.Indyuce.mmoitems.stat.ItemDamage;
 import net.Indyuce.mmoitems.stat.ItemLevel;
 import net.Indyuce.mmoitems.stat.ItemParticles;
@@ -238,5 +239,6 @@ public class ItemStats {
 	// Internal Stats
 	SOULBOUND = new Soulbound(),
 			STORED_TAGS = new StoredTags(),
-			ITEM_LEVEL = new ItemLevel();
+			ITEM_LEVEL = new ItemLevel(),
+			INTERNAL_REVISION_ID = new InternalRevisionID();
 }

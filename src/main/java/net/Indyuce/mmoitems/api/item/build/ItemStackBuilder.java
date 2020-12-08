@@ -63,6 +63,8 @@ public class ItemStackBuilder {
 
 		tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoitem.getType().getId()));
 		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
+		if (MMOItems.INTERNAL_REVISION_ID > 1)
+			tags.add(new ItemTag("MMOITEMS_INTERNAL_REVISION_ID", MMOItems.INTERNAL_REVISION_ID));
 
 		/*if (MMOItems.plugin.getUpdater().hasData(mmoitem))
 			tags.add(new ItemTag("MMOITEMS_ITEM_UUID",

@@ -1,14 +1,14 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class MMOItem implements ItemReference {
 	private final Type type;
@@ -23,13 +23,11 @@ public class MMOItem implements ItemReference {
 
 	/**
 	 * Constructor used to generate an ItemStack based on some stat data
-	 * 
-	 * @param type
-	 *            The type of the item you want to create
-	 * @param id
-	 *            The id of the item, make sure it is different from other
-	 *            existing items not to interfere with MI features like the
-	 *            dynamic item updater
+	 *
+	 * @param type The type of the item you want to create
+	 * @param id   The id of the item, make sure it is different from other
+	 *             existing items not to interfere with MI features like the
+	 *             dynamic item updater
 	 */
 	public MMOItem(Type type, String id) {
 		this.type = type;

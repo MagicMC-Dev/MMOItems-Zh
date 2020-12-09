@@ -50,7 +50,6 @@ public class BooleanStat extends ItemStat {
 
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
-
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			inv.getEditedSection().set(getPath(), inv.getEditedSection().getBoolean(getPath()) ? null : true);
 			inv.registerTemplateEdition();

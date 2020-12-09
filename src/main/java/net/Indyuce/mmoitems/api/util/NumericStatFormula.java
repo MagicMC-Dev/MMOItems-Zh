@@ -127,6 +127,8 @@ public class NumericStatFormula implements RandomStatData {
 	 *            The config path used to save the formula
 	 */
 	public void fillConfigurationSection(ConfigurationSection config, String path) {
+		if(path == null)
+			throw new NullPointerException("Path was empty");
 		if (scale == 0 && spread == 0 && maxSpread == 0)
 			config.set(path, base == 0 ? null : base);
 		else {

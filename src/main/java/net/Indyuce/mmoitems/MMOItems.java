@@ -89,6 +89,9 @@ import java.util.logging.Level;
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
 
+	// Increment this when making breaking changes to items.
+	public static int INTERNAL_REVISION_ID = 1;
+
 	private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
 	private final CraftingManager stationRecipeManager = new CraftingManager();
 	private final LoreFormatManager formatManager = new LoreFormatManager();

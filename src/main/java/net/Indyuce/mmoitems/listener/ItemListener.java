@@ -86,8 +86,10 @@ public class ItemListener implements Listener {
 	/* Whether or not data should be kept when updating an item to latest revision. */
 	private boolean shouldUpdate(NBTItem nbt, String type) {
 		if(!MMOItems.plugin.getTemplates().hasTemplate(nbt)) return false;
+
 		return !MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + type) &&
-			(MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() > (nbt.hasTag("MMOITEMS_REVISION_ID")
-					? nbt.getInteger("MMOITEMS_REVISION_ID") : 1));
+				((MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() > (nbt.hasTag("MMOITEMS_REVISION_ID")
+				? nbt.getInteger("MMOITEMS_REVISION_ID") : 1)) || (MMOItems.INTERNAL_REVISION_ID >
+				(nbt.hasTag("MMOITEMS_INTERNAL_REVISION_ID") ? nbt.getInteger("MMOITEMS_INTERNAL_REVISION_ID") : 1)) );
 	}
 }

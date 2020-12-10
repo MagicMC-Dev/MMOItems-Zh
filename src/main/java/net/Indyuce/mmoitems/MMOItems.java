@@ -208,8 +208,11 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
-		if (getConfig().getBoolean("lootsplosion.enabled"))
-			Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
+		if (getConfig().getBoolean("lootsplosion.enabled")) {
+			if(Bukkit.getPluginManager().isPluginEnabled("MythicMobs"))
+				Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
+			else getLogger().warning("Lootsplosions are enabled, but MythicMobs was not found!");
+		}
 
 		/*
 		 * this class implements the Listener, if the option

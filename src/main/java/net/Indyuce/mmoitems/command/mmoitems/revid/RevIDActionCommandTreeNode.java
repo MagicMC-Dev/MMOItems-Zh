@@ -10,11 +10,17 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-public class RevIncreaseCommandTreeNode extends CommandTreeNode {
-	public RevIncreaseCommandTreeNode(CommandTreeNode parent) {
-		super(parent, "increase");
+public class RevIDActionCommandTreeNode extends CommandTreeNode {
+	private final String cmdType;
+	private final Function<Integer, Integer> modifier;
 
+	public RevIDActionCommandTreeNode(CommandTreeNode parent, String type, Function<Integer, Integer> modifier) {
+		super(parent, type);
+
+		this.cmdType = type;
+		this.modifier = modifier;
 		addParameter(RevisionIDCommandTreeNode.TYPE_OR_ALL);
 	}
 
@@ -30,14 +36,19 @@ public class RevIncreaseCommandTreeNode extends CommandTreeNode {
 
 		Type type = args[2].equalsIgnoreCase("all") ? null : Type.get(args[2]);
 		List<MMOItemTemplate> templates = new ArrayList<>(type == null ? MMOItems.plugin.getTemplates().collectTemplates() : MMOItems.plugin.getTemplates().getTemplates(type));
+		int failed = 0;
 		for(MMOItemTemplate template : templates) {
 			ConfigFile file = template.getType().getConfigFile();
-			file.getConfig().getConfigurationSection(template.getId() + ".base")
-				.set("revision-id", Math.min(template.getRevisionId() + 1, Integer.MAX_VALUE));
-			file.registerTemplateEdition(template);
+			if(!file.getConfig().isConfigurationSection(template.getId() + ".base"))
+				failed++;
+			else {
+				file.getConfig().getConfigurationSection(template.getId() + ".base").set("revision-id", modifier.apply(template.getRevisionId()));
+				file.registerTemplateEdition(template);
+			}
 		}
 
-		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "Successfully increased Rev IDs" + (type != null ? " for " + type.getName() : "") + "!");
+		if(failed > 0) sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find ConfigurationSection for " + failed + " of the specified items.");
+		else sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "Successfully " + cmdType + "d Rev IDs" + (type != null ? " for " + type.getName() : "") + "!");
 		return CommandResult.SUCCESS;
 	}
 }

@@ -14,8 +14,10 @@ public class RevisionIDCommandTreeNode extends CommandTreeNode {
 	public RevisionIDCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "revid");
 
-		addChild(new RevIncreaseCommandTreeNode(this));
-		addChild(new RevDecreaseCommandTreeNode(this));
+		addChild(new RevIDActionCommandTreeNode(this, "increase", (revId) -> Math.min(revId + 1, Integer.MAX_VALUE)));
+		addChild(new RevIDActionCommandTreeNode(this, "decrease", (revId) -> Math.max(revId - 1, 1)));
+
+
 	}
 
 	@Override

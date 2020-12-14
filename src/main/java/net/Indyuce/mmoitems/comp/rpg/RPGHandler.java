@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -21,7 +22,8 @@ public interface RPGHandler {
 		BATTLELEVELS("BattleLevels", BattleLevelsHook.class),
 		MCMMO("mcMMO", McMMOHook.class),
 		MCRPG("McRPG", McRPGHook.class),
-		SKILLS("Skills", SkillsHook.class);
+		SKILLS("Skills", SkillsHook.class),
+		SKILLSPRO("SkillsPro", SkillsProHook.class);
 
 		private final Class<? extends RPGHandler> pluginClass;
 		private final String name;
@@ -33,8 +35,8 @@ public interface RPGHandler {
 
 		public RPGHandler load() {
 			try {
-				return pluginClass.newInstance();
-			} catch (InstantiationException | IllegalAccessException exception) {
+				return pluginClass.getDeclaredConstructor().newInstance();
+			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						"Could not initialize RPG plugin compatibility with " + name + ": " + exception.getMessage());
 				return new DefaultHook();

@@ -191,6 +191,13 @@
 			<systemPath>${basedir}/lib/Skills.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>org.skills.main</groupId>
+			<artifactId>SkillsPro</artifactId>
+			<version>18.9.0.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/SkillsPro.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>me.robin</groupId>
 			<artifactId>BattleLevels</artifactId>
 			<version>6.9.1</version>

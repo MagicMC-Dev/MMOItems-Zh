@@ -45,7 +45,7 @@ public class TemplateExplorer {
 			case 1:
 				return all.stream().findFirst();
 			default:
-				return all.stream().skip(random.nextInt(count() - 1)).findFirst();
+				return all.stream().skip(random.nextInt(count())).findFirst();
 		}
 	}
 

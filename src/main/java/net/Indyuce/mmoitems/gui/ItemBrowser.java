@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemBrowser extends PluginInventory {
-	private Map<String, ItemStack> cached = new LinkedHashMap<>();
+	private final Map<String, ItemStack> cached = new LinkedHashMap<>();
 
 	private final Type type;
 	private boolean deleteMode;
@@ -136,7 +136,7 @@ public class ItemBrowser extends PluginInventory {
 				newLore.add(toComponent(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
 
 				BaseComponent display = nbtItem.getDisplayNameComponent();
-				if (display.getExtra() != null) {
+				if (display != null && display.getExtra() != null) {
 					List<BaseComponent> extra = new ArrayList<>(display.getExtra());
 					extra.add(0, toComponent(ChatColor.RED + "DELETE: "));
 					display.setExtra(extra);

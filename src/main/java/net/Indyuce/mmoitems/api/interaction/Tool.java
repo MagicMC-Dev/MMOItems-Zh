@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import net.mmogroup.mmolib.UtilityMethods;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -30,12 +31,11 @@ public class Tool extends UseItem {
 		
 		if (getNBTItem().getBoolean("MMOITEMS_AUTOSMELT"))
 			if (block.getType() == Material.IRON_ORE || block.getType() == Material.GOLD_ORE) {
-				ItemStack item = new ItemStack(Material.valueOf(block.getType().name().replace("_ORE", "") + "_INGOT"));
+				ItemStack item = new ItemStack(Material.valueOf(block.getType().name().replace("_ORE", "_INGOT")));
 
-				Location loc = block.getLocation().add(.5, 0, .5);
+				UtilityMethods.dropItemNaturally(block.getLocation(), item);
+				block.getWorld().spawnParticle(Particle.CLOUD, block.getLocation().add(.5, .5, .5), 0);
 				block.setType(Material.AIR);
-				block.getWorld().dropItemNaturally(loc, item);
-				block.getWorld().spawnParticle(Particle.CLOUD, loc.add(0, .5, 0), 0);
 				cancel = true;
 			}
 

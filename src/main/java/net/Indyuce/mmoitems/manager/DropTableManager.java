@@ -7,15 +7,14 @@ import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
+import net.mmogroup.mmolib.UtilityMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -113,7 +112,7 @@ public class DropTableManager implements Listener, Reloadable {
 						return;
 
 					for (ItemStack drop : drops)
-						drop(block, drop);
+						UtilityMethods.dropItemNaturally(block.getLocation(), drop);
 				}, 2);
 		}
 
@@ -121,38 +120,10 @@ public class DropTableManager implements Listener, Reloadable {
 			final Material type = block.getType();
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
 				for (ItemStack drop : blocks.get(type).read(PlayerData.get(player), hasSilkTouchTool(player)))
-					drop(block, drop);
+					UtilityMethods.dropItemNaturally(block.getLocation(), drop);
 			}, 2);
 		}
 	}
-	
-	private void drop(Block block, ItemStack drop) {
-		Block above = block.getRelative(BlockFace.UP);
-		if(above.isEmpty() || above.isLiquid() || above.isPassable()) {
-			Item item = block.getWorld().dropItemNaturally(block.getLocation().add(.5, .1, .5), drop);
-			item.setVelocity(item.getVelocity().multiply(0.5f));
-		}
-		else block.getWorld().dropItemNaturally(block.getLocation().add(.5, 0, .5), drop);
-	}
-
-	// public Collection<ItemStack> getBlockDrops(Block block, Player player) {
-	// final Material type = block.getType();
-	//
-	// CustomBlock custom = CustomBlock.getFromData(block.getBlockData()) ;
-	// if (custom != null) {
-	// if (customBlocks.containsKey(custom.getId())) {
-	// if (CustomBlockListener.getPickaxePower(player) >=
-	// custom.getRequiredPower()) {
-	// return customBlocks.get(custom.getId()).read(hasSilkTouchTool(player));
-	// }
-	// }
-	// } else {
-	// if (blocks.containsKey(type)) {
-	// return blocks.get(type).read(hasSilkTouchTool(player));
-	// }
-	// }
-	// return block.getDrops(player.getInventory().getItemInMainHand());
-	// }
 
 	public boolean hasSilkTouchTool(Player player) {
 		ItemStack item = player.getInventory().getItemInMainHand();

@@ -93,7 +93,7 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOLib</artifactId>
-			<version>1.6</version>
+			<version>1.7.3</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>

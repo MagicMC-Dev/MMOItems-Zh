@@ -100,19 +100,21 @@ public class PlayerData {
 	private void load(FileConfiguration config) {
 		if (config.contains("crafting-queue"))
 			craftingStatus.load(this, config.getConfigurationSection("crafting-queue"));
-	}
 
-	public void save() {
-		if (MMOItems.plugin.hasPermissions()) {
+		if (MMOItems.plugin.hasPermissions() && config.contains("permissions-from-items")) {
 			Permission perms = MMOItems.plugin.getVault().getPermissions();
-			permissions.forEach(perm -> {
+			config.getStringList("permissions-from-items").forEach(perm -> {
 				if (perms.has(getPlayer(), perm)) perms.playerRemove(getPlayer(), perm);
 			});
 		}
+	}
+
+	public void save() {
 		cancelRunnables();
 
 		ConfigFile config = new ConfigFile("/userdata", getUniqueId().toString());
 		config.getConfig().createSection("crafting-queue");
+		config.getConfig().set("permissions-from-items", new ArrayList<>(permissions));
 		craftingStatus.save(config.getConfig().getConfigurationSection("crafting-queue"));
 		config.save();
 	}

@@ -11,15 +11,23 @@ public class CachedRecipe {
 	private ItemStack stack;
 
 	public boolean isValid(ItemStack[] matrix) {
+		//System.out.println("Checking validity");
 		boolean check = true;
 		for (int i = 0; i < matrix.length; i++) {
-			if (matrix[i] == null || matrix[i].getType() == Material.AIR)
+			if (matrix[i] == null || matrix[i].getType() == Material.AIR) {
+				//System.out.printf("[%d] is null or air%n", i);
 				continue;
-			if (matrix[i].getAmount() < amounts.get(i))
+			}
+			if (matrix[i].getAmount() < amounts.get(i)) {
+				//System.out.printf("[%d] did not have correct amounts (%d < %d)%n", i, matrix[i].getAmount(), amounts.get(i));
 				check = false;
-			if (!check)
+			}
+			if (!check) {
+				//System.out.println("Failed the check");
 				break;
+			}
 		}
+		//System.out.println("Succeeded the check");
 		return check;
 	}
 

@@ -14,7 +14,6 @@ import net.mmogroup.mmolib.api.util.AltChar;
 public class VaultSupport {
 	private final Economy economy;
 	private final Permission permissions;
-	private final boolean enabled;
 
 	public VaultSupport() {
 		RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager()
@@ -23,23 +22,20 @@ public class VaultSupport {
 		RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager()
 				.getRegistration(Permission.class);
 		permissions = permissionProvider != null ? permissionProvider.getProvider() : null;
-		
-		enabled = load();
-		if(!enabled) {
-			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Vault");
+
+		if(economy == null) {
+			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Economy Support (Vault)");
+			return;
+		} else
+			MMOItems.plugin.getCrafting().registerCondition("money", MoneyCondition::new,
+					new ConditionalDisplay("&a" + AltChar.check + " Requires $#money#",
+							"&c" + AltChar.cross + " Requires $#money#"));
+		if(permissions == null) {
+			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Permissions Support (Vault)");
 			return;
 		}
 
 		MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto Vault");
-		MMOItems.plugin.getCrafting().registerCondition("money", MoneyCondition::new,
-				new ConditionalDisplay("&a" + AltChar.check + " Requires $#money#",
-						"&c" + AltChar.cross + " Requires $#money#"));
-	}
-	
-	private boolean load() {
-		if (economy == null)
-			return false;
-		return permissions != null;
 	}
 	
 	public Permission getPermissions() {
@@ -48,9 +44,5 @@ public class VaultSupport {
 	
 	public Economy getEconomy() {
 		return economy;
-	}
-	
-	public boolean enabled() {
-		return enabled;
 	}
 }

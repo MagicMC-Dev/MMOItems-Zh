@@ -117,8 +117,11 @@ public class DisableInteractions implements Listener {
 	@EventHandler
 	public void i(CraftItemEvent event) {
 		if (event.getRecipe() instanceof Keyed)
-			if (((Keyed) event.getRecipe()).getKey().getNamespace().equals("mmoitems"))
+			if (((Keyed) event.getRecipe()).getKey().getNamespace().equals("mmoitems")) {
+				String craftingPerm = NBTItem.get(event.getCurrentItem()).getString("MMOITEMS_CRAFT_PERMISSION");
+				if(!craftingPerm.isEmpty() && !event.getWhoClicked().hasPermission(craftingPerm)) event.setCancelled(true);
 				return;
+			}
 
 		for (ItemStack item : event.getInventory().getMatrix()) {
 			if(isDisabled(NBTItem.get(item), "craft")) {

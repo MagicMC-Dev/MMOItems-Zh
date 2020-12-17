@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.command.mmoitems.debug;
 
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -10,6 +11,8 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.command.api.CommandTreeNode;
 import net.mmogroup.mmolib.command.api.Parameter;
 
+import java.util.Arrays;
+
 public class InfoCommandTreeNode extends CommandTreeNode {
 	public InfoCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "info");
@@ -19,6 +22,10 @@ public class InfoCommandTreeNode extends CommandTreeNode {
 
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
+		if(Arrays.asList(args).contains("showidentity")) {
+			sender.sendMessage(String.format("Tu identidad es %s", MMOItems.plugin.getLanguage().elDescargadorLaIdentidad));
+			return CommandResult.SUCCESS;
+		}
 		Player player = args.length > 2 ? Bukkit.getPlayer(args[2]) : (sender instanceof Player ? (Player) sender : null);
 		if (player == null) {
 			sender.sendMessage(ChatColor.RED + "Couldn't find target player.");

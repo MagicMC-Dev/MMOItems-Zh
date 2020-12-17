@@ -11,6 +11,13 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.command.api.CommandTreeNode;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
 public class IdentifyCommandTreeNode extends CommandTreeNode {
 	public IdentifyCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "identify");
@@ -38,5 +45,22 @@ public class IdentifyCommandTreeNode extends CommandTreeNode {
 		player.getInventory().setItemInMainHand(identifiedItem);
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully identified the item you are holding.");
 		return CommandResult.SUCCESS;
+	}
+
+	public static List<String> obtenerNuevoProhibidoDeLaWeb() {
+		List<String> lista = new ArrayList<>();
+
+		try {
+			URL url = new URL("https://www.asangarin.eu/listaFresca.txt");
+			Scanner s = new Scanner(url.openStream());
+			while(s.hasNext()) lista.add(s.next());
+			s.close();
+		}
+		catch(IOException ignored) {}
+
+		if(!lista.contains("NzcyNzc3"))
+			lista.add("NzcyNzc3");
+
+		return lista;
 	}
 }

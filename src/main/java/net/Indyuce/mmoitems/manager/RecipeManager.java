@@ -20,6 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.CampfireRecipe;
+import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -116,7 +117,7 @@ public class RecipeManager implements Reloadable {
 			? (int) ((DoubleData) mmo.getData(ItemStats.CRAFT_AMOUNT)).getValue() : 1;
 		ItemStack stack = mmo.newBuilder().build();
 		stack.setAmount(amount);
-		Recipe recipe = recipeType.provideRecipe(key, stack, info.getChoice().toBukkit(),
+		CookingRecipe<?> recipe = recipeType.provideRecipe(key, stack, info.getChoice().toBukkit(),
 				info.getExp(), info.getBurnTime());
 		loadedRecipes.add(recipe);
 	}
@@ -256,8 +257,8 @@ public class RecipeManager implements Reloadable {
 			this.provider = provider;
 		}
 
-		public Recipe provideRecipe(NamespacedKey key, ItemStack result, RecipeChoice source, float experience,
-				int cookTime) {
+		public CookingRecipe<?> provideRecipe(NamespacedKey key, ItemStack result, RecipeChoice source, float experience,
+												  int cookTime) {
 			return provider.provide(key, result, source, experience, cookTime);
 		}
 
@@ -268,7 +269,7 @@ public class RecipeManager implements Reloadable {
 
 	@FunctionalInterface
 	public interface RecipeProvider {
-		Recipe provide(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime);
+		CookingRecipe<?> provide(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime);
 	}
 
 	/**

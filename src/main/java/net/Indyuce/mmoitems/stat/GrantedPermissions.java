@@ -85,13 +85,14 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public void whenApplied(ItemStackBuilder item, StatData data) {
 		JsonArray array = new JsonArray();
 		((StringListData) data).getList().forEach(array::add);
-		item.addItemTag(new ItemTag(getPath(), array.toString()));
+		item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
 	}
 
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag(getNBTPath()))
+		if (mmoitem.getNBT().hasTag(getNBTPath())) {
 			mmoitem.setData(ItemStats.GRANTED_PERMISSIONS, new StringListData(
-				new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()));
+					new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()));
+		}
 	}
 }

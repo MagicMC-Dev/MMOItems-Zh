@@ -5,19 +5,35 @@ import org.bukkit.entity.Player;
 
 public class SoundReader {
 	private final Sound sound;
+	private final String soundKey;
 
 	public SoundReader(String tag, Sound defaultSound) {
+		if(tag.isEmpty()) {
+			this.sound = defaultSound;
+			this.soundKey = "";
+			return;
+		}
+
 		Sound sound;
+		String soundKey;
 		try {
 			sound = Sound.valueOf(tag);
+			soundKey = "";
 		} catch (Exception e) {
-			sound = defaultSound;
+			sound = null;
+			soundKey = tag;
 		}
+
 		this.sound = sound;
+		this.soundKey = soundKey;
 	}
 
 	public Sound getSound() {
 		return sound;
+	}
+
+	public String getSoundKey() {
+		return soundKey;
 	}
 
 	public void play(Player player) {
@@ -25,6 +41,9 @@ public class SoundReader {
 	}
 
 	public void play(Player player, float vol, float pitch) {
-		player.playSound(player.getLocation(), sound, vol, pitch);
+		if(soundKey.isEmpty())
+			player.playSound(player.getLocation(), sound, vol, pitch);
+		else
+			player.playSound(player.getLocation(), soundKey, vol, pitch);
 	}
 }

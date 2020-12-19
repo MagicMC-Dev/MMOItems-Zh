@@ -8,7 +8,7 @@
 # a Spigot Plugin by Team Requiem
 
 # DO NOT TOUCH
-config-version: 6
+config-version: 7
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.
@@ -256,6 +256,11 @@ item-revision:
     # Please note, that this value has no effect if
     # ´reroll-when-updated´ is set to true.
     default-item-level: -1
+    # Whether or not the current tier of the item should
+    # be carried over.
+    # Please note, that this value has no effect if
+    # ´reroll-when-updated´ is set to true.
+    keep-tiers: true
     # Whether the updated items should reroll stats
     # according to the players current level or if
     # they should keep the level and tier from when

@@ -94,7 +94,8 @@ public class ItemModInstance {
 		if (player == null) {
 			final int iLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -1);
 			int level = iLevel == -1 ? (mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0) : iLevel;
-			ItemTier tier = mmoItem.hasData(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(mmoItem.getData(ItemStats.TIER).toString()) : null;
+			ItemTier tier = (mmoItem.hasData(ItemStats.TIER) &&
+			MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers")) ? MMOItems.plugin.getTiers().get(mmoItem.getData(ItemStats.TIER).toString()) : null;
 			mmoItem = template.newBuilder(level, tier).build();
 		} else mmoItem = template.newBuilder(player).build();
 	}

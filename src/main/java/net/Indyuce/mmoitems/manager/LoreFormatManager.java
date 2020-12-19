@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.manager;
 
 import net.Indyuce.mmoitems.MMOItems;
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

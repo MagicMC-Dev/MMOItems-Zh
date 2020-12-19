@@ -8,7 +8,7 @@
 # a Spigot Plugin by Team Requiem
 
 # DO NOT TOUCH
-config-version: 5
+config-version: 6
 
 # Notifies players with the 'mmoitems.update-notify' perm node when
 # they join the server if a new update is available for download.

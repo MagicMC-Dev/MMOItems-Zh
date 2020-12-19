@@ -19,7 +19,6 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.version.VersionSound;
-import org.jetbrains.annotations.NotNull;
 
 public class Bunny_Mode extends Ability {
 	public Bunny_Mode() {

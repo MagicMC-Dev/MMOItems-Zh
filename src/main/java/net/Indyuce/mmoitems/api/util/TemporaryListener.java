@@ -5,7 +5,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import net.Indyuce.mmoitems.MMOItems;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class TemporaryListener implements Listener {
 

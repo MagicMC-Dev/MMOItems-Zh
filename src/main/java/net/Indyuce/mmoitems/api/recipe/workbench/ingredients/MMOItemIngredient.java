@@ -21,7 +21,7 @@ public class MMOItemIngredient extends WorkbenchIngredient {
 	@Override
 	public boolean corresponds(ItemStack stack) {
 		NBTItem nbt = NBTItem.get(stack);
-		return type.equals(nbt.getType()) && nbt.getString("MMOITEMS_ITEM_ID").equalsIgnoreCase(id);
+		return type.equals(Type.get(nbt.getType())) && nbt.getString("MMOITEMS_ITEM_ID").equalsIgnoreCase(id);
 	}
 
 	@Override

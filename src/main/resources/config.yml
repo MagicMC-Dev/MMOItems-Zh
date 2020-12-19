@@ -264,9 +264,14 @@ item-revision:
     # Whether or not specific stats should be kept
     # when an item is updated to latest revision.
     keep-data:
-        gemstones: true
+        display-name: true
+        lore: false # Warning, this prevents stats in the lore from updating visually!
+        enchantments: true
         soulbound: true
-        upgrades: true
+        # Modifications are Gemstones and Upgrades
+        # Please note that some stats will be unable to update
+        # to the latest changes if you enable these.
+        modifications: false
     # Here you can disable individual events for when
     # Items should update when a higher revision ID is found
     disable-on:

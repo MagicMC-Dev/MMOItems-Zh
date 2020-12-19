@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.manager;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ReforgeOptions;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
@@ -42,6 +43,7 @@ public class ConfigManager implements Reloadable {
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
 	public NumericStatFormula defaultItemCapacity;
+	public ReforgeOptions revisionOptions;
 
 	/** DE-TAREAS: Implement reward system for good users? */
 	@SuppressWarnings("unused")
@@ -214,6 +216,8 @@ public class ConfigManager implements Reloadable {
 		keepSoulboundOnDeath = MMOItems.plugin.getConfig().getBoolean("soulbound.keep-on-death");
 		rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
 		levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
+
+		revisionOptions = new ReforgeOptions(MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data"));
 
 		try {
 			defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));

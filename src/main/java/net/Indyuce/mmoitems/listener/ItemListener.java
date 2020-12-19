@@ -72,7 +72,7 @@ public class ItemListener implements Listener {
 		if (!nbt.hasType()) return null;
 		ItemModInstance mod = new ItemModInstance(nbt);
 		if (shouldUpdate(nbt, type))
-			mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null);
+			mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null, MMOItems.plugin.getLanguage().revisionOptions);
 		if (shouldSoulbind(nbt, type)) mod.applySoulbound(player);
 		return mod.hasChanges() ? mod.toStack() : null;
 	}

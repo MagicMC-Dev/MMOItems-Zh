@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.util;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.ReforgeOptions;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
@@ -11,24 +12,38 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.Soulbound;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.Upgradable;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ItemModInstance {
 	private final NBTItem nbtItem;
 	private final int amount;
-	private final Map<Enchantment, Integer> enchantments;
+
+	private final Map<ItemStat, StatData> itemData = new HashMap<>();
+
 	// Not initialized at first for performance reasons
 	private MMOItem mmoItem;
+
+	private String cachedName;
+	private List<String> cachedLore;
+	private Map<Enchantment, Integer> cachedEnchants;
+	private StatData cachedSoulbound;
 
 	public ItemModInstance(NBTItem nbt) {
 		this.nbtItem = nbt;
 		this.amount = nbt.getItem().getAmount();
-		this.enchantments = nbt.getItem().getEnchantments();
 	}
 
 	public void applySoulbound(Player p) {
@@ -40,8 +55,8 @@ public class ItemModInstance {
 		mmoItem.setData(ItemStats.SOULBOUND, ((Soulbound) ItemStats.SOULBOUND).newSoulboundData(p.getUniqueId(), p.getName(), level));
 	}
 
-	public void reforge(Player p) {
-		reforge(p == null ? null : PlayerData.get(p).getRPG());
+	public void reforge(Player p, ReforgeOptions options) {
+		reforge(p == null ? null : PlayerData.get(p).getRPG(), options);
 	}
 
 	/**
@@ -49,9 +64,33 @@ public class ItemModInstance {
 	 *               If empty, it will use the old items level
 	 *               and tier, or default values if needed.
 	 */
-	public void reforge(RPGPlayer player) {
+	public void reforge(RPGPlayer player, ReforgeOptions options) {
 		loadVolatileMMOItem();
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId());
+
+		ItemMeta meta = nbtItem.getItem().getItemMeta();
+		if(options.shouldKeepName() && meta.hasDisplayName()) cachedName = meta.getDisplayName();
+		if(options.shouldKeepLore() && meta.hasLore()) cachedLore = meta.getLore();
+		if(options.shouldKeepEnchantments()) cachedEnchants = nbtItem.getItem().getEnchantments();
+
+		if(options.shouldKeepModifications())
+			for (ItemStat stat : mmoItem.getStats()) {
+				if(stat instanceof Upgradable)
+					itemData.put(stat, mmoItem.getData(stat));
+
+				if (!(stat instanceof GemStoneStat)) {
+					StatData data = mmoItem.getData(stat);
+					if (data instanceof Mergeable) {
+						if(itemData.containsKey(stat))
+							((Mergeable) itemData.get(stat)).merge(data);
+						else itemData.put(stat, data);
+					}
+				}
+			}
+
+		if(options.shouldKeepSoulbind() && mmoItem.hasData(ItemStats.SOULBOUND))
+			cachedSoulbound = mmoItem.getData(ItemStats.SOULBOUND);
+
 		if (player == null) {
 			final int iLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -1);
 			int level = iLevel == -1 ? (mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0) : iLevel;
@@ -65,9 +104,17 @@ public class ItemModInstance {
 	}
 
 	public ItemStack toStack() {
+		for(Map.Entry<ItemStat, StatData> data : itemData.entrySet())
+			if (mmoItem.hasData(data.getKey())) ((Mergeable) mmoItem.getData(data.getKey())).merge(data.getValue());
+			else mmoItem.setData(data.getKey(), data.getValue());
+		if(cachedSoulbound != null) mmoItem.setData(ItemStats.SOULBOUND, cachedSoulbound);
 		ItemStack stack = mmoItem.newBuilder().build();
 		stack.setAmount(amount);
-		stack.addUnsafeEnchantments(this.enchantments);
+		ItemMeta meta = stack.getItemMeta();
+		if(cachedName != null) meta.setDisplayName(cachedName);
+		if(cachedLore != null) meta.setLore(cachedLore);
+		stack.setItemMeta(meta);
+		if(cachedEnchants != null) stack.addUnsafeEnchantments(cachedEnchants);
 		return stack;
 	}
 

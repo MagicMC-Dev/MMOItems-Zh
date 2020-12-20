@@ -27,8 +27,8 @@ public class TemplateManager implements Reloadable {
 	private final TemplateMap<MMOItemTemplate> templates = new TemplateMap<>();
 
 	/*
-	 * bank of item modifiers which can be used anywhere in generation templates to
-	 * make item generation easier.
+	 * bank of item modifiers which can be used anywhere in generation templates
+	 * to make item generation easier.
 	 */
 	private final Map<String, TemplateModifier> modifiers = new HashMap<>();
 
@@ -53,9 +53,9 @@ public class TemplateManager implements Reloadable {
 	/**
 	 * Used in class constructors to easily
 	 *
-	 * @param type The item type
-	 * @param id   The item ID
-	 * @return MMOItem template if it exists, or throws an IAE otherwise
+	 * @param  type The item type
+	 * @param  id   The item ID
+	 * @return      MMOItem template if it exists, or throws an IAE otherwise
 	 */
 	public MMOItemTemplate getTemplateOrThrow(Type type, String id) {
 		Validate.isTrue(hasTemplate(type, id), "Could not find a template with ID '" + id + "'");
@@ -78,9 +78,9 @@ public class TemplateManager implements Reloadable {
 	}
 
 	/**
-	 * Unregisters a template from mmoitem registery. Must be used when an item is
-	 * removed from the config files. Also disables the dynamic updater for that
-	 * item
+	 * Unregisters a template from mmoitem registery. Must be used when an item
+	 * is removed from the config files. Also disables the dynamic updater for
+	 * that item
 	 *
 	 * @param type The item type
 	 * @param id   The item ID
@@ -90,8 +90,8 @@ public class TemplateManager implements Reloadable {
 	}
 
 	/**
-	 * Unregisters a template from mmoitem registery and clears it from the config
-	 * file
+	 * Unregisters a template from mmoitem registery and clears it from the
+	 * config file
 	 *
 	 * @param type The item type
 	 * @param id   The item ID
@@ -109,8 +109,8 @@ public class TemplateManager implements Reloadable {
 	 * method unregisters the current template and loads it again from the
 	 * configuration file.
 	 *
-	 * Can also be used right after creating a template after the config file has
-	 * been initialized in order to load the newly created item
+	 * Can also be used right after creating a template after the config file
+	 * has been initialized in order to load the newly created item
 	 *
 	 * @param type The item type
 	 * @param id   The item ID
@@ -120,22 +120,21 @@ public class TemplateManager implements Reloadable {
 		templates.removeValue(type, id);
 
 		try {
-			MMOItemTemplate template = new MMOItemTemplate(type,
-					type.getConfigFile().getConfig().getConfigurationSection(id));
+			MMOItemTemplate template = new MMOItemTemplate(type, type.getConfigFile().getConfig().getConfigurationSection(id));
 			template.postLoad();
 			registerTemplate(template);
 			return template;
 
 		} catch (IllegalArgumentException exception) {
-			MMOItems.plugin.getLogger().log(Level.INFO, "An error occured while trying to reload item gen template '"
-					+ id + "': " + exception.getMessage());
+			MMOItems.plugin.getLogger().log(Level.INFO,
+					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
 			return null;
 		}
 	}
 
 	/**
-	 * @return Collects all existing mmoitem templates into a set so that it can be
-	 *         filtered afterwards to generate random loot
+	 * @return Collects all existing mmoitem templates into a set so that it can
+	 *         be filtered afterwards to generate random loot
 	 */
 	public Collection<MMOItemTemplate> collectTemplates() {
 		return templates.collectValues();
@@ -168,10 +167,11 @@ public class TemplateManager implements Reloadable {
 	}
 
 	/**
-	 * @param playerLevel Input player level
-	 * @return Generates a randomly chosen item level. The level spread (editable in
-	 *         the main config file) corresponding to the standard deviation of a
-	 *         gaussian distribution centered on the player level (input)
+	 * @param  playerLevel Input player level
+	 * @return             Generates a randomly chosen item level. The level
+	 *                     spread (editable in the main config file)
+	 *                     corresponding to the standard deviation of a gaussian
+	 *                     distribution centered on the player level (input)
 	 */
 	public int rollLevel(int playerLevel) {
 		double spread = MMOItems.plugin.getLanguage().levelSpread;
@@ -183,7 +183,6 @@ public class TemplateManager implements Reloadable {
 
 		return (int) found;
 	}
-
 
 	/**
 	 * Templates must be loaded whenever MMOItems enables so that other plugins

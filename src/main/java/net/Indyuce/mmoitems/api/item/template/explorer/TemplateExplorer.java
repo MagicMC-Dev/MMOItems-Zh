@@ -17,9 +17,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
  * so this can be performance heavy
  * 
  * @author cympe
- *
  */
-@SuppressWarnings("UnusedReturnValue")
 public class TemplateExplorer {
 	private final Random random = new Random();
 
@@ -40,19 +38,20 @@ public class TemplateExplorer {
 
 	public Optional<MMOItemTemplate> rollLoot() {
 		switch (count()) {
-			case 0:
-				return Optional.empty();
-			case 1:
-				return all.stream().findFirst();
-			default:
-				return all.stream().skip(random.nextInt(count())).findFirst();
+		case 0:
+			return Optional.empty();
+		case 1:
+			return all.stream().findFirst();
+		default:
+			return all.stream().skip(random.nextInt(count())).findFirst();
 		}
 	}
 
 	/**
 	 * Util method to easily generate random MI loot
 	 * 
-	 * @param player The player
+	 * @param player
+	 *            The player
 	 * @return Random item with random tier and item level which matches the
 	 *         player's level
 	 */

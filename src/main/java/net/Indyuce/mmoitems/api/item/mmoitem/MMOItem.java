@@ -24,10 +24,12 @@ public class MMOItem implements ItemReference {
 	/**
 	 * Constructor used to generate an ItemStack based on some stat data
 	 *
-	 * @param type The type of the item you want to create
-	 * @param id   The id of the item, make sure it is different from other
-	 *             existing items not to interfere with MI features like the
-	 *             dynamic item updater
+	 * @param type
+	 *            The type of the item you want to create
+	 * @param id
+	 *            The id of the item, make sure it is different from other
+	 *            existing items not to interfere with MI features like the
+	 *            dynamic item updater
 	 */
 	public MMOItem(Type type, String id) {
 		this.type = type;

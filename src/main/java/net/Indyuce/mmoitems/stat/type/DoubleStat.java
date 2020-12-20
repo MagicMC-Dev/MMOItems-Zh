@@ -1,5 +1,16 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -15,15 +26,6 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 public class DoubleStat extends ItemStat implements Upgradable {
 	private static final DecimalFormat digit = new DecimalFormat("0.####");
@@ -34,6 +36,13 @@ public class DoubleStat extends ItemStat implements Upgradable {
 
 	public DoubleStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
 		super(id, mat, name, lore, types, materials);
+	}
+
+	/**
+	 * @return If this stat supports negatives stat values
+	 */
+	public boolean handleNegativeStats() {
+		return true;
 	}
 
 	@Override
@@ -51,16 +60,15 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	@Override
 	public void whenApplied(ItemStackBuilder item, StatData data) {
 		double value = ((DoubleData) data).getValue();
-		// If value is not allowed to be negative it will not
-		// apply the stat or the lore.
-		if (value < 0 && !canNegative())
+		if (value < 0 && !handleNegativeStats())
 			return;
+
 		// If the value is 0 the lore will not be applied
 		// but the stat will still be added to the nbt
 		if (value != 0)
 			item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
-		item.addItemTag(new ItemTag(getNBTPath(), value));
 
+		item.addItemTag(new ItemTag(getNBTPath(), value));
 	}
 
 	@Override
@@ -72,18 +80,44 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
-				"Second Format: {Base} {Scaling Value} {Spread} {Max Spread}");
+				"Second Format: {Base} {Scaling Value} {Spread} {Max Spread}", "Third Format: {Min Value} -> {Max Value}");
 	}
 
 	@Override
 	public void whenInput(EditionInventory inv, String message, Object... info) {
-		String[] split = message.split(" ");
-		double base = MMOUtils.parseDouble(split[0]);
-		double scale = split.length > 1 ? MMOUtils.parseDouble(split[1]) : 0;
-		double spread = split.length > 2 ? MMOUtils.parseDouble(split[2]) : 0;
-		double maxSpread = split.length > 3 ? MMOUtils.parseDouble(split[3]) : 0;
+		double base, scale, spread, maxSpread;
 
-		// save as number
+		/**
+		 * Supports the old RANGE formula with a minimum and a maximum value and
+		 * automatically makes the conversion to the newest system. This way
+		 * users can keep using the old system if they don't want to adapt to
+		 * the complex gaussian stat calculation
+		 */
+		if (message.contains("->")) {
+			String[] split = message.replace(" ", "").split(Pattern.quote("->"));
+			Validate.isTrue(split.length > 1, "You must specif two (both min and max) values");
+
+			double min = Double.parseDouble(split[0]), max = Double.parseDouble(split[1]);
+			Validate.isTrue(max > min, "Max value must be greater than min value");
+
+			base = MMOUtils.truncation(min == -max ? (max - min) * .05 : (min + max) / 2, 3);
+			scale = 0; // No scale
+			maxSpread = MMOUtils.truncation((max - min) / (2 * base), 3);
+			spread = MMOUtils.truncation(.8 * maxSpread, 3);
+		}
+
+		/**
+		 * Newest system with gaussian values calculation
+		 */
+		else {
+			String[] split = message.split(" ");
+			base = MMOUtils.parseDouble(split[0]);
+			scale = split.length > 1 ? MMOUtils.parseDouble(split[1]) : 0;
+			spread = split.length > 2 ? MMOUtils.parseDouble(split[2]) : 0;
+			maxSpread = split.length > 3 ? MMOUtils.parseDouble(split[3]) : 0;
+		}
+
+		// Save as a flat formula
 		if (scale == 0 && spread == 0 && maxSpread == 0)
 			inv.getEditedSection().set(getPath(), base);
 

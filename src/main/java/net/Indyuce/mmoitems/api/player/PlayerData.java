@@ -60,9 +60,9 @@ public class PlayerData {
 	private RPGPlayer rpgPlayer;
 
 	/*
-	 * the inventory is all the items the player can actually use. items are cached
-	 * here to check if the player's items changed, if so just update inventory
-	 * TODO improve player inventory checkup method
+	 * the inventory is all the items the player can actually use. items are
+	 * cached here to check if the player's items changed, if so just update
+	 * inventory TODO improve player inventory checkup method
 	 */
 	private ItemStack helmet = null, chestplate = null, leggings = null, boots = null, hand = null, offhand = null;
 	private final List<VolatileMMOItem> playerInventory = new ArrayList<>();
@@ -74,8 +74,8 @@ public class PlayerData {
 	private final Map<CooldownType, Long> extraCooldowns = new HashMap<>();
 
 	/*
-	 * specific stat calculation
-	 * TODO compress it in Map<ItemStat, DynamicStatData>
+	 * specific stat calculation TODO compress it in Map<ItemStat,
+	 * DynamicStatData>
 	 */
 	private final Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
 	private final Set<ParticleRunnable> itemParticles = new HashSet<>();
@@ -104,7 +104,8 @@ public class PlayerData {
 		if (MMOItems.plugin.hasPermissions() && config.contains("permissions-from-items")) {
 			Permission perms = MMOItems.plugin.getVault().getPermissions();
 			config.getStringList("permissions-from-items").forEach(perm -> {
-				if (perms.has(getPlayer(), perm)) perms.playerRemove(getPlayer(), perm);
+				if (perms.has(getPlayer(), perm))
+					perms.playerRemove(getPlayer(), perm);
 			});
 		}
 	}
@@ -149,9 +150,11 @@ public class PlayerData {
 	}
 
 	public void checkForInventoryUpdate() {
-		if (!mmoData.isOnline()) return;
+		if (!mmoData.isOnline())
+			return;
 		PlayerInventory inv = getPlayer().getInventory();
-		if (isNotSame(helmet, inv.getHelmet()) || isNotSame(chestplate, inv.getChestplate()) || isNotSame(leggings, inv.getLeggings()) || isNotSame(boots, inv.getBoots()) || isNotSame(hand, inv.getItemInMainHand()) || isNotSame(offhand, inv.getItemInOffHand()))
+		if (isNotSame(helmet, inv.getHelmet()) || isNotSame(chestplate, inv.getChestplate()) || isNotSame(leggings, inv.getLeggings())
+				|| isNotSame(boots, inv.getBoots()) || isNotSame(hand, inv.getItemInMainHand()) || isNotSame(offhand, inv.getItemInOffHand()))
 			updateInventory();
 	}
 
@@ -165,7 +168,8 @@ public class PlayerData {
 
 	public void cancelRunnables() {
 		itemParticles.forEach(BukkitRunnable::cancel);
-		if (overridingItemParticles != null) overridingItemParticles.cancel();
+		if (overridingItemParticles != null)
+			overridingItemParticles.cancel();
 	}
 
 	/*
@@ -173,14 +177,17 @@ public class PlayerData {
 	 * one two handed item and one other item at the same time. this will
 	 */
 	public boolean areHandsFull() {
-		if (!mmoData.isOnline()) return false;
+		if (!mmoData.isOnline())
+			return false;
 		NBTItem main = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
 		NBTItem off = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
-		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR)) || (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
+		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
+				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
 
 	public void updateInventory() {
-		if (!mmoData.isOnline()) return;
+		if (!mmoData.isOnline())
+			return;
 		/*
 		 * very important, clear particle data AFTER canceling the runnable
 		 * otherwise it cannot cancel and the runnable keeps going (severe)
@@ -211,16 +218,19 @@ public class PlayerData {
 			NBTItem nbtItem = item.newNBTItem();
 
 			Type type = Type.get(nbtItem.getType());
-			if (type == null) continue;
+			if (type == null)
+				continue;
 
 			/*
 			 * if the player is holding an item the wrong way i.e if the item is
 			 * not in the right slot. intuitive methods with small exceptions
 			 * like BOTH_HANDS and ANY
 			 */
-			if (!item.matches(type)) continue;
+			if (!item.matches(type))
+				continue;
 
-			if (!getRPG().canUse(nbtItem, false)) continue;
+			if (!getRPG().canUse(nbtItem, false))
+				continue;
 
 			playerInventory.add(new VolatileMMOItem(nbtItem));
 		}
@@ -243,8 +253,10 @@ public class PlayerData {
 				ParticleData particleData = (ParticleData) item.getData(ItemStats.ITEM_PARTICLES);
 
 				if (particleData.getType().hasPriority()) {
-					if (overridingItemParticles == null) overridingItemParticles = particleData.start(this);
-				} else itemParticles.add(particleData.start(this));
+					if (overridingItemParticles == null)
+						overridingItemParticles = particleData.start(this);
+				} else
+					itemParticles.add(particleData.start(this));
 			}
 
 			/*
@@ -254,9 +266,11 @@ public class PlayerData {
 				// if the item with the abilities is in the players offhand AND
 				// its disabled in the config then just move on, else add the
 				// ability
-				if (item.getNBT().getItem().equals(getPlayer().getInventory().getItemInOffHand()) && MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
+				if (item.getNBT().getItem().equals(getPlayer().getInventory().getItemInOffHand())
+						&& MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
 					continue;
-				} else itemAbilities.addAll(((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities());
+				} else
+					itemAbilities.addAll(((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities());
 			}
 
 			/*
@@ -282,7 +296,8 @@ public class PlayerData {
 		for (VolatileMMOItem item : getMMOItems()) {
 			String tag = item.getNBT().getString("MMOITEMS_ITEM_SET");
 			ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
-			if (itemSet == null) continue;
+			if (itemSet == null)
+				continue;
 
 			int nextInt = (sets.getOrDefault(itemSet, 0)) + 1;
 			sets.put(itemSet, nextInt);
@@ -327,13 +342,15 @@ public class PlayerData {
 	}
 
 	public void updateStats() {
-		if (!mmoData.isOnline()) return;
+		if (!mmoData.isOnline())
+			return;
 
 		// perm effects
 		permanentEffects.keySet().forEach(effect -> getPlayer().addPotionEffect(permanentEffects.get(effect)));
 
 		// two handed
-		if (fullHands) getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
+		if (fullHands)
+			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
 	}
 
 	public SetBonuses getSetBonuses() {
@@ -370,7 +387,8 @@ public class PlayerData {
 
 	private boolean hasAbility(CastingMode castMode) {
 		for (AbilityData ability : itemAbilities)
-			if (ability.getCastingMode() == castMode) return true;
+			if (ability.getCastingMode() == castMode)
+				return true;
 		return false;
 	}
 
@@ -381,24 +399,29 @@ public class PlayerData {
 		 * performance improvement, do not cache the player stats into a
 		 * CachedStats if the player has no ability on that cast mode
 		 */
-		if (!hasAbility(castMode)) return result;
+		if (!hasAbility(castMode))
+			return result;
 
 		return castAbilities(getStats().newTemporary(), target, result, castMode);
 	}
 
 	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
-		if (!mmoData.isOnline()) return result;
+		if (!mmoData.isOnline())
+			return result;
 
 		/*
 		 * if ability has target, check for ability flag at location of target
 		 * and make sure player can attack target. if ability has no target,
 		 * check for WG flag at the caster location
 		 */
-		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_ABILITIES) : !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES) || !MMOUtils.canDamage(getPlayer(), target))
+		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_ABILITIES)
+				: !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
+						|| !MMOUtils.canDamage(getPlayer(), target))
 			return result.setSuccessful(false);
 
 		for (AbilityData ability : itemAbilities)
-			if (ability.getCastingMode() == castMode) cast(stats, target, result, ability);
+			if (ability.getCastingMode() == castMode)
+				cast(stats, target, result, ability);
 
 		return result;
 	}
@@ -420,25 +443,31 @@ public class PlayerData {
 	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability) {
 		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
 		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled()) return;
+		if (event.isCancelled())
+			return;
 
-		if (!rpgPlayer.canCast(ability)) return;
+		if (!rpgPlayer.canCast(ability))
+			return;
 
 		/*
 		 * check if ability can be cast (custom conditions)
 		 */
 		AbilityResult abilityResult = ability.getAbility().whenRan(stats, target, ability, attack);
-		if (!abilityResult.isSuccessful()) return;
+		if (!abilityResult.isSuccessful())
+			return;
 
 		/*
 		 * the player can cast the ability, and it was successfully cast on its
 		 * target, removes resources needed from the player
 		 */
-		if (ability.hasModifier("mana")) rpgPlayer.giveMana(-abilityResult.getModifier("mana"));
-		if (ability.hasModifier("stamina")) rpgPlayer.giveStamina(-abilityResult.getModifier("stamina"));
+		if (ability.hasModifier("mana"))
+			rpgPlayer.giveMana(-abilityResult.getModifier("mana"));
+		if (ability.hasModifier("stamina"))
+			rpgPlayer.giveStamina(-abilityResult.getModifier("stamina"));
 
 		double cooldown = abilityResult.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStats.COOLDOWN_REDUCTION) / 100));
-		if (cooldown > 0) applyAbilityCooldown(ability.getAbility(), cooldown);
+		if (cooldown > 0)
+			applyAbilityCooldown(ability.getAbility(), cooldown);
 
 		/*
 		 * finally cast the ability (BUG FIX) cooldown MUST be applied BEFORE
@@ -502,7 +531,8 @@ public class PlayerData {
 	}
 
 	public static PlayerData get(UUID uuid) {
-		if (PlayerData.data.containsKey(uuid)) return data.get(uuid);
+		if (PlayerData.data.containsKey(uuid))
+			return data.get(uuid);
 		return new PlayerData(MMOPlayerData.get(uuid));
 	}
 
@@ -513,13 +543,15 @@ public class PlayerData {
 	public static void load(Player player) {
 		/*
 		 * Double check they are online, for some reason even if this is fired
-		 * from the join event the player can be offline if they left in the same tick or something.
+		 * from the join event the player can be offline if they left in the
+		 * same tick or something.
 		 */
-		if (!player.isOnline() || data.containsKey(player.getUniqueId())) return;
+		if (!player.isOnline() || data.containsKey(player.getUniqueId()))
+			return;
 		PlayerData newData = PlayerData.get(player.getUniqueId());
 		/*
-		 * update the cached RPGPlayer in case of any major
-		 * change in the player data of other rpg plugins
+		 * update the cached RPGPlayer in case of any major change in the player
+		 * data of other rpg plugins
 		 */
 		newData.rpgPlayer = MMOItems.plugin.getRPG().getInfo(newData);
 		/* cache the playerdata */

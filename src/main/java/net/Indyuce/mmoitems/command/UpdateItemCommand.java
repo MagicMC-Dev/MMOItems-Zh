@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.command;
 
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +18,7 @@ public class UpdateItemCommand implements CommandExecutor {
 
 		Player player = (Player) sender;
 		if (args.length < 1 || !player.hasPermission("mmoitems.admin")) {
-			NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+//			NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 
 			// for items generated before 2.0
 			/*if (!item.hasTag("MMOITEMS_ITEM_TYPE")) {

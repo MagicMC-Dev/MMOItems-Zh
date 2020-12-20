@@ -49,6 +49,7 @@ public class ItemStackBuilder {
 	 * 
 	 * @param mmoitem The mmoitem you want to build
 	 */
+	@SuppressWarnings("unused")
 	public ItemStackBuilder(MMOItem mmoitem) {
 		this.mmoitem = mmoitem;
 

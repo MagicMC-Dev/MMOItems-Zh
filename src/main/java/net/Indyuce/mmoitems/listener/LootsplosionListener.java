@@ -28,8 +28,7 @@ public class LootsplosionListener implements Listener {
 	private final boolean colored;
 
 	public LootsplosionListener() {
-		colored = Bukkit.getPluginManager().getPlugin("MMOItems") != null
-			&& MMOItems.plugin.getConfig().getBoolean("lootsplosion.show-color");
+		colored = MMOItems.plugin.getConfig().getBoolean("lootsplosion.show-color");
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -80,7 +79,6 @@ public class LootsplosionListener implements Listener {
 					}
 				});
 		}
-
 	}
 
 	private Vector randomVector() {

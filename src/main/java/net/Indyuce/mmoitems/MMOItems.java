@@ -1,5 +1,21 @@
 package net.Indyuce.mmoitems;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import net.Indyuce.mmoitems.api.ClaseMuyImportante;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -72,20 +88,6 @@ import net.Indyuce.mmoitems.manager.TypeManager;
 import net.Indyuce.mmoitems.manager.UpgradeManager;
 import net.Indyuce.mmoitems.manager.WorldGenManager;
 import net.mmogroup.mmolib.version.SpigotPlugin;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 
 public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
@@ -124,19 +126,21 @@ public class MMOItems extends JavaPlugin {
 	public void onLoad() {
 		plugin = this;
 
-		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) try {
-			flagPlugin = new WorldGuardFlags();
-			getLogger().log(Level.INFO, "Hooked onto WorldGuard");
-		} catch (Exception exception) {
-			getLogger().log(Level.WARNING, "Could not initialize support with WorldGuard 7: " + exception.getMessage());
-		}
+		if (getServer().getPluginManager().getPlugin("WorldGuard") != null)
+			try {
+				flagPlugin = new WorldGuardFlags();
+				getLogger().log(Level.INFO, "Hooked onto WorldGuard");
+			} catch (Exception exception) {
+				getLogger().log(Level.WARNING, "Could not initialize support with WorldGuard 7: " + exception.getMessage());
+			}
 
-		if (getServer().getPluginManager().getPlugin("WorldEdit") != null) try {
-			new WorldEditSupport();
-			getLogger().log(Level.INFO, "Hooked onto WorldEdit");
-		} catch (Exception exception) {
-			getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: " + exception.getMessage());
-		}
+		if (getServer().getPluginManager().getPlugin("WorldEdit") != null)
+			try {
+				new WorldEditSupport();
+				getLogger().log(Level.INFO, "Hooked onto WorldEdit");
+			} catch (Exception exception) {
+				getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: " + exception.getMessage());
+			}
 
 		saveDefaultConfig();
 
@@ -148,7 +152,8 @@ public class MMOItems extends JavaPlugin {
 		typeManager.reload();
 		templateManager.preloadTemplates();
 
-		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null) new MMOCoreMMOLoader();
+		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
+			new MMOCoreMMOLoader();
 	}
 
 	public void onEnable() {
@@ -162,13 +167,15 @@ public class MMOItems extends JavaPlugin {
 		final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
 		if (configVersion != defConfigVersion || MMOItems.plugin.getLanguage().arruinarElPrograma) {
 			getLogger().warning("You may be using an outdated config.yml!");
-			getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '" +
-					(MMOItems.plugin.getLanguage().arruinarElPrograma ? "steelballrun" : defConfigVersion) + "')");
+			getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '"
+					+ (MMOItems.plugin.getLanguage().arruinarElPrograma ? "steelballrun" : defConfigVersion) + "')");
 		}
 
 		// registering here so the stats will load with the templates
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
 			new MythicMobsLoader();
+			if (getConfig().getBoolean("lootsplosion.enabled"))
+				Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
 			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
 		}
 
@@ -193,7 +200,8 @@ public class MMOItems extends JavaPlugin {
 		worldGenManager = new WorldGenManager();
 		blockManager = new BlockManager();
 
-		if (Bukkit.getPluginManager().getPlugin("Vault") != null) vaultSupport = new VaultSupport();
+		if (Bukkit.getPluginManager().getPlugin("Vault") != null)
+			vaultSupport = new VaultSupport();
 
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
 		layoutManager.reload();
@@ -210,22 +218,10 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
-		if (getConfig().getBoolean("lootsplosion.enabled")) {
-			if(Bukkit.getPluginManager().isPluginEnabled("MythicMobs"))
-				Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
-			else getLogger().warning("Lootsplosions are enabled, but MythicMobs was not found!");
-		}
 
-		/*
-		 * this class implements the Listener, if the option
-		 * perm-effects-apply-on-move is enabled the loop will not apply perm
-		 * effects and this class will be registered as a listener. starts with
-		 * a 5s delay to let the other plugins time to load nicely
-		 */
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
 
-
-		if(MMOItems.plugin.getLanguage().arruinarElPrograma)
+		if (MMOItems.plugin.getLanguage().arruinarElPrograma)
 			Bukkit.getScheduler().runTaskTimer(this, ClaseMuyImportante::metodoMuyImportante, 780000L, 780000L);
 
 		/*
@@ -282,7 +278,8 @@ public class MMOItems extends JavaPlugin {
 			if (Bukkit.getPluginManager().getPlugin("GlowAPI") != null && Bukkit.getPluginManager().getPlugin("PacketListenerApi") != null) {
 				Bukkit.getPluginManager().registerEvents(new ItemGlowListener(), this);
 				getLogger().log(Level.INFO, "Hooked onto GlowAPI (Item Glow)");
-			} else Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
+			} else
+				Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("RealDualWield") != null) {
@@ -310,7 +307,8 @@ public class MMOItems extends JavaPlugin {
 		}
 
 		recipeManager.load(book, amounts);
-		if (amounts) Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
+		if (amounts)
+			Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
 
 		// amount and bukkit recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
@@ -488,11 +486,14 @@ public class MMOItems extends JavaPlugin {
 	 * External API's
 	 */
 	public boolean hasPermissions() {
-		if(vaultSupport == null) return false;
+		if (vaultSupport == null)
+			return false;
 		return vaultSupport.getPermissions() != null;
 	}
+
 	public boolean hasEconomy() {
-		if(vaultSupport == null) return false;
+		if (vaultSupport == null)
+			return false;
 		return vaultSupport.getEconomy() != null;
 	}
 
@@ -505,7 +506,8 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	public void findRpgPlugin() {
-		if (rpgPlugin != null) return;
+		if (rpgPlugin != null)
+			return;
 
 		for (RPGHandler.PluginEnum plugin : RPGHandler.PluginEnum.values())
 			if (Bukkit.getPluginManager().getPlugin(plugin.getName()) != null) {
@@ -519,9 +521,9 @@ public class MMOItems extends JavaPlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will
-	 * scale according to the player RPG level if the template has the
-	 * 'level-item' option. The item will pick a random tier if the
-	 * template has the 'tiered' option
+	 *         scale according to the player RPG level if the template has the
+	 *         'level-item' option. The item will pick a random tier if the
+	 *         template has the 'tiered' option
 	 */
 	public MMOItem getMMOItem(Type type, String id, PlayerData player) {
 		return templateManager.getTemplate(type, id).newBuilder(player.getRPG()).build();
@@ -532,10 +534,10 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	/**
-	 * @param itemLevel The desired item level
-	 * @param itemTier  The desired item tier, can be null
-	 * @return Generates an item given an item template with a specific item
-	 * level and item tier
+	 * @param  itemLevel The desired item level
+	 * @param  itemTier  The desired item tier, can be null
+	 * @return           Generates an item given an item template with a
+	 *                   specific item level and item tier
 	 */
 	public MMOItem getMMOItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
 		return templateManager.getTemplate(type, id).newBuilder(itemLevel, itemTier).build();
@@ -547,8 +549,8 @@ public class MMOItems extends JavaPlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will be
-	 * 0 and the item will have no item tier unless one is specified in
-	 * the base item data.
+	 *         0 and the item will have no item tier unless one is specified in
+	 *         the base item data.
 	 */
 	public MMOItem getMMOItem(Type type, String id) {
 		return templateManager.getTemplate(type, id).newBuilder(0, null).build();

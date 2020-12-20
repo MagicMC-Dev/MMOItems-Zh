@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public abstract class ItemStat {
 	private final String id, name;
 	private final Material material;
@@ -33,21 +32,17 @@ public abstract class ItemStat {
 	/**
 	 * Initializes an item stat
 	 * 
-	 * @param id
-	 *            The item stat ID, used internally. Also determines the lower
-	 *            case path for config files
-	 * @param material
-	 *            The material used to display the stat in the item edition GUI
-	 * @param name
-	 *            The stat name which has a translation in the language files
-	 * @param lore
-	 *            The stat description used in the edition GUI
-	 * @param types
-	 *            Compatible types. Use 'all' to support all item types or
-	 *            !{type-name} to blacklist an item type
-	 * @param materials
-	 *            Materials compatible with the item stat (eg Shield Pattern),
-	 *            any if empty
+	 * @param id        The item stat ID, used internally. Also determines the
+	 *                  lower case path for config files
+	 * @param material  The material used to display the stat in the item
+	 *                  edition GUI
+	 * @param name      The stat name which has a translation in the language
+	 *                  files
+	 * @param lore      The stat description used in the edition GUI
+	 * @param types     Compatible types. Use 'all' to support all item types or
+	 *                  !{type-name} to blacklist an item type
+	 * @param materials Materials compatible with the item stat (eg Shield
+	 *                  Pattern), any if empty
 	 */
 	public ItemStat(String id, Material material, String name, String[] lore, String[] types, Material... materials) {
 		this.id = id;
@@ -61,9 +56,8 @@ public abstract class ItemStat {
 	/**
 	 * When random stat data is being read from a config file
 	 * 
-	 * @param object
-	 *            Could be a config section, a string, a string list, etc.
-	 * @return Random stat data read from config, or throws an IAE
+	 * @param  object Could be a config section, a string, a string list, etc.
+	 * @return        Random stat data read from config, or throws an IAE
 	 */
 	public abstract RandomStatData whenInitialized(Object object);
 
@@ -71,20 +65,16 @@ public abstract class ItemStat {
 	 * Called when applying a stat onto an mmoitem builder instance. Applies
 	 * item tags, adds required lines to the item lore, etc.
 	 * 
-	 * @param item
-	 *            MMOItem builder which must be completed
-	 * @param data
-	 *            Stat data being applied
+	 * @param item MMOItem builder which must be completed
+	 * @param data Stat data being applied
 	 */
 	public abstract void whenApplied(ItemStackBuilder item, StatData data);
 
 	/**
 	 * Called when the stat item is clicked in the item edition menu
 	 * 
-	 * @param inv
-	 *            Inventory clicked
-	 * @param event
-	 *            Click event
+	 * @param inv   Inventory clicked
+	 * @param event Click event
 	 */
 	public abstract void whenClicked(EditionInventory inv, InventoryClickEvent event);
 
@@ -94,22 +84,18 @@ public abstract class ItemStat {
 	 * the player. Stat edition is not canceled until a right input is given or
 	 * the player inputs 'cancel'
 	 * 
-	 * @param inv
-	 *            Previously opened edition menu
-	 * @param message
-	 *            Player input
-	 * @param info
-	 *            Extra information given by the stat when instanciating
-	 *            StatEdition given to this method to identify what is being
-	 *            edited
+	 * @param inv     Previously opened edition menu
+	 * @param message Player input
+	 * @param info    Extra information given by the stat when instanciating
+	 *                StatEdition given to this method to identify what is being
+	 *                edited
 	 */
 	public abstract void whenInput(EditionInventory inv, String message, Object... info);
 
 	/**
 	 * Called when stat data is read from an ItemStack in a player inventory
 	 * 
-	 * @param mmoitem
-	 *            NBTItem being read and transformed into a MMOItem instance
+	 * @param mmoitem NBTItem being read and transformed into a MMOItem instance
 	 */
 	public abstract void whenLoaded(ReadMMOItem mmoitem);
 
@@ -119,11 +105,9 @@ public abstract class ItemStat {
 	 * modifier or base item data. It is much easier to display RandomStatData
 	 * if it exists
 	 * 
-	 * @param lore
-	 *            Current item lore which must be completed
-	 * @param statData
-	 *            Stat data being displayed, optional is empty if there is no
-	 *            stat data
+	 * @param lore     Current item lore which must be completed
+	 * @param statData Stat data being displayed, optional is empty if there is
+	 *                 no stat data
 	 */
 	public abstract void whenDisplayed(List<String> lore, RandomStatData statData);
 
@@ -136,7 +120,7 @@ public abstract class ItemStat {
 	}
 
 	/**
-	 * @return The stat ID
+	 * @return     The stat ID
 	 * @deprecated Use getId() instead. Type is no longer an util since they can
 	 *             now be registered from external plugins
 	 */
@@ -175,9 +159,8 @@ public abstract class ItemStat {
 	}
 
 	/**
-	 * @param type
-	 *            The item type to check
-	 * @return If a certain item type is compatible with this item stat
+	 * @param  type The item type to check
+	 * @return      If a certain item type is compatible with this item stat
 	 */
 	public boolean isCompatible(Type type) {
 		String lower = type.getId().toLowerCase();

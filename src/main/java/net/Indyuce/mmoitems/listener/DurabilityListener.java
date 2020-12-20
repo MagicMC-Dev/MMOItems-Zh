@@ -21,13 +21,18 @@ public class DurabilityListener implements Listener {
 	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
 			DamageCause.FIRE_TICK, DamageCause.SUFFOCATION, DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
 
+	/**
+	 * Handles custom durability for player heads
+	 */
 	@EventHandler(ignoreCancelled = true)
 	public void playerDamage(EntityDamageEvent event) {
 		if (event.getEntityType() != EntityType.PLAYER || ignoredCauses.contains(event.getCause()))
 			return;
+
 		Player player = (Player) event.getEntity();
 		if (player.getEquipment().getHelmet() == null || player.getEquipment().getHelmet().getType() != Material.PLAYER_HEAD)
 			return;
+
 		ItemStack helmet = player.getEquipment().getHelmet();
 		DurabilityItem item = new DurabilityItem(player, helmet);
 

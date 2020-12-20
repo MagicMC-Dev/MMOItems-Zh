@@ -21,7 +21,8 @@ import net.mmogroup.mmolib.version.VersionSound;
 
 public class Targeted_Fireball extends Ability {
 	public Targeted_Fireball() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
+				CastingMode.SHIFT_RIGHT_CLICK);
 
 		addModifier("cooldown", 10);
 		addModifier("mana", 0);
@@ -60,12 +61,13 @@ public class Targeted_Fireball extends Ability {
 				}
 
 				loc.getWorld().playSound(loc, VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 1, 1);
-				if (target.getLocation().distanceSquared(loc) < 1.3) {
+				if (target.getLocation().add(0, target.getHeight() / 2, 0).distanceSquared(loc) < 1.3) {
 					loc.getWorld().spawnParticle(Particle.LAVA, loc, 8);
 					loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
 					loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_HURT, 2, 1);
 					target.setFireTicks((int) (target.getFireTicks() + ability.getModifier("ignite") * 20));
-					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE).damage(stats.getPlayer(), target);
+					new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE)
+							.damage(stats.getPlayer(), target);
 					cancel();
 				}
 			}

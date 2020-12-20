@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.Indyuce.mmoitems.stat.data.EmptyData;
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.gui.PluginInventory;
+import net.Indyuce.mmoitems.stat.data.EmptyData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
@@ -68,17 +69,18 @@ public abstract class EditionInventory extends PluginInventory {
 	 *         section or the 'stats' section for modifiers).
 	 */
 	public ConfigurationSection getEditedSection() {
-		return configFile.getConfig()
-				.getConfigurationSection(template.getId() + (editedModifier == null ? ".base" : ".modifiers." + editedModifier.getId() + ".stats"));
+		ConfigurationSection config = configFile.getConfig().getConfigurationSection(template.getId());
+		Validate.notNull(config, "Could not find config section associated to the template '" + template.getType().getId() + "." + template.getId()
+				+ "': make sure the config section name is in capital letters");
+		return config.getConfigurationSection(editedModifier == null ? ".base" : ".modifiers." + editedModifier.getId() + ".stats");
 	}
 
 	/**
 	 * Used in edition GUIs to display the current stat data of the edited
 	 * template.
 	 * 
-	 * @param stat
-	 *            The stat which data we are looking for
-	 * @return Optional which contains the corresponding random stat data
+	 * @param  stat The stat which data we are looking for
+	 * @return      Optional which contains the corresponding random stat data
 	 */
 	public RandomStatData getEventualStatData(ItemStat stat) {
 		/*

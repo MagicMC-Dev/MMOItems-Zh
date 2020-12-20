@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -13,20 +15,19 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.List;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 
 public class DurabilityListener implements Listener {
-	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE,
-			DamageCause.FALL, DamageCause.VOID, DamageCause.FIRE_TICK, DamageCause.SUFFOCATION,
-			DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
+	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
+			DamageCause.FIRE_TICK, DamageCause.SUFFOCATION, DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
 
 	@EventHandler(ignoreCancelled = true)
 	public void playerDamage(EntityDamageEvent event) {
-		if(event.getEntityType() != EntityType.PLAYER || ignoredCauses.contains(event.getCause())) return;
+		if (event.getEntityType() != EntityType.PLAYER || ignoredCauses.contains(event.getCause()))
+			return;
 		Player player = (Player) event.getEntity();
-		if(player.getEquipment().getHelmet() == null ||
-				player.getEquipment().getHelmet().getType() != Material.PLAYER_HEAD) return;
+		if (player.getEquipment().getHelmet() == null || player.getEquipment().getHelmet().getType() != Material.PLAYER_HEAD)
+			return;
 		ItemStack helmet = player.getEquipment().getHelmet();
 		DurabilityItem item = new DurabilityItem(player, helmet);
 
@@ -34,7 +35,8 @@ public class DurabilityListener implements Listener {
 			/*
 			 * Calculate item durability loss
 			 *
-			 * This uses the vanilla formula of 1 durability per 4 damage. (rounded down, but never below 1)
+			 * This uses the vanilla formula of 1 durability per 4 damage.
+			 * (rounded down, but never below 1)
 			 */
 			item.decreaseDurability(Math.max((int) event.getDamage() / 4, 1));
 

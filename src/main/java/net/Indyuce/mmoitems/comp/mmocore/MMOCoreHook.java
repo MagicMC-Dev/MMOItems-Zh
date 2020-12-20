@@ -17,7 +17,10 @@ import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 
 public class MMOCoreHook implements RPGHandler, Listener {
-	/* called when MMOItems enables */
+
+	/**
+	 * Called when MMOItems enables
+	 */
 	public MMOCoreHook() {
 		/*
 		 * only works when the server is reloaded. needs /reload when changing

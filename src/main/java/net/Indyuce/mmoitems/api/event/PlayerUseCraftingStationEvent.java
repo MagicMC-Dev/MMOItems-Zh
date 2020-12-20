@@ -28,13 +28,8 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	 * @param recipeInfo
 	 *            The recipe being used to craft the item
 	 */
-	public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation station, RecipeInfo recipeInfo) {
-		super(playerData);
-
-		this.recipeInfo = recipeInfo;
-		this.recipe = recipeInfo.getRecipe();
-		this.station = station;
-		this.action = StationAction.INTERACT_WITH_RECIPE;
+	public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation station, RecipeInfo recipeInfo, StationAction action) {
+		this(playerData, station, recipeInfo, recipeInfo.getRecipe(), action);
 	}
 
 	/**
@@ -47,13 +42,18 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	 * @param recipe
 	 *            The recipe being used to craft the item
 	 */
-	public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation station, Recipe recipe) {
+	public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation station, Recipe recipe, StationAction action) {
+		this(playerData, station, null, recipe, action);
+	}
+
+
+	private PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation station, RecipeInfo recipeInfo, Recipe recipe, StationAction action) {
 		super(playerData);
 
-		this.recipeInfo = null;
+		this.recipeInfo = recipeInfo;
 		this.recipe = recipe;
 		this.station = station;
-		this.action = StationAction.CRAFTING_QUEUE;
+		this.action = action;
 	}
 
 	public CraftingStation getStation() {
@@ -68,6 +68,10 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	public RecipeInfo getRecipeInfo() {
 		Validate.notNull(recipeInfo, "No recipe info is provided when a player claims an item in the crafting queue");
 		return recipeInfo;
+	}
+
+	public boolean hasRecipeInfo() {
+		return recipeInfo != null;
 	}
 
 	public Recipe getRecipe() {
@@ -95,15 +99,24 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 
 		/**
 		 * Called when a player places an item in the crafting queue when the
-		 * recipe is not instantaneous or when the player directly gets the item
-		 * via an instant recipe
+		 * recipe is not instantaneous
 		 */
 		INTERACT_WITH_RECIPE,
+
+		/**
+		 * Called when the player directly gets the item via an instant recipe
+		 */
+		INSTANT_RECIPE,
 
 		/**
 		 * Called when a player claims the item from the crafting queue due to a
 		 * non instant crafting recipe
 		 */
-		CRAFTING_QUEUE
+		CRAFTING_QUEUE,
+
+		/**
+		 * Called when a player removes an item from the crafting queue
+		 */
+		CANCEL_QUEUE
 	}
 }

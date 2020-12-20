@@ -55,7 +55,7 @@ public class CraftingRecipe extends Recipe {
 		 * directly add the ingredients to the player inventory
 		 */
 		if (isInstant()) {
-			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe);
+			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe, PlayerUseCraftingStationEvent.StationAction.INSTANT_RECIPE);
 			Bukkit.getPluginManager().callEvent(event);
 			if (event.isCancelled())
 				return;

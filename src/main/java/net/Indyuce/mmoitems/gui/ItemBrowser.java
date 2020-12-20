@@ -130,29 +130,47 @@ public class ItemBrowser extends PluginInventory {
 			}
 			NBTItem nbtItem = NBTItem.get(item);
 
-			List<BaseComponent> newLore = new ArrayList<>();
-			newLore.add(toComponent(""));
-			if (deleteMode) {
-				newLore.add(toComponent(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
+			ItemStack stack;
+			List<BaseComponent> lore = nbtItem.getLoreComponents();
+			if(lore == null) {
+				stack = nbtItem.toItem();
+				ItemMeta meta = stack.getItemMeta();
+				List<String> newLore = meta.getLore();
+				newLore.add("");
+				if (deleteMode) {
+					newLore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
+					meta.setDisplayName(ChatColor.RED + "DELETE: " + meta.getDisplayName());
+				}
+				newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
+				newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
+				meta.setLore(newLore);
+				stack.setItemMeta(meta);
+			}
+			else {
+				List<BaseComponent> newLore = new ArrayList<>();
+				newLore.add(toComponent(""));
+				if (deleteMode) {
+					newLore.add(toComponent(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
 
-				BaseComponent display = nbtItem.getDisplayNameComponent();
-				if (display != null && display.getExtra() != null) {
-					List<BaseComponent> extra = new ArrayList<>(display.getExtra());
-					extra.add(0, toComponent(ChatColor.RED + "DELETE: "));
-					display.setExtra(extra);
-					nbtItem.setDisplayNameComponent(display);
+					BaseComponent display = nbtItem.getDisplayNameComponent();
+					if (display != null && display.getExtra() != null) {
+						List<BaseComponent> extra = new ArrayList<>(display.getExtra());
+						extra.add(0, toComponent(ChatColor.RED + "DELETE: "));
+						display.setExtra(extra);
+						nbtItem.setDisplayNameComponent(display);
+					}
+
+				} else {
+					newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
+					newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
 				}
 
-			} else {
-				newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
-				newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
+				lore.addAll(newLore);
+				nbtItem.setLoreComponents(lore);
+				stack = nbtItem.toItem();
 			}
 
-			List<BaseComponent> lore = nbtItem.getLoreComponents();
-			lore.addAll(newLore);
-			nbtItem.setLoreComponents(lore);
-
-			cached.put(template.getId(), nbtItem.toItem());
+			cached.put(template.getId(), stack);
 
 			inv.setItem(slots[n++], cached.get(template.getId()));
 		}

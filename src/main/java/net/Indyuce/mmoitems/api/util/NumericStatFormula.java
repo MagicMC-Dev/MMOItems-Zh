@@ -28,8 +28,7 @@ public class NumericStatFormula implements RandomStatData {
 	 * Throws an IAE either if the format is not good or if the object does not
 	 * have the right type
 	 * 
-	 * @param object
-	 *            Object to read data from.
+	 * @param object Object to read data from.
 	 */
 	public NumericStatFormula(Object object) {
 		Validate.notNull(object, "Config must not be null");
@@ -71,19 +70,15 @@ public class NumericStatFormula implements RandomStatData {
 	 * accordingly to the item level but also have a more or less important
 	 * gaussian based random factor
 	 * 
-	 * @param base
-	 *            Base value
-	 * @param scale
-	 *            Value which scales with the item level
-	 * @param spread
-	 *            The relative standard deviation of a normal law centered on
-	 *            (base + scale * level). If it's set to 0.1, the standard
-	 *            deviation will be 10% of the stat value without the random
-	 *            factor.
-	 * @param maxSpread
-	 *            The max amount of deviation you can have. If it's set to 0.3,
-	 *            let A = base + scale * level, then the final stat value will
-	 *            be in [0.7 * A, 1.3 * A]
+	 * @param base      Base value
+	 * @param scale     Value which scales with the item level
+	 * @param spread    The relative standard deviation of a normal law centered
+	 *                  on (base + scale * level). If it's set to 0.1, the
+	 *                  standard deviation will be 10% of the stat value without
+	 *                  the random factor.
+	 * @param maxSpread The max amount of deviation you can have. If it's set to
+	 *                  0.3, let A = base + scale * level, then the final stat
+	 *                  value will be in [0.7 * A, 1.3 * A]
 	 */
 	public NumericStatFormula(double base, double scale, double spread, double maxSpread) {
 		this.base = base;
@@ -121,22 +116,26 @@ public class NumericStatFormula implements RandomStatData {
 	 * Save some formula in a config file. This method is used when editing stat
 	 * data in the edition GUI (when a player inputs a numeric formula)
 	 * 
-	 * @param config
-	 *            The formula will be saved in that config file
-	 * @param path
-	 *            The config path used to save the formula
+	 * @param config The formula will be saved in that config file
+	 * @param path   The config path used to save the formula
 	 */
-	public void fillConfigurationSection(ConfigurationSection config, String path) {
-		if(path == null)
+	public void fillConfigurationSection(ConfigurationSection config, String path, FormulaSaveOption option) {
+		if (path == null)
 			throw new NullPointerException("Path was empty");
+
 		if (scale == 0 && spread == 0 && maxSpread == 0)
-			config.set(path, base == 0 ? null : base);
+			config.set(path, base == 0 && option == FormulaSaveOption.DELETE_IF_ZERO ? null : base);
+
 		else {
 			config.set(path + ".base", base);
 			config.set(path + ".scale", scale);
 			config.set(path + ".spread", spread);
 			config.set(path + ".max-spread", maxSpread);
 		}
+	}
+
+	public void fillConfigurationSection(ConfigurationSection config, String path) {
+		fillConfigurationSection(config, path, FormulaSaveOption.DELETE_IF_ZERO);
 	}
 
 	@Override
@@ -151,5 +150,21 @@ public class NumericStatFormula implements RandomStatData {
 
 		return "{Base=" + digit.format(base) + (scale != 0 ? ",Scale=" + digit.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
 				+ (maxSpread != 0 ? ",Max=" + maxSpread : "") + "}";
+	}
+
+	public static enum FormulaSaveOption {
+
+		/**
+		 * When toggled on, if the formula is set to 0 then the configuration
+		 * section will just be deleted. This option fixes a bug where ability
+		 * modifiers with non null default values cannot take strictly null
+		 * values because inputting 0 would just delete the config section.
+		 */
+		DELETE_IF_ZERO,
+
+		/**
+		 * No option used
+		 */
+		NONE;
 	}
 }

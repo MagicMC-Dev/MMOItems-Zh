@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.command.mmoitems.EditCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.GenerateCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.GiveAllCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.GiveCommandTreeNode;
+import net.Indyuce.mmoitems.command.mmoitems.ItemListCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.ReloadCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.debug.DebugCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.list.ListCommandTreeNode;
@@ -55,6 +56,7 @@ public class MMOItemsCommandTreeRoot extends CommandTreeRoot {
 		addChild(new DropCommandTreeNode(this));
 		addChild(new AbilityCommandTreeNode(this));
 		addChild(new GiveAllCommandTreeNode(this));
+		addChild(new ItemListCommandTreeNode(this));
 		addChild(new RevisionIDCommandTreeNode(this));
 		
 		addChild(new ItemCommandTreeNode(this));

@@ -64,6 +64,7 @@ default:
 item-glow: true
 
 item-upgrading:
+
     # Display name suffix for upgraded items.
     name-suffix: '&f &e(+#lvl#)'
 
@@ -83,21 +84,27 @@ item-upgrading:
     display-stat-changes: false
 
 soulbound:
+
     # Edit soulbound damage when players try to use
     # items which are not bound to themselves.
     damage:
         base: 1
         per-lvl: 1
+        
     # Whether or not soulbound items should be
     # kept when a player dies.
     keep-on-death: true
+    
     # Whether or not soulbound item can be
     # dropped by the player
     can-drop: true
+    
     auto-bind:
+    
         # The default Soulbind level to apply
         # when automatically soulbinding
         level: 1
+        
         # Here you can disable individual events for when
         # Items should automatically soulbind to the player
         # (Requires the 'Auto-Bind' stat to be true)
@@ -205,11 +212,13 @@ game-indicators:
         #format: '&a&l❤ #'
 
 recipes:
+
     # Allows you to use stack amounts for recipe ingredients.
     # This will enable a custom crafting system which
     # can cause lots of trouble. If you don't need specific
     # ingredient amounts then DO NOT enable this!
     recipe-amounts: false
+    
     # Enables the vanilla recipe book for MMOItem recipes!
     # THIS IS NOT COMPATIBLE WITH RECIPE AMOUNTS!
     use-recipe-book: true
@@ -244,28 +253,32 @@ permissions:
 
 # Disables non MMOItems from being crafted in the vanilla workbench.
 # Add [] if the list is empty.
-disable-vanilla-recipes: [ ]
+disable-vanilla-recipes: []
 # - DIAMOND_PICKAXE
 # - IRON_BLOCK
 
 # Options for the Item Revision System
 item-revision:
+
     # This is the value to set the Item Level to when
     # items are updated by the revision system.
     # This can be set to -1 to use the items previous level.
     # Please note, that this value has no effect if
     # ´reroll-when-updated´ is set to true.
     default-item-level: -1
+    
     # Whether or not the current tier of the item should
     # be carried over.
     # Please note, that this value has no effect if
     # ´reroll-when-updated´ is set to true.
     keep-tiers: true
+    
     # Whether the updated items should reroll stats
     # according to the players current level or if
     # they should keep the level and tier from when
     # the item was first generated.
     reroll-when-updated: false
+    
     # Whether or not specific stats should be kept
     # when an item is updated to latest revision.
     keep-data:
@@ -273,10 +286,12 @@ item-revision:
         lore: false # Warning, this prevents stats in the lore from updating visually!
         enchantments: true
         soulbound: true
+        
         # Modifications are Gemstones and Upgrades
         # Please note that some stats will be unable to update
         # to the latest changes if you enable these.
         modifications: false
+        
     # Here you can disable individual events for when
     # Items should update when a higher revision ID is found
     disable-on:

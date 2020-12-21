@@ -135,7 +135,7 @@ public class ItemBrowser extends PluginInventory {
 			if(lore == null) {
 				stack = nbtItem.toItem();
 				ItemMeta meta = stack.getItemMeta();
-				List<String> newLore = meta.getLore();
+				List<String> newLore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
 				newLore.add("");
 				if (deleteMode) {
 					newLore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);

@@ -106,12 +106,12 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void readSoulbound(PlayerRespawnEvent event) {
-		if(MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
+		if (MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
 			SoulboundInfo.read(event.getPlayer());
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void registerProjectiles(ProjectileLaunchEvent event) {
+	public void registerTridents(ProjectileLaunchEvent event) {
 		if (!(event.getEntity() instanceof Trident) || !(event.getEntity().getShooter() instanceof Player))
 			return;
 
@@ -121,14 +121,16 @@ public class PlayerListener implements Listener {
 
 		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
 		Type type = Type.get(nbtItem.getType());
-
 		PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
-		if (type != null && !new Weapon(playerData, nbtItem).canBeUsed()) {
-			event.setCancelled(true);
-			return;
+
+		if (type != null) {
+			Weapon weapon = new Weapon(playerData, nbtItem);
+			if (!weapon.applyItemCosts() || !weapon.applyWeaponCosts()) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 
-		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), event.getEntity(),
-				type != null);
+		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), event.getEntity(), type != null);
 	}
 }

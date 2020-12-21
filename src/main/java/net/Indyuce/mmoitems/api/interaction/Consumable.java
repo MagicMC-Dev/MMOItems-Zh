@@ -52,7 +52,7 @@ public class Consumable extends UseItem {
 	}
 
 	@Override
-	public boolean canBeUsed() {
+	public boolean applyItemCosts() {
 		return MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_CONSUMABLES) && playerData.getRPG().canUse(getNBTItem(), true);
 	}
 

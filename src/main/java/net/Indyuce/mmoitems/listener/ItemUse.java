@@ -70,7 +70,7 @@ public class ItemUse implements Listener {
 		/*
 		 * (BUG FIX) cancel the event to prevent things like shield blocking
 		 */
-		if (!useItem.canBeUsed()) {
+		if (!useItem.applyItemCosts()) {
 			event.setCancelled(true);
 			return;
 		}
@@ -139,12 +139,12 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!weapon.canBeUsed()) {
+			if (!weapon.applyItemCosts()) {
 				event.setCancelled(true);
 				return;
 			}
 
-			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, result);
+			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(), target, result);
 			if (!result.isSuccessful()) {
 				event.setCancelled(true);
 				return;
@@ -158,7 +158,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!weapon.canBeUsed()) {
+			if (!weapon.applyItemCosts()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -183,7 +183,7 @@ public class ItemUse implements Listener {
 			return;
 
 		Tool tool = new Tool(player, item);
-		if (!tool.canBeUsed()) {
+		if (!tool.applyItemCosts()) {
 			event.setCancelled(true);
 			return;
 		}
@@ -207,7 +207,7 @@ public class ItemUse implements Listener {
 			return;
 
 		UseItem weapon = UseItem.getItem(player, item, item.getType());
-		if (!weapon.canBeUsed())
+		if (!weapon.applyItemCosts())
 			return;
 
 		// special staff attack
@@ -231,7 +231,7 @@ public class ItemUse implements Listener {
 			return;
 
 		UseItem useItem = UseItem.getItem(player, item, item.getType());
-		if (!useItem.canBeUsed())
+		if (!useItem.applyItemCosts())
 			return;
 
 		if (useItem instanceof ItemSkin) {
@@ -286,11 +286,13 @@ public class ItemUse implements Listener {
 		Type type = Type.get(item.getType());
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
-		if (type != null)
-			if (!new Weapon(playerData, item).canBeUsed()) {
+		if (type != null) {
+			Weapon weapon = new Weapon(playerData, item);
+			if (!weapon.applyItemCosts() || !weapon.applyWeaponCosts()) {
 				event.setCancelled(true);
 				return;
 			}
+		}
 
 		Arrow arrow = (Arrow) event.getProjectile();
 		if (item.getStat("ARROW_VELOCITY") > 0)
@@ -307,7 +309,7 @@ public class ItemUse implements Listener {
 
 		Player player = event.getPlayer();
 		UseItem useItem = UseItem.getItem(player, item, item.getType());
-		if (!useItem.canBeUsed()) {
+		if (!useItem.applyItemCosts()) {
 			event.setCancelled(true);
 			return;
 		}

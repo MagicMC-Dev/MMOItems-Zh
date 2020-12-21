@@ -39,14 +39,15 @@ public class ProjectileData {
 		return customWeapon;
 	}
 
-	public void applyEffects(LivingEntity target) {
-		if(!sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS")) return;
-			
-		for(JsonElement entry : MMOLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
-			if(!entry.isJsonObject()) continue;
-			JsonObject object = entry.getAsJsonObject();
-			target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),
-					object.get("duration").getAsDouble(), object.get("level").getAsInt()).toEffect());
-		}
+	public void applyPotionEffects(LivingEntity target) {
+		if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
+			for (JsonElement entry : MMOLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
+				if (!entry.isJsonObject())
+					continue;
+
+				JsonObject object = entry.getAsJsonObject();
+				target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),
+						object.get("duration").getAsDouble(), object.get("level").getAsInt()).toEffect());
+			}
 	}
 }

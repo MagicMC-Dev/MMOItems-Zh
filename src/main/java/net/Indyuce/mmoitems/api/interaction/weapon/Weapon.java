@@ -1,5 +1,12 @@
 package net.Indyuce.mmoitems.api.interaction.weapon;
 
+import javax.annotation.Nullable;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -11,10 +18,6 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 public class Weapon extends UseItem {
 	public Weapon(Player player, NBTItem item) {
@@ -26,7 +29,7 @@ public class Weapon extends UseItem {
 	}
 
 	@Override
-	public boolean canBeUsed() {
+	public boolean applyItemCosts() {
 		if (MMOUtils.twoHandedCase(getPlayer())) {
 			Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer(), "two-handed");
 			return false;
@@ -35,21 +38,34 @@ public class Weapon extends UseItem {
 		return MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS) && playerData.getRPG().canUse(getNBTItem(), true);
 	}
 
-	/*
-	 * applies the cooldown, mana & stamina cost and returns a true boolean if
-	 * the player does have all the resource requirements
+	/**
+	 * Applies mana and stamina weapon costs
+	 * 
+	 * @return If the attack was cast successfully
 	 */
-	public boolean hasEnoughResources(double attackSpeed, CooldownType cooldown, boolean isSwing) {
-		if (!isSwing && getPlayerData().isOnCooldown(cooldown))
+	public boolean applyWeaponCosts() {
+		return applyWeaponCosts(0, null);
+	}
+
+	/**
+	 * Applies cooldown, mana and stamina weapon costs
+	 * 
+	 * @param  attackSpeed The weapon attack speed
+	 * @param  cooldown    The weapon cooldown type. When set to null, no
+	 *                     cooldown will be applied. This is made to handle
+	 * @return             If the attack was cast successfully
+	 */
+	public boolean applyWeaponCosts(double attackSpeed, @Nullable CooldownType cooldown) {
+		if (cooldown != null && getPlayerData().isOnCooldown(cooldown))
 			return false;
 
-		double manaCost = getNBTItem().getStat(ItemStats.MANA_COST.getId()), staminaCost = getNBTItem().getStat(ItemStats.STAMINA_COST.getId());
-
+		double manaCost = getNBTItem().getStat("MANA_COST");
 		if (manaCost > 0 && playerData.getRPG().getMana() < manaCost) {
 			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(getPlayer(), "not-enough-mana");
 			return false;
 		}
 
+		double staminaCost = getNBTItem().getStat("STAMINA_COST");
 		if (staminaCost > 0 && playerData.getRPG().getStamina() < staminaCost) {
 			Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(getPlayer(), "not-enough-stamina");
 			return false;
@@ -61,20 +77,26 @@ public class Weapon extends UseItem {
 		if (staminaCost > 0)
 			playerData.getRPG().giveStamina(-staminaCost);
 
-		getPlayerData().applyCooldown(cooldown, attackSpeed);
+		if (cooldown != null)
+			getPlayerData().applyCooldown(cooldown, attackSpeed);
+
 		return true;
 	}
 
-	// While we may never use the return value, external plugins may need to.
-	@SuppressWarnings("UnusedReturnValue")
-	public ItemAttackResult targetedAttack(CachedStats stats, LivingEntity target, ItemAttackResult result) {
-		// cooldown
+	public ItemAttackResult handleTargetedAttack(CachedStats stats, LivingEntity target, ItemAttackResult result) {
+
+		/*
+		 * Handle weapon cooldown, mana and stamina costs
+		 */
 		double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED.getId());
 		attackSpeed = attackSpeed == 0 ? 1.493 : 1 / attackSpeed;
-		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, true))
+		if (!applyWeaponCosts())
 			return result.setSuccessful(false);
 
-		if (!getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE") && getMMOItem().getType().getItemSet().hasAttackEffect())
+		/*
+		 * Handle item set attack effects
+		 */
+		if (getMMOItem().getType().getItemSet().hasAttackEffect() && !getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE"))
 			getMMOItem().getType().getItemSet().applyAttackEffect(stats, target, this, result);
 
 		return result;

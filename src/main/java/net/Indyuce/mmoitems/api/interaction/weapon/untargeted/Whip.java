@@ -27,8 +27,8 @@ public class Whip extends UntargetedWeapon {
 	public void untargetedAttack(EquipmentSlot slot) {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
-				CooldownType.ATTACK, false))
+		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+				CooldownType.ATTACK))
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);

@@ -19,7 +19,8 @@ public class Gauntlet extends Weapon {
 	public void specialAttack(LivingEntity target) {
 		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.gauntlet.enabled"))
 			return;
-		if (!hasEnoughResources(MMOItems.plugin.getConfig().getDouble("item-ability.gauntlet.cooldown"), CooldownType.SPECIAL_ATTACK, false))
+
+		if (!applyWeaponCosts(MMOItems.plugin.getConfig().getDouble("item-ability.gauntlet.cooldown"), CooldownType.SPECIAL_ATTACK))
 			return;
 
 		target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);

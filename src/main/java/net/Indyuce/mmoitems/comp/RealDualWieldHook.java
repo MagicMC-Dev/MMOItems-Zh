@@ -53,12 +53,12 @@ public class RealDualWieldHook implements Listener {
 				return;
 			}
 
-			if (!weapon.canBeUsed()) {
+			if (!weapon.applyItemCosts()) {
 				event.setCancelled(true);
 				return;
 			}
 
-			weapon.targetedAttack(stats = playerData.getStats().newTemporary(), target, result);
+			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(), target, result);
 			if (!result.isSuccessful()) {
 				event.setCancelled(true);
 				return;
@@ -72,7 +72,7 @@ public class RealDualWieldHook implements Listener {
 				return;
 			}
 
-			if (!weapon.canBeUsed()) {
+			if (!weapon.applyItemCosts()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -82,7 +82,6 @@ public class RealDualWieldHook implements Listener {
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
 		result.applyEffects(stats == null ? playerData.getStats().newTemporary() : stats, item, target);
-
 		event.setDamage(result.getDamage());
 	}
 }

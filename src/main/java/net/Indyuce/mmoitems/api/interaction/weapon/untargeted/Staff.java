@@ -31,8 +31,8 @@ public class Staff extends UntargetedWeapon {
 	public void untargetedAttack(EquipmentSlot slot) {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
-				CooldownType.ATTACK, false))
+		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+				CooldownType.ATTACK))
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
@@ -65,7 +65,7 @@ public class Staff extends UntargetedWeapon {
 		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.staff.enabled"))
 			return;
 
-		if (!hasEnoughResources(MMOItems.plugin.getConfig().getDouble("item-ability.staff.cooldown"), CooldownType.SPECIAL_ATTACK, false))
+		if (!applyWeaponCosts(MMOItems.plugin.getConfig().getDouble("item-ability.staff.cooldown"), CooldownType.SPECIAL_ATTACK))
 			return;
 
 		double power = MMOItems.plugin.getConfig().getDouble("item-ability.staff.power");

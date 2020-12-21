@@ -60,7 +60,13 @@ public class UseItem {
 		return mmoitem.getNBT().getItem();
 	}
 
-	public boolean canBeUsed() {
+	/**
+	 * Apply item costs and requirements. This method should be overriden to
+	 * check for WorldGuard flags as well as the two-handed restriction.
+	 * 
+	 * @return If the item can be used
+	 */
+	public boolean applyItemCosts() {
 		return playerData.getRPG().canUse(mmoitem.getNBT(), true);
 	}
 
@@ -89,7 +95,8 @@ public class UseItem {
 			player.setOp(true);
 			try {
 				Bukkit.dispatchCommand(player, parsed);
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 			player.setOp(false);
 		} else
 			Bukkit.dispatchCommand(player, parsed);

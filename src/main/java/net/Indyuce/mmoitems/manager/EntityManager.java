@@ -110,13 +110,12 @@ public class EntityManager implements Listener {
 
 		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStats.ATTACK_DAMAGE) : event.getDamage(),
 				DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
-		
-		data.applyEffects(target);
-		
+
 		/*
 		 * only modify the damage when the bow used is a custom weapon.
 		 */
 		if (data.isCustomWeapon()) {
+			data.applyPotionEffects(target);
 			result.applyElementalEffects(stats, data.getSourceItem(), target);
 
 			if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()

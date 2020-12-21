@@ -34,7 +34,7 @@ public class Lute extends UntargetedWeapon {
 
 		CachedStats stats = getPlayerData().getStats().newTemporary();
 		double attackSpeed = 1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
-		if (!hasEnoughResources(attackSpeed, CooldownType.ATTACK, false))
+		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);

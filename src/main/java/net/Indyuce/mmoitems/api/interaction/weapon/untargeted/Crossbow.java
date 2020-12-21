@@ -27,8 +27,8 @@ public class Crossbow extends UntargetedWeapon {
 			return;
 
 		PlayerStats stats = getPlayerData().getStats();
-		if (!hasEnoughResources(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
-				CooldownType.ATTACK, false))
+		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+				CooldownType.ATTACK))
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
@@ -42,7 +42,8 @@ public class Crossbow extends UntargetedWeapon {
 
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 		Arrow arrow = getPlayer().launchProjectile(Arrow.class);
-		arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
+		arrow.setVelocity(
+				getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
 		getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
 
 		MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats.newTemporary(), arrow, true);

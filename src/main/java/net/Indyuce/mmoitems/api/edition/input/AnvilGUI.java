@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.edition.process;
+package net.Indyuce.mmoitems.api.edition.input;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,12 +15,17 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.Edition;
 import net.mmogroup.mmolib.MMOLib;
 
-public class AnvilGUI extends EditionProcess implements Listener {
+public class AnvilGUI extends PlayerInputHandler implements Listener {
 	private final int containerId;
 	private final Inventory inventory;
 
 	private boolean open;
 
+	/**
+	 * Allows to retrieve player input using an anvil GUI
+	 * 
+	 * @param edition Data being edited
+	 */
 	public AnvilGUI(Edition edition) {
 		super(edition);
 

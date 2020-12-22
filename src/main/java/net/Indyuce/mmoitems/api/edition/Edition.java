@@ -7,10 +7,8 @@ public interface Edition {
 	/**
 	 * Processes the player input.
 	 * 
-	 * @param input
-	 *            Current player input
-	 * @return If the edition process should be closed, or false if it should
-	 *         continue listening to player input
+	 * @param  input Current player input
+	 * @return       False if it should continue listening to player input
 	 */
 	boolean processInput(String input);
 
@@ -23,8 +21,7 @@ public interface Edition {
 	/**
 	 * Called when edition is opened.
 	 * 
-	 * @param message
-	 *            Message which should be sent to the player
+	 * @param message Message which should be sent to the player
 	 */
 	void enable(String... message);
 
@@ -32,6 +29,5 @@ public interface Edition {
 	 * @return If the previously opened GUI should be opened right after edition
 	 *         ends or if it should be ignored
 	 */
-	@Deprecated
 	boolean shouldGoBack();
 }

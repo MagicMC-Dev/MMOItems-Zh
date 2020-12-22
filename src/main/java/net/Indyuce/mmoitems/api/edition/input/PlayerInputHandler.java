@@ -1,14 +1,14 @@
-package net.Indyuce.mmoitems.api.edition.process;
+package net.Indyuce.mmoitems.api.edition.input;
 
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.api.edition.Edition;
 
-public abstract class EditionProcess {
+public abstract class PlayerInputHandler {
 
-	/*
-	 * saves the last inventory opened. it saves the item data, and the last
-	 * opened page. allows for a much easier access to this data
+	/**
+	 * Saves the last inventory opened, the item data, and the last opened page;
+	 * allows for a much easier access to this data
 	 */
 	private final Edition edition;
 
@@ -17,7 +17,7 @@ public abstract class EditionProcess {
 	 *
 	 * @param edition The edition object
 	 */
-	public EditionProcess(Edition edition) {
+	public PlayerInputHandler(Edition edition) {
 		this.edition = edition;
 	}
 
@@ -30,15 +30,14 @@ public abstract class EditionProcess {
 	 * opens the previously opened GUI if needed. This method is protected
 	 * because it should only be ran by edition process classes
 	 * 
-	 * @param input
-	 *            Player input
+	 * @param input Player input
 	 */
 	protected void registerInput(String input) {
 		if (!edition.processInput(input))
 			return;
 
-//		if (edition.shouldGoBack())
-//			edition.getInventory().open();
+		if (edition.shouldGoBack())
+			edition.getInventory().open();
 		close();
 	}
 

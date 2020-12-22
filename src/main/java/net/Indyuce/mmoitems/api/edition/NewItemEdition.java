@@ -4,19 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
-import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
+import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
+import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.mmogroup.mmolib.MMOLib;
 
 public class NewItemEdition implements Edition {
-
-	/*
-	 * saves the data about the edited data so the plugin can edit the
-	 * corresponding stat. some stats have complex chat formats, so the object
-	 * array allow to save more complex edition info
-	 */
 	private final ItemBrowser inv;
 
 	public NewItemEdition(ItemBrowser inv) {

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.edition.process;
+package net.Indyuce.mmoitems.api.edition.input;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -11,7 +11,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.Edition;
 
-public class ChatEdition extends EditionProcess implements Listener {
+public class ChatEdition extends PlayerInputHandler implements Listener {
+
+	/**
+	 * Allows to retrieve player input using chat messages
+	 * 
+	 * @param edition The type of data being edited
+	 */
 	public ChatEdition(Edition edition) {
 		super(edition);
 

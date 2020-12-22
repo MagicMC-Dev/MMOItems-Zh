@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.api.edition;
 import org.bukkit.ChatColor;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.edition.process.AnvilGUI;
-import net.Indyuce.mmoitems.api.edition.process.ChatEdition;
+import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
+import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
 import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;

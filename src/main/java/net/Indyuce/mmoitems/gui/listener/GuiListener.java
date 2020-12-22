@@ -12,10 +12,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.Indyuce.mmoitems.gui.edition.CraftingEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.Indyuce.mmoitems.gui.edition.RecipeEdition;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeEdition;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 
@@ -65,7 +65,7 @@ public class GuiListener implements Listener {
 				if (inventory instanceof ItemEdition)
 					new ItemBrowser(player, template.getType()).open();
 				else if (inventory instanceof RecipeEdition)
-					new CraftingEdition(player, template).open(((EditionInventory) inventory).getPreviousPage());
+					new RecipeListEdition(player, template).open(((EditionInventory) inventory).getPreviousPage());
 				else
 					new ItemEdition(player, template).onPage(((EditionInventory) inventory).getPreviousPage()).open();
 			}

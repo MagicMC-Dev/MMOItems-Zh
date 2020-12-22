@@ -16,12 +16,10 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
  */
 public class ItemManager {
 	/**
-	 * @param type
-	 *            The item type
-	 * @param id
-	 *            The item id
-	 * @return The corresponding MMOItem
-	 * @deprecated Use MMOItems.plugin.getMMOItem(Type, String) instead
+	 * @param      type The item type
+	 * @param      id   The item id
+	 * @return          The corresponding MMOItem
+	 * @deprecated      Use MMOItems.plugin.getMMOItem(Type, String) instead
 	 */
 	@Deprecated
 	public MMOItem getMMOItem(Type type, String id) {
@@ -29,12 +27,10 @@ public class ItemManager {
 	}
 
 	/**
-	 * @param type
-	 *            The item type
-	 * @param id
-	 *            The item id
-	 * @return Generates an ItemStack using an MMOItem
-	 * @deprecated Use MMOItems.plugin.getItem(Type, String) instead
+	 * @param      type The item type
+	 * @param      id   The item id
+	 * @return          Generates an ItemStack using an MMOItem
+	 * @deprecated      Use MMOItems.plugin.getItem(Type, String) instead
 	 */
 	@Deprecated
 	public ItemStack getItem(Type type, String id) {

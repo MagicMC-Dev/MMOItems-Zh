@@ -486,15 +486,11 @@ public class MMOItems extends JavaPlugin {
 	 * External API's
 	 */
 	public boolean hasPermissions() {
-		if (vaultSupport == null)
-			return false;
-		return vaultSupport.getPermissions() != null;
+		return vaultSupport != null && vaultSupport.getPermissions() != null;
 	}
 
 	public boolean hasEconomy() {
-		if (vaultSupport == null)
-			return false;
-		return vaultSupport.getEconomy() != null;
+		return vaultSupport != null && vaultSupport.getEconomy() != null;
 	}
 
 	public VaultSupport getVault() {
@@ -529,6 +525,12 @@ public class MMOItems extends JavaPlugin {
 		return templateManager.getTemplate(type, id).newBuilder(player.getRPG()).build();
 	}
 
+	/**
+	 * @return Generates an item given an item template. The item level will
+	 *         scale according to the player RPG level if the template has the
+	 *         'level-item' option. The item will pick a random tier if the
+	 *         template has the 'tiered' option
+	 */
 	public ItemStack getItem(Type type, String id, PlayerData player) {
 		return getMMOItem(type, id, player).newBuilder().build();
 	}
@@ -543,6 +545,12 @@ public class MMOItems extends JavaPlugin {
 		return templateManager.getTemplate(type, id).newBuilder(itemLevel, itemTier).build();
 	}
 
+	/**
+	 * @param  itemLevel The desired item level
+	 * @param  itemTier  The desired item tier, can be null
+	 * @return           Generates an item given an item template with a
+	 *                   specific item level and item tier
+	 */
 	public ItemStack getItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
 		return getMMOItem(type, id, itemLevel, itemTier).newBuilder().build();
 	}
@@ -556,6 +564,11 @@ public class MMOItems extends JavaPlugin {
 		return templateManager.getTemplate(type, id).newBuilder(0, null).build();
 	}
 
+	/**
+	 * @return Generates an item given an item template. The item level will be
+	 *         0 and the item will have no item tier unless one is specified in
+	 *         the base item data.
+	 */
 	public ItemStack getItem(Type type, String id) {
 		return getMMOItem(type, id).newBuilder().build();
 	}

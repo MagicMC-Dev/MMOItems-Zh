@@ -1,34 +1,25 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.List;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.gui.edition.CraftingEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
 
-import java.util.List;
-
-/**
- * TODO Needs some cleanup
- * 
- * @author cympe
- */
 public class Crafting extends ItemStat {
-	// @Deprecated
-	// why was this deprecated??
 	public Crafting() {
 		super("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "Crafting",
 				new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
@@ -37,15 +28,14 @@ public class Crafting extends ItemStat {
 	@Override
 	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new CraftingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
-		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			if (inv.getEditedSection().contains("crafting")) {
-				inv.getEditedSection().set("crafting", null);
-				inv.registerTemplateEdition();
-				inv.getPlayer()
-						.sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using "
-								+ ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
-			}
+			new RecipeListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+
+		else if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("crafting")) {
+			inv.getEditedSection().set("crafting", null);
+			inv.registerTemplateEdition();
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using "
+							+ ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
 		}
 	}
 
@@ -60,63 +50,84 @@ public class Crafting extends ItemStat {
 		String type = (String) info[0];
 
 		switch (type) {
-			case "recipe":
-				int slot = (int) info[2];
 
-				if (validate(inv.getPlayer(), message)) {
-					if ((info[1]).equals("shaped")) {
-						List<String> newList = inv.getEditedSection().getStringList("crafting.shaped.1");
-						String[] newArray = newList.get(slot / 3).split(" ");
-						newArray[slot % 3] = message;
-						newList.set(slot / 3, (newArray[0] + " " + newArray[1] + " " + newArray[2]));
+		/*
+		 * Handles shaped and shapeless crafting recipes
+		 */
+		case "recipe":
+			int slot = (int) info[2];
+			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(message), "Invalid ingredient");
 
-						for (String s : newList) {
-							if (s.equals("AIR AIR AIR"))
-								continue;
-							inv.getEditedSection().set("crafting.shaped.1", newList);
-							inv.registerTemplateEdition();
-							break;
-						}
-					} else {
-						List<String> newList = inv.getEditedSection().getStringList("crafting.shapeless.1");
-						newList.set(slot, message);
+			/*
+			 * Handles shaped crafting recipes
+			 */
+			if ((info[1]).equals("shaped")) {
+				List<String> newList = inv.getEditedSection().getStringList("crafting.shaped.1");
+				String[] newArray = newList.get(slot / 3).split(" ");
+				newArray[slot % 3] = message;
+				newList.set(slot / 3, (newArray[0] + " " + newArray[1] + " " + newArray[2]));
 
-						for (String s : newList) {
-							if (s.equals("AIR"))
-								continue;
-							inv.getEditedSection().set("crafting.shapeless.1", newList);
-							inv.registerTemplateEdition();
-							break;
-						}
-					}
+				for (String s : newList) {
+					if (s.equals("AIR AIR AIR"))
+						continue;
+
+					inv.getEditedSection().set("crafting.shaped.1", newList);
+					inv.registerTemplateEdition();
+					break;
 				}
-				break;
-			case "item": {
-				String[] args = message.split(" ");
-				Validate.isTrue(args.length == 3, "Invalid format");
-				Validate.isTrue(validate(inv.getPlayer(), args[0]));
-				int time = Integer.parseInt(args[1]);
-				double exp = MMOUtils.parseDouble(args[2]);
 
-				inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
-				inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
-				inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
-				inv.registerTemplateEdition();
-				break;
-			}
-			case "smithing": {
-				String[] args = message.split(" ");
-				Validate.isTrue(args.length == 2, "Invalid format");
-				Validate.isTrue(validate(inv.getPlayer(), args[0]) && validate(inv.getPlayer(), args[1]));
+				/*
+				 * Handles shapeless crafting recipes
+				 */
+			} else {
+				List<String> newList = inv.getEditedSection().getStringList("crafting.shapeless.1");
+				newList.set(slot, message);
 
-				inv.getEditedSection().set("crafting.smithing.1.input1", args[0]);
-				inv.getEditedSection().set("crafting.smithing.1.input2", args[1]);
-				inv.registerTemplateEdition();
-				break;
+				for (String s : newList) {
+					if (s.equals("AIR"))
+						continue;
+					inv.getEditedSection().set("crafting.shapeless.1", newList);
+					inv.registerTemplateEdition();
+					break;
+				}
 			}
-			default:
-				MMOItems.plugin.getLogger().warning("Something went wrong!");
-				break;
+
+			break;
+
+		/*
+		 * Handles burning recipes ie furnace, campfire, smoker and blast
+		 * furnace recipes
+		 */
+		case "item": {
+			String[] args = message.split(" ");
+			Validate.isTrue(args.length == 3, "Invalid format");
+			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[0]), "Invalid ingredient");
+			int time = Integer.parseInt(args[1]);
+			double exp = MMOUtils.parseDouble(args[2]);
+
+			inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
+			inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
+			inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
+			inv.registerTemplateEdition();
+			break;
+		}
+
+		/**
+		 * Handles smithing recipes
+		 */
+		case "smithing": {
+			String[] args = message.split(" ");
+			Validate.isTrue(args.length == 2, "Invalid format");
+			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[0]), "Invalid first ingredient");
+			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[1]), "Invalid second ingredient");
+
+			inv.getEditedSection().set("crafting.smithing.1.input1", args[0]);
+			inv.getEditedSection().set("crafting.smithing.1.input2", args[1]);
+			inv.registerTemplateEdition();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Recipe type not recognized");
 		}
 	}
 
@@ -131,54 +142,5 @@ public class Crafting extends ItemStat {
 
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
-	}
-
-	private boolean validate(Player player, String input) {
-		if (input.contains(":")) {
-			String[] count = input.split(":");
-
-			if (count.length != 2) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
-				return false;
-			}
-
-			try {
-				Integer.parseInt(count[1]);
-			} catch (NumberFormatException exception) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + count[1] + "' isn't a valid number.");
-				return false;
-			}
-
-			input = count[0];
-		}
-		if (input.contains(".")) {
-			String[] typeid = input.split("\\.");
-			if (typeid.length != 2) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format.");
-				return false;
-			}
-			if (!Type.isValid(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"))) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "'" + typeid[0].toUpperCase().replace("-", "_").replace(" ", "_")
-						+ "' isn't a valid item type.");
-				return false;
-			}
-
-			Type type = Type.get(typeid[0].toUpperCase().replace("-", "_").replace(" ", "_"));
-			if (MMOItems.plugin.getItem(type, typeid[1]) == null) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Could not find item with ID '"
-						+ typeid[1].toUpperCase().replace("-", "_").replace(" ", "_") + "'.");
-				return false;
-			}
-
-			return true;
-		}
-		try {
-			Material.valueOf(input.toUpperCase().replace("-", "_"));
-		} catch (Exception e) {
-			player.sendMessage(MMOItems.plugin.getPrefix() + "'" + input.toUpperCase().replace("-", "_") + "' isn't a valid material.");
-			return false;
-		}
-
-		return true;
 	}
 }

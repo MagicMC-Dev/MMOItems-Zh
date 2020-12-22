@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
@@ -7,7 +9,6 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMod
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.mmogroup.mmolib.api.MMOLineConfig;
-import org.bukkit.inventory.ItemStack;
 
 public abstract class Ingredient {
 	private final String id;
@@ -38,34 +39,42 @@ public abstract class Ingredient {
 		return MMOItems.plugin.getCrafting().getIngredients().stream().filter(type -> type.getId().equals(id)).findAny().orElse(null).getDisplay();
 	}
 
-	/*
-	 * ingredient key is used internally by plugin to check if two ingredients
-	 * are of the same nature. name is the actual piece of string displayed
+	/**
+	 * @return The ingredient key which is used internally by MMOItems to check
+	 *         if two ingredients are of the same nature.
 	 */
 	public abstract String getKey();
 
-	/*
-	 * apply specific placeholders to display the ingredient in the item lore.
+	/**
+	 * Apply specific placeholders to display the ingredient in the item lore.
+	 * 
+	 * @param  string String with unparsed placeholders
+	 * @return        String with parsed placeholders
 	 */
-	public abstract String formatLoreDisplay(String string);
+	public abstract String formatDisplay(String string);
 
 	public abstract ItemStack generateItemStack(RPGPlayer player);
 
-	public CheckedIngredient newIngredientInfo(IngredientInventory inv) {
+	public CheckedIngredient evaluateIngredient(IngredientInventory inv) {
 		return new CheckedIngredient(this, inv.getIngredient(this, IngredientLookupMode.BASIC));
 	}
 
-	/*
-	 * used to reduce calculations when the player has opened the crafting
-	 * station. ingredientInfo instances must be updated everytime the player's
-	 * inventory updates.
-	 */
 	public static class CheckedIngredient {
-		private final Ingredient inventory;
+		private final Ingredient ingredient;
 		private final PlayerIngredient found;
 
-		private CheckedIngredient(Ingredient inventory, PlayerIngredient found) {
-			this.inventory = inventory;
+		/**
+		 * Instanciated everytime an ingredient is evaluated for a player when a
+		 * CheckedRecipe is being created (when a player is opening a crafting
+		 * station). This helps greatly reducing ingredient checkups by caching
+		 * the items the plugin will need to take off the player's ingredient
+		 * 
+		 * @param ingredient The ingredient being evaluated
+		 * @param found      The corresponding ingredient found in the player's
+		 *                   ingredient
+		 */
+		private CheckedIngredient(Ingredient ingredient, PlayerIngredient found) {
+			this.ingredient = ingredient;
 			this.found = found;
 		}
 
@@ -73,11 +82,11 @@ public abstract class Ingredient {
 		 * checks if the player has a specific item or not
 		 */
 		public boolean isHad() {
-			return found != null && found.getAmount() >= inventory.getAmount();
+			return found != null && found.getAmount() >= ingredient.getAmount();
 		}
 
 		public Ingredient getIngredient() {
-			return inventory;
+			return ingredient;
 		}
 
 		public PlayerIngredient getPlayerIngredient() {
@@ -85,7 +94,7 @@ public abstract class Ingredient {
 		}
 
 		public String format() {
-			return inventory.formatLoreDisplay(isHad() ? inventory.getDisplay().getPositive() : inventory.getDisplay().getNegative());
+			return ingredient.formatDisplay(isHad() ? ingredient.getDisplay().getPositive() : ingredient.getDisplay().getNegative());
 		}
 	}
 }

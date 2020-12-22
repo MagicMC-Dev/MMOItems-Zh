@@ -1,5 +1,12 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
+import java.util.Random;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
@@ -15,12 +22,6 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.mmogroup.mmolib.MMOLib;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Random;
 
 public class UpgradingRecipe extends Recipe {
 	private final ConfigMMOItem item;
@@ -43,19 +44,21 @@ public class UpgradingRecipe extends Recipe {
 	}
 
 	@Override
-	public void whenUsed(PlayerData data, IngredientInventory inv, RecipeInfo uncastRecipe, CraftingStation station) {
+	public void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe uncastRecipe, CraftingStation station) {
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
 		recipe.getUpgradeData().upgrade(recipe.getMMOItem());
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
 		uncastRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-		if(!data.isOnline()) return;
+		if (!data.isOnline())
+			return;
+
 		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());
 		data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 	}
 
 	@Override
-	public boolean canUse(PlayerData data, IngredientInventory inv, RecipeInfo uncastRecipe, CraftingStation station) {
+	public boolean canUse(PlayerData data, IngredientInventory inv, CheckedRecipe uncastRecipe, CraftingStation station) {
 
 		/*
 		 * try to find the item which is meant to be updated. null check is
@@ -65,18 +68,23 @@ public class UpgradingRecipe extends Recipe {
 		 */
 		PlayerIngredient upgraded = inv.getIngredient(ingredient, IngredientLookupMode.IGNORE_ITEM_LEVEL);
 		if (upgraded == null) {
-			if(!data.isOnline()) return false;
+			if (!data.isOnline())
+				return false;
+
 			Message.NOT_HAVE_ITEM_UPGRADE.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 			return false;
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new LiveMMOItem(MMOLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem()))).hasData(ItemStats.UPGRADE))
+		if (!(recipe.mmoitem = new LiveMMOItem(MMOLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem())))
+				.hasData(ItemStats.UPGRADE))
 			return false;
 
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStats.UPGRADE)).canLevelUp()) {
-			if(!data.isOnline()) return false;
+			if (!data.isOnline())
+				return false;
+
 			Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
 			return false;
@@ -87,7 +95,9 @@ public class UpgradingRecipe extends Recipe {
 				recipe.getUpgraded().setAmount(recipe.getUpgraded().getAmount() - 1);
 
 			recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
-			if(!data.isOnline()) return false;
+			if (!data.isOnline())
+				return false;
+
 			Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 2);
 			return false;
@@ -97,16 +107,16 @@ public class UpgradingRecipe extends Recipe {
 	}
 
 	@Override
-	public ItemStack display(RecipeInfo recipe) {
+	public ItemStack display(CheckedRecipe recipe) {
 		return ConfigItems.UPGRADING_RECIPE_DISPLAY.newBuilder(recipe).build();
 	}
 
 	@Override
-	public RecipeInfo getRecipeInfo(PlayerData data, IngredientInventory inv) {
+	public CheckedRecipe evaluateRecipe(PlayerData data, IngredientInventory inv) {
 		return new UpgradingRecipeInfo(this, data, inv);
 	}
 
-	public static class UpgradingRecipeInfo extends RecipeInfo {
+	public static class UpgradingRecipeInfo extends CheckedRecipe {
 		private LiveMMOItem mmoitem;
 		private UpgradeData upgradeData;
 

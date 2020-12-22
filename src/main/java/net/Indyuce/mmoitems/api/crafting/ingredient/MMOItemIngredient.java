@@ -48,7 +48,7 @@ public class MMOItemIngredient extends Ingredient {
 	}
 
 	@Override
-	public String formatLoreDisplay(String string) {
+	public String formatDisplay(String string) {
 		return string.replace("#item#", display).replace("#level#", level != 0 ? "lvl." + level + " " : "").replace("#amount#", "" + getAmount());
 	}
 

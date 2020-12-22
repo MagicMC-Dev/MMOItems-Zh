@@ -1,5 +1,11 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
@@ -9,11 +15,6 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.api.util.SmartGive;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
 
 public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
@@ -29,9 +30,7 @@ public class CraftingRecipe extends Recipe {
 
 		craftingTime = config.getDouble("crafting-time");
 
-		/*
-		 * load recipe output
-		 */
+		// load recipe output
 		output = new ConfigMMOItem(config.getConfigurationSection("output"));
 	}
 
@@ -48,14 +47,20 @@ public class CraftingRecipe extends Recipe {
 	}
 
 	@Override
-	public void whenUsed(PlayerData data, IngredientInventory inv, RecipeInfo recipe, CraftingStation station) {
-		if(!data.isOnline()) return;
+	public void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station) {
+		if (!data.isOnline())
+			return;
+
+		if (!hasOption(RecipeOption.SILENT_CRAFT))
+			data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+
 		/*
-		 * if the recipe is an instant recipe, just take off the ingredients add
-		 * directly add the ingredients to the player inventory
+		 * If the recipe is instant, take the ingredients off and directly add
+		 * the output to the player's inventory
 		 */
 		if (isInstant()) {
-			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe, PlayerUseCraftingStationEvent.StationAction.INSTANT_RECIPE);
+			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe,
+					PlayerUseCraftingStationEvent.StationAction.INSTANT_RECIPE);
 			Bukkit.getPluginManager().callEvent(event);
 			if (event.isCancelled())
 				return;
@@ -63,27 +68,24 @@ public class CraftingRecipe extends Recipe {
 			if (hasOption(RecipeOption.OUTPUT_ITEM))
 				new SmartGive(data.getPlayer()).give(getOutput().generate(data.getRPG()));
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-			if (!hasOption(RecipeOption.SILENT_CRAFT))
-				data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+
 			/*
-			 * if recipe not instant, add item to crafting queue, either way
-			 * RELOAD inventory data and reopen inventory!
+			 * If the recipe is not instant, add the item to the crafting queue
 			 */
 		} else
 			data.getCrafting().getQueue(station).add(this);
-
-		if (!isInstant())
-			data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 	}
 
 	@Override
-	public boolean canUse(PlayerData data, IngredientInventory inv, RecipeInfo recipe, CraftingStation station) {
+	public boolean canUse(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station) {
 		if (isInstant())
 			return true;
 
 		CraftingQueue queue = data.getCrafting().getQueue(station);
 		if (queue.isFull(station)) {
-			if(!data.isOnline()) return false;
+			if (!data.isOnline())
+				return false;
+
 			Message.CRAFTING_QUEUE_FULL.format(ChatColor.RED).send(data.getPlayer());
 			data.getPlayer().playSound(data.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return false;
@@ -92,7 +94,7 @@ public class CraftingRecipe extends Recipe {
 	}
 
 	@Override
-	public ItemStack display(RecipeInfo recipe) {
+	public ItemStack display(CheckedRecipe recipe) {
 		return ConfigItems.CRAFTING_RECIPE_DISPLAY.newBuilder(recipe).build();
 	}
 }

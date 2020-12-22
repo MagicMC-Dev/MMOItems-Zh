@@ -34,7 +34,7 @@ public class MythicItemIngredient extends Ingredient {
 	}
 
 	@Override
-	public String formatLoreDisplay(String string) {
+	public String formatDisplay(String string) {
 		return string.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 

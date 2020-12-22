@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.MMOLib;
@@ -24,14 +24,14 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
-	private final RecipeInfo recipe;
+	private final CheckedRecipe recipe;
 
 	private final List<ItemStack> ingredients = new ArrayList<>();
 
 	private static final int[] slots = { 12, 13, 14, 21, 22, 23, 30, 31, 32 },
 			fill = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 17, 18, 19, 25, 26, 27, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44 };
 
-	public CraftingStationPreview(CraftingStationView previous, RecipeInfo recipe) {
+	public CraftingStationPreview(CraftingStationView previous, CheckedRecipe recipe) {
 		super(previous.getPlayer());
 
 		this.previous = previous;

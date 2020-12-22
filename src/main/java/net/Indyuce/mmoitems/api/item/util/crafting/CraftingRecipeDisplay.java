@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.MMOLib;
@@ -33,7 +33,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 				"&eRight-Click to preview!");
 	}
 
-	public ItemBuilder newBuilder(RecipeInfo recipe) {
+	public ItemBuilder newBuilder(CheckedRecipe recipe) {
 		return new ItemBuilder(recipe);
 	}
 
@@ -41,13 +41,13 @@ public class CraftingRecipeDisplay extends ConfigItem {
 	 * allows to build an unidentified item based on the given NBTItem.
 	 */
 	public class ItemBuilder {
-		private final RecipeInfo recipe;
+		private final CheckedRecipe recipe;
 		private final CraftingRecipe craftingRecipe;
 
 		private final String name = getName();
 		private final List<String> lore = new ArrayList<>(getLore());
 
-		public ItemBuilder(RecipeInfo recipe) {
+		public ItemBuilder(CheckedRecipe recipe) {
 			this.recipe = recipe;
 			craftingRecipe = (CraftingRecipe) recipe.getRecipe();
 		}

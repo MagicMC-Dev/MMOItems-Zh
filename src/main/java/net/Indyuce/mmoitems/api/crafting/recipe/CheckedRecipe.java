@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
-public class RecipeInfo {
+public class CheckedRecipe {
 	private final Recipe recipe;
 
 	private final Set<CheckedCondition> conditions = new LinkedHashSet<>();
@@ -21,27 +21,32 @@ public class RecipeInfo {
 
 	private boolean ingredientsHad = true, conditionsMet = true;
 
-	/*
-	 * once the recipe is loaded, this class is used to reduce checkups for
-	 * ingredients and conditions
+	/**
+	 * An instance of CheckedRecipe is created, for every recipe in a crafting
+	 * station whenever a player opens a crafting station. This class calculates
+	 * the ingredients the player is missing and the conditions which he does
+	 * not meet. It is used to display the missing ingredients on the GUI recipe
+	 * items.
+	 * 
+	 * @param recipe The corresponding crafting recipe
+	 * @param data   The player opening the crafting station
+	 * @param inv    The player's ingredients
 	 */
-	public RecipeInfo(Recipe recipe, PlayerData data, IngredientInventory inv) {
+	public CheckedRecipe(Recipe recipe, PlayerData data, IngredientInventory inv) {
 		this.recipe = recipe;
 
 		for (Ingredient ingredient : recipe.getIngredients()) {
-			CheckedIngredient info = ingredient.newIngredientInfo(inv);
+			CheckedIngredient info = ingredient.evaluateIngredient(inv);
 			ingredients.add(info);
-			if (!info.isHad()) {
+			if (!info.isHad())
 				ingredientsHad = false;
-			}
 		}
 
 		for (Condition condition : recipe.getConditions()) {
-			CheckedCondition info = condition.newConditionInfo(data);
+			CheckedCondition info = condition.evaluateCondition(data);
 			conditions.add(info);
-			if (!info.isMet()) {
+			if (!info.isMet())
 				conditionsMet = false;
-			}
 		}
 	}
 
@@ -71,8 +76,7 @@ public class RecipeInfo {
 	}
 
 	public Set<CheckedCondition> getDisplayableConditions() {
-		return conditions.stream().filter(condition -> condition.getCondition().getDisplay() != null)
-				.collect(Collectors.toSet());
+		return conditions.stream().filter(condition -> condition.getCondition().getDisplay() != null).collect(Collectors.toSet());
 	}
 
 	public Set<CheckedIngredient> getIngredients() {

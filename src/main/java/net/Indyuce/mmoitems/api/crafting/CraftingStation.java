@@ -4,7 +4,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
-import net.Indyuce.mmoitems.api.crafting.recipe.RecipeInfo;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.MMOLib;
@@ -110,11 +110,11 @@ public class CraftingStation extends PostLoadObject {
 		return maxQueueSize;
 	}
 
-	public List<RecipeInfo> getAvailableRecipes(PlayerData data, IngredientInventory inv) {
-		List<RecipeInfo> infos = new ArrayList<>();
+	public List<CheckedRecipe> getAvailableRecipes(PlayerData data, IngredientInventory inv) {
+		List<CheckedRecipe> infos = new ArrayList<>();
 
 		for (Recipe recipe : getRecipes()) {
-			RecipeInfo info = recipe.getRecipeInfo(data, inv);
+			CheckedRecipe info = recipe.evaluateRecipe(data, inv);
 			if ((info.areConditionsMet() || !info.getRecipe().hasOption(RecipeOption.HIDE_WHEN_LOCKED))
 					&& (info.allIngredientsHad() || !info.getRecipe().hasOption(RecipeOption.HIDE_WHEN_NO_INGREDIENTS)))
 				infos.add(info);

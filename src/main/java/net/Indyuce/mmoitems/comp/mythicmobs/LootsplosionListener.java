@@ -1,11 +1,9 @@
-package net.Indyuce.mmoitems.listener;
+package net.Indyuce.mmoitems.comp.mythicmobs;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemTier;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -19,6 +17,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
@@ -28,7 +28,7 @@ public class LootsplosionListener implements Listener {
 	private final boolean colored;
 
 	public LootsplosionListener() {
-		colored = MMOItems.plugin.getConfig().getBoolean("lootsplosion.show-color");
+		colored = MMOItems.plugin.getConfig().getBoolean("lootsplosion.color");
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -87,7 +87,7 @@ public class LootsplosionListener implements Listener {
 		return new Vector(Math.cos(random.nextDouble() * Math.PI * 2) * offset, height, Math.sin(random.nextDouble() * Math.PI * 2) * offset);
 	}
 
-	public static class LootColor extends BukkitRunnable {
+	public class LootColor extends BukkitRunnable {
 		private final Item item;
 		private final Color color;
 

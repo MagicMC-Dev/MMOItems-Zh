@@ -125,7 +125,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			inv.getEditedSection().set(getPath() + ".base", base);
 			inv.getEditedSection().set(getPath() + ".scale", scale == 0 ? null : scale);
 			inv.getEditedSection().set(getPath() + ".spread", spread == 0 ? null : spread);
-			inv.getEditedSection().set(getPath() + ".maxSpread", maxSpread == 0 ? null : maxSpread);
+			inv.getEditedSection().set(getPath() + ".max-spread", maxSpread == 0 ? null : maxSpread);
 		}
 
 		inv.registerTemplateEdition();

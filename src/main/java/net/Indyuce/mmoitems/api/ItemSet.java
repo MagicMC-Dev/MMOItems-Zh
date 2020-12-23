@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -61,7 +60,7 @@ public class ItemSet {
 									config.getInt("bonuses." + j + "." + key) - 1, true, false));
 							continue;
 						}
-						
+
 						if (key.startsWith("arrow-effect-")) {
 							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("arrow-effect-".length()));
 							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
@@ -78,15 +77,11 @@ public class ItemSet {
 
 						// stat
 						ItemStat stat = MMOItems.plugin.getStats().get(format);
-						if (stat != null) {
-							bonuses.addStat(stat, config.getDouble("bonuses." + j + "." + key));
-							continue;
-						}
+						Validate.notNull(stat, "Could not find stat called '" + format + "'");
+						bonuses.addStat(stat, config.getDouble("bonuses." + j + "." + key));
 
-						MMOItems.plugin.getLogger().log(Level.WARNING, "Could not match set bonus '" + key + "' from set '" + id + "'.");
 					} catch (IllegalArgumentException exception) {
-						MMOItems.plugin.getLogger().log(Level.WARNING,
-								"Could not load set bonus '" + key + "' from set '" + id + "': " + exception.getMessage());
+						throw new IllegalArgumentException("Could not load set bonus '" + key + "': " + exception.getMessage());
 					}
 
 				this.bonuses.put(j, bonuses);

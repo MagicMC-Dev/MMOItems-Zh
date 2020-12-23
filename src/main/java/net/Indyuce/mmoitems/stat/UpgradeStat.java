@@ -1,30 +1,48 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.google.gson.JsonParser;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.UpgradeItemEvent;
+import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.UpgradingEdition;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.util.AltChar;
 
-public class UpgradeStat extends ItemStat {
+public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
+	private static final Random random = new Random();
+
 	public UpgradeStat() {
 		super("UPGRADE", Material.FLINT, "Item Upgrading",
 				new String[] { "Upgrading your item improves its", "current stats. It requires either a", "consumable or a specific crafting ",
@@ -101,5 +119,67 @@ public class UpgradeStat extends ItemStat {
 	public void whenDisplayed(List<String> lore, RandomStatData statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup upgrading.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
+	}
+
+	@Override
+	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+		VolatileMMOItem mmoitem = consumable.getMMOItem();
+		Player player = playerData.getPlayer();
+
+		if (mmoitem.hasData(ItemStats.UPGRADE) && target.hasTag("MMOITEMS_UPGRADE")) {
+			if (target.getItem().getAmount() > 1) {
+				Message.CANT_UPGRADED_STACK.format(ChatColor.RED).send(player);
+				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+				return false;
+			}
+
+			MMOItem targetMMO = new LiveMMOItem(target);
+			UpgradeData targetSharpening = (UpgradeData) targetMMO.getData(ItemStats.UPGRADE);
+			if (!targetSharpening.canLevelUp()) {
+				Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
+				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+				return false;
+			}
+
+			UpgradeData consumableSharpening = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE);
+			if (!consumableSharpening.matchesReference(targetSharpening)) {
+				Message.WRONG_UPGRADE_REFERENCE.format(ChatColor.RED).send(player);
+				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+				return false;
+			}
+
+			UpgradeItemEvent called = new UpgradeItemEvent(playerData, mmoitem, targetMMO, consumableSharpening, targetSharpening);
+			Bukkit.getPluginManager().callEvent(called);
+			if (called.isCancelled())
+				return false;
+
+			targetSharpening.upgrade(targetMMO);
+			NBTItem result = targetMMO.newBuilder().buildNBT();
+
+			/*
+			 * Safe check, if the specs the item has after ugprade are too high
+			 * for the player, then cancel upgrading because the player would
+			 * not be able to use it.
+			 */
+			if (MMOItems.plugin.getLanguage().upgradeRequirementsCheck && !playerData.getRPG().canUse(result, false)) {
+				Message.UPGRADE_REQUIREMENT_SAFE_CHECK.format(ChatColor.RED).send(player);
+				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);
+				return false;
+			}
+
+			if (random.nextDouble() > consumableSharpening.getSuccess() * targetSharpening.getSuccess()) {
+				Message.UPGRADE_FAIL.format(ChatColor.RED).send(player);
+				if (targetSharpening.destroysOnFail())
+					event.getCurrentItem().setAmount(0);
+				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 2);
+				return true;
+			}
+
+			Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
+			event.getCurrentItem().setItemMeta(new DynamicLore(result).build().getItemMeta());
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			return true;
+		}
+		return false;
 	}
 }

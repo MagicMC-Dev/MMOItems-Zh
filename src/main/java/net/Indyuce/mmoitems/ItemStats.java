@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems;
 
+import org.bukkit.Material;
+
 import net.Indyuce.mmoitems.stat.Abilities;
 import net.Indyuce.mmoitems.stat.Armor;
 import net.Indyuce.mmoitems.stat.ArmorToughness;
@@ -7,6 +9,9 @@ import net.Indyuce.mmoitems.stat.ArrowParticles;
 import net.Indyuce.mmoitems.stat.ArrowPotionEffects;
 import net.Indyuce.mmoitems.stat.AttackDamage;
 import net.Indyuce.mmoitems.stat.AttackSpeed;
+import net.Indyuce.mmoitems.stat.CanDeconstruct;
+import net.Indyuce.mmoitems.stat.CanDeskin;
+import net.Indyuce.mmoitems.stat.CanIdentify;
 import net.Indyuce.mmoitems.stat.Commands;
 import net.Indyuce.mmoitems.stat.CompatibleTypes;
 import net.Indyuce.mmoitems.stat.Crafting;
@@ -48,12 +53,15 @@ import net.Indyuce.mmoitems.stat.Permission;
 import net.Indyuce.mmoitems.stat.PickaxePower;
 import net.Indyuce.mmoitems.stat.PotionColor;
 import net.Indyuce.mmoitems.stat.PotionEffects;
+import net.Indyuce.mmoitems.stat.RepairPower;
 import net.Indyuce.mmoitems.stat.RequiredClass;
 import net.Indyuce.mmoitems.stat.RequiredLevel;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.ShieldPatternStat;
 import net.Indyuce.mmoitems.stat.SkullTextureStat;
 import net.Indyuce.mmoitems.stat.Soulbound;
+import net.Indyuce.mmoitems.stat.SoulbindingBreakChance;
+import net.Indyuce.mmoitems.stat.SoulbindingChance;
 import net.Indyuce.mmoitems.stat.SoulboundLevel;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat;
 import net.Indyuce.mmoitems.stat.StoredTags;
@@ -73,7 +81,6 @@ import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.bukkit.Material;
 
 /**
  * A central file for the plugin since new stats are added ALL the time.
@@ -81,8 +88,10 @@ import org.bukkit.Material;
  */
 @SuppressWarnings("unused")
 public class ItemStats {
+	
+	
+	// Main Item Stats
 	public static final ItemStat
-			// Main Item Stats
 			REVISION_ID = new RevisionID(),
 			MATERIAL = new MaterialStat(),
 			DURABILITY = new ItemDamage(),
@@ -183,12 +192,12 @@ public class ItemStats {
 			RESTORE_SATURATION = new DoubleStat("RESTORE_SATURATION", Material.GOLDEN_CARROT, "Saturation Restoration", new String[]{"Saturation given when consumed."}, new String[]{"consumable"}),
 			RESTORE_MANA = new DoubleStat("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Restore Mana", new String[]{"The amount of mana", "your consumable restores."}, new String[]{"consumable"}),
 			RESTORE_STAMINA = new DoubleStat("RESTORE_STAMINA", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "Restore Stamina", new String[]{"The amount of stamina/power", "your consumable restores."}, new String[]{"consumable"}),
-			CAN_IDENTIFY = new BooleanStat("CAN_IDENTIFY", Material.PAPER, "Can Identify?", new String[]{"Players can identify & make their", "item usable using this consumable."}, new String[]{"consumable"}),
-			CAN_DECONSTRUCT = new BooleanStat("CAN_DECONSTRUCT", Material.PAPER, "Can Deconstruct?", new String[]{"Players can deconstruct their item", "using this consumable, creating", "another random item."}, new String[]{"consumable"}),
-			CAN_DESKIN = new BooleanStat("CAN_DESKIN", Material.LEATHER, "Can Deskin?", new String[]{"Players can deskin their item", "and get their skin back", "from the item."}, new String[]{"consumable"}),
+			CAN_IDENTIFY = new CanIdentify(),
+			CAN_DECONSTRUCT = new CanDeconstruct(),
+			CAN_DESKIN = new CanDeskin(),
 			EFFECTS = new Effects(),
-			SOULBINDING_CHANCE = new DoubleStat("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbinding Chance", new String[]{"Defines the chance your item has to", "link another item to your soul,", "preventing other players from using it."}, new String[]{"consumable"}),
-			SOULBOUND_BREAK_CHANCE = new DoubleStat("SOULBOUND_BREAK_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbound Break Chance", new String[]{"The chance of breaking an item's", "soulbound when drag & drop'd on it.", "This chance is lowered depending", "on the soulbound's level."}, new String[]{"consumable"}),
+			SOULBINDING_CHANCE = new SoulbindingChance(),
+			SOULBOUND_BREAK_CHANCE = new SoulbindingBreakChance(),
 			SOULBOUND_LEVEL = new SoulboundLevel(),
 			AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
 			ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "Item Cooldown", new String[]{"This cooldown applies for consumables", "as well as for item commands."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
@@ -218,7 +227,7 @@ public class ItemStats {
 			NOTE_WEIGHT = new DoubleStat("NOTE_WEIGHT", VersionMaterial.MUSIC_DISC_MALL.toMaterial(), "Note Weight", new String[]{"Defines how the projectile cast", "by your lute tilts downwards."}, new String[]{"lute"}),
 			REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "Remove on Craft", new String[]{"If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket."}, new String[]{"all"}, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
 			GEM_SOCKETS = new GemSockets(),
-			REPAIR = new DoubleStat("REPAIR", Material.ANVIL, "Repair", new String[]{"The amount of durability your item", "can repair when set an item."}, new String[]{"consumable"}),
+			REPAIR = new RepairPower(),
 	// REPAIR_MATERIAL = new RepairMaterial(),
 	KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),
 			RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Recoil", new String[]{"Corresponds to the shooting innacuracy."}, new String[]{"musket"}),

@@ -1,5 +1,11 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import java.util.Random;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -10,18 +16,12 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Lute;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Whip;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
 import net.mmogroup.mmolib.api.item.NBTItem;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Random;
 
 public class UseItem {
 	protected final Player player;
@@ -48,7 +48,7 @@ public class UseItem {
 		return playerData;
 	}
 
-	public MMOItem getMMOItem() {
+	public VolatileMMOItem getMMOItem() {
 		return mmoitem;
 	}
 

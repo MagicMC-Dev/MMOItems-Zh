@@ -13,21 +13,24 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
+import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 
 public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
 
 	/*
-	 * numeric statistics handled by MMOLib
+	 * These lists are sets of stats collected when the stats are registered for
+	 * the first time to make their access easier. Check the classes
+	 * individually to understand better
 	 */
 	private final Set<DoubleStat> numeric = new HashSet<>();
-
 	private final Set<AttributeStat> attributeBased = new HashSet<>();
 	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
+	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -73,6 +76,14 @@ public class StatManager {
 		return itemRestriction;
 	}
 
+	/**
+	 * @return Collection of all stats implementing a consumable action like
+	 *         deconstructing, identifying...
+	 */
+	public Set<ConsumableItemInteraction> getConsumableActions() {
+		return consumableActions;
+	}
+
 	public boolean has(String id) {
 		return stats.containsKey(id);
 	}
@@ -84,12 +95,10 @@ public class StatManager {
 	/**
 	 * Registers a stat in MMOItems
 	 * 
-	 * @param id
-	 *            Useless.
-	 * @param stat
-	 *            The stat instance
-	 * @deprecated Stat IDs are now stored in the stat instance directly. Please
-	 *             use StatManager#register(ItemStat) instead
+	 * @param      id   Useless.
+	 * @param      stat The stat instance
+	 * @deprecated      Stat IDs are now stored in the stat instance directly.
+	 *                  Please use StatManager#register(ItemStat) instead
 	 */
 	@Deprecated
 	@SuppressWarnings("unused")
@@ -102,8 +111,7 @@ public class StatManager {
 	 * before any manager is initialized because stats are commonly used when
 	 * loading configs.
 	 * 
-	 * @param stat
-	 *            The stat to register
+	 * @param stat The stat to register
 	 */
 	public void register(ItemStat stat) {
 		if (!stat.isEnabled())
@@ -119,6 +127,9 @@ public class StatManager {
 
 		if (stat instanceof ItemRestriction)
 			itemRestriction.add((ItemRestriction) stat);
+
+		if (stat instanceof ConsumableItemInteraction)
+			consumableActions.add((ConsumableItemInteraction) stat);
 
 		/*
 		 * cache stat for every type which may have this stat. really important

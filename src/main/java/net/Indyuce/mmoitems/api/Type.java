@@ -1,17 +1,20 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
-import net.Indyuce.mmoitems.manager.TypeManager;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
+import net.Indyuce.mmoitems.manager.TypeManager;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.mmogroup.mmolib.MMOLib;
 
 @SuppressWarnings("unused")
 public class Type {
@@ -50,9 +53,9 @@ public class Type {
 	public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, false, true, EquipmentSlot.OTHER);
 	public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, false, true, EquipmentSlot.OTHER);
 	public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, false, true, EquipmentSlot.ACCESSORY);
-    public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, false, false, EquipmentSlot.OTHER);
+	public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, false, false, EquipmentSlot.OTHER);
 
-    private final String id;
+	private final String id;
 	private String name;
 	private final TypeSet set;
 
@@ -196,9 +199,8 @@ public class Type {
 	}
 
 	/**
-	 * @param stat
-	 *            The stat to check
-	 * @return If the stat can be handled by this type of item
+	 * @param  stat The stat to check
+	 * @return      If the stat can be handled by this type of item
 	 */
 	@Deprecated
 	public boolean canHave(ItemStat stat) {
@@ -220,13 +222,12 @@ public class Type {
 
 	/**
 	 * 
-	 * @param item
-	 *            The item to retrieve the type from
-	 * @return The type of the item.
-	 * @deprecated Really heavy method because it instantiates an NBTItem (reads
-	 *             through all the item NBT data), looks for the type tag and
-	 *             does a type map lookup. Use NBTItem#get(ItemStack) first and
-	 *             then NBTItem#getType()
+	 * @param      item The item to retrieve the type from
+	 * @return          The type of the item.
+	 * @deprecated      Really heavy method because it instantiates an NBTItem
+	 *                  (reads through all the item NBT data), looks for the
+	 *                  type tag and does a type map lookup. Use
+	 *                  NBTItem#get(ItemStack) first and then NBTItem#getType()
 	 */
 	@Deprecated
 	public static Type get(ItemStack item) {
@@ -236,20 +237,22 @@ public class Type {
 	/**
 	 * Used in command executors and completions for easier manipulation
 	 * 
-	 * @param id
-	 *            The type id
-	 * @return The type or NPE if it couldn't be found
+	 * @param  id The type id
+	 * @return    The type or null if it couldn't be found
 	 */
-	public static Type get(String id) {
-		return isValid(id) ? MMOItems.plugin.getTypes().get(id.toUpperCase().replace("-", "_").replace(" ", "_")) : null;
+	public static @Nullable Type get(String id) {
+		if (id == null)
+			return null;
+
+		String format = id.toUpperCase().replace("-", "_").replace(" ", "_");
+		return MMOItems.plugin.getTypes().has(format) ? MMOItems.plugin.getTypes().get(format) : null;
 	}
 
 	/**
 	 * Used in command executors and completions for easier manipulation
 	 * 
-	 * @param id
-	 *            The type id
-	 * @return If a registered type with this ID could be found
+	 * @param  id The type id
+	 * @return    If a registered type with this ID could be found
 	 */
 	public static boolean isValid(String id) {
 		return id != null && MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));

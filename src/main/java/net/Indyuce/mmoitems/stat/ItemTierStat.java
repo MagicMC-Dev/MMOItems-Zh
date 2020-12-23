@@ -13,9 +13,8 @@ import net.mmogroup.mmolib.api.item.ItemTag;
 
 public class ItemTierStat extends StringStat {
 	public ItemTierStat() {
-		super("TIER", Material.DIAMOND, "Item Tier", new String[] { "The tier defines how rare your item is",
-				"and what item is dropped when your", "item is deconstructed.", "&9Tiers can be configured in the tiers.yml file" },
-				new String[] { "all" });
+		super("TIER", Material.DIAMOND, "Item Tier", new String[] { "The tier defines how rare your item is", "and what item is dropped when your",
+				"item is deconstructed.", "&9Tiers can be configured in the tiers.yml file" }, new String[] { "all" });
 	}
 
 	@Override

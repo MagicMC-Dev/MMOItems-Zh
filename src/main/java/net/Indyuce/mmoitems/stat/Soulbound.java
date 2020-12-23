@@ -1,7 +1,13 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.regex.Pattern;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -16,11 +22,6 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class Soulbound extends InternalStat implements ItemRestriction {
 	public Soulbound() {
@@ -46,10 +47,6 @@ public class Soulbound extends InternalStat implements ItemRestriction {
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
-	}
-
-	public SoulboundData newSoulboundData(UUID uuid, String name, int level) {
-		return new SoulboundData(uuid, name, level);
 	}
 
 	@Override

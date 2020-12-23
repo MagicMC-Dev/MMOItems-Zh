@@ -35,6 +35,7 @@ public enum Message {
 	ZERO_DURABILITY("This item is broken, you first need to repair it."),
 
 	// consumables & gem stones
+	CANNOT_IDENTIFY_STACKED_ITEMS("You may only identify one item at a time."),
 	SUCCESSFULLY_IDENTIFIED("You successfully identified &6#item#&e."),
 	SUCCESSFULLY_DECONSTRUCTED("You successfully deconstructed &6#item#&e."),
 	GEM_STONE_APPLIED("You successfully applied &6#gem#&e onto your &6#item#&e."),

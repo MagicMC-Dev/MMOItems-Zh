@@ -142,12 +142,14 @@ item-ability:
         cooldown: 4
 
 gem-sockets:
+
     # Define the text you need to enter in the
     # item gem sockets if you want to create an
     # uncolored gem socket i.e a socket for any type of gem.
     uncolored: 'Uncolored'
 
 custom-blocks:
+
     # Whether or not custom blocks should
     # generate in the world according to
     # their generation template.

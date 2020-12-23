@@ -23,9 +23,7 @@ import java.util.logging.Level;
 public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	private final Type type;
 	private final String id;
-
-	// Revision ID
-	private int revId = 1;
+	private final int revId;
 
 	// base item data
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
@@ -37,26 +35,23 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 * Public constructor which can be used to register extra item templates
 	 * using other addons or plugins
 	 *
-	 * @param type
-	 *            The item type of your template
-	 * @param id
-	 *            The template identifier, it's ok if two templates with
-	 *            different item types share the same ID
+	 * @param type The item type of your template
+	 * @param id   The template identifier, it's ok if two templates with
+	 *             different item types share the same ID
 	 */
 	public MMOItemTemplate(Type type, String id) {
 		super(null);
 
 		this.type = type;
 		this.id = id;
+		this.revId = 1;
 	}
 
 	/**
 	 * Used to load mmoitem templates from config files
 	 *
-	 * @param type
-	 *            The item type of your template
-	 * @param config
-	 *            The config file read to load the template
+	 * @param type   The item type of your template
+	 * @param config The config file read to load the template
 	 */
 	public MMOItemTemplate(Type type, ConfigurationSection config) {
 		super(config);
@@ -64,11 +59,11 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 
 		this.type = type;
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
+		this.revId = config.getInt("base.revision-id", 1);
 	}
 
 	@Override
 	protected void whenPostLoaded(ConfigurationSection config) {
-		revId = config.getInt("base.revision-id", 1);
 
 		if (config.contains("option"))
 			for (TemplateOption option : TemplateOption.values())
@@ -141,9 +136,8 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 * template has the 'tiered' recipe option, a random tier will be picked. If
 	 * the template has the 'level-item' option, a random level will be picked
 	 *
-	 * @param player
-	 *            The player for whom you are generating the itme
-	 * @return Item builder with random level and tier?
+	 * @param  player The player for whom you are generating the itme
+	 * @return        Item builder with random level and tier?
 	 */
 	public MMOItemBuilder newBuilder(RPGPlayer player) {
 		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
@@ -152,11 +146,9 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	}
 
 	/**
-	 * @param itemLevel
-	 *            The desired item level
-	 * @param itemTier
-	 *            The desired item tier, can be null
-	 * @return Item builder with specific item level and tier
+	 * @param  itemLevel The desired item level
+	 * @param  itemTier  The desired item tier, can be null
+	 * @return           Item builder with specific item level and tier
 	 */
 	public MMOItemBuilder newBuilder(int itemLevel, @Nullable ItemTier itemTier) {
 		return new MMOItemBuilder(this, itemLevel, itemTier);

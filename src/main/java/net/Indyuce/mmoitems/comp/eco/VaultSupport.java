@@ -25,17 +25,16 @@ public class VaultSupport {
 
 		if(economy == null) {
 			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Economy Support (Vault)");
-			return;
 		} else
 			MMOItems.plugin.getCrafting().registerCondition("money", MoneyCondition::new,
 					new ConditionalDisplay("&a" + AltChar.check + " Requires $#money#",
 							"&c" + AltChar.cross + " Requires $#money#"));
 		if(permissions == null) {
 			MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Permissions Support (Vault)");
-			return;
 		}
 
-		MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto Vault");
+		if(economy != null || permissions != null)
+			MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto Vault");
 	}
 	
 	public Permission getPermissions() {

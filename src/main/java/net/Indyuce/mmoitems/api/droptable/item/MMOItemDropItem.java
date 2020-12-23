@@ -50,13 +50,21 @@ public class MMOItemDropItem extends DropItem {
 
 	@Override
 	public ItemStack getItem(PlayerData player, int amount) {
-		if(!MMOItems.plugin.getTemplates().hasTemplate(type, id)) return null;
+		if (!MMOItems.plugin.getTemplates().hasTemplate(type, id))
+			return null;
+
 		ItemStack item = player == null ? MMOItems.plugin.getItem(type, id) : MMOItems.plugin.getItem(type, id, player);
 		if (item == null || item.getType() == Material.AIR)
 			return null;
 
+		/*
+		 * Apply unidentification before editing the item amount
+		 */
+		if (rollIdentification())
+			item = type.getUnidentifiedTemplate().newBuilder(NBTItem.get(item)).build();
+
 		item.setAmount(amount);
-		return rollIdentification() ? type.getUnidentifiedTemplate().newBuilder(NBTItem.get(item)).build() : item;
+		return item;
 	}
 
 	@Override

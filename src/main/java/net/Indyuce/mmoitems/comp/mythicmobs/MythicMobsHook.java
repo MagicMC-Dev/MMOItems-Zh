@@ -32,7 +32,7 @@ public class MythicMobsHook implements Listener {
 	 */
 
 	/*
-	 * MUST NOT BE REMOVED - this class must be kept as vitam aeternam in case we
+	 * MUST NOT BE REMOVED - this class must be kept ad vitam aeternam in case we
 	 * need to change something in MM compatibility and sent it back to MM devs
 	 */
 	public MythicMobsHook() {

@@ -56,6 +56,7 @@ import net.Indyuce.mmoitems.comp.parse.placeholders.DefaultPlaceholderParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderAPIParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderParser;
 import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
+import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
@@ -233,6 +234,9 @@ public class MMOItems extends JavaPlugin {
 			for (Player player : Bukkit.getOnlinePlayers())
 				PlayerData.get(player).checkForInventoryUpdate();
 		}, 100, getConfig().getInt("inventory-update-delay"));
+
+		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
+			statManager.register(McMMOHook.disableMcMMORepair);
 
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
 			flagPlugin = new ResidenceFlags();

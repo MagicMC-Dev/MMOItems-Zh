@@ -10,7 +10,6 @@ import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelUpEvent;
 import com.gmail.nossr50.events.skills.repair.McMMOPlayerRepairCheckEvent;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.DisableStat;
@@ -19,10 +18,14 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class McMMOHook implements RPGHandler, Listener {
 
-	public McMMOHook() {
-		ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair", "Players can't repair this with McMMO.");
-		MMOItems.plugin.getStats().register(disableMcMMORepair);
-	}
+	/**
+	 * McMMO is a special plugin, it can be used along with other RPG plugins
+	 * like MMOCore. That stat must be registered even if McMMO is not the main
+	 * RPG core plugin, therefore the register() method is on the onEnable() and
+	 * not in the constructor of that class
+	 */
+	public static final ItemStat disableMcMMORepair = new DisableStat("MCMMO_REPAIR", Material.IRON_BLOCK, "Disable McMMO Repair",
+			"Players can't repair this with McMMO.");
 
 	@EventHandler(ignoreCancelled = true)
 	public void a(McMMOPlayerLevelUpEvent event) {

@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ElementsEdition extends EditionInventory {
 	private static final int[] slots = { 19, 25, 20, 24, 28, 34, 29, 33, 30, 32, 37, 43, 38, 42, 39, 41 };
@@ -38,10 +39,10 @@ public class ElementsEdition extends EditionInventory {
 			ItemMeta attackMeta = attack.getItemMeta();
 			attackMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Damage");
 			List<String> attackLore = new ArrayList<>();
-			RandomStatData statData = getEventualStatData(ItemStats.ELEMENTS);
+			Optional<RandomStatData> statData = getEventualStatData(ItemStats.ELEMENTS);
 			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-					+ (statData.isPresent() && ((RandomElementListData) statData).hasDamage(element)
-							? ((RandomElementListData) statData).getDamage(element) + " (%)"
+					+ (statData.isPresent() && ((RandomElementListData) statData.get()).hasDamage(element)
+							? ((RandomElementListData) statData.get()).getDamage(element) + " (%)"
 							: "---"));
 			attackLore.add("");
 			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -54,8 +55,8 @@ public class ElementsEdition extends EditionInventory {
 			defenseMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Defense");
 			List<String> defenseLore = new ArrayList<>();
 			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-					+ (statData.isPresent() && ((RandomElementListData) statData).hasDefense(element)
-							? ((RandomElementListData) statData).getDefense(element) + " (%)"
+					+ (statData.isPresent() && ((RandomElementListData) statData.get()).hasDefense(element)
+							? ((RandomElementListData) statData.get()).getDefense(element) + " (%)"
 							: "---"));
 			defenseLore.add("");
 			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");

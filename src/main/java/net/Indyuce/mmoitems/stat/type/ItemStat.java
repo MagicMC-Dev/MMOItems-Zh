@@ -1,5 +1,14 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -7,13 +16,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class ItemStat {
 	private final String id, name;
@@ -79,10 +81,10 @@ public abstract class ItemStat {
 	public abstract void whenClicked(EditionInventory inv, InventoryClickEvent event);
 
 	/**
-	 * When inputing data using chat or anvil input in order to edit the edit in
-	 * the GUI editor. IAE are handled and exception messages are sent back to
-	 * the player. Stat edition is not canceled until a right input is given or
-	 * the player inputs 'cancel'
+	 * When inputing data using chat or anvil input in order to edit the item
+	 * using the GUI editor. IAE are handled and exception messages are sent
+	 * back to the player. Stat edition is not canceled until a right input is
+	 * given or the player inputs 'cancel'
 	 * 
 	 * @param inv     Previously opened edition menu
 	 * @param message Player input
@@ -109,7 +111,7 @@ public abstract class ItemStat {
 	 * @param statData Stat data being displayed, optional is empty if there is
 	 *                 no stat data
 	 */
-	public abstract void whenDisplayed(List<String> lore, RandomStatData statData);
+	public abstract void whenDisplayed(List<String> lore, Optional<RandomStatData> statData);
 
 	public String getName() {
 		return name;

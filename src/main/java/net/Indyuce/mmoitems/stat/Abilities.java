@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -130,9 +131,9 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GOLD
-				+ (statData.isPresent() ? ((RandomAbilityListData) statData).getAbilities().size() : 0));
+				+ (statData.isPresent() ? ((RandomAbilityListData) statData.get()).getAbilities().size() : 0));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}

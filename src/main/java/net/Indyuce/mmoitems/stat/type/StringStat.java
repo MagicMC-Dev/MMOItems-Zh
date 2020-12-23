@@ -1,5 +1,13 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -11,12 +19,6 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
-import java.util.List;
 
 public class StringStat extends ItemStat {
 	public StringStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
@@ -59,7 +61,7 @@ public class StringStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		if (statData.isPresent()) {
 			String value = MMOLib.plugin.parseColors(statData.toString());
 			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;

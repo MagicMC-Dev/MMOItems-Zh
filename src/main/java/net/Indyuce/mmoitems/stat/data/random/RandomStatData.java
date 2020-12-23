@@ -17,8 +17,4 @@ public interface RandomStatData {
 	 *         base item template
 	 */
 	StatData randomize(MMOItemBuilder builder);
-
-	default boolean isPresent() {
-		return true;
-	}
 }

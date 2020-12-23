@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui.edition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -20,7 +21,6 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.Indyuce.mmoitems.stat.data.EmptyData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.util.AltChar;
@@ -82,14 +82,15 @@ public abstract class EditionInventory extends PluginInventory {
 	 * @param  stat The stat which data we are looking for
 	 * @return      Optional which contains the corresponding random stat data
 	 */
-	public RandomStatData getEventualStatData(ItemStat stat) {
+	public Optional<RandomStatData> getEventualStatData(ItemStat stat) {
+
 		/*
 		 * The item data map used to display what the player is currently
 		 * editing. If he is editing a stat modifier, use the modifier item data
 		 * map. Otherwise, use the base item data map
 		 */
 		Map<ItemStat, RandomStatData> map = editedModifier != null ? editedModifier.getItemData() : template.getBaseItemData();
-		return map.getOrDefault(stat, new EmptyData());
+		return map.containsKey(stat) ? Optional.of(map.get(stat)) : Optional.empty();
 	}
 
 	public void registerTemplateEdition() {

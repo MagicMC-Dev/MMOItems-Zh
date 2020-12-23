@@ -1,8 +1,18 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -18,13 +28,6 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 import net.mmogroup.mmolib.version.VersionMaterial;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Particle;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
-import java.util.List;
 
 public class ArrowParticles extends ItemStat {
 	public ArrowParticles() {
@@ -124,9 +127,9 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		if (statData.isPresent()) {
-			ArrowParticlesData cast = (ArrowParticlesData) statData;
+			ArrowParticlesData cast = (ArrowParticlesData) statData.get();
 			lore.add(ChatColor.GRAY + "Current Value:");
 
 			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD
@@ -140,8 +143,8 @@ public class ArrowParticles extends ItemStat {
 						"&7* Color: &c&l" + cast.getRed() + "&7 - &a&l" + cast.getGreen() + "&7 - &9&l" + cast.getBlue()));
 			else
 				lore.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + cast.getSpeed());
-		}
-		else lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+		} else
+			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit.");

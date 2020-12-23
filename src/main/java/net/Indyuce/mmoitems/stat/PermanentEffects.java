@@ -1,8 +1,22 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.potion.PotionEffectType;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -20,22 +34,15 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+/**
+ * This class has not been updated for the item generation update!!! The potion
+ * amplifier and duration are not numeric formulas but flat values.... TODO
+ */
 public class PermanentEffects extends ItemStat {
 	public PermanentEffects() {
-		super("PERM_EFFECTS", Material.POTION, "Permanent Effects",
-				new String[] { "The potion effects your", "item grants to the holder." }, new String[] { "!miscellaneous", "!block", "all" });
+		super("PERM_EFFECTS", Material.POTION, "Permanent Effects", new String[] { "The potion effects your", "item grants to the holder." },
+				new String[] { "!miscellaneous", "!block", "all" });
 	}
 
 	@Override
@@ -69,7 +76,7 @@ public class PermanentEffects extends ItemStat {
 					inv.getEditedSection().set("perm-effects", null);
 				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
-						+ last.substring(1).toLowerCase() + "�7.");
+						+ last.substring(1).toLowerCase() + ".");
 			}
 		}
 	}
@@ -92,10 +99,10 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomPotionEffectListData data = (RandomPotionEffectListData) statData;
+			RandomPotionEffectListData data = (RandomPotionEffectListData) statData.get();
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
 						+ " " + effect.getAmplifier().toString());
@@ -115,8 +122,8 @@ public class PermanentEffects extends ItemStat {
 
 		String permEffectFormat = ItemStat.translate("perm-effect");
 		((PotionEffectListData) data).getEffects().forEach(effect -> {
-			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
-					+ " " + MMOUtils.intToRoman(effect.getLevel())));
+			lore.add(permEffectFormat.replace("#",
+					MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
 			object.addProperty(effect.getType().getName(), effect.getLevel());
 		});
 
@@ -130,13 +137,13 @@ public class PermanentEffects extends ItemStat {
 			PotionEffectListData effects = new PotionEffectListData();
 
 			JsonElement element = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_PERM_EFFECTS"));
-			if(!element.isJsonObject()) {
-				MMOItems.plugin.getLogger().warning("Couldn't load perm effects from " + mmoitem.getType()
-					+ "." + mmoitem.getId() + ", the NBTData isn't a json object!");
+			if (!element.isJsonObject()) {
+				MMOItems.plugin.getLogger().warning(
+						"Couldn't load perm effects from " + mmoitem.getType() + "." + mmoitem.getId() + ", the NBTData isn't a json object!");
 				return;
 			}
-			element.getAsJsonObject().entrySet().forEach(entry ->
-				effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+			element.getAsJsonObject().entrySet()
+					.forEach(entry -> effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 
 			mmoitem.setData(ItemStats.PERM_EFFECTS, effects);
 		}

@@ -1,7 +1,18 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -16,18 +27,11 @@ import net.Indyuce.mmoitems.stat.type.StringListStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
-		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "Granted Permissions", new String[] { "A list of permissions that will,", "be granted by the item." }, new String[] { "all" });
+		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "Granted Permissions",
+				new String[] { "A list of permissions that will,", "be granted by the item." }, new String[] { "all" });
 	}
 
 	@Override
@@ -66,11 +70,11 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, RandomStatData statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) statData;
+			StringListData data = (StringListData) statData.get();
 			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(element)));
 
 		} else
@@ -91,8 +95,8 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	@Override
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().hasTag(getNBTPath())) {
-			mmoitem.setData(ItemStats.GRANTED_PERMISSIONS, new StringListData(
-					new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()));
+			mmoitem.setData(ItemStats.GRANTED_PERMISSIONS,
+					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()));
 		}
 	}
 }

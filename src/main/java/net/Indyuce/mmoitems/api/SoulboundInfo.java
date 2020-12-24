@@ -26,11 +26,18 @@ public class SoulboundInfo {
 	private final Location loc;
 	private final Player player;
 
+	/**
+	 * Used to store which items must be given back to which player
+	 */
 	private static final Map<UUID, SoulboundInfo> info = new HashMap<>();
 
 	/**
-	 * Used when a player dies and when some items must not be dropped and needs
-	 * to be cached before the player respawns
+	 * Instanced when a player dies if some souljbound items must be kept in the
+	 * player's inventory and need to be cached before the player respawns.
+	 * 
+	 * If the player leaves the server leaving one object of this type in server
+	 * RAM, the cached items need to be dropped if the server closes before the
+	 * player respawns again
 	 */
 	public SoulboundInfo(Player player) {
 		this.player = player;
@@ -66,6 +73,10 @@ public class SoulboundInfo {
 		}
 	}
 
+	/**
+	 * @return Soulbound info of players who have not clicked the respawn button
+	 *         and yet have items cached in server RAM
+	 */
 	public static Collection<SoulboundInfo> getAbandonnedInfo() {
 		return info.values();
 	}

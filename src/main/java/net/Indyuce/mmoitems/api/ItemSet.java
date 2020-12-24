@@ -23,11 +23,11 @@ public class ItemSet {
 	private final List<String> loreTag;
 	private final String name, id;
 
-	/*
-	 * arbitrary constant that only determines the maximum amount of items in a
+	/**
+	 * Arbitrary constant that only determines the maximum amount of items in a
 	 * set e.g if set to 11 you can't create buffs that apply when a player
-	 * wears at least 11 items of the same set. has to be higher than 5 for
-	 * CUSTOM INVENTORY plugins
+	 * wears at least 11 items of the same set. Has to be higher than 5 for
+	 * CUSTOM INVENTORY plugins but it does not have to be tremendously high
 	 */
 	private static final int itemLimit = 10;
 
@@ -55,14 +55,6 @@ public class ItemSet {
 						// potion effect
 						if (key.startsWith("potion-")) {
 							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
-							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
-									config.getInt("bonuses." + j + "." + key) - 1, true, false));
-							continue;
-						}
-
-						if (key.startsWith("arrow-effect-")) {
-							PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("arrow-effect-".length()));
 							Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
 							bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
 									config.getInt("bonuses." + j + "." + key) - 1, true, false));
@@ -109,17 +101,10 @@ public class ItemSet {
 	}
 
 	public static class SetBonuses {
-		private final Map<ItemStat, Double> stats;
-		private final Map<PotionEffectType, PotionEffect> permEffects;
-		private final Set<AbilityData> abilities;
-		private final Set<ParticleData> particles;
-
-		public SetBonuses() {
-			stats = new HashMap<>();
-			permEffects = new HashMap<>();
-			abilities = new HashSet<>();
-			particles = new HashSet<>();
-		}
+		private final Map<ItemStat, Double> stats = new HashMap<>();
+		private final Map<PotionEffectType, PotionEffect> permEffects = new HashMap<>();
+		private final Set<AbilityData> abilities = new HashSet<>();
+		private final Set<ParticleData> particles = new HashSet<>();
 
 		public void addStat(ItemStat stat, double value) {
 			stats.put(stat, value);

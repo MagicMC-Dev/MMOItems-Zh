@@ -103,6 +103,15 @@ public class NumericStatFormula implements RandomStatData {
 		return maxSpread;
 	}
 
+	/**
+	 * Applies the formula for a given input x.
+	 * 
+	 * @param  x Numeric input
+	 * @return   Let A = {base} + {scale} * x, then the returned value is a
+	 *           random value taken in respect to a gaussian distribution
+	 *           centered on A, with average spread of {spread}%, and with a
+	 *           maximum offset of {maxSpread}% (relative to average value)
+	 */
 	public double calculate(double x) {
 		return (base + scale * x) * (1 + Math.min(Math.max(random.nextGaussian() * spread, -maxSpread), maxSpread));
 	}

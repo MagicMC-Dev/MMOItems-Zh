@@ -47,7 +47,7 @@ public class ItemTier {
 		}
 
 		chance = config.getDouble("generation.chance");
-		capacity = config.contains("generation.capacity") ? new NumericStatFormula(config.getConfigurationSection("")) : null;
+		capacity = config.contains("generation.capacity") ? new NumericStatFormula(config.getConfigurationSection("generation.capacity")) : null;
 	}
 
 	public String getId() {
@@ -79,22 +79,26 @@ public class ItemTier {
 	}
 
 	/**
-	 * @return The chance of being chosen when a random tier is selected while
-	 *         calling an mmoitem template to generate an item.
+	 * @return The chance of the tier being chosen when generating a random item
 	 */
 	public double getGenerationChance() {
 		return chance;
 	}
 
 	/**
-	 * @return If the item tier has capacity ie if this tier can be applied onto
-	 *         item templates.
+	 * @return If the item tier has a modifier capacity ie if this tier let
+	 *         generated items have modifiers
 	 */
 	public boolean hasCapacity() {
 		return capacity != null;
 	}
 
-	public NumericStatFormula getCapacity() {
+	/**
+	 * @return The formula for modifier capacity which can be then rolled to
+	 *         generate a random amount of modifier capacity when generating a
+	 *         random item
+	 */
+	public NumericStatFormula getModifierCapacity() {
 		return capacity;
 	}
 

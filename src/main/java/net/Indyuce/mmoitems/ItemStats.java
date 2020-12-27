@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
 
+import net.Indyuce.mmoitems.stat.CompatibleIds;
 import org.bukkit.Material;
 
 import net.Indyuce.mmoitems.stat.Abilities;
@@ -208,6 +209,7 @@ public class ItemStats {
 			MAX_CONSUME = new DoubleStat("MAX_CONSUME", Material.BLAZE_POWDER, "Max Consume", new String[]{"Max amount of usage before", "item disappears."}, new String[]{"consumable"}),
 			SUCCESS_RATE = new SuccessRate(),
 			COMPATIBLE_TYPES = new CompatibleTypes(),
+			COMPATIBLE_IDS = new CompatibleIds(),
 
 	// Crafting Stats
 	CRAFTING = new Crafting(),

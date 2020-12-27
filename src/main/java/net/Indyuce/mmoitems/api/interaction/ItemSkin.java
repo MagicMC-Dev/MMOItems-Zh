@@ -53,6 +53,22 @@ public class ItemSkin extends UseItem {
 			}
 		}
 
+		if (getMMOItem().hasData(ItemStats.COMPATIBLE_IDS)) {
+			for (String id : ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList()) {
+				if (id.equalsIgnoreCase(target.getString("MMOITEMS_ITEM_ID"))) {
+					compatible = true;
+					break;
+				}
+			}
+
+			if (!compatible) {
+				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+						.send(player);
+				return new ApplyResult(ResultType.NONE);
+			}
+		}
+
 		// check for success rate
 		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
 		if (successRate != 0)

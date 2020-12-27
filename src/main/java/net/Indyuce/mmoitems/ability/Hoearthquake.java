@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.ability;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -49,8 +51,12 @@ public class Hoearthquake extends Ability {
 				for (int x = -1; x < 2; x++)
 					for (int z = -1; z < 2; z++) {
 						Block b = loc.clone().add(x, -1, z).getBlock();
-						if (b.getType() == Material.GRASS || b.getType() == Material.DIRT)
-							b.setType(Material.FARMLAND);
+						if (b.getType() == Material.GRASS || b.getType() == Material.DIRT) {
+							BlockBreakEvent event = new BlockBreakEvent(b, stats.getPlayer());
+							event.setDropItems(false);
+							Bukkit.getPluginManager().callEvent(event);
+							if(!event.isCancelled()) b.setType(Material.FARMLAND);
+						}
 					}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);

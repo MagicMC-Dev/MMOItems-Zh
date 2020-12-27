@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,7 +45,7 @@ public class SkillsProHook implements RPGHandler, Listener {
 
 		@Override
 		public String getClassName() {
-			return info.getSkillName();
+			return ChatColor.stripColor(info.getSkill().getDisplayName());
 		}
 
 		@Override

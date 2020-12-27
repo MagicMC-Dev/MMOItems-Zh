@@ -1,34 +1,32 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 
-import java.util.List;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.util.SoundReader;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.List;
 
 public class WaveLuteAttack implements LuteAttackHandler {
 
 	@Override
-	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
+	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, SoundReader sound) {
 		new BukkitRunnable() {
 			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
 			final Location loc = stats.getPlayer().getEyeLocation();
 			int ti = 0;
 
 			public void run() {
-				if (ti++ > range)
-					cancel();
+				if (ti++ > range) cancel();
 
 				List<Entity> entities = MMOUtils.getNearbyChunkEntities(loc);
 				for (int j = 0; j < 3; j++) {
@@ -41,8 +39,7 @@ public class WaveLuteAttack implements LuteAttackHandler {
 					Vector vec = MMOUtils.rotateFunc(new Vector(.5, 0, 0), loc);
 					loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(vec.multiply(Math.sin((double) ti / 2))), 0);
 					loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(vec.multiply(-1)), 0);
-					if (j == 0)
-						loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range));
+					if (j == 0) sound.play(loc, 2, (float) (.5 + (double) ti / range));
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {

@@ -63,7 +63,7 @@ public class StringStat extends ItemStat {
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		if (statData.isPresent()) {
-			String value = MMOLib.plugin.parseColors(statData.toString());
+			String value = MMOLib.plugin.parseColors(statData.get().toString());
 			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
 

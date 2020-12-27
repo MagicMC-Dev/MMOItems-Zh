@@ -1,34 +1,32 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.util.SoundReader;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
-
 public class SlashLuteAttack implements LuteAttackHandler {
 
 	@Override
-	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, Sound sound) {
+	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, SoundReader sound) {
 		new BukkitRunnable() {
 			final Vector vec = stats.getPlayer().getEyeLocation().getDirection();
 			final Location loc = stats.getPlayer().getLocation().add(0, 1.3, 0);
 			double ti = 1;
 
 			public void run() {
-				if ((ti += .6) > 5)
-					cancel();
+				if ((ti += .6) > 5) cancel();
 
-				loc.getWorld().playSound(loc, sound, 2, (float) (.5 + ti / 5));
+				sound.play(loc, 2, (float) (.5 + ti / range));
 				for (int k = -30; k < 30; k += 3)
 					if (random.nextBoolean()) {
 						loc.setDirection(vec);

@@ -21,7 +21,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.EquipmentSlot;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -50,7 +49,8 @@ public class ItemUse implements Listener {
 
 	@EventHandler
 	public void a(PlayerInteractEvent event) {
-		if (!event.hasItem() || event.getHand() != EquipmentSlot.HAND)
+		if (!event.hasItem())
+			// || event.getHand() != EquipmentSlot.HAND
 			return;
 
 		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
@@ -99,7 +99,7 @@ public class ItemUse implements Listener {
 			UntargetedWeapon weapon = (UntargetedWeapon) useItem;
 			if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK)
 					|| (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK))
-				weapon.untargetedAttack(EquipmentSlot.HAND);
+				weapon.untargetedAttack(event.getHand());
 		}
 	}
 
@@ -128,7 +128,6 @@ public class ItemUse implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(player);
 		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
-		NBTItem offhandItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInOffHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
@@ -146,19 +145,6 @@ public class ItemUse implements Listener {
 
 			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(), target, result);
 			if (!result.isSuccessful()) {
-				event.setCancelled(true);
-				return;
-			}
-		}
-		if (offhandItem.hasType() && Type.get(item.getType()) != Type.BLOCK) {
-			Weapon weapon = new Weapon(playerData, offhandItem);
-
-			if (weapon.getMMOItem().getType().getItemSet() == TypeSet.RANGE) {
-				event.setCancelled(true);
-				return;
-			}
-
-			if (!weapon.applyItemCosts()) {
 				event.setCancelled(true);
 				return;
 			}

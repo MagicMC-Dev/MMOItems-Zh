@@ -16,9 +16,11 @@ public abstract class UntargetedWeapon extends Weapon {
 		this.weaponType = weaponType;
 	}
 
-	/*
-	 * called first when the player clicks his item and allows to apply
-	 * durability onto a weapon that is not targeted
+	/**
+	 * Called when the player interacts with the item. This method is used to
+	 * apply durability and cast the weapon attack
+	 * 
+	 * @param slot Slot being interacted with
 	 */
 	public abstract void untargetedAttack(EquipmentSlot slot);
 
@@ -26,7 +28,15 @@ public abstract class UntargetedWeapon extends Weapon {
 		return weaponType;
 	}
 
-	public enum WeaponType {
+	/**
+	 * Used to determine if the item must be left or right clicked in order to
+	 * cast a basic attack. Whips, staffs are left click weapons whereas muskets
+	 * are right click weapons
+	 * 
+	 * @author cympe
+	 *
+	 */
+	public static enum WeaponType {
 		RIGHT_CLICK,
 		LEFT_CLICK;
 

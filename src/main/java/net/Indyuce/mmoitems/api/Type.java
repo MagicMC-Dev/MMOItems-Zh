@@ -20,65 +20,62 @@ import net.mmogroup.mmolib.MMOLib;
 public class Type {
 
 	// slashing
-	public static final Type SWORD = new Type(TypeSet.SLASHING, "SWORD", true, true, true, EquipmentSlot.MAIN_HAND);
+	public static final Type SWORD = new Type(TypeSet.SLASHING, "SWORD", true, EquipmentSlot.MAIN_HAND);
 
 	// piercing
-	public static final Type DAGGER = new Type(TypeSet.PIERCING, "DAGGER", true, true, true, EquipmentSlot.MAIN_HAND);
-	public static final Type SPEAR = new Type(TypeSet.PIERCING, "SPEAR", true, true, true, EquipmentSlot.MAIN_HAND);
+	public static final Type DAGGER = new Type(TypeSet.PIERCING, "DAGGER", true, EquipmentSlot.MAIN_HAND);
+	public static final Type SPEAR = new Type(TypeSet.PIERCING, "SPEAR", true, EquipmentSlot.MAIN_HAND);
 
 	// blunt
-	public static final Type HAMMER = new Type(TypeSet.BLUNT, "HAMMER", true, true, true, EquipmentSlot.MAIN_HAND);
-	public static final Type GAUNTLET = new Type(TypeSet.BLUNT, "GAUNTLET", true, true, true, EquipmentSlot.MAIN_HAND);
+	public static final Type HAMMER = new Type(TypeSet.BLUNT, "HAMMER", true, EquipmentSlot.MAIN_HAND);
+	public static final Type GAUNTLET = new Type(TypeSet.BLUNT, "GAUNTLET", true, EquipmentSlot.MAIN_HAND);
 
 	// range
-	public static final Type WHIP = new Type(TypeSet.RANGE, "WHIP", true, false, true, EquipmentSlot.MAIN_HAND);
-	public static final Type STAFF = new Type(TypeSet.RANGE, "STAFF", true, false, true, EquipmentSlot.MAIN_HAND);
-	public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, false, false, EquipmentSlot.BOTH_HANDS);
-	public static final Type CROSSBOW = new Type(TypeSet.RANGE, "CROSSBOW", false, true, false, EquipmentSlot.BOTH_HANDS);
-	public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, false, false, EquipmentSlot.BOTH_HANDS);
-	public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, false, true, EquipmentSlot.BOTH_HANDS);
+	public static final Type WHIP = new Type(TypeSet.RANGE, "WHIP", true, EquipmentSlot.MAIN_HAND);
+	public static final Type STAFF = new Type(TypeSet.RANGE, "STAFF", true, EquipmentSlot.MAIN_HAND);
+	public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, EquipmentSlot.BOTH_HANDS);
+	public static final Type CROSSBOW = new Type(TypeSet.RANGE, "CROSSBOW", false, EquipmentSlot.BOTH_HANDS);
+	public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, EquipmentSlot.BOTH_HANDS);
+	public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, EquipmentSlot.BOTH_HANDS);
 
 	// offhand
-	public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, false, true, EquipmentSlot.BOTH_HANDS);
-	public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, false, true, EquipmentSlot.OFF_HAND);
+	public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, EquipmentSlot.BOTH_HANDS);
+	public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OFF_HAND);
 
 	// any
-	public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, false, true, EquipmentSlot.ANY);
+	public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.ANY);
 
 	// extra
-	public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, false, true, EquipmentSlot.ARMOR);
-	public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, false, true, EquipmentSlot.MAIN_HAND);
-	public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, false, true, EquipmentSlot.MAIN_HAND);
-	public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, false, true, EquipmentSlot.MAIN_HAND);
-	public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, false, true, EquipmentSlot.OTHER);
-	public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, false, true, EquipmentSlot.OTHER);
-	public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, false, true, EquipmentSlot.ACCESSORY);
-	public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, false, false, EquipmentSlot.OTHER);
+	public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR);
+	public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, EquipmentSlot.MAIN_HAND);
+	public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, EquipmentSlot.MAIN_HAND);
+	public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, EquipmentSlot.MAIN_HAND);
+	public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, EquipmentSlot.OTHER);
+	public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, EquipmentSlot.OTHER);
+	public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, EquipmentSlot.ACCESSORY);
+	public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, EquipmentSlot.OTHER);
 
 	private final String id;
 	private String name;
 	private final TypeSet set;
 
-	/*
-	 * the 'weapon' boolean is used for item type restrictions for gem stones to
-	 * easily check if the item is a weapon. 'melee' defines if the item can
-	 * actually be used during a melee entity attack, if it can't it usually has
-	 * some unique attack effect. 'rightClickSpecial' defines what items need to
-	 * be right/left clicked to cast a right-click ability. e.g bows need to be
-	 * left clicked since the right click is used to fire arrows.
+	/**
+	 * Used for item type restrictions for gem stones to easily check if the
+	 * item is a weapon.
 	 */
-	private final boolean weapon, melee, rightClickSpecial;
+	private final boolean weapon;
+
 	private final EquipmentSlot equipType;
 
-	/*
-	 * used to display the item in the item explorer and in the item recipes
+	/**
+	 * Used to display the item in the item explorer and in the item recipes
 	 * list in the advanced workbench. can also be edited using the config
 	 * files.
 	 */
 	private ItemStack item;
 
-	/*
-	 * any type can have a subtype which basically dictates what the item type
+	/**
+	 * Any type can have a subtype which basically dictates what the item type
 	 * does.
 	 */
 	private Type parent;
@@ -91,14 +88,12 @@ public class Type {
 	 */
 	private final List<ItemStat> available = new ArrayList<>();
 
-	public Type(TypeSet set, String id, boolean weapon, boolean melee, boolean rightClickSpecial, EquipmentSlot equipType) {
+	public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType) {
 		this.set = set;
 		this.id = id.toUpperCase().replace("-", "_").replace(" ", "_");
 		this.equipType = equipType;
 
 		this.weapon = weapon;
-		this.melee = melee;
-		this.rightClickSpecial = rightClickSpecial;
 	}
 
 	public Type(TypeManager manager, ConfigurationSection config) {
@@ -107,8 +102,6 @@ public class Type {
 		parent = manager.get(config.getString("parent").toUpperCase().replace("-", "_").replace(" ", "_"));
 		set = parent.set;
 		weapon = parent.weapon;
-		melee = parent.melee;
-		rightClickSpecial = parent.rightClickSpecial;
 		equipType = parent.equipType;
 	}
 
@@ -139,14 +132,6 @@ public class Type {
 
 	public boolean isWeapon() {
 		return weapon;
-	}
-
-	public boolean isMeleeWeapon() {
-		return melee;
-	}
-
-	public boolean rightClickInteraction() {
-		return rightClickSpecial;
 	}
 
 	public String getName() {

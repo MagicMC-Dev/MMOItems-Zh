@@ -8,13 +8,11 @@ import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelUpEvent;
-import com.gmail.nossr50.events.skills.repair.McMMOPlayerRepairCheckEvent;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.DisableStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 
 public class McMMOHook implements RPGHandler, Listener {
 
@@ -29,19 +27,12 @@ public class McMMOHook implements RPGHandler, Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void a(McMMOPlayerLevelUpEvent event) {
-		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void b(McMMOPlayerLevelDownEvent event) {
-		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void c(McMMOPlayerRepairCheckEvent event) {
-		NBTItem nbt = NBTItem.get(event.getRepairedObject());
-		if (nbt.hasType() && nbt.getBoolean("MMOITEMS_DISABLE_MCMMO_REPAIR"))
-			event.setCancelled(true);
+		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@Override

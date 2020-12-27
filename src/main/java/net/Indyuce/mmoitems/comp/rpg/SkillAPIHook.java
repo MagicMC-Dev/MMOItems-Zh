@@ -61,7 +61,7 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
 
 	@EventHandler
 	public void b(PlayerLevelUpEvent event) {
-		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayerData().getPlayer()).scheduleDelayedInventoryUpdate();
+		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayerData().getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@Override

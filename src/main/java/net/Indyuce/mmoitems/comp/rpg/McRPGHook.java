@@ -12,7 +12,7 @@ public class McRPGHook implements RPGHandler, Listener {
 
 	@EventHandler
 	public void a(McRPGPlayerLevelChangeEvent event) {
-		PlayerData.get(event.getMcRPGPlayer().getOfflineMcRPGPlayer()).scheduleDelayedInventoryUpdate();
+		PlayerData.get(event.getMcRPGPlayer().getOfflineMcRPGPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@Override

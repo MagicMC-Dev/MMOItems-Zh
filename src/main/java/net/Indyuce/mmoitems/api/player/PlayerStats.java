@@ -6,7 +6,8 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.stat.StatInstance;
@@ -43,37 +44,49 @@ public class PlayerStats {
 
 	public void updateStats() {
 		getMap().getInstances().forEach(ins -> {
-			ins.remove("item");
-			ins.remove("fullSetBonus");
+			ins.remove("MMOItem");
+			ins.remove("MMOItemSetBonus");
 		});
 
 		if (playerData.hasSetBonuses())
 			playerData.getSetBonuses().getStats()
-					.forEach((stat, value) -> getInstance(stat).addModifier("fullSetBonus", new StatModifier(value, ModifierType.FLAT)));
+					.forEach((stat, value) -> getInstance(stat).addModifier("MMOItemSetBonus", new StatModifier(value, ModifierType.FLAT)));
 
 		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
-			double t = 0;
+			double sum = 0;
 
-			for (VolatileMMOItem item : playerData.getMMOItems())
-				t += item.getNBT().getStat(stat.getId());
+			/*
+			 * If the player is holding a weapon granting a certain stat, the
+			 * final stat value should be applied the attribute stat offset like
+			 * 4 for attack speed or 1 for attack damage
+			 */
+			boolean hasWeapon = false;
 
-			if (t != 0)
-				getInstance(stat).addModifier("item",
-						new StatModifier(t - (stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0), ModifierType.FLAT));
+			for (EquippedPlayerItem item : playerData.getInventory().getEquipped()) {
+				double value = item.getItem().getNBT().getStat(stat.getId());
+				if (value != 0) {
+					sum += value;
+					if (!hasWeapon && item.getSlot() == EquipmentSlot.BOTH_HANDS)
+						hasWeapon = true;
+				}
+			}
+
+			if (sum != 0) {
+				double offset = hasWeapon && stat instanceof AttributeStat ? ((AttributeStat) stat).getOffset() : 0;
+				getInstance(stat).addModifier("MMOItem", new StatModifier(sum - offset, ModifierType.FLAT));
+			}
 		}
 	}
 
 	public class CachedStats {
-
-		/*
-		 * this field is made final so even when the player logs out, the
-		 * ability can still be cast without any additional errors. this allows
-		 * not to add a safe check in every ability loop.
-		 */
 		private final Player player;
-
 		private final Map<String, Double> stats = new HashMap<>();
 
+		/**
+		 * Used to cache stats when a player casts a skill so that if the player
+		 * swaps items or changes any of his stat value before the end of the
+		 * spell duration, the stat value is not updated
+		 */
 		public CachedStats() {
 			player = playerData.getPlayer();
 			for (StatInstance ins : getMap().getInstances())

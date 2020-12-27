@@ -1,5 +1,23 @@
 package net.Indyuce.mmoitems.api.player;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -8,6 +26,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
@@ -15,8 +34,10 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
+import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import net.Indyuce.mmoitems.comp.inventory.PlayerInventory.EquippedItem;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
@@ -28,27 +49,6 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.api.player.MMOPlayerData;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
 public class PlayerData {
 	private static final Map<UUID, PlayerData> data = new HashMap<>();
@@ -59,14 +59,7 @@ public class PlayerData {
 	 */
 	private RPGPlayer rpgPlayer;
 
-	/*
-	 * the inventory is all the items the player can actually use. items are
-	 * cached here to check if the player's items changed, if so just update
-	 * inventory TODO improve player inventory checkup method
-	 */
-	private ItemStack helmet = null, chestplate = null, leggings = null, boots = null, hand = null, offhand = null;
-	private final List<VolatileMMOItem> playerInventory = new ArrayList<>();
-
+	private final InventoryUpdateHandler inventory = new InventoryUpdateHandler(this);
 	private final CraftingStatus craftingStatus = new CraftingStatus();
 	private final PlayerAbilityData playerAbilityData = new PlayerAbilityData();
 	private final Map<String, CooldownInformation> abilityCooldowns = new HashMap<>();
@@ -140,32 +133,6 @@ public class PlayerData {
 		return rpgPlayer;
 	}
 
-	/*
-	 * returns all the usable MMOItems in the player inventory, this can be used
-	 * to calculate stats. this list updates each time a player equips a new
-	 * item.
-	 */
-	public List<VolatileMMOItem> getMMOItems() {
-		return playerInventory;
-	}
-
-	public void checkForInventoryUpdate() {
-		if (!mmoData.isOnline())
-			return;
-		PlayerInventory inv = getPlayer().getInventory();
-		if (isNotSame(helmet, inv.getHelmet()) || isNotSame(chestplate, inv.getChestplate()) || isNotSame(leggings, inv.getLeggings())
-				|| isNotSame(boots, inv.getBoots()) || isNotSame(hand, inv.getItemInMainHand()) || isNotSame(offhand, inv.getItemInOffHand()))
-			updateInventory();
-	}
-
-	public void scheduleDelayedInventoryUpdate() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, this::updateInventory);
-	}
-
-	private boolean isNotSame(ItemStack item, ItemStack item1) {
-		return !Objects.equals(item, item1);
-	}
-
 	public void cancelRunnables() {
 		itemParticles.forEach(BukkitRunnable::cancel);
 		if (overridingItemParticles != null)
@@ -179,20 +146,23 @@ public class PlayerData {
 	public boolean areHandsFull() {
 		if (!mmoData.isOnline())
 			return false;
+
 		NBTItem main = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
 		NBTItem off = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
 		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
 				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void updateInventory() {
 		if (!mmoData.isOnline())
 			return;
+
 		/*
 		 * very important, clear particle data AFTER canceling the runnable
 		 * otherwise it cannot cancel and the runnable keeps going (severe)
 		 */
-		playerInventory.clear();
+		inventory.getEquipped().clear();
 		permanentEffects.clear();
 		itemAbilities.clear();
 		cancelRunnables();
@@ -213,32 +183,28 @@ public class PlayerData {
 		 */
 		fullHands = areHandsFull();
 
-		// find all the items the player can actually use.
+		/*
+		 * Find all the items the player can actually use
+		 */
 		for (EquippedItem item : MMOItems.plugin.getInventory().getInventory(getPlayer())) {
-			NBTItem nbtItem = item.newNBTItem();
-
+			NBTItem nbtItem = item.getItem();
 			Type type = Type.get(nbtItem.getType());
-			if (type == null)
-				continue;
 
-			/*
-			 * if the player is holding an item the wrong way i.e if the item is
-			 * not in the right slot. intuitive methods with small exceptions
-			 * like BOTH_HANDS and ANY
+			/**
+			 * If the item is a custom item, apply slot and item use
+			 * restrictions (items which only work in a specific equipment slot)
 			 */
-			if (!item.matches(type))
+			if (type != null && (!item.matches(type) || !getRPG().canUse(nbtItem, false)))
 				continue;
 
-			if (!getRPG().canUse(nbtItem, false))
-				continue;
-
-			playerInventory.add(new VolatileMMOItem(nbtItem));
+			inventory.getEquipped().add(new EquippedPlayerItem(item));
 		}
 
-		for (VolatileMMOItem item : getMMOItems()) {
+		for (EquippedPlayerItem equipped : inventory.getEquipped()) {
+			VolatileMMOItem item = equipped.getItem();
 
 			/*
-			 * apply permanent potion effects
+			 * Apply permanent potion effects
 			 */
 			if (item.hasData(ItemStats.PERM_EFFECTS))
 				((PotionEffectListData) item.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(effect -> {
@@ -247,7 +213,7 @@ public class PlayerData {
 				});
 
 			/*
-			 * apply item particles
+			 * Apply item particles
 			 */
 			if (item.hasData(ItemStats.ITEM_PARTICLES)) {
 				ParticleData particleData = (ParticleData) item.getData(ItemStats.ITEM_PARTICLES);
@@ -260,21 +226,14 @@ public class PlayerData {
 			}
 
 			/*
-			 * apply abilities
+			 * Apply abilities
 			 */
-			if (item.hasData(ItemStats.ABILITIES)) {
-				// if the item with the abilities is in the players offhand AND
-				// its disabled in the config then just move on, else add the
-				// ability
-				if (item.getNBT().getItem().equals(getPlayer().getInventory().getItemInOffHand())
-						&& MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand")) {
-					continue;
-				} else
+			if (item.hasData(ItemStats.ABILITIES))
+				if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
 					itemAbilities.addAll(((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities());
-			}
 
 			/*
-			 * apply permissions if vault exists
+			 * Apply permissions if vault exists
 			 */
 			if (MMOItems.plugin.hasPermissions() && item.hasData(ItemStats.GRANTED_PERMISSIONS)) {
 				permissions.addAll(((StringListData) item.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
@@ -293,7 +252,8 @@ public class PlayerData {
 		int max = 0;
 		ItemSet set = null;
 		Map<ItemSet, Integer> sets = new HashMap<>();
-		for (VolatileMMOItem item : getMMOItems()) {
+		for (EquippedPlayerItem equipped : inventory.getEquipped()) {
+			VolatileMMOItem item = equipped.getItem();
 			String tag = item.getNBT().getString("MMOITEMS_ITEM_SET");
 			ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
 			if (itemSet == null)
@@ -333,12 +293,12 @@ public class PlayerData {
 		 * actually update the player inventory so the task doesn't infinitely
 		 * loop on updating
 		 */
-		helmet = getPlayer().getInventory().getHelmet();
-		chestplate = getPlayer().getInventory().getChestplate();
-		leggings = getPlayer().getInventory().getLeggings();
-		boots = getPlayer().getInventory().getBoots();
-		hand = getPlayer().getInventory().getItemInMainHand();
-		offhand = getPlayer().getInventory().getItemInOffHand();
+		inventory.helmet = getPlayer().getInventory().getHelmet();
+		inventory.chestplate = getPlayer().getInventory().getChestplate();
+		inventory.leggings = getPlayer().getInventory().getLeggings();
+		inventory.boots = getPlayer().getInventory().getBoots();
+		inventory.hand = getPlayer().getInventory().getItemInMainHand();
+		inventory.offhand = getPlayer().getInventory().getItemInOffHand();
 	}
 
 	public void updateStats() {
@@ -351,6 +311,10 @@ public class PlayerData {
 		// two handed
 		if (fullHands)
 			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
+	}
+
+	public InventoryUpdateHandler getInventory() {
+		return inventory;
 	}
 
 	public SetBonuses getSetBonuses() {
@@ -441,23 +405,29 @@ public class PlayerData {
 	}
 
 	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability) {
-		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
-		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled())
-			return;
 
+		/*
+		 * Apply simple conditions including mana and stamina cost, permission
+		 * and cooldown checks
+		 */
 		if (!rpgPlayer.canCast(ability))
 			return;
 
 		/*
-		 * check if ability can be cast (custom conditions)
+		 * Apply extra conditions which depend on the ability the player is
+		 * casting
 		 */
 		AbilityResult abilityResult = ability.getAbility().whenRan(stats, target, ability, attack);
 		if (!abilityResult.isSuccessful())
 			return;
 
+		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled())
+			return;
+
 		/*
-		 * the player can cast the ability, and it was successfully cast on its
+		 * The player can cast the ability, and it was successfully cast on its
 		 * target, removes resources needed from the player
 		 */
 		if (ability.hasModifier("mana"))
@@ -470,7 +440,7 @@ public class PlayerData {
 			applyAbilityCooldown(ability.getAbility(), cooldown);
 
 		/*
-		 * finally cast the ability (BUG FIX) cooldown MUST be applied BEFORE
+		 * Finally cast the ability; BUG FIX: cooldown MUST be applied BEFORE
 		 * the ability is cast otherwise instantaneously damaging abilities like
 		 * Sparkle can trigger deadly crash loops
 		 */
@@ -531,31 +501,30 @@ public class PlayerData {
 	}
 
 	public static PlayerData get(UUID uuid) {
-		if (PlayerData.data.containsKey(uuid))
-			return data.get(uuid);
-		return new PlayerData(MMOPlayerData.get(uuid));
+		return data.get(uuid);
 	}
 
-	/*
-	 * method called when the corresponding MMOPlayerData has already been
-	 * initialized
+	/**
+	 * Called when the corresponding MMOPlayerData has already been initialized
 	 */
 	public static void load(Player player) {
+
 		/*
 		 * Double check they are online, for some reason even if this is fired
 		 * from the join event the player can be offline if they left in the
 		 * same tick or something.
 		 */
-		if (!player.isOnline() || data.containsKey(player.getUniqueId()))
+		if (!data.containsKey(player.getUniqueId())) {
+			data.put(player.getUniqueId(), new PlayerData(MMOPlayerData.get(player)));
 			return;
-		PlayerData newData = PlayerData.get(player.getUniqueId());
+		}
+
 		/*
-		 * update the cached RPGPlayer in case of any major change in the player
+		 * Update the cached RPGPlayer in case of any major change in the player
 		 * data of other rpg plugins
 		 */
-		newData.rpgPlayer = MMOItems.plugin.getRPG().getInfo(newData);
-		/* cache the playerdata */
-		data.put(player.getUniqueId(), newData);
+		PlayerData playerData = PlayerData.get(player.getUniqueId());
+		playerData.rpgPlayer = MMOItems.plugin.getRPG().getInfo(playerData);
 	}
 
 	public static Collection<PlayerData> getLoaded() {
@@ -564,16 +533,25 @@ public class PlayerData {
 
 	public enum CooldownType {
 
-		// simple attack cooldown
+		/**
+		 * Basic attack cooldown like staffs and lutes
+		 */
 		ATTACK,
 
-		// elemental ttack
+		/**
+		 * Elemental attacks cooldown
+		 */
 		ELEMENTAL_ATTACK,
 
-		// item type special effects
+		/**
+		 * Special attacks like staffs or gauntlets right clicks
+		 */
 		SPECIAL_ATTACK,
 
-		// piercing / blunt / slashing passive effects
+		/**
+		 * Special item set attack effects including slashing, piercing and
+		 * blunt attack effects
+		 */
 		SET_TYPE_ATTACK
 	}
 }

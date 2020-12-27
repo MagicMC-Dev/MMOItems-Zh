@@ -43,17 +43,17 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
 	@EventHandler
 	public void updateInventoryOnLevelUp(PlayerLevelUpEvent event) {
-		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@EventHandler
 	public void updateInventoryOnClassChange(PlayerChangeClassEvent event) {
-		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@EventHandler
 	public void updateInventoryOnPlayerDataLoad(PlayerDataLoadEvent event) {
-		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	public static class MMOCoreRPGPlayer extends RPGPlayer {

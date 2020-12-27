@@ -29,6 +29,7 @@ import net.Indyuce.mmoitems.command.completion.UpdateItemCompletion;
 import net.Indyuce.mmoitems.comp.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
 import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
+import net.Indyuce.mmoitems.comp.McMMONonRPGHook;
 import net.Indyuce.mmoitems.comp.RealDualWieldHook;
 import net.Indyuce.mmoitems.comp.WorldEditSupport;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
@@ -155,6 +156,9 @@ public class MMOItems extends JavaPlugin {
 
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
+
+		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
+			statManager.register(McMMOHook.disableMcMMORepair);
 	}
 
 	public void onEnable() {
@@ -232,16 +236,16 @@ public class MMOItems extends JavaPlugin {
 		 */
 		Bukkit.getScheduler().runTaskTimer(this, () -> {
 			for (Player player : Bukkit.getOnlinePlayers())
-				PlayerData.get(player).checkForInventoryUpdate();
+				PlayerData.get(player).getInventory().updateCheck();
 		}, 100, getConfig().getInt("inventory-update-delay"));
-
-		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
-			statManager.register(McMMOHook.disableMcMMORepair);
 
 		if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
 			flagPlugin = new ResidenceFlags();
 			getLogger().log(Level.INFO, "Hooked onto Residence");
 		}
+
+		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
+			Bukkit.getPluginManager().registerEvents(new McMMONonRPGHook(), this);
 
 		if (Bukkit.getPluginManager().getPlugin("RPGInventory") != null) {
 			inventory = new RPGInventoryHook();

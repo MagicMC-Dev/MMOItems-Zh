@@ -21,6 +21,14 @@ public abstract class RPGPlayer {
 		this(PlayerData.get(player));
 	}
 
+	/**
+	 * Used to retrieve useful information like class name, level, mana and
+	 * stamina from RPG plugins. This instance is reloaded everytime the player
+	 * logs back on the server to ensure the object references are kept up to
+	 * date
+	 * 
+	 * @param playerData The corresponding player
+	 */
 	public RPGPlayer(PlayerData playerData) {
 		this.player = playerData.getPlayer();
 		this.playerData = playerData;

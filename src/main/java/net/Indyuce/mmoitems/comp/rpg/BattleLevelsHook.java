@@ -12,7 +12,7 @@ public class BattleLevelsHook implements RPGHandler, Listener {
 
 	@EventHandler
 	public void a(PlayerLevelUpEvent event) {
-		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@Override

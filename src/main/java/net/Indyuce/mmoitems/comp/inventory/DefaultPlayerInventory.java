@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 
 public class DefaultPlayerInventory implements PlayerInventory {
 	@Override

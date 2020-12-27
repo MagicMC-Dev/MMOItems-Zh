@@ -15,7 +15,7 @@ public class DefaultHook implements RPGHandler, Listener {
 
 	@EventHandler
 	public void a(PlayerLevelChangeEvent event) {
-		PlayerData.get(event.getPlayer()).scheduleDelayedInventoryUpdate();
+		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
 	@Override

@@ -145,7 +145,7 @@ public class Type {
 		return melee;
 	}
 
-	public boolean isSpecialActionOnRightClick() {
+	public boolean rightClickInteraction() {
 		return rightClickSpecial;
 	}
 
@@ -258,32 +258,50 @@ public class Type {
 		return id != null && MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}
 
+	/**
+	 * Used by player inventory updates to store where the items are equipped
+	 * and if they should be updated when some specific event happens.
+	 * 
+	 * @author cympe
+	 *
+	 */
 	public enum EquipmentSlot {
 
-		/*
-		 * can only apply stats in armor
+		/**
+		 * Can only apply stats in armor slots
 		 */
 		ARMOR,
 
-		/*
-		 * can't apply stats in vanilla slots
+		/**
+		 * Can't apply stats in vanilla slots
 		 */
 		ACCESSORY,
 
-		/*
-		 * cannot apply its stats anywhere
+		/**
+		 * Cannot apply its stats anywhere
 		 */
 		OTHER,
 
-		/*
-		 * always apply its stats. may only be used by EquippedItems, and not
+		/**
+		 * Always apply its stats. may only be used by EquippedItems, and not
 		 * Types since default types do not use it and extra types keep their
 		 * parent equipment slot
 		 */
 		ANY,
 
+		/**
+		 * Apply stats in main hands only
+		 */
 		MAIN_HAND,
+
+		/**
+		 * Apply stats in off hand slot only (off hand catalysts mainly)
+		 */
 		OFF_HAND,
+
+		/**
+		 * Apply stats in both hands, ie shields or bows
+		 */
 		BOTH_HANDS;
 
 		public boolean isHand() {

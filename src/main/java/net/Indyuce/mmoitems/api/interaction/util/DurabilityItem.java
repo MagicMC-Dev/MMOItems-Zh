@@ -28,10 +28,8 @@ public class DurabilityItem {
 	 * Use to handle durability changes for MMOItems without using heavy MMOItem
 	 * class methods
 	 * 
-	 * @param player
-	 *            Player holding the item
-	 * @param item
-	 *            Item with durability
+	 * @param player Player holding the item
+	 * @param item   Item with durability
 	 */
 	public DurabilityItem(Player player, ItemStack item) {
 		this(player, MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
@@ -41,10 +39,8 @@ public class DurabilityItem {
 	 * Use to handle durability changes for MMOItems without using heavy MMOItem
 	 * class methods
 	 * 
-	 * @param player
-	 *            Player holding the item
-	 * @param item
-	 *            Item with durability
+	 * @param player Player holding the item
+	 * @param item   Item with durability
 	 */
 	public DurabilityItem(Player player, NBTItem item) {
 		this.player = player;
@@ -109,13 +105,14 @@ public class DurabilityItem {
 		// When the item breaks
 		if (durability <= 0) {
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-			PlayerData.get(player).scheduleDelayedInventoryUpdate();
+			PlayerData.get(player).getInventory().scheduleUpdate();
 		}
 
 		return this;
 	}
 
 	public ItemStack toItem() {
+
 		/*
 		 * Cross multiplication to display the current item durability on the
 		 * item durability bar. (1 - ratio) because minecraft works with item

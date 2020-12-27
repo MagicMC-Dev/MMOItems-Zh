@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.util;
 
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -25,7 +26,7 @@ public class SoundReader {
 		}
 
 		this.sound = sound;
-		this.soundKey = soundKey;
+		this.soundKey = soundKey.toLowerCase();
 	}
 
 	public Sound getSound() {
@@ -45,5 +46,16 @@ public class SoundReader {
 			player.playSound(player.getLocation(), sound, vol, pitch);
 		else
 			player.playSound(player.getLocation(), soundKey, vol, pitch);
+	}
+
+	public void play(Location loc) {
+		play(loc, 1, 1);
+	}
+
+	public void play(Location loc, float vol, float pitch) {
+		if(soundKey.isEmpty())
+			loc.getWorld().playSound(loc, sound, vol, pitch);
+		else
+			loc.getWorld().playSound(loc, soundKey, vol, pitch);
 	}
 }

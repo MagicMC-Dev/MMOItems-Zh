@@ -14,7 +14,6 @@ import net.mmogroup.mmolib.api.item.NBTItem;
 import net.mmogroup.mmolib.version.VersionSound;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -46,7 +45,7 @@ public class Lute extends UntargetedWeapon {
 		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);
 
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
-		Sound sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound()).getSound();
+		SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
 		if (effect != null) {
 			effect.getAttack().handle(stats, getNBTItem(), attackDamage, range, weight, sound);
 			return;
@@ -63,7 +62,7 @@ public class Lute extends UntargetedWeapon {
 
 				List<Entity> entities = MMOUtils.getNearbyChunkEntities(loc);
 				loc.getWorld().spawnParticle(Particle.NOTE, loc, 0);
-				loc.getWorld().playSound(loc, sound, 2, (float) (.5 + (double) ti / range));
+				sound.play(loc, 2, (float) (.5 + (double) ti / range));
 				for (int j = 0; j < 3; j++) {
 					loc.add(vec.add(weight));
 					if (loc.getBlock().getType().isSolid()) {

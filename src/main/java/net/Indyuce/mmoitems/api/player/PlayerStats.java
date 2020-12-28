@@ -66,7 +66,7 @@ public class PlayerStats {
 				double value = item.getItem().getNBT().getStat(stat.getId());
 				if (value != 0) {
 					sum += value;
-					if (!hasWeapon && item.getSlot() == EquipmentSlot.BOTH_HANDS)
+					if (!hasWeapon && item.getSlot() == EquipmentSlot.MAIN_HAND)
 						hasWeapon = true;
 				}
 			}

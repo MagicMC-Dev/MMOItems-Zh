@@ -1,18 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -24,6 +13,15 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class StringListStat extends ItemStat {
     public StringListStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
@@ -41,13 +39,13 @@ public class StringListStat extends ItemStat {
     public void whenApplied(ItemStackBuilder item, StatData data) {
         JsonArray array = new JsonArray();
         ((StringListData) data).getList().forEach(array::add);
-        item.addItemTag(new ItemTag(getPath(), array.toString()));
+        item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
     }
 
     @Override
     public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, this).enable("Write in the chat the lore line you want to add.");
+            new StatEdition(inv, this).enable("Write in the chat the line you want to add.");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains(getPath())) {
             List<String> list = inv.getEditedSection().getStringList(getPath());

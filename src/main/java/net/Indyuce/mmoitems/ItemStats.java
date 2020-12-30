@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems;
 
 import net.Indyuce.mmoitems.stat.CompatibleIds;
+import net.Indyuce.mmoitems.stat.RepairType;
 import org.bukkit.Material;
 
 import net.Indyuce.mmoitems.stat.Abilities;
@@ -89,8 +90,6 @@ import net.mmogroup.mmolib.version.VersionMaterial;
  */
 @SuppressWarnings("unused")
 public class ItemStats {
-	
-	
 	// Main Item Stats
 	public static final ItemStat
 			REVISION_ID = new RevisionID(),
@@ -230,7 +229,7 @@ public class ItemStats {
 			REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "Remove on Craft", new String[]{"If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket."}, new String[]{"all"}, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
 			GEM_SOCKETS = new GemSockets(),
 			REPAIR = new RepairPower(),
-	// REPAIR_MATERIAL = new RepairMaterial(),
+			REPAIR_TYPE = new RepairType(),
 	KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),
 			RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Recoil", new String[]{"Corresponds to the shooting innacuracy."}, new String[]{"musket"}),
 

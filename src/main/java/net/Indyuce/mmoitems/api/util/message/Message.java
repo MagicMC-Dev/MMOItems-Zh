@@ -79,6 +79,7 @@ public enum Message {
 	// ALREADY_CRAFTING_STATION("You are already crafting something else in that
 	// station."),
 	// CRAFTING_SUBTITLE("#bar# &e#left# left"),
+	UNABLE_TO_REPAIR("This item can't be repaired by this consumable!"),
 	;
 
 	private final String defaultMessage, path;

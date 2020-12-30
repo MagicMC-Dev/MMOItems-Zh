@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.Damageable;
@@ -34,8 +35,16 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 
 		// custom durability
 		Player player = playerData.getPlayer();
-		if (target.hasTag("MMOITEMS_DURABILITY")) {
 
+		final String type = "MMOITEMS_REPAIR_TYPE";
+		if(target.hasTag(type) || consumable.getNBTItem().hasTag(type) &&
+			!target.getString(type).equals(consumable.getNBTItem().getString(type))) {
+			Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
+			player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+			return false;
+		}
+
+		if (target.hasTag("MMOITEMS_DURABILITY")) {
 			RepairItemEvent called = new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairPower);
 			Bukkit.getPluginManager().callEvent(called);
 			if (called.isCancelled())

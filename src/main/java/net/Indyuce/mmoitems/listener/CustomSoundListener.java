@@ -1,14 +1,16 @@
 package net.Indyuce.mmoitems.listener;
 
+import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -18,7 +20,6 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class CustomSoundListener implements Listener {
@@ -44,26 +45,24 @@ public class CustomSoundListener implements Listener {
 
 	@EventHandler
 	public void d(PlayerInteractEvent event) {
-		if (event.getHand() == null || event.getHand() == EquipmentSlot.OFF_HAND || !event.hasItem())
+		if (event.getAction() == Action.PHYSICAL || !event.hasItem())
 			return;
 
-		if (event.hasBlock()) {
-			if (event.getAction().name().contains("RIGHT_CLICK"))
-				playSound(event.getItem(), "ON_RIGHT_CLICK", event.getPlayer());
+		if (event.getAction().name().contains("RIGHT_CLICK"))
+			playSound(event.getItem(), "ON_RIGHT_CLICK", event.getPlayer());
 
-			if (event.getAction().name().contains("LEFT_CLICK"))
-				playSound(event.getItem(), "ON_LEFT_CLICK", event.getPlayer());
-		}
+		if (event.getAction().name().contains("LEFT_CLICK"))
+			playSound(event.getItem(), "ON_LEFT_CLICK", event.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void e(CraftItemEvent event) {
-		playSound(event.getInventory().getResult(), "ON_CRAFT", event.getWhoClicked().getWorld(), event.getWhoClicked().getLocation());
+		playSound(event.getInventory().getResult(), "ON_CRAFT", event.getWhoClicked().getLocation());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void f(FurnaceSmeltEvent event) {
-		playSound(event.getResult(), "ON_CRAFT", event.getBlock().getWorld(), event.getBlock().getLocation());
+		playSound(event.getResult(), "ON_CRAFT", event.getBlock().getLocation());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -86,20 +85,24 @@ public class CustomSoundListener implements Listener {
 			return;
 
 		NBTItem nbt = NBTItem.get(item);
-		if (nbt.hasTag("MMOITEMS_SOUND_ON_CRAFT"))
-			player.getWorld().playSound(player.getLocation(), nbt.getString("MMOITEMS_SOUND_ON_CRAFT"), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_PIT"));
+		if (nbt.hasTag("MMOITEMS_SOUND_ON_CRAFT")) {
+			SoundReader sound = new SoundReader(nbt.getString("MMOITEMS_SOUND_ON_CRAFT"), Sound.ENTITY_PIG_AMBIENT);
+			sound.play(player.getLocation(), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_PIT"));
+		}
 	}
 
-	private void playSound(ItemStack item, String sound, Player player) {
-		playSound(item, sound, player.getWorld(), player.getLocation());
+	private void playSound(ItemStack item, String type, Player player) {
+		playSound(item, type, player.getLocation());
 	}
 
-	private void playSound(ItemStack item, String sound, World world, Location loc) {
+	private void playSound(ItemStack item, String type, Location loc) {
 		if (item == null)
 			return;
 
 		NBTItem nbt = NBTItem.get(item);
-		if (nbt.hasTag("MMOITEMS_SOUND_" + sound))
-			world.playSound(loc, nbt.getString("MMOITEMS_SOUND_" + sound).toLowerCase(), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_PIT"));
+		if (nbt.hasTag("MMOITEMS_SOUND_" + type)) {
+			SoundReader sound = new SoundReader(nbt.getString("MMOITEMS_SOUND_" + type), Sound.ENTITY_PIG_AMBIENT);
+			sound.play(loc, (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_PIT"));
+		}
 	}
 }

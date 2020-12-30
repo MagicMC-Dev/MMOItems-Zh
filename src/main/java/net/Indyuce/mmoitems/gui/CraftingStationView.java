@@ -188,7 +188,7 @@ public class CraftingStationView extends PluginInventory {
 				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(data, station, recipe,
 						PlayerUseCraftingStationEvent.StationAction.CRAFTING_QUEUE);
 				Bukkit.getPluginManager().callEvent(called);
-				if (!called.isCancelled())
+				if (called.isCancelled())
 					return;
 
 				data.getCrafting().getQueue(station).remove(recipeInfo);
@@ -200,7 +200,7 @@ public class CraftingStationView extends PluginInventory {
 				if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
 					new SmartGive(getPlayer()).give(craftedItem);
 
-				/**
+				/*
 				 * If the recipe is not ready, cancel the recipe and give the
 				 * ingredients back to the player
 				 */

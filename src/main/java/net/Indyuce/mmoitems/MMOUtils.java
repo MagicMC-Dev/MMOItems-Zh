@@ -8,7 +8,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,9 +44,8 @@ public class MMOUtils {
 	/**
 	 * Returns either the normalized vector, or null vector if input is null
 	 * vector which cannot be normalized.
-	 * 
-	 * @param vector
-	 *            Vector which can be of length 0
+	 *
+	 * @param vector Vector which can be of length 0
 	 * @return Normalized vector or 0 depending on input
 	 */
 	public static Vector normalize(Vector vector) {
@@ -53,9 +56,8 @@ public class MMOUtils {
 	 * Double.parseDouble(String) cannot be used when asking for player input in
 	 * stat edition because the exception message is confusing. This method has
 	 * a better exception message
-	 * 
-	 * @param format
-	 *            Format to parse into a number
+	 *
+	 * @param format Format to parse into a number
 	 * @return Parsed double
 	 */
 	public static double parseDouble(String format) {
@@ -77,8 +79,7 @@ public class MMOUtils {
 		/*
 		 * check direct damager
 		 */
-		if (event.getDamager() instanceof LivingEntity)
-			return (LivingEntity) event.getDamager();
+		if (event.getDamager() instanceof LivingEntity) return (LivingEntity) event.getDamager();
 
 		/*
 		 * checks projectile and add damage type, which supports every vanilla
@@ -86,8 +87,7 @@ public class MMOUtils {
 		 */
 		if (event.getDamager() instanceof Projectile) {
 			Projectile proj = (Projectile) event.getDamager();
-			if (proj.getShooter() instanceof LivingEntity)
-				return (LivingEntity) proj.getShooter();
+			if (proj.getShooter() instanceof LivingEntity) return (LivingEntity) proj.getShooter();
 		}
 
 		/*
@@ -106,26 +106,23 @@ public class MMOUtils {
 	 * last 10 seconds, blindness takes a few seconds to decay as well, and
 	 * there can be small server lags. It's best to apply a specific duration
 	 * for every type of permanent effect.
-	 * 
-	 * @param type
-	 *            Potion effect type
+	 *
+	 * @param type Potion effect type
 	 * @return The duration that MMOItems should be using to give player
-	 *         "permanent" potion effects, depending on the potion effect type
+	 * "permanent" potion effects, depending on the potion effect type
 	 */
 	public static int getEffectDuration(PotionEffectType type) {
-		return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260
-				: type.equals(PotionEffectType.BLINDNESS) ? 140 : 80;
+		return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 80;
 	}
 
 	public static String getDisplayName(ItemStack item) {
-		return item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName()
-				: caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+		return item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
 	}
 
 	public static boolean twoHandedCase(Player player) {
 		int normal = 0, twoHanded = 0;
 
-		for (ItemStack item : new ItemStack[] { player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() })
+		for (ItemStack item : new ItemStack[]{player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()})
 			if (item.getType() != Material.AIR) {
 				normal++;
 				if (MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
@@ -143,33 +140,27 @@ public class MMOUtils {
 			if (isLastSpace && ch >= 'a' && ch <= 'z') {
 				builder.setCharAt(i, (char) (ch + ('A' - 'a')));
 				isLastSpace = false;
-			} else
-				isLastSpace = ch == ' ';
+			} else isLastSpace = ch == ' ';
 		}
 		return builder.toString();
 	}
 
 	/**
-	 * @param item
-	 *            The item to check
-	 * @param lore
-	 *            Whether or not MI should check for an item lore
+	 * @param item The item to check
+	 * @param lore Whether or not MI should check for an item lore
 	 * @return If the item is not null, has an itemMeta and has a display name.
-	 *         If 'lore' is true, also checks if the itemMeta has a lore.
+	 * If 'lore' is true, also checks if the itemMeta has a lore.
 	 */
 	public static boolean isMetaItem(ItemStack item, boolean lore) {
-		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null
-				&& (!lore || item.getItemMeta().getLore() != null);
+		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null && (!lore || item.getItemMeta().getLore() != null);
 	}
 
 	public static void saturate(Player player, double saturation) {
-		if (saturation > 0)
-			player.setSaturation(Math.min(20, player.getSaturation() + (float) saturation));
+		if (saturation > 0) player.setSaturation(Math.min(20, player.getSaturation() + (float) saturation));
 	}
 
 	public static void feed(Player player, int feed) {
-		if (feed > 0)
-			player.setFoodLevel(Math.min(20, player.getFoodLevel() + feed));
+		if (feed > 0) player.setFoodLevel(Math.min(20, player.getFoodLevel() + feed));
 	}
 
 	public static void heal(LivingEntity player, double heal) {
@@ -186,15 +177,12 @@ public class MMOUtils {
 	}
 
 	/**
-	 * @param player
-	 *            Player hitting the entity which can be null
-	 * @param loc
-	 *            If the given location is not null, this method checks if this
-	 *            location is inside the bounding box
-	 * @param target
-	 *            The entity being hit
+	 * @param player Player hitting the entity which can be null
+	 * @param loc    If the given location is not null, this method checks if this
+	 *               location is inside the bounding box
+	 * @param target The entity being hit
 	 * @return If the entity can be damaged, by a specific player, at a specific
-	 *         spot
+	 * spot
 	 */
 	public static boolean canDamage(@Nullable Player player, @Nullable Location loc, Entity target) {
 
@@ -211,26 +199,23 @@ public class MMOUtils {
 		 * Extra plugin compatibility, everything is handled via MMOLib because
 		 * the same system is used by MMOCore
 		 */
-		if (MMOLib.plugin.getEntities().findCustom(target))
-			return false;
+		if (MMOLib.plugin.getEntities().findCustom(target)) return false;
 
 		/*
 		 * The ability player damage option is cached for quicker access in the
 		 * config manager instance since it is used in runnables
 		 */
-		if (target instanceof Player
-				&& (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
+		if (target instanceof Player && (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
 			return false;
 
 		return loc == null || MMOLib.plugin.getVersion().getWrapper().isInBoundingBox(target, loc);
 	}
 
-	private static final String[] romanChars = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
-	private static final int[] romanValues = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+	private static final String[] romanChars = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+	private static final int[] romanValues = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
 
 	public static String intToRoman(int input) {
-		if (input < 1 || input > 3999)
-			throw new IllegalArgumentException("Input must be between 1 and 3999");
+		if (input < 1 || input > 3999) throw new IllegalArgumentException("Input must be between 1 and 3999");
 
 		StringBuilder format = new StringBuilder();
 
@@ -275,13 +260,12 @@ public class MMOUtils {
 	}
 
 	/**
-	 * @param loc
-	 *            Where we are looking for nearby entities
+	 * @param loc Where we are looking for nearby entities
 	 * @return List of all entities surrounding a location. This method loops
-	 *         through the 9 surrounding chunks and collect all entities from
-	 *         them. This list can be cached and used multiple times in the same
-	 *         tick for projectile based spells which need to run entity
-	 *         checkups
+	 * through the 9 surrounding chunks and collect all entities from
+	 * them. This list can be cached and used multiple times in the same
+	 * tick for projectile based spells which need to run entity
+	 * checkups
 	 */
 	public static List<Entity> getNearbyChunkEntities(Location loc) {
 		List<Entity> entities = new ArrayList<>();

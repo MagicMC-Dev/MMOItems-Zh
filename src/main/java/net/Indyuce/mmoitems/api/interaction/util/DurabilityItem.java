@@ -125,7 +125,6 @@ public class DurabilityItem {
 		 */
 		int damage = durability == maxDurability ? 0
 				: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
-		if(damage == 0 && durability != maxDurability) damage = 1;
 		nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability), new ItemTag("Damage", damage));
 
 		return new DynamicLore(nbtItem).build();

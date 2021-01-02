@@ -45,7 +45,7 @@ public class CustomSoundListener implements Listener {
 
 	@EventHandler
 	public void d(PlayerInteractEvent event) {
-		if (event.getAction() == Action.PHYSICAL || !event.hasItem())
+		if (event.getAction() != Action.PHYSICAL || !event.hasItem())
 			return;
 
 		if (event.getAction().name().contains("RIGHT_CLICK"))

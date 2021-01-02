@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -37,7 +38,7 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 		Player player = playerData.getPlayer();
 
 		final String type = "MMOITEMS_REPAIR_TYPE";
-		if(target.hasTag(type) || consumable.getNBTItem().hasTag(type) &&
+		if((target.hasTag(type) || consumable.getNBTItem().hasTag(type)) &&
 			!target.getString(type).equals(consumable.getNBTItem().getString(type))) {
 			Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
 			player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
@@ -56,6 +57,7 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 				Message.REPAIRED_ITEM
 						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
 						.send(player);
+				CustomSoundListener.playConsumableSound(consumable.getItem(), player);
 			}
 			return true;
 		}
@@ -74,6 +76,7 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 			target.getItem().setItemMeta(meta);
 			Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
 					.send(player);
+			CustomSoundListener.playConsumableSound(consumable.getItem(), player);
 			return true;
 		}
 

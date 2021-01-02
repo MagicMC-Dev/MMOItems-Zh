@@ -81,21 +81,18 @@ public class CustomSoundListener implements Listener {
 	}
 
 	public static void stationCrafting(ItemStack item, Player player) {
-		if (item == null)
-			return;
-
-		NBTItem nbt = NBTItem.get(item);
-		if (nbt.hasTag("MMOITEMS_SOUND_ON_CRAFT")) {
-			SoundReader sound = new SoundReader(nbt.getString("MMOITEMS_SOUND_ON_CRAFT"), Sound.ENTITY_PIG_AMBIENT);
-			sound.play(player.getLocation(), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_ON_CRAFT_PIT"));
-		}
+		playSound(item, "ON_CRAFT", player);
 	}
 
-	private void playSound(ItemStack item, String type, Player player) {
+	public static void playConsumableSound(ItemStack item, Player player) {
+		playSound(item, "ON_CONSUME", player);
+	}
+
+	private static void playSound(ItemStack item, String type, Player player) {
 		playSound(item, type, player.getLocation());
 	}
 
-	private void playSound(ItemStack item, String type, Location loc) {
+	private static void playSound(ItemStack item, String type, Location loc) {
 		if (item == null)
 			return;
 

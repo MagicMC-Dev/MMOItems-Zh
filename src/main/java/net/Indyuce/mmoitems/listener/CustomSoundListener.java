@@ -45,7 +45,7 @@ public class CustomSoundListener implements Listener {
 
 	@EventHandler
 	public void d(PlayerInteractEvent event) {
-		if (event.getAction() != Action.PHYSICAL || !event.hasItem())
+		if (event.getAction() == Action.PHYSICAL || !event.hasItem())
 			return;
 
 		if (event.getAction().name().contains("RIGHT_CLICK"))
@@ -99,7 +99,7 @@ public class CustomSoundListener implements Listener {
 		NBTItem nbt = NBTItem.get(item);
 		if (nbt.hasTag("MMOITEMS_SOUND_" + type)) {
 			SoundReader sound = new SoundReader(nbt.getString("MMOITEMS_SOUND_" + type), Sound.ENTITY_PIG_AMBIENT);
-			sound.play(loc, (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + sound + "_PIT"));
+			sound.play(loc, (float) nbt.getDouble("MMOITEMS_SOUND_" + type + "_VOL"), (float) nbt.getDouble("MMOITEMS_SOUND_" + type + "_PIT"));
 		}
 	}
 }

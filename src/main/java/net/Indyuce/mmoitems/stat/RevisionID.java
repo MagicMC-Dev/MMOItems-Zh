@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import java.util.List;
 import java.util.Optional;
 
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
@@ -19,7 +20,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.util.AltChar;
 
-public class RevisionID extends ItemStat {
+public class RevisionID extends ItemStat implements GemStoneStat {
 	public RevisionID() {
 		super("REVISION_ID", Material.ITEM_FRAME, "Revision ID", new String[] { "The Revision ID is used to determine",
 		"if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!"},

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.listener;
 
 import java.text.DecimalFormat;
 
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -43,6 +44,9 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemUse implements Listener {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
@@ -278,6 +282,10 @@ public class ItemUse implements Listener {
 				event.setCancelled(true);
 				return;
 			}
+			if (!eitherHandSuccess((Player) event.getEntity(), item, event.getHand())) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 
 		Arrow arrow = (Arrow) event.getProjectile();
@@ -285,6 +293,79 @@ public class ItemUse implements Listener {
 			arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
 		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), event.getProjectile(), type != null,
 				event.getForce());
+	}
+
+	/**
+	 * It is undesirable to fire bows whose arrows have the stats of the Mainhand weapon.
+	 * <p></p>
+	 * If such an item succeeds in this check, that means it can be fired. Only makes sense to
+	 * check when you really suspect it is an EITHER_HAND weapon. Otherwise the check already
+	 * happened when its stats where added in the first place.
+	 */
+	public static boolean eitherHandSuccess(@NotNull Player p, @NotNull NBTItem item, @NotNull EquipmentSlot held) {
+
+		/*
+		 * Make sure it is a plugin item to begin with
+		 */
+		Type itemType = Type.get(item.getType());
+		if (itemType == null) { return false; }
+
+		/*
+		 * Get the held type of the item held
+		 */
+		Type.EquipmentSlot mainheld_type = null;
+
+		// Get Mainhand Item
+		ItemStack mainheld = p.getInventory().getItemInMainHand();
+
+		// Existed?
+		if (mainheld.getType().isItem()) {
+
+			// Get as NBTItem
+			NBTItem mainnbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
+
+			// Existed?
+			if (mainnbt != null) {
+
+				// Get MMOItem Type
+				Type maintype = Type.get(mainnbt.getType());
+
+				// Existed?
+				if (maintype != null) {
+
+					// Remember Equipment Type
+					mainheld_type = maintype.getEquipmentType();
+				}
+			}
+		}
+
+		/*
+		 * Perform Equipped Item Check
+		 */
+		Type.EquipmentSlot heldTranslated;
+		switch (held) {
+			case HAND:
+				heldTranslated = Type.EquipmentSlot.MAIN_HAND;
+				break;
+			case OFF_HAND:
+				heldTranslated = Type.EquipmentSlot.OFF_HAND;
+				break;
+			case FEET:
+			case HEAD:
+			case LEGS:
+			case CHEST:
+				heldTranslated = Type.EquipmentSlot.ARMOR;
+				break;
+			default:
+				heldTranslated = Type.EquipmentSlot.ACCESSORY;
+				break;
+		}
+
+		// Just do as if it was actually a real thing
+		EquippedItem eitem = new EquippedItem(item, heldTranslated);
+
+		// Does it match?
+		return eitem.matches(itemType, mainheld_type);
 	}
 
 	@EventHandler

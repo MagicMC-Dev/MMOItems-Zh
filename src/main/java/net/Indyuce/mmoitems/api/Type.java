@@ -33,10 +33,10 @@ public class Type {
 	// range
 	public static final Type WHIP = new Type(TypeSet.RANGE, "WHIP", true, EquipmentSlot.MAIN_HAND);
 	public static final Type STAFF = new Type(TypeSet.RANGE, "STAFF", true, EquipmentSlot.MAIN_HAND);
-	public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, EquipmentSlot.BOTH_HANDS);
-	public static final Type CROSSBOW = new Type(TypeSet.RANGE, "CROSSBOW", false, EquipmentSlot.BOTH_HANDS);
-	public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, EquipmentSlot.BOTH_HANDS);
-	public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, EquipmentSlot.BOTH_HANDS);
+	public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, EquipmentSlot.EITHER_HAND);
+	public static final Type CROSSBOW = new Type(TypeSet.RANGE, "CROSSBOW", false, EquipmentSlot.EITHER_HAND);
+	public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, EquipmentSlot.EITHER_HAND);
+	public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, EquipmentSlot.EITHER_HAND);
 
 	// offhand
 	public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, EquipmentSlot.BOTH_HANDS);
@@ -285,9 +285,20 @@ public class Type {
 		OFF_HAND,
 
 		/**
-		 * Apply stats in both hands, ie shields or bows
+		 * Apply stats in both hands, ie shields or catalysts
 		 */
-		BOTH_HANDS;
+		BOTH_HANDS,
+
+		/**
+		 * Apply stats when actually held. Bows may be held in offhand but
+		 * it is undesirable if players dual-wield bows and add their stats
+		 * together.
+		 * <p></p>
+		 * This will work if the player:
+		 * <p> > Holds this in their Main Hand
+		 * </p> > Holds this in their Off Hand, and the mainhand held item is not of <code>MAIN_HAND</code> nor <code>EITHER_HAND</code>
+		 */
+		EITHER_HAND;
 
 		public boolean isHand() {
 			return this == MAIN_HAND || this == OFF_HAND || this == BOTH_HANDS;

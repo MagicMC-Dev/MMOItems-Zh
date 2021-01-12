@@ -20,6 +20,11 @@ import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 
+/**
+ * Tells MMOItems where to find additional equipment.
+ * <p></p>
+ * Ornaments - Found in any inventory slot.
+ */
 public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 	public OrnamentPlayerInventory() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
@@ -29,11 +34,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 	public List<EquippedItem> getInventory(Player player) {
 		List<EquippedItem> list = new ArrayList<>();
 
-		list.add(new EquippedItem(player.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
-		list.add(new EquippedItem(player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
-		for (ItemStack armor : player.getInventory().getArmorContents())
-			list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
-
+		// Ornaments
 		for (ItemStack item : player.getInventory().getContents()) {
 			NBTItem nbtItem;
 			if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)

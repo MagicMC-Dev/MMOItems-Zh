@@ -19,8 +19,12 @@ import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 
+/**
+ * Tells MMOItems where to find additional equipment.
+ * <p></p>
+ * RPGInventory stuff - Passive Items
+ */
 public class RPGInventoryHook implements PlayerInventory, Listener {
-	private final boolean ornaments;
 
 	/*
 	 * RPGInventory is outdated. MI still supports it but it shall NEVER be
@@ -29,30 +33,15 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 	 */
 	public RPGInventoryHook() {
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-		if (ornaments = MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
-			Bukkit.getPluginManager().registerEvents(new OrnamentPlayerInventory(), MMOItems.plugin);
 	}
 
 	@Override
 	public List<EquippedItem> getInventory(Player player) {
 		List<EquippedItem> list = new ArrayList<>();
 
-		list.add(new EquippedItem(player.getInventory().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
-		list.add(new EquippedItem(player.getInventory().getItemInOffHand(), EquipmentSlot.OFF_HAND));
-
 		for (ItemStack passive : InventoryAPI.getPassiveItems(player))
 			if (passive != null)
 				list.add(new EquippedItem(passive, EquipmentSlot.ANY));
-		for (ItemStack armor : player.getInventory().getArmorContents())
-			if (armor != null)
-				list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
-
-		if (ornaments)
-			for (ItemStack item : player.getInventory().getContents()) {
-				NBTItem nbtItem;
-				if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)
-					list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
-			}
 
 		return list;
 	}

@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -182,6 +183,22 @@ public class PlayerData {
 		 * the updateEffects() method
 		 */
 		fullHands = areHandsFull();
+		//region EquipmentSlot mainheld_type = [equipment Type of whatever the player is holding]
+		EquipmentSlot mainheld_type = null;
+		ItemStack mainheld = getPlayer().getInventory().getItemInMainHand();
+		if (mainheld.getType().isItem()) {
+			NBTItem mainnbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
+
+			if (mainnbt != null) {
+				Type maintype = Type.get(mainnbt.getType());
+
+				if (maintype != null) {
+
+					mainheld_type = maintype.getEquipmentType();
+				}
+			}
+		}
+		//endregion
 
 		/*
 		 * Find all the items the player can actually use
@@ -194,7 +211,7 @@ public class PlayerData {
 			 * If the item is a custom item, apply slot and item use
 			 * restrictions (items which only work in a specific equipment slot)
 			 */
-			if (type != null && (!item.matches(type) || !getRPG().canUse(nbtItem, false)))
+			if (type != null && (!item.matches(type, mainheld_type) || !getRPG().canUse(nbtItem, false)))
 				continue;
 
 			inventory.getEquipped().add(new EquippedPlayerItem(item));

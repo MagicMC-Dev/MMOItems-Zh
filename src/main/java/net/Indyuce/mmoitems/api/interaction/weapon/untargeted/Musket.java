@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.listener.ItemUse;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.MMORayTraceResult;
@@ -25,6 +26,8 @@ public class Musket extends UntargetedWeapon {
 
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
+		if (!ItemUse.eitherHandSuccess(getPlayer(), getNBTItem(), slot))
+			return;
 		CachedStats stats = getPlayerData().getStats().newTemporary();
 
 		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),

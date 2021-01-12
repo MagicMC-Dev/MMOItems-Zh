@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import javax.annotation.Nullable;
 
+import net.Indyuce.mmoitems.comp.inventory.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,10 +43,6 @@ import net.Indyuce.mmoitems.comp.holograms.HologramSupport;
 import net.Indyuce.mmoitems.comp.holograms.HologramsPlugin;
 import net.Indyuce.mmoitems.comp.holograms.HolographicDisplaysPlugin;
 import net.Indyuce.mmoitems.comp.holograms.TrHologramPlugin;
-import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
-import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
-import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
-import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
@@ -119,7 +116,7 @@ public class MMOItems extends JavaPlugin {
 
 	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
-	private PlayerInventory inventory = new DefaultPlayerInventory();
+	private PlayerInventoryHandler inventory = new PlayerInventoryHandler();
 	private FlagPlugin flagPlugin = new DefaultFlags();
 	private HologramSupport hologramSupport;
 	private VaultSupport vaultSupport;
@@ -247,11 +244,18 @@ public class MMOItems extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
 			Bukkit.getPluginManager().registerEvents(new McMMONonRPGHook(), this);
 
+		/*
+		 * Registers Player Inventories. Each of these add locations of items to search for
+		 * when doing inventory updates.
+		 */
+		registerPlayerInventory(new DefaultPlayerInventory());
 		if (Bukkit.getPluginManager().getPlugin("RPGInventory") != null) {
-			inventory = new RPGInventoryHook();
+			registerPlayerInventory(new RPGInventoryHook());
 			getLogger().log(Level.INFO, "Hooked onto RPGInventory");
-		} else if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
-			inventory = new OrnamentPlayerInventory();
+		}
+		if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory")) {
+			registerPlayerInventory(new OrnamentPlayerInventory());
+		}
 
 		if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
 			Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this);
@@ -406,13 +410,26 @@ public class MMOItems extends JavaPlugin {
 		return pluginUpdateManager;
 	}
 
-	public PlayerInventory getInventory() {
+	public PlayerInventoryHandler getInventory() {
 		return inventory;
 	}
 
 	/**
 	 * The PlayerInventory interface lets MMOItems knows what items to look for
-	 * in player inventories when doing inventory updates. By default, it only
+	 * in player inventories whe doing inventory updates. By default, it only
+	 * checks held items + armor slots. However other plugins like MMOInv do
+	 * implement custom slots and therefore must register a custom
+	 * PlayerInventory instance that tells of additional items to look for.
+	 */
+	public void registerPlayerInventory(PlayerInventory value) {
+
+		// Registers in the Inventory Handler
+		getInventory().register(value);
+	}
+
+	/**
+	 * The PlayerInventory interface lets MMOItems knows what items to look for
+	 * in player inventories whe doing inventory updates. By default, it only
 	 * checks held items + armor slots. However other plugins like MMOInv do
 	 * implement custom slots and therefore must register a custom
 	 * PlayerInventory instance.
@@ -420,9 +437,19 @@ public class MMOItems extends JavaPlugin {
 	 * Default instance is DefaultPlayerInventory in comp.inventory
 	 *
 	 * @param value The player inventory subclass
+	 * @deprecated Rather than setting this to the only inventory MMOItems will
+	 *             search equipment within, you must add your inventory to the
+	 *             handler with <code>getInventory().Register()</code>. This method
+	 *             will clear all other PlayerInventories for now, as to keep
+	 *             backwards compatibility.
 	 */
 	public void setPlayerInventory(PlayerInventory value) {
-		inventory = value;
+
+		// Unregisters those previously registered
+		getInventory().unregisterAll();
+
+		// Registers this as the only
+		getInventory().register(value);
 	}
 
 	public StatManager getStats() {

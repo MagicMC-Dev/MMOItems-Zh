@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.SoundReader;
+import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.mmogroup.mmolib.api.DamageType;
 import net.mmogroup.mmolib.api.item.NBTItem;
@@ -31,6 +32,8 @@ public class Lute extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
+		if (!ItemUse.eitherHandSuccess(getPlayer(), getNBTItem(), slot))
+			return;
 		CachedStats stats = getPlayerData().getStats().newTemporary();
 		double attackSpeed = 1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
 		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))

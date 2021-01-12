@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
+import net.Indyuce.mmoitems.listener.ItemUse;
 import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -26,6 +27,8 @@ public class Crossbow extends UntargetedWeapon {
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
 			return;
 
+		if (!ItemUse.eitherHandSuccess(getPlayer(), getNBTItem(), slot))
+			return;
 		PlayerStats stats = getPlayerData().getStats();
 		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))

@@ -43,7 +43,7 @@ public abstract class PluginInventory implements InventoryHolder {
 
 	/*
 	 * since 1.14 sync events cannot be called in async methods anymore so MI
-	 * has to register a delayed sync task to open the inventory again
+	 * has to register a delayed sync task to open the inventory again sad
 	 */
 	public void open() {
 		if (Bukkit.isPrimaryThread())

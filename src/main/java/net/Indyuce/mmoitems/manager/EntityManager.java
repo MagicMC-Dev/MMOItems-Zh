@@ -22,6 +22,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class EntityManager implements Listener {
 
@@ -32,7 +33,7 @@ public class EntityManager implements Listener {
 	 */
 	private final Map<Integer, Object[]> entities = new HashMap<>();
 
-	private final Map<Integer, ProjectileData> projectiles = new HashMap<>();
+	private final WeakHashMap<Integer, ProjectileData> projectiles = new WeakHashMap<>();
 
 	public void registerCustomProjectile(NBTItem sourceItem, CachedStats stats, Entity entity, boolean customWeapon) {
 		registerCustomProjectile(sourceItem, stats, entity, customWeapon, 1);

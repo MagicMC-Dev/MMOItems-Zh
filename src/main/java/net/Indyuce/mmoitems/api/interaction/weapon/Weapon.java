@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon;
 
 import javax.annotation.Nullable;
 
+import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -35,7 +36,10 @@ public class Weapon extends UseItem {
 			return false;
 		}
 
-		return MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS) && playerData.getRPG().canUse(getNBTItem(), true);
+		boolean asCanUse = playerData.getRPG().canUse(getNBTItem(), true);
+		boolean asFlagAllowed = true; FlagPlugin fg = MMOItems.plugin.getFlags(); if (fg != null) { asFlagAllowed = fg.isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS); }
+		else { MMOItems.Log("Flag Plugin Not Found");}
+		return asCanUse || asFlagAllowed;
 	}
 
 	/**

@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.MMOLib;
 import net.mmogroup.mmolib.api.item.ItemTag;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -45,28 +46,35 @@ public class ItemStackBuilder {
 			UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
 	/**
-	 * Used to build an MMOItem into an ItemStack
+	 * Used to build an MMOItem into an ItemStack.
 	 * 
 	 * @param mmoitem The mmoitem you want to build
 	 */
-	@SuppressWarnings("unused")
 	public ItemStackBuilder(MMOItem mmoitem) {
+
+		// Reference to source MMOItem
 		this.mmoitem = mmoitem;
 
-		item = new ItemStack(
-				mmoitem.hasData(ItemStats.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStats.MATERIAL)).getMaterial()
+		// Generates a new ItemStack of the specified material (Specified in the Material stat, or a DIAMOND_SWORD if missing).
+		item = new ItemStack( mmoitem.hasData(ItemStats.MATERIAL) ?
+						((MaterialData) mmoitem.getData(ItemStats.MATERIAL)).getMaterial()
 						: Material.DIAMOND_SWORD);
+
+		// Gets a lore builder, which will be used to apply the chosen lore format (Choose with the lore format stat, or the default one if unspecified)
 		lore = new LoreBuilder(mmoitem.hasData(ItemStats.LORE_FORMAT)
 				? MMOItems.plugin.getFormats().getFormat(mmoitem.getData(ItemStats.LORE_FORMAT).toString())
 				: MMOItems.plugin.getLanguage().getDefaultLoreFormat());
+
+		// Gets the meta, and hides attributes
 		meta = item.getItemMeta();
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
+		// Store the internal TYPE-ID Information (not stats, so it must be done manually here)
 		tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoitem.getType().getId()));
 		tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
-		if (MMOItems.INTERNAL_REVISION_ID > 1)
-			tags.add(new ItemTag("MMOITEMS_INTERNAL_REVISION_ID", MMOItems.INTERNAL_REVISION_ID));
 
+		// And a last technical tag for updating items
+		if (MMOItems.INTERNAL_REVISION_ID > 1) { tags.add(new ItemTag("MMOITEMS_INTERNAL_REVISION_ID", MMOItems.INTERNAL_REVISION_ID)); }
 		/*if (MMOItems.plugin.getUpdater().hasData(mmoitem))
 			tags.add(new ItemTag("MMOITEMS_ITEM_UUID",
 					MMOItems.plugin.getUpdater().getData(mmoitem.getType(), mmoitem.getId()).getUniqueId().toString()));*/
@@ -100,21 +108,30 @@ public class ItemStackBuilder {
 	}
 
 	/**
-	 * 
 	 * @return Returns built NBTItem with applied tags and lore
 	 */
 	public NBTItem buildNBT() {
 		this.mmoitem = new StatLore(mmoitem).generateNewItem();
 
+		// For every stat within this item
 		for (ItemStat stat : mmoitem.getStats())
+
+			// Attempt to add
 			try {
+
+				//
 				stat.whenApplied(this, mmoitem.getData(stat));
+
+			// Something went wrong...
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to generate item '"
-						+ mmoitem.getId() + "' with stat '" + stat.getId() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING,
+						ChatColor.GRAY + "An error occurred while trying to generate item '"
+						+ ChatColor.RED + mmoitem.getId() + ChatColor.GRAY + "' with stat '"
+						+ ChatColor.GOLD + stat.getId() + ChatColor.GRAY + "': "
+						+ ChatColor.YELLOW + exception.getMessage());
 			}
 
-		// Display gem stone lore
+		// Display gem stone lore hint thing
 		if (mmoitem.getType() == Type.GEM_STONE)
 			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
 

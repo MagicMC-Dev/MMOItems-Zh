@@ -607,4 +607,13 @@ public class MMOItems extends JavaPlugin {
 	public ItemStack getItem(Type type, String id) {
 		return getMMOItem(type, id).newBuilder().build();
 	}
+
+	/**
+	 * Logs something into the console with a cool [MMOItems] prefix :)
+	 * <p></p>
+	 * Parses color codes
+	 */
+	public static void Log(String message) {
+		plugin.getLogger().log(Level.INFO, "\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77");
+	}
 }

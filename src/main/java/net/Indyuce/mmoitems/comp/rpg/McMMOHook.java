@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,9 +52,27 @@ public class McMMOHook implements RPGHandler, Listener {
 
 		@Override
 		public int getLevel() {
+			//RPG*/MMOItems. Log("Getting level of \u00a7c" + getPlayer().getName());
+
+			// No errors, right?
 			try {
-				return ExperienceAPI.getPowerLevel(getPlayer());
+
+				// Get through Experience API I suppose
+				int r = ExperienceAPI.getPowerLevel(getPlayer());
+
+				// Log rq
+				//RPG*/MMOItems. Log("\u00a76  + \u00a77Found level as \u00a7c" + r);
+
+				// thats it
+				return r;
+
+			// A problem may have occured
 			} catch (McMMOPlayerNotFoundException exception) {
+
+				// Log rq
+				//RPG*/MMOItems. Log("\u00a76  - \u00a77No data found. Using \u00a7c0");
+
+				// Thats it
 				return 0;
 			}
 		}

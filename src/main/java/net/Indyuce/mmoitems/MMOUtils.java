@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.mmogroup.mmolib.MMOLib;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
@@ -119,17 +120,13 @@ public class MMOUtils {
 		return item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
 	}
 
+	/**
+	 * Is the player encumbered by carrying two-handed items?
+	 */
 	public static boolean twoHandedCase(Player player) {
-		int normal = 0, twoHanded = 0;
 
-		for (ItemStack item : new ItemStack[]{player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()})
-			if (item.getType() != Material.AIR) {
-				normal++;
-				if (MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getBoolean("MMOITEMS_TWO_HANDED"))
-					twoHanded++;
-			}
-
-		return twoHanded > 0 && normal > 1;
+		// Straight from player data
+		return PlayerData.get(player).areHandsFull();
 	}
 
 	public static String caseOnWords(String s) {

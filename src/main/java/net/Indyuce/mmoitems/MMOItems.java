@@ -536,17 +536,31 @@ public class MMOItems extends JavaPlugin {
 		return stringInputParsers;
 	}
 
+	/**
+	 * Decide by which system will the RPG Requirements of the player will be checked.
+	 * <p></p>
+	 * For example, required level, is that vanilla XP levels, MMOCore levels, McMMO Leves or what?
+	 */
 	public void findRpgPlugin() {
 		if (rpgPlugin != null)
 			return;
 
-		for (RPGHandler.PluginEnum plugin : RPGHandler.PluginEnum.values())
+		// For each supported plugin
+		for (RPGHandler.PluginEnum plugin : RPGHandler.PluginEnum.values()) {
+
+			// Found the plugin?
 			if (Bukkit.getPluginManager().getPlugin(plugin.getName()) != null) {
+
+				// Load that one
 				setRPG(plugin.load());
-				getLogger().log(Level.INFO, "Hooked onto " + plugin.getName());
+
+				// Mention it
+				SLog("Using \u00a76" + plugin.getName() + "\u00a77 as RPG Player provider.");
 				return;
 			}
+		}
 
+		// Just use the default
 		setRPG(new DefaultHook());
 	}
 
@@ -611,9 +625,18 @@ public class MMOItems extends JavaPlugin {
 	/**
 	 * Logs something into the console with a cool [MMOItems] prefix :)
 	 * <p></p>
-	 * Parses color codes
+	 * Parses color codes. <b>Meant for DEV testing</b>, all of them are removed every release.
 	 */
 	public static void Log(String message) {
-		plugin.getLogger().log(Level.INFO, "\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77");
+		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
+	}
+
+	/**
+	 * Logs something into the console with a cool [MMOItems] prefix :)
+	 * <p></p>
+	 * Parses color codes, official method. Wont be removed when releasing MMOItems versions.
+	 */
+	public static void SLog(String message) {
+		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
 	}
 }

@@ -107,9 +107,9 @@ public class ItemParticles extends ItemStat {
 	public void whenLoaded(ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().hasTag("MMOITEMS_ITEM_PARTICLES"))
 			try {
-				mmoitem.setData(ItemStats.ITEM_PARTICLES,
-						new ParticleData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ITEM_PARTICLES")).getAsJsonObject()));
-			} catch (JsonSyntaxException exception) {
+				mmoitem.setData(ItemStats.ITEM_PARTICLES, new ParticleData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ITEM_PARTICLES")).getAsJsonObject()));
+
+			} catch (JsonSyntaxException|IllegalStateException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */

@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.ChatColor;
 
 public class VolatileMMOItem extends ReadMMOItem {
 
@@ -30,11 +31,20 @@ public class VolatileMMOItem extends ReadMMOItem {
 	@Override
 	public boolean hasData(ItemStat stat) {
 		if (!super.hasData(stat))
+
+			// Attempt to lad this stat data
 			try {
 				stat.whenLoaded(this);
+
+			// Nope
 			} catch (IllegalArgumentException exception) {
+
+				// Log a warning
 				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"Could not load stat '" + stat.getId() + "'item data from '" + getId() + "': " + exception.getMessage());
+						ChatColor.GRAY + "Could not load stat '"
+								+ ChatColor.GOLD + stat.getId() + ChatColor.GRAY + "'item data from '"
+								+ ChatColor.RED + getId() + ChatColor.GRAY + "': "
+								+ ChatColor.YELLOW + exception.getMessage());
 			}
 		return super.hasData(stat);
 	}

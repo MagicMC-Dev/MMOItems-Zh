@@ -119,7 +119,7 @@ public class ItemStackBuilder {
 			// Attempt to add
 			try {
 
-				//
+				// Make necessary lore changes
 				stat.whenApplied(this, mmoitem.getData(stat));
 
 			// Something went wrong...

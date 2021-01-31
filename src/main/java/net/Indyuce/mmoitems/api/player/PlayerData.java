@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -148,10 +149,20 @@ public class PlayerData {
 		if (!mmoData.isOnline())
 			return false;
 
+		// Get the mainhand and offhand items.
 		NBTItem main = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
 		NBTItem off = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
-		return (main.getBoolean("MMOITEMS_TWO_HANDED") && (off.getItem() != null && off.getItem().getType() != Material.AIR))
-				|| (off.getBoolean("MMOITEMS_TWO_HANDED") && (main.getItem() != null && main.getItem().getType() != Material.AIR));
+
+		// Is either hand two-handed?
+		boolean mainhand_twohanded = main.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+		boolean offhand_twohanded = off.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+
+		// Is either hand encumbering: Not NULL, not AIR, and not Handworn
+		boolean mainhand_encumbering = (main.getItem() != null && main.getItem().getType() != Material.AIR && !main.getBoolean(ItemStats.HANDWORN.getNBTPath()));
+		boolean offhand_encumbering = (off.getItem() != null && off.getItem().getType() != Material.AIR && !off.getBoolean(ItemStats.HANDWORN.getNBTPath()));
+
+		// Will it encumber?
+		return (mainhand_twohanded && offhand_encumbering) || (mainhand_encumbering && offhand_twohanded);
 	}
 
 	@SuppressWarnings("deprecation")

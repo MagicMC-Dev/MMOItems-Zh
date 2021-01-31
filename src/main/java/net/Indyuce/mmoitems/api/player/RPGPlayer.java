@@ -42,18 +42,38 @@ public abstract class RPGPlayer {
 		return playerData.getPlayer();
 	}
 
+	/**
+	 * Main profile level of the player.
+	 * <p></p>
+	 * Used in the REQUIRED_LEVEL item stat, and crafting stations with the level condition.
+	 */
 	public abstract int getLevel();
 
 	public abstract String getClassName();
 
+	/**
+	 * The mana the player currently has.
+	 * <p></p>
+	 * Sometimes an internal quantity, sometimes the hunger bar, etc...
+	 */
 	public abstract double getMana();
 
 	public abstract double getStamina();
 
+	/**
+	 * Sets the mana of the player.
+	 * <p></p>
+	 * Sometimes an internal quantity, sometimes the hunger bar, etc...
+	 */
 	public abstract void setMana(double value);
 
 	public abstract void setStamina(double value);
 
+	/**
+	 * Increases or substracts mana to the player.
+	 * <p></p>
+	 * Sometimes an internal quantity, sometimes the hunger bar, etc...
+	 */
 	public void giveMana(double value) {
 		setMana(getMana() + value);
 	}

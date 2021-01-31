@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.item.mmoitem;
 
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -32,12 +33,22 @@ public class LiveMMOItem extends ReadMMOItem {
 	public LiveMMOItem(NBTItem item) {
 		super(item);
 
+		// Reads all the stats that this type could possibly have.
 		for (ItemStat stat : getType().getAvailableStats())
+
+			// Attempts to load it
 			try {
+
+				// Will not do much if the stat is missing from the item
 				stat.whenLoaded(this);
+
+			// Some unknown error happened. L
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"Could not load stat '" + stat.getId() + "'item data from '" + getId() + "': " + exception.getMessage());
+						ChatColor.GRAY + "Could not load stat '"
+							+ ChatColor.GOLD + stat.getId() + ChatColor.GRAY + "'item data from '"
+							+ ChatColor.RED + getId() + ChatColor.GRAY + "': "
+							+ ChatColor.YELLOW + exception.getMessage());
 			}
 	}
 }

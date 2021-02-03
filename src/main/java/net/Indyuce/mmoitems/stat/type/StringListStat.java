@@ -10,9 +10,9 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -57,7 +57,7 @@ public class StringListStat extends ItemStat {
             inv.getEditedSection().set(getPath(), list.isEmpty() ? null : list);
             inv.registerTemplateEdition();
             inv.getPlayer()
-                    .sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MMOLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
+                    .sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
         }
     }
 
@@ -82,7 +82,7 @@ public class StringListStat extends ItemStat {
         if (statData.isPresent()) {
             lore.add(ChatColor.GRAY + "Current Value:");
             StringListData data = (StringListData) statData.get();
-            data.getList().forEach(element -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(element)));
+            data.getList().forEach(element -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(element)));
 
         } else
             lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

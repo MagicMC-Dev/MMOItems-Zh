@@ -22,9 +22,9 @@ import net.Indyuce.mmoitems.api.item.template.explorer.TemplateExplorer;
 import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.mmogroup.mmolib.api.util.SmartGive;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
-import net.mmogroup.mmolib.command.api.Parameter;
+import io.lumine.mythic.lib.api.util.SmartGive;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
 
 public class GenerateCommandTreeNode extends CommandTreeNode {
 	private static final Random random = new Random();

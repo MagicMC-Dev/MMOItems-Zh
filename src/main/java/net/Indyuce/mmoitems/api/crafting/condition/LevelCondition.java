@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.condition;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.MMOLineConfig;
 
 public class LevelCondition extends Condition {
 	private final int level;

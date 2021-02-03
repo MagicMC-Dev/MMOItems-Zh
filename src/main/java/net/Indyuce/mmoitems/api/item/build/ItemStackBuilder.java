@@ -1,23 +1,19 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.gson.JsonArray;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.StoredTagsData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -27,11 +23,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
@@ -166,12 +158,12 @@ public class ItemStackBuilder {
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
 		item.setItemMeta(meta);
-		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
+		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
 
 		nbtItem.addTag(tags);
 
 		if (nbtItem.getDisplayNameComponent() != null) {
-			nbtItem.setDisplayNameComponent(MMOLib.plugin.getComponentBuilder().parse(nbtItem.getDisplayNameComponent()));
+			nbtItem.setDisplayNameComponent(MythicLib.plugin.getComponentBuilder().parse(nbtItem.getDisplayNameComponent()));
 
 		}
 
@@ -231,7 +223,7 @@ public class ItemStackBuilder {
 							if (value > 0)
 								lore.insert(stat.getPath(), stat.formatNumericStat(value, "#",
 										new StatFormat("##").format(value))
-										+ MMOLib.plugin.parseColors(MMOItems.plugin.getConfig()
+										+ MythicLib.plugin.parseColors(MMOItems.plugin.getConfig()
 												.getString("item-upgrading.stat-change-suffix", " &e(+#stat#)").replace(
 														"#stat#", new StatFormat("##").format(value - getBase(stat)))));
 						}

@@ -1,25 +1,9 @@
 package net.Indyuce.mmoitems.api.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -41,16 +25,20 @@ import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.AbilityListData;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
-import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.*;
 import net.milkbowl.vault.permission.Permission;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.player.MMOPlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.*;
 
 public class PlayerData {
 	private static final Map<UUID, PlayerData> data = new HashMap<>();
@@ -150,8 +138,8 @@ public class PlayerData {
 			return false;
 
 		// Get the mainhand and offhand items.
-		NBTItem main = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
-		NBTItem off = MMOLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
+		NBTItem main = MythicLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
+		NBTItem off = MythicLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
 
 		// Is either hand two-handed?
 		boolean mainhand_twohanded = main.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
@@ -198,7 +186,7 @@ public class PlayerData {
 		EquipmentSlot mainheld_type = null;
 		ItemStack mainheld = getPlayer().getInventory().getItemInMainHand();
 		if (mainheld.getType().isItem()) {
-			NBTItem mainnbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
+			NBTItem mainnbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
 
 			if (mainnbt != null) {
 				Type maintype = Type.get(mainnbt.getType());

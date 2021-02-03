@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
 import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public abstract class ReadMMOItem extends MMOItem {
 	private final NBTItem item;

@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.api.item.util;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -80,17 +80,17 @@ public class ConfigItem {
 			return;
 
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(MMOLib.plugin.parseColors(getName()));
+		meta.setDisplayName(MythicLib.plugin.parseColors(getName()));
 		meta.addItemFlags(ItemFlag.values());
 
 		if (hasLore()) {
 			List<String> lore = new ArrayList<>();
-			getLore().forEach(str -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(str)));
+			getLore().forEach(str -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(str)));
 			meta.setLore(lore);
 		}
 
 		item.setItemMeta(meta);
-		item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("ItemId", id)).toItem();
+		item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("ItemId", id)).toItem();
 	}
 
 	public String getName() {

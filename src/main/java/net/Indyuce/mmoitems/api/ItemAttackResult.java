@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.api;
 
-import org.bukkit.entity.LivingEntity;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.AttackResult;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.entity.LivingEntity;
 
 public class ItemAttackResult extends AttackResult {
 	public ItemAttackResult(boolean successful, DamageType... types) {
@@ -48,7 +47,7 @@ public class ItemAttackResult extends AttackResult {
 	 *            The entity target
 	 */
 	public void applyEffectsAndDamage(CachedStats stats, NBTItem item, LivingEntity target) {
-		MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, applyEffects(stats, item, target));
+		MythicLib.plugin.getDamage().damage(stats.getPlayer(), target, applyEffects(stats, item, target));
 	}
 
 	/**

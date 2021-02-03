@@ -5,7 +5,7 @@ import org.bukkit.inventory.RecipeChoice;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class MMOItemIngredient extends WorkbenchIngredient {
 	private final Type type;

@@ -6,11 +6,11 @@ import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.AttackResult;
-import net.mmogroup.mmolib.api.DamageHandler;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.RegisteredAttack;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageHandler;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.RegisteredAttack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +25,7 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<Integer, RegisteredAttack> damageInfo = new HashMap<>();
 
 	public SkillAPIHook() {
-		MMOLib.plugin.getDamage().registerHandler(this);
+		MythicLib.plugin.getDamage().registerHandler(this);
 	}
 
 	@Override

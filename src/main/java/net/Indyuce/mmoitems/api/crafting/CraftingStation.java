@@ -1,14 +1,14 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.PostLoadObject;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe.RecipeOption;
-import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.util.PostLoadObject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,7 +31,7 @@ public class CraftingStation extends PostLoadObject {
 		super(config);
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = MMOLib.plugin.parseColors(config.getString("name"));
+		this.name = MythicLib.plugin.parseColors(config.getString("name"));
 		this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
 		this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 
@@ -55,7 +55,7 @@ public class CraftingStation extends PostLoadObject {
 		Validate.notNull(sound, "Crafting station sound must not be null");
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = MMOLib.plugin.parseColors(name);
+		this.name = MythicLib.plugin.parseColors(name);
 		this.layout = layout;
 		this.sound = sound;
 		this.itemOptions = itemOptions;

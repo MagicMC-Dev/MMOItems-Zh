@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -13,8 +15,6 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.command.item.IdentifyCommandTreeNode;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.util.AltChar;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -203,8 +203,8 @@ public class ConfigManager implements Reloadable {
 		replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
 		worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
-		healIndicatorFormat = MMOLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
-		damageIndicatorFormat = MMOLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));
+		healIndicatorFormat = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
+		damageIndicatorFormat = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));
 		healIndicatorDecimalFormat = new DecimalFormat(MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format"));
 		damageIndicatorDecimalFormat = new DecimalFormat(MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format"));
 		abilitySplitter = getStatFormat("ability-splitter");
@@ -246,7 +246,7 @@ public class ConfigManager implements Reloadable {
 
 	public String getMessage(String path) {
 		String found = messages.getConfig().getString(path);
-		return MMOLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
+		return MythicLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
 	}
 
 	public String getAbilityName(Ability ability) {

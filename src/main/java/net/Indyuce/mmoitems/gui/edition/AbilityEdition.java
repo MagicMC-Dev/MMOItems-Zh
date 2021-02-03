@@ -8,10 +8,10 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -114,7 +114,7 @@ public class AbilityEdition extends EditionInventory {
 				modifierItemMeta.setLore(modifierItemLore);
 				modifierItem.setItemMeta(modifierItemMeta);
 
-				modifierItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier))
+				modifierItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier))
 						.toItem();
 
 				inv.setItem(slots[n++], modifierItem);
@@ -191,7 +191,7 @@ public class AbilityEdition extends EditionInventory {
 			return;
 		}
 
-		String tag = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("abilityModifier");
+		String tag = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("abilityModifier");
 		if (tag.equals(""))
 			return;
 

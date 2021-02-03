@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.comp;
 
+import io.lumine.mythic.lib.comp.Metrics;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.comp.Metrics;
 
 public class MMOItemsMetrics extends Metrics {
 	public MMOItemsMetrics() {

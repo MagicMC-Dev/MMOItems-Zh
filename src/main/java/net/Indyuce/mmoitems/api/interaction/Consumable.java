@@ -1,14 +1,9 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.List;
-
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.SmartGive;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -16,10 +11,14 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.SmartGive;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item) {
@@ -96,7 +95,7 @@ public class Consumable extends UseItem {
 		int maxConsume = (int) nbtItem.getStat("MAX_CONSUME");
 		if (maxConsume > 1) {
 			ItemStack item = nbtItem.toItem().clone();
-			String configMaxConsumeLore = MMOLib.plugin.parseColors(MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
+			String configMaxConsumeLore = MythicLib.plugin.parseColors(MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
 			String maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
 
 			maxConsume -= 1;

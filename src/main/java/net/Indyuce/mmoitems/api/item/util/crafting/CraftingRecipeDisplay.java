@@ -1,28 +1,23 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
+import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
+import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
-import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
-import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
@@ -112,7 +107,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
+				lore.set(n, MythicLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = craftingRecipe.getOutput().getPreview();
 			int amount = craftingRecipe.getOutput().getAmount();
@@ -124,7 +119,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(MMOLib.plugin.parseColors(
+			meta.setDisplayName(MythicLib.plugin.parseColors(
 					name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
 			meta.setLore(lore);
 			item.setItemMeta(meta);

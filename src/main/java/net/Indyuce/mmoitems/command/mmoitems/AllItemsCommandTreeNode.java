@@ -6,8 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class AllItemsCommandTreeNode extends CommandTreeNode {
 	public AllItemsCommandTreeNode(CommandTreeNode parent) {
@@ -23,7 +23,7 @@ public class AllItemsCommandTreeNode extends CommandTreeNode {
 			for (String s : config.getKeys(false))
 				sender.sendMessage("* " + ChatColor.GREEN + s
 						+ (config.getConfigurationSection(s).contains("name")
-								? " " + ChatColor.WHITE + "(" + MMOLib.plugin.parseColors(config.getString(s + ".name")) + ChatColor.WHITE + ")"
+								? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(config.getString(s + ".name")) + ChatColor.WHITE + ")"
 								: ""));
 		}
 		return CommandResult.SUCCESS;

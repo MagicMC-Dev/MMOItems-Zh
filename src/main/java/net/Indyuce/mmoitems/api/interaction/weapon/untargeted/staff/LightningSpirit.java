@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
-import org.bukkit.Location;
-import org.bukkit.Particle;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.MMORayTraceResult;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.MMORayTraceResult;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.version.VersionSound;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 
 public class LightningSpirit implements StaffAttackHandler {
 
@@ -19,7 +18,7 @@ public class LightningSpirit implements StaffAttackHandler {
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 
 		Location loc = stats.getPlayer().getEyeLocation();
-		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
+		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
 				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
 		if (trace.hasHit())
 			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt, trace.getHit());

@@ -19,10 +19,10 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.version.VersionMaterial;
 
 public class AbilityListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25 };
@@ -76,7 +76,7 @@ public class AbilityListEdition extends EditionInventory {
 				abilityItemMeta.setLore(abilityItemLore);
 				abilityItem.setItemMeta(abilityItemMeta);
 
-				abilityItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
+				abilityItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
 
 				inv.setItem(slots[n++], abilityItem);
 			}
@@ -129,7 +129,7 @@ public class AbilityListEdition extends EditionInventory {
 				}
 		}
 
-		String tag = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("configKey");
+		String tag = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getString("configKey");
 		if (tag.equals(""))
 			return;
 

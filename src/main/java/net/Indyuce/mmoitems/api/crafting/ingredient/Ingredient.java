@@ -1,14 +1,14 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
-import org.bukkit.inventory.ItemStack;
-
+import io.lumine.mythic.lib.api.MMOLineConfig;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMode;
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import org.bukkit.inventory.ItemStack;
+
 
 public abstract class Ingredient {
 	private final String id;

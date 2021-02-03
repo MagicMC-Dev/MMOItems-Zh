@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.listener;
 
 import net.Indyuce.mmoitems.api.util.SoundReader;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;

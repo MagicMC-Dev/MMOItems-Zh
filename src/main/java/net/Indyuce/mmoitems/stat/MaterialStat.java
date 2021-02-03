@@ -1,12 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.EnumUtils;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -22,9 +18,12 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.mmogroup.mmolib.api.util.AltChar;
-import net.mmogroup.mmolib.api.util.EnumUtils;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.List;
+import java.util.Optional;
 
 public class MaterialStat extends ItemStat {
 	public MaterialStat() {

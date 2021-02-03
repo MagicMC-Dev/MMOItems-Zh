@@ -1,11 +1,10 @@
 package net.Indyuce.mmoitems.api.event.item;
 
-import org.bukkit.event.HandlerList;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import org.bukkit.event.HandlerList;
 
 public class IdentifyItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();

@@ -2,9 +2,9 @@ package net.Indyuce.mmoitems.api.item.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,7 +21,7 @@ public class DynamicLore {
 	public ItemStack build() {
 		ItemStack stack = item.toItem();
 		if (item.hasTag("MMOITEMS_DYNAMIC_LORE")) {
-			JsonArray array = MMOLib.plugin.getJson().parse(item.getString("MMOITEMS_DYNAMIC_LORE"), JsonArray.class);
+			JsonArray array = MythicLib.plugin.getJson().parse(item.getString("MMOITEMS_DYNAMIC_LORE"), JsonArray.class);
 			List<String> lore = new ArrayList<>();
 			for (JsonElement e : array) {
 				String s = replace(e.getAsString());
@@ -35,7 +35,7 @@ public class DynamicLore {
 		}
 		NBTItem nbt = NBTItem.get(stack);
 		if (nbt.getLoreComponents() != null) {
-			nbt.setLoreComponents(MMOLib.plugin.getComponentBuilder().parse(nbt.getLoreComponents()));
+			nbt.setLoreComponents(MythicLib.plugin.getComponentBuilder().parse(nbt.getLoreComponents()));
 		}
 		return nbt.toItem();
 	}
@@ -45,7 +45,7 @@ public class DynamicLore {
 		switch(input.toLowerCase()) {
 			case "%durability%":
 				if(item.hasTag("MMOITEMS_DURABILITY") && item.hasTag("MMOITEMS_MAX_DURABILITY"))
-					return MMOLib.plugin.parseColors(MMOItems.plugin.getLanguage().getDynLoreFormat("durability")
+					return MythicLib.plugin.parseColors(MMOItems.plugin.getLanguage().getDynLoreFormat("durability")
 					.replace("%durability%", "" + item.getInteger("MMOITEMS_DURABILITY"))
 					.replace("%max_durability%", "" + item.getInteger("MMOITEMS_MAX_DURABILITY")));
 				else return "!INVALID!";

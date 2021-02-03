@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class Regen_Ally extends Ability {
 	public Regen_Ally() {
@@ -66,7 +66,7 @@ public class Regen_Ally extends Ability {
 		public FriendlyTargetAbilityResult(AbilityData ability, Player caster, LivingEntity target) {
 			super(ability);
 
-			this.target = target != null ? target : MMOLib.plugin.getVersion().getWrapper().rayTrace(caster, 50, entity -> (entity instanceof Player && MMOUtils.canDamage(caster, entity))).getHit();
+			this.target = target != null ? target : MythicLib.plugin.getVersion().getWrapper().rayTrace(caster, 50, entity -> (entity instanceof Player && MMOUtils.canDamage(caster, entity))).getHit();
 		}
 
 		public LivingEntity getTarget() {

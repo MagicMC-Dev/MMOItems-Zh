@@ -2,8 +2,8 @@ package net.Indyuce.mmoitems.listener;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -59,7 +59,7 @@ public class CustomBlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void c(BlockPlaceEvent event) {
 		if (!event.isCancelled() && !isMushroomBlock(event.getBlockPlaced().getType())) {
-			NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItemInHand());
+			NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItemInHand());
 			int blockId = nbtItem.getInteger("MMOITEMS_BLOCK_ID");
 			if (blockId > 160 || blockId < 1 || blockId == 54) // checks if block is a custom block
 				return;

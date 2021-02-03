@@ -19,7 +19,7 @@ import net.Indyuce.mmoitems.stat.data.ColorData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.AltChar;
 
 public class PotionColor extends StringStat {
 	public PotionColor() {

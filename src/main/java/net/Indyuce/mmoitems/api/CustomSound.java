@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOUtils;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VersionMaterial;
 
 public enum CustomSound {
 	ON_ATTACK(Material.IRON_SWORD, 19, "Plays when attacking an entity."),

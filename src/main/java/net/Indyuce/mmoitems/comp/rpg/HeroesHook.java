@@ -6,14 +6,14 @@ import com.herocraftonline.heroes.api.events.ClassChangeEvent;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.skill.SkillType;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageHandler;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.RegisteredAttack;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.AttackResult;
-import net.mmogroup.mmolib.api.DamageHandler;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.RegisteredAttack;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +26,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<SkillType, DamageType> damages = new HashMap<>();
 
 	public HeroesHook() {
-		MMOLib.plugin.getDamage().registerHandler(this);
+		MythicLib.plugin.getDamage().registerHandler(this);
 
 		damages.put(SkillType.ABILITY_PROPERTY_PHYSICAL, DamageType.PHYSICAL);
 		damages.put(SkillType.ABILITY_PROPERTY_MAGICAL, DamageType.MAGIC);

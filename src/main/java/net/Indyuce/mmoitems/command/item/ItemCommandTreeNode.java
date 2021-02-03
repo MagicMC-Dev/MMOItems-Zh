@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.command.item;
 
 import org.bukkit.command.CommandSender;
 
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class ItemCommandTreeNode extends CommandTreeNode {
 	public ItemCommandTreeNode(CommandTreeNode parent) {

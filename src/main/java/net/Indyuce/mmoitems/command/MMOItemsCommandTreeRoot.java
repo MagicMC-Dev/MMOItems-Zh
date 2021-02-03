@@ -1,28 +1,16 @@
 package net.Indyuce.mmoitems.command;
 
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeRoot;
+import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.item.ItemCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.AbilityCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.AllItemsCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.BrowseCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.CopyCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.CreateCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.DeleteCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.DropCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.EditCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.GenerateCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.GiveAllCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.GiveCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.ItemListCommandTreeNode;
-import net.Indyuce.mmoitems.command.mmoitems.ReloadCommandTreeNode;
+import net.Indyuce.mmoitems.command.mmoitems.*;
 import net.Indyuce.mmoitems.command.mmoitems.debug.DebugCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.list.ListCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.revid.RevisionIDCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.stations.StationsCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.update.UpdateCommandTreeNode;
-import net.mmogroup.mmolib.command.api.CommandTreeRoot;
-import net.mmogroup.mmolib.command.api.Parameter;
 
 public class MMOItemsCommandTreeRoot extends CommandTreeRoot {
 	public static final Parameter TYPE = new Parameter("<type>",

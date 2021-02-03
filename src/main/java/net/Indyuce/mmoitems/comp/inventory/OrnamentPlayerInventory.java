@@ -17,8 +17,8 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 /**
  * Tells MMOItems where to find additional equipment.
@@ -37,7 +37,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 		// Ornaments
 		for (ItemStack item : player.getInventory().getContents()) {
 			NBTItem nbtItem;
-			if (item != null && (nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)
+			if (item != null && (nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)
 				list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
 		}
 

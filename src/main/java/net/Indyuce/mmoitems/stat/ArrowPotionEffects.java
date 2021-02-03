@@ -33,9 +33,9 @@ import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
 
 public class ArrowPotionEffects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
@@ -140,7 +140,7 @@ public class ArrowPotionEffects extends ItemStat {
 		if (mmoitem.getNBT().hasTag(getNBTPath())) {
 			PotionEffectListData effects = new PotionEffectListData();
 
-			for(JsonElement entry : MMOLib.plugin.getJson().parse(mmoitem.getNBT().getString(getNBTPath()), JsonArray.class)) {
+			for(JsonElement entry : MythicLib.plugin.getJson().parse(mmoitem.getNBT().getString(getNBTPath()), JsonArray.class)) {
 				if(!entry.isJsonObject()) continue;
 				JsonObject object = entry.getAsJsonObject();
 				effects.add(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),

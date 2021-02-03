@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class Required_Profession extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final Profession profession;

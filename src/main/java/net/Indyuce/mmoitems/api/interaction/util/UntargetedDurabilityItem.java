@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.api.interaction.util;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class UntargetedDurabilityItem extends DurabilityItem {
 	private final EquipmentSlot slot;

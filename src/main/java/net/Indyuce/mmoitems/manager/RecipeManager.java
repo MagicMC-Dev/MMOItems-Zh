@@ -36,7 +36,7 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class RecipeManager implements Reloadable {
 
@@ -207,7 +207,7 @@ public class RecipeManager implements Reloadable {
 			return;
 		}
 
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
+		if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
 			for (NamespacedKey key : player.getDiscoveredRecipes())
 				if (key.getNamespace().equals("mmoitems") && !getNamespacedKeys().contains(key))
 					player.undiscoverRecipe(key);

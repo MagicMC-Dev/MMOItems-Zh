@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class ItemListCommandTreeNode extends CommandTreeNode {
 	public ItemListCommandTreeNode(CommandTreeNode parent) {
@@ -39,12 +39,12 @@ public class ItemListCommandTreeNode extends CommandTreeNode {
 		if (sender instanceof Player)
 			for (String s : config.getKeys(false)) {
 				String nameFormat = config.getConfigurationSection(s).contains("name")
-						? " " + ChatColor.WHITE + "(" + MMOLib.plugin.parseColors(config.getString(s + ".name")) + ChatColor.WHITE + ")"
+						? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(config.getString(s + ".name")) + ChatColor.WHITE + ")"
 						: "";
-				MMOLib.plugin.getVersion().getWrapper().sendJson((Player) sender,
+				MythicLib.plugin.getVersion().getWrapper().sendJson((Player) sender,
 						"{\"text\":\"* " + ChatColor.GREEN + s + nameFormat + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit "
 								+ type.getId() + " " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit "
-								+ (nameFormat.equals("") ? s : MMOLib.plugin.parseColors(config.getString(s + ".name"))) + ChatColor.WHITE
+								+ (nameFormat.equals("") ? s : MythicLib.plugin.parseColors(config.getString(s + ".name"))) + ChatColor.WHITE
 								+ ".\",\"color\":\"white\"}}}");
 			}
 
@@ -52,7 +52,7 @@ public class ItemListCommandTreeNode extends CommandTreeNode {
 			for (String s : config.getKeys(false))
 				sender.sendMessage("* " + ChatColor.GREEN + s
 						+ (config.getConfigurationSection(s).contains("name")
-								? " " + ChatColor.WHITE + "(" + MMOLib.plugin.parseColors(config.getString(s + ".name")) + ChatColor.WHITE + ")"
+								? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(config.getString(s + ".name")) + ChatColor.WHITE + ")"
 								: ""));
 
 		return CommandResult.SUCCESS;

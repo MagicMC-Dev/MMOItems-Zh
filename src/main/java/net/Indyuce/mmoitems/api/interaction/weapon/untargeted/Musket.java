@@ -1,5 +1,9 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.MMORayTraceResult;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -8,10 +12,6 @@ import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.listener.ItemUse;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.MMORayTraceResult;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -55,7 +55,7 @@ public class Musket extends UntargetedWeapon {
 		loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * 2 * recoil));
 		Vector vec = loc.getDirection();
 
-		MMORayTraceResult trace = MMOLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range,
+		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range,
 				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
 		if (trace.hasHit())
 			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyEffectsAndDamage(stats,

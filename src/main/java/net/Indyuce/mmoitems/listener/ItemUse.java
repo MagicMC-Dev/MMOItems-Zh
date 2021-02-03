@@ -41,9 +41,9 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.W
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +57,7 @@ public class ItemUse implements Listener {
 			// || event.getHand() != EquipmentSlot.HAND
 			return;
 
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (!item.hasType())
 			return;
 
@@ -120,7 +120,7 @@ public class ItemUse implements Listener {
 
 		// custom damage check
 		LivingEntity target = (LivingEntity) event.getEntity();
-		if (MMOLib.plugin.getDamage().findInfo(target) != null)
+		if (MythicLib.plugin.getDamage().findInfo(target) != null)
 			return;
 
 		Player player = (Player) event.getDamager();
@@ -131,7 +131,7 @@ public class ItemUse implements Listener {
 		 * be cancelled before anything is applied
 		 */
 		PlayerData playerData = PlayerData.get(player);
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
 
 		if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
@@ -168,7 +168,7 @@ public class ItemUse implements Listener {
 		if (player.getGameMode() == GameMode.CREATIVE)
 			return;
 
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		if (!item.hasType())
 			return;
 
@@ -188,7 +188,7 @@ public class ItemUse implements Listener {
 		if (!(event.getRightClicked() instanceof LivingEntity))
 			return;
 
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		if (!item.hasType())
 			return;
 
@@ -216,7 +216,7 @@ public class ItemUse implements Listener {
 		if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR)
 			return;
 
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCursor());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCursor());
 		if (!item.hasType())
 			return;
 
@@ -225,7 +225,7 @@ public class ItemUse implements Listener {
 			return;
 
 		if (useItem instanceof ItemSkin) {
-			NBTItem picked = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+			NBTItem picked = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 			if (!picked.hasType())
 				return;
 
@@ -243,7 +243,7 @@ public class ItemUse implements Listener {
 		}
 
 		if (useItem instanceof GemStone) {
-			NBTItem picked = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+			NBTItem picked = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 			if (!picked.hasType())
 				return;
 
@@ -261,7 +261,7 @@ public class ItemUse implements Listener {
 		}
 
 		if (useItem instanceof Consumable && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR)
-			if (((Consumable) useItem).useOnItem(event, MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem()))) {
+			if (((Consumable) useItem).useOnItem(event, MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem()))) {
 				event.setCancelled(true);
 				event.getCursor().setAmount(event.getCursor().getAmount() - 1);
 			}
@@ -272,7 +272,7 @@ public class ItemUse implements Listener {
 		if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
 			return;
 
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getBow());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getBow());
 		Type type = Type.get(item.getType());
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
@@ -322,7 +322,7 @@ public class ItemUse implements Listener {
 		if (mainheld.getType().isItem()) {
 
 			// Get as NBTItem
-			NBTItem mainnbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
+			NBTItem mainnbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
 
 			// Existed?
 			if (mainnbt != null) {
@@ -370,7 +370,7 @@ public class ItemUse implements Listener {
 
 	@EventHandler
 	public void g(PlayerItemConsumeEvent event) {
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (!item.hasType())
 			return;
 

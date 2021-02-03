@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class UpdaterData {
 

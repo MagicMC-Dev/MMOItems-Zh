@@ -1,20 +1,18 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import io.lumine.mythic.lib.MythicLib;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
+import net.Indyuce.mmoitems.manager.TypeManager;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
-import net.Indyuce.mmoitems.manager.TypeManager;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class Type {
@@ -202,7 +200,7 @@ public class Type {
 
 		String[] split = str.split(":");
 		Material material = Material.valueOf(split[0]);
-		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
+		return split.length > 1 ? MythicLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 
 	/**
@@ -216,7 +214,7 @@ public class Type {
 	 */
 	@Deprecated
 	public static Type get(ItemStack item) {
-		return Type.get(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).getType());
+		return Type.get(MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getType());
 	}
 
 	/**

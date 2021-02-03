@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -196,7 +196,7 @@ public class MMOUtils {
 		 * Extra plugin compatibility, everything is handled via MMOLib because
 		 * the same system is used by MMOCore
 		 */
-		if (MMOLib.plugin.getEntities().findCustom(target)) return false;
+		if (MythicLib.plugin.getEntities().findCustom(target)) return false;
 
 		/*
 		 * The ability player damage option is cached for quicker access in the
@@ -205,7 +205,7 @@ public class MMOUtils {
 		if (target instanceof Player && (!MMOItems.plugin.getLanguage().abilityPlayerDamage || !MMOItems.plugin.getFlags().isPvpAllowed(target.getLocation())))
 			return false;
 
-		return loc == null || MMOLib.plugin.getVersion().getWrapper().isInBoundingBox(target, loc);
+		return loc == null || MythicLib.plugin.getVersion().getWrapper().isInBoundingBox(target, loc);
 	}
 
 	private static final String[] romanChars = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
@@ -280,6 +280,6 @@ public class MMOUtils {
 	public static ItemStack readIcon(String string) throws IllegalArgumentException {
 		String[] split = string.split(":");
 		Material material = Material.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
-		return split.length > 1 ? MMOLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
+		return split.length > 1 ? MythicLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 }

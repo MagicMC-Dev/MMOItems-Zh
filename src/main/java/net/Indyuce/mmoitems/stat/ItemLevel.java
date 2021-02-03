@@ -5,8 +5,8 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.version.VersionMaterial;
 
 public class ItemLevel extends InternalStat {
 	public ItemLevel() {

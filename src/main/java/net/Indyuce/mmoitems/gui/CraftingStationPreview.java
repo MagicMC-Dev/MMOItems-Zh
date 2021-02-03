@@ -19,8 +19,8 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
@@ -113,7 +113,7 @@ public class CraftingStationPreview extends PluginInventory {
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 		switch (nbtItem.getString("ItemId")) {
 			case "CONFIRM":
 				previous.processRecipe(recipe);

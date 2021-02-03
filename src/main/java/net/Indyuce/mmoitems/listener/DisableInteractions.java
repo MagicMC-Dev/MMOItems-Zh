@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.listener;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.Keyed;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class DisableInteractions implements Listener {
 	// grindstone
 	@EventHandler
 	public void b(InventoryClickEvent event) {
-		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
+		if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 13))
 			return;
 
 		Inventory inv = event.getClickedInventory();
@@ -54,7 +54,7 @@ public class DisableInteractions implements Listener {
 	// smithing table
 	@EventHandler
 	public void c(InventoryClickEvent event) {
-		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 15))
+		if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 15))
 			return;
 
 		Inventory inv = event.getClickedInventory();

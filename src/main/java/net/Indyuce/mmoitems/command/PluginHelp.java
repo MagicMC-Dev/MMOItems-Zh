@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.AltChar;
 
 public class PluginHelp {
 	private static final int commandsPerPage = 8;
@@ -36,7 +36,7 @@ public class PluginHelp {
 			while (n++ < commandsPerPage)
 				sender.sendMessage("");
 
-			MMOLib.plugin.getVersion().getWrapper().sendJson((Player) sender,
+			MythicLib.plugin.getVersion().getWrapper().sendJson((Player) sender,
 					"[{\"text\":\"" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "------------------" + ChatColor.DARK_GRAY + "[\"},{\"text\":\""
 							+ ChatColor.RED + "««\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help " + (page - 1)
 							+ "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Previous Page\"}}},{\"text\":\""
@@ -112,7 +112,7 @@ public class PluginHelp {
 
 		private void sendAsJson(Player player) {
 			if (isCommand())
-				MMOLib.plugin.getVersion().getWrapper().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY
+				MythicLib.plugin.getVersion().getWrapper().sendJson(player, "{\"text\":\"" + ChatColor.LIGHT_PURPLE + AltChar.listDash + ChatColor.GRAY
 						+ " /" + usage + "\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + help + "\"}}}");
 			else
 				player.sendMessage(ChatColor.LIGHT_PURPLE + usage);

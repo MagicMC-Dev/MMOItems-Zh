@@ -29,9 +29,9 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.SmartGive;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.SmartGive;
 
 public class CraftingStationView extends PluginInventory {
 	private final CraftingStation station;
@@ -137,7 +137,7 @@ public class CraftingStationView extends PluginInventory {
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
 
-		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 		if (nbtItem.getString("ItemId").equals("PREVIOUS_IN_QUEUE")) {
 			queueOffset--;
 			open();
@@ -162,7 +162,7 @@ public class CraftingStationView extends PluginInventory {
 			return;
 		}
 
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 		String tag = item.getString("recipeId");
 		if (!tag.equals("")) {
 			CheckedRecipe recipe = getRecipe(tag);

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.MMOLineConfig;
 
 public class ClassCondition extends Condition {
 	private final List<String> classes;

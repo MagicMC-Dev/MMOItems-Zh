@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.command.mmoitems.update;
 
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.PluginUpdate;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.PluginUpdate;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
-import net.mmogroup.mmolib.command.api.Parameter;
 
 public class ApplyCommandTreeNode extends CommandTreeNode {
 	public ApplyCommandTreeNode(CommandTreeNode parent) {

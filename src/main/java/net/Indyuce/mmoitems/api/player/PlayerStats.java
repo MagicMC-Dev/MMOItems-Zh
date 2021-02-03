@@ -1,19 +1,18 @@
 package net.Indyuce.mmoitems.api.player;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.entity.Player;
-
+import io.lumine.mythic.lib.api.stat.StatInstance;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.api.stat.modifier.ModifierType;
+import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.stat.StatInstance;
-import net.mmogroup.mmolib.api.stat.StatMap;
-import net.mmogroup.mmolib.api.stat.modifier.ModifierType;
-import net.mmogroup.mmolib.api.stat.modifier.StatModifier;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerStats {
 	private final PlayerData playerData;

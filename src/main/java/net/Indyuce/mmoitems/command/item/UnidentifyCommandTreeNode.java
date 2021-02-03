@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class UnidentifyCommandTreeNode extends CommandTreeNode {
 	public UnidentifyCommandTreeNode(CommandTreeNode parent) {
@@ -23,7 +23,7 @@ public class UnidentifyCommandTreeNode extends CommandTreeNode {
 		}
 
 		Player player = (Player) sender;
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		if (item.getType() == null) {
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "Couldn't unidentify the item you are holding.");
 			return CommandResult.FAILURE;

@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 /**
  * Stats which implement a consumable action like deconstructing, identifying,

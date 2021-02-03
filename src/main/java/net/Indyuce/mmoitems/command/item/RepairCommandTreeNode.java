@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class RepairCommandTreeNode extends CommandTreeNode {
 	public RepairCommandTreeNode(CommandTreeNode parent) {
@@ -25,7 +25,7 @@ public class RepairCommandTreeNode extends CommandTreeNode {
 
 		Player player = (Player) sender;
 		ItemStack stack = player.getInventory().getItemInMainHand();
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(stack);
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(stack);
 
 		if (!item.hasTag("MMOITEMS_DURABILITY")) {
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding can't be repaired.");

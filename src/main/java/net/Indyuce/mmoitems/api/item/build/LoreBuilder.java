@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 import java.util.*;
 
@@ -43,7 +43,7 @@ public class LoreBuilder {
 			str = str.replace("{" + holder + "}", placeholders.getOrDefault(holder, "PHE"));
 		}
 
-		return MMOLib.plugin.parseColors(str);
+		return MythicLib.plugin.parseColors(str);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class LoreBuilder {
 		 */
 		final List<String> cleaned = new ArrayList<>();
 		for (String s : lore)
-			cleaned.addAll(Arrays.asList(MMOLib.plugin.parseColors(s.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n")));
+			cleaned.addAll(Arrays.asList(MythicLib.plugin.parseColors(s.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n")));
 
 		return cleaned;
 	}

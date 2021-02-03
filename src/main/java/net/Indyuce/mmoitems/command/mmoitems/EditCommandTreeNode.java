@@ -1,14 +1,13 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class EditCommandTreeNode extends CommandTreeNode {
 	public EditCommandTreeNode(CommandTreeNode parent) {

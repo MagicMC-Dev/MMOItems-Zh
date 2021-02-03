@@ -4,14 +4,14 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class NamedItemStack extends ItemStack {
 	public NamedItemStack(Material material, String name) {
 		super(material);
 
 		ItemMeta meta = getItemMeta();
-		meta.setDisplayName(MMOLib.plugin.parseColors(name));
+		meta.setDisplayName(MythicLib.plugin.parseColors(name));
 		setItemMeta(meta);
 	}
 }

@@ -14,9 +14,9 @@ import net.Indyuce.mmoitems.api.ability.AbilityResult;
 import net.Indyuce.mmoitems.api.ability.TargetAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.AttackResult;
-import net.mmogroup.mmolib.api.DamageType;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageType;
 
 public class Death_Mark extends Ability {
 	public Death_Mark() {
@@ -55,7 +55,7 @@ public class Death_Mark extends Ability {
 				target.getWorld().spawnParticle(Particle.SPELL_MOB, target.getLocation(), 4, .2, 0, .2, 0);
 
 				if (ti % 20 == 0)
-					MMOLib.plugin.getDamage().damage(stats.getPlayer(), target, new AttackResult(dps, DamageType.SKILL, DamageType.MAGIC), false);
+					MythicLib.plugin.getDamage().damage(stats.getPlayer(), target, new AttackResult(dps, DamageType.SKILL, DamageType.MAGIC), false);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 1, 2);

@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.api;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;

@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.api.edition;
 
-import org.bukkit.ChatColor;
-
+import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
@@ -9,7 +8,7 @@ import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
+import org.bukkit.ChatColor;
 
 public class StatEdition implements Edition {
 
@@ -54,7 +53,7 @@ public class StatEdition implements Edition {
 		 * anvil text input feature. enables players to use an anvil to input
 		 * text if they are having conflicts with their chat management plugins.
 		 */
-		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
+		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MythicLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
 			new AnvilGUI(this);
 			return;
 		}

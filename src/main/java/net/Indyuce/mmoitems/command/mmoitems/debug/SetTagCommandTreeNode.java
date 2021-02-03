@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.command.mmoitems.debug;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
-import net.mmogroup.mmolib.command.api.Parameter;
 
 public class SetTagCommandTreeNode extends CommandTreeNode {
 	public SetTagCommandTreeNode(CommandTreeNode parent) {
@@ -29,7 +28,7 @@ public class SetTagCommandTreeNode extends CommandTreeNode {
 
 		try {
 			Player player = (Player) sender;
-			player.getInventory().setItemInMainHand(MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand())
+			player.getInventory().setItemInMainHand(MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand())
 					.addTag(new ItemTag(args[2].toUpperCase().replace("-", "_"), args[3].replace("%%", " "))).toItem());
 			player.sendMessage("Successfully set tag.");
 			return CommandResult.SUCCESS;

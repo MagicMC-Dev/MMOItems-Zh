@@ -17,8 +17,8 @@ import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
 
 public class UpgradingRecipeDisplay extends ConfigItem {
 	public UpgradingRecipeDisplay() {
@@ -85,16 +85,16 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
+				lore.set(n, MythicLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = upgradingRecipe.getItem().getPreview();
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(MMOLib.plugin.parseColors(name.replace("#name#", MMOUtils.getDisplayName(item))));
+			meta.setDisplayName(MythicLib.plugin.parseColors(name.replace("#name#", MMOUtils.getDisplayName(item))));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
+			return MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
 		}
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Random;
 import org.bukkit.Location;
 
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public interface StaffAttackHandler {
 	void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range);

@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -67,7 +67,7 @@ public class UpdaterManager implements Listener {
 	}
 
 	public ItemStack getUpdated(ItemStack item, Player target) {
-		return getUpdated(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item), target);
+		return getUpdated(MythicLib.plugin.getVersion().getWrapper().getNBTItem(item), target);
 	}
 
 	public ItemStack getUpdated(NBTItem item, Player target) {

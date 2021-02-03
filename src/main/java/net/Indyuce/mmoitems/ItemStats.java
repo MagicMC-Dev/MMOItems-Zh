@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.stat.type.DisableStat;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VersionMaterial;
 
 /**
  * A central file for the plugin since new stats are added ALL the time.

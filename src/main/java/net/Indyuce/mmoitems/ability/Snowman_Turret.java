@@ -28,7 +28,7 @@ import net.Indyuce.mmoitems.api.ability.LocationAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.version.VersionSound;
+import io.lumine.mythic.lib.version.VersionSound;
 
 public class Snowman_Turret extends Ability {
 	public Snowman_Turret() {

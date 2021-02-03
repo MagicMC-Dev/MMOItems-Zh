@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class ElementalAttack {
 	private final Map<Element, Double> relative = new HashMap<>();
@@ -40,7 +40,7 @@ public class ElementalAttack {
 
 		// elemental defense
 		for (ItemStack equip : target.getEquipment().getArmorContents()) {
-			NBTItem nbtEquip = MMOLib.plugin.getVersion().getWrapper().getNBTItem(equip);
+			NBTItem nbtEquip = MythicLib.plugin.getVersion().getWrapper().getNBTItem(equip);
 			if (nbtEquip.getType() != null)
 				for (Element element : absolute.keySet()) {
 					double defense = nbtEquip.getStat(element.name() + "_DEFENSE") / 100;

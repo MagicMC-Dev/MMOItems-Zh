@@ -1,7 +1,12 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
-import java.util.Optional;
-
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import net.Indyuce.mmocore.api.experience.Profession;
+import net.Indyuce.mmocore.api.experience.source.type.SpecificExperienceSource;
+import net.Indyuce.mmocore.api.player.PlayerData;
+import net.Indyuce.mmocore.manager.profession.ExperienceManager;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -9,13 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmocore.api.experience.Profession;
-import net.Indyuce.mmocore.api.experience.source.type.SpecificExperienceSource;
-import net.Indyuce.mmocore.api.player.PlayerData;
-import net.Indyuce.mmocore.manager.profession.ExperienceManager;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import java.util.Optional;
 
 public class MineMIBlockExperienceSource extends SpecificExperienceSource<Integer> {
 	private final int id;

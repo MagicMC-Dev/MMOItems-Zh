@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api;
 
+import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.comp.itemglow.TierColor;
-import net.mmogroup.mmolib.MMOLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +35,7 @@ public class ItemTier {
 
 	public ItemTier(ConfigurationSection config) {
 		id = config.getName().toUpperCase().replace("-", "_");
-		name = MMOLib.plugin.parseColors(config.getString("name"));
+		name = MythicLib.plugin.parseColors(config.getString("name"));
 		deconstruct = config.contains("deconstruct-item") ? new DropTable(config.getConfigurationSection("deconstruct-item")) : null;
 		unidentificationInfo = new UnidentificationInfo(config.getConfigurationSection("unidentification"));
 
@@ -144,6 +144,6 @@ public class ItemTier {
 	}
 
 	private String color(String str) {
-		return MMOLib.plugin.parseColors(str);
+		return MythicLib.plugin.parseColors(str);
 	}
 }

@@ -1,13 +1,11 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-
+import io.lumine.mythic.lib.api.MMOLineConfig;
 import net.Indyuce.mmocore.api.block.BlockInfo.RegeneratingBlock;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import org.bukkit.block.Block;
 
 public class MMOItemsBlockType implements BlockType {
 	private final int id;
@@ -25,16 +23,28 @@ public class MMOItemsBlockType implements BlockType {
 	public int getBlockId() {
 		return id;
 	}
-
+  /** TODO this broke with the mythiclib change when i updated mmocores versions, this will need fixed.
 	@Override
 	public void place(Location loc, RegeneratingBlock regenerating) {
 		CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(id);
 		loc.getBlock().setType(block.getState().getType());
 		loc.getBlock().setBlockData(block.getState().getBlockData());
 	}
+	*/
 
 	public static boolean matches(Block block) {
 		return MMOItems.plugin.getCustomBlocks().isMushroomBlock(block.getType());
+	}
+
+	@Override
+	public void place(RegeneratingBlock regeneratingBlock) {
+		CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(id);
+		//MISSING METHODS
+	}
+
+	@Override
+	public void regenerate(RegeneratingBlock regeneratingBlock) {
+
 	}
 
 	@Override

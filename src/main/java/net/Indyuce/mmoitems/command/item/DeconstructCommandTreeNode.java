@@ -10,9 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class DeconstructCommandTreeNode extends CommandTreeNode {
 	public DeconstructCommandTreeNode(CommandTreeNode parent) {
@@ -28,7 +28,7 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 
 		Player player = (Player) sender;
 		ItemStack stack = player.getInventory().getItemInMainHand();
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(stack);
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(stack);
 		String tag = item.getString("MMOITEMS_TIER");
 		if (tag.equals("") || !item.getBoolean("MMOITEMS_CAN_DECONSTRUCT")) {
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding can't be deconstructed.");

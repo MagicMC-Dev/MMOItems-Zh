@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class NewItemEdition implements Edition {
 	private final ItemBrowser inv;
@@ -34,7 +34,7 @@ public class NewItemEdition implements Edition {
 		 * anvil text input feature. enables players to use an anvil to input
 		 * text if they are having conflicts with their chat management plugins.
 		 */
-		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MMOLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
+		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MythicLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
 			new AnvilGUI(this);
 			return;
 		}

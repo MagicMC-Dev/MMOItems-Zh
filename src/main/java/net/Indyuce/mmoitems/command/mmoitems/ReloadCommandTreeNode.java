@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

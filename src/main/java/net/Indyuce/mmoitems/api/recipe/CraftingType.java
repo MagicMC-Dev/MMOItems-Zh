@@ -1,11 +1,10 @@
 package net.Indyuce.mmoitems.api.recipe;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.MMOUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.MMOUtils;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.version.VersionMaterial;
 
 public enum CraftingType {
 	SHAPED(21, "The C. Table Recipe (Shaped) for this item", VersionMaterial.CRAFTING_TABLE),
@@ -49,7 +48,7 @@ public enum CraftingType {
 	}
 
 	public boolean shouldAdd() {
-		return mustBeHigher.length == 0 || MMOLib.plugin.getVersion().isStrictlyHigher(mustBeHigher);
+		return mustBeHigher.length == 0 || MythicLib.plugin.getVersion().isStrictlyHigher(mustBeHigher);
 	}
 
 	public static CraftingType getBySlot(int slot) {

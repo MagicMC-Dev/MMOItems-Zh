@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class DeconstructItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();

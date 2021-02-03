@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.Edition;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class AnvilGUI extends PlayerInputHandler implements Listener {
 	private final int containerId;
@@ -34,21 +34,21 @@ public class AnvilGUI extends PlayerInputHandler implements Listener {
 		paperMeta.setDisplayName("Input text..");
 		paper.setItemMeta(paperMeta);
 
-		MMOLib.plugin.getVersion().getWrapper().handleInventoryCloseEvent(getPlayer());
-		MMOLib.plugin.getVersion().getWrapper().setActiveContainerDefault(getPlayer());
+		MythicLib.plugin.getVersion().getWrapper().handleInventoryCloseEvent(getPlayer());
+		MythicLib.plugin.getVersion().getWrapper().setActiveContainerDefault(getPlayer());
 
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 
-		final Object container = MMOLib.plugin.getVersion().getWrapper().newContainerAnvil(getPlayer());
+		final Object container = MythicLib.plugin.getVersion().getWrapper().newContainerAnvil(getPlayer());
 
-		inventory = MMOLib.plugin.getVersion().getWrapper().toBukkitInventory(container);
+		inventory = MythicLib.plugin.getVersion().getWrapper().toBukkitInventory(container);
 		inventory.setItem(0, paper);
 
-		containerId = MMOLib.plugin.getVersion().getWrapper().getNextContainerId(getPlayer());
-		MMOLib.plugin.getVersion().getWrapper().sendPacketOpenWindow(getPlayer(), containerId);
-		MMOLib.plugin.getVersion().getWrapper().setActiveContainer(getPlayer(), container);
-		MMOLib.plugin.getVersion().getWrapper().setActiveContainerId(container, containerId);
-		MMOLib.plugin.getVersion().getWrapper().addActiveContainerSlotListener(container, getPlayer());
+		containerId = MythicLib.plugin.getVersion().getWrapper().getNextContainerId(getPlayer());
+		MythicLib.plugin.getVersion().getWrapper().sendPacketOpenWindow(getPlayer(), containerId);
+		MythicLib.plugin.getVersion().getWrapper().setActiveContainer(getPlayer(), container);
+		MythicLib.plugin.getVersion().getWrapper().setActiveContainerId(container, containerId);
+		MythicLib.plugin.getVersion().getWrapper().addActiveContainerSlotListener(container, getPlayer());
 
 		open = true;
 	}
@@ -63,9 +63,9 @@ public class AnvilGUI extends PlayerInputHandler implements Listener {
 			return;
 		open = false;
 
-		MMOLib.plugin.getVersion().getWrapper().handleInventoryCloseEvent(getPlayer());
-		MMOLib.plugin.getVersion().getWrapper().setActiveContainerDefault(getPlayer());
-		MMOLib.plugin.getVersion().getWrapper().sendPacketCloseWindow(getPlayer(), containerId);
+		MythicLib.plugin.getVersion().getWrapper().handleInventoryCloseEvent(getPlayer());
+		MythicLib.plugin.getVersion().getWrapper().setActiveContainerDefault(getPlayer());
+		MythicLib.plugin.getVersion().getWrapper().sendPacketCloseWindow(getPlayer(), containerId);
 
 		HandlerList.unregisterAll(this);
 	}

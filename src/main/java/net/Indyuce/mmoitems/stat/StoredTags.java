@@ -7,8 +7,8 @@ import net.Indyuce.mmoitems.stat.data.StoredTagsData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.version.VersionMaterial;
 
 public class StoredTags extends InternalStat implements GemStoneStat {
 	public StoredTags() {

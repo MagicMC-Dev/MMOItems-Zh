@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.crafting.trigger;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.MMOLineConfig;
 
 public class MessageTrigger extends Trigger {
 	private final String message;

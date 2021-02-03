@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class LiveMMOItem extends ReadMMOItem {
 
@@ -20,7 +20,7 @@ public class LiveMMOItem extends ReadMMOItem {
 	 *            The item to read
 	 */
 	public LiveMMOItem(ItemStack item) {
-		this(MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
+		this(MythicLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}
 
 	/**

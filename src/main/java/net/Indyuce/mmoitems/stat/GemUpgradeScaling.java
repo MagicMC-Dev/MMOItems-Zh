@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import net.Indyuce.mmoitems.stat.type.ChooseStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.mmogroup.mmolib.version.VersionMaterial;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.Material;
 
 import java.util.ArrayList;

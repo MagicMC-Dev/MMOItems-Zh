@@ -9,8 +9,8 @@ import com.google.gson.JsonObject;
 
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class ProjectileData {
 	private final NBTItem sourceItem;
@@ -41,7 +41,7 @@ public class ProjectileData {
 
 	public void applyPotionEffects(LivingEntity target) {
 		if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
-			for (JsonElement entry : MMOLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
+			for (JsonElement entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
 				if (!entry.isJsonObject())
 					continue;
 

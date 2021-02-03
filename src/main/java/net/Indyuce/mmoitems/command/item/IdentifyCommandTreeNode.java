@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,7 +30,7 @@ public class IdentifyCommandTreeNode extends CommandTreeNode {
 		}
 
 		Player player = (Player) sender;
-		NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		String tag = item.getString("MMOITEMS_UNIDENTIFIED_ITEM");
 		if (tag.equals("")) {
 			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding is already identified.");

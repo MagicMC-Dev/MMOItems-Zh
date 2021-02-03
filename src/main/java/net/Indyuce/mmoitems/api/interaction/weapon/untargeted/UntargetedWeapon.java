@@ -5,7 +5,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.EquipmentSlot;
 
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public abstract class UntargetedWeapon extends Weapon {
 	protected final WeaponType weaponType;

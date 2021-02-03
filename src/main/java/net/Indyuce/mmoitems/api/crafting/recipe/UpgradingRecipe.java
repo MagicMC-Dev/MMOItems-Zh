@@ -21,7 +21,7 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class UpgradingRecipe extends Recipe {
 	private final ConfigMMOItem item;
@@ -77,7 +77,7 @@ public class UpgradingRecipe extends Recipe {
 		}
 
 		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new LiveMMOItem(MMOLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem())))
+		if (!(recipe.mmoitem = new LiveMMOItem(MythicLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem())))
 				.hasData(ItemStats.UPGRADE))
 			return false;
 

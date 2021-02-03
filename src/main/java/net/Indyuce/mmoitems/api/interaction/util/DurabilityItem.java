@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class DurabilityItem {
 	private final NBTItem nbtItem;
@@ -32,7 +32,7 @@ public class DurabilityItem {
 	 * @param item   Item with durability
 	 */
 	public DurabilityItem(Player player, ItemStack item) {
-		this(player, MMOLib.plugin.getVersion().getWrapper().getNBTItem(item));
+		this(player, MythicLib.plugin.getVersion().getWrapper().getNBTItem(item));
 	}
 
 	/**

@@ -23,9 +23,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.mojang.authlib.GameProfile;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class NoClipItem implements Listener {
 	private final Item item;
@@ -91,7 +91,7 @@ public class NoClipItem implements Listener {
 	 * https://i.imgur.com/oLjkeoD.png
 	 */
 	private ItemStack stripItemData(ItemStack oldItem) {
-		final NBTItem oldItemNBT = MMOLib.plugin.getVersion().getWrapper().getNBTItem(oldItem);
+		final NBTItem oldItemNBT = MythicLib.plugin.getVersion().getWrapper().getNBTItem(oldItem);
 
 		// Make new item.
 		final ItemStack newItem = new ItemStack(oldItem.getType());
@@ -110,7 +110,7 @@ public class NoClipItem implements Listener {
 		}
 
 		// Copy CustomModelData. Only if 1.14+
-		if (MMOLib.plugin.getVersion().isStrictlyHigher(1, 13) && oldItem.getItemMeta().hasCustomModelData() && oldItem.getItemMeta().getCustomModelData() != 0) {
+		if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 13) && oldItem.getItemMeta().hasCustomModelData() && oldItem.getItemMeta().getCustomModelData() != 0) {
 			newItemMeta.setCustomModelData(oldItem.getItemMeta().getCustomModelData());
 		}
 
@@ -136,7 +136,7 @@ public class NoClipItem implements Listener {
 
 		// Set ItemMeta and get item as NBTItem to continue work.
 		newItem.setItemMeta(newItemMeta);
-		final NBTItem newItemNBT = MMOLib.plugin.getVersion().getWrapper().getNBTItem(newItem);
+		final NBTItem newItemNBT = MythicLib.plugin.getVersion().getWrapper().getNBTItem(newItem);
 
 		// Copy Tier for item Glow.
 		newItemNBT.addTag(new ItemTag("MMOITEMS_TIER", oldItemNBT.getString("MMOITEMS_TIER").trim().isEmpty() ? null : oldItemNBT.getString("MMOITEMS_TIER")));

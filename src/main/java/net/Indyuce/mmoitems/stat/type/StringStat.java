@@ -1,13 +1,8 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -16,9 +11,13 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.List;
+import java.util.Optional;
 
 public class StringStat extends ItemStat {
 	public StringStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
@@ -51,7 +50,7 @@ public class StringStat extends ItemStat {
 		inv.getEditedSection().set(getPath(), message);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(
-				MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MMOLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
+				MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
 	}
 
 	@Override
@@ -63,7 +62,7 @@ public class StringStat extends ItemStat {
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		if (statData.isPresent()) {
-			String value = MMOLib.plugin.parseColors(statData.get().toString());
+			String value = MythicLib.plugin.parseColors(statData.get().toString());
 			value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
 

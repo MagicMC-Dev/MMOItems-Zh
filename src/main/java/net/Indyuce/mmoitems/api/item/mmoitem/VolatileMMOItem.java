@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
-import java.util.logging.Level;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.ChatColor;
+
+import java.util.logging.Level;
 
 public class VolatileMMOItem extends ReadMMOItem {
 

@@ -2,8 +2,8 @@ package net.Indyuce.mmoitems.api.item.util.crafting;
 
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -76,17 +76,17 @@ public class QueueItemDisplay extends ConfigItem {
 			 * apply color to lore
 			 */
 			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, MMOLib.plugin.parseColors(lore.get(n)));
+				lore.set(n, MythicLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = crafting.getRecipe().getOutput().getPreview();
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(MMOLib.plugin.parseColors(name.replace("#name#", meta.getDisplayName())));
+			meta.setDisplayName(MythicLib.plugin.parseColors(name.replace("#name#", meta.getDisplayName())));
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MMOLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString()))
+			return MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString()))
 					.toItem();
 		}
 	}

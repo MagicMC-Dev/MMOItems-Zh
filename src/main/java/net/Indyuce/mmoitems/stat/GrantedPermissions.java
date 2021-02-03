@@ -24,9 +24,9 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringListStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
 
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
@@ -56,7 +56,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 			inv.getEditedSection().set(getPath(), permissions.isEmpty() ? null : permissions);
 			inv.registerTemplateEdition();
 			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MMOLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
+					.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
 		}
 	}
 
@@ -75,7 +75,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
 			StringListData data = (StringListData) statData.get();
-			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MMOLib.plugin.parseColors(element)));
+			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(element)));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

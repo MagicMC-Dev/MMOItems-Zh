@@ -1,21 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
+import net.Indyuce.mmoitems.manager.CraftingManager.IngredientType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
-import net.Indyuce.mmoitems.manager.CraftingManager.IngredientType;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import java.util.*;
 
 public class IngredientInventory {
 
@@ -34,7 +29,7 @@ public class IngredientInventory {
 	public IngredientInventory(Inventory inv) {
 		loop: for (ItemStack item : inv.getContents())
 			if (item != null && item.getType() != Material.AIR) {
-				NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
+				NBTItem nbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
 				for (IngredientType ingredient : MMOItems.plugin.getCrafting().getIngredients()) {
 					if (ingredient.check(nbt)) {
 						addIngredient(nbt, ingredient);

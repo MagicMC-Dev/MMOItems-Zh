@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.command.mmoitems.revid;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
-import net.mmogroup.mmolib.command.api.Parameter;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
 import org.bukkit.command.CommandSender;
 
 public class RevisionIDCommandTreeNode extends CommandTreeNode {

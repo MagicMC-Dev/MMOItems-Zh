@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems.api.item.util.identify;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -9,9 +12,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
-import net.mmogroup.mmolib.api.item.NBTItem;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,11 +19,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UnidentifiedItem extends ConfigItem {
 	public UnidentifiedItem(Type type) {
@@ -93,20 +89,20 @@ public class UnidentifiedItem extends ConfigItem {
 				String str = lore.get(n);
 				for (String placeholder : placeholders.keySet())
 					str = str.replace("#" + placeholder + "#", placeholders.get(placeholder));
-				lore.set(n, MMOLib.plugin.parseColors(str.replace("{range}", "").replace("{tier}", "")));
+				lore.set(n, MythicLib.plugin.parseColors(str.replace("{range}", "").replace("{tier}", "")));
 			}
 
 			/*
 			 * apply changes to item
 			 */
 			item.getItem().setAmount(1);
-			ItemStack unidentified = MMOLib.plugin.getVersion().getWrapper().copyTexture(item)
+			ItemStack unidentified = MythicLib.plugin.getVersion().getWrapper().copyTexture(item)
 					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(new DynamicLore(item).build()))).toItem();
 			unidentified.setAmount(amount);
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);
-			meta.setDisplayName(MMOLib.plugin.parseColors(name));
+			meta.setDisplayName(MythicLib.plugin.parseColors(name));
 			meta.setLore(lore);
 			unidentified.setItemMeta(meta);
 

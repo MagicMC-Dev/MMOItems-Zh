@@ -1,23 +1,22 @@
 package net.Indyuce.mmoitems.comp.parse.placeholders;
 
-import java.text.DecimalFormat;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.math.EvaluatedFormula;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.util.AltChar;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.math.EvaluatedFormula;
-import net.mmogroup.mmolib.api.player.MMOPlayerData;
-import net.mmogroup.mmolib.api.util.AltChar;
+import java.text.DecimalFormat;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
@@ -94,15 +93,15 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 			return null;
 
 		if (identifier.equals("durability"))
-			return "" + (int) MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
+			return "" + (int) MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
 					.getDouble("MMOITEMS_DURABILITY");
 
 		if (identifier.equals("durability_max"))
-			return "" + (int) MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
+			return "" + (int) MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
 					.getDouble("MMOITEMS_MAX_DURABILITY");
 
 		if (identifier.equals("durability_ratio")) {
-			NBTItem item = MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand());
+			NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand());
 			double durability = item.getDouble("MMOITEMS_DURABILITY");
 			double maxDurability = item.getDouble("MMOITEMS_MAX_DURABILITY");
 			return oneDigit.format(durability / maxDurability * 100);
@@ -120,14 +119,14 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	}
 
 	private double calculateDefense(MMOPlayerData data) {
-		String formula = MMOLib.plugin.getConfig().getString("defense-application", "#damage# * (1 - (#defense# / (#defense# + 100)))");
+		String formula = MythicLib.plugin.getConfig().getString("defense-application", "#damage# * (1 - (#defense# / (#defense# + 100)))");
 		formula = formula.replace("#defense#", String.valueOf(data.getStatMap().getStat("DEFENSE")));
 		formula = formula.replace("#damage#", String.valueOf(100));
 		return Math.max(0, new EvaluatedFormula(formula).evaluate());
 	}
 	
 	private String getCurrentDurabilityBar(ItemStack item, String barChar, int length) {
-		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
+		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
 		double durability = nbtItem.getDouble("MMOITEMS_DURABILITY");
 		double maxDurability = nbtItem.getDouble("MMOITEMS_MAX_DURABILITY");
 		long r = Math.round(durability / maxDurability * length);

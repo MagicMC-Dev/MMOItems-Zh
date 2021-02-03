@@ -16,8 +16,8 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeEdition;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.AltChar;
 
 public class GuiListener implements Listener {
 

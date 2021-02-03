@@ -12,8 +12,8 @@ import net.Indyuce.mmocore.api.quest.objective.Objective;
 import net.Indyuce.mmocore.comp.citizens.CitizenInteractEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.mmogroup.mmolib.api.MMOLineConfig;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class GetMMOItemObjective extends Objective {
 	private final Type type;

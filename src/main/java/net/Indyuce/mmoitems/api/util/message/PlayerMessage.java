@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 
 public class PlayerMessage {
 	private String message;
@@ -41,7 +41,7 @@ public class PlayerMessage {
 			if (Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
 				PlayerData.get(player).setActionBarTimeOut(60);
 
-			MMOLib.plugin.getVersion().getWrapper().sendActionBar(player, message);
+			MythicLib.plugin.getVersion().getWrapper().sendActionBar(player, message);
 		} else
 			player.sendMessage(message);
 	}

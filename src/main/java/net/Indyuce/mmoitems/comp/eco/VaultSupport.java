@@ -9,7 +9,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import net.mmogroup.mmolib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.AltChar;
 
 public class VaultSupport {
 	private final Economy economy;

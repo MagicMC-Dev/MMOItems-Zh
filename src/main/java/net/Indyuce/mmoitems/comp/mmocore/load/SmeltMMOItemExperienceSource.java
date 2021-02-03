@@ -13,9 +13,9 @@ import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.experience.source.type.SpecificExperienceSource;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.manager.profession.ExperienceManager;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.MMOLineConfig;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTItem> {
 	private final String type, id;
@@ -39,7 +39,7 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
 					return;
 
 				ItemStack caught = event.getResult();
-				NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(caught);
+				NBTItem nbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(caught);
 				if (!nbt.hasType())
 					return;
 

@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.ItemTag;
 
 public class DisableStat extends BooleanStat {
 	public DisableStat(String id, Material material, String name, String... lore) {

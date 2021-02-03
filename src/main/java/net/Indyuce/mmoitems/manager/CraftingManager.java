@@ -1,6 +1,9 @@
 package net.Indyuce.mmoitems.manager;
 
 import com.google.gson.JsonParser;
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
@@ -12,9 +15,6 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.VanillaIngredient;
 import net.Indyuce.mmoitems.api.crafting.trigger.*;
 import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
 import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicMobsSkillTrigger;
-import net.mmogroup.mmolib.api.MMOLineConfig;
-import net.mmogroup.mmolib.api.item.NBTItem;
-import net.mmogroup.mmolib.api.util.AltChar;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 

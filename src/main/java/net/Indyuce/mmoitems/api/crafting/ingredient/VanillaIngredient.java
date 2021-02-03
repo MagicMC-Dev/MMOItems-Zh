@@ -6,8 +6,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.MMOLineConfig;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.MMOLineConfig;
 
 public class VanillaIngredient extends Ingredient {
 	private final Material material;
@@ -24,7 +24,7 @@ public class VanillaIngredient extends Ingredient {
 		config.validate("type");
 
 		material = Material.valueOf(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
-		displayName = config.contains("name") ? MMOLib.plugin.parseColors(config.getString("name")) : null;
+		displayName = config.contains("name") ? MythicLib.plugin.parseColors(config.getString("name")) : null;
 
 		display = config.contains("display") ? config.getString("display") : MMOUtils.caseOnWords(material.name().toLowerCase().replace("_", " "));
 	}

@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class CheckTagsCommandTreeNode extends CommandTreeNode {
 	public CheckTagsCommandTreeNode(CommandTreeNode parent) {
@@ -21,7 +21,7 @@ public class CheckTagsCommandTreeNode extends CommandTreeNode {
 
 		Player player = (Player) sender;
 		player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-		for (String s : MMOLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand()).getTags())
+		for (String s : MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand()).getTags())
 			player.sendMessage("- " + s);
 		return CommandResult.SUCCESS;
 	}

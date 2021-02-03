@@ -51,6 +51,10 @@
 	</build>
 	<repositories>
 		<repository>
+			<id>lumine-repo</id>
+			<url>https://mvn.lumine.io/repository/maven-public/</url>
+		</repository>
+		<repository>
 			<id>mojang</id>
 			<url>https://libraries.minecraft.net/</url>
 		</repository>
@@ -86,10 +90,15 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOCore</artifactId>
-			<version>1.5</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/MMOCore.jar</systemPath>
+			<version>1.6.2</version>
+			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.lumine</groupId>
+			<artifactId>MythicLib</artifactId>
+			<version>0.0.1-20210203.081118-2</version>
+		</dependency>
+		<!--
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOLib</artifactId>
@@ -97,6 +106,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
 		</dependency>
+		-->
 
 		<!-- APIs -->
 		<dependency>

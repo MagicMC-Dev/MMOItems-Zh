@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.mmogroup.mmolib.MMOLib;
+import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class UpgradeData implements StatData, RandomStatData {
@@ -72,7 +72,7 @@ public class UpgradeData implements StatData, RandomStatData {
 		}
 
 		// change display name
-		String suffix = MMOLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
 			if (mmoitem.hasData(ItemStats.NAME)) {
 				StringData nameData = (StringData) mmoitem.getData(ItemStats.NAME);

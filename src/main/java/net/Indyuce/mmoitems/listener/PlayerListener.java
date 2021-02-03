@@ -28,9 +28,9 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.item.NBTItem;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class PlayerListener implements Listener {
 
@@ -87,7 +87,7 @@ public class PlayerListener implements Listener {
 		Iterator<ItemStack> iterator = event.getDrops().iterator();
 		while (iterator.hasNext()) {
 			ItemStack item = iterator.next();
-			NBTItem nbt = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item);
+			NBTItem nbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
 
 			/*
 			 * not a perfect check but it's very sufficient and so we avoid
@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
 		if (!item.hasItem())
 			return;
 
-		NBTItem nbtItem = MMOLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
+		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
 		Type type = Type.get(nbtItem.getType());
 		PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
 

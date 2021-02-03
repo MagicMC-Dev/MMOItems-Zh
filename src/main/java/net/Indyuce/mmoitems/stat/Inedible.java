@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.ItemTag;
 
 public class Inedible extends BooleanStat {
 	public Inedible() {

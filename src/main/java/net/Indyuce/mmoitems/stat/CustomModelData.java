@@ -6,15 +6,15 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.mmogroup.mmolib.MMOLib;
-import net.mmogroup.mmolib.api.item.ItemTag;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import org.bukkit.Material;
 
 public class CustomModelData extends DoubleStat implements GemStoneStat {
 	public CustomModelData() {
 		super("CUSTOM_MODEL_DATA", Material.PAINTING, "Custom Model Data", new String[] { "Your 1.14+ model data." }, new String[] { "!block", "all" });
 
-		if (MMOLib.plugin.getVersion().isBelowOrEqual(1, 13))
+		if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 13))
 			disable();
 	}
 

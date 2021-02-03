@@ -3,7 +3,7 @@ version: ${project.version}
 main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce
 description: ${project.description}
-depend: [MMOLib]
+depend: [MythicLib]
 softdepend: [WorldGuard,Holograms,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MythicMobs,MMOInventory,PlaceholderAPI,TrHologram,Vault]
 api-version: 1.13
 commands:

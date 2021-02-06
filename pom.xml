@@ -96,7 +96,7 @@
 		<dependency>
 			<groupId>io.lumine</groupId>
 			<artifactId>MythicLib</artifactId>
-			<version>0.0.1-20210203.081118-2</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!--
 		<dependency>

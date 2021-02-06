@@ -5,6 +5,7 @@ import net.Indyuce.mmocore.api.block.BlockInfo.RegeneratingBlock;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 public class MMOItemsBlockType implements BlockType {
@@ -23,14 +24,6 @@ public class MMOItemsBlockType implements BlockType {
 	public int getBlockId() {
 		return id;
 	}
-  /** TODO this broke with the mythiclib change when i updated mmocores versions, this will need fixed.
-	@Override
-	public void place(Location loc, RegeneratingBlock regenerating) {
-		CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(id);
-		loc.getBlock().setType(block.getState().getType());
-		loc.getBlock().setBlockData(block.getState().getBlockData());
-	}
-	*/
 
 	public static boolean matches(Block block) {
 		return MMOItems.plugin.getCustomBlocks().isMushroomBlock(block.getType());
@@ -38,8 +31,11 @@ public class MMOItemsBlockType implements BlockType {
 
 	@Override
 	public void place(RegeneratingBlock regeneratingBlock) {
+		Location loc = regeneratingBlock.getLocation();
 		CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(id);
-		//MISSING METHODS
+
+		loc.getBlock().setType(block.getState().getType());
+		loc.getBlock().setBlockData(block.getState().getBlockData());
 	}
 
 	@Override

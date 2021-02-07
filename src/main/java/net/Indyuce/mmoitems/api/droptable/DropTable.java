@@ -1,25 +1,18 @@
 package net.Indyuce.mmoitems.api.droptable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.item.BlockDropItem;
 import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.logging.Level;
 
 public class DropTable {
 	private static final Random random = new Random();
@@ -28,7 +21,7 @@ public class DropTable {
 	private final Map<String, Subtable> subtables = new HashMap<>();
 
 	public DropTable(ConfigurationSection config) {
-		Validate.notNull(config, "Could not read config");
+		Validate.notNull(config, "Could not read the config");
 		for (String key : config.getKeys(false))
 			try {
 

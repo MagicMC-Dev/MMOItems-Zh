@@ -112,6 +112,7 @@ public class ItemStats {
 			KNOCKBACK_RESISTANCE = new KnockbackResistance(),
 			MOVEMENT_SPEED = new MovementSpeed(),
 			TWO_HANDED = new BooleanStat("TWO_HANDED", Material.IRON_INGOT, "Two Handed", new String[]{"If set to true, a player will be", "significantly slower if holding two", "items, one being Two Handed."}, new String[]{"piercing", "slashing", "blunt", "offhand", "range", "tool"}),
+			EQUIP_PRIORITY = new DoubleStat("EQUIP_PRIORITY", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "Equip Priority", new String[]{"Sets the level of priority this item has for the", "right click to swap equipped armor feature."}),
 
 	// Permanent Effects
 	PERM_EFFECTS = new PermanentEffects(),

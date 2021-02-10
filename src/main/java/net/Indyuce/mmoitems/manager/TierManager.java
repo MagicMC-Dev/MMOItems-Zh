@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class TierManager implements Reloadable {
+public class TierManager implements Reloadable{
 	private final Map<String, ItemTier> tiers = new HashMap<>();
 
 	public TierManager() {
@@ -59,4 +59,5 @@ public class TierManager implements Reloadable {
 			return null;
 		}
 	}
+
 }

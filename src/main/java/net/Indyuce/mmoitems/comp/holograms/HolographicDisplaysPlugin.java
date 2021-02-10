@@ -1,13 +1,11 @@
 package net.Indyuce.mmoitems.comp.holograms;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import net.Indyuce.mmoitems.MMOItems;
 
 public class HolographicDisplaysPlugin extends HologramSupport {
 	public HolographicDisplaysPlugin() {
@@ -22,4 +20,5 @@ public class HolographicDisplaysPlugin extends HologramSupport {
 			hologram.getVisibilityManager().hideTo(player);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, hologram::delete, 20);
 	}
+
 }

@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems;
 
 import io.lumine.mythic.lib.version.SpigotPlugin;
+import io.lumine.mythic.utils.plugin.LuminePlugin;
 import net.Indyuce.mmoitems.api.*;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -40,7 +41,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 
-public class MMOItems extends JavaPlugin {
+public class MMOItems extends LuminePlugin {
 	public static MMOItems plugin;
 
 	// Increment this when making breaking changes to items.
@@ -74,6 +74,7 @@ public class MMOItems extends JavaPlugin {
 	private TierManager tierManager;
 	private StatManager statManager;
 	private SetManager setManager;
+	private EquipListener equipListener;
 
 	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
@@ -83,7 +84,8 @@ public class MMOItems extends JavaPlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
-	public void onLoad() {
+	@Override
+	public void load() {
 		plugin = this;
 
 		if (getServer().getPluginManager().getPlugin("WorldGuard") != null)
@@ -118,8 +120,8 @@ public class MMOItems extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
 			statManager.register(McMMOHook.disableMcMMORepair);
 	}
-
-	public void onEnable() {
+	@Override
+	public void enable() {
 		new SpigotPlugin(39267, this).checkForUpdate();
 		new MMOItemsMetrics();
 
@@ -162,6 +164,7 @@ public class MMOItems extends JavaPlugin {
 		dropTableManager = new DropTableManager();
 		worldGenManager = new WorldGenManager();
 		blockManager = new BlockManager();
+		equipListener = new EquipListener();
 
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null)
 			vaultSupport = new VaultSupport();
@@ -297,7 +300,8 @@ public class MMOItems extends JavaPlugin {
 		getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
 	}
 
-	public void onDisable() {
+	@Override
+	public void disable() {
 
 		// save player data
 		PlayerData.getLoaded().forEach(PlayerData::save);
@@ -463,6 +467,9 @@ public class MMOItems extends JavaPlugin {
 
 	public HologramSupport getHolograms() {
 		return hologramSupport;
+	}
+	public EquipListener getEquipListener(){
+		return equipListener;
 	}
 
 	public TemplateManager getTemplates() {

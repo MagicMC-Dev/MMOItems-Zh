@@ -1,7 +1,10 @@
 package net.Indyuce.mmoitems.api.interaction.util;
 
-import java.util.Random;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -9,16 +12,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.item.util.DynamicLore;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.Random;
 
 public class DurabilityItem {
 	private final NBTItem nbtItem;
 	private final Player player;
-	private final int maxDurability, unbreakingLevel;
+	private int maxDurability = 0;
+	private int unbreakingLevel = 0;
 
 	private int durability;
 
@@ -43,8 +43,14 @@ public class DurabilityItem {
 	 * @param item   Item with durability
 	 */
 	public DurabilityItem(Player player, NBTItem item) {
+
+
 		this.player = player;
 		this.nbtItem = item;
+
+		if(!item.hasTag("MMOITEMS_MAX_DURABILITY")){
+			return;
+		}
 
 		durability = nbtItem.getInteger("MMOITEMS_DURABILITY");
 		maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");

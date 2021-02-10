@@ -17,8 +17,7 @@ import java.util.Random;
 public class DurabilityItem {
 	private final NBTItem nbtItem;
 	private final Player player;
-	private int maxDurability = 0;
-	private int unbreakingLevel = 0;
+	private int maxDurability , unbreakingLevel;
 
 	private int durability;
 
@@ -48,9 +47,6 @@ public class DurabilityItem {
 		this.player = player;
 		this.nbtItem = item;
 
-		if(!item.hasTag("MMOITEMS_MAX_DURABILITY")){
-			return;
-		}
 
 		durability = nbtItem.getInteger("MMOITEMS_DURABILITY");
 		maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");

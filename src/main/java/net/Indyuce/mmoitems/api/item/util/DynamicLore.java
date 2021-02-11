@@ -4,9 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.utils.text.Component;
+import io.lumine.mythic.utils.text.minimessage.MiniMessage;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,25 +20,17 @@ public class DynamicLore {
 	}
 	
 	public ItemStack build() {
-		ItemStack stack = item.toItem();
 		if (item.hasTag("MMOITEMS_DYNAMIC_LORE")) {
 			JsonArray array = MythicLib.plugin.getJson().parse(item.getString("MMOITEMS_DYNAMIC_LORE"), JsonArray.class);
-			List<String> lore = new ArrayList<>();
+			List<Component> lore = new ArrayList<>(array.size());
 			for (JsonElement e : array) {
 				String s = replace(e.getAsString());
 				if(!s.equals("!INVALID!"))
-					lore.add(s);
+					lore.add(MiniMessage.get().parse(s));
 			}
-			ItemMeta meta = stack.getItemMeta();
-			meta.setLore(lore);
-			stack.setItemMeta(meta);
-
+			item.setLoreComponents(lore);
 		}
-		NBTItem nbt = NBTItem.get(stack);
-		if (nbt.getLoreComponents() != null) {
-			nbt.setLoreComponents(MythicLib.plugin.getComponentBuilder().parse(nbt.getLoreComponents()));
-		}
-		return nbt.toItem();
+		return item.toItem();
 	}
 	
 	private String replace(String input) {

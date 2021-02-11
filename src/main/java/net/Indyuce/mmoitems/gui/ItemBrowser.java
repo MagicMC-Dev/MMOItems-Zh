@@ -1,18 +1,18 @@
 package net.Indyuce.mmoitems.gui;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ComponentUtil;
+import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.mythic.utils.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -129,48 +129,24 @@ public class ItemBrowser extends PluginInventory {
 				continue;
 			}
 			NBTItem nbtItem = NBTItem.get(item);
+			List<Component> lore = nbtItem.getLoreComponents();
 
-			ItemStack stack;
-			List<BaseComponent> lore = nbtItem.getLoreComponents();
-			if(lore == null) {
-				stack = nbtItem.toItem();
-				ItemMeta meta = stack.getItemMeta();
-				List<String> newLore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
-				newLore.add("");
-				if (deleteMode) {
-					newLore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
-					meta.setDisplayName(ChatColor.RED + "DELETE: " + meta.getDisplayName());
-				}
-				newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
-				newLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
-				meta.setLore(newLore);
-				stack.setItemMeta(meta);
-			}
-			else {
-				List<BaseComponent> newLore = new ArrayList<>();
-				newLore.add(toComponent(""));
-				if (deleteMode) {
-					newLore.add(toComponent(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
-
-					BaseComponent display = nbtItem.getDisplayNameComponent();
-					if (display != null && display.getExtra() != null) {
-						List<BaseComponent> extra = new ArrayList<>(display.getExtra());
-						extra.add(0, toComponent(ChatColor.RED + "DELETE: "));
-						display.setExtra(extra);
-						nbtItem.setDisplayNameComponent(display);
-					}
-
-				} else {
-					newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
-					newLore.add(toComponent(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
-				}
-
-				lore.addAll(newLore);
-				nbtItem.setLoreComponents(lore);
-				stack = nbtItem.toItem();
+			lore.add(Component.empty());
+			if (deleteMode) {
+				lore.add(ComponentUtil.fromString(
+						ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
+				nbtItem.setDisplayNameComponent(Component.text()
+						.append(ComponentUtil.fromString(ChatColor.RED + "DELETE: "))
+						.append(nbtItem.getDisplayNameComponent())
+						.build());
 			}
 
-			cached.put(template.getId(), stack);
+			lore.add(ComponentUtil.fromString(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
+			lore.add(ComponentUtil.fromString(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
+
+			nbtItem.setLoreComponents(lore);
+
+			cached.put(template.getId(), nbtItem.toItem());
 
 			inv.setItem(slots[n++], cached.get(template.getId()));
 		}
@@ -299,13 +275,8 @@ public class ItemBrowser extends PluginInventory {
 	}
 
 	private ItemStack removeLastLoreLines(NBTItem item) {
-		List<BaseComponent> lore = item.getLoreComponents();
+		List<Component> lore = item.getLoreComponents();
 		item.setLoreComponents(lore.subList(0, lore.size() - 3));
 		return item.toItem();
-	}
-	private BaseComponent toComponent(String text) {
-		BaseComponent component = TextComponent.fromLegacyText(text)[0];
-		component.setItalic(false);
-		return component;
 	}
 }

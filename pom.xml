@@ -103,7 +103,7 @@
 <!--		<dependency>-->
 <!--			<groupId>io.lumine</groupId>-->
 <!--			<artifactId>MythicLib</artifactId>-->
-<!--			<version>1.0.0</version>-->
+<!--			<version>1.0. 0</version>-->
 <!--			<scope>system</scope>-->
 <!--			<systemPath>${basedir}/lib/MythicLib.jar</systemPath>-->
 <!--		</dependency>-->

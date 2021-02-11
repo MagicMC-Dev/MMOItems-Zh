@@ -20,7 +20,7 @@ public class EquipListener implements Reloadable, Listener {
                 /*
                  *    We only care about listening for right click and shift right clicks.
                  */
-                if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+                if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR))) {
                     return;
                 }
 

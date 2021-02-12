@@ -90,13 +90,14 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOCore</artifactId>
-			<version>1.6.2</version>
+			<version>1.7.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.lumine</groupId>
 			<artifactId>MythicLib</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- USING THIS FOR INTERNAL TESTING -->

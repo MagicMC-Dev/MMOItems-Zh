@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.utils.text.Component;
+import io.lumine.mythic.utils.text.format.TextDecoration;
 import io.lumine.mythic.utils.text.minimessage.MiniMessage;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -11,7 +13,11 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.*;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.StoredTagsData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -24,7 +30,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
@@ -159,11 +169,14 @@ public class ItemStackBuilder {
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
 		item.setItemMeta(meta);
-		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+		NBTItem nbtItem = NBTItem.get(item);
 
 		nbtItem.addTag(tags);
 
-		nbtItem.setDisplayNameComponent(MiniMessage.get().parse(meta.getDisplayName()));
+		nbtItem.setDisplayNameComponent(Component.text()
+				.append(MiniMessage.get().parse(meta.getDisplayName())
+				.decoration(TextDecoration.ITALIC, false))
+				.build());
 
 		return nbtItem;
 	}

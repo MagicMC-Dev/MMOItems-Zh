@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.utils.text.Component;
+import io.lumine.mythic.utils.text.format.TextDecoration;
 import io.lumine.mythic.utils.text.minimessage.MiniMessage;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +27,10 @@ public class DynamicLore {
 			for (JsonElement e : array) {
 				String s = replace(e.getAsString());
 				if(!s.equals("!INVALID!"))
-					lore.add(MiniMessage.get().parse(s));
+					lore.add(Component.text()
+							.append(MiniMessage.get().parse(s))
+							.decoration(TextDecoration.ITALIC, false)
+							.build());
 			}
 			item.setLoreComponents(lore);
 		}

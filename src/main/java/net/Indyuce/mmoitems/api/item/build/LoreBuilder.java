@@ -1,9 +1,14 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
-import io.lumine.mythic.lib.MythicLib;
+import org.bukkit.ChatColor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LoreBuilder {
 	private final List<String> lore = new ArrayList<>();
@@ -43,7 +48,7 @@ public class LoreBuilder {
 			str = str.replace("{" + holder + "}", placeholders.getOrDefault(holder, "PHE"));
 		}
 
-		return MythicLib.plugin.parseColors(str);
+		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 
 	/**
@@ -121,7 +126,8 @@ public class LoreBuilder {
 		 */
 		final List<String> cleaned = new ArrayList<>();
 		for (String s : lore)
-			cleaned.addAll(Arrays.asList(MythicLib.plugin.parseColors(s.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n")));
+			cleaned.addAll(Arrays.asList(ChatColor.translateAlternateColorCodes('&',
+					s.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n")));
 
 		return cleaned;
 	}

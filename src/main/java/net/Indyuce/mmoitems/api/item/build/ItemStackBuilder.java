@@ -226,7 +226,6 @@ public class ItemStackBuilder {
 								mmoitem.setData(stat, new DoubleData(0));
 
 							calculateBase(stat, info, level);
-
 							updateStat(stat, info, level);
 
 							double value = getValue(stat);

@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.manager.Reloadable;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class EquipListener implements Reloadable, Listener {
@@ -21,6 +22,9 @@ public class EquipListener implements Reloadable, Listener {
                  *    We only care about listening for right click and shift right clicks.
                  */
                 if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR))) {
+                    return;
+                }
+                if(!(event.getHand().equals(EquipmentSlot.HAND))){
                     return;
                 }
 

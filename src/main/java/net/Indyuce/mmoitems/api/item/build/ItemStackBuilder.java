@@ -183,7 +183,7 @@ public class ItemStackBuilder {
 
 	/**
 	 * @return Builds the item
-	 */
+	 */E
 	public ItemStack build() {
 		return new DynamicLore(buildNBT()).build();
 	}

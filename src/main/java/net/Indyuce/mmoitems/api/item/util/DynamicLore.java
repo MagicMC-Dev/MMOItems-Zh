@@ -4,9 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.ComponentUtil;
 import io.lumine.mythic.utils.text.Component;
 import io.lumine.mythic.utils.text.format.TextDecoration;
-import io.lumine.mythic.utils.text.minimessage.MiniMessage;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,7 +28,7 @@ public class DynamicLore {
 				String s = replace(e.getAsString());
 				if(!s.equals("!INVALID!"))
 					lore.add(Component.text()
-							.append(MiniMessage.get().parse(s))
+							.append(ComponentUtil.legacyMiniMessage(s))
 							.decoration(TextDecoration.ITALIC, false)
 							.build());
 			}

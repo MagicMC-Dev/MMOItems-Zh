@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
-import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +47,7 @@ public class LoreBuilder {
 			str = str.replace("{" + holder + "}", placeholders.getOrDefault(holder, "PHE"));
 		}
 
-		return ChatColor.translateAlternateColorCodes('&', str);
+		return str;
 	}
 
 	/**
@@ -126,8 +125,7 @@ public class LoreBuilder {
 		 */
 		final List<String> cleaned = new ArrayList<>();
 		for (String s : lore)
-			cleaned.addAll(Arrays.asList(ChatColor.translateAlternateColorCodes('&',
-					s.replace("{bar}", "").replace("{sbar}", "")).split("\\\\n")));
+			cleaned.addAll(Arrays.asList(s.replace("{bar}", "").replace("{sbar}", "").split("\\\\n")));
 
 		return cleaned;
 	}

@@ -25,7 +25,7 @@ public class DisplayName extends StringStat {
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
 
-		item.getMeta().setDisplayName(ChatColor.translateAlternateColorCodes('&', format));
+		item.getMeta().setDisplayName(format);
 	}
 
 	@Override

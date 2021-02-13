@@ -121,16 +121,24 @@ public class StatHistory<S extends StatData> {
         StatHistory<StatData> hist = ofItem.getStatHistory(ofStat);
 
         // Found? Thats it
-        if (hist != null) { MMOItems.Log("Found Stat History of \u00a76" + ofStat.getNBTPath() + "\u00a77 in this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId()); return hist; }
-        MMOItems.Log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
+        if (hist != null) {
+            //GEM//MMOItems.Log("Found Stat History of \u00a76" + ofStat.getNBTPath() + "\u00a77 in this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
+            return hist; }
+        //GEM//MMOItems.Log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
 
         // That is Mergeable right...
         Validate.isTrue(ofStat.getClearStatData() instanceof Mergeable, "Non-Mergeable stat data wont have a Stat History; they cannot be modified dynamically in the first place.");
 
         // Get original data
         StatData original = ofItem.getData(ofStat);
-        if (original == null) { original = ofStat.getClearStatData(); MMOItems.Log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc."); }
-        else { original = ((Mergeable) original).cloneData(); MMOItems.Log("\u00a7a   +\u00a77 Found original data"); }
+        if (original == null) {
+            original = ofStat.getClearStatData();
+            //GEM// MMOItems.Log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc.");
+        }
+        else {
+            original = ((Mergeable) original).cloneData();
+            //GEM//MMOItems.Log("\u00a7a   +\u00a77 Found original data");
+        }
 
         // Create new
         hist = new StatHistory<>(ofItem, ofStat, original);

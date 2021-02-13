@@ -96,7 +96,7 @@ public class GemStone extends UseItem {
 
 				// If the data is MERGEABLE
 				if (data instanceof Mergeable) {
-					MMOItems.Log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
+					//GEM//MMOItems.Log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
 
 					// Merge into it
 					targetMMO.mergeData(stat, data, gemData.getHistoricUUID());

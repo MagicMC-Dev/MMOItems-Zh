@@ -59,25 +59,25 @@ public class MMOItem implements ItemReference {
 	 * stored as a GemStone in the history, allowing to be removed from the item with that same UUID.
 	 */
 	public void mergeData(@NotNull ItemStat stat, @NotNull StatData data, @Nullable UUID associatedGemStone) {
-		MMOItems.Log("Merging stone stat \u00a76" + stat.getNBTPath() + "\u00a77 into \u00a7c" + getType().getName() + " " + getId());
+		//GEM//MMOItems.Log("Merging stone stat \u00a76" + stat.getNBTPath() + "\u00a77 into \u00a7c" + getType().getName() + " " + getId());
 
 		// Do we already have the data?
 		if (data instanceof Mergeable) {
-			MMOItems.Log("\u00a7a + \u00a77Mergeable");
+			//GEM//MMOItems.Log("\u00a7a + \u00a77Mergeable");
 
 			// Prepare to merge: Gather History (Also initializes the ORIGINAL stats)
 			StatHistory<StatData> sHistory = StatHistory.From(this, stat);
 
 			// As GemStone or as External?
 			if (associatedGemStone != null) {
-				MMOItems.Log(" \u00a79++\u00a77 As Gemstone \u00a7b" + associatedGemStone.toString());
+				//GEM//MMOItems.Log(" \u00a79++\u00a77 As Gemstone \u00a7b" + associatedGemStone.toString());
 
 				// As GemStone
 				sHistory.registerGemstoneData(associatedGemStone, data);
 
 			// As External
 			} else {
-				MMOItems.Log(" \u00a7c++\u00a77 As External");
+				//GEM//MMOItems.Log(" \u00a7c++\u00a77 As External");
 
 				// As External, UUIDless modifier
 				sHistory.registerExternalData(data);

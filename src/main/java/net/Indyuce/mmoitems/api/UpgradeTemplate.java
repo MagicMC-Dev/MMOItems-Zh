@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.apache.commons.lang.Validate;
@@ -59,8 +60,12 @@ public class UpgradeTemplate {
 			// If it has the data to begin with?
 			if (mmoitem.hasData(stat)) {
 
-				// Initializes original stats.
-				StatHistory.From(mmoitem, stat);
+				// ONLY if mergeable
+				if (stat.getClearStatData() instanceof Mergeable) {
+
+					// Initializes original stats.
+					StatHistory.From(mmoitem, stat);
+				}
 
 				// Applies changes
 				((Upgradable) stat).apply(mmoitem, stats.get(stat));

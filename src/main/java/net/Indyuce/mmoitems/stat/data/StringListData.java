@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class StringListData implements StatData, RandomStatData, Mergeable {
 	private final List<String> list;
@@ -48,4 +49,7 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 		Validate.isTrue(data instanceof StringListData, "Cannot merge two different stat data types");
 		list.addAll(((StringListData) data).list);
 	}
+
+	@Override
+	public @NotNull StatData cloneData() { return new StringListData(getList()); }
 }

@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockID extends DoubleStat {
 
@@ -14,7 +15,7 @@ public class BlockID extends DoubleStat {
     }
 
     @Override
-    public void whenApplied(ItemStackBuilder item, StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
         super.whenApplied(item, data);
         item.addItemTag(new ItemTag("CustomModelData", (int) ((DoubleData) data).getValue() +1000));
     }

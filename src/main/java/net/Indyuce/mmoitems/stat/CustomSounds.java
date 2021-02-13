@@ -1,8 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,6 +28,8 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CustomSounds extends ItemStat implements GemStoneStat {
 	public CustomSounds() {
@@ -50,7 +54,7 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new SoundsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
@@ -63,7 +67,7 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String soundsPath = (String) info[0];
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3, message + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
@@ -101,31 +105,117 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public @NotNull StatData getClearStatData() {
+		return new SoundListData();
+	}
+
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
+
+	@Override
+	public @NotNull ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Make Array
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Well that
 		SoundListData sounds = (SoundListData) data;
 
+		// Add
 		sounds.getCustomSounds().forEach(sound -> {
 			SoundData value = sounds.get(sound);
 			String s = sound.getName().replace(" ", "_").toUpperCase();
 
-			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s, value.getSound()));
-			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_VOL", value.getVolume()));
-			item.addItemTag(new ItemTag("MMOITEMS_SOUND_" + s + "_PIT", value.getPitch()));
+			ret.add(new ItemTag("MMOITEMS_SOUND_" + s, value.getSound()));
+			ret.add(new ItemTag("MMOITEMS_SOUND_" + s + "_VOL", value.getVolume()));
+			ret.add(new ItemTag("MMOITEMS_SOUND_" + s + "_PIT", value.getPitch()));
 		});
+
+		// Yes
+		return ret;
+	}
+
+	public @Nullable StatData getLoadedNBT(@NotNull ArrayList<ItemTag> data) {
+
+		// Something to build
+		SoundListData sounds = new SoundListData();
+
+		// For each value
+		for (CustomSound sound : CustomSound.values()) {
+
+			// Find tag?
+			ItemTag soundTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + sound.name(), data);
+			ItemTag volumeTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + sound.name() + "_VOL", data);
+			ItemTag pitchTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + sound.name() + "_PIT", data);
+
+			// Not null righ
+			if (soundTag != null && volumeTag != null && pitchTag != null) {
+
+				// Get as String
+				String soundName = (String) soundTag.getValue();
+				Double volume = (Double) volumeTag.getValue();
+				Double pitch = (Double) pitchTag.getValue();
+
+				// If valid
+				if (!soundName.isEmpty()) {
+
+					// Set
+					sounds.set(sound, new SoundData(soundName, volume, pitch));
+				}
+			}
+		}
+
+		// Return that amount
+		if (sounds.getCustomSounds().size() > 0) {
+
+			// Yes
+			return sounds;
+		}
+
+		// Failure: No sounds
+		return null;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		SoundListData sounds = new SoundListData();
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
 
 		for (CustomSound sound : CustomSound.values()) {
-			String soundName = mmoitem.getNBT().getString("MMOITEMS_SOUND_" + sound.name());
-			if (soundName != null && !soundName.isEmpty())
-				sounds.set(sound, new SoundData(soundName, mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_VOL"),
-						mmoitem.getNBT().getDouble("MMOITEMS_SOUND_" + sound.name() + "_PIT")));
+
+			// Find tag?
+			ItemTag soundTag = null;
+			ItemTag volumeTag = null;
+			ItemTag pitchTag = null;
+
+			if (mmoitem.getNBT().hasTag("MMOITEMS_SOUND_" + sound.name()))
+				soundTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + sound.name(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
+
+			if (mmoitem.getNBT().hasTag("MMOITEMS_SOUND_" + sound.name() + "_VOL"))
+				volumeTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + sound.name() + "_VOL", mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE);
+
+			if (mmoitem.getNBT().hasTag("MMOITEMS_SOUND_" + sound.name() + "_PIT"))
+				pitchTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + sound.name() + "_PIT", mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE);
+
+			// All or none
+			if (soundTag != null && volumeTag != null && pitchTag != null) {
+
+				// Include
+				relevantTags.add(soundTag);
+				relevantTags.add(volumeTag);
+				relevantTags.add(pitchTag);
+			}
 		}
 
-		if (sounds.getCustomSounds().size() > 0)
+		// Use that
+		SoundListData sounds = (SoundListData) getLoadedNBT(relevantTags);
+
+		// Valid?
+		if (sounds != null) {
+
+			// Set
 			mmoitem.setData(ItemStats.CUSTOM_SOUNDS, sounds);
+		}
 	}
 }

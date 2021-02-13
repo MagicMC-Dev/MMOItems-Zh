@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction;
 
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
@@ -9,6 +10,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
@@ -36,7 +38,7 @@ public class GemStone extends UseItem {
 		if (!targetMMO.hasData(ItemStats.GEM_SOCKETS))
 			return new ApplyResult(ResultType.NONE);
 
-		String gemType = getNBTItem().getString("MMOITEMS_GEM_COLOR");
+		String gemType = getNBTItem().getString(ItemStats.GEM_COLOR.getNBTPath());
 
 		GemSocketsData sockets = (GemSocketsData) targetMMO.getData(ItemStats.GEM_SOCKETS);
 		if (!sockets.canReceive(gemType))
@@ -46,7 +48,7 @@ public class GemStone extends UseItem {
 		 * Checks if the gem supports the item type, or the item set, or a
 		 * weapon
 		 */
-		String appliableTypes = getNBTItem().getString("MMOITEMS_ITEM_TYPE_RESTRICTION");
+		String appliableTypes = getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
 		if (!appliableTypes.equals("") && (!targetType.isWeapon() || !appliableTypes.contains("WEAPON"))
 				&& !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
 			return new ApplyResult(ResultType.NONE);
@@ -76,18 +78,31 @@ public class GemStone extends UseItem {
 		sockets.apply(gemType, gemData);
 
 		/*
+		 * Get the item's level, important for the GemScalingStat
+		 */
+		StatData upgradeLevel = targetMMO.getData(ItemStats.UPGRADE);
+		if (upgradeLevel != null) { gemData.SetLevel(((UpgradeData) upgradeLevel).getLevel()); }
+
+		/*
 		 * Only applies NON PROPER and MERGEABLE item stats
 		 */
-		for (ItemStat stat : mmo.getStats())
+		for (ItemStat stat : mmo.getStats()) {
+
+			// If it is not PROPER
 			if (!(stat instanceof GemStoneStat)) {
+
+				// Get the stat data
 				StatData data = mmo.getData(stat);
+
+				// If the data is MERGEABLE
 				if (data instanceof Mergeable) {
-					if (targetMMO.hasData(stat))
-						((Mergeable) targetMMO.getData(stat)).merge(mmo.getData(stat));
-					else
-						targetMMO.setData(stat, mmo.getData(stat));
+					MMOItems.Log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
+
+					// Merge into it
+					targetMMO.mergeData(stat, data, gemData.getHistoricUUID());
 				}
 			}
+		}
 
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 		Message.GEM_STONE_APPLIED

@@ -23,6 +23,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemTypeRestriction extends StringStat {
 	public ItemTypeRestriction() {
@@ -38,7 +39,7 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.ITEM_TYPE_RESTRICTION).enable("Write in the chat the item type you want your gem to support.",
@@ -79,7 +80,7 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		// if (counter > 1) {
 		// inv.getEditedSection().set(path + "." + getPath() + ".display",
 		// message);
@@ -117,7 +118,7 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		// List<String> displayedTypes = new ArrayList<String>();
 		//
 		// for (String typeId : (List<String>) values[0])

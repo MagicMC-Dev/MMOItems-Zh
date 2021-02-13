@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.ItemStats;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -28,6 +32,8 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RequiredClass extends StringListStat implements ItemRestriction, GemStoneStat {
 	public RequiredClass() {
@@ -43,7 +49,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, this).enable("Write in the chat the class you want your item to support.");
 
@@ -63,7 +69,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		List<String> lore = (inv.getEditedSection().getKeys(false).contains("required-class") ? inv.getEditedSection().getStringList("required-class")
 				: new ArrayList<>());
 		lore.add(message);
@@ -73,9 +79,36 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find tag
+		ArrayList<ItemTag> rtags = new ArrayList<>();
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			mmoitem.setData(this, new StringListData(mmoitem.getNBT().getString(getNBTPath()).split(Pattern.quote(", "))));
+			rtags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Build
+		StatData data = getLoadedNBT(rtags);
+
+		// Success?
+		if (data != null) { mmoitem.setData(this, data);}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Get it
+		ItemTag listTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (listTag != null) {
+
+			// Create String List Data
+			return new StringListData(((String) listTag.getValue()).split(Pattern.quote(", ")));
+		}
+
+		// No correct tags
+		return null;
 	}
 
 	@Override
@@ -95,15 +128,30 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		String joined = String.join(", ", ((StringListData) data).getList());
 		item.getLore().insert("required-class", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", joined));
-		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_CLASS", joined));
+
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Make the result list
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Add the Json Array
+		ret.add(new ItemTag(getNBTPath(), String.join(", ", ((StringListData) data).getList())));
+
+		// Ready.
+		return ret;
 	}
 
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
-		String requiredClass = item.getString("MMOITEMS_REQUIRED_CLASS");
+		String requiredClass = item.getString(ItemStats.REQUIRED_CLASS.getNBTPath());
 		if (!requiredClass.equals("") && !hasRightClass(player, requiredClass) && !player.getPlayer().hasPermission("mmoitems.bypass.class")) {
 			if (message) {
 				Message.WRONG_CLASS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");

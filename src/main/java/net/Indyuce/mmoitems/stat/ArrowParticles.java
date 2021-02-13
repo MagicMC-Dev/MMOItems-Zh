@@ -1,12 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Item;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.google.gson.JsonObject;
@@ -28,6 +31,8 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ArrowParticles extends ItemStat {
 	public ArrowParticles() {
@@ -53,39 +58,86 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+		ArrayList<ItemTag> tags = new ArrayList<>();
+		tags.add(new ItemTag(getNBTPath(), data.toString()));
+		return tags;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get relvant tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			try {
-				JsonObject json = new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonObject();
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
 
-				Particle particle = Particle.valueOf(json.get("Particle").getAsString());
-				int amount = json.get("Amount").getAsInt();
-				double offset = json.get("Offset").getAsDouble();
+		// Get Data
+		StatData data = getLoadedNBT(relevantTags);
 
-				mmoitem.setData(ItemStats.ARROW_PARTICLES,
-						ParticleData.isColorable(particle)
-								? new ArrowParticlesData(particle, amount, offset, json.get("Red").getAsInt(), json.get("Green").getAsInt(),
-										json.get("Blue").getAsInt())
-								: new ArrowParticlesData(particle, amount, offset, json.get("Speed").getAsDouble()));
-			} catch (JsonSyntaxException exception) {
-				/*
-				 * OLD ITEM WHICH MUST BE UPDATED.
-				 */
-			}
+		// Valid?
+		if (data != null) {
+
+			// Set item stat
+			mmoitem.setData(this, data);
+		}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Get tag
+		ItemTag tagS = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		 if (tagS != null) {
+			 try {
+				 // Parse as Json Object
+				 JsonObject json = new JsonParser().parse((String) tagS.getValue()).getAsJsonObject();
+
+				 // Build
+				 Particle particle = Particle.valueOf(json.get("Particle").getAsString());
+				 int amount = json.get("Amount").getAsInt();
+				 double offset = json.get("Offset").getAsDouble();
+
+				 // Ist it colorable'
+				 if (ParticleData.isColorable(particle)) {
+
+					 // Return as colourable
+					 return new ArrowParticlesData(particle, amount, offset, json.get("Red").getAsInt(), json.get("Green").getAsInt(), json.get("Blue").getAsInt());
+
+					 // Not colourable
+				 } else {
+
+					 // Return as speedy
+					 return new ArrowParticlesData(particle, amount, offset, json.get("Speed").getAsDouble());
+				 }
+
+			 } catch (JsonSyntaxException|IllegalStateException exception) {
+				 /*
+				  * OLD ITEM WHICH MUST BE UPDATED.
+				  */
+			 }
+		 }
+
+		 // Fail
+		return null;
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		new ArrowParticlesEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String edited = (String) info[0];
 
 		if (edited.equals("color")) {
@@ -148,5 +200,11 @@ public class ArrowParticles extends ItemStat {
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit.");
+	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new ArrowParticlesData(Particle.EXPLOSION_LARGE, 1, 0, 1);
 	}
 }

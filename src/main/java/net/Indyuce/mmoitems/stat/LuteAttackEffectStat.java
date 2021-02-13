@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class LuteAttackEffectStat extends StringStat {
 	public LuteAttackEffectStat() {
@@ -20,7 +21,7 @@ public class LuteAttackEffectStat extends StringStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("lute-attack-effect", null);
 			inv.registerTemplateEdition();
@@ -30,7 +31,7 @@ public class LuteAttackEffectStat extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		LuteAttackEffect effect = LuteAttackEffect.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
 		inv.getEditedSection().set("lute-attack-effect", effect.name());
 		inv.registerTemplateEdition();
@@ -38,7 +39,7 @@ public class LuteAttackEffectStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		LuteAttackEffect effect = LuteAttackEffect.valueOf(data.toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", effect.name()));
 		item.getLore().insert("lute-attack-effect", effect.getName());

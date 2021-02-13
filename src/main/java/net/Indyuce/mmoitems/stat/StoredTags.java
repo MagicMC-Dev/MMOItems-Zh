@@ -9,6 +9,10 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 public class StoredTags extends InternalStat implements GemStoneStat {
 	public StoredTags() {
@@ -17,13 +21,28 @@ public class StoredTags extends InternalStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		for (ItemTag tag : ((StoredTagsData) data).getTags())
-			item.addItemTag(tag);
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Just that
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Collect all tags here
+		return new ArrayList<>(((StoredTagsData) data).getTags());
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		mmoitem.setData(ItemStats.STORED_TAGS, new StoredTagsData(mmoitem.getNBT()));
-	}
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) { mmoitem.setData(ItemStats.STORED_TAGS, new StoredTagsData(mmoitem.getNBT())); }
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return new StoredTagsData(storedTags); }
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() { return new StoredTagsData(new ArrayList<>()); }
 }

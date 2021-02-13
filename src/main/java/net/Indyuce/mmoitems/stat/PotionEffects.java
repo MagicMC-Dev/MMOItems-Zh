@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,6 +33,8 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PotionEffects extends ItemStat {
 	public PotionEffects() {
@@ -45,7 +49,7 @@ public class PotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.POTION_EFFECTS).enable("Write in the chat the potion effect you want to add.",
 					ChatColor.AQUA + "Format: {Effect Name} {Duration} {Amplifier}",
@@ -64,7 +68,7 @@ public class PotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		if (message.contains("|")) {
 			String[] split = message.split("\\|");
 
@@ -124,16 +128,63 @@ public class PotionEffects extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
 	}
 
+	@NotNull
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public StatData getClearStatData() {
+		return new PotionEffectListData();
+	}
+
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			for (PotionEffectData effect : ((PotionEffectListData) data).getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
 	}
 
+	/**
+	 * No item tags are added onto the item, I suppose it is saved as the Potion Effects themselves.
+	 */
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// ??
+		ArrayList<ItemTag> tg = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			tg.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		StatData data = getLoadedNBT(tg);
+
+		if (data != null) { mmoitem.setData(this, data); }
+
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
 			mmoitem.setData(this, new StringData(mmoitem.getNBT().getString(getNBTPath())));
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// ??
+		ItemTag otag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		if (otag != null) {
+
+			/*
+			 *  Not sure why this, but well, Im only transcribing the old
+			 *  Load/Write NBT format into this new one, so I shall keep
+			 *  the functionality exactly the same.
+			 *
+			 *  This is not even written onto the item in getAppliedNBT()
+			 */
+			return new StringData((String) otag.getValue());
+		}
+
+		return null;
 	}
 }

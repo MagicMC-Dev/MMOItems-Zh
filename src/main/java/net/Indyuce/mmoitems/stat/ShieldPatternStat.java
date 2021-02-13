@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
+import net.Indyuce.mmoitems.stat.data.BooleanData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -30,6 +32,8 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ShieldPatternStat extends StringStat {
 	public ShieldPatternStat() {
@@ -61,7 +65,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		BlockStateMeta meta = (BlockStateMeta) item.getMeta();
 		Banner banner = (Banner) meta.getBlockState();
 		ShieldPatternData pattern = (ShieldPatternData) data;
@@ -71,8 +75,16 @@ public class ShieldPatternStat extends StringStat {
 		item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 	}
 
+	/**
+	 * This stat is saved not as a custom tag, but as the vanilla pattenrs themselves.
+	 * Alas this is an empty array
+	 */
+	@NotNull
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+
+	@Override
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
 
@@ -100,7 +112,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		int editedStatData = (int) info[0];
 
 		if (editedStatData == 1) {
@@ -151,7 +163,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 		if (mmoitem.getNBT().getItem().getItemMeta() instanceof BlockStateMeta
 				&& ((BlockStateMeta) mmoitem.getNBT().getItem().getItemMeta()).hasBlockState()
 				&& ((BlockStateMeta) mmoitem.getNBT().getItem().getItemMeta()).getBlockState() instanceof Banner) {
@@ -162,6 +174,20 @@ public class ShieldPatternStat extends StringStat {
 			mmoitem.setData(ItemStats.SHIELD_PATTERN, shieldPattern);
 		}
 	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new ShieldPatternData(DyeColor.YELLOW);
+	}
+
+	/**
+	 * This stat is saved not as a custom tag, but as the vanilla Pattern itself.
+	 * Alas this method returns null.
+	 */
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 
 	private int getNextAvailableKey(ConfigurationSection section) {
 		for (int j = 0; j < 100; j++)

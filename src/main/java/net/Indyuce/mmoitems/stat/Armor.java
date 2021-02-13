@@ -8,19 +8,11 @@ import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.attribute.Attribute;
+import org.jetbrains.annotations.NotNull;
 
 public class Armor extends AttributeStat {
 	public Armor() {
 		super("ARMOR", VersionMaterial.GOLDEN_CHESTPLATE.toMaterial(), "Armor", new String[] { "The armor given to the holder." },
 				Attribute.GENERIC_ARMOR);
-	}
-
-	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).getValue();
-		// for (String slot : item.getMMOItem().getType().getSlots())
-		// item.addItemAttribute(new Attribute("armor", value, slot));
-		item.addItemTag(new ItemTag(getNBTPath(), value));
-		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}
 }

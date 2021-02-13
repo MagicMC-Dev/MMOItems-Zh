@@ -10,6 +10,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 public class UpgradeData implements StatData, RandomStatData {
 	private final String reference, template;
@@ -17,6 +18,15 @@ public class UpgradeData implements StatData, RandomStatData {
 	private final double success;
 	private final int max;
 	private int level;
+
+	public UpgradeData(@NotNull String referenc, @NotNull String templat, boolean workbenc, boolean destro, int maxx, double succes) {
+		reference = referenc;
+		template = templat;
+		workbench = workbenc;
+		destroy = destro;
+		max = maxx;
+		success = succes;
+	}
 
 	public UpgradeData(ConfigurationSection section) {
 		reference = section.getString("reference");

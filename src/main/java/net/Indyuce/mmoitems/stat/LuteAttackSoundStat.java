@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
 
 public class LuteAttackSoundStat extends StringStat {
 	public LuteAttackSoundStat() {
@@ -12,7 +13,7 @@ public class LuteAttackSoundStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		item.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_SOUND", data.toString().toUpperCase().replace("-", "_").replace(" ", "_")));
 	}
 }

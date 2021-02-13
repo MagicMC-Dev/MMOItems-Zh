@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class EnchantListData implements StatData, Mergeable {
 	private final Map<Enchantment, Integer> enchants = new HashMap<>();
@@ -32,4 +33,18 @@ public class EnchantListData implements StatData, Mergeable {
 		for (Enchantment enchant : extra.keySet())
 			enchants.put(enchant, enchants.containsKey(enchant) ? Math.max(extra.get(enchant), enchants.get(enchant)) : extra.get(enchant));
 	}
+
+	@Override
+	public @NotNull StatData cloneData() {
+
+		// Start Fresh
+		EnchantListData ret = new EnchantListData();
+
+		// Enchant
+		for (Enchantment enchant : enchants.keySet()) { ret.addEnchant(enchant, enchants.getOrDefault(enchant, 0)); }
+
+		// Thats it
+		return ret;
+	}
+
 }

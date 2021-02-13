@@ -1,10 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,6 +26,8 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Enchants extends ItemStat {
 	public Enchants() {
@@ -41,7 +41,7 @@ public class Enchants extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.ENCHANTS).enable("Write in the chat the enchant you want to add.",
 					ChatColor.AQUA + "Format: {Enchant Name} {Enchant Level Numeric Formula}");
@@ -66,7 +66,7 @@ public class Enchants extends ItemStat {
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length >= 2, "Use this format: {Enchant Name} {Enchant Level Numeric Formula}. Example: 'sharpness 5 0.3' "
 				+ "stands for Sharpness 5, plus 0.3 level per item level (rounded up to lower integer)");
@@ -99,8 +99,16 @@ public class Enchants extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last enchant.");
 	}
 
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public StatData getClearStatData() {
+		return new EnchantListData();
+	}
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Create enchant data from this items' enchantments
 		EnchantListData enchants = new EnchantListData();
 		mmoitem.getNBT().getItem().getItemMeta().getEnchants().keySet()
 				.forEach(enchant -> enchants.addEnchant(enchant, mmoitem.getNBT().getItem().getItemMeta().getEnchantLevel(enchant)));
@@ -108,10 +116,29 @@ public class Enchants extends ItemStat {
 			mmoitem.setData(ItemStats.ENCHANTS, enchants);
 	}
 
+
+	/**
+	 * This is not writen into a custom tag, rather saved into the item's enchantments themselves.
+	 * Thus this returns null.
+	 */
+	@Nullable
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Enchant Item
 		EnchantListData enchants = (EnchantListData) data;
 		for (Enchantment enchant : enchants.getEnchants())
 			item.getMeta().addEnchant(enchant, enchants.getLevel(enchant), true);
 	}
+
+	/**
+	 * This is not writen into a custom tag, rather saved into the item's enchantments themselves.
+	 * Thus this returns an empty list
+	 */
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
 }

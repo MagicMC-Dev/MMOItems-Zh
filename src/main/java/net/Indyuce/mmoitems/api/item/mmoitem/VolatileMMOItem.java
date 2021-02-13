@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
@@ -13,7 +14,12 @@ public class VolatileMMOItem extends ReadMMOItem {
 	 * VolatileMMOItems only loads the item data it needs instantly. The item
 	 * data is only read when using hasData(ItemStat) for the first time.
 	 * LiveMMOItems read everything on the constructor. VolativeMMOItems are
-	 * used in player inventory updates
+	 * used in player inventory updates.
+	 * <p></p>
+	 * Basically, use this to <b>quickly read Stat Data values</b> from an ItemStack.
+	 * <p></p>
+	 * If you are editing the stats, and then building a new item stack,
+	 * you must use {@link LiveMMOItem}.
 	 * 
 	 * @param item
 	 *            The item to read from
@@ -29,7 +35,7 @@ public class VolatileMMOItem extends ReadMMOItem {
 	 * @return If the item has some stat data
 	 */
 	@Override
-	public boolean hasData(ItemStat stat) {
+	public boolean hasData(@NotNull ItemStat stat) {
 		if (!super.hasData(stat))
 
 			// Attempt to lad this stat data

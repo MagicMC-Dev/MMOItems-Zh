@@ -20,6 +20,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
 
 public class PotionColor extends StringStat {
 	public PotionColor() {
@@ -35,7 +36,7 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.POTION_COLOR).enable("Write in the chat the RGB color you want.",
 					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
@@ -48,7 +49,7 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
 
@@ -73,7 +74,7 @@ public class PotionColor extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
 			((PotionMeta) item.getMeta()).setColor(((ColorData) data).getColor());
 	}

@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import org.jetbrains.annotations.NotNull;
 
 public class VanillaEatingAnimation extends BooleanStat {
 	public VanillaEatingAnimation() {
@@ -14,7 +15,7 @@ public class VanillaEatingAnimation extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		if (((BooleanData) data).isEnabled())
 			item.addItemTag(new ItemTag("MMOITEMS_VANILLA_EATING", true));
 	}

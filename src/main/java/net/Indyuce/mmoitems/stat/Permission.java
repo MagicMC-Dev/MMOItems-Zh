@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.stat.data.BooleanData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -29,6 +31,8 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Permission extends StringListStat implements ItemRestriction, GemStoneStat {
 	public Permission() {
@@ -44,7 +48,7 @@ public class Permission extends StringListStat implements ItemRestriction, GemSt
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.PERMISSION).enable("Write in the chat the permission you want your item to require.");
 
@@ -64,7 +68,7 @@ public class Permission extends StringListStat implements ItemRestriction, GemSt
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		Validate.isTrue(!message.contains("|"), "Your perm node must not contain any | symbol.");
 		List<String> lore = inv.getEditedSection().contains("permission") ? inv.getEditedSection().getStringList("permission") : new ArrayList<>();
 		lore.add(message);
@@ -90,14 +94,59 @@ public class Permission extends StringListStat implements ItemRestriction, GemSt
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("MMOITEMS_PERMISSION", String.join("|", ((StringListData) data).getList())));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Just add NBT tags
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Create Fresh
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Create tag and add
+		ret.add(new ItemTag(getNBTPath(), String.join("|", ((StringListData) data).getList())));
+
+		// Return thay
+		return ret;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find tags
+		ArrayList<ItemTag> revTgs = new ArrayList<>();
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			mmoitem.setData(this, new StringListData(Arrays.asList(mmoitem.getNBT().getString(getNBTPath()).split("\\|"))));
+			revTgs.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// BUild Data
+		StatData data = getLoadedNBT(revTgs);
+
+		// Valid?
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find relevant tag
+		ItemTag encoded = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found it?
+		if (encoded != null) {
+
+			// Split and make list
+			ArrayList<String> list = new ArrayList<>(Arrays.asList(((String) encoded.getValue()).split("\\|")));
+
+			// Build and return
+			return new StringListData(list);
+		}
+
+		return null;
 	}
 
 	@Override

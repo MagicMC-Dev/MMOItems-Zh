@@ -1,9 +1,13 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,6 +44,8 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	private static final Random random = new Random();
@@ -58,12 +64,18 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("MMOITEMS_UPGRADE", data.toString()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+		ArrayList<ItemTag> ret = new ArrayList<>();
+		ret.add(new ItemTag(getNBTPath(), data.toString()));
+		return ret;
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new UpgradingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
@@ -75,7 +87,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 
 		if (info[0].equals("ref")) {
 			inv.getEditedSection().set("upgrade.reference", message);
@@ -111,9 +123,39 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_UPGRADE"))
-			mmoitem.setData(this, new UpgradeData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_UPGRADE")).getAsJsonObject()));
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get Tags
+		ArrayList<ItemTag> tags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+		StatData data = getLoadedNBT(tags);
+		if (data != null) { mmoitem.setData(this, data);}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Gettag
+		ItemTag uTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		if (uTag != null) {
+
+			try {
+
+				// Cook Upgrade Data
+				return new UpgradeData(new JsonParser().parse((String) uTag.getValue()).getAsJsonObject());
+
+			} catch (JsonSyntaxException |IllegalStateException exception) {
+				/*
+				 * OLD ITEM WHICH MUST BE UPDATED.
+				 */
+			}
+		}
+
+		// Nope
+		return null;
 	}
 
 	@Override
@@ -121,6 +163,10 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup upgrading.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
 	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() { return new UpgradeData("", "", false, false, 0, 0D); }
 
 	@Override
 	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {

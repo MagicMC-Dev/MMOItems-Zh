@@ -14,6 +14,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {
@@ -23,7 +26,7 @@ public class ItemSetStat extends StringStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent e) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent e) {
 		super.whenClicked(inv, e);
 		if (e.getAction() != InventoryAction.PICKUP_HALF) {
 			inv.getPlayer().sendMessage(ChatColor.GREEN + "Available Item Sets:");
@@ -38,24 +41,38 @@ public class ItemSetStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		String path = data.toString();
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 
-		ItemSet set = MMOItems.plugin.getSets().get(path);
-		Validate.notNull(set, "Could not find item set with ID '" + path + "'");
+		// Add NBT
+		item.addItemTag(getAppliedNBT(data));
 
-		item.addItemTag(new ItemTag("MMOITEMS_ITEM_SET", path));
+		// Display in lore
+		ItemSet set = MMOItems.plugin.getSets().get(data.toString());
 		item.getLore().insert("set", set.getLoreTag());
 	}
 
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_ITEM_SET"))
-			mmoitem.setData(this, new StringData(mmoitem.getNBT().getString("MMOITEMS_ITEM_SET")));
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		ItemSet set = MMOItems.plugin.getSets().get(data.toString());
+		Validate.notNull(set, "Could not find item set with ID '" + data.toString() + "'");
+
+		// Make Array
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Add that tag
+		ret.add(new ItemTag(getNBTPath(), data.toString()));
+
+		// Thats it
+		return ret;
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	@NotNull public String getNBTPath() { return "MMOITEMS_ITEM_SET"; }
+
+	@Override
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		ItemSet set = MMOItems.plugin.getSets().get(message);
 		Validate.notNull(set, "Couldn't find the set named '" + message + "'.");
 		super.whenInput(inv, message, info);

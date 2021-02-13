@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import org.jetbrains.annotations.NotNull;
 
 public class PickaxePower extends DoubleStat {
 	public PickaxePower() {
@@ -15,7 +16,7 @@ public class PickaxePower extends DoubleStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		int pickPower = (int) ((DoubleData) data).getValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", pickPower));

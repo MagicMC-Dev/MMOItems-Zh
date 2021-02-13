@@ -9,9 +9,10 @@ import org.apache.commons.lang.Validate;
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class ElementListData implements StatData, Mergeable {
-	private final Map<Element, Double> damage = new HashMap<>(), defense = new HashMap<>();
+	@NotNull private final Map<Element, Double> damage = new HashMap<>(), defense = new HashMap<>();
 
 	public double getDefense(Element element) {
 		return defense.getOrDefault(element, 0d);
@@ -28,6 +29,13 @@ public class ElementListData implements StatData, Mergeable {
 	public Set<Element> getDamageElements() {
 		return damage.keySet();
 	}
+
+	/**
+	 * No way to add the elements directly from the constructor.
+	 * <p></p>
+	 * Use the set methids for that.
+	 */
+	public ElementListData() { }
 
 	public void setDamage(Element element, double value) {
 		if (value == 0)
@@ -57,4 +65,23 @@ public class ElementListData implements StatData, Mergeable {
 		for (Element element : extra.defense.keySet())
 			defense.put(element, extra.defense.get(element) + defense.getOrDefault(element, 0d));
 	}
+
+	@Override
+	public @NotNull StatData cloneData() {
+
+		// Start fresh
+		ElementListData ret = new ElementListData();
+
+		// Add Damages
+		for (Element element : damage.keySet()) { ret.setDamage(element, damage.getOrDefault(element, 0d)); }
+
+
+		// Add Defensese
+		for (Element element : defense.keySet()) { ret.setDefense(element, defense.getOrDefault(element, 0d));}
+
+		// Return cloned
+		return ret;
+	}
+
+
 }

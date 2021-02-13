@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
 
 public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat {
 	public MaximumDurability() {
@@ -24,7 +25,7 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 	 * initializes the custom durability mecanism on an item.
 	 */
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		int value = (int) ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag("MMOITEMS_MAX_DURABILITY", value), new ItemTag("MMOITEMS_DURABILITY", value));
 	}

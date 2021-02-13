@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,6 +36,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class has not been updated for the item generation update!!! The potion
@@ -62,7 +66,7 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
 					ChatColor.AQUA + "Format: {Effect Name} {Amplifier Numeric Formula}");
@@ -82,7 +86,7 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length >= 2, "Use this format: {Effect Name} {Effect Amplifier Numeric Formula}. Example: 'speed 1 0.3' "
 				+ "stands for Speed 1, plus 0.3 level per item level (rounded up to lower int)");
@@ -115,37 +119,95 @@ public class PermanentEffects extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
 	}
 
+	@NotNull
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		JsonObject object = new JsonObject();
+	public StatData getClearStatData() {
+		return null;
+	}
+
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		List<String> lore = new ArrayList<>();
 
 		String permEffectFormat = ItemStat.translate("perm-effect");
 		((PotionEffectListData) data).getEffects().forEach(effect -> {
-			lore.add(permEffectFormat.replace("#",
-					MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
-			object.addProperty(effect.getType().getName(), effect.getLevel());
+			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
 		});
 
 		item.getLore().insert("perm-effects", lore);
-		item.addItemTag(new ItemTag("MMOITEMS_PERM_EFFECTS", object.toString()));
+
+		// Yes
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Them tags
+		ArrayList<ItemTag> ret = new ArrayList<>();
+		JsonObject object = new JsonObject();
+
+		// For every registered effect
+		for (PotionEffectData effect : ((PotionEffectListData) data).getEffects()) {
+
+			// Add Properies
+			object.addProperty(effect.getType().getName(), effect.getLevel());
+		}
+
+		// Add onto the list
+		ret.add(new ItemTag(getNBTPath(), object.toString()));
+
+		return ret;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag(getNBTPath())) {
-			PotionEffectListData effects = new PotionEffectListData();
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
-			JsonElement element = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_PERM_EFFECTS"));
-			if (!element.isJsonObject()) {
-				MMOItems.plugin.getLogger().warning(
-						"Couldn't load perm effects from " + mmoitem.getType() + "." + mmoitem.getId() + ", the NBTData isn't a json object!");
-				return;
+		// Find tags
+		ArrayList<ItemTag> rTag = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			rTag.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Build Data
+		StatData data = getLoadedNBT(rTag);
+
+		// Add data, if valid
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find tag
+		ItemTag oTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Well
+		if (oTag != null) {
+
+			// Parse as Json
+			try {
+
+				// A new effect
+				PotionEffectListData effects = new PotionEffectListData();
+
+				JsonElement element = new JsonParser().parse((String) oTag.getValue());
+
+				element.getAsJsonObject().entrySet().forEach(entry ->
+						effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+
+				// Thats it
+				return effects;
+
+			} catch (JsonSyntaxException |IllegalStateException exception) {
+				/*
+				 * OLD ITEM WHICH MUST BE UPDATED.
+				 */
 			}
-			element.getAsJsonObject().entrySet()
-					.forEach(entry -> effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
-
-			mmoitem.setData(ItemStats.PERM_EFFECTS, effects);
 		}
+
+		// Noep
+		return null;
 	}
 }

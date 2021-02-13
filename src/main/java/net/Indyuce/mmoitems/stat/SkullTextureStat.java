@@ -2,11 +2,13 @@ package net.Indyuce.mmoitems.stat;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -14,8 +16,11 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class SkullTextureStat extends StringStat {
@@ -42,7 +47,7 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		inv.getEditedSection().set("skull-texture.value", message);
 		inv.getEditedSection().set("skull-texture.uuid", UUID.randomUUID().toString());
 		inv.registerTemplateEdition();
@@ -50,7 +55,7 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		if (item.getItemStack().getType() != VersionMaterial.PLAYER_HEAD.toMaterial())
 			return;
 
@@ -62,13 +67,32 @@ public class SkullTextureStat extends StringStat {
 			throw new IllegalArgumentException(exception.getMessage());
 		}
 	}
+	/**
+	 * This stat is saved not as a custom tag, but as the vanilla HideFlag itself.
+	 * Alas this is an empty array
+	 */
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 		try {
 			Field profileField = mmoitem.getNBT().getItem().getItemMeta().getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
 			mmoitem.setData(ItemStats.SKULL_TEXTURE, new SkullTextureData((GameProfile) profileField.get(mmoitem.getNBT().getItem().getItemMeta())));
 		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {}
 	}
+
+	/**
+	 * This stat is saved not as a custom tag, but as the vanilla Head Texture itself.
+	 * Alas this method returns null.
+	 */
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() { return new SkullTextureData(new GameProfile(UUID.fromString("df930b7b-a84d-4f76-90ac-33be6a5b6c88"), "gunging")); }
 }

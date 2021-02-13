@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
@@ -25,6 +27,8 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CompatibleTypes extends ItemStat {
 	public CompatibleTypes() {
@@ -40,7 +44,7 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
 
@@ -60,7 +64,7 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		List<String> lore = inv.getEditedSection().contains("compatible-types") ? inv.getEditedSection().getStringList("compatible-types")
 				: new ArrayList<>();
 		lore.add(message.toUpperCase());
@@ -84,22 +88,82 @@ public class CompatibleTypes extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last type.");
 	}
 
+	@NotNull
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		List<String> compatibleTypes = new ArrayList<>();
-		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(line -> {
-			array.add(line);
-			compatibleTypes.add(line);
-		});
-		item.getLore().insert("compatible-types", compatibleTypes);
-		item.addItemTag(new ItemTag("MMOITEMS_COMPATIBLE_TYPES", array.toString()));
+	public StatData getClearStatData() {
+		return new StringListData();
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_COMPATIBLE_TYPES"))
-			mmoitem.setData(ItemStats.COMPATIBLE_TYPES,
-					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_COMPATIBLE_TYPES")).getAsJsonArray()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Copy Array, for lore
+		List<String> compatibleTypes = new ArrayList<>(((StringListData) data).getList());
+		item.getLore().insert("compatible-types", compatibleTypes);
+
+		// Add data
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Build Json Array
+		JsonArray array = new JsonArray();
+
+		// For each string in the ids of the data
+		for (String sts : ((StringListData) data).getList()) { array.add(sts); }
+
+		// Make returning array
+		ArrayList<ItemTag> tags = new ArrayList<>();
+
+		// Add Json Array
+		tags.add(new ItemTag(getNBTPath(), array.toString()));
+
+		return tags;
+	}
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// FInd relvant tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Generate data
+		StatData data = getLoadedNBT(relevantTags);
+
+		if (data != null) { mmoitem.setData(this, data);}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find relevant tag
+		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (rTag != null) {
+
+			try {
+
+				// Parse onto Json Array
+				JsonArray array = new JsonParser().parse((String) rTag.getValue()).getAsJsonArray();
+
+				// Make and return list
+				return new StringListData(array);
+
+			} catch (JsonSyntaxException |IllegalStateException exception) {
+				/*
+				 * OLD ITEM WHICH MUST BE UPDATED.
+				 */
+			}
+		}
+
+		// Nope
+		return null;
 	}
 }

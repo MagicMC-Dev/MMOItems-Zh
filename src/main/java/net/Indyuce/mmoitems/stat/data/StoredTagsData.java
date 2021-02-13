@@ -2,10 +2,12 @@ package net.Indyuce.mmoitems.stat.data;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,12 +23,13 @@ public class StoredTagsData implements StatData, Mergeable {
 	public StoredTagsData(ItemStack stack) {
 		this(NBTItem.get(stack));
 	}
+	public StoredTagsData(List<ItemTag> tgs) { tags.addAll(tgs); }
 
 	public StoredTagsData(NBTItem nbt) {
 		for (String tag : nbt.getTags()) {
 			// Any vanilla or MMOItem tag should be ignored as those are
-			// automatically handled
-			if (ignoreList.contains(tag) || tag.startsWith("MMOITEMS_"))
+			// automatically handled. Same for the History stat ones.
+			if (ignoreList.contains(tag) || tag.startsWith("MMOITEMS_") || tag.startsWith(ItemStackBuilder.histroy_keyword))
 				continue;
 
 			// As more methods are added we can add more types here
@@ -93,4 +96,8 @@ public class StoredTagsData implements StatData, Mergeable {
 		Validate.isTrue(data instanceof StoredTagsData, "Cannot merge two different stat data types");
 		tags.addAll(((StoredTagsData) data).tags);
 	}
+
+	@Override
+	public @NotNull
+	StatData cloneData() { return new StoredTagsData(getTags()); }
 }

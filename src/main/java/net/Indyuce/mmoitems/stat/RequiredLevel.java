@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -16,6 +18,10 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
@@ -30,11 +36,24 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		int lvl = (int) ((DoubleData) data).getValue();
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 
-		item.addItemTag(new ItemTag("MMOITEMS_REQUIRED_LEVEL", lvl));
+		// Lore Management
+		int lvl = (int) ((DoubleData) data).getValue();
 		item.getLore().insert("required-level", formatNumericStat(lvl, "#", "" + lvl));
+
+		// Insert NBT
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Make and bake
+		ArrayList<ItemTag> ret = new ArrayList<>();
+		ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
+		return ret;
 	}
 
 	@Override
@@ -43,14 +62,41 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find relevat tgs
+		ArrayList<ItemTag> tags = new ArrayList<>();
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			mmoitem.setData(this, new RequiredLevelData(mmoitem.getNBT().getDouble(getNBTPath())));
+			tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
+
+		// Build
+		StatData data = getLoadedNBT(tags);
+
+		// Valid?
+		if (data != null) { mmoitem.setData(this, data); }
 	}
 
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find
+		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (rTag != null) {
+
+			// Yes
+			return new RequiredLevelData((Double) rTag.getValue());
+		}
+
+		// no
+		return null;
+	}
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
-		int level = item.getInteger("MMOITEMS_REQUIRED_LEVEL");
+		int level = item.getInteger(ItemStats.REQUIRED_LEVEL.getNBTPath());
 		if (player.getLevel() < level && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
 			if (message) {
 				Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
@@ -59,5 +105,10 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public @NotNull StatData getClearStatData() {
+		return new RequiredLevelData(0D);
 	}
 }

@@ -1,7 +1,10 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -18,6 +21,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +41,36 @@ public class StringListStat extends ItemStat {
     }
 
     @Override
-    public void whenApplied(ItemStackBuilder item, StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+        item.addItemTag(getAppliedNBT(data));
+    }
+
+    @NotNull
+    @Override
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+        // Start out with a new JSON Array
         JsonArray array = new JsonArray();
-        ((StringListData) data).getList().forEach(array::add);
-        item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
+
+        // For every list entry
+        for (String str : ((StringListData) data).getList()) {
+
+            // Add to the array as-is
+            array.add(str);
+        }
+
+        // Make the result list
+        ArrayList<ItemTag> ret = new ArrayList<>();
+
+        // Add the Json Array
+        ret.add(new ItemTag(getNBTPath(), array.toString()));
+
+        // Ready.
+        return ret;
     }
 
     @Override
-    public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
             new StatEdition(inv, this).enable("Write in the chat the line you want to add.");
 
@@ -62,7 +89,7 @@ public class StringListStat extends ItemStat {
     }
 
     @Override
-    public void whenInput(EditionInventory inv, String message, Object... info) {
+    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         List<String> list = inv.getEditedSection().contains(getPath()) ? inv.getEditedSection().getStringList(getPath()) : new ArrayList<>();
         list.add(message);
         inv.getEditedSection().set(getPath(), list);
@@ -71,10 +98,46 @@ public class StringListStat extends ItemStat {
     }
 
     @Override
-    public void whenLoaded(ReadMMOItem mmoitem) {
+    public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+        // Find the relevant tags
+        ArrayList<ItemTag> relevantTags = new ArrayList<>();
         if (mmoitem.getNBT().hasTag(getNBTPath()))
-            mmoitem.setData(this, new StringListData(
-                    new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()));
+            relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+        // Generate data
+        StatData data = getLoadedNBT(relevantTags);
+
+        // Valid?
+        if (data != null) { mmoitem.setData(this, data); }
+    }
+
+    @Nullable
+    @Override
+    public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+        // Get it
+        ItemTag listTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+        // Found?
+        if (listTag != null) {
+            try {
+
+                // Value must be a Json Array
+                JsonArray array = new JsonParser().parse((String) listTag.getValue()).getAsJsonArray();
+
+                // Create String List Data
+                return new StringListData(array);
+
+            } catch (JsonSyntaxException |IllegalStateException exception) {
+                /*
+                 * OLD ITEM WHICH MUST BE UPDATED.
+                 */
+            }
+        }
+
+        // No correct tags
+        return null;
     }
 
     @Override
@@ -90,5 +153,11 @@ public class StringListStat extends ItemStat {
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a permission.");
         lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last permission.");
+    }
+
+    @NotNull
+    @Override
+    public StatData getClearStatData() {
+        return new StringListData();
     }
 }

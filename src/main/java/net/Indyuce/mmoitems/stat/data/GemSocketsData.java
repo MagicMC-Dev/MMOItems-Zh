@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.Indyuce.mmoitems.api.interaction.GemStone;
 import org.apache.commons.lang.Validate;
 
 import com.google.gson.JsonArray;
@@ -15,6 +16,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	private final Set<GemstoneData> gems = new HashSet<>();
@@ -74,6 +76,18 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof GemSocketsData, "Cannot merge two different stat data types");
 		emptySlots.addAll(((GemSocketsData) data).emptySlots);
+	}
+
+	@Override
+	public @NotNull StatData cloneData() {
+
+		// Start Fresh
+		GemSocketsData ret = new GemSocketsData(emptySlots);
+
+		// Add Gems
+		for (GemstoneData g : getGemstones()) { ret.add(g); }
+
+		return ret;
 	}
 
 	@Override

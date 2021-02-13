@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.google.gson.*;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,11 +16,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.potion.PotionEffectType;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -37,6 +34,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Effects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
@@ -53,7 +52,7 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
 					ChatColor.AQUA + "Format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}", ChatColor.DARK_RED + "Note: " + ChatColor.RED + "The '|' lines are literal.");
@@ -73,7 +72,7 @@ public class Effects extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split("\\|");
 		Validate.isTrue(split.length > 1, "Use this format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}.");
 
@@ -108,11 +107,17 @@ public class Effects extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
 	}
 
+	@NotNull
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		List<String> lore = new ArrayList<>();
-		JsonArray array = new JsonArray();
+	public StatData getClearStatData() {
+		return new PotionEffectListData();
+	}
 
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Process Lore
+		List<String> lore = new ArrayList<>();
 		String effectFormat = ItemStat.translate("effect");
 		((PotionEffectListData) data).getEffects().forEach(effect -> {
 			lore.add(effectFormat
@@ -120,35 +125,97 @@ public class Effects extends ItemStat {
 							MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
 									+ (effect.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(effect.getLevel())))
 					.replace("#d", durationFormat.format(effect.getDuration())));
+		});
+		item.getLore().insert("effects", lore);
 
+		// Add tags to item
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Create aJson Array
+		JsonArray array = new JsonArray();
+
+		// For every effect
+		for (PotionEffectData effect : ((PotionEffectListData) data).getEffects()) {
+
+			// Convert to Json Object
 			JsonObject object = new JsonObject();
 			object.addProperty("Type", effect.getType().getName());
 			object.addProperty("Duration", effect.getDuration());
 			object.addProperty("Level", effect.getLevel());
 			array.add(object);
-		});
+		}
 
-		item.getLore().insert("effects", lore);
-		item.addItemTag(new ItemTag("MMOITEMS_EFFECTS", array.toString()));
+		// Make the tag
+		ArrayList<ItemTag> ret = new ArrayList<>();
+		ret.add(new ItemTag(getNBTPath(), array.toString()));
+
+		// Thats it
+		return ret;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find relevant tag
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Attempt to build data
+		StatData data = getLoadedNBT(relevantTags);
+
+		// Valid? Append.
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find tag
+		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (rTag != null) {
+
+			// Must be Json Array, attempt to parse.
 			try {
 				PotionEffectListData effects = new PotionEffectListData();
 
-				new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_EFFECTS")).getAsJsonArray().forEach(element -> {
-					JsonObject key = element.getAsJsonObject();
-					effects.add(new PotionEffectData(PotionEffectType.getByName(key.get("Type").getAsString()), key.get("Duration").getAsDouble(),
-							key.get("Level").getAsInt()));
-				});
+				// Get as Array
+				JsonArray array = new JsonParser().parse((String) rTag.getValue()).getAsJsonArray();
 
-				mmoitem.setData(ItemStats.EFFECTS, effects);
-			} catch (JsonSyntaxException exception) {
+				// BUild each element
+				for (JsonElement e : array) {
+
+					// Must be object
+					if (e.isJsonObject()) {
+
+						// Extract
+						JsonObject key = e.getAsJsonObject();
+
+						effects.add(new PotionEffectData(PotionEffectType.getByName(
+										key.get("Type").getAsString()),
+										key.get("Duration").getAsDouble(),
+										key.get("Level").getAsInt()));
+					}
+				}
+
+				// Success
+				return effects;
+
+			} catch (JsonSyntaxException|IllegalStateException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
+		}
+
+		return null;
 	}
 }

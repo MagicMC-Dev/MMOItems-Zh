@@ -27,6 +27,7 @@ import net.Indyuce.mmoitems.stat.type.StringListStat;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
 
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
@@ -42,7 +43,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.GRANTED_PERMISSIONS).enable("Write in the chat the permission you want to add.");
 
@@ -61,7 +62,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		List<String> permissions = inv.getEditedSection().contains(getPath()) ? inv.getEditedSection().getStringList(getPath()) : new ArrayList<>();
 		permissions.add(message);
 		inv.getEditedSection().set(getPath(), permissions);
@@ -83,20 +84,5 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a permission.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last permission.");
-	}
-
-	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(array::add);
-		item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
-	}
-
-	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag(getNBTPath())) {
-			mmoitem.setData(ItemStats.GRANTED_PERMISSIONS,
-					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()));
-		}
 	}
 }

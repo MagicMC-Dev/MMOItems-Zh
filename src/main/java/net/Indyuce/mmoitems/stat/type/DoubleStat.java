@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -21,8 +22,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -59,21 +63,75 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Get Value
 		double value = ((DoubleData) data).getValue();
-		if (value < 0 && !handleNegativeStats())
-			return;
 
-		// If the value is 0 the lore will not be applied
-		// but the stat will still be added to the nbt
-		if (value != 0)
-			item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
+		// Cancel if it equals ZERO, or its NEGATIVE and this doesnt support negative stats.
+		if (value < 0 && !handleNegativeStats()) { return; }
 
-		item.addItemTag(new ItemTag(getNBTPath(), value));
+		// Display if not ZERO
+		if (value != 0) { item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value))); }
+
+		// Add NBT Path
+		item.addItemTag(getAppliedNBT(data));
+	}
+	@Override
+	public @NotNull ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Create Fresh
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Add sole tag
+		ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
+
+		// Return thay
+		return ret;
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+
+		// Add sole tag
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
+
+		// Use that
+		DoubleData bakedData = (DoubleData) getLoadedNBT(relevantTags);
+
+		// Valid?
+		if (bakedData != null) {
+
+			// Set
+			mmoitem.setData(this, bakedData);
+		}
+	}
+	@Override
+	public @Nullable StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// You got a double righ
+		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found righ
+		if (tg != null) {
+
+			// Get number
+			Double value = (Double) tg.getValue();
+
+			// Thats it
+			return new DoubleData(value);
+		}
+
+		// Fail
+		return null;
+	}
+
+	@Override
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set(getPath(), null);
 			inv.registerTemplateEdition();
@@ -85,7 +143,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		double base, scale, spread, maxSpread;
 
 		/**
@@ -135,12 +193,6 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			mmoitem.setData(this, new DoubleData(mmoitem.getNBT().getDouble(getNBTPath())));
-	}
-
-	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
 		if (statData.isPresent()) {
 			NumericStatFormula data = (NumericStatFormula) statData.get();
@@ -156,6 +208,11 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
+	}
+
+	@Override
+	public @NotNull StatData getClearStatData() {
+		return new DoubleData(0D);
 	}
 
 	@Override

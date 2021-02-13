@@ -18,9 +18,11 @@ import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StoredTagsData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -106,9 +108,11 @@ public class ItemStackBuilder {
 		return meta;
 	}
 
-	public void addItemTag(ItemTag... itemTags) {
-		tags.addAll(Arrays.asList(itemTags));
-	}
+
+	public void addItemTag(List<ItemTag> newTags) { tags.addAll(newTags); }
+	public void addItemTag(ItemTag... itemTags) { tags.addAll(Arrays.asList(itemTags)); }
+
+	public static final String histroy_keyword = "HSTRY_";
 
 	/**
 	 * @return Returns built NBTItem with applied tags and lore
@@ -116,17 +120,33 @@ public class ItemStackBuilder {
 	public NBTItem buildNBT() {
 		this.mmoitem = new StatLore(mmoitem).generateNewItem();
 
+		MMOItems.Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.mergeableStatHistory.size() + "\u00a77 Historic)");
+
 		// For every stat within this item
 		for (ItemStat stat : mmoitem.getStats())
 
 			// Attempt to add
 			try {
 
+				MMOItems.Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
+
 				// Make necessary lore changes
 				stat.whenApplied(this, mmoitem.getData(stat));
 
+				// Does the item have any stat history regarding thay?
+				StatHistory<StatData> s = mmoitem.getStatHistory(stat);
+
+				// Found it?
+				if (s != null) {
+
+					MMOItems.Log("\u00a7a -+- \u00a77Found History");
+
+					// Add to NBT
+					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));
+				}
+
 			// Something went wrong...
-			} catch (IllegalArgumentException exception) {
+			} catch (IllegalArgumentException|NullPointerException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
 						ChatColor.GRAY + "An error occurred while trying to generate item '"
 						+ ChatColor.RED + mmoitem.getId() + ChatColor.GRAY + "' with stat '"
@@ -212,18 +232,22 @@ public class ItemStackBuilder {
 		}
 
 		public MMOItem generateNewItem() {
-			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false)
-					&& isUpgradable()) {
+			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false) && isUpgradable()) {
+
 				if (upgradeData.getLevel() > 0)
+
 					for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
+
 						UpgradeInfo upgradeInfo = upgradeData.getTemplate().getUpgradeInfo(stat);
 						if (upgradeInfo instanceof DoubleStat.DoubleUpgradeInfo) {
 
 							DoubleStat.DoubleUpgradeInfo info = ((DoubleStat.DoubleUpgradeInfo) upgradeInfo);
 							int level = upgradeData.getLevel();
 
-							if (!mmoitem.hasData(stat))
+							if (!mmoitem.hasData(stat)){
+
 								mmoitem.setData(stat, new DoubleData(0));
+							}
 
 							calculateBase(stat, info, level);
 							updateStat(stat, info, level);

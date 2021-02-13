@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class InternalStat extends ItemStat {
 
@@ -27,12 +28,12 @@ public abstract class InternalStat extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		// not supported
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		// not supported
 	}
 

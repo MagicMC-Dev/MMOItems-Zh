@@ -14,11 +14,4 @@ public class AttackDamage extends AttributeStat {
 		super("ATTACK_DAMAGE", Material.IRON_SWORD, "Attack Damage", new String[] { "The amount of damage", "your weapon deals." },
 				Attribute.GENERIC_ATTACK_DAMAGE, 1);
 	}
-
-	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).getValue();
-		item.addItemTag(new ItemTag(getNBTPath(), value));
-		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
-	}
 }

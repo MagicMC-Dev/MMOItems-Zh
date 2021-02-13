@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
 
 public class GemColor extends StringStat {
 	public GemColor() {
@@ -12,7 +13,7 @@ public class GemColor extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
 	}
 }

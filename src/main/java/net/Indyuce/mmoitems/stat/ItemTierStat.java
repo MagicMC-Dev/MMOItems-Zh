@@ -10,6 +10,7 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemTierStat extends StringStat {
 	public ItemTierStat() {
@@ -18,7 +19,7 @@ public class ItemTierStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		String path = data.toString().toUpperCase().replace("-", "_").replace(" ", "_");
 		Validate.isTrue(MMOItems.plugin.getTiers().has(path), "Could not find item tier with ID '" + path + "'");
 
@@ -28,7 +29,7 @@ public class ItemTierStat extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
 		Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Couldn't find the tier called '" + format + "'.");
 

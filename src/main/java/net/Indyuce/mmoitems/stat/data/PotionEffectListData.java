@@ -8,6 +8,7 @@ import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class PotionEffectListData implements StatData, Mergeable {
 	private final List<PotionEffectData> effects = new ArrayList<>();
@@ -36,4 +37,7 @@ public class PotionEffectListData implements StatData, Mergeable {
 		Validate.isTrue(data instanceof PotionEffectListData, "Cannot merge two different stat data types");
 		effects.addAll(((PotionEffectListData) data).effects);
 	}
+
+	@Override
+	public @NotNull StatData cloneData() { return new PotionEffectListData(getEffects().toArray(new PotionEffectData[0])); }
 }

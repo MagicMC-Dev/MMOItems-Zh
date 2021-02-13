@@ -1,7 +1,12 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Attribute stats are also collected when registered in the StatManager because
@@ -38,5 +43,22 @@ public abstract class AttributeStat extends DoubleStat {
 
 	public double getOffset() {
 		return offset;
+	}
+
+	/**
+	 * Only difference from <code>DoubleStat.whenApplied()</code> is that
+	 * double stats dont bother displaying when equal to 0, but attribute
+	 * stats do.
+	 */
+	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Get its value
+		double value = ((DoubleData) data).getValue();
+
+		// Adds the Item Tag
+		item.addItemTag(getAppliedNBT(data));
+
+		// Translates in Lore
+		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
 	}
 }

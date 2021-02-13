@@ -1,9 +1,12 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,6 +25,8 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BooleanStat extends ItemStat {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
@@ -43,15 +48,38 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Only if enabled yo
 		if (((BooleanData) data).isEnabled()) {
-			item.addItemTag(new ItemTag(getNBTPath(), true));
+
+			// Add those
+			item.addItemTag(getAppliedNBT(data));
+
+			// Show in lore
 			item.getLore().insert(getPath(), MMOItems.plugin.getLanguage().getStatFormat(getPath()));
 		}
 	}
 
+	@NotNull
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Create Fresh
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		if (((BooleanData) data).isEnabled()) {
+
+			// Add sole tag
+			ret.add(new ItemTag(getNBTPath(), true));
+		}
+
+		// Return thay
+		return ret;
+	}
+
+	@Override
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			inv.getEditedSection().set(getPath(), inv.getEditedSection().getBoolean(getPath()) ? null : true);
 			inv.registerTemplateEdition();
@@ -62,7 +90,7 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 
 		double probability = MMOUtils.parseDouble(message);
 		Validate.isTrue(probability >= 0 && probability <= 100, "Chance must be between 0 and 100");
@@ -74,9 +102,40 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find the useful tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+
+		// That one is useful
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			mmoitem.setData(this, new BooleanData(mmoitem.getNBT().getBoolean(getNBTPath())));
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.BOOLEAN));
+
+		BooleanData data = (BooleanData) getLoadedNBT(relevantTags);
+
+		// Success?
+		if (data != null) {
+
+			// Set the data if it was successful
+			mmoitem.setData(this, data);
+		}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find relevant tag
+		ItemTag encoded = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found it?
+		if (encoded != null) {
+
+			// Well read it!
+			return new BooleanData((Boolean) encoded.getValue());
+		}
+
+		return null;
 	}
 
 	@Override
@@ -93,5 +152,11 @@ public class BooleanStat extends ItemStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to switch this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to choose a probability to have this option.");
+	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new BooleanData(false);
 	}
 }

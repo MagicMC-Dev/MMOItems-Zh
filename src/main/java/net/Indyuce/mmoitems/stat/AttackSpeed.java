@@ -14,11 +14,4 @@ public class AttackSpeed extends AttributeStat {
 		super("ATTACK_SPEED", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "Attack Speed",
 				new String[] { "The speed at which your weapon strikes.", "In attacks/sec." }, Attribute.GENERIC_ATTACK_SPEED, 4);
 	}
-
-	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).getValue();
-		item.addItemTag(new ItemTag(getNBTPath(), value));
-		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
-	}
 }

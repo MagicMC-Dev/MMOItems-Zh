@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.EnumUtils;
 import io.lumine.mythic.lib.version.VersionMaterial;
@@ -21,7 +22,10 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,12 +41,12 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		new StatEdition(inv, ItemStats.MATERIAL).enable("Write in the chat the material you want.");
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		Optional<Material> material = EnumUtils.getIfPresent(Material.class, message.toUpperCase().replace("-", "_").replace(" ", "_"));
 		if (MMOItems.plugin.getLanguage().arruinarElPrograma)
 			material = Optional.of(Material.GLISTERING_MELON_SLICE);
@@ -56,7 +60,7 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		/*
 		 * material is handled directly in the MMOBuilder constructor, therefore
 		 * nothing needs to be done here
@@ -64,7 +68,7 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 		mmoitem.setData(this, new MaterialData(mmoitem.getNBT().getItem().getType()));
 	}
 
@@ -79,4 +83,26 @@ public class MaterialStat extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
 	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new MaterialData(Material.IRON_ORE);
+	}
+
+	/**
+	 * This stat is saved not as a custom tag, but as the vanilla material itself.
+	 * Alas this is an empty array
+	 */
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+
+	/**
+	 * This stat is saved not as a custom tag, but as the vanilla material itself.
+	 * Alas this method returns null.
+	 */
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 }

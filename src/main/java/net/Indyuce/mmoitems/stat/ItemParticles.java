@@ -1,8 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -27,6 +30,8 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemParticles extends ItemStat {
 	public ItemParticles() {
@@ -35,7 +40,7 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		new ParticlesEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 	}
 
@@ -46,8 +51,21 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", ((ParticleData) data).toJson().toString()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Ret
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Yes
+		ret.add(new ItemTag(getNBTPath(), ((ParticleData) data).toJson().toString()));
+
+		return ret;
 	}
 
 	@Override
@@ -55,8 +73,12 @@ public class ItemParticles extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to setup the item particles.");
 	}
 
+	@NotNull
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public StatData getClearStatData() { return new ParticleData(ParticleType.AURA, Particle.EXPLOSION_LARGE); }
+
+	@Override
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String edited = (String) info[0];
 
 		String format = message.toUpperCase().replace("-", "_").replace(" ", "_");
@@ -104,15 +126,37 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_ITEM_PARTICLES"))
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Fetch the tags
+		ArrayList<ItemTag> tags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Generate
+		StatData data = getLoadedNBT(tags);
+
+		// Valid?
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		ItemTag tagg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+		if (tagg != null) {
 			try {
-				mmoitem.setData(ItemStats.ITEM_PARTICLES, new ParticleData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_ITEM_PARTICLES")).getAsJsonObject()));
+				return new ParticleData(new JsonParser().parse((String) tagg.getValue()).getAsJsonObject());
 
 			} catch (JsonSyntaxException|IllegalStateException exception) {
+
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
+		}
+
+		return null;
 	}
 }

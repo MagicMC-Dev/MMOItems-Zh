@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.jetbrains.annotations.NotNull;
 
 
 public class StaffSpiritStat extends StringStat {
@@ -18,7 +19,7 @@ public class StaffSpiritStat extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		try {
 			StaffSpirit spirit = StaffSpirit.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
 			inv.getEditedSection().set("staff-spirit", spirit.name());
@@ -30,7 +31,7 @@ public class StaffSpiritStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		StaffSpirit staffSpirit = StaffSpirit.valueOf(data.toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
 		item.getLore().insert("staff-spirit", staffSpirit.getName());

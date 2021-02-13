@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import org.jetbrains.annotations.NotNull;
 
 public class DisableStat extends BooleanStat {
 	public DisableStat(String id, Material material, String name, String... lore) {
@@ -21,7 +22,7 @@ public class DisableStat extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		if (((BooleanData) data).isEnabled())
 			item.addItemTag(new ItemTag("MMOITEMS_" + getId(), true));
 	}

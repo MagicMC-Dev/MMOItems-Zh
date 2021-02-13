@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class SoundListData implements StatData, Mergeable, RandomStatData {
 	private final Map<CustomSound, SoundData> sounds;
@@ -45,6 +46,9 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 		SoundListData cast = (SoundListData) data;
 		cast.sounds.forEach(sounds::put);
 	}
+
+	@Override
+	public @NotNull StatData cloneData() { return new SoundListData(mapData()); }
 
 	@Override
 	public StatData randomize(MMOItemBuilder builder) {

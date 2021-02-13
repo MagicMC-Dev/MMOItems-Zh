@@ -25,6 +25,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringListStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
 
 public class NBTTags extends StringListStat {
 	public NBTTags() {
@@ -39,7 +40,7 @@ public class NBTTags extends StringListStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.",
 					ChatColor.AQUA + "Format: {Tag Name} {Tag Value}");
@@ -60,7 +61,7 @@ public class NBTTags extends StringListStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		Validate.isTrue(message.split(" ").length > 1, "Use this format: {Tag Name} {Tag Value}");
 		List<String> customNbt = inv.getEditedSection().contains("custom-nbt") ? inv.getEditedSection().getStringList("custom-nbt")
 				: new ArrayList<>();
@@ -87,22 +88,38 @@ public class NBTTags extends StringListStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(tag -> {
-			array.add(tag);
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
 
-			item.addItemTag(new ItemTag(tag.substring(0, tag.indexOf(' ')), calculateObjectType(tag.substring(tag.indexOf(' ') + 1))));
-		});
-		item.addItemTag(new ItemTag("MMOITEMS_NBTTAGS", array.toString()));
-	}
-
+	/**
+	 * Unlike other StringLists, this adds every content of the array as a different tag rather than as a JsonArray compound.
+	 */
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_NBTTAGS"))
-			mmoitem.setData(ItemStats.NBT_TAGS,
-					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_NBTTAGS")).getAsJsonArray()));
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+
+		// Start out with a new JSON Array
+		JsonArray array = new JsonArray();
+
+		// Make the result list
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// For every list entry
+		for (String str : ((StringListData) data).getList()) {
+
+			// Add to the array as-is
+			array.add(str);
+
+			ret.add(new ItemTag(str.substring(0, str.indexOf(' ')), calculateObjectType(str.substring(str.indexOf(' ') + 1))));
+		}
+
+		// Add the Json Array
+		ret.add(new ItemTag(getNBTPath(), array.toString()));
+
+		// Ready.
+		return ret;
 	}
+
 
 	public Object calculateObjectType(String input) {
 		if (input.equalsIgnoreCase("true"))

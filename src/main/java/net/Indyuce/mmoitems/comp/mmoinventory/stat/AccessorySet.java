@@ -9,6 +9,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 public class AccessorySet extends StringStat {
     public AccessorySet() {
@@ -16,11 +17,11 @@ public class AccessorySet extends StringStat {
     }
 
     @Override
-    public void whenApplied(ItemStackBuilder item, StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
         item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
     }
     @Override
-    public void whenInput(EditionInventory inv, String message, Object... info) {
+    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         message = message.toLowerCase();
         inv.getEditedSection().set(getPath(), message);
         inv.registerTemplateEdition();

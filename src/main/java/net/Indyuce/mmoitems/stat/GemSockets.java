@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,6 +29,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GemSockets extends ItemStat {
 	public GemSockets() {
@@ -43,10 +46,13 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		GemSocketsData sockets = (GemSocketsData) data;
-		item.addItemTag(new ItemTag("MMOITEMS_GEM_STONES", sockets.toJson().toString()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 
+		// Append NBT Tags
+		GemSocketsData sockets = (GemSocketsData) data;
+		item.addItemTag(getAppliedNBT(data));
+
+		// Edit Lore
 		String empty = ItemStat.translate("empty-gem-socket"), filled = ItemStat.translate("filled-gem-socket");
 		List<String> lore = new ArrayList<>();
 		sockets.getGemstones().forEach(gem -> lore.add(filled.replace("#", gem.getName())));
@@ -54,22 +60,71 @@ public class GemSockets extends ItemStat {
 		item.getLore().insert("gem-stones", lore);
 	}
 
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_GEM_STONES"))
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Well its just a Json tostring
+		GemSocketsData sockets = (GemSocketsData) data;
+
+		ArrayList<ItemTag> ret = new ArrayList<>();
+		ret.add(new ItemTag(getNBTPath(), sockets.toJson().toString()));
+
+		// Thats it
+		return ret;
+	}
+
+	@Override
+	@NotNull public String getNBTPath() {
+		return "MMOITEMS_GEM_STONES";
+	}
+
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find relevant tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Attempt to build
+		StatData data = getLoadedNBT(relevantTags);
+
+		// Valid?
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find Tag
+		ItemTag gTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (gTag != null) {
+
 			try {
-				JsonObject object = new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_GEM_STONES")).getAsJsonObject();
+				// INterpret as Json Object
+				JsonObject object = new JsonParser().parse((String) gTag.getValue()).getAsJsonObject();
 				GemSocketsData sockets = new GemSocketsData(toList(object.getAsJsonArray("EmptySlots")));
 
 				JsonArray array = object.getAsJsonArray("Gemstones");
 				array.forEach(element -> sockets.add(new GemstoneData(element.getAsJsonObject())));
 
-				mmoitem.setData(this, sockets);
-			} catch (JsonSyntaxException exception) {
+				// Return built
+				return sockets;
+
+			} catch (JsonSyntaxException|IllegalStateException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
+		}
+
+		// Nope
+		return null;
 	}
 
 	private List<String> toList(JsonArray array) {
@@ -79,7 +134,7 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.GEM_SOCKETS).enable("Write in the chat the COLOR of the gem socket you want to add.");
 
@@ -99,7 +154,7 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		List<String> lore = inv.getEditedSection().contains(getPath()) ? inv.getEditedSection().getStringList("" + getPath()) : new ArrayList<>();
 		lore.add(message);
 		inv.getEditedSection().set("" + getPath(), lore);
@@ -121,5 +176,11 @@ public class GemSockets extends ItemStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a gem socket.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the socket.");
+	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new GemSocketsData(new ArrayList<>());
 	}
 }

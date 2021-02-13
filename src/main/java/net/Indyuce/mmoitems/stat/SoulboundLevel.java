@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
 
 public class SoulboundLevel extends DoubleStat {
 	public SoulboundLevel() {
@@ -15,7 +16,7 @@ public class SoulboundLevel extends DoubleStat {
 
 	// writes soulbound level with roman writing in lore
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		int value = (int) ((DoubleData) data).getValue();
 		item.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", value));
 		item.getLore().insert("soulbound-level", formatNumericStat(value, "#", MMOUtils.intToRoman(value)));

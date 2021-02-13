@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.gson.*;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -35,6 +33,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Abilities extends ItemStat {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.#");
@@ -57,17 +57,18 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		//Modify Lore
 		List<String> abilityLore = new ArrayList<>();
 		boolean splitter = !MMOItems.plugin.getLanguage().abilitySplitter.equals("");
 
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
-		JsonArray jsonArray = new JsonArray();
+
 		((AbilityListData) data).getAbilities().forEach(ability -> {
 			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getCastingMode())).replace("#a",
 					MMOItems.plugin.getLanguage().getAbilityName(ability.getAbility())));
 
-			jsonArray.add(ability.toJson());
 			for (String modifier : ability.getModifiers()) {
 				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getID().toLowerCase() + "_" + modifier,
 						this.modifierFormat.format(ability.getModifier(modifier)));
@@ -82,17 +83,35 @@ public class Abilities extends ItemStat {
 		if (splitter && abilityLore.size() > 0)
 			abilityLore.remove(abilityLore.size() - 1);
 
+		// Modify tags
 		item.getLore().insert("abilities", abilityLore);
-		item.addItemTag(new ItemTag(getNBTPath(), jsonArray.toString()));
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Make Array
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Convert to JSON
+		JsonArray jsonArray = new JsonArray();
+		for (AbilityData ab : ((AbilityListData) data).getAbilities()) { jsonArray.add(ab.toJson()); }
+
+		// Put
+		ret.add(new ItemTag(getNBTPath(), jsonArray.toString()));
+
+		return ret;
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		new AbilityListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String configKey = (String) info[0];
 		String edited = (String) info[1];
 
@@ -138,18 +157,73 @@ public class Abilities extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit the item abilities.");
 	}
 
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public StatData getClearStatData() {
+		return new AbilityListData();
+	}
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		AbilityListData data = (AbilityListData) getLoadedNBT(relevantTags);
+
+		// Valid?
+		if (data != null) {
+
+			// Set
+			mmoitem.setData(this, data);
+		}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Get Json Array thing
+		ItemTag jsonCompact = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (jsonCompact != null) {
+
+			// Attempt to parse
 			try {
+
+				// New ablity list data
 				AbilityListData list = new AbilityListData();
-				new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray()
-						.forEach(obj -> list.add(new AbilityData(obj.getAsJsonObject())));
-				mmoitem.setData(ItemStats.ABILITIES, list);
-			} catch (JsonSyntaxException | IllegalStateException exception) {
+				JsonArray ar = new JsonParser().parse((String) jsonCompact.getValue()).getAsJsonArray();
+
+				// Convert every object into an ability
+				for (JsonElement e : ar) {
+
+					// For every object
+					if (e.isJsonObject()) {
+
+						// Get as object
+						JsonObject obj = e.getAsJsonObject();
+
+						// Add to abilit list
+						list.add(new AbilityData(obj));
+					}
+				}
+
+				// Well that mus thave worked aye?
+				return list;
+
+			} catch (JsonSyntaxException|IllegalStateException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
+		}
+
+		// Did not work out
+		return null;
 	}
 }

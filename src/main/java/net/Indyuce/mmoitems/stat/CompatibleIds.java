@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.stat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -19,6 +21,8 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,7 @@ public class CompatibleIds extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.COMPATIBLE_IDS).enable("Write in the chat the item id you want to add.");
 
@@ -58,7 +62,7 @@ public class CompatibleIds extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		List<String> lore = inv.getEditedSection().contains("compatible-ids") ? inv.getEditedSection().getStringList("compatible-ids")
 				: new ArrayList<>();
 		lore.add(message.toUpperCase());
@@ -82,22 +86,81 @@ public class CompatibleIds extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last id.");
 	}
 
+	@NotNull
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		List<String> compatibleIds = new ArrayList<>();
-		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(line -> {
-			array.add(line);
-			compatibleIds.add(line);
-		});
-		item.getLore().insert("compatible-ids", compatibleIds);
-		item.addItemTag(new ItemTag("MMOITEMS_COMPATIBLE_IDS", array.toString()));
+	public StatData getClearStatData() {
+		return new StringListData();
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_COMPATIBLE_IDS"))
-			mmoitem.setData(ItemStats.COMPATIBLE_IDS,
-					new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_COMPATIBLE_IDS")).getAsJsonArray()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Copy Array, for lore
+		List<String> compatibleIds = new ArrayList<>(((StringListData) data).getList());
+		item.getLore().insert("compatible-ids", compatibleIds);
+
+		// Add data
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Build Json Array
+		JsonArray array = new JsonArray();
+
+		// For each string in the ids of the data
+		for (String sts : ((StringListData) data).getList()) { array.add(sts); }
+
+		// Make returning array
+		ArrayList<ItemTag> tags = new ArrayList<>();
+
+		// Add Json Array
+		tags.add(new ItemTag(getNBTPath(), array.toString()));
+
+		return tags;
+	}
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// FInd relvant tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Generate data
+		StatData data = getLoadedNBT(relevantTags);
+
+		if (data != null) { mmoitem.setData(this, data);}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find relevant tag
+		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (rTag != null) {
+
+			try {
+				// Parse onto Json Array
+				JsonArray array = new JsonParser().parse((String) rTag.getValue()).getAsJsonArray();
+
+				// Make and return list
+				return new StringListData(array);
+
+			} catch (JsonSyntaxException |IllegalStateException exception) {
+				/*
+				 * OLD ITEM WHICH MUST BE UPDATED.
+				 */
+			}
+		}
+
+		// Nope
+		return null;
 	}
 }

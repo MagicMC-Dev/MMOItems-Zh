@@ -27,6 +27,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
 
 public class Lore extends StringListStat implements GemStoneStat {
 	public Lore() {
@@ -41,7 +42,7 @@ public class Lore extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.LORE).enable("Write in the chat the lore line you want to add.");
 
@@ -60,7 +61,7 @@ public class Lore extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		List<String> lore = inv.getEditedSection().contains("lore") ? inv.getEditedSection().getStringList("lore") : new ArrayList<>();
 		lore.add(message);
 		inv.getEditedSection().set("lore", lore);
@@ -84,24 +85,10 @@ public class Lore extends StringListStat implements GemStoneStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last line.");
 	}
 
-	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-
-		/*
-		 * The lore is not directly inserted into the final itemStack lore
-		 * because all stats have not registered all their lore placeholders
-		 * yet. The lore is only saved in a JSon array so that it can be
-		 * recalculated LATER on with right placeholders
-		 */
-
-		JsonArray array = new JsonArray();
-		((StringListData) data).getList().forEach(array::add);
-		item.addItemTag(new ItemTag("MMOITEMS_LORE", array.toString()));
-	}
-
-	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_LORE"))
-			mmoitem.setData(ItemStats.LORE, new StringListData(new JsonParser().parse(mmoitem.getNBT().getString("MMOITEMS_LORE")).getAsJsonArray()));
-	}
+	/*
+	 * The lore is not directly inserted into the final itemStack lore
+	 * because all stats have not registered all their lore placeholders
+	 * yet. The lore is only saved in a JSon array so that it can be
+	 * recalculated LATER on with right placeholders
+	 */
 }

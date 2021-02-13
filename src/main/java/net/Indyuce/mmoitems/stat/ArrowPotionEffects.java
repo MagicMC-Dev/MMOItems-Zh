@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,6 +37,8 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ArrowPotionEffects extends ItemStat {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
@@ -52,7 +55,7 @@ public class ArrowPotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.ARROW_POTION_EFFECTS).enable("Write in the chat the potion effect you want to add.",
 					ChatColor.AQUA + "Format: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
@@ -72,7 +75,7 @@ public class ArrowPotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3,
 				message + " is not a valid [POTION_EFFECT] [DURATION] [AMPLIFIER]. Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds.");
@@ -114,16 +117,43 @@ public class ArrowPotionEffects extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
 	}
 
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new PotionEffectListData();
+	}
+
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		JsonArray array = new JsonArray();
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		List<String> lore = new ArrayList<>();
 
 		String permEffectFormat = ItemStat.translate("arrow-potion-effects");
 		((PotionEffectListData) data).getEffects().forEach(effect -> {
 			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
 				+ " " + MMOUtils.intToRoman(effect.getLevel()) + "(" + durationFormat.format(effect.getDuration()) + "s)"));
+		});
+
+		item.getLore().insert("arrow-potion-effects", lore);
+
+		// Add tags
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Build Tags list
+		ArrayList<ItemTag> tags = new ArrayList<>();
+
+		// Will make use of a JsonArray
+		JsonArray array = new JsonArray();
+
+		// For every potion effect
+		((PotionEffectListData) data).getEffects().forEach(effect -> {
+
+			// Get as Json Object
 			JsonObject object = new JsonObject();
 			object.addProperty("type", effect.getType().getName());
 			object.addProperty("level", effect.getLevel());
@@ -131,23 +161,58 @@ public class ArrowPotionEffects extends ItemStat {
 			array.add(object);
 		});
 
-		item.getLore().insert("arrow-potion-effects", lore);
-		item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
+		// Add as tag
+		tags.add(new ItemTag(getNBTPath(), array.toString()));
+
+		// Thats it
+		return tags;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag(getNBTPath())) {
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find relevant tag
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Generate Data
+		StatData data = getLoadedNBT(relevantTags);
+
+		// Valid?
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Found at path?
+		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Yes?
+		if (tg != null) {
+
+			// Fresh data
 			PotionEffectListData effects = new PotionEffectListData();
 
-			for(JsonElement entry : MythicLib.plugin.getJson().parse(mmoitem.getNBT().getString(getNBTPath()), JsonArray.class)) {
+			// All right, parse Json
+			for(JsonElement entry : MythicLib.plugin.getJson().parse((String) tg.getValue(), JsonArray.class)) {
+
+				// Fail if not Json Object
 				if(!entry.isJsonObject()) continue;
 				JsonObject object = entry.getAsJsonObject();
-				effects.add(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),
-					object.get("duration").getAsDouble(), object.get("level").getAsInt()));
+
+				// Add
+				effects.add(new PotionEffectData(
+						PotionEffectType.getByName(object.get("type").getAsString()),
+						object.get("duration").getAsDouble(), object.get("level").getAsInt()));
 			}
 
-			mmoitem.setData(ItemStats.ARROW_POTION_EFFECTS, effects);
+			// Return
+			return effects;
 		}
+
+		return null;
 	}
 }

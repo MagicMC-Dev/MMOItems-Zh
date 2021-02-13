@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -9,6 +10,10 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 public class CustomModelData extends DoubleStat implements GemStoneStat {
 	public CustomModelData() {
@@ -19,13 +24,58 @@ public class CustomModelData extends DoubleStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("CustomModelData", (int) ((DoubleData) data).getValue()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Edit meta
+		item.getMeta().setCustomModelData((int) ((DoubleData) data).getValue());
+
+		// Apply Custom Model Data
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Make new ArrayList
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Add Integer
+		ret.add(new ItemTag(getNBTPath(), (int) ((DoubleData) data).getValue()));
+
+		// Return thay
+		return ret;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("CustomModelData"))
-			mmoitem.setData(this, new DoubleData(mmoitem.getNBT().getDouble("CustomModelData")));
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get Relevant tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.INTEGER));
+
+		// Attempt to build data
+		StatData data = getLoadedNBT(relevantTags);
+
+		// Success?
+		if (data != null) { mmoitem.setData(this, data);}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find Tag
+		ItemTag cmd = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found?
+		if (cmd != null) {
+
+			// Well thats it
+			return new DoubleData((Integer) cmd.getValue());
+		}
+
+		return null;
+
 	}
 }

@@ -10,6 +10,7 @@ arrow-velocity: '&7■ Arrow Velocity: &f#'
 blunt-power: '&7■ Blunt Power: &f#'
 blunt-rating: '&7■ Blunt Rating: &f#%'
 two-handed: '&7■ Two Handed'
+handworn: '&7■ Handworn'
 knockback: '&7■ Knockback: &f#'
 recoil: '&7■ Recoil: &f#%'
 note-weight: '&7■ Note Weight: &f#'
@@ -26,9 +27,9 @@ projectile-damage: '&7■ Projectile Damage: &f<plus>#%'
 faction-damage-undead: '&7■ Undead Faction Damage: &f<plus>#%'
 
 # Abilities
-ability-format: '&2#c: #a'
-ability-modifier: '&2#m: #v'
-ability-splitter: '&2'
+ability-format: '&a>&8| &7#c &8|&e|&8| &7&l#a'
+ability-modifier: ' &3>&8|&7 #m&8: &f#v'
+ability-splitter: '&8'
 
 # Armor Stats
 block-power: '&7■ Block Power: &f<plus>#%'
@@ -100,7 +101,7 @@ pickaxe-power: '&7■ &fPickaxe Power: &a#'
 
 # General
 item-type: '&c#'
-tier: '# ITEM'
+tier: '&7Tier: #'
 required-class: '&7# Item'
 required-level: '&eRequires Lvl #'
 # Attributes

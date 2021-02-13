@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,10 +17,12 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class ItemStat {
-	private final String id, name;
-	private final Material material;
+	@NotNull private final String id, name;
+	@NotNull private final Material material;
 
 	private final String[] lore;
 	private final List<String> compatibleTypes;
@@ -46,7 +49,7 @@ public abstract class ItemStat {
 	 * @param materials Materials compatible with the item stat (eg Shield
 	 *                  Pattern), any if empty
 	 */
-	public ItemStat(String id, Material material, String name, String[] lore, String[] types, Material... materials) {
+	public ItemStat(@NotNull String id, @NotNull Material material, @NotNull String name, String[] lore, String[] types, Material... materials) {
 		this.id = id;
 		this.material = material;
 		this.lore = lore == null ? new String[0] : lore;
@@ -70,7 +73,21 @@ public abstract class ItemStat {
 	 * @param item MMOItem builder which must be completed
 	 * @param data Stat data being applied
 	 */
-	public abstract void whenApplied(ItemStackBuilder item, StatData data);
+	public abstract void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data);
+	/**
+	 * Usually called within <code>whenApplied</code>, this generates the
+	 * actual NBT tag that will be written onto the item. Reverses
+	 * <code>fromAppliedNBT()</code> actually.
+	 * <p></p>
+	 * Note that only the following types are supported:
+	 * <p><b>+ </b> Number
+ 	 * </p><b>+ </b> String
+	 * <p><b>+ </b> Boolean
+	 * </p><b>+ </b> List of any of these
+	 *
+	 * @author gunging
+	 */
+	@NotNull public abstract ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data);
 
 	/**
 	 * Called when the stat item is clicked in the item edition menu
@@ -78,7 +95,7 @@ public abstract class ItemStat {
 	 * @param inv   Inventory clicked
 	 * @param event Click event
 	 */
-	public abstract void whenClicked(EditionInventory inv, InventoryClickEvent event);
+	public abstract void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event);
 
 	/**
 	 * When inputing data using chat or anvil input in order to edit the item
@@ -92,14 +109,25 @@ public abstract class ItemStat {
 	 *                StatEdition given to this method to identify what is being
 	 *                edited
 	 */
-	public abstract void whenInput(EditionInventory inv, String message, Object... info);
+	public abstract void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info);
 
 	/**
 	 * Called when stat data is read from an ItemStack in a player inventory
 	 * 
 	 * @param mmoitem NBTItem being read and transformed into a MMOItem instance
 	 */
-	public abstract void whenLoaded(ReadMMOItem mmoitem);
+	public abstract void whenLoaded(@NotNull ReadMMOItem mmoitem);
+	/**
+	 * Usually called within <code>whenLoaded</code>, this generates the
+	 * actual Stat Data from the NBT stored within the item. Reverses
+	 * <code>getAppliedNBT()</code> actually.
+	 * <p></p>
+	 * Shall return null if the tags passed dont provide enough
+	 * information to generate a useable StatData.
+	 *
+	 * @author gunging
+	 */
+	@Nullable public abstract StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags);
 
 	/**
 	 * Called when stat data is displayed in the edition GUI. We cannot use
@@ -113,11 +141,16 @@ public abstract class ItemStat {
 	 */
 	public abstract void whenDisplayed(List<String> lore, Optional<RandomStatData> statData);
 
-	public String getName() {
+	@NotNull public String getName() {
 		return name;
 	}
 
-	public String getId() {
+	/**
+	 * The internal name of this ItemStat.
+	 * <p></p>
+	 * Example, from attack damage: <b>ATTACK_DAMAGE</b>
+	 */
+	@NotNull public String getId() {
 		return id;
 	}
 
@@ -127,21 +160,27 @@ public abstract class ItemStat {
 	 *             now be registered from external plugins
 	 */
 	@Deprecated
-	public String name() {
+	@NotNull public String name() {
 		return id;
 	}
 
-	public String getPath() {
-		return id.toLowerCase().replace("_", "-");
+	String path_Built = null;
+	@NotNull public String getPath() {
+		if (path_Built != null) { return path_Built; }
+		path_Built = id.toLowerCase().replace("_", "-");
+		return path_Built;
 	}
 
+	String nbtPath_Built = null;
 	/**
 	 * @return The NBT path used by the stat to save data in an item's NBTTags.
 	 *         The format is 'MMOITEMS_' followed by the stat name in capital
 	 *         letters only using _
 	 */
-	public String getNBTPath() {
-		return "MMOITEMS_" + id;
+	@NotNull public String getNBTPath() {
+		if (nbtPath_Built != null) { return nbtPath_Built; }
+		nbtPath_Built = "MMOITEMS_" + id;
+		return nbtPath_Built;
 	}
 
 	public Material getDisplayMaterial() {
@@ -195,4 +234,22 @@ public abstract class ItemStat {
 		String str = MMOItems.plugin.getLanguage().getStatFormat(path);
 		return str == null ? "<TranslationNotFound:" + path + ">" : str;
 	}
+
+	/**
+	 * The default value of this ItemStat.
+	 * <p></p>
+	 * Must be blank, easiest examples are <code>DoubleStat</code>s which
+	 * usually return a <code>new DoubleData(0.0)</code>.
+	 * <p></p>
+	 * Used when a gem stone is applied onto an item, but this item did
+	 * not have the stat provided by the gem stone. In this case, the 'original'
+	 * value of the item will be given by this.
+	 * <p></p>
+	 * Also used to know what kind of data to expect, because it may not be super obvious.
+	 * <p>Take <code>Commands</code> stat that has a data of <code>CommandListData</code>
+	 * where one may thing it takes a <code>StringListData</code></p>
+	 *
+	 * @author gunging
+	 */
+	@NotNull public abstract StatData getClearStatData();
 }

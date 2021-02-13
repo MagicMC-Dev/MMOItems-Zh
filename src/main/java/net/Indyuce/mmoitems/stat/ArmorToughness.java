@@ -14,11 +14,4 @@ public class ArmorToughness extends AttributeStat {
 		super("ARMOR_TOUGHNESS", Material.DIAMOND_CHESTPLATE, "Armor Toughness",
 				new String[] { "Armor toughness reduces damage taken." }, Attribute.GENERIC_ARMOR_TOUGHNESS);
 	}
-
-	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		double value = ((DoubleData) data).getValue();
-		item.addItemTag(new ItemTag(getNBTPath(), value));
-		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
-	}
 }

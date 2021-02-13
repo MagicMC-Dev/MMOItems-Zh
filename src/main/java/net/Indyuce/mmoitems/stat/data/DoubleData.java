@@ -4,6 +4,7 @@ import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class DoubleData implements StatData, Mergeable {
 	private double value;
@@ -33,4 +34,7 @@ public class DoubleData implements StatData, Mergeable {
 		Validate.isTrue(data instanceof DoubleData, "Cannot merge two different stat data types");
 		value += ((DoubleData) data).value;
 	}
+
+	@Override
+	public @NotNull StatData cloneData() { return new DoubleData(getValue()); }
 }

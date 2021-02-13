@@ -1,10 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
@@ -23,6 +21,8 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +53,12 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		new CommandListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		if (inv.getEditedSection().contains("commands"))
 			if (inv.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= max) {
 				// max command number = 8
@@ -117,44 +117,125 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		JsonArray array = new JsonArray();
-		List<String> lore = new ArrayList<>();
-
-		String commandFormat = ItemStat.translate("command");
-		((CommandListData) data).getCommands().forEach(command -> {
-
-			JsonObject object = new JsonObject();
-			object.addProperty("Command", command.getCommand());
-			object.addProperty("Delay", command.getDelay());
-			object.addProperty("Console", command.isConsoleCommand());
-			object.addProperty("Op", command.hasOpPerms());
-			array.add(object);
-
-			lore.add(commandFormat.replace("#c", "/" + command.getCommand()).replace("#d", "" + command.getDelay()));
-		});
-
-		item.getLore().insert("commands", lore);
-		item.addItemTag(new ItemTag(getNBTPath(), array.toString()));
+	public @NotNull StatData getClearStatData() {
+		return new CommandListData();
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Add persistent tags onto item
+		item.addItemTag(getAppliedNBT(data));
+
+		// Addlore
+		List<String> lore = new ArrayList<>();
+		String commandFormat = ItemStat.translate("command");
+		((CommandListData) data).getCommands().forEach(command -> {
+
+			lore.add(commandFormat.replace("#c", "/" + command.getCommand()).replace("#d", "" + command.getDelay()));
+		});
+		item.getLore().insert("commands", lore);
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Will end up returning this
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// But it contains only 1 tag: THIS
+		JsonArray array = new JsonArray();
+
+		// Add each command
+		for (CommandData cd : ((CommandListData) data).getCommands()) {
+
+			JsonObject object = new JsonObject();
+			object.addProperty("Command", cd.getCommand());
+			object.addProperty("Delay", cd.getDelay());
+			object.addProperty("Console", cd.isConsoleCommand());
+			object.addProperty("Op", cd.hasOpPerms());
+
+			// Include object
+			array.add(object);
+		}
+
+		// Add that tag in there
+		ret.add(new ItemTag(getNBTPath(), array.toString()));
+
+		// Thats it
+		return ret;
+	}
+
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Find the relevant tag
+		ArrayList<ItemTag> relevantTag = new ArrayList<>();
+
+		// Yes
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTag.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Attempt to bake data
+		CommandListData data = (CommandListData) getLoadedNBT(relevantTag);
+
+		// Valid?
+		if (data != null) {
+
+			// yup
+			mmoitem.setData(this, data);
+		}
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Find relevant tag
+		ItemTag relevant = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found it?
+		if (relevant != null) {
+
+			// Attempt to parse it
 			try {
+
+				// New data <3
 				CommandListData commands = new CommandListData();
 
-				new JsonParser().parse(mmoitem.getNBT().getString(getNBTPath())).getAsJsonArray().forEach(element -> {
-					JsonObject key = element.getAsJsonObject();
-					commands.add(new CommandData(key.get("Command").getAsString(), key.get("Delay").getAsDouble(), key.get("Console").getAsBoolean(),
-							key.get("Op").getAsBoolean()));
-				});
+				// Parse array from it
+				JsonArray ar = new JsonParser().parse((String) relevant.getValue()).getAsJsonArray();
 
-				mmoitem.setData(ItemStats.COMMANDS, commands);
-			} catch (JsonSyntaxException exception) {
+				// Examine every element
+				for (JsonElement e : ar) {
+
+					// Valid?
+					if (e.isJsonObject()) {
+
+						// Get Key
+						JsonObject key = e.getAsJsonObject();
+
+						// Interpret Command Data
+						CommandData cd = new CommandData(
+								key.get("Command").getAsString(),
+								key.get("Delay").getAsDouble(),
+								key.get("Console").getAsBoolean(),
+								key.get("Op").getAsBoolean());
+
+						// Register
+						commands.add(cd);
+					}
+				}
+
+			// Needs updating
+			} catch (JsonSyntaxException|IllegalStateException exception) {
 				/*
 				 * OLD ITEM WHICH MUST BE UPDATED.
 				 */
 			}
+		}
+
+		return null;
 	}
 }

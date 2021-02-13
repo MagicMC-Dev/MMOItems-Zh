@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import org.jetbrains.annotations.NotNull;
 
 public class LoreFormat extends StringStat {
 	public LoreFormat() {
@@ -18,7 +19,7 @@ public class LoreFormat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		String path = data.toString();
 		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(path), "Could not find lore format with ID '" + path + "'");
 
@@ -26,7 +27,7 @@ public class LoreFormat extends StringStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(message), "Couldn't find lore format with ID '" + message + "'.");
 
 		inv.getEditedSection().set(getPath(), message);

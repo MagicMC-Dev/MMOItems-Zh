@@ -4,6 +4,7 @@ import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class RestoreData implements StatData, Mergeable {
 	private double health, food, saturation;
@@ -44,5 +45,10 @@ public class RestoreData implements StatData, Mergeable {
 		health += ((RestoreData) data).health;
 		food += ((RestoreData) data).food;
 		saturation += ((RestoreData) data).saturation;
+	}
+
+	@Override
+	public @NotNull StatData cloneData() {
+		return new RestoreData(getHealth(), getFood(), getSaturation());
 	}
 }

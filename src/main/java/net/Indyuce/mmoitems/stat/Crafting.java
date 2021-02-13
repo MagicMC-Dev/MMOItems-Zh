@@ -1,8 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
@@ -19,6 +22,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Crafting extends ItemStat {
 	public Crafting() {
@@ -27,7 +32,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new RecipeListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
@@ -46,8 +51,18 @@ public class Crafting extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all crafting recipes.");
 	}
 
+	/**
+	 * This stat is not saved within the item. This method returns a StringData with its value as <code>null</code>,
+	 * though it is just a placeholder, for this method truly has no data associated to it.
+	 */
+	@NotNull
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public StatData getClearStatData() {
+		return new StringData(null);
+	}
+
+	@Override
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String type = (String) info[0];
 
 		switch (type) {
@@ -137,11 +152,29 @@ public class Crafting extends ItemStat {
 		return null;
 	}
 
+	/**
+	 * This stat is not saved within the item. This method is empty.
+	 */
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-	}
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { }
 
+	/**
+	 * This stat is not saved within the item. This method is always an empty array.
+	 */
+	@NotNull
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-	}
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+
+	/**
+	 * This stat is not saved within the item. This method is empty.
+	 */
+	@Override
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) { }
+
+	/**
+	 * This stat is not saved within the item. This method is always null.
+	 */
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 }

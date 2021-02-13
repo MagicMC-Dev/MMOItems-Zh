@@ -35,24 +35,7 @@ public abstract class ChooseStat extends StringStat {
     }
 
     @Override
-    public RandomStatData whenInitialized(Object object) {
-
-        // Return a string data I guess
-        return new StringData(object.toString());
-    }
-
-    @Override
-    public void whenApplied(ItemStackBuilder item, StatData data) {
-
-        // Add tag to item
-        item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
-
-        // Insert lore line
-        item.getLore().insert(getPath(), data.toString());
-    }
-
-    @Override
-    public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         Validate.isTrue(chooseableList.size() > 0, "\u00a77Invalid Chooseable Item Stat " + ChatColor.GOLD + getId() + "\u00a77' - \u00a7cNo options to choose from.");
 
         // If removing, reset to default
@@ -88,25 +71,6 @@ public abstract class ChooseStat extends StringStat {
             // Sends a message
             inv.getPlayer().sendMessage( MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + current + ChatColor.GRAY + ".");
         }
-    }
-
-    @Override
-    public void whenInput(EditionInventory inv, String message, Object... info) {
-
-        // Edits into persistent files
-        inv.getEditedSection().set(getPath(), message);
-        inv.registerTemplateEdition();
-
-        // Sends a message
-        inv.getPlayer().sendMessage( MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
-    }
-
-    @Override
-    public void whenLoaded(ReadMMOItem mmoitem) {
-
-        // If the item has such NBT path, load it.
-        if (mmoitem.getNBT().hasTag(getNBTPath()))
-            mmoitem.setData(this, new StringData(mmoitem.getNBT().getString(getNBTPath())));
     }
 
     @Override

@@ -1,8 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,11 +30,30 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Elements extends ItemStat {
 	public Elements() {
 		super("ELEMENT", Material.SLIME_BALL, "Elements", new String[] { "The elements of your item." },
 				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
+
+		// Initialize paths
+		if (defenseNBTpaths == null) {
+
+			// Initialize
+			defenseNBTpaths = new HashMap<>();
+			damageNBTpaths = new HashMap<>();
+
+			// Initialize
+			for (Element element : Element.values()) {
+
+				// Add I guess
+				defenseNBTpaths.put(element, "MMOITEMS_" + element.name() + "_DEFENSE");
+				damageNBTpaths.put(element, "MMOITEMS_" + element.name() + "_DAMAGE");
+			}
+
+		}
 	}
 
 	@Override
@@ -41,7 +63,7 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new ElementsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
@@ -54,7 +76,7 @@ public class Elements extends ItemStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String elementPath = info[0].toString();
 
 		NumericStatFormula formula = new NumericStatFormula(message);
@@ -94,37 +116,111 @@ public class Elements extends ItemStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all the elements.");
 	}
 
+	@NotNull
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		ElementListData elements = (ElementListData) data;
+	public StatData getClearStatData() { return new ElementListData(); }
 
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Write Lore
+		ElementListData elements = (ElementListData) data;
 		for (Element element : elements.getDamageElements()) {
 			String path = element.name().toLowerCase() + "-damage";
 			double value = elements.getDamage(element);
-
-			item.addItemTag(new ItemTag("MMOITEMS_" + element.name() + "_DAMAGE", value));
-			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value)));
-		}
-
+			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value))); }
 		for (Element element : elements.getDefenseElements()) {
 			String path = element.name().toLowerCase() + "-defense";
 			double value = elements.getDefense(element);
+			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value))); }
 
-			item.addItemTag(new ItemTag("MMOITEMS_" + element.name() + "_DEFENSE", value));
-			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value)));
+		// Addtags
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Must be element list data
+		ElementListData elements = (ElementListData) data;
+
+		// Create Array
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Add damages
+		for (Element element : elements.getDamageElements()) {
+
+			// Obtain damage
+			String path = element.name().toLowerCase() + "-damage";
+			double value = elements.getDamage(element);
+
+			// Create Tag
+			ret.add(new ItemTag(damageNBTpaths.get(element), value));
 		}
+
+		// Add defenses
+		for (Element element : elements.getDefenseElements()) {
+
+			// Obtain defense
+			String path = element.name().toLowerCase() + "-defense";
+			double value = elements.getDefense(element);
+
+			// Create Tag
+			ret.add(new ItemTag(defenseNBTpaths.get(element), value));
+		}
+
+		// Thats it
+		return ret;
 	}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		ElementListData elements = new ElementListData();
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
+		// Seek the relevant tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
 		for (Element element : Element.values()) {
-			elements.setDefense(element, mmoitem.getNBT().getDouble("MMOITEMS_" + element.name() + "_DEFENSE"));
-			elements.setDamage(element, mmoitem.getNBT().getDouble("MMOITEMS_" + element.name() + "_DAMAGE"));
+
+			// Add I guess
+			if (mmoitem.getNBT().hasTag(damageNBTpaths.get(element)))
+				relevantTags.add(ItemTag.getTagAtPath(damageNBTpaths.get(element), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
+
+
+			if (mmoitem.getNBT().hasTag(defenseNBTpaths.get(element)))
+				relevantTags.add(ItemTag.getTagAtPath(defenseNBTpaths.get(element), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
 		}
 
-		if (elements.total() > 0)
-			mmoitem.setData(ItemStats.ELEMENTS, elements);
+		// Generate Data
+		StatData data = getLoadedNBT(relevantTags);
+
+		// Found?
+		if (data != null) { mmoitem.setData(this, data); }
 	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// Create new
+		ElementListData elements = new ElementListData();
+		boolean success = false;
+
+		// Try to find every existing element
+		for (Element element : Element.values()) {
+
+			// Find Damage and Defense Tags
+			ItemTag damTag = ItemTag.getTagAtPath(damageNBTpaths.get(element), storedTags);
+			ItemTag defTag = ItemTag.getTagAtPath(defenseNBTpaths.get(element), storedTags);
+
+			// Found?
+			if (damTag != null) { elements.setDamage(element, (double) damTag.getValue()); success = true; }
+			if (defTag != null) { elements.setDefense(element, (double) defTag.getValue()); success = true; }
+		}
+
+		if (success) { return elements; }
+		return null;
+	}
+
+	static HashMap<Element, String> defenseNBTpaths = null;
+	static HashMap<Element, String> damageNBTpaths = null;
 }

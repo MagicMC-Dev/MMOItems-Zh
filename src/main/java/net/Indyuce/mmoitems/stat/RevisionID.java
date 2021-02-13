@@ -1,8 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,6 +21,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RevisionID extends ItemStat implements GemStoneStat {
 	public RevisionID() {
@@ -36,12 +40,20 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(ItemStackBuilder item, StatData data) {
-		item.addItemTag(new ItemTag("MMOITEMS_REVISION_ID", (int) ((DoubleData) data).getValue()));
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
+	@Override
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+		ArrayList<ItemTag> ret = new ArrayList<>();
+		ret.add(new ItemTag(getNBTPath(), (int) ((DoubleData) data).getValue()));
+		return ret;
 	}
 
 	@Override
-	public void whenClicked(EditionInventory inv, InventoryClickEvent event) {
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		int id = inv.getEditedSection().getInt(getPath(), 1);
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set(getPath(), Math.max(id - 1, 1));
@@ -54,12 +66,23 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenInput(EditionInventory inv, String message, Object... info) {}
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {}
 
 	@Override
-	public void whenLoaded(ReadMMOItem mmoitem) {
-		if (mmoitem.getNBT().hasTag("MMOITEMS_REVISION_ID"))
-			mmoitem.setData(this, new DoubleData(mmoitem.getNBT().getInteger("MMOITEMS_REVISION_ID")));
+	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+		ArrayList<ItemTag> tags = new ArrayList<>();
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.INTEGER));
+		StatData data = getLoadedNBT(tags);
+		if (data != null) { mmoitem.setData(this, data); }
+	}
+
+	@Nullable
+	@Override
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+		ItemTag tag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+		if (tag != null) { return new DoubleData((int) tag.getValue()); }
+		return null;
 	}
 
 	@Override
@@ -73,5 +96,11 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to increase this value.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to decrease this value.");
+	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new DoubleData(0D);
 	}
 }

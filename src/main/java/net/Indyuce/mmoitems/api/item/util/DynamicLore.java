@@ -4,10 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ComponentUtil;
 import io.lumine.mythic.utils.text.Component;
 import io.lumine.mythic.utils.text.format.TextDecoration;
+import io.lumine.mythic.utils.text.minimessage.MiniMessage;
 import net.Indyuce.mmoitems.MMOItems;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class DynamicLore {
 				String s = replace(e.getAsString());
 				if(!s.equals("!INVALID!"))
 					lore.add(Component.text()
-							.append(ComponentUtil.legacyMiniMessage(s))
+							.append(MiniMessage.get().parse(ChatColor.translateAlternateColorCodes('&', s)))
 							.decoration(TextDecoration.ITALIC, false)
 							.build());
 			}
@@ -42,7 +43,7 @@ public class DynamicLore {
 		switch(input.toLowerCase()) {
 			case "%durability%":
 				if(item.hasTag("MMOITEMS_DURABILITY") && item.hasTag("MMOITEMS_MAX_DURABILITY"))
-					return MythicLib.plugin.parseColors(MMOItems.plugin.getLanguage().getDynLoreFormat("durability")
+					return (MMOItems.plugin.getLanguage().getDynLoreFormat("durability")
 					.replace("%durability%", "" + item.getInteger("MMOITEMS_DURABILITY"))
 					.replace("%max_durability%", "" + item.getInteger("MMOITEMS_MAX_DURABILITY")));
 				else return "!INVALID!";

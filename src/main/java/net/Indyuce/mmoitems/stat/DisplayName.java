@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -30,7 +29,7 @@ public class DisplayName extends StringStat {
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
 
-		item.getMeta().setDisplayName(format);
+		item.getMeta().setDisplayName(ChatColor.translateAlternateColorCodes('&', format));
 	}
 
 	/**

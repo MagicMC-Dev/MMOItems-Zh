@@ -193,10 +193,11 @@ public class ItemStackBuilder {
 
 		nbtItem.addTag(tags);
 
-		nbtItem.setDisplayNameComponent(Component.text()
-				.append(MiniMessage.get().parse(meta.getDisplayName()))
-				.decoration(TextDecoration.ITALIC, false)
-				.build());
+		if (meta.hasDisplayName())
+			nbtItem.setDisplayNameComponent(Component.text()
+					.append(MiniMessage.get().parse(meta.getDisplayName()))
+					.decoration(TextDecoration.ITALIC, false)
+					.build());
 
 		return nbtItem;
 	}

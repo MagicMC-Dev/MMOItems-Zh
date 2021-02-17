@@ -227,6 +227,7 @@ public class Commands extends ItemStat {
 						commands.add(cd);
 					}
 				}
+				return commands;
 
 			// Needs updating
 			} catch (JsonSyntaxException|IllegalStateException exception) {

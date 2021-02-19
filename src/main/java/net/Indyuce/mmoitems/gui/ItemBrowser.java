@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ComponentUtil;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.utils.text.Component;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;

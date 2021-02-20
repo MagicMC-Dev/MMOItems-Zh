@@ -3,6 +3,8 @@ package net.Indyuce.mmoitems.api.item.util.crafting;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
@@ -17,7 +19,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 public class CraftingRecipeDisplay extends ConfigItem {
 	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
@@ -119,12 +125,17 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(MythicLib.plugin.parseColors(
-					name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
-			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return NBTItem.get(item).addTag(new ItemTag("recipeId", craftingRecipe.getId())).toItem();
+			NBTItem nbtItem = NBTItem.get(item);
+
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
+
+			List<Component> componentLore = new ArrayList<>();
+			lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+			nbtItem.setLoreComponents(componentLore);
+
+			return nbtItem.addTag(new ItemTag("recipeId", craftingRecipe.getId())).toItem();
 		}
 	}
 }

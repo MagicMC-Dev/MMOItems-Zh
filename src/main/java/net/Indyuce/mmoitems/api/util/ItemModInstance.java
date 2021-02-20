@@ -1,14 +1,8 @@
 package net.Indyuce.mmoitems.api.util;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -26,7 +20,15 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemModInstance {
 	private final NBTItem nbtItem;
@@ -124,14 +126,21 @@ public class ItemModInstance {
 		ItemStack stack = mmoItem.newBuilder().build();
 		stack.setAmount(amount);
 		ItemMeta meta = stack.getItemMeta();
-		if (cachedName != null)
-			meta.setDisplayName(cachedName);
-		if (cachedLore != null)
-			meta.setLore(cachedLore);
-		stack.setItemMeta(meta);
 		if (cachedEnchants != null)
 			stack.addUnsafeEnchantments(cachedEnchants);
-		return stack;
+		stack.setItemMeta(meta);
+
+		NBTItem nbtItem = NBTItem.get(stack);
+
+		if (cachedName != null)
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(cachedName));
+		if (cachedLore != null) {
+			List<Component> componentLore = new ArrayList<>();
+			cachedLore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+			nbtItem.setLoreComponents(componentLore);
+		}
+
+		return nbtItem.toItem();
 	}
 
 	/*

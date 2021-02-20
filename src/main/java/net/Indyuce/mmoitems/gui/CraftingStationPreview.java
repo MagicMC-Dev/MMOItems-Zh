@@ -1,9 +1,15 @@
 package net.Indyuce.mmoitems.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
+import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
+import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,14 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
-import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
@@ -81,11 +81,11 @@ public class CraftingStationPreview extends PluginInventory {
 			inv.setItem(16, item);
 		}
 		if (recipe.getRecipe() instanceof UpgradingRecipe) {
-			ItemStack stack = ((UpgradingRecipe) recipe.getRecipe()).getItem().getPreview();
-			ItemMeta meta = stack.getItemMeta();
-			meta.setDisplayName(meta.getDisplayName() + ChatColor.GREEN + "+1!");
-			stack.setItemMeta(meta);
-			inv.setItem(16, stack);
+			NBTItem nbtItem = NBTItem.get(((UpgradingRecipe) recipe.getRecipe()).getItem().getPreview());
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(
+					nbtItem.toItem().getItemMeta().getDisplayName() + ChatColor.GREEN + "+1!"));
+
+			inv.setItem(16, nbtItem.toItem());
 		}
 
 		inv.setItem(10, ConfigItems.BACK.getItem());

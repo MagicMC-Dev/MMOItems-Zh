@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -139,16 +142,20 @@ public class UpdaterManager implements Listener {
 		//if (did.hasOption(KeepOption.KEEP_DURABILITY) && item.getItem().getItemMeta() instanceof Damageable && newItemMeta instanceof Damageable)
 		((Damageable) newItemMeta).setDamage(((Damageable) item.getItem().getItemMeta()).getDamage());
 
+		newItem.setItemMeta(newItemMeta);
+		NBTItem nbtItem = NBTItem.get(newItem);
 		/*
 		 * keep name so players who renamed the item in the anvil does not have
 		 * to rename it again
 		 */
 		//if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
-		newItemMeta.setDisplayName(item.getItem().getItemMeta().getDisplayName());
+		nbtItem.setDisplayNameComponent(LegacyComponent.parse(item.getItem().getItemMeta().getDisplayName()));
 
-		newItemMeta.setLore(lore);
-		newItem.setItemMeta(newItemMeta);
-		return newItem;
+		List<Component> componentLore = new ArrayList<>();
+		lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+		nbtItem.setLoreComponents(componentLore);
+
+		return nbtItem.toItem();
 	}
 
 	public enum KeepOption {

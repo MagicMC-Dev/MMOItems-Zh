@@ -1,24 +1,26 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 public class UpgradingRecipeDisplay extends ConfigItem {
 	public UpgradingRecipeDisplay() {
@@ -90,11 +92,17 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			ItemStack item = upgradingRecipe.getItem().getPreview();
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(MythicLib.plugin.parseColors(name.replace("#name#", MMOUtils.getDisplayName(item))));
-			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
+			NBTItem nbtItem = NBTItem.get(item);
+
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(name.replace("#name#", MMOUtils.getDisplayName(item))));
+
+			List<Component> componentLore = new ArrayList<>();
+			lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+			nbtItem.setLoreComponents(componentLore);
+
+			return nbtItem.addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
 		}
 	}
 }

@@ -84,7 +84,9 @@ public class ConfigItem {
 		}
 
 		nbtItem.addTag(new ItemTag("ItemId", id));
-		nbtItem.setDisplayNameComponent(LegacyComponent.parse(getName()));
+
+		if (getName() != null)
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(getName()));
 
 		if (hasLore()) {
 			List<Component> lore = new ArrayList<>();

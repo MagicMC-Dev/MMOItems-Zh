@@ -1,9 +1,12 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
-import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
+import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
+import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -82,11 +85,17 @@ public class QueueItemDisplay extends ConfigItem {
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(MythicLib.plugin.parseColors(name.replace("#name#", meta.getDisplayName())));
-			meta.setLore(lore);
 			item.setItemMeta(meta);
 
-			return MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("queueId", crafting.getUniqueId().toString()))
+			NBTItem nbtItem = NBTItem.get(item);
+
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(name.replace("#name#", meta.getDisplayName())));
+
+			List<Component> componentLore = new ArrayList<>();
+			lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+			nbtItem.setLoreComponents(componentLore);
+
+			return nbtItem.addTag(new ItemTag("queueId", crafting.getUniqueId().toString()))
 					.toItem();
 		}
 	}

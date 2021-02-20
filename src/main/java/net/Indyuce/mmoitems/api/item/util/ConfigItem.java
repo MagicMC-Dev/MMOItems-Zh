@@ -1,10 +1,11 @@
 package net.Indyuce.mmoitems.api.item.util;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.ComponentUtil;
+import io.lumine.mythic.utils.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
@@ -75,22 +76,26 @@ public class ConfigItem {
 	}
 
 	public void updateItem() {
-		setItem(icon);
-		if (icon.getType() == Material.AIR)
+		NBTItem nbtItem = NBTItem.get(icon);
+
+		if (icon.getType() == Material.AIR) {
+			item = icon;
 			return;
-
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(MythicLib.plugin.parseColors(getName()));
-		meta.addItemFlags(ItemFlag.values());
-
-		if (hasLore()) {
-			List<String> lore = new ArrayList<>();
-			getLore().forEach(str -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(str)));
-			meta.setLore(lore);
 		}
 
+		nbtItem.addTag(new ItemTag("ItemId", id));
+		nbtItem.setDisplayNameComponent(ComponentUtil.legacyMiniMessage(getName()));
+
+		if (hasLore()) {
+			List<Component> lore = new ArrayList<>();
+			getLore().forEach(line -> lore.add(ComponentUtil.legacyMiniMessage(line)));
+			nbtItem.setLoreComponents(lore);
+		}
+		item = nbtItem.toItem();
+
+		ItemMeta meta =  item.getItemMeta();
+		meta.addItemFlags(ItemFlag.values());
 		item.setItemMeta(meta);
-		item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("ItemId", id)).toItem();
 	}
 
 	public String getName() {

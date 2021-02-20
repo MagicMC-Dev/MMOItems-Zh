@@ -6,7 +6,6 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.utils.adventure.text.Component;
-import io.lumine.mythic.utils.adventure.text.format.TextDecoration;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -172,9 +171,8 @@ public class ItemStackBuilder {
 		JsonArray array = new JsonArray();
 		for (String s : list)
 			array.add(s);
-		if(array.size() != 0)
+		if (array.size() != 0)
 			tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
-		meta.setLore(list);
 
 		/*
 		 * This tag is added to entirely override default vanilla item attribute
@@ -189,10 +187,11 @@ public class ItemStackBuilder {
 		nbtItem.addTag(tags);
 
 		if (meta.hasDisplayName())
-			nbtItem.setDisplayNameComponent(Component.text()
-					.append(LegacyComponent.parse(meta.getDisplayName()))
-					.decoration(TextDecoration.ITALIC, false)
-					.build());
+			nbtItem.setDisplayNameComponent(LegacyComponent.parse(meta.getDisplayName()));
+
+		List<Component> componentLore = new ArrayList<>();
+		list.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+		nbtItem.setLoreComponents(componentLore);
 
 		return nbtItem;
 	}

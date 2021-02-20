@@ -3,7 +3,9 @@ package net.Indyuce.mmoitems.api.interaction;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.SmartGive;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -16,8 +18,8 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Consumable extends UseItem {
@@ -101,23 +103,23 @@ public class Consumable extends UseItem {
 			maxConsume -= 1;
 			nbtItem.addTag(new ItemTag("MMOITEMS_MAX_CONSUME", maxConsume));
 
-			ItemStack usedItem = nbtItem.toItem().clone();
-			usedItem.setAmount(1);
 
-			ItemMeta usedItemMeta = usedItem.getItemMeta();
-			List<String> itemLores = usedItemMeta.getLore();
+			List<String> itemLores = nbtItem.toItem().clone().getItemMeta().getLore();
 
 			for (int i = 0; i < itemLores.size(); i++) {
 				if (itemLores.get(i).equals(maxConsumeLore)) {
 					maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
 					itemLores.set(i, maxConsumeLore);
 
-					usedItemMeta.setLore(itemLores);
-					usedItem.setItemMeta(usedItemMeta);
+					List<Component> componentLore = new ArrayList<>();
+					itemLores.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+					nbtItem.setLoreComponents(componentLore);
 
 					break;
 				}
 			}
+			ItemStack usedItem = nbtItem.toItem().clone();
+			usedItem.setAmount(1);
 
 			if (player.getInventory().getItemInMainHand().equals(item))
 				player.getInventory().setItemInMainHand(usedItem);

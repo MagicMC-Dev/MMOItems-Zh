@@ -1,13 +1,13 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 public class VanillaIngredient extends Ingredient {
 	private final Material material;
@@ -41,12 +41,10 @@ public class VanillaIngredient extends Ingredient {
 
 	@Override
 	public ItemStack generateItemStack(RPGPlayer player) {
-		ItemStack item = new ItemStack(material, getAmount());
+		NBTItem item = NBTItem.get(new ItemStack(material, getAmount()));
 		if (displayName != null) {
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName(displayName);
-			item.setItemMeta(meta);
+			item.setDisplayNameComponent(LegacyComponent.parse(displayName));
 		}
-		return item;
+		return item.toItem();
 	}
 }

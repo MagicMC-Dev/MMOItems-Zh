@@ -4,11 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.utils.adventure.text.Component;
 import io.lumine.mythic.utils.adventure.text.format.TextDecoration;
-import io.lumine.mythic.utils.adventure.text.minimessage.MiniMessage;
 import net.Indyuce.mmoitems.MMOItems;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class DynamicLore {
 				String s = replace(e.getAsString());
 				if(!s.equals("!INVALID!"))
 					lore.add(Component.text()
-							.append(MiniMessage.get().parse(ChatColor.translateAlternateColorCodes('&', s)))
+							.append(LegacyComponent.parse(s))
 							.decoration(TextDecoration.ITALIC, false)
 							.build());
 			}

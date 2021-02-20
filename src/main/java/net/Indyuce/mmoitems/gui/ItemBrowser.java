@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.api.util.ComponentUtil;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
@@ -133,16 +133,16 @@ public class ItemBrowser extends PluginInventory {
 
 			lore.add(Component.empty());
 			if (deleteMode) {
-				lore.add(ComponentUtil.fromString(
+				lore.add(LegacyComponent.parse(
 						ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross));
 				nbtItem.setDisplayNameComponent(Component.text()
-						.append(ComponentUtil.fromString(ChatColor.RED + "DELETE: "))
+						.append(LegacyComponent.parse(ChatColor.RED + "DELETE: "))
 						.append(nbtItem.getDisplayNameComponent())
 						.build());
 			}
 
-			lore.add(ComponentUtil.fromString(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
-			lore.add(ComponentUtil.fromString(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
+			lore.add(LegacyComponent.parse(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item."));
+			lore.add(LegacyComponent.parse(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."));
 
 			nbtItem.setLoreComponents(lore);
 

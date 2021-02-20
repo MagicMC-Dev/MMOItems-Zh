@@ -15,12 +15,8 @@ import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.StoredTagsData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.ChatColor;
@@ -34,7 +30,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -209,122 +204,44 @@ public class ItemStackBuilder {
 		return new DynamicLore(buildNBT()).build();
 	}
 
+	//
 	public class StatLore {
-		private final MMOItem mmoitem;
+		private MMOItem mmoitem;
 
-		private final UpgradeData upgradeData;
-
-		/**
-		 * @deprecated Will be improved with MMOItems 7. Currently used to display
-		 *             upgrade stats in the lore. Should be improved to be more OOP
-		 *             friendly. NO MODIFICATIONS ALLOWED BEFORE A REWRITE
-		 */
 		public StatLore(MMOItem mmoitem) {
-			this.mmoitem = mmoitem.clone();
-			this.upgradeData = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE);
-		}
-
-		public MMOItem getMMOItem() {
-			return mmoitem;
-		}
-
-		public boolean isUpgradable() {
-			return upgradeData != null && upgradeData.getTemplate() != null;
+			this.mmoitem = mmoitem;
 		}
 
 		public MMOItem generateNewItem() {
-			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false) && isUpgradable()) {
+			mmoitem = mmoitem.clone();
 
-				if (upgradeData.getLevel() > 0)
+			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false))
+				for (ItemStat stat : mmoitem.getStats()) {
+					StatHistory<StatData> data = mmoitem.getStatHistory(stat);
+					if (data != null
+							&& data.getOriginalData() instanceof DoubleData
+							&& mmoitem.getData(stat) instanceof DoubleData) {
+						double value, original, current;
+						try {
+							original = ((DoubleData) data.getOriginalData()).getValue();
+							current = ((DoubleData) mmoitem.getData(stat)).getValue();
+							value = current - original;
+						} catch (NullPointerException e) {
+							continue;
+						}
 
-					for (ItemStat stat : upgradeData.getTemplate().getKeys()) {
-
-						UpgradeInfo upgradeInfo = upgradeData.getTemplate().getUpgradeInfo(stat);
-						if (upgradeInfo instanceof DoubleStat.DoubleUpgradeInfo) {
-
-							DoubleStat.DoubleUpgradeInfo info = ((DoubleStat.DoubleUpgradeInfo) upgradeInfo);
-							int level = upgradeData.getLevel();
-
-							if (!mmoitem.hasData(stat)){
-
-								mmoitem.setData(stat, new DoubleData(0));
-							}
-
-							calculateBase(stat, info, level);
-							updateStat(stat, info, level);
-
-							double value = getValue(stat);
-
-							if (value > 0)
+						if (value != 0) {
 								lore.insert(stat.getPath(), stat.formatNumericStat(value, "#",
-										new StatFormat("##").format(value))
+										new StatFormat("##").format(current))
 										+ MythicLib.plugin.parseColors(MMOItems.plugin.getConfig()
-												.getString("item-upgrading.stat-change-suffix", " &e(+#stat#)").replace(
-														"#stat#", new StatFormat("##").format(value - getBase(stat)))));
+										.getString("item-upgrading.stat-change-suffix", " &e(+#stat#)").replace(
+												"#stat#", new StatFormat("##").format(value))));
 						}
 					}
-			}
+				}
 			return mmoitem;
 		}
-
-		public void calculateBase(ItemStat stat, DoubleStat.DoubleUpgradeInfo info, int level) {
-			if (!hasBase(stat)) {
-				ItemTag tag;
-				String key = "BASE_" + stat.getNBTPath();
-				double value = getValue(stat);
-
-				// does inverse math to get the base
-				if (info.isRelative()) {
-					double upgradeAmount = ((DoubleStat.DoubleUpgradeInfo) upgradeData.getTemplate()
-							.getUpgradeInfo(stat)).getAmount();
-
-					for (int i = 1; i <= level; i++) {
-						value /= 1 + upgradeAmount;
-					}
-
-					tag = new ItemTag(key, value);
-				} else {
-					tag = new ItemTag(key, Math.max(0, value - (info.getAmount() * level)));
-				}
-				StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStats.STORED_TAGS);
-
-				tagsData.addTag(tag);
-				mmoitem.replaceData(ItemStats.STORED_TAGS, tagsData);
-			}
-		}
-
-		// sets the mmoitem data to reflect current upgrade
-		public void updateStat(ItemStat stat, DoubleStat.DoubleUpgradeInfo info, int level) {
-			double base = getBase(stat);
-			if (info.isRelative()) {
-				for (int i = 1; i <= level; i++) {
-					base *= 1 + info.getAmount();
-				}
-				mmoitem.replaceData(stat, new DoubleData(base));
-			} else {
-				mmoitem.replaceData(stat, new DoubleData((info.getAmount() * level) + base));
-			}
-		}
-
-		public HashMap<String, ItemTag> getStoredTags() {
-			HashMap<String, ItemTag> map = new HashMap<>();
-			StoredTagsData tagsData = (StoredTagsData) mmoitem.getData(ItemStats.STORED_TAGS);
-
-			for (ItemTag tag : tagsData.getTags())
-				map.put(tag.getPath(), tag);
-			return map;
-		}
-
-		public double getValue(ItemStat stat) {
-			return ((DoubleData) mmoitem.getData(stat)).getValue();
-		}
-
-		public boolean hasBase(ItemStat stat) {
-			return getStoredTags().containsKey("BASE_" + stat.getNBTPath());
-		}
-
-		public double getBase(ItemStat stat) {
-			return Double.parseDouble(getStoredTags().get("BASE_" + stat.getNBTPath()).getValue().toString());
-		}
 	}
+
+
 }

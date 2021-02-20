@@ -2,8 +2,8 @@ package net.Indyuce.mmoitems.api.item.util;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ComponentUtil;
-import io.lumine.mythic.utils.text.Component;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -84,11 +84,11 @@ public class ConfigItem {
 		}
 
 		nbtItem.addTag(new ItemTag("ItemId", id));
-		nbtItem.setDisplayNameComponent(ComponentUtil.legacyMiniMessage(getName()));
+		nbtItem.setDisplayNameComponent(LegacyComponent.parse(getName()));
 
 		if (hasLore()) {
 			List<Component> lore = new ArrayList<>();
-			getLore().forEach(line -> lore.add(ComponentUtil.legacyMiniMessage(line)));
+			getLore().forEach(line -> lore.add(LegacyComponent.parse(line)));
 			nbtItem.setLoreComponents(lore);
 		}
 		item = nbtItem.toItem();

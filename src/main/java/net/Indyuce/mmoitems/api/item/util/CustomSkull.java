@@ -4,9 +4,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ComponentUtil;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.utils.text.Component;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,11 +34,11 @@ public class CustomSkull extends ConfigItem {
 		NBTItem nbtItem = NBTItem.get(VersionMaterial.PLAYER_HEAD.toItem());
 
 		nbtItem.addTag(new ItemTag("ItemId", getId()));
-		nbtItem.setDisplayNameComponent(ComponentUtil.legacyMiniMessage(getName()));
+		nbtItem.setDisplayNameComponent(LegacyComponent.parse(getName()));
 
 		if (hasLore()) {
 			List<Component> lore = new ArrayList<>();
-			getLore().forEach(line -> lore.add(ComponentUtil.legacyMiniMessage(line)));
+			getLore().forEach(line -> lore.add(LegacyComponent.parse(line)));
 			nbtItem.setLoreComponents(lore);
 		}
 

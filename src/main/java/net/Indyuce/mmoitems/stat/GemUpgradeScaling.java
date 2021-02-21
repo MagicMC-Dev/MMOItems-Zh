@@ -1,9 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ChooseStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,4 +37,6 @@ public class GemUpgradeScaling extends ChooseStat implements GemStoneStat {
         // Update
         HintChooseableDefs(definitions);
     }
+
+    @NotNull @Override public StatData getClearStatData() { return new StringData(SUBSEQUENT); }
 }

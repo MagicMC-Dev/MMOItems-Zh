@@ -2,9 +2,15 @@ package net.Indyuce.mmoitems.api;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
@@ -16,60 +22,147 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class UpgradeTemplate {
-	private final String id;
-	private final Map<ItemStat, UpgradeInfo> stats = new HashMap<>();
+	@NotNull private final String id;
+	@NotNull private final Map<ItemStat, UpgradeInfo> perStatUpgradeInfos = new HashMap<>();
 
-	public UpgradeTemplate(ConfigurationSection config) {
+	/**
+	 *  Loads an Upgrade Template directly from the YML file. Neat!
+	 */
+	public UpgradeTemplate(@NotNull ConfigurationSection config) {
 		Validate.notNull(config, "You must specify a config section.");
 
+		// Build ID
 		id = config.getName().toLowerCase().replace("_", "-").replace(" ", "-");
 
+		// Feedback
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
+		ffp.ActivatePrefix(true, "Upgrade Template $i&o" + config.getName());
+
+		// For ever stat
 		for (String key : config.getKeys(false)) {
+
+			// Get internal stat ID
 			String statFormat = key.toUpperCase().replace("-", "_");
 
+			// Attempt to find stat
 			ItemStat stat = MMOItems.plugin.getStats().get(statFormat);
-			Validate.notNull(stat, "Could not read stat ID " + statFormat);
-			Validate.isTrue(stat instanceof Upgradable, "Stat " + stat.getId() + " us not upgradable.");
+			if (stat == null) { ffp.Log(FriendlyFeedbackCategory.ERROR, "Stat '$r{0}$b' $fnot found$b.", statFormat); continue; }
+			if (!(stat instanceof Upgradable)) { ffp.Log(FriendlyFeedbackCategory.ERROR, "Stat $r{0}$b is $fnot upgradeable$b.", stat.getId()); continue; }
+			if (!(stat.getClearStatData() instanceof Mergeable)) { ffp.Log(FriendlyFeedbackCategory.ERROR, "Stat Data used by $r{0}$b is $fnot mergeable$b, and thus it cannot be upgradeable. Contact the dev of this ItemStat.", stat.getId()); continue; }
 
+			// Attempt to parse Upgrade Info
 			try {
-				stats.put(stat, ((Upgradable) stat).loadUpgradeInfo(config.get(key)));
+
+				// Parsed correctly? Add
+				perStatUpgradeInfos.put(stat, ((Upgradable) stat).loadUpgradeInfo(config.get(key)));
+
+			// Somethings up, generate exception ig
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"An error occured while trying to load stat '" + key + "' from upgrade template '" + id + "': " + exception.getMessage());
+
+				// Log
+				ffp.Log(FriendlyFeedbackCategory.ERROR, exception.getMessage());
 			}
 		}
+
+		// Print all failures
+		ffp.SendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
 	}
 
-	public String getId() {
+	/**
+	 * Get the internal ID of this template.
+	 * <p></p>
+	 * In the format: <code><b>upgrade-template-name</b></code>
+	 * <p>(No spaces nor underscores, lowercase)</p>
+	 */
+	@NotNull public String getId() {
 		return id;
 	}
 
-	public Set<ItemStat> getKeys() {
-		return stats.keySet();
+	/**
+	 * Get the <code>ItemStat</code>s that this template has <code>UpgradeInfo</code> about.
+	 */
+	@NotNull public Set<ItemStat> getKeys() {
+		return perStatUpgradeInfos.keySet();
 	}
 
-	public UpgradeInfo getUpgradeInfo(ItemStat stat) {
-		return stats.get(stat);
+	/**
+	 * Get the <code>UpgradeInfo</code> associated with this stat.
+	 */
+	@Nullable public UpgradeInfo getUpgradeInfo(@NotNull ItemStat stat) {
+		return perStatUpgradeInfos.get(stat);
 	}
 
-	public void upgrade(MMOItem mmoitem) {
-		for (ItemStat stat : stats.keySet()) {
+	/**
+	 * Upgrades this MMOItem by 1 level
+	 */
+	public void upgrade(@NotNull MMOItem mmoitem) {
+
+		// Yes
+		upgradeTo(mmoitem, mmoitem.getUpgradeLevel() + 1);
+	}
+
+	/**
+	 * Upgrades this MMOItem's stats and sets the level.
+	 * @param level Target level, which may even be negative!
+	 */
+	public void upgradeTo(@NotNull MMOItem mmoitem, int level) {
+
+		// Set the items level
+		UpgradeData dat;
+		if (mmoitem.hasData(ItemStats.UPGRADE)) { dat = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE); } else { dat = new UpgradeData(null, null, false, false, 0, 100); }
+		dat.setLevel(level);
+		mmoitem.setData(ItemStats.UPGRADE, dat);
+
+		// For every Stat-UpgradeInfo pair
+		for (ItemStat stat : perStatUpgradeInfos.keySet()) {
 
 			// If it has the data to begin with?
 			if (mmoitem.hasData(stat)) {
 
-				// ONLY if mergeable
-				if (stat.getClearStatData() instanceof Mergeable) {
+				// Initializes Stat History
+				StatHistory<StatData> hist = StatHistory.From(mmoitem, stat);
 
-					// Initializes original stats.
-					StatHistory.From(mmoitem, stat);
-				}
-
-				// Applies changes
-				((Upgradable) stat).apply(mmoitem, stats.get(stat));
+				// The Stat History now manages applying upgrades.
+				mmoitem.setData(stat, hist.Recalculate());
 			}
+		}
+	}
+
+	/**
+	 * @return If the user has set in the config that the stats should display how the item's upgrades have affected them.
+	 */
+	public static boolean isDisplayingUpgrades() { return MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false); }
+
+	/**
+	 * The user may define how to display stat changes due to upgrades,
+	 * as well as 'negative' and 'positive' colours.
+	 *
+	 * @return A string ready to just have its colors parsed and inserted into lore.
+	 * @param value The <code>toString()</code> of this will replace all instances of <code>#stat#</code> the user specifies in the config.
+	 * @param isNegative Should 'negative' coloration be used instead of positive? The user uses the color code <code><b>&p</b></code> in this place.
+	 */
+	@NotNull public static String getUpgradeChangeSuffix(@NotNull String value, boolean isNegative) {
+
+		// Get the base
+		String base = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(&p#stat#&8)"));
+		String succ = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-positive", "&a"));
+		String fauc = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-negative", "&c"));
+
+		// Parse ig
+		if (isNegative) {
+
+			// Failure-colored
+			return base.replace("&p", fauc).replace("#stat#", value);
+
+		// Its a positive upgrade-yo
+		} else {
+
+			// Success-coloreds
+			return base.replace("&p", succ).replace("#stat#", value);
 		}
 	}
 }

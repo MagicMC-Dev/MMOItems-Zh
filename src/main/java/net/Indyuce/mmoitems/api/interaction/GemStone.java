@@ -8,8 +8,10 @@ import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -41,7 +43,8 @@ public class GemStone extends UseItem {
 		String gemType = getNBTItem().getString(ItemStats.GEM_COLOR.getNBTPath());
 
 		GemSocketsData sockets = (GemSocketsData) targetMMO.getData(ItemStats.GEM_SOCKETS);
-		if (!sockets.canReceive(gemType))
+		String foundSocketColor = sockets.getEmptySocket(gemType);
+		if (foundSocketColor == null)
 			return new ApplyResult(ResultType.NONE);
 
 		/*
@@ -73,30 +76,47 @@ public class GemStone extends UseItem {
 		 * permanent effects. also REGISTER gem stone in the item gem stone
 		 * list.
 		 */
-		LiveMMOItem mmo = new LiveMMOItem(getNBTItem());
-		GemstoneData gemData = new GemstoneData(mmo);
+		LiveMMOItem gemMMOItem = new LiveMMOItem(getNBTItem());
+		GemstoneData gemData = new GemstoneData(gemMMOItem, foundSocketColor);
 		sockets.apply(gemType, gemData);
+		//UPGRD//MMOItems. Log("Applying Gemstone: \u00a73" + foundSocketColor);
 
 		/*
 		 * Get the item's level, important for the GemScalingStat
 		 */
-		StatData upgradeLevel = targetMMO.getData(ItemStats.UPGRADE);
-		if (upgradeLevel != null) { gemData.SetLevel(((UpgradeData) upgradeLevel).getLevel()); }
+		Integer levelIdentified = null; String scaling = GemUpgradeScaling.SUBSEQUENT;
+		if (gemMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)) { scaling = gemMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString(); }
+		//UPGRD//MMOItems. Log("Scaling Identified: \u00a73" + scaling);
+		switch (scaling) {
+			case GemUpgradeScaling.HISTORIC:
+				levelIdentified = 0;
+				break;
+			case GemUpgradeScaling.SUBSEQUENT:
+				StatData upgradeLevel = targetMMO.getData(ItemStats.UPGRADE);
+				if (upgradeLevel != null) { levelIdentified = ((UpgradeData) upgradeLevel).getLevel(); }
+				break;
+			case GemUpgradeScaling.NEVER:
+			default:
+				levelIdentified = null;
+				break;
+		}
+		gemData.setLevel(levelIdentified);
+		//UPGRD//MMOItems. Log("Set Level: \u00a7b" + gemData.getLevel());
 
 		/*
 		 * Only applies NON PROPER and MERGEABLE item stats
 		 */
-		for (ItemStat stat : mmo.getStats()) {
+		for (ItemStat stat : gemMMOItem.getStats()) {
 
 			// If it is not PROPER
 			if (!(stat instanceof GemStoneStat)) {
 
 				// Get the stat data
-				StatData data = mmo.getData(stat);
+				StatData data = gemMMOItem.getData(stat);
 
 				// If the data is MERGEABLE
 				if (data instanceof Mergeable) {
-					//GEM//MMOItems.Log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
+					//GEM////UPGRD//MMOItems. Log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
 
 					// Merge into it
 					targetMMO.mergeData(stat, data, gemData.getHistoricUUID());

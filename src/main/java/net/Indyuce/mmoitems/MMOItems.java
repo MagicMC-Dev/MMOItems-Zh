@@ -37,10 +37,12 @@ import net.Indyuce.mmoitems.manager.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -523,7 +525,7 @@ public class MMOItems extends LuminePlugin {
 				setRPG(plugin.load());
 
 				// Mention it
-				SLog("Using \u00a76" + plugin.getName() + "\u00a77 as RPG Player provider.");
+				Log("Using \u00a76" + plugin.getName() + "\u00a77 as RPG Player provider.");
 				return;
 			}
 		}
@@ -568,7 +570,7 @@ public class MMOItems extends LuminePlugin {
 	 * @return           Generates an item given an item template with a
 	 *                   specific item level and item tier
 	 */
-	public ItemStack getItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
+	public ItemStack getItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
 		return getMMOItem(type, id, itemLevel, itemTier).newBuilder().build();
 	}
 
@@ -577,7 +579,7 @@ public class MMOItems extends LuminePlugin {
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
 	 */
-	public MMOItem getMMOItem(Type type, String id) {
+	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id) {
 		return templateManager.getTemplate(type, id).newBuilder(0, null).build();
 	}
 
@@ -586,25 +588,21 @@ public class MMOItems extends LuminePlugin {
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
 	 */
-	public ItemStack getItem(Type type, String id) {
+	public ItemStack getItem(@NotNull Type type, @NotNull String id) {
 		return getMMOItem(type, id).newBuilder().build();
 	}
 
 	/**
 	 * Logs something into the console with a cool [MMOItems] prefix :)
 	 * <p></p>
-	 * Parses color codes. <b>Meant for DEV testing</b>, all of them are removed every release.
+	 * Parses color codes. <b>Mostly for DEV testing</b>. these may removed any release.
 	 */
 	public static void Log(String message) {
 		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
 	}
 
 	/**
-	 * Logs something into the console with a cool [MMOItems] prefix :)
-	 * <p></p>
-	 * Parses color codes, official method. Wont be removed when releasing MMOItems versions.
+	 * @return The server's console sender.
 	 */
-	public static void SLog(String message) {
-		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
-	}
+	@NotNull public static ConsoleCommandSender getConsole() { return plugin.getServer().getConsoleSender(); }
 }

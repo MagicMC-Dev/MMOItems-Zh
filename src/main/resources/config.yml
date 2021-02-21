@@ -86,7 +86,9 @@ item-upgrading:
 
     # How stat changes are formatted
     # in the stat suffix.
-    stat-change-suffix: '&f &e(+#stat#)'
+    stat-change-suffix: ' &8(&p#stat#&8)'
+    stat-change-positive: '&a'
+    stat-change-negative: '&c'
 
     # Whether or not to display which
     # stats are changed in the lore.

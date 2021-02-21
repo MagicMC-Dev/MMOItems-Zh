@@ -9,6 +9,7 @@ import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.StatFormat;
@@ -112,8 +113,8 @@ public class ItemStackBuilder {
 	 * @return Returns built NBTItem with applied tags and lore
 	 */
 	public NBTItem buildNBT() {
-		this.mmoitem = new StatLore(mmoitem).generateNewItem();
-
+		// Clone as to not conflict in any way
+		this.mmoitem = mmoitem.clone();
 		//GEM//MMOItems.Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.mergeableStatHistory.size() + "\u00a77 Historic)");
 
 		// For every stat within this item
@@ -202,45 +203,4 @@ public class ItemStackBuilder {
 	public ItemStack build() {
 		return new DynamicLore(buildNBT()).build();
 	}
-
-	//
-	public class StatLore {
-		private MMOItem mmoitem;
-
-		public StatLore(MMOItem mmoitem) {
-			this.mmoitem = mmoitem;
-		}
-
-		public MMOItem generateNewItem() {
-			mmoitem = mmoitem.clone();
-
-			if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-stat-changes", false))
-				for (ItemStat stat : mmoitem.getStats()) {
-					StatHistory<StatData> data = mmoitem.getStatHistory(stat);
-					if (data != null
-							&& data.getOriginalData() instanceof DoubleData
-							&& mmoitem.getData(stat) instanceof DoubleData) {
-						double value, original, current;
-						try {
-							original = ((DoubleData) data.getOriginalData()).getValue();
-							current = ((DoubleData) mmoitem.getData(stat)).getValue();
-							value = current - original;
-						} catch (NullPointerException e) {
-							continue;
-						}
-
-						if (value != 0) {
-								lore.insert(stat.getPath(), stat.formatNumericStat(value, "#",
-										new StatFormat("##").format(current))
-										+ MythicLib.plugin.parseColors(MMOItems.plugin.getConfig()
-										.getString("item-upgrading.stat-change-suffix", " &e(+#stat#)").replace(
-												"#stat#", new StatFormat("##").format(value))));
-						}
-					}
-				}
-			return mmoitem;
-		}
-	}
-
-
 }

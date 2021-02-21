@@ -4,6 +4,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +35,11 @@ public class UpgradeManager implements Reloadable {
 		return templates.values();
 	}
 
-	public UpgradeTemplate getTemplate(String id) {
+	/**
+	 * Get the <code>UpgradeTemplate</code> of this name.
+	 * @return <code>null</code> if there is no such template loaded.
+	 */
+	@Nullable public UpgradeTemplate getTemplate(@NotNull String id) {
 		return templates.get(id);
 	}
 

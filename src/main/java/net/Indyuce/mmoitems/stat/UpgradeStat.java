@@ -166,7 +166,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new UpgradeData("", "", false, false, 0, 0D); }
+	public StatData getClearStatData() { return new UpgradeData(null, null, false, false, 0, 0D); }
 
 	@Override
 	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.util.Ref;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
 import org.apache.commons.lang.Validate;
 
@@ -17,20 +18,31 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GemSocketsData implements StatData, Mergeable, RandomStatData {
-	private final Set<GemstoneData> gems = new HashSet<>();
-	private final List<String> emptySlots;
+	@NotNull private final Set<GemstoneData> gems = new HashSet<>();
+	@NotNull private final List<String> emptySlots;
 
-	public GemSocketsData(List<String> emptySlots) {
+	public GemSocketsData(@NotNull List<String> emptySlots) {
 		this.emptySlots = emptySlots;
 	}
 
-	public boolean canReceive(String gem) {
+	/**
+	 * Attempts to find a slot of the same color of this gem within the item.
+	 * <p></p>
+	 * To know the color of the socket pass the same argument to {@link #getEmptySocket(String)}
+	 * which checks in the same order as this method for the first success.
+	 */
+	public boolean canReceive(@NotNull String gem) {
 		return getEmptySocket(gem) != null;
 	}
 
-	public String getEmptySocket(String gem) {
+	/**
+	 * Get the first emtpty gem socket that matches this color
+	 * @return <code>null</code> if none matched.
+	 */
+	@Nullable public String getEmptySocket(@NotNull String gem) {
 		for (String slot : emptySlots)
 			if (gem.equals("") || slot.equals(MMOItems.plugin.getConfig().getString("gem-sockets.uncolored")) || gem.equals(slot))
 				return slot;
@@ -50,11 +62,11 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 		emptySlots.add(slot);
 	}
 
-	public List<String> getEmptySlots() {
+	@NotNull public List<String> getEmptySlots() {
 		return emptySlots;
 	}
 
-	public Set<GemstoneData> getGemstones() {
+	@NotNull public Set<GemstoneData> getGemstones() {
 		return gems;
 	}
 

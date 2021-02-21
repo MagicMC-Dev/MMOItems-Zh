@@ -136,7 +136,7 @@ public class ItemStats {
 			VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(),
 			INEDIBLE = new Inedible(),
 			GEM_COLOR = new GemColor(),
-			//todo GEM_UPGRADE_SCALING = new GemUpgradeScaling(),
+			GEM_UPGRADE_SCALING = new GemUpgradeScaling(),
 			ITEM_TYPE_RESTRICTION = new ItemTypeRestriction(),
 			MAX_CONSUME = new DoubleStat("MAX_CONSUME", Material.BLAZE_POWDER, "Max Consume", new String[]{"Max amount of usage before", "item disappears."}, new String[]{"consumable"}),
 			SUCCESS_RATE = new SuccessRate(),

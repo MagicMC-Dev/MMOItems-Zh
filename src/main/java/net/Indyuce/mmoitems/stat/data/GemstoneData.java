@@ -1,15 +1,12 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,10 +18,10 @@ public class GemstoneData {
 	@NotNull private final List<PotionEffectData> effects = new ArrayList<>();
 	@NotNull private final Map<ItemStat, Double> stats = new HashMap<>();
 	@NotNull private final String name;
-	int levelPut = 0;
+	@Nullable Integer levelPut = 0;
 	@NotNull final UUID historicUUID;
 
-	@Nullable final String mmoitemType, mmoitemID;
+	@Nullable final String mmoitemType, mmoitemID, socketColor;
 
 	/**
 	 * This constructor is not really performance friendly. It should only be
@@ -59,19 +56,21 @@ public class GemstoneData {
 			mmoitemID = object.get("Id").getAsString();
 
 			JsonElement level = object.get("Level");
-			if (level != null) { levelPut = level.getAsInt(); }
+			if (level != null && level.isJsonPrimitive()) { levelPut = level.getAsJsonPrimitive().getAsInt(); } else { levelPut = null; }
 
-		} else { historicUUID = UUID.randomUUID(); mmoitemID = null; mmoitemType = null; }
+			JsonElement color = object.get("Color");
+			if (color != null && color.isJsonPrimitive()) { socketColor = color.getAsJsonPrimitive().getAsString(); } else { socketColor = null; }
 
-
+		} else { historicUUID = UUID.randomUUID(); mmoitemID = null; mmoitemType = null; socketColor = null; }
 	}
 
 	/**
 	 * Create a GemStoneData from a GemStone MMOItem.
 	 * <p></p>
 	 * Basically extracts all the useable stats from the MMOItem, to have them ready to apply onto another MMOItem.
+	 * @param color Color of the slot this gem was inserted onto.
 	 */
-	public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem) {
+	public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color) {
 
 		// Get Name to Display
 		name = MMOUtils.getDisplayName(gemStoneMMOItem.getNBT().getItem());
@@ -87,6 +86,7 @@ public class GemstoneData {
 		historicUUID = UUID.randomUUID();
 		mmoitemID = gemStoneMMOItem.getId();
 		mmoitemType = gemStoneMMOItem.getType().getId();
+		socketColor = color;
 	}
 
 	/**
@@ -101,32 +101,42 @@ public class GemstoneData {
 		this.name = name;
 		mmoitemID = null;
 		mmoitemType = null;
+		socketColor = null;
 		historicUUID = UUID.randomUUID();
 	}
 
 	/**
 	 * This is at which level (of the item) the gemstone was placed onto the item.
+	 * <p>A null level means this gem does not scale.</p>
 	 * <p></p>
 	 * For scaling purposes of stat {@link GemUpgradeScaling}
 	 */
-	public void SetLevel(int l) { levelPut = l; }
+	public void setLevel(@Nullable Integer l) { levelPut = l; }
 	/**
 	 * This is at which level (of the item) the gemstone was placed onto the item.
+	 * <p>A null level means this gem does not scale.</p>
 	 * <p></p>
 	 * For scaling purposes of stat {@link GemUpgradeScaling}
 	 */
-	public int GetLevel() { return levelPut; }
+	@Nullable public Integer getLevel() { return levelPut; }
+
+	/**
+	 * Does this gem scale with item upgrades?
+	 */
+	public boolean isScaling() { return levelPut != null; }
 
 	/**
 	 * This is a completely empty builder.
 	 * <p></p>
 	 * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
 	 * @param name Name to display in the lore of the item when you put the gemstone into it.
+	 * @param color Color of the socket this gem is inserted onto
 	 */
-	public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id) {
+	public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color) {
 		this.name = name;
 		mmoitemID = type;
 		mmoitemType = id;
+		socketColor = color;
 		historicUUID = UUID.randomUUID();
 	}
 

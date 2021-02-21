@@ -1,16 +1,23 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -28,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -50,6 +58,12 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		return true;
 	}
 
+	/**
+	 * Usually, a greater magnitude of stat benefits the player (more health, more attack damage).
+	 * <p>However, its not impossible for a stat to be evil instead, who knows?
+	 */
+	public boolean moreIsBetter() { return true; }
+
 	@Override
 	public RandomStatData whenInitialized(Object object) {
 
@@ -68,15 +82,65 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		// Get Value
 		double value = ((DoubleData) data).getValue();
 
-		// Cancel if it equals ZERO, or its NEGATIVE and this doesnt support negative stats.
+		// Cancel if it its NEGATIVE and this doesn't support negative stats.
 		if (value < 0 && !handleNegativeStats()) { return; }
 
+		// Identify the upgrade amount
+		double upgradeShift = 0;
+
+		// Displaying upgrades?
+		if (UpgradeTemplate.isDisplayingUpgrades() && item.getMMOItem().getUpgradeLevel() != 0) {
+
+			// Get stat history
+			StatHistory<StatData> hist = item.getMMOItem().getStatHistory(this);
+			if (hist != null) {
+
+				// Get as if it had never been upgraded
+				DoubleData uData = (DoubleData) hist.Recalculate_Unupgraded();
+
+				// Calculate Difference
+				upgradeShift = value - uData.getValue();
+			}
+
+		}
+
 		// Display if not ZERO
-		if (value != 0) { item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value))); }
+		if (value != 0 || upgradeShift != 0) {
+
+			// Displaying upgrades?
+			if (upgradeShift != 0) {
+
+				item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value))
+						+ MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift) + (new StatFormat("##").format(upgradeShift)), !isGood(upgradeShift))));
+
+			} else {
+
+				// Just display normally
+				item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
+			}
+		}
 
 		// Add NBT Path
 		item.addItemTag(getAppliedNBT(data));
 	}
+	@NotNull String plus(double amount) { if (amount >= 0) { return "+"; } else return ""; }
+
+	/**
+	 * Usually, a greater magnitude of stat benefits the player (more health, more attack damage).
+	 * <p>However, its not impossible for a stat to be evil instead, who knows?
+	 * <p></p>
+	 * This will return true if:
+	 * <p> > The amount is positive, and more benefits the player
+	 * </p> > The amount is negative, and more hurts the player
+	 */
+	public boolean isGood(double amount) {
+		if (moreIsBetter()) {
+			return amount >= 0;
+		} else {
+			return  amount <= 0;
+		}
+	}
+
 	@Override
 	public @NotNull ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
 
@@ -146,7 +210,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		double base, scale, spread, maxSpread;
 
-		/**
+		/*
 		 * Supports the old RANGE formula with a minimum and a maximum value and
 		 * automatically makes the conversion to the newest system. This way
 		 * users can keep using the old system if they don't want to adapt to
@@ -165,7 +229,7 @@ public class DoubleStat extends ItemStat implements Upgradable {
 			spread = MMOUtils.truncation(.8 * maxSpread, 3);
 		}
 
-		/**
+		/*
 		 * Newest system with gaussian values calculation
 		 */
 		else {
@@ -215,45 +279,104 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		return new DoubleData(0D);
 	}
 
+	@NotNull
 	@Override
-	public UpgradeInfo loadUpgradeInfo(Object obj) {
-		return new DoubleUpgradeInfo(obj);
+	public UpgradeInfo loadUpgradeInfo(@Nullable Object obj) throws IllegalArgumentException {
+
+		// Return result of thay
+		return DoubleUpgradeInfo.GetFrom(obj);
 	}
 
+	@NotNull
 	@Override
-	public void apply(MMOItem mmoitem, UpgradeInfo info) {
-		DoubleUpgradeInfo doubleInfo = (DoubleUpgradeInfo) info;
+	public StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level) {
 
-		if (mmoitem.hasData(this)) {
-			if (doubleInfo.isRelative())
-				((DoubleData) mmoitem.getData(this)).addRelative(doubleInfo.getAmount());
-			else
-				((DoubleData) mmoitem.getData(this)).add(doubleInfo.getAmount());
-		} else
-			mmoitem.setData(this, new DoubleData(doubleInfo.getAmount()));
+		// Must be DoubleData
+		if (original instanceof DoubleData && info instanceof DoubleUpgradeInfo) {
+
+			// Get value
+			double value = ((DoubleData) original).getValue();
+
+			// If leveling up
+			if (level > 0) {
+
+				// While still positive
+				while (level > 0) {
+
+					// Apply PMP Operation Positively
+					value = ((DoubleUpgradeInfo) info).getPMP().apply(value);
+
+					// Decrease
+					level--;
+				}
+
+			// Degrading the item
+			} else if (level < 0) {
+
+				// While still negative
+				while (level < 0) {
+
+					// Apply PMP Operation Reversibly
+					value = ((DoubleUpgradeInfo) info).getPMP().reverse(value);
+
+					// Decrease
+					level++;
+				}
+			}
+
+			// Update
+			((DoubleData) original).setValue(value);
+		}
+
+		// Upgraded
+		return original;
 	}
 
 	public static class DoubleUpgradeInfo implements UpgradeInfo {
-		private final boolean relative;
-		private final double amount;
+		@NotNull PlusMinusPercent pmp;
 
-		public DoubleUpgradeInfo(Object obj) {
-			Validate.notNull(obj, "Argument must not be null");
+		/**
+		 * Generate a <code>DoubleUpgradeInfo</code> from this <code><b>String</b></code>
+		 * that represents a {@link PlusMinusPercent}.
+		 * <p></p>
+		 * To keep older MMOItems versions working the same way, instead of having no prefix
+		 * to use the <i>set</i> function of the PMP, one must use an <b><code>s</code></b> prefix.
+		 * @param obj A <code><u>String</u></code> that encodes for a PMP.
+		 * @throws IllegalArgumentException If any part of the operation goes wrong (including reading the PMP).
+		 */
+		@NotNull public static DoubleUpgradeInfo GetFrom(@Nullable Object obj) throws IllegalArgumentException {
 
+			// Shall not be null
+			Validate.notNull(obj, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Upgrade operation must not be null"));
+
+			// Does the string exist?
 			String str = obj.toString();
-			if (str.isEmpty())
-				throw new IllegalArgumentException("Couldn't read amount");
+			if (str.isEmpty()) {
+				throw new IllegalArgumentException(
+						FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Upgrade operation is empty"));
+			}
 
-			relative = str.toCharArray()[str.length() - 1] == '%';
-			amount = relative ? MMOUtils.parseDouble(str.substring(0, str.length() - 1)) / 100 : MMOUtils.parseDouble(str);
+			// Adapt to PMP format
+			char c = str.charAt(0); if (c == 's') { str = str.substring(1); } else if (c != '+' && c != '-' && c != 'n') { str = '+' + str; }
+
+			// Is it a valid plus minus percent?
+			FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
+			PlusMinusPercent pmpRead = PlusMinusPercent.getFromString(str, ffp);
+			if (pmpRead == null) {
+				throw new IllegalArgumentException(
+						ffp.getFeedbackOf(FriendlyFeedbackCategory.ERROR).get(0).forConsole(ffp.getPalette()));
+			}
+
+			// Success
+			return new DoubleUpgradeInfo(pmpRead);
 		}
 
-		public double getAmount() {
-			return amount;
-		}
+		public DoubleUpgradeInfo(@NotNull PlusMinusPercent pmp) { this.pmp = pmp; }
 
-		public boolean isRelative() {
-			return relative;
-		}
+		/**
+		 * The operation every level will perform.
+		 * @see PlusMinusPercent
+		 */
+		@NotNull public PlusMinusPercent getPMP() { return pmp; }
 	}
 }

@@ -1,10 +1,13 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
-import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -13,10 +16,7 @@ import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class MMOItem implements ItemReference {
 	private final Type type;
@@ -83,17 +83,8 @@ public class MMOItem implements ItemReference {
 				sHistory.registerExternalData(data);
 			}
 
-			// Merge or set onto main stat
-			if (hasData(stat)) {
-
-				// Merge
-				((Mergeable) getData(stat)).merge(data);
-
-			} else {
-
-				// Override Completely
-				setData(stat, data);
-			}
+			// Recalculate
+			setData(stat, sHistory.Recalculate());
 
 	 	// Merging means replacing if it cannot be merged
 		} else {
@@ -115,7 +106,7 @@ public class MMOItem implements ItemReference {
 		stats.remove(stat);
 	}
 
-	@Nullable public StatData getData(@NotNull ItemStat stat) {
+	public StatData getData(@NotNull ItemStat stat) {
 		return stats.get(stat);
 	}
 
@@ -197,6 +188,93 @@ public class MMOItem implements ItemReference {
 	 */
 	public void setStatHistory(@NotNull ItemStat stat, @NotNull StatHistory<StatData> hist) {
 		mergeableStatHistory.put(stat.getNBTPath(), hist);
+	}
+	//endregion
+
+	//region Upgrading API
+	/**
+	 * Upgrades this MMOItem one level.
+	 * <p></p>
+	 * <b>Make sure to check {@link #hasUpgradeTemplate()} before calling.</b>
+	 */
+	public void upgrade() {
+
+		// Upgrade through the template's API
+		getUpgradeTemplate().upgrade(this);
+	}
+
+	/**
+	 * Whether or not this item has all the information
+	 * required to call
+	 */
+	public boolean hasUpgradeTemplate() {
+
+		// Does it have Upgrade Stat?
+		if (hasData(ItemStats.UPGRADE)) {
+
+			// Get that data
+			UpgradeData data = (UpgradeData) getData(ItemStats.UPGRADE);
+
+			// A template its all that's required
+			return data.getTemplate() != null;
+		}
+
+		// Nope
+		return false;
+	}
+
+	/**
+	 * @return The upgrade level, or 0 if there is none.
+	 */
+	public int getUpgradeLevel() {
+
+		// Does it have Upgrade Data?
+		if (hasData(ItemStats.UPGRADE)) {
+
+			// Return the registered level.
+			return ((UpgradeData) getData(ItemStats.UPGRADE)).getLevel();
+		}
+
+		// Nope? Well its level 0 I guess.
+		return 0;
+	}
+
+	/**
+	 * <b>Make sure to check {@link #hasUpgradeTemplate()} before calling.</b>
+	 * <p></p>
+	 * This will fail and throw an exception if the MMOItem has no upgrade template.
+	 * @return The upgrade template by which the MMOItem would upgrade normally.
+	 */
+	@NotNull public UpgradeTemplate getUpgradeTemplate() {
+		Validate.isTrue(hasUpgradeTemplate(), "This item has no Upgrade Information, do not call this method without checking first!");
+
+		// All Right
+		UpgradeData data = (UpgradeData) getData(ItemStats.UPGRADE);
+
+		// That's the template
+		return data.getTemplate();
+	}
+
+	/**
+	 * Get the list of GemStones inserted into this item
+	 */
+	@NotNull public Set<GemstoneData> getGemStones() {
+
+		// Got gem sockets?
+		if (hasData(ItemStats.GEM_SOCKETS)) {
+
+			// Get Data
+			GemSocketsData data = (GemSocketsData) getData(ItemStats.GEM_SOCKETS);
+
+			// Thats it
+			return data.getGemstones();
+
+		// Has no gem sockets
+		} else {
+
+			// Empty Set
+			return new HashSet<>();
+		}
 	}
 	//endregion
 }

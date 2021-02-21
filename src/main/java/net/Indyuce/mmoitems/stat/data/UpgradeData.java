@@ -11,15 +11,23 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.MythicLib;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * A class containing the Upgrading stuff of an item. Things like:
+ * <p> • What level it currently is
+ * </p> • What upgrade template it upgrades with
+ * <p> • Chance of successful upgrade
+ * </p> • May it get destroyed if unsucessful upgrade?
+ */
 public class UpgradeData implements StatData, RandomStatData {
-	private final String reference, template;
+	@Nullable private final String reference, template;
 	private final boolean workbench, destroy;
 	private final double success;
 	private final int max;
 	private int level;
 
-	public UpgradeData(@NotNull String referenc, @NotNull String templat, boolean workbenc, boolean destro, int maxx, double succes) {
+	public UpgradeData(@Nullable String referenc, @Nullable String templat, boolean workbenc, boolean destro, int maxx, double succes) {
 		reference = referenc;
 		template = templat;
 		workbench = workbenc;
@@ -47,13 +55,22 @@ public class UpgradeData implements StatData, RandomStatData {
 		success = object.get("Success").getAsDouble();
 	}
 
-	public UpgradeTemplate getTemplate() {
+	/**
+	 * @return The template associated to this data, if it is loaded.
+	 */
+	@Nullable public UpgradeTemplate getTemplate() {
 		return MMOItems.plugin.getUpgrades().getTemplate(template);
 	}
 
-	public int getLevel() {
-		return level;
-	}
+	public int getLevel() { return level; }
+
+	/**
+	 * Dont you mean {@link UpgradeTemplate#upgradeTo(MMOItem, int)}?
+	 * This sets the level the item thinks it is, does not apply no changes.
+	 * <p></p>
+	 * <b>Make sure you know what you are doing before using this</b>
+	 */
+	public void setLevel(int l) { level = l; }
 
 	public int getMaxUpgrades() {
 		return max;
@@ -75,13 +92,22 @@ public class UpgradeData implements StatData, RandomStatData {
 		return reference == null || data.reference == null || reference.isEmpty() || data.reference.isEmpty() || reference.equals(data.reference);
 	}
 
-	public void upgrade(MMOItem mmoitem) {
-		if (!MMOItems.plugin.getUpgrades().hasTemplate(template)) {
+	/**
+	 *  Upgrade this MMOItem by 1 Level
+	 */
+	public void upgrade(@NotNull MMOItem mmoitem) {
+
+		/*
+		 *  Find Upgrade Template
+		 */
+		if (getTemplate() == null) {
 			MMOItems.plugin.getLogger().warning("Couldn't find upgrade template '" + template + "'. Does it exist?");
 			return;
 		}
 
-		// change display name
+		/*
+		 *  Display Upgrade Level
+		 */
 		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
 			if (mmoitem.hasData(ItemStats.NAME)) {
@@ -89,7 +115,6 @@ public class UpgradeData implements StatData, RandomStatData {
 				nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1))
 						: nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
 			}
-
 		/*TODO: implement this as a new dynamic lore type
 		else if (mmoitem.hasData(ItemStats.LORE)) {
 				StringListData loreData = (StringListData) mmoitem.getData(ItemStats.LORE);
@@ -101,11 +126,10 @@ public class UpgradeData implements StatData, RandomStatData {
 				});
 			}*/
 
-		// apply stat updates
+		/*
+		 *  Go through every stat that must be ugpraded and apply
+		 */
 		getTemplate().upgrade(mmoitem);
-
-		// increase the level
-		level++;
 	}
 
 	public JsonObject toJson() {

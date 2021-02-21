@@ -43,12 +43,12 @@ public class ItemSetStat extends StringStat {
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 
-		// Add NBT
-		item.addItemTag(getAppliedNBT(data));
-
 		// Display in lore
 		ItemSet set = MMOItems.plugin.getSets().get(data.toString());
 		item.getLore().insert("set", set.getLoreTag());
+
+		// Add NBT
+		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@NotNull

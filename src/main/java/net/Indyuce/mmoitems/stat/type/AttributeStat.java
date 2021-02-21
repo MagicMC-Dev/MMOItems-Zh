@@ -44,21 +44,4 @@ public abstract class AttributeStat extends DoubleStat {
 	public double getOffset() {
 		return offset;
 	}
-
-	/**
-	 * Only difference from <code>DoubleStat.whenApplied()</code> is that
-	 * double stats dont bother displaying when equal to 0, but attribute
-	 * stats do.
-	 */
-	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-
-		// Get its value
-		double value = ((DoubleData) data).getValue();
-
-		// Adds the Item Tag
-		item.addItemTag(getAppliedNBT(data));
-
-		// Translates in Lore
-		item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
-	}
 }

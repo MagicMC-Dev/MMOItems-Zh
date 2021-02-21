@@ -53,7 +53,8 @@ public abstract class EditionInventory extends PluginInventory {
 
 		this.template = template;
 		this.configFile = template.getType().getConfigFile();
-		if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
+		player.getOpenInventory();
+		if (player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
 			this.cachedItem = ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cachedItem;
 	}
 

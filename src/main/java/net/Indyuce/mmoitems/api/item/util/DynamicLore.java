@@ -6,7 +6,6 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.utils.adventure.text.Component;
-import io.lumine.mythic.utils.adventure.text.format.TextDecoration;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,10 +26,7 @@ public class DynamicLore {
 			for (JsonElement e : array) {
 				String s = replace(e.getAsString());
 				if(!s.equals("!INVALID!"))
-					lore.add(Component.text()
-							.append(LegacyComponent.parse(s))
-							.decoration(TextDecoration.ITALIC, false)
-							.build());
+					lore.add(LegacyComponent.parse(s));
 			}
 			item.setLoreComponents(lore);
 		}

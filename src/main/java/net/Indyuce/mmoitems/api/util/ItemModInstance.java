@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.api.util;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -25,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +37,8 @@ public class ItemModInstance {
 	// Not initialized at first for performance reasons
 	private MMOItem mmoItem;
 
-	private String cachedName;
-	private List<String> cachedLore;
+	private Component cachedName;
+	private List<Component> cachedLore;
 	private Map<Enchantment, Integer> cachedEnchants;
 	private StatData cachedSoulbound;
 
@@ -73,9 +71,9 @@ public class ItemModInstance {
 
 		ItemMeta meta = nbtItem.getItem().getItemMeta();
 		if (options.shouldKeepName() && meta.hasDisplayName())
-			cachedName = meta.getDisplayName();
+			cachedName = nbtItem.getDisplayNameComponent();
 		if (options.shouldKeepLore() && meta.hasLore())
-			cachedLore = meta.getLore();
+			cachedLore = nbtItem.getLoreComponents();
 		if (options.shouldKeepEnchantments())
 			cachedEnchants = nbtItem.getItem().getEnchantments();
 
@@ -133,11 +131,9 @@ public class ItemModInstance {
 		NBTItem nbtItem = NBTItem.get(stack);
 
 		if (cachedName != null)
-			nbtItem.setDisplayNameComponent(LegacyComponent.parse(cachedName));
+			nbtItem.setDisplayNameComponent(cachedName);
 		if (cachedLore != null) {
-			List<Component> componentLore = new ArrayList<>();
-			cachedLore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
-			nbtItem.setLoreComponents(componentLore);
+			nbtItem.setLoreComponents(cachedLore);
 		}
 
 		return nbtItem.toItem();

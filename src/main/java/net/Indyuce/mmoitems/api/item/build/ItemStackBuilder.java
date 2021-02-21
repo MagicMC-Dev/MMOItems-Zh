@@ -1,19 +1,14 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.gson.JsonArray;
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
-import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -174,6 +169,7 @@ public class ItemStackBuilder {
 			array.add(s);
 		if (array.size() != 0)
 			tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
+		meta.setLore(list);
 
 		/*
 		 * This tag is added to entirely override default vanilla item attribute
@@ -182,19 +178,18 @@ public class ItemStackBuilder {
 		 */
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
+		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
+			meta.setDisplayName(getMeta().getDisplayName());
+		}
+
 		item.setItemMeta(meta);
 		NBTItem nbtItem = NBTItem.get(item);
 
-		nbtItem.addTag(tags);
-
-		if (meta.hasDisplayName())
+		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
 			nbtItem.setDisplayNameComponent(LegacyComponent.parse(meta.getDisplayName()));
+		}
 
-		List<Component> componentLore = new ArrayList<>();
-		list.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
-		nbtItem.setLoreComponents(componentLore);
-
-		return nbtItem;
+		return nbtItem.addTag(tags);
 	}
 
 	/**

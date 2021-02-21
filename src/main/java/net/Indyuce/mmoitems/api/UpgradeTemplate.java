@@ -156,13 +156,13 @@ public class UpgradeTemplate {
 		if (isNegative) {
 
 			// Failure-colored
-			return base.replace("&p", fauc).replace("#stat#", value);
+			return base.replace("<p>", fauc).replace("#stat#", value);
 
 		// Its a positive upgrade-yo
 		} else {
 
 			// Success-coloreds
-			return base.replace("&p", succ).replace("#stat#", value);
+			return base.replace("<p>", succ).replace("#stat#", value);
 		}
 	}
 }

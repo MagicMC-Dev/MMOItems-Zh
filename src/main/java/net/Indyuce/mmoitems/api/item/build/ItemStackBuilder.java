@@ -16,9 +16,6 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,7 +23,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
@@ -36,9 +32,6 @@ public class ItemStackBuilder {
 	private final ItemMeta meta;
 	private final LoreBuilder lore;
 	private final List<ItemTag> tags = new ArrayList<>();
-
-	private static final AttributeModifier fakeModifier = new AttributeModifier(
-			UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"), "mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
 	/**
 	 * Used to build an MMOItem into an ItemStack.
@@ -170,13 +163,6 @@ public class ItemStackBuilder {
 		if (array.size() != 0)
 			tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
 		meta.setLore(list);
-
-		/*
-		 * This tag is added to entirely override default vanilla item attribute
-		 * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the holder.
-		 * Since 4.7 attributes are handled via custom calculations
-		 */
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
 		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
 			meta.setDisplayName(getMeta().getDisplayName());

@@ -274,24 +274,24 @@ disable-vanilla-recipes: []
 # Options for the Item Revision System
 item-revision:
 
+    # Whether the updated items should reroll stats
+    # according to the players current level or if
+    # they should keep the level and tier from when
+    # the item was first generated.
+    reroll-when-updated: false
+
     # This is the value to set the Item Level to when
     # items are updated by the revision system.
     # This can be set to -1 to use the items previous level.
     # Please note, that this value has no effect if
     # ´reroll-when-updated´ is set to true.
     default-item-level: -1
-    
+
     # Whether or not the current tier of the item should
     # be carried over.
     # Please note, that this value has no effect if
     # ´reroll-when-updated´ is set to true.
     keep-tiers: true
-    
-    # Whether the updated items should reroll stats
-    # according to the players current level or if
-    # they should keep the level and tier from when
-    # the item was first generated.
-    reroll-when-updated: false
     
     # Whether or not specific stats should be kept
     # when an item is updated to latest revision.
@@ -304,7 +304,7 @@ item-revision:
         # Modifications are Gemstones and Upgrades
         # Please note that some stats will be unable to update
         # to the latest changes if you enable these.
-        modifications: false
+        modifications: true
         
     # Here you can disable individual events for when
     # Items should update when a higher revision ID is found

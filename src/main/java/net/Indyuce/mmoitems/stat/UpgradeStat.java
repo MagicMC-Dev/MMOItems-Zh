@@ -8,6 +8,7 @@ import java.util.Random;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -173,7 +174,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 		VolatileMMOItem mmoitem = consumable.getMMOItem();
 		Player player = playerData.getPlayer();
 
-		if (mmoitem.hasData(ItemStats.UPGRADE) && target.hasTag("MMOITEMS_UPGRADE")) {
+		if (mmoitem.hasData(ItemStats.UPGRADE) && target.hasTag(ItemStats.UPGRADE.getNBTPath())) {
 			if (target.getItem().getAmount() > 1) {
 				Message.CANT_UPGRADED_STACK.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);

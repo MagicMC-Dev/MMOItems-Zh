@@ -231,6 +231,9 @@ public class Type {
 		return MMOItems.plugin.getTypes().has(format) ? MMOItems.plugin.getTypes().get(format) : null;
 	}
 
+	@Override
+	public String toString() { return getId(); }
+
 	/**
 	 * Used in command executors and completions for easier manipulation
 	 * 

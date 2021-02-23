@@ -33,7 +33,7 @@ public class UpgradeTemplate {
 	 *  Loads an Upgrade Template directly from the YML file. Neat!
 	 */
 	public UpgradeTemplate(@NotNull ConfigurationSection config) {
-		Validate.notNull(config, "You must specify a config section.");
+		Validate.notNull(config, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "You must specify a config section."));
 
 		// Build ID
 		id = config.getName().toLowerCase().replace("_", "-").replace(" ", "-");
@@ -44,6 +44,7 @@ public class UpgradeTemplate {
 
 		// For ever stat
 		for (String key : config.getKeys(false)) {
+			//UPGRD//MMOItems. Log("\u00a7a>>> \u00a77Stat \u00a72" + key);
 
 			// Get internal stat ID
 			String statFormat = key.toUpperCase().replace("-", "_");
@@ -120,15 +121,11 @@ public class UpgradeTemplate {
 		// For every Stat-UpgradeInfo pair
 		for (ItemStat stat : perStatUpgradeInfos.keySet()) {
 
-			// If it has the data to begin with?
-			if (mmoitem.hasData(stat)) {
+			// Initializes Stat History
+			StatHistory<StatData> hist = StatHistory.From(mmoitem, stat);
 
-				// Initializes Stat History
-				StatHistory<StatData> hist = StatHistory.From(mmoitem, stat);
-
-				// The Stat History now manages applying upgrades.
-				mmoitem.setData(stat, hist.Recalculate());
-			}
+			// The Stat History now manages applying upgrades.
+			mmoitem.setData(stat, hist.Recalculate());
 		}
 	}
 
@@ -143,12 +140,12 @@ public class UpgradeTemplate {
 	 *
 	 * @return A string ready to just have its colors parsed and inserted into lore.
 	 * @param value The <code>toString()</code> of this will replace all instances of <code>#stat#</code> the user specifies in the config.
-	 * @param isNegative Should 'negative' coloration be used instead of positive? The user uses the color code <code><b>&p</b></code> in this place.
+	 * @param isNegative Should 'negative' coloration be used instead of positive? The user uses the placeholder <code><b>< p ></b></code> in this place.
 	 */
 	@NotNull public static String getUpgradeChangeSuffix(@NotNull String value, boolean isNegative) {
 
 		// Get the base
-		String base = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(&p#stat#&8)"));
+		String base = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(<p>#stat#&8)"));
 		String succ = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-positive", "&a"));
 		String fauc = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-negative", "&c"));
 

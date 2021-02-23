@@ -23,12 +23,11 @@ public class UpgradeManager implements Reloadable {
 		templates.clear();
 
 		FileConfiguration config = new ConfigFile("upgrade-templates").getConfig();
-		for (String key : config.getKeys(false))
-			try {
-				registerTemplate(new UpgradeTemplate(config.getConfigurationSection(key)));
-			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load upgrade template '" + key + "': " + exception.getMessage());
-			}
+		for (String key : config.getKeys(false)) {
+
+			// Register
+			registerTemplate(new UpgradeTemplate(config.getConfigurationSection(key)));
+		}
 	}
 
 	public Collection<UpgradeTemplate> getAll() {

@@ -4,11 +4,13 @@ import com.google.gson.JsonArray;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -102,27 +104,27 @@ public class ItemStackBuilder {
 	 */
 	public NBTItem buildNBT() {
 		// Clone as to not conflict in any way
-		this.mmoitem = mmoitem.clone();
-		//GEM//MMOItems.Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.mergeableStatHistory.size() + "\u00a77 Historic)");
+		MMOItem builtMMOItem = mmoitem.clone();
+		//GEM//MMOItems. Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.mergeableStatHistory.size() + "\u00a77 Historic)");
 
 		// For every stat within this item
-		for (ItemStat stat : mmoitem.getStats())
+		for (ItemStat stat : builtMMOItem.getStats())
 
 			// Attempt to add
 			try {
 
-				//GEM//MMOItems.Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
+				//GEM//MMOItems. Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
 
 				// Make necessary lore changes
-				stat.whenApplied(this, mmoitem.getData(stat));
+				stat.whenApplied(this, builtMMOItem.getData(stat));
 
 				// Does the item have any stat history regarding thay?
-				StatHistory<StatData> s = mmoitem.getStatHistory(stat);
+				StatHistory<StatData> s = builtMMOItem.getStatHistory(stat);
 
 				// Found it?
 				if (s != null) {
 
-					//GEM//MMOItems.Log("\u00a7a -+- \u00a77Found History");
+					//GEM//MMOItems. Log("\u00a7a -+- \u00a77Found History");
 
 					// Add to NBT
 					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));
@@ -130,28 +132,31 @@ public class ItemStackBuilder {
 
 			// Something went wrong...
 			} catch (IllegalArgumentException|NullPointerException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING,
-						ChatColor.GRAY + "An error occurred while trying to generate item '"
-						+ ChatColor.RED + mmoitem.getId() + ChatColor.GRAY + "' with stat '"
-						+ ChatColor.GOLD + stat.getId() + ChatColor.GRAY + "': "
-						+ ChatColor.YELLOW + exception.getMessage());
+
+				// That
+				MMOItems.plugin.getLogger().log(Level.WARNING, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(),
+						"An error occurred while trying to generate item '$f{0}$b' with stat '$f{1}$b': {2}",
+						builtMMOItem.getId(),
+						stat.getId(),
+						exception.getMessage()));
 			}
 
 		// Display gem stone lore hint thing
-		if (mmoitem.getType() == Type.GEM_STONE)
+		if (builtMMOItem.getType() == Type.GEM_STONE) {
 			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
+		}
 
 		// Display item type
 		lore.insert("item-type",
 				ItemStat.translate("item-type").replace("#",
-						mmoitem.getStats().contains(ItemStats.DISPLAYED_TYPE)
-								? mmoitem.getData(ItemStats.DISPLAYED_TYPE).toString()
-								: mmoitem.getType().getName()));
+						builtMMOItem.getStats().contains(ItemStats.DISPLAYED_TYPE)
+								? builtMMOItem.getData(ItemStats.DISPLAYED_TYPE).toString()
+								: builtMMOItem.getType().getName()));
 
 		// Calculate lore with placeholders
-		if (mmoitem.hasData(ItemStats.LORE)) {
+		if (builtMMOItem.hasData(ItemStats.LORE)) {
 			List<String> parsed = new ArrayList<>();
-			((StringListData) mmoitem.getData(ItemStats.LORE)).getList()
+			((StringListData) builtMMOItem.getData(ItemStats.LORE)).getList()
 					.forEach(str -> parsed.add(lore.applyLorePlaceholders(str)));
 			lore.insert("lore", parsed);
 		}
@@ -164,14 +169,14 @@ public class ItemStackBuilder {
 			tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
 		meta.setLore(list);
 
-		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
+		if (builtMMOItem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
 			meta.setDisplayName(getMeta().getDisplayName());
 		}
 
 		item.setItemMeta(meta);
 		NBTItem nbtItem = NBTItem.get(item);
 
-		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
+		if (builtMMOItem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
 			nbtItem.setDisplayNameComponent(LegacyComponent.parse(meta.getDisplayName()));
 		}
 

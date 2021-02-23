@@ -62,6 +62,8 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 				+ MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
 				+ MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
+		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
+				+ MMOItems.plugin.getUpgrades().getAll().size() + ChatColor.GRAY + " Upgrade Templates");
 	}
 
 	public void reloadRecipes(CommandSender sender) {

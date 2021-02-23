@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.MythicLib;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -115,6 +116,7 @@ public class UpgradeData implements StatData, RandomStatData {
 				nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1))
 						: nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
 			}
+
 		/*TODO: implement this as a new dynamic lore type
 		else if (mmoitem.hasData(ItemStats.LORE)) {
 				StringListData loreData = (StringListData) mmoitem.getData(ItemStats.LORE);

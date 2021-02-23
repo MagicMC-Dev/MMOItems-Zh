@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -8,6 +10,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -239,7 +242,10 @@ public class TemplateManager implements Reloadable {
 		templates.clear();
 		modifiers.clear();
 
-		MMOItems.plugin.getLogger().log(Level.INFO, "Loading template modifiers, please wait..");
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
+		ffp.ActivatePrefix(true, "Item Templates");
+		ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Loading template modifiers, please wait..");
+
 		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 			for (String key : config.getKeys(false))
@@ -247,11 +253,13 @@ public class TemplateManager implements Reloadable {
 					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
 					modifiers.put(modifier.getId(), modifier);
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load template modifier '" + key + "': " + exception.getMessage());
+
+					// Log
+					ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Could not load template modifier '" + key + "': " + exception.getMessage());
 				}
 		}
 
-		MMOItems.plugin.getLogger().log(Level.INFO, "Loading item templates, please wait..");
+		ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...");
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			for (String key : config.getKeys(false))
@@ -259,9 +267,15 @@ public class TemplateManager implements Reloadable {
 					MMOItemTemplate template = new MMOItemTemplate(type, config.getConfigurationSection(key));
 					template.postLoad();
 					registerTemplate(template);
+
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "Could not load item template '" + key + "': " + exception.getMessage());
+
+					// Log
+					ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Could not load item template '" + key + "': " + exception.getMessage());
 				}
 		}
+
+		// Print all failures
+		ffp.SendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
 	}
 }

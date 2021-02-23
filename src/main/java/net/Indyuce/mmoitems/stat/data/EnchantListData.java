@@ -10,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EnchantListData implements StatData, Mergeable {
 	private final Map<Enchantment, Integer> enchants = new HashMap<>();
@@ -18,7 +19,8 @@ public class EnchantListData implements StatData, Mergeable {
 		return enchants.keySet();
 	}
 
-	public int getLevel(Enchantment enchant) {
+	public int getLevel(@NotNull Enchantment enchant) {
+		if (!enchants.containsKey(enchant)) { return 0; }
 		return enchants.get(enchant);
 	}
 

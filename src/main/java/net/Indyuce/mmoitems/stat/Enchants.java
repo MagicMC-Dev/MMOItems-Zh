@@ -285,7 +285,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
 				// Update
 				//UPGRD//MMOItems. Log("\u00a7b      -> \u00a77Final level \u00a7f" + value);
-				dataEnchants.addEnchant(e, SilentNumbers.Round(value));
+				dataEnchants.addEnchant(e, SilentNumbers.Round(value - 0.5));
 			}
 
 			// Yes

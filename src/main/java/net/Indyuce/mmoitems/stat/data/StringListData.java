@@ -15,27 +15,27 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
 public class StringListData implements StatData, RandomStatData, Mergeable {
-	private final List<String> list;
+	@NotNull private final List<String> list;
 
 	public StringListData() {
 		this(new ArrayList<>());
 	}
 
-	public StringListData(String[] array) {
+	public StringListData(@NotNull String[] array) {
 		this(Arrays.asList(array));
 	}
 
-	public StringListData(JsonArray array) {
+	public StringListData(@NotNull JsonArray array) {
 		this();
 
 		array.forEach(str -> list.add(str.getAsString()));
 	}
 
-	public StringListData(List<String> list) {
+	public StringListData(@NotNull List<String> list) {
 		this.list = list;
 	}
 
-	public List<String> getList() {
+	@NotNull public List<String> getList() {
 		return list;
 	}
 

@@ -25,4 +25,14 @@ public interface ItemRestriction {
 	 * @return         False if the item cannot be used
 	 */
 	boolean canUse(RPGPlayer player, NBTItem item, boolean message);
+
+	/**
+	 * Usually, item restrictions are checked <i>when equipping</i>
+	 * an item, and prevent the item being equipped if they fail that moment.
+	 * <p></p>
+	 * Setting this to <code>true</code> will allow items equip anyway
+	 * and check with every use that the conditions for their usage
+	 * are met.
+	 */
+	default boolean isDynamic() { return false; }
 }

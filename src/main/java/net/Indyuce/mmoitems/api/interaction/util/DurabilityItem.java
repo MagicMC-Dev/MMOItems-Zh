@@ -3,9 +3,12 @@ package net.Indyuce.mmoitems.api.interaction.util;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.event.item.CustomDurabilityDamage;
+import net.Indyuce.mmoitems.api.event.item.CustomDurabilityRepair;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -86,12 +89,19 @@ public class DurabilityItem {
 	}
 
 	public DurabilityItem addDurability(int gain) {
+		CustomDurabilityRepair evG = new CustomDurabilityRepair(this, gain);
+		Bukkit.getPluginManager().callEvent(evG);
+		if (!evG.isCancelled()) { return this; }
+
 		Validate.isTrue(gain > 0, "Durability gain must be greater than 0");
 		durability = Math.max(0, Math.min(durability + gain, maxDurability));
 		return this;
 	}
 
 	public DurabilityItem decreaseDurability(int loss) {
+		CustomDurabilityDamage evG = new CustomDurabilityDamage(this, loss);
+		Bukkit.getPluginManager().callEvent(evG);
+		if (!evG.isCancelled()) { return this; }
 
 		/*
 		 * Calculate the chance of the item not losing any durability because of

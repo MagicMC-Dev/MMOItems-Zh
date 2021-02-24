@@ -206,11 +206,11 @@ public class PlayerData {
 			NBTItem nbtItem = item.getItem();
 			Type type = Type.get(nbtItem.getType());
 
-			/**
+			/*
 			 * If the item is a custom item, apply slot and item use
 			 * restrictions (items which only work in a specific equipment slot)
 			 */
-			if (type != null && (!item.matches(type, mainheld_type) || !getRPG().canUse(nbtItem, false)))
+			if (type != null && (!item.matches(type, mainheld_type) || !getRPG().canUse(nbtItem, false, false)))
 				continue;
 
 			inventory.getEquipped().add(new EquippedPlayerItem(item));

@@ -82,7 +82,22 @@ public abstract class RPGPlayer {
 		setStamina(getStamina() + value);
 	}
 
-	public boolean canUse(NBTItem item, boolean message) {
+	/**
+	 *  If this item can be used by this player
+	 * @param message Should the player be notified that they cant use the item?
+	 *                <p>Use for active checks (the player actually clicking)</p>
+	 */
+	public boolean canUse(NBTItem item, boolean message) { return canUse(item, message, false); }
+
+	/**
+	 *  If this item can be used by this player
+	 * @param message Should the player be notified that they cant use the item?
+	 *                <p>Use for active checks (the player actually clicking)</p>
+	 * @param allowDynamic If a Stat Restriction is dynamic, it will be ignored
+	 *                     if it fails (returning true even if it is not met).
+	 * @see ItemRestriction#isDynamic()
+	 */
+	public boolean canUse(NBTItem item, boolean message, boolean allowDynamic) {
 		if (item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
 			if (message) {
 				Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
@@ -91,9 +106,10 @@ public abstract class RPGPlayer {
 			return false;
 		}
 
-		for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats())
-			if (!condition.canUse(this, item, message))
-				return false;
+		for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats()) {
+			if (!condition.isDynamic() || !allowDynamic) {
+				if (!condition.canUse(this, item, message)) {
+					return false; } } }
 
 		return true;
 	}

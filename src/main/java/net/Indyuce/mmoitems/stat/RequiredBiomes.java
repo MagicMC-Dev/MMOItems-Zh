@@ -32,13 +32,14 @@ public class RequiredBiomes extends StringListStat implements ItemRestriction, G
         // Generate data
         StringListData data = (StringListData) getLoadedNBT(relevantTags);
 
+        boolean counter = false;
         if (data != null) {
 
             // Check every string, must match once
             for (String biome : data.getList()) {
 
                 // Crop
-                String tst = biome.toLowerCase().replace(" ", "_").replace("-", "_"); boolean counter = false;
+                String tst = biome.toLowerCase().replace(" ", "_").replace("-", "_");
                 if (tst.startsWith("!")) { counter = true; tst = tst.substring(1); }
 
                 // Get biome
@@ -48,9 +49,13 @@ public class RequiredBiomes extends StringListStat implements ItemRestriction, G
                 if (b.contains(tst)) { return !counter; }
             }
 
-            return false;
+            // If the biome evaded all restrictions it will return true; if the biome didn't met any specifications it will be false.
+            return counter;
         }
 
         return true;
     }
+
+    @Override
+    public boolean isDynamic() { return true; }
 }

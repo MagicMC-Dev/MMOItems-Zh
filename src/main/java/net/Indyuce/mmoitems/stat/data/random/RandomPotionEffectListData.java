@@ -19,9 +19,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class RandomPotionEffectListData implements RandomStatData {
 	private final List<RandomPotionEffectData> effects = new ArrayList<>();
-	boolean containsObsoleteConfigurations = false;
-	public void MarkForSaveAll() { containsObsoleteConfigurations = true; }
-	public boolean isMarkedForSaveAll() { return containsObsoleteConfigurations; }
 
 	public RandomPotionEffectListData(ConfigurationSection config) {
 		Validate.notNull(config, "Config cannot be null");

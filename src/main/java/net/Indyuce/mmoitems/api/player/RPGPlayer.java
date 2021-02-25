@@ -2,6 +2,8 @@ package net.Indyuce.mmoitems.api.player;
 
 import java.text.DecimalFormat;
 
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -106,11 +108,16 @@ public abstract class RPGPlayer {
 			return false;
 		}
 
+		//REQ//MMOItems. Log("Checking REQS");
 		for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats()) {
+			//REQ//MMOItems. Log(" \u00a7a> \u00a77" + ((ItemStat) condition).getNBTPath());
 			if (!condition.isDynamic() || !allowDynamic) {
+				//REQ//MMOItems. Log(" \u00a78> \u00a77Nondynamic / Dynamic Unallowed");
 				if (!condition.canUse(this, item, message)) {
+					//REQ//MMOItems. Log(" \u00a7c> Cant use");
 					return false; } } }
 
+		//REQ//MMOItems. Log(" \u00a7a> Success use");
 		return true;
 	}
 

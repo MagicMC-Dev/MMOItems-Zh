@@ -91,7 +91,7 @@ public class DurabilityItem {
 	public DurabilityItem addDurability(int gain) {
 		CustomDurabilityRepair evG = new CustomDurabilityRepair(this, gain);
 		Bukkit.getPluginManager().callEvent(evG);
-		if (!evG.isCancelled()) { return this; }
+		if (evG.isCancelled()) { return this; }
 
 		Validate.isTrue(gain > 0, "Durability gain must be greater than 0");
 		durability = Math.max(0, Math.min(durability + gain, maxDurability));
@@ -101,7 +101,7 @@ public class DurabilityItem {
 	public DurabilityItem decreaseDurability(int loss) {
 		CustomDurabilityDamage evG = new CustomDurabilityDamage(this, loss);
 		Bukkit.getPluginManager().callEvent(evG);
-		if (!evG.isCancelled()) { return this; }
+		if (evG.isCancelled()) { return this; }
 
 		/*
 		 * Calculate the chance of the item not losing any durability because of

@@ -11,6 +11,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -125,11 +126,20 @@ public class UpgradeTemplate {
 		// For every Stat-UpgradeInfo pair
 		for (ItemStat stat : perStatUpgradeInfos.keySet()) {
 
+			// Preprocess
+			((Upgradable) stat).preprocess(mmoitem);
+
 			// Initializes Stat History
 			StatHistory<StatData> hist = StatHistory.From(mmoitem, stat);
 
+			// Midprocess
+			((Upgradable) stat).midprocess(mmoitem);
+
 			// The Stat History now manages applying upgrades.
 			mmoitem.setData(stat, hist.Recalculate());
+
+			// Postprocess
+			((Upgradable) stat).postprocess(mmoitem);
 		}
 	}
 

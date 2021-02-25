@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
@@ -47,4 +48,29 @@ public interface Upgradable {
 	 *              May be negative if the stat supports it.
 	 */
 	@NotNull StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level);
+
+	/**
+	 *  Does your stat need to do anything to a MMOItem prior to recalculating upgrades?
+	 *  This happens even before generating the {@link StatHistory} in case you need
+	 *  to check the default values.
+	 *  <p></p>
+	 *  <b>Only use if you know what you're doing.</b>
+	 */
+	default void preprocess(@NotNull MMOItem item) { }
+
+
+	/**
+	 *  Does your stat need to do anything to a MMOItem prior to recalculating upgrades?
+	 *  This happens even after generating the {@link StatHistory}.
+	 *  <p></p>
+	 *  <b>Only use if you know what you're doing.</b>
+	 */
+	default void midprocess(@NotNull MMOItem item) { }
+
+	/**
+	 *  Does your stat need to do anything to a MMOItem right after recalculating upgrades?
+	 *  <p></p>
+	 *  <b>Only use if you know what you're doing.</b>
+	 */
+	default void postprocess(@NotNull MMOItem item) {}
 }

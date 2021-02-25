@@ -24,6 +24,7 @@ import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
-	private MMOItem mmoitem;
+	@NotNull private final MMOItem mmoitem;
 
 	private final ItemStack item;
 	private final ItemMeta meta;
@@ -47,7 +48,7 @@ public class ItemStackBuilder {
 	 * 
 	 * @param mmoitem The mmoitem you want to build
 	 */
-	public ItemStackBuilder(MMOItem mmoitem) {
+	public ItemStackBuilder(@NotNull MMOItem mmoitem) {
 
 		// Reference to source MMOItem
 		this.mmoitem = mmoitem;
@@ -77,13 +78,9 @@ public class ItemStackBuilder {
 					MMOItems.plugin.getUpdater().getData(mmoitem.getType(), mmoitem.getId()).getUniqueId().toString()));*/
 	}
 
-	public LoreBuilder getLore() {
-		return lore;
-	}
+	public LoreBuilder getLore() { return lore; }
 
-	public MMOItem getMMOItem() {
-		return mmoitem;
-	}
+	@NotNull public MMOItem getMMOItem() { return mmoitem; }
 
 	/**
 	 * @return Does NOT return the built item stack. It returns only returns the
@@ -92,13 +89,9 @@ public class ItemStackBuilder {
 	 *         of a specific material (like the Shield Pattern stat which checks if
 	 *         the item is a shield)
 	 */
-	public ItemStack getItemStack() {
-		return item;
-	}
+	public ItemStack getItemStack() { return item; }
 
-	public ItemMeta getMeta() {
-		return meta;
-	}
+	public ItemMeta getMeta() { return meta; }
 
 
 	public void addItemTag(List<ItemTag> newTags) { tags.addAll(newTags); }
@@ -200,7 +193,5 @@ public class ItemStackBuilder {
 	/**
 	 * @return Builds the item
 	 */
-	public ItemStack build() {
-		return new DynamicLore(buildNBT()).build();
-	}
+	public ItemStack build() { return new DynamicLore(buildNBT()).build(); }
 }

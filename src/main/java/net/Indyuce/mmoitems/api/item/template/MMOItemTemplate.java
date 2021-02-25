@@ -144,7 +144,8 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 * template has the 'tiered' recipe option, a random tier will be picked. If
 	 * the template has the 'level-item' option, a random level will be picked
 	 *
-	 * @param  player The player for whom you are generating the itme
+	 * @param  player The player for whom you are generating the item. Seems to only
+	 *                matter when rolling for the 'item level'
 	 * @return        Item builder with random level and tier?
 	 */
 	public MMOItemBuilder newBuilder(RPGPlayer player) {

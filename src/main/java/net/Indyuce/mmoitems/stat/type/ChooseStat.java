@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat.type;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -96,7 +97,7 @@ public abstract class ChooseStat extends StringStat {
         }
 
         // Get Definition
-        if (chooseableDefs.containsKey(def)) { for (String deff : Chop(chooseableDefs.get(def), 50)) { lore.add(ChatColor.GRAY + "   " + deff); } }
+        if (chooseableDefs.containsKey(def)) { for (String definition : SilentNumbers.Chop(chooseableDefs.get(def), 50, "")) { lore.add(ChatColor.GRAY + "   " + definition); } }
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to return to default value.");
@@ -123,39 +124,4 @@ public abstract class ChooseStat extends StringStat {
      */
     @NotNull HashMap<String, String> chooseableDefs = new HashMap<>();
     public void HintChooseableDefs(@NotNull HashMap<String, String> list) { chooseableDefs = list; }
-
-    /**
-     * Chops a long description into several parts.
-     */
-     ArrayList<String> Chop(String longString, int paragraphWide) {
-
-         // Ret
-         ArrayList<String> ret = new ArrayList<>();
-         boolean skip = false;
-
-         // While longer
-         while (longString.length() > paragraphWide) {
-
-             // Skip
-             skip = true;
-
-             // Get the wide
-             int idx = longString.lastIndexOf(" ", paragraphWide + 1);
-
-             // Chop
-             ret.add(longString.substring(0, idx));
-
-             // Update
-             longString = longString.substring(idx + 1);
-
-             // Add final.
-             if (longString.length() <= paragraphWide) { ret.add(longString); }
-         }
-
-         // Wasnt long at all
-         if (!skip) { ret.add(longString); }
-
-         // Thats it
-         return ret;
-     }
 }

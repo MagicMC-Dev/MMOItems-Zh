@@ -1,10 +1,12 @@
 package net.Indyuce.mmoitems;
 
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import io.lumine.mythic.utils.plugin.LuminePlugin;
 import net.Indyuce.mmoitems.api.*;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.command.UpdateItemCommand;
 import net.Indyuce.mmoitems.command.completion.UpdateItemCompletion;
@@ -525,7 +527,7 @@ public class MMOItems extends LuminePlugin {
 				setRPG(plugin.load());
 
 				// Mention it
-				Log("Using \u00a76" + plugin.getName() + "\u00a77 as RPG Player provider.");
+				Print(Level.INFO, "Using $s{0}$b as RPGPlayer provider", plugin.getName());
 				return;
 			}
 		}
@@ -599,6 +601,13 @@ public class MMOItems extends LuminePlugin {
 	 */
 	public static void Log(String message) {
 		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
+	}
+
+	/**
+	 * Easily log something using the FriendlyFeedbackProvider, nice!
+	 */
+	public static void Print(@NotNull Level level, @NotNull String message, String... replaces) {
+		MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), message, replaces));
 	}
 
 	/**

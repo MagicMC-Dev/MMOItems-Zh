@@ -14,6 +14,9 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 
+/**
+ * @author Gunging
+ */
 public class RequiredBiomes extends StringListStat implements ItemRestriction, GemStoneStat {
     public RequiredBiomes() {
         super("REQUIRED_BIOMES",  Material.JUNGLE_SAPLING, "Required Biomes", new String[] { "The biome the player must be within", "for this item to activate." }, new String[] { "!block", "all" });

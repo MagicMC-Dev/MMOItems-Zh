@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
+import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
+import net.Indyuce.mmoitems.gui.edition.RevisionInventory;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,10 +27,15 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Regarding the auto updating of items
+ * @see RevisionInventory
+ * @see MMOItemReforger
+ */
 public class RevisionID extends ItemStat implements GemStoneStat {
 	public RevisionID() {
 		super("REVISION_ID", Material.ITEM_FRAME, "Revision ID", new String[] { "The Revision ID is used to determine",
-		"if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!"},
+		"if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!", "", "\u00a76The updater is smart and will apply", "\u00a76changes to the base stats of the item,", "\u00a76keeping gemstones intact (for example)."},
 				new String[] { "all" });
 	}
 
@@ -54,19 +62,11 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		int id = inv.getEditedSection().getInt(getPath(), 1);
-		if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			inv.getEditedSection().set(getPath(), Math.max(id - 1, 1));
-			inv.registerTemplateEdition();
-			return;
-		}
-
-		inv.getEditedSection().set(getPath(), Math.min(id + 1, Integer.MAX_VALUE));
-		inv.registerTemplateEdition();
+		new RevisionInventory(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 	}
 
 	@Override
-	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {}
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) { }
 
 	@Override
 	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {

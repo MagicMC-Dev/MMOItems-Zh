@@ -10,6 +10,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -111,6 +112,9 @@ public class UpgradeTemplate {
 	 * @param level Target level, which may even be negative!
 	 */
 	public void upgradeTo(@NotNull MMOItem mmoitem, int level) {
+
+		// Make sure to not overwrite player's enchantments when upgrading.
+		Enchants.separateEnchantments(mmoitem);
 
 		// Set the items level
 		UpgradeData dat;

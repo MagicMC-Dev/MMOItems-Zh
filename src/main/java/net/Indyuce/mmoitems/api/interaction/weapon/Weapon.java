@@ -20,6 +20,8 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 
+import java.util.logging.Level;
+
 public class Weapon extends UseItem {
 	public Weapon(Player player, NBTItem item) {
 		this(PlayerData.get(player), item);
@@ -38,7 +40,7 @@ public class Weapon extends UseItem {
 
 		boolean asCanUse = playerData.getRPG().canUse(getNBTItem(), true);
 		boolean asFlagAllowed = true; FlagPlugin fg = MMOItems.plugin.getFlags(); if (fg != null) { asFlagAllowed = fg.isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS); }
-		else { MMOItems.Log("Flag Plugin Not Found");}
+		else { MMOItems.Print(Level.WARNING, "$fFlag plugin not found"); }
 		return asCanUse || asFlagAllowed;
 	}
 

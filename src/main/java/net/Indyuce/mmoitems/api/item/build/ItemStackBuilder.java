@@ -105,7 +105,7 @@ public class ItemStackBuilder {
 	public NBTItem buildNBT() {
 		// Clone as to not conflict in any way
 		MMOItem builtMMOItem = mmoitem.clone();
-		//GEM//MMOItems. Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.mergeableStatHistory.size() + "\u00a77 Historic)");
+		//GEM//MMOItems.Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.getStatHistories().size() + "\u00a77 Historic)");
 
 		// For every stat within this item
 		for (ItemStat stat : builtMMOItem.getStats())
@@ -113,7 +113,7 @@ public class ItemStackBuilder {
 			// Attempt to add
 			try {
 
-				//GEM//MMOItems. Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
+				//GEM//MMOItems.Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
 
 				// Make necessary lore changes
 				stat.whenApplied(this, builtMMOItem.getData(stat));
@@ -124,7 +124,7 @@ public class ItemStackBuilder {
 				// Found it?
 				if (s != null) {
 
-					//GEM//MMOItems. Log("\u00a7a -+- \u00a77Found History");
+					//GEM//MMOItems.Log("\u00a7a -+- \u00a77Found History");
 
 					// Add to NBT
 					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));

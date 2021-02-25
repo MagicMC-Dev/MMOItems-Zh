@@ -107,28 +107,6 @@ public class UpgradeData implements StatData, RandomStatData {
 		}
 
 		/*
-		 *  Display Upgrade Level
-		 */
-		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
-		if (MMOItems.plugin.getConfig().getBoolean("item-upgrading.display-in-name"))
-			if (mmoitem.hasData(ItemStats.NAME)) {
-				StringData nameData = (StringData) mmoitem.getData(ItemStats.NAME);
-				nameData.setString(level == 0 ? nameData.toString() + suffix.replace("#lvl#", "" + (level + 1))
-						: nameData.toString().replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + (level + 1))));
-			}
-
-		/*TODO: implement this as a new dynamic lore type
-		else if (mmoitem.hasData(ItemStats.LORE)) {
-				StringListData loreData = (StringListData) mmoitem.getData(ItemStats.LORE);
-				loreData.getList().forEach(line -> {
-					if (line.contains("%upgrade_level%") || line.contains(suffix.replace("#lvl#", "" + level))) {
-						line.replace("%upgrade_level%", suffix.replace("#lvl#", "" + level + 1));
-						line.replace(suffix.replace("#lvl#", "" + level), suffix.replace("#lvl#", "" + level + 1));
-					}
-				});
-			}*/
-
-		/*
 		 *  Go through every stat that must be ugpraded and apply
 		 */
 		getTemplate().upgrade(mmoitem);

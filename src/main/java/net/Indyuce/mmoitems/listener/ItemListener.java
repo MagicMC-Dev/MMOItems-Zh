@@ -1,7 +1,8 @@
 package net.Indyuce.mmoitems.listener;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.util.ItemModInstance;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -14,6 +15,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
@@ -67,13 +70,26 @@ public class ItemListener implements Listener {
 		if(newItem != null) player.getEquipment().setItemInOffHand(newItem);
 	}
 
-	private ItemStack modifyItem(ItemStack stack, Player player, String type) {
+	@Nullable private ItemStack modifyItem(@NotNull ItemStack stack, @NotNull Player player, @NotNull String type) {
+
+		// Get the item
 		NBTItem nbt = NBTItem.get(stack);
-		if (!nbt.hasType()) return null;
-		ItemModInstance mod = new ItemModInstance(nbt);
-		if (shouldUpdate(nbt, type))
+
+		// Not a MMOItem? not our problem.
+		if (!nbt.hasType()) { return null; }
+
+		// ??
+		MMOItemReforger mod = new MMOItemReforger(nbt);
+
+		// Should this item be updated (via the updater)
+		if (shouldUpdate(nbt, type)) {
 			mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null, MMOItems.plugin.getLanguage().revisionOptions);
-		if (shouldSoulbind(nbt, type)) mod.applySoulbound(player);
+		}
+
+		// Should this item be soulbount?
+		if (shouldSoulbind(nbt, type)) { mod.applySoulbound(player); }
+
+		// Return either the changed one or null
 		return mod.hasChanges() ? mod.toStack() : null;
 	}
 
@@ -87,9 +103,24 @@ public class ItemListener implements Listener {
 	private boolean shouldUpdate(NBTItem nbt, String type) {
 		if(!MMOItems.plugin.getTemplates().hasTemplate(nbt)) return false;
 
-		return !MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + type) &&
-				((MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() > (nbt.hasTag("MMOITEMS_REVISION_ID")
-				? nbt.getInteger("MMOITEMS_REVISION_ID") : 1)) || (MMOItems.INTERNAL_REVISION_ID >
-				(nbt.hasTag("MMOITEMS_INTERNAL_REVISION_ID") ? nbt.getInteger("MMOITEMS_INTERNAL_REVISION_ID") : 1)) );
+		return
+				// It must not be disabled for this item
+				!MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + type) &&
+
+
+				// Either the normal revision ID or the internal revision IDs are out of date.
+				(
+						// Is the template's revision ID greater than the one currently in the item?
+						(MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() >
+
+								// The one 'currently in the item' is the value of the stat, or 1 if missing.
+								(nbt.hasTag(ItemStats.REVISION_ID.getNBTPath()) ? nbt.getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1)) ||
+
+						// Or the MMOItems internal revision ID itself
+						(MMOItems.INTERNAL_REVISION_ID >
+
+								// Same thing: either the value of the stat or 1 if missing.
+								(nbt.hasTag(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) ? nbt.getInteger(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) : 1))
+				);
 	}
 }

@@ -4,6 +4,7 @@ import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
@@ -125,9 +126,9 @@ public class StatHistory<S extends StatData> {
 
         // Found? Thats it
         if (hist != null) {
-            //UPGRD//MMOItems. Log("Found Stat History of \u00a76" + ofStat.getNBTPath() + "\u00a77 in this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
+            //UPGRD//MMOItems.Log("Found Stat History of \u00a76" + ofStat.getNBTPath() + "\u00a77 in this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
             return hist; }
-        //UPGRD//MMOItems. Log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
+        //UPGRD//MMOItems.Log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
 
         // That is Mergeable right...
         Validate.isTrue(ofStat.getClearStatData() instanceof Mergeable, "Non-Mergeable stat data wont have a Stat History; they cannot be modified dynamically in the first place.");
@@ -136,11 +137,12 @@ public class StatHistory<S extends StatData> {
         StatData original = ofItem.getData(ofStat);
         if (original == null) {
             original = ofStat.getClearStatData();
-            //UPGRD//MMOItems. Log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc.");
+            ofItem.setData(ofStat, original);
+            //UPGRD//MMOItems.Log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc.");
         }
         else {
             original = ((Mergeable) original).cloneData();
-            //UPGRD//MMOItems. Log("\u00a7a   +\u00a77 Found original data");
+            //UPGRD//MMOItems.Log("\u00a7a   +\u00a77 Found original data");
         }
 
         // Create new
@@ -161,12 +163,71 @@ public class StatHistory<S extends StatData> {
     StatHistory(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat, @NotNull S ogData) { itemStat = ofStat; originalData = ogData; parent = ofItem; }
 
     /**
+     * Checks the item and makes sure that the UUIDs
+     * attributed to gemstones link to existing gem
+     * stones. Removes them if no such gemstone exists.
+     */
+    public void PurgeGemstones() {
+
+        // Which will get purged...
+        ArrayList<UUID> extraneous = new ArrayList<>();
+        GemSocketsData data = (GemSocketsData) getMMOItem().getData(ItemStats.GEM_SOCKETS);
+        if (data == null) { data = new GemSocketsData(new ArrayList<>()); }
+
+        // For each UUID
+        for (UUID gem : perGemstoneData.keySet()) {
+
+            // Check Gemstones
+            boolean success = false;
+            for (GemstoneData indiv : data.getGemstones()) {
+
+                // Not null
+                if (indiv != null) {
+
+                    // Equal in UUID
+                    if (gem.equals(indiv.getHistoricUUID())) {
+
+                        success = true;
+                        break;
+                    }
+                }
+            }
+
+            // No success?
+            if (!success) {
+
+                // No gemstone matched
+                extraneous.add(gem);
+            }
+        }
+
+        // Unregister
+        for (UUID ext : extraneous) {
+            //UPGRD//MMOItems.Log("\u00a76 ||\u00a77 Purged Stone: \u00a7e" + ext.toString());
+
+            // Remove
+            perGemstoneData.remove(ext);
+        }
+    }
+
+    /**
      * This recalculates final value of the stats of the item.
      * <p></p>
      * This will not apply the changes, it will just give you the final
      * <code>StatData</code> that shall be applied (used when upgrading).
      */
-    @NotNull public S Recalculate() {
+    @NotNull public S Recalculate() { return Recalculate(true); }
+    /**
+     * This recalculates final value of the stats of the item.
+     * <p></p>
+     * This will not apply the changes, it will just give you the final
+     * <code>StatData</code> that shall be applied (used when upgrading).
+     * @param withPurge Check if the gemstones UUIDs are valid.
+     *                  Leave <code>true</code> unless you know
+     *                  what you're doing.
+     */
+    @NotNull public S Recalculate(boolean withPurge) {
+        if (withPurge) { PurgeGemstones(); }
 
         // If its upgradeable and not level ZERO, it must apply upgrades
         if ((getMMOItem().getUpgradeLevel() != 0)  &&
@@ -181,12 +242,26 @@ public class StatHistory<S extends StatData> {
         // Merge Normally
         return Recalculate_ThroughClone();
     }
+
     /**
      * This recalculates values accounting only for gemstones and external data.
      * <p></p>
-     * In case someone was wondered the contribution of upgrading the item.
+     * In case someone was wondered the contribution of upgrading the item, just
+     * substract it from {@link #Recalculate()}
      */
-    @NotNull public S Recalculate_Unupgraded() {
+    @NotNull public S Recalculate_Unupgraded() { return Recalculate_Unupgraded(true); }
+
+    /**
+     * This recalculates values accounting only for gemstones and external data.
+     * <p></p>
+     * In case someone was wondered the contribution of upgrading the item, just
+     * substract it from {@link #Recalculate()}
+     * @param withPurge Check if the gemstones UUIDs are valid.
+     *                  Leave <code>true</code> unless you know
+     *                  what you're doing.
+     */
+    @NotNull public S Recalculate_Unupgraded(boolean withPurge) {
+        if (withPurge) { PurgeGemstones(); }
 
         // Merge Normally
         return Recalculate_ThroughClone();
@@ -203,7 +278,7 @@ public class StatHistory<S extends StatData> {
      * <p>5: Sums external data (modifiers that are not linked to an ID, I suppose by external plugins).
      */
     private S Recalculate_AsUpgradeable() {
-        //UPGRD//MMOItems. Log("\u00a76|||\u00a77 Calculating as Upgradeable");
+        //UPGRD//MMOItems.Log("\u00a76|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Upgradeable");
 
         // Get Upgrade Info?
         UpgradeInfo inf = getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat());
@@ -216,7 +291,7 @@ public class StatHistory<S extends StatData> {
 
         // Level up
         int lvl = getMMOItem().getUpgradeLevel();
-        //UPGRD//MMOItems. Log("\u00a76 ||\u00a77 Item Level: \u00a7e" + lvl);
+        //UPGRD//MMOItems.Log("\u00a76 ||\u00a77 Item Level: \u00a7e" + lvl);
         //UPGRD//MMOItems. Log("\u00a76  >\u00a77 Original Base: \u00a7e" + ((DoubleData) ogCloned).getValue());
         S ret = (S) ((Upgradable) getItemStat()).apply(ogCloned, inf, lvl);
         //UPGRD//MMOItems. Log("\u00a76  >\u00a77 Leveled Base: \u00a7e" + ((DoubleData) ret).getValue());
@@ -248,7 +323,7 @@ public class StatHistory<S extends StatData> {
 
             // Calculate level difference
             int gLevel = lvl - level;
-            //UPGRD//MMOItems. Log("\u00a76 |\u00a7b|\u00a76>\u00a77 Gemstone Level: \u00a7e" + gLevel + "\u00a77 (Put at \u00a7b" + level + "\u00a77)");
+            //UPGRD//MMOItems.Log("\u00a76 |\u00a7b|\u00a76>\u00a77 Gemstone Level: \u00a7e" + gLevel + "\u00a77 (Put at \u00a7b" + level + "\u00a77)");
 
             //UPGRD//MMOItems. Log("\u00a76  \u00a7b|>\u00a77 Gemstone Base: \u00a7e" + ((DoubleData) getGemstoneData(d)).getValue());
             // Apply upgrades
@@ -282,7 +357,7 @@ public class StatHistory<S extends StatData> {
      * <p>4: Sums external data (modifiers that are not linked to an ID, I suppose by external plugins).
      */
     private S Recalculate_ThroughClone() {
-        //UPGRD//MMOItems. Log("\u00a73|||\u00a77 Calculating as Clonium");
+        //UPGRD//MMOItems.Log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Clonium");
 
         // Just clone bro
         S ret = (S) ((Mergeable) getOriginalData()).cloneData();
@@ -525,6 +600,32 @@ public class StatHistory<S extends StatData> {
             ffp.Log(FriendlyFeedbackCategory.ERROR, "Could not get stat history: $f{0}$b at $f{1}", e.getMessage(), e.getStackTrace()[0].toString());
             ffp.SendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
             return null;
+        }
+    }
+
+    /**
+     * Get all gemstone and extraneous data from this other, while
+     * keeping the current ones as well as <u>these</u> original bases.
+     * <p></p>
+     * Fails if the stats are not the same one.
+     */
+    public void Assimilate(@NotNull StatHistory<StatData> other) {
+
+        // Stat must be the same
+        if (other.getItemStat().getNBTPath().equals(getItemStat().getNBTPath())) {
+           //UPDT//MMOItems.Log("    \u00a72>\u00a76> \u00a77History Stat Matches");
+
+           //UPDT//MMOItems.Log("     \u00a76:\u00a72: \u00a77Original Gemstones \u00a7f" + perGemstoneData.size());
+           //UPDT//MMOItems.Log("     \u00a76:\u00a72: \u00a77Original Externals \u00a7f" + perExternalData.size());
+
+            // Register gemstones
+            for (UUID exUID : other.perGemstoneData.keySet()) { registerGemstoneData(exUID, (S) other.getGemstoneData(exUID)); }
+
+            // Register externals
+            for (StatData ex : other.perExternalData) { registerExternalData((S) ex); }
+
+           //UPDT//MMOItems.Log("     \u00a76:\u00a72: \u00a77Final Gemstones \u00a7f" + perGemstoneData.size());
+           //UPDT//MMOItems.Log("     \u00a76:\u00a72: \u00a77Final Externals \u00a7f" + perExternalData.size());
         }
     }
 

@@ -30,6 +30,15 @@ public class DisplayName extends StringStat {
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
 
+		int upgradeLevel = item.getMMOItem().getUpgradeLevel();
+		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+		String oldSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel - 1));
+		String actSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel));
+		String oldSuffix2 = suffix.replace("#lvl#", String.valueOf(upgradeLevel + 1));
+		format = format.replace(oldSuffix, "").replace(oldSuffix2, "").replace(actSuffix, "");
+		if (upgradeLevel != 0) { format = format + actSuffix; }
+
+
 		item.getMeta().setDisplayName(MythicLib.inst().parseColors(format));
 	}
 

@@ -9,10 +9,12 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -192,7 +194,16 @@ public class Enchants extends ItemStat implements Upgradable {
 
 		// Enchant Item
 		EnchantListData enchants = (EnchantListData) data;
-		for (Enchantment enchant : enchants.getEnchants()) { item.getMeta().addEnchant(enchant, enchants.getLevel(enchant), true); }
+		for (Enchantment enchant : enchants.getEnchants()) {
+
+			// Get level
+			int lvl = enchants.getLevel(enchant);
+
+			// Not ZERO bruh
+			if (lvl != 0) {
+				item.getMeta().addEnchant(enchant, enchants.getLevel(enchant), true);
+			}
+		}
 
 		// Apply tags
 		item.addItemTag(getAppliedNBT(data));
@@ -294,6 +305,57 @@ public class Enchants extends ItemStat implements Upgradable {
 
 		// Upgraded
 		return original;
+	}
+
+	/**
+	 * Players may enchant an item via 'vanilla' means (Not Gemstones, not Upgrades).
+	 * If they do so, the enchantments of their item will be wiped if they try to put
+	 * a gemstone in or upgrade the item, which is not nice.
+	 * <p></p>
+	 * This operation classifies these discrepancies in the enchantment levels as
+	 * 'externals' in the Stat History of enchantments. From then on, they will be
+	 * accounted for.
+	 */
+	public static void separateEnchantments(@NotNull MMOItem mmoitem) {
+
+		// Cancellation because the player could not have done so HMMM
+		if (mmoitem.hasData(ItemStats.DISABLE_REPAIRING) && mmoitem.hasData(ItemStats.DISABLE_ENCHANTING)) { return; }
+
+		// Does it have enchantment data?
+		if (mmoitem.hasData(ItemStats.ENCHANTS)) {
+
+			// Get that data
+			EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
+			StatHistory<StatData> hist = StatHistory.From(mmoitem, ItemStats.ENCHANTS);
+
+			// All right, whats the expected enchantment levels?
+			EnchantListData expected = (EnchantListData) hist.Recalculate();
+
+			// Gather a list of extraneous enchantments
+			HashMap<Enchantment, Integer> discrepancies = new HashMap<>();
+
+			// For every enchantment
+			for (Enchantment e : Enchantment.values()) {
+
+				// Get both
+				int actual = data.getLevel(e);
+				int ideal = expected.getLevel(e);
+
+				// Get difference, and register.
+				int offset = actual - ideal;
+				if (offset != 0) { discrepancies.put(e, offset); }
+			}
+
+			// It has been extracted
+			if (discrepancies.size() > 0) {
+				// Generate enchantment list with offsets
+				EnchantListData extraneous = new EnchantListData();
+				for (Enchantment e : discrepancies.keySet()) { extraneous.addEnchant(e, discrepancies.get(e));}
+
+				// Register extraneous
+				hist.registerExternalData(extraneous);
+			}
+		}
 	}
 
 	public static class EnchantUpgradeInfo implements UpgradeInfo {

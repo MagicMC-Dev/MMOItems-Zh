@@ -21,7 +21,10 @@ public class GemstoneData {
 	@Nullable Integer levelPut = 0;
 	@NotNull final UUID historicUUID;
 
-	@Nullable final String mmoitemType, mmoitemID, socketColor;
+	@Nullable final String mmoitemType;
+	@Nullable final String mmoitemID;
+	@Nullable
+	String socketColor;
 
 	/**
 	 * This constructor is not really performance friendly. It should only be
@@ -167,6 +170,16 @@ public class GemstoneData {
 	@NotNull public String getName() {
 		return name;
 	}
+
+	/**
+	 *  If known, the socket colour this gem was put into
+	 */
+	@Nullable public String getColour() { return socketColor; }
+
+	/**
+	 *  If known, the socket colour this gem was put into
+	 */
+	 public void setColour(@Nullable String color) { socketColor = color; }
 
 	/**
 	 * Want to know which stats were given to the item by this gemstone (after applying upgrade scaling and such)? Use this!

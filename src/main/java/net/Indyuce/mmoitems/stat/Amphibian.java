@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * @author Gunging
+ */
 public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneStat {
     public static final String
         NORMAL = "UNRESTRICTED",

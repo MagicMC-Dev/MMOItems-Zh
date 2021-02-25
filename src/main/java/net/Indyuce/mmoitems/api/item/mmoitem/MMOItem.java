@@ -60,25 +60,25 @@ public class MMOItem implements ItemReference {
 	 * stored as a GemStone in the history, allowing to be removed from the item with that same UUID.
 	 */
 	public void mergeData(@NotNull ItemStat stat, @NotNull StatData data, @Nullable UUID associatedGemStone) {
-		//GEM//MMOItems.Log("Merging stone stat \u00a76" + stat.getNBTPath() + "\u00a77 into \u00a7c" + getType().getName() + " " + getId());
+		//GEM//MMOItems. Log("Merging stone stat \u00a76" + stat.getNBTPath() + "\u00a77 into \u00a7c" + getType().getName() + " " + getId());
 
 		// Do we already have the data?
 		if (data instanceof Mergeable) {
-			//GEM//MMOItems.Log("\u00a7a + \u00a77Mergeable");
+			//GEM//MMOItems. Log("\u00a7a + \u00a77Mergeable");
 
 			// Prepare to merge: Gather History (Also initializes the ORIGINAL stats)
 			StatHistory<StatData> sHistory = StatHistory.From(this, stat);
 
 			// As GemStone or as External?
 			if (associatedGemStone != null) {
-				//GEM//MMOItems.Log(" \u00a79++\u00a77 As Gemstone \u00a7b" + associatedGemStone.toString());
+				//GEM//MMOItems. Log(" \u00a79++\u00a77 As Gemstone \u00a7b" + associatedGemStone.toString());
 
 				// As GemStone
 				sHistory.registerGemstoneData(associatedGemStone, data);
 
 			// As External
 			} else {
-				//GEM//MMOItems.Log(" \u00a7c++\u00a77 As External");
+				//GEM//MMOItems. Log(" \u00a7c++\u00a77 As External");
 
 				// As External, UUIDless modifier
 				sHistory.registerExternalData(data);
@@ -111,9 +111,7 @@ public class MMOItem implements ItemReference {
 		return stats.get(stat);
 	}
 
-	public boolean hasData(@NotNull ItemStat stat) {
-		return (stats.get(stat) != null);
-	}
+	public boolean hasData(@NotNull ItemStat stat) { return (stats.get(stat) != null); }
 
 	/**
 	 * @return Collection of all item stats which have some data on this mmoitem
@@ -163,15 +161,14 @@ public class MMOItem implements ItemReference {
 	 * its original stats, and from which gem stone came each stat, in order to allow
 	 * removal of gem stones in the future. This is where that is remembered.
 	 */
-	@NotNull public final Map<String, StatHistory<StatData>> mergeableStatHistory = new HashMap<>();
+	@NotNull final Map<String, StatHistory<StatData>> mergeableStatHistory = new HashMap<>();
 
 	/**
 	 * Gets the history associated to this stat, if there is any
 	 * <p></p>
 	 * A stat history is basically the memmory of its original stats, from when it was created, its gem stone stats, those added by which gem, and its upgrade bonuses.
 	 */
-	@Nullable
-	public  StatHistory<StatData> getStatHistory(@NotNull ItemStat stat) {
+	@Nullable public StatHistory<StatData> getStatHistory(@NotNull ItemStat stat) {
 		try {
 
 			// Well that REALLY should work
@@ -180,6 +177,11 @@ public class MMOItem implements ItemReference {
 		} catch (ClassCastException ignored) {
 			return null;
 		}
+	}
+	@NotNull public ArrayList<StatHistory<StatData>> getStatHistories() {
+
+		// Those
+		return new ArrayList<>(mergeableStatHistory.values());
 	}
 
 	/**

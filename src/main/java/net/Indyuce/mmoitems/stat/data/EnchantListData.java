@@ -28,22 +28,31 @@ public class EnchantListData implements StatData, Mergeable {
 	public void addEnchant(Enchantment enchant, int level) {
 		enchants.put(enchant, level);
 	}
+	public void clear() { enchants.clear(); }
 
 	@Override
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof EnchantListData, "Cannot merge two different stat data types");
-		Map<Enchantment, Integer> extra = ((EnchantListData) data).enchants;
 		boolean additiveMerge = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-enchantments", false);
 
-		for (Enchantment enchant : extra.keySet()) {
+		for (Enchantment enchant : ((EnchantListData) data).getEnchants()) {
 			if (additiveMerge) {
 
 				// Additive
-				enchants.put(enchant, extra.get(enchant) + enchants.get(enchant));
+				enchants.put(enchant, ((EnchantListData) data).getLevel(enchant) + enchants.get(enchant));
 			} else {
 
 				// Max Enchantment
-				enchants.put(enchant, enchants.containsKey(enchant) ? extra.get(enchant) + enchants.get(enchant) : extra.get(enchant));
+				addEnchant(enchant,
+
+						// Does this one already have the enchant?
+						enchants.containsKey(enchant) ?
+
+								// Use the better of the two
+								Math.max(((EnchantListData) data).getLevel(enchant), enchants.get(enchant)) :
+
+								// No enchant yet, just copy over
+								((EnchantListData) data).getLevel(enchant));
 			}
 		}
 	}

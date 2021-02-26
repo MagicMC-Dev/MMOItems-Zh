@@ -65,13 +65,18 @@ public class StatHistory<S extends StatData> {
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
      */
-    @NotNull HashMap<UUID, S> perGemstoneData = new HashMap<>();
+    @NotNull public HashMap<UUID, S> perGemstoneData = new HashMap<>();
 
     /**
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
      */
     @NotNull public S getGemstoneData(UUID of) { return perGemstoneData.get(of); }
+
+    /**
+     * All the Stat Datas provided by GemStones
+     */
+    @NotNull public ArrayList<UUID> getAllGemstones() { return new ArrayList<>(perGemstoneData.keySet()); }
 
     /**
      * The final modifier being provided by each gemstone.

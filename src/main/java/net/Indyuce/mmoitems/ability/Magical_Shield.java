@@ -73,7 +73,7 @@ public class Magical_Shield extends Ability {
 
 		@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 		public void a(EntityDamageEvent event) {
-			if (event.getEntity() instanceof Player && event.getEntity().getLocation().distanceSquared(loc) < radius)
+			if (event.getEntity() instanceof Player && event.getEntity().getWorld().equals(loc.getWorld()) && event.getEntity().getLocation().distanceSquared(loc) < radius)
 				event.setDamage(event.getDamage() * (1 - power));
 		}
 

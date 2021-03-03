@@ -39,7 +39,7 @@ public class DisplayName extends StringStat {
 		if (upgradeLevel != 0) { format = format + actSuffix; }
 
 
-		item.getMeta().setDisplayName(MythicLib.inst().parseColors(format));
+		item.getMeta().setDisplayName(ChatColor.translateAlternateColorCodes('&', format));
 	}
 
 	/**

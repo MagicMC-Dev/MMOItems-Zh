@@ -1,6 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -11,11 +16,9 @@ import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomRequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -105,6 +108,64 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 			return false;
 		}
 		return true;
+	}
+
+
+	@NotNull
+	@Override
+	public StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level) {
+		//UPGRD//MMOItems. Log("\u00a7a  --> \u00a77Applying Enchants Upgrade");
+
+		// Must be DoubleData
+		if (original instanceof RequiredLevelData && info instanceof DoubleUpgradeInfo) {
+
+			// Get value
+			RequiredLevelData originalLevel = ((RequiredLevelData) original);
+			DoubleUpgradeInfo dui = (DoubleUpgradeInfo) info;
+
+			// For every enchantment
+			int lSimulation = level;
+
+			// Get current level
+			double value = originalLevel.getValue();
+			PlusMinusPercent pmp = dui.getPMP();
+
+			// If leveling up
+			if (lSimulation > 0) {
+
+				// While still positive
+				while (lSimulation > 0) {
+
+					// Apply PMP Operation Positively
+					value = pmp.apply(value);
+
+					// Decrease
+					lSimulation--;
+				}
+
+				// Degrading the item
+			} else if (lSimulation < 0) {
+
+				// While still negative
+				while (lSimulation < 0) {
+
+					// Reverse Operation
+					value = pmp.reverse(value);
+
+					// Decrease
+					lSimulation++;
+				}
+			}
+
+			// Update
+			originalLevel.setValue(SilentNumbers.Round(value - 0.5));
+
+			// Yes
+			return originalLevel;
+		}
+
+		// Upgraded
+		return original;
 	}
 
 	@Override

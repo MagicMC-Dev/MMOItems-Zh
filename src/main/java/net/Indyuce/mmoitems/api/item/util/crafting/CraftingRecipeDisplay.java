@@ -109,12 +109,6 @@ public class CraftingRecipeDisplay extends ConfigItem {
 						lore.add(conditionsIndex++, condition.format());
 				}
 
-			/*
-			 * apply color to lore
-			 */
-			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, MythicLib.plugin.parseColors(lore.get(n)));
-
 			ItemStack item = craftingRecipe.getOutput().getPreview();
 			int amount = craftingRecipe.getOutput().getAmount();
 

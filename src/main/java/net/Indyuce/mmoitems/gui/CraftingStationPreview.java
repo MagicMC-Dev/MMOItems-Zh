@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
@@ -90,16 +91,23 @@ public class CraftingStationPreview extends PluginInventory {
 
 		inv.setItem(10, ConfigItems.BACK.getItem());
 		inv.setItem(34, ConfigItems.CONFIRM.getItem());
-		ItemStack book = recipe.display();
-		book.setType(Material.KNOWLEDGE_BOOK);
-		book.setAmount(1);
-		ItemMeta meta = book.getItemMeta();
-		List<String> newLore = meta.getLore().subList(0, meta.getLore().size() - 3);
-		meta.setLore(newLore);
+		ItemStack bookStack = recipe.display();
+
+		bookStack.setType(Material.KNOWLEDGE_BOOK);
+		bookStack.setAmount(1);
+
+		ItemMeta meta = bookStack.getItemMeta();
+
 		for (Enchantment ench : meta.getEnchants().keySet())
 			meta.removeEnchant(ench);
-		book.setItemMeta(meta);
-		inv.setItem(28, book);
+		bookStack.setItemMeta(meta);
+
+		NBTItem book = NBTItem.get(bookStack);
+
+		List<Component> lore = book.getLoreComponents();
+		book.setLoreComponents(lore.subList(0, lore.size() - 3));
+
+		inv.setItem(28, book.toItem());
 
 		inv.setItem(20, page > 1 ? ConfigItems.PREVIOUS_PAGE.getItem() : ConfigItems.FILL.getItem());
 		inv.setItem(24, max < ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());

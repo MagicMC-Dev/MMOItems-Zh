@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -30,16 +31,39 @@ public class DisplayName extends StringStat {
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
 
-		int upgradeLevel = item.getMMOItem().getUpgradeLevel();
-		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
-		String oldSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel - 1));
-		String actSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel));
-		String oldSuffix2 = suffix.replace("#lvl#", String.valueOf(upgradeLevel + 1));
-		format = format.replace(oldSuffix, "").replace(oldSuffix2, "").replace(actSuffix, "");
-		if (upgradeLevel != 0) { format = format + actSuffix; }
+		// Is this upgradable?
+		if (item.getMMOItem().hasUpgradeTemplate()) {
+			int upgradeLevel = item.getMMOItem().getUpgradeLevel();
+			String suffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix");
+			MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
+			MMOItems.getConsole().sendMessage("Format " + format);
+			if (suffix != null) {
+				MMOItems.getConsole().sendMessage("Suffix " + suffix);
 
+				// Bake old indices for removal
+				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
+				if (upgradeLevel < 0) { upgradeLevel = -upgradeLevel; negativity = true; }
+				for (int i = 1; i <= upgradeLevel + 3; i++) {
+					if (negativity) {
+						oldSuffixii.add(suffix.replace("#lvl#", String.valueOf(-i)));
+					} else {
+						oldSuffixii.add(suffix.replace("#lvl#", String.valueOf(i))); }}
+				for (String str : oldSuffixii) {
+					MMOItems.getConsole().sendMessage("Found " + str);
+					str = MythicLib.plugin.parseColors(str);
+					MMOItems.getConsole().sendMessage("Colored " + str);
+					format = format.replace(MythicLib.plugin.parseColors(str), "");
+					MMOItems.getConsole().sendMessage("Edited " + format);
+				}
 
-		item.getMeta().setDisplayName(ChatColor.translateAlternateColorCodes('&', format));
+				String actSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel));
+				MMOItems.getConsole().sendMessage("Current " + actSuffix);
+				if (upgradeLevel != 0) { format = format + MythicLib.plugin.parseColors(actSuffix); }
+				MMOItems.getConsole().sendMessage("Final " + format);
+			}
+		}
+
+		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
 	}
 
 	/**

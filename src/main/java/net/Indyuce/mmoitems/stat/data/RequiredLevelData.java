@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat.data;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
 
 public class RequiredLevelData extends DoubleData {
 	public RequiredLevelData(double value) {
@@ -31,4 +32,8 @@ public class RequiredLevelData extends DoubleData {
 			setValue(Math.max(((RequiredLevelData) data).getValue(), getValue()));
 		}
 	}
+
+	@Override
+	public @NotNull
+	StatData cloneData() { return new RequiredLevelData(getValue()); }
 }

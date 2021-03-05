@@ -31,7 +31,7 @@ public class NameModifier {
 		if (object instanceof ConfigurationSection) {
 			ConfigurationSection config = (ConfigurationSection) object;
 			Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " format cannot be null");
-			format = MythicLib.plugin.parseColors(config.get("format").toString());
+			format = config.get("format").toString();
 			priority = config.getInt("priority");
 			return;
 		}
@@ -42,7 +42,7 @@ public class NameModifier {
 	public NameModifier(ModifierType type, String format, int priority) {
 		Validate.notNull(format, "Format cannot be null");
 		this.type = type;
-		this.format = MythicLib.plugin.parseColors(format);
+		this.format = format;
 		this.priority = priority;
 
 		Validate.notNull(type, "Type cannot be null");

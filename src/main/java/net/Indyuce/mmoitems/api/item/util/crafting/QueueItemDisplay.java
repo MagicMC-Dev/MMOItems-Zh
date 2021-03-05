@@ -75,12 +75,6 @@ public class QueueItemDisplay extends ConfigItem {
 			for (String key : replace.keySet())
 				lore.set(lore.indexOf(key), replace.get(key).replace("#left#", formatDelay(crafting.getLeft())));
 
-			/*
-			 * apply color to lore
-			 */
-			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, MythicLib.plugin.parseColors(lore.get(n)));
-
 			ItemStack item = crafting.getRecipe().getOutput().getPreview();
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();

@@ -83,11 +83,6 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 						// the config
 						lore.add(conditionsIndex++, condition.format());
 				}
-			/*
-			 * apply color to lore
-			 */
-			for (int n = 0; n < lore.size(); n++)
-				lore.set(n, MythicLib.plugin.parseColors(lore.get(n)));
 
 			ItemStack item = upgradingRecipe.getItem().getPreview();
 			ItemMeta meta = item.getItemMeta();

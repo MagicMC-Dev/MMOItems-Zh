@@ -76,7 +76,7 @@ item-glow: true
 item-upgrading:
 
     # Display name suffix for upgraded items.
-    name-suffix: '&f &e(+#lvl#)'
+    name-suffix: ' &8(&e+#lvl#&8)'
 
     # Whether to display in Item Name or Lore
     # Disable if item renaming is available to players.

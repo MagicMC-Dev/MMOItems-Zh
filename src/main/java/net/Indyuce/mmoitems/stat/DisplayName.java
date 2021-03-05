@@ -35,10 +35,10 @@ public class DisplayName extends StringStat {
 		if (item.getMMOItem().hasUpgradeTemplate()) {
 			int upgradeLevel = item.getMMOItem().getUpgradeLevel();
 			String suffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix");
-			MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
-			MMOItems.getConsole().sendMessage("Format " + format);
+			//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
+			//MMOItems.getConsole().sendMessage("Format " + format);
 			if (suffix != null) {
-				MMOItems.getConsole().sendMessage("Suffix " + suffix);
+				//MMOItems.getConsole().sendMessage("Suffix " + suffix);
 
 				// Bake old indices for removal
 				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
@@ -49,17 +49,17 @@ public class DisplayName extends StringStat {
 					} else {
 						oldSuffixii.add(suffix.replace("#lvl#", String.valueOf(i))); }}
 				for (String str : oldSuffixii) {
-					MMOItems.getConsole().sendMessage("Found " + str);
+					//MMOItems.getConsole().sendMessage("Found " + str);
 					str = MythicLib.plugin.parseColors(str);
-					MMOItems.getConsole().sendMessage("Colored " + str);
+					//MMOItems.getConsole().sendMessage("Colored " + str);
 					format = format.replace(MythicLib.plugin.parseColors(str), "");
-					MMOItems.getConsole().sendMessage("Edited " + format);
+					//MMOItems.getConsole().sendMessage("Edited " + format);
 				}
 
 				String actSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel));
-				MMOItems.getConsole().sendMessage("Current " + actSuffix);
+				//MMOItems.getConsole().sendMessage("Current " + actSuffix);
 				if (upgradeLevel != 0) { format = format + MythicLib.plugin.parseColors(actSuffix); }
-				MMOItems.getConsole().sendMessage("Final " + format);
+				//MMOItems.getConsole().sendMessage("Final " + format);
 			}
 		}
 

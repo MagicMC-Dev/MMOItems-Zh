@@ -80,7 +80,7 @@ public class ConfigItem {
 			return;
 
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
+		meta.setDisplayName(MythicLib.plugin.parseColors(getName()));
 		meta.addItemFlags(ItemFlag.values());
 
 		if (hasLore()) {

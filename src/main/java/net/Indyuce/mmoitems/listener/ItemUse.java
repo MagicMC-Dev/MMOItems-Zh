@@ -272,7 +272,7 @@ public class ItemUse implements Listener {
 		if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
 			return;
 
-		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getBow());
+		NBTItem item = NBTItem.get(event.getBow());
 		Type type = Type.get(item.getType());
 
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
@@ -282,7 +282,11 @@ public class ItemUse implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			if (!eitherHandSuccess((Player) event.getEntity(), item, event.getHand())) {
+			// Have to get hand manually because 1.15 and below does not have event.getHand()
+			ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
+			EquipmentSlot bowSlot = (itemInMainHand == event.getBow()) ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
+
+			if (!eitherHandSuccess((Player) event.getEntity(), item, bowSlot)) {
 				event.setCancelled(true);
 				return;
 			}

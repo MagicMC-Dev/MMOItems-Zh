@@ -40,7 +40,7 @@ public class MMOItemsBlockType implements BlockType {
 
 	@Override
 	public void regenerate(RegeneratingBlock regeneratingBlock) {
-
+		place(regeneratingBlock);
 	}
 
 	@Override

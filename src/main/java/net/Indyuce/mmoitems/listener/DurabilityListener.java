@@ -1,15 +1,15 @@
 package net.Indyuce.mmoitems.listener;
 
-import java.util.Arrays;
-import java.util.List;
-
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -17,7 +17,8 @@ import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import java.util.Arrays;
+import java.util.List;
 
 public class DurabilityListener implements Listener {
 	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
@@ -37,6 +38,18 @@ public class DurabilityListener implements Listener {
 		for(EquipmentSlot slot : slots)
 			if(hasItem(player, slot))
 				handleVanillaDamage(player.getInventory().getItem(slot), player, slot, damage);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void playerAttack(EntityDamageByEntityEvent event) {
+		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
+				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+			return;
+		Player player = (Player) event.getDamager();
+		ItemStack item = player.getInventory().getItemInMainHand();
+
+		if (item.hasItemMeta() && item.getItemMeta().isUnbreakable())
+			handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
 	}
 
 	@EventHandler(ignoreCancelled = true)

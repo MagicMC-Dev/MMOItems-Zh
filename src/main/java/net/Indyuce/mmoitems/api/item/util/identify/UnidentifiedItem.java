@@ -3,8 +3,6 @@ package net.Indyuce.mmoitems.api.item.util.identify;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -108,17 +106,11 @@ public class UnidentifiedItem extends ConfigItem {
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());
 			meta.setUnbreakable(true);
+			meta.setDisplayName(MythicLib.plugin.parseColors(name));
+			meta.setLore(lore);
 			unidentified.setItemMeta(meta);
 
-			NBTItem nbtItem = NBTItem.get(unidentified);
-
-			nbtItem.setDisplayNameComponent(LegacyComponent.parse(name));
-
-			List<Component> componentLore = new ArrayList<>();
-			lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
-			nbtItem.setLoreComponents(componentLore);
-
-			return nbtItem.toItem();
+			return unidentified;
 		}
 
 		private String serialize(ItemStack item) {

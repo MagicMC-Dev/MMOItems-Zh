@@ -6,13 +6,15 @@ import io.lumine.mythic.lib.api.math.EvaluatedFormula;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,8 +58,26 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		// with substring
 		if (identifier.equals("stat_defense_percent"))
 			return twoDigits.format(100 - calculateDefense(MMOPlayerData.get(player))) + "%";
-		if (identifier.startsWith("stat_elements")) {
-			PlayerData.get(player).getStats().getInstance(ItemStats.ELEMENTS);
+
+		if (identifier.startsWith("stat_elements") && player.isOnline()) {
+			// index 0 = element
+			// index 1 = defense/damage
+			String[] param = identifier.split("_");
+
+			if (param.length > 3) {
+				String tag = "MMOITEMS_" + param[2].toUpperCase() + "_" + param[3].toUpperCase();
+
+				double value = 0;
+				for (EquipmentSlot slot : EquipmentSlot.values())
+					if (hasItem((Player) player, slot)) {
+						NBTItem nbtItem = NBTItem.get(((Player) player).getInventory().getItem(slot));
+						if (nbtItem.hasTag(tag)) {
+							value += nbtItem.getDouble(tag);
+						}
+					}
+
+				return twoDigits.format(value);
+			}
 		}
 		else if (identifier.startsWith("stat_")) {
 			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
@@ -138,5 +158,9 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		for (int j = 0; j < length; j++)
 			bar.append(j == r ? ChatColor.WHITE : "").append(barChar);
 		return bar.toString();
+	}
+
+	private boolean hasItem(Player player, EquipmentSlot slot) {
+		return player.getInventory().getItem(slot) != null && player.getInventory().getItem(slot).getType() != Material.AIR;
 	}
 }

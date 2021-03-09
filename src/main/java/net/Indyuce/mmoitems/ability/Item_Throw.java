@@ -1,14 +1,12 @@
 package net.Indyuce.mmoitems.ability;
 
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -18,8 +16,14 @@ import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.NoClipItem;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import io.lumine.mythic.lib.api.AttackResult;
-import io.lumine.mythic.lib.api.DamageType;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Item_Throw extends Ability implements Listener {
 	public Item_Throw() {
@@ -40,10 +44,26 @@ public class Item_Throw extends Ability implements Listener {
 	@Override
 	public void whenCast(CachedStats stats, AbilityResult ability, ItemAttackResult result) {
 		ItemStack itemStack = stats.getPlayer().getInventory().getItemInMainHand().clone();
-		if (itemStack == null || itemStack.getType() == Material.AIR) {
+		NBTItem nbtItem = NBTItem.get(itemStack);
+		if (itemStack.getType() == Material.AIR || !nbtItem.hasType()) {
 			result.setSuccessful(false);
 			return;
 		}
+		boolean hasAbility = false;
+
+		for (JsonElement entry : MythicLib.plugin.getJson().parse(nbtItem.getString("MMOITEMS_ABILITY"), JsonArray.class)) {
+			if (!entry.isJsonObject())
+				continue;
+
+			JsonObject object = entry.getAsJsonObject();
+			if (object.get("Id").getAsString().equalsIgnoreCase(getID())) {
+				hasAbility = true;
+				break;
+			}
+		}
+
+		if (!hasAbility)
+			return;
 
 		final NoClipItem item = new NoClipItem(stats.getPlayer().getLocation().add(0, 1.2, 0), itemStack);
 		item.getEntity().setVelocity(((VectorAbilityResult) ability).getTarget().multiply(1.5 * ability.getModifier("force")));

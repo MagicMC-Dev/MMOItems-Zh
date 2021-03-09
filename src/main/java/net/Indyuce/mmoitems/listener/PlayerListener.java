@@ -1,7 +1,17 @@
 package net.Indyuce.mmoitems.listener;
 
-import java.util.Iterator;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,18 +29,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.SoulboundInfo;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.Iterator;
 
 public class PlayerListener implements Listener {
 
@@ -71,7 +70,7 @@ public class PlayerListener implements Listener {
 	}
 
 	/*
-	 * prevent players from droping items which are bound to them with a
+	 * prevent players from dropping items which are bound to them with a
 	 * soulbound. items are cached inside a map waiting for the player to
 	 * respawn. if he does not respawn the items are dropped on the ground, this
 	 * way there don't get lost

@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.math.EvaluatedFormula;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -55,7 +56,10 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		// with substring
 		if (identifier.equals("stat_defense_percent"))
 			return twoDigits.format(100 - calculateDefense(MMOPlayerData.get(player))) + "%";
-		if (identifier.startsWith("stat_")) {
+		if (identifier.startsWith("stat_elements")) {
+			PlayerData.get(player).getStats().getInstance(ItemStats.ELEMENTS);
+		}
+		else if (identifier.startsWith("stat_")) {
 			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
 			if (stat != null)
 				return twoDigits.format(PlayerData.get(player).getStats().getStat(stat));

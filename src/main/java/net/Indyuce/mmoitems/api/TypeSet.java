@@ -75,10 +75,11 @@ public enum TypeSet {
 	 */
 	BLUNT((stats, target, weapon, result) -> {
 		final Random random = new Random();
+		float pitchRange = 0.7f + random.nextFloat() * (0.9f - 0.7f);
 
 		if (MMOItems.plugin.getConfig().getBoolean("item-ability.blunt.aoe.enabled") && !stats.getData().isOnCooldown(CooldownType.SPECIAL_ATTACK)) {
 			stats.getData().applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.aoe.cooldown"));
-			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
+			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 0.6f, pitchRange);
 			target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
 			double bluntPower = stats.getStat(ItemStats.BLUNT_POWER);
 			if (bluntPower > 0) {

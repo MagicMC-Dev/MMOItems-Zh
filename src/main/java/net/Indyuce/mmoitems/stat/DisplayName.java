@@ -41,10 +41,6 @@ public class DisplayName extends StringStat {
 
 			if (suffix != null) {
 
-				// Yes
-				suffix = suffix.toUpperCase().replace("X", "x");
-				//MMOItems.getConsole().sendMessage("Suffix " + suffix);
-
 				// Bake old indices for removal
 				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
 				if (upgradeLevel < 0) { upgradeLevel = -upgradeLevel; negativity = true; }
@@ -86,7 +82,7 @@ public class DisplayName extends StringStat {
 	String levelPrefix(@NotNull String template, int toLevel) {
 
 		// Ez
-		template = template.replace("#LVL#", String.valueOf(toLevel));
+		template = template.replace("#lvl#", String.valueOf(toLevel));
 
 		// 00f
 		template = template.replace("+-", "-");

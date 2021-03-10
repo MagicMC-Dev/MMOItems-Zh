@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.listener;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.utils.Schedulers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -123,8 +124,10 @@ public class PlayerListener implements Listener {
 			SoulboundInfo.read(player);
 
 		if (deathItems.containsKey(player)) {
-			player.getInventory().addItem(deathItems.get(player).toArray(new ItemStack[0]));
-			deathItems.remove(player);
+			Schedulers.sync().runLater( () -> {
+				player.getInventory().addItem(deathItems.get(player).toArray(new ItemStack[0]));
+				deathItems.remove(player);
+			}, 10);
 		}
 	}
 

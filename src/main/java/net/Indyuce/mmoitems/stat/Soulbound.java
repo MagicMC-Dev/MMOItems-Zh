@@ -85,7 +85,7 @@ public class Soulbound extends InternalStat implements ItemRestriction {
 
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
-		if (item.hasTag(ItemStats.SOULBOUND.getNBTPath()) && !item.getString(ItemStats.SOULBOUND.getNBTPath()).contains(player.getPlayer().getUniqueId().toString())) {
+		if (item.hasTag(ItemStats.SOULBOUND.getNBTPath()) && !item.getString(ItemStats.SOULBOUND.getNBTPath()).contains(player.getPlayer().getUniqueId().toString()) && !player.getPlayer().hasPermission("mmoitems.bypass.soulbound")) {
 			if (message) {
 				int level = new JsonParser().parse(item.getString(ItemStats.SOULBOUND.getNBTPath())).getAsJsonObject().get("Level").getAsInt();
 				Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");

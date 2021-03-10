@@ -1,8 +1,80 @@
 package net.Indyuce.mmoitems;
 
-import net.Indyuce.mmoitems.stat.*;
-import org.bukkit.Material;
-
+import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.stat.Abilities;
+import net.Indyuce.mmoitems.stat.Amphibian;
+import net.Indyuce.mmoitems.stat.Armor;
+import net.Indyuce.mmoitems.stat.ArmorToughness;
+import net.Indyuce.mmoitems.stat.ArrowParticles;
+import net.Indyuce.mmoitems.stat.ArrowPotionEffects;
+import net.Indyuce.mmoitems.stat.AttackDamage;
+import net.Indyuce.mmoitems.stat.AttackSpeed;
+import net.Indyuce.mmoitems.stat.CanDeconstruct;
+import net.Indyuce.mmoitems.stat.CanDeskin;
+import net.Indyuce.mmoitems.stat.CanIdentify;
+import net.Indyuce.mmoitems.stat.Commands;
+import net.Indyuce.mmoitems.stat.CompatibleIds;
+import net.Indyuce.mmoitems.stat.CompatibleTypes;
+import net.Indyuce.mmoitems.stat.Crafting;
+import net.Indyuce.mmoitems.stat.CustomModelData;
+import net.Indyuce.mmoitems.stat.CustomSounds;
+import net.Indyuce.mmoitems.stat.DisableAdvancedEnchantments;
+import net.Indyuce.mmoitems.stat.DisableDeathDrop;
+import net.Indyuce.mmoitems.stat.DisplayName;
+import net.Indyuce.mmoitems.stat.DyeColor;
+import net.Indyuce.mmoitems.stat.Effects;
+import net.Indyuce.mmoitems.stat.Elements;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.GemColor;
+import net.Indyuce.mmoitems.stat.GemSockets;
+import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
+import net.Indyuce.mmoitems.stat.GrantedPermissions;
+import net.Indyuce.mmoitems.stat.HideDye;
+import net.Indyuce.mmoitems.stat.HideEnchants;
+import net.Indyuce.mmoitems.stat.HidePotionEffects;
+import net.Indyuce.mmoitems.stat.Inedible;
+import net.Indyuce.mmoitems.stat.InternalRevisionID;
+import net.Indyuce.mmoitems.stat.ItemDamage;
+import net.Indyuce.mmoitems.stat.ItemLevel;
+import net.Indyuce.mmoitems.stat.ItemParticles;
+import net.Indyuce.mmoitems.stat.ItemSetStat;
+import net.Indyuce.mmoitems.stat.ItemTierStat;
+import net.Indyuce.mmoitems.stat.ItemTypeRestriction;
+import net.Indyuce.mmoitems.stat.KnockbackResistance;
+import net.Indyuce.mmoitems.stat.Lore;
+import net.Indyuce.mmoitems.stat.LoreFormat;
+import net.Indyuce.mmoitems.stat.LostWhenBroken;
+import net.Indyuce.mmoitems.stat.LuteAttackEffectStat;
+import net.Indyuce.mmoitems.stat.LuteAttackSoundStat;
+import net.Indyuce.mmoitems.stat.MaterialStat;
+import net.Indyuce.mmoitems.stat.MaxHealth;
+import net.Indyuce.mmoitems.stat.MaximumDurability;
+import net.Indyuce.mmoitems.stat.MovementSpeed;
+import net.Indyuce.mmoitems.stat.NBTTags;
+import net.Indyuce.mmoitems.stat.PermanentEffects;
+import net.Indyuce.mmoitems.stat.Permission;
+import net.Indyuce.mmoitems.stat.PickaxePower;
+import net.Indyuce.mmoitems.stat.PotionColor;
+import net.Indyuce.mmoitems.stat.PotionEffects;
+import net.Indyuce.mmoitems.stat.RepairPower;
+import net.Indyuce.mmoitems.stat.RepairType;
+import net.Indyuce.mmoitems.stat.RequiredBiomes;
+import net.Indyuce.mmoitems.stat.RequiredClass;
+import net.Indyuce.mmoitems.stat.RequiredLevel;
+import net.Indyuce.mmoitems.stat.RevisionID;
+import net.Indyuce.mmoitems.stat.ShieldPatternStat;
+import net.Indyuce.mmoitems.stat.SkullTextureStat;
+import net.Indyuce.mmoitems.stat.SoulbindingBreakChance;
+import net.Indyuce.mmoitems.stat.SoulbindingChance;
+import net.Indyuce.mmoitems.stat.Soulbound;
+import net.Indyuce.mmoitems.stat.SoulboundLevel;
+import net.Indyuce.mmoitems.stat.StaffSpiritStat;
+import net.Indyuce.mmoitems.stat.StoredTags;
+import net.Indyuce.mmoitems.stat.SuccessRate;
+import net.Indyuce.mmoitems.stat.Unbreakable;
+import net.Indyuce.mmoitems.stat.Unstackable;
+import net.Indyuce.mmoitems.stat.UpgradeStat;
+import net.Indyuce.mmoitems.stat.VanillaEatingAnimation;
 import net.Indyuce.mmoitems.stat.block.BlockID;
 import net.Indyuce.mmoitems.stat.block.GenTemplate;
 import net.Indyuce.mmoitems.stat.block.MaxXP;
@@ -13,7 +85,7 @@ import net.Indyuce.mmoitems.stat.type.DisableStat;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import org.bukkit.Material;
 
 /**
  * A central file for the plugin since new stats are added ALL the time.
@@ -114,6 +186,7 @@ public class ItemStats {
 			TWO_HANDED = new BooleanStat("TWO_HANDED", Material.IRON_INGOT, "Two Handed", new String[]{"If set to true, a player will be", "significantly slower if holding two", "items, one being Two Handed."}, new String[]{"piercing", "slashing", "blunt", "offhand", "range", "tool"}),
 			EQUIP_PRIORITY = new DoubleStat("EQUIP_PRIORITY", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "Equip Priority", new String[]{"Sets the level of priority this item has for the", "right click to swap equipped armor feature."}),
 			REQUIRED_BIOMES = new RequiredBiomes(),
+			DROP_ON_DEATH = new DisableDeathDrop(),
 
 	// Permanent Effects
 	PERM_EFFECTS = new PermanentEffects(),

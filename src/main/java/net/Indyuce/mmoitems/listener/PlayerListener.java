@@ -29,9 +29,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class PlayerListener implements Listener {
+	private final Map<Player, ArrayList<ItemStack>> deathItems = new HashMap<>();
 
 	@EventHandler
 	public void loadPlayerData(PlayerJoinEvent event) {
@@ -76,7 +80,7 @@ public class PlayerListener implements Listener {
 	 * way there don't get lost
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
-	public void applySoulbound(PlayerDeathEvent event) {
+	public void onDeath(PlayerDeathEvent event) {
 		if (event.getKeepInventory() || !MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
 			return;
 
@@ -86,14 +90,22 @@ public class PlayerListener implements Listener {
 		Iterator<ItemStack> iterator = event.getDrops().iterator();
 		while (iterator.hasNext()) {
 			ItemStack item = iterator.next();
-			NBTItem nbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+			NBTItem nbt = NBTItem.get(item);
+
+			if (nbt.hasTag("MMOITEMS_DISABLE_DEATH_DROP") && nbt.getBoolean("MMOITEMS_DISABLE_DEATH_DROP")) {
+				iterator.remove();
+				if (!deathItems.containsKey(player))
+					deathItems.put(player, new ArrayList<>());
+
+				deathItems.get(player).add(item);
+			}
 
 			/*
 			 * not a perfect check but it's very sufficient and so we avoid
 			 * using a JsonParser followed by map checkups in the SoulboundData
 			 * constructor
 			 */
-			if (nbt.hasTag("MMOITEMS_SOULBOUND") && nbt.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString())) {
+			else if (nbt.hasTag("MMOITEMS_SOULBOUND") && nbt.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString())) {
 				iterator.remove();
 				soulboundInfo.add(item);
 			}
@@ -104,9 +116,16 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void readSoulbound(PlayerRespawnEvent event) {
+	public void onRespawn(PlayerRespawnEvent event) {
+		Player player = event.getPlayer();
+
 		if (MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
-			SoulboundInfo.read(event.getPlayer());
+			SoulboundInfo.read(player);
+
+		if (deathItems.containsKey(player)) {
+			player.getInventory().addItem(deathItems.get(player).toArray(new ItemStack[0]));
+			deathItems.remove(player);
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)

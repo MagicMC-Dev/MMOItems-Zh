@@ -43,7 +43,7 @@ public class DisplayName extends StringStat {
 				// Bake old indices for removal
 				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
 				if (upgradeLevel < 0) { upgradeLevel = -upgradeLevel; negativity = true; }
-				for (int i = 1; i <= upgradeLevel + 3; i++) {
+				for (int i = upgradeLevel + 3; i >= 1; i--) {
 					if (negativity) {
 						oldSuffixii.add(suffix.replace("#lvl#", String.valueOf(-i)));
 					} else {

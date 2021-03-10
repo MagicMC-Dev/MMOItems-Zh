@@ -34,10 +34,15 @@ public class DisplayName extends StringStat {
 		// Is this upgradable?
 		if (item.getMMOItem().hasUpgradeTemplate()) {
 			int upgradeLevel = item.getMMOItem().getUpgradeLevel();
-			String suffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix");
+			String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+
 			//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
 			//MMOItems.getConsole().sendMessage("Format " + format);
+
 			if (suffix != null) {
+
+				// Yes
+				suffix = suffix.toUpperCase().replace("X", "x");
 				//MMOItems.getConsole().sendMessage("Suffix " + suffix);
 
 				// Bake old indices for removal
@@ -45,25 +50,49 @@ public class DisplayName extends StringStat {
 				if (upgradeLevel < 0) { upgradeLevel = -upgradeLevel; negativity = true; }
 				for (int i = upgradeLevel + 3; i >= 1; i--) {
 					if (negativity) {
-						oldSuffixii.add(suffix.replace("#lvl#", String.valueOf(-i)));
+						oldSuffixii.add(levelPrefix(suffix, -i));
 					} else {
-						oldSuffixii.add(suffix.replace("#lvl#", String.valueOf(i))); }}
+						oldSuffixii.add(levelPrefix(suffix, i)); }}
+
 				for (String str : oldSuffixii) {
+
 					//MMOItems.getConsole().sendMessage("Found " + str);
-					str = MythicLib.plugin.parseColors(str);
-					//MMOItems.getConsole().sendMessage("Colored " + str);
-					format = format.replace(MythicLib.plugin.parseColors(str), "");
+
+					// Remove the one with color parsed from the current name
+					format = format.replace(str, "");
+
 					//MMOItems.getConsole().sendMessage("Edited " + format);
 				}
 
-				String actSuffix = suffix.replace("#lvl#", String.valueOf(upgradeLevel));
-				//MMOItems.getConsole().sendMessage("Current " + actSuffix);
-				if (upgradeLevel != 0) { format = format + MythicLib.plugin.parseColors(actSuffix); }
+				// Add a prefix anew if the upgrade level worked
+				if (upgradeLevel != 0) {
+
+					// Get the current suffix
+					String actSuffix = levelPrefix(suffix, upgradeLevel);
+
+					//MMOItems.getConsole().sendMessage("Current " + actSuffix);
+
+					// Append it
+					format = format + actSuffix;
+				}
+
 				//MMOItems.getConsole().sendMessage("Final " + format);
 			}
 		}
 
 		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
+	}
+
+	String levelPrefix(@NotNull String template, int toLevel) {
+
+		// Ez
+		template = template.replace("#LVL#", String.valueOf(toLevel));
+
+		// 00f
+		template = template.replace("+-", "-");
+
+		// Yes
+		return template;
 	}
 
 	/**

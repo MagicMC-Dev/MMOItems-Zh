@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.listener;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -48,7 +49,9 @@ public class DurabilityListener implements Listener {
 		Player player = (Player) event.getDamager();
 		ItemStack item = player.getInventory().getItemInMainHand();
 
-		if (item.hasItemMeta() && item.getItemMeta().isUnbreakable())
+		NBTItem nbtItem = NBTItem.get(item);
+
+		if (item.hasItemMeta() && item.getItemMeta().isUnbreakable() && nbtItem.hasTag("MMOITEMS_MAX_DURABILITY"))
 			handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
 	}
 

@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.utils.Schedulers;
+import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -13,6 +14,8 @@ import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -128,6 +131,17 @@ public class PlayerListener implements Listener {
 				player.getInventory().addItem(deathItems.get(player).toArray(new ItemStack[0]));
 				deathItems.remove(player);
 			}, 10);
+		}
+	}
+
+	@EventHandler
+	public void onArmorEquip(ArmorEquipEvent event) {
+		Player p = event.getPlayer();
+		RPGPlayer rpgPlayer = PlayerData.get(p.getUniqueId()).getRPG();
+		NBTItem item = NBTItem.get(event.getNewArmorPiece());
+
+		if (!rpgPlayer.canUse(item, true)) {
+			event.setCancelled(true);
 		}
 	}
 

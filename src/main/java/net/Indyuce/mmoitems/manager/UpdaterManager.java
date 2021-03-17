@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.utils.adventure.text.Component;
+import io.lumine.mythic.utils.adventure.text.format.NamedTextColor;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -20,8 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class UpdaterManager implements Listener {
@@ -113,7 +114,10 @@ public class UpdaterManager implements Listener {
 		newItem.setAmount(item.getItem().getAmount());
 
 		ItemMeta newItemMeta = newItem.getItemMeta();
-		List<String> lore = newItemMeta.getLore();
+		NBTItem nbtItem = NBTItem.get(newItem);
+		List<Component> lore = new LinkedList<>();
+		newItemMeta.getLore().forEach(line -> lore.add(LegacyComponent.parse(line)));
+		
 
 		/*
 		 * add old enchants to the item. warning - if enabled the item will
@@ -129,9 +133,9 @@ public class UpdaterManager implements Listener {
 		 */
 		//if (did.hasOption(KeepOption.KEEP_LORE)) {
 		int n = 0;
-		for (String s : item.getItem().getItemMeta().getLore()) {
-			if (!s.startsWith(ChatColor.GRAY + "")) break;
-			lore.add(n++, s);
+		for (Component component : nbtItem.getLoreComponents()) {
+			if (component.color() == NamedTextColor.GRAY) break;
+			lore.add(n++, component);
 		}
 		//}
 
@@ -143,7 +147,6 @@ public class UpdaterManager implements Listener {
 		((Damageable) newItemMeta).setDamage(((Damageable) item.getItem().getItemMeta()).getDamage());
 
 		newItem.setItemMeta(newItemMeta);
-		NBTItem nbtItem = NBTItem.get(newItem);
 		/*
 		 * keep name so players who renamed the item in the anvil does not have
 		 * to rename it again
@@ -151,9 +154,7 @@ public class UpdaterManager implements Listener {
 		//if (did.hasOption(KeepOption.KEEP_NAME) && item.getItem().getItemMeta().hasDisplayName())
 		nbtItem.setDisplayNameComponent(LegacyComponent.parse(item.getItem().getItemMeta().getDisplayName()));
 
-		List<Component> componentLore = new ArrayList<>();
-		lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
-		nbtItem.setLoreComponents(componentLore);
+		nbtItem.setLoreComponents(lore);
 
 		return nbtItem.toItem();
 	}

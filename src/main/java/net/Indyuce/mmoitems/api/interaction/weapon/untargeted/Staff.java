@@ -36,6 +36,9 @@ public class Staff extends UntargetedWeapon {
 			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
+		if (durItem.isBroken())
+			return;
+
 		if (durItem.isValid())
 			durItem.decreaseDurability(1).update();
 

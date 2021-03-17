@@ -122,7 +122,7 @@ public class PermanentEffects extends ItemStat {
 	@NotNull
 	@Override
 	public StatData getClearStatData() {
-		return null;
+		return new PotionEffectListData();
 	}
 
 	@Override

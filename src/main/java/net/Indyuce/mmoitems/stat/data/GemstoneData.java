@@ -55,8 +55,10 @@ public class GemstoneData {
 			else { historicUUID = UUID.randomUUID(); }
 
 			// Get Type and IDs
-			mmoitemType = object.get("Type").getAsString();
-			mmoitemID = object.get("Id").getAsString();
+			JsonElement gType = object.get("Type");
+			JsonElement gID = object.get("Id");
+			if (gType != null) { mmoitemType = gType.getAsString(); } else { mmoitemType = null; }
+			if (gID != null) { mmoitemID = gID.getAsString(); } else { mmoitemID = null; }
 
 			JsonElement level = object.get("Level");
 			if (level != null && level.isJsonPrimitive()) { levelPut = level.getAsJsonPrimitive().getAsInt(); } else { levelPut = null; }

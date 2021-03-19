@@ -77,7 +77,7 @@ public class DurabilityItem {
 	}
 
 	public boolean isBroken() {
-		return durability <= 0;
+		return nbtItem.hasTag("MMOITEMS_DURABILITY") && durability <= 0;
 	}
 
 	public boolean isLostWhenBroken() {

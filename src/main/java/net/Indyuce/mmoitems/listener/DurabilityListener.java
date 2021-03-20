@@ -1,13 +1,16 @@
 package net.Indyuce.mmoitems.listener;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -38,20 +41,19 @@ public class DurabilityListener implements Listener {
 				handleVanillaDamage(player.getInventory().getItem(slot), player, slot, damage);
 	}
 
-	// TODO: 3/11/2021 Make this work how you'd expect it to
-//	@EventHandler(ignoreCancelled = true)
-//	public void playerAttack(EntityDamageByEntityEvent event) {
-//		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
-//				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
-//			return;
-//		Player player = (Player) event.getDamager();
-//		ItemStack item = player.getInventory().getItemInMainHand();
-//
-//		NBTItem nbtItem = NBTItem.get(item);
-//
-//		if (item.hasItemMeta() && item.getItemMeta().isUnbreakable() && nbtItem.hasTag("MMOITEMS_MAX_DURABILITY"))
-//			handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
-//	}
+	@EventHandler(ignoreCancelled = true)
+	public void playerAttack(EntityDamageByEntityEvent event) {
+		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
+				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+			return;
+		Player player = (Player) event.getDamager();
+		ItemStack item = player.getInventory().getItemInMainHand();
+
+		NBTItem nbtItem = NBTItem.get(item);
+
+		if (item.hasItemMeta() && item.getItemMeta().isUnbreakable() && nbtItem.hasTag("MMOITEMS_MAX_DURABILITY"))
+			handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
+	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void itemDamage(PlayerItemDamageEvent event) {

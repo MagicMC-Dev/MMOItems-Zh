@@ -30,8 +30,8 @@ public class ItemTier {
 	private final double chance;
 	private final NumericStatFormula capacity;
 
-	private static final Random random = new Random();
-	private static final boolean glow = Bukkit.getPluginManager().getPlugin("GlowAPI") != null;
+	private static final Random RANDOM = new Random();
+	private static final boolean GLOW = Bukkit.getPluginManager().getPlugin("GlowAPI") != null;
 
 	public ItemTier(ConfigurationSection config) {
 		id = config.getName().toUpperCase().replace("-", "_");
@@ -41,7 +41,7 @@ public class ItemTier {
 
 		try {
 			hint = config.contains("item-glow") && config.getBoolean("item-glow.hint");
-			color = config.contains("item-glow") ? new TierColor(config.getString("item-glow.color"), glow) : null;
+			color = config.contains("item-glow") ? new TierColor(config.getString("item-glow.color"), GLOW) : null;
 		} catch (NoClassDefFoundError | IllegalAccessException | NoSuchFieldException | SecurityException exception) {
 			throw new IllegalArgumentException("Could not load tier color: " + exception.getMessage());
 		}
@@ -138,7 +138,7 @@ public class ItemTier {
 		}
 
 		public int[] calculateRange(int level) {
-			int min = (int) Math.max(1, (level - (double) range * random.nextDouble()));
+			int min = (int) Math.max(1, (level - (double) range * RANDOM.nextDouble()));
 			return new int[] { min, min + range };
 		}
 	}

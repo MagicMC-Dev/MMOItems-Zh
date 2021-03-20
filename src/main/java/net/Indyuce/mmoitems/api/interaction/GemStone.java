@@ -58,7 +58,7 @@ public class GemStone extends UseItem {
 
 		// check for success rate
 		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
-		if (successRate != 0 && random.nextDouble() > successRate / 100) {
+		if (successRate != 0 && RANDOM.nextDouble() > successRate / 100) {
 			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 			Message.GEM_STONE_BROKE
 					.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))

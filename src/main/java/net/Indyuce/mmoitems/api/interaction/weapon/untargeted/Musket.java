@@ -54,8 +54,8 @@ public class Musket extends UntargetedWeapon {
 		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-		loc.setPitch((float) (loc.getPitch() + (random.nextDouble() - .5) * 2 * recoil));
-		loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * 2 * recoil));
+		loc.setPitch((float) (loc.getPitch() + (RANDOM.nextDouble() - .5) * 2 * recoil));
+		loc.setYaw((float) (loc.getYaw() + (RANDOM.nextDouble() - .5) * 2 * recoil));
 		Vector vec = loc.getDirection();
 
 		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range,

@@ -28,8 +28,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class UpgradeTemplate {
-	@NotNull private final String id;
-	@NotNull private final Map<ItemStat, UpgradeInfo> perStatUpgradeInfos = new HashMap<>();
+	@NotNull
+	private final String id;
+	@NotNull
+	private final Map<ItemStat, UpgradeInfo> perStatUpgradeInfos = new HashMap<>();
 
 	/**
 	 *  Loads an Upgrade Template directly from the YML file. Neat!

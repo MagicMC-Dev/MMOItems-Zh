@@ -40,22 +40,20 @@ public class ArrowParticles extends BukkitRunnable {
 			return;
 		}
 
-        // TODO Allow Note to be colored and allow BLOCK_DUST/ITEM_DUST to pick a block/item.
-        if (color != null) {
-            if (particle == Particle.REDSTONE) {
-                arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, new Particle.DustOptions(color, 1));
-            }
-            else if (particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT) {
-                // 0 for amount to allow colors (Thats why there is a for loop). Then the offsets are RGB values from 0.0 - 1.0, last 1 is the brightness.
-            	for (int i = 0; i < amount; i++) {
-            		arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), 0, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1);
-            	}
-            }
-            // else if (particle == Particle.NOTE) { Do Fancy Color Stuff Good Luck } 
-            // The above code semi-worked for note particles but I think there is a limited amount of colors so its harder and prob have to get the nearest one.
-        }
-        else {
-            arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
-        }
+		// TODO Allow Note to be colored and allow BLOCK_DUST/ITEM_DUST to pick a block/item.
+		if (color != null) {
+			if (particle == Particle.REDSTONE) {
+				arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, new Particle.DustOptions(color, 1));
+			} else if (particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT) {
+				// 0 for amount to allow colors (Thats why there is a for loop). Then the offsets are RGB values from 0.0 - 1.0, last 1 is the brightness.
+				for (int i = 0; i < amount; i++) {
+					arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), 0, (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, 1);
+				}
+			}
+			// else if (particle == Particle.NOTE) { Do Fancy Color Stuff Good Luck } 
+			// The above code semi-worked for note particles but I think there is a limited amount of colors so its harder and prob have to get the nearest one.
+		} else {
+			arrow.getWorld().spawnParticle(particle, arrow.getLocation().add(0, .25, 0), amount, offset, offset, offset, speed);
+		}
 	}
 }

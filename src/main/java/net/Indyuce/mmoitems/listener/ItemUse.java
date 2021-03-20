@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 
 public class ItemUse implements Listener {
-	private static final DecimalFormat digit = new DecimalFormat("0.#");
+	private static final DecimalFormat DIGIT = new DecimalFormat("0.#");
 
 	@EventHandler
 	public void a(PlayerInteractEvent event) {
@@ -82,7 +82,7 @@ public class ItemUse implements Listener {
 		if (event.getAction().name().contains("RIGHT_CLICK")) {
 			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
 				Message.ITEM_ON_COOLDOWN
-						.format(ChatColor.RED, "#left#", digit.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
+						.format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
 						.send(player, "item-cooldown");
 				event.setCancelled(true);
 				return;

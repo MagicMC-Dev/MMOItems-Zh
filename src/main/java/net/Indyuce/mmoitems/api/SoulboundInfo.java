@@ -29,7 +29,7 @@ public class SoulboundInfo {
 	/**
 	 * Used to store which items must be given back to which player
 	 */
-	private static final Map<UUID, SoulboundInfo> info = new HashMap<>();
+	private static final Map<UUID, SoulboundInfo> INFO = new HashMap<>();
 
 	/**
 	 * Instanced when a player dies if some souljbound items must be kept in the
@@ -53,7 +53,7 @@ public class SoulboundInfo {
 	}
 
 	public void setup() {
-		info.put(player.getUniqueId(), this);
+		INFO.put(player.getUniqueId(), this);
 	}
 
 	public void giveItems() {
@@ -67,9 +67,9 @@ public class SoulboundInfo {
 	}
 
 	public static void read(Player player) {
-		if (info.containsKey(player.getUniqueId())) {
-			info.get(player.getUniqueId()).giveItems();
-			info.remove(player.getUniqueId());
+		if (INFO.containsKey(player.getUniqueId())) {
+			INFO.get(player.getUniqueId()).giveItems();
+			INFO.remove(player.getUniqueId());
 		}
 	}
 
@@ -78,6 +78,6 @@ public class SoulboundInfo {
 	 *         and yet have items cached in server RAM
 	 */
 	public static Collection<SoulboundInfo> getAbandonnedInfo() {
-		return info.values();
+		return INFO.values();
 	}
 }

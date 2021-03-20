@@ -28,7 +28,7 @@ public class UseItem {
 	protected final PlayerData playerData;
 	protected final VolatileMMOItem mmoitem;
 
-	protected static final Random random = new Random();
+	protected static final Random RANDOM = new Random();
 
 	public UseItem(Player player, NBTItem nbtItem) {
 		this(PlayerData.get(player), nbtItem);

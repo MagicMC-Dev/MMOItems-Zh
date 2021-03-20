@@ -27,7 +27,7 @@ import java.util.logging.Level;
 
 public class CustomBlockListener implements Listener {
 
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	public CustomBlockListener() {
 		if (MMOItems.plugin.getLanguage().replaceMushroomDrops)
@@ -53,7 +53,7 @@ public class CustomBlockListener implements Listener {
 		event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0
 				: CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower()
 						? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0
-								: random.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
+								: RANDOM.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
 						: 0);
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)

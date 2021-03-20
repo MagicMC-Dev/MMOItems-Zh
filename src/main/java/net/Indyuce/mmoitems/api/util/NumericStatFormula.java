@@ -14,8 +14,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 public class NumericStatFormula implements RandomStatData {
 	private final double base, scale, spread, maxSpread;
 
-	private static final Random random = new Random();
-	private static final DecimalFormat digit = new DecimalFormat("0.####");
+	private static final Random RANDOM = new Random();
+	private static final DecimalFormat DIGIT = new DecimalFormat("0.####");
 
 	public static final NumericStatFormula ZERO = new NumericStatFormula(0, 0, 0, 0);
 
@@ -113,7 +113,7 @@ public class NumericStatFormula implements RandomStatData {
 	 *           maximum offset of {maxSpread}% (relative to average value)
 	 */
 	public double calculate(double x) {
-		return (base + scale * x) * (1 + Math.min(Math.max(random.nextGaussian() * spread, -maxSpread), maxSpread));
+		return (base + scale * x) * (1 + Math.min(Math.max(RANDOM.nextGaussian() * spread, -maxSpread), maxSpread));
 	}
 
 	@Override
@@ -151,13 +151,13 @@ public class NumericStatFormula implements RandomStatData {
 	public String toString() {
 
 		if (scale == 0 && spread == 0)
-			return digit.format(base);
+			return DIGIT.format(base);
 
 		if (scale == 0)
-			return "[" + digit.format(base * (1 - maxSpread)) + " -> " + digit.format(base * (1 + maxSpread)) + "] (" + digit.format(spread * 100)
-					+ "% Spread) (" + digit.format(base) + " Avg)";
+			return "[" + DIGIT.format(base * (1 - maxSpread)) + " -> " + DIGIT.format(base * (1 + maxSpread)) + "] (" + DIGIT.format(spread * 100)
+					+ "% Spread) (" + DIGIT.format(base) + " Avg)";
 
-		return "{Base=" + digit.format(base) + (scale != 0 ? ",Scale=" + digit.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
+		return "{Base=" + DIGIT.format(base) + (scale != 0 ? ",Scale=" + DIGIT.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
 				+ (maxSpread != 0 ? ",Max=" + maxSpread : "") + "}";
 	}
 

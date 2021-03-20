@@ -5,7 +5,7 @@ import java.util.Random;
 public class RandomAmount {
 	private final int min, max;
 
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	public RandomAmount(int min, int max) {
 		this.min = min;
@@ -33,6 +33,6 @@ public class RandomAmount {
 	}
 
 	public int getRandomAmount() {
-		return max > 0 ? min + random.nextInt(max - min + 1) : min;
+		return max > 0 ? min + RANDOM.nextInt(max - min + 1) : min;
 	}
 }

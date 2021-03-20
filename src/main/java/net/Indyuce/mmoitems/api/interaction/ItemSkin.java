@@ -72,7 +72,7 @@ public class ItemSkin extends UseItem {
 		// check for success rate
 		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
 		if (successRate != 0)
-			if (random.nextDouble() < 1 - successRate / 100) {
+			if (RANDOM.nextDouble() < 1 - successRate / 100) {
 				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 				Message.SKIN_BROKE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
 						.send(player);

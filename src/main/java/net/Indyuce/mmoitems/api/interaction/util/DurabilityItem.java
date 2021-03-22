@@ -20,7 +20,7 @@ import java.util.Random;
 public class DurabilityItem {
 	private final NBTItem nbtItem;
 	private final Player player;
-	private int maxDurability , unbreakingLevel;
+	private int maxDurability, unbreakingLevel;
 
 	private int durability;
 
@@ -53,7 +53,10 @@ public class DurabilityItem {
 
 		durability = nbtItem.getInteger("MMOITEMS_DURABILITY");
 		maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");
-		unbreakingLevel = nbtItem.getItem().getItemMeta().getEnchantLevel(Enchantment.DURABILITY);
+
+		unbreakingLevel = (nbtItem.getItem().getItemMeta() != null && nbtItem.getItem().getItemMeta().hasEnchant(Enchantment.DURABILITY)) ?
+						nbtItem.getItem().getItemMeta().getEnchantLevel(Enchantment.DURABILITY) :
+						0;
 	}
 
 	public Player getPlayer() {

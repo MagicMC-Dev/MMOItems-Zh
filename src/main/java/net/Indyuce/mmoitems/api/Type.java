@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
@@ -120,9 +121,12 @@ public class Type {
 		return id;
 	}
 
-	public String getId() {
-		return id;
-	}
+	/**
+	 * Example <code>OFF_CATALYST</code>
+	 *
+	 * @return Internal name in uppercase and no spaces.
+	 */
+	public String getId() { return id; }
 
 	public TypeSet getItemSet() {
 		return set;
@@ -204,18 +208,15 @@ public class Type {
 	}
 
 	/**
-	 * 
+	 * Reads an ItemStack in hopes for finding its MMOItem Type.
+	 *
 	 * @param      item The item to retrieve the type from
-	 * @return          The type of the item.
-	 * @deprecated      Really heavy method because it instantiates an NBTItem
-	 *                  (reads through all the item NBT data), looks for the
-	 *                  type tag and does a type map lookup. Use
-	 *                  NBTItem#get(ItemStack) first and then NBTItem#getType()
+	 *
+	 * @return          The type of the item, if it has a type.
 	 */
-	@Deprecated
-	public static Type get(ItemStack item) {
-		return Type.get(MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).getType());
-	}
+	@Nullable public static Type get(@Nullable ItemStack item) {
+		if (item == null) { return null; }
+		return get(NBTItem.get(item).getType()); }
 
 	/**
 	 * Used in command executors and completions for easier manipulation
@@ -223,10 +224,8 @@ public class Type {
 	 * @param  id The type id
 	 * @return    The type or null if it couldn't be found
 	 */
-	public static @Nullable Type get(String id) {
-		if (id == null)
-			return null;
-
+	public static @Nullable Type get(@Nullable String id) {
+		if (id == null) { return null; }
 		String format = id.toUpperCase().replace("-", "_").replace(" ", "_");
 		return MMOItems.plugin.getTypes().has(format) ? MMOItems.plugin.getTypes().get(format) : null;
 	}
@@ -240,7 +239,7 @@ public class Type {
 	 * @param  id The type id
 	 * @return    If a registered type with this ID could be found
 	 */
-	public static boolean isValid(String id) {
+	public static boolean isValid(@Nullable String id) {
 		return id != null && MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
 	}
 

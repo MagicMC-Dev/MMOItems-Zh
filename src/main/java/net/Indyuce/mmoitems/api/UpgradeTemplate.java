@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
 
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -37,14 +35,14 @@ public class UpgradeTemplate {
 	 *  Loads an Upgrade Template directly from the YML file. Neat!
 	 */
 	public UpgradeTemplate(@NotNull ConfigurationSection config) {
-		Validate.notNull(config, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "You must specify a config section."));
+		Validate.notNull(config, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "You must specify a config section."));
 
 		// Build ID
 		id = config.getName().toLowerCase().replace("_", "-").replace(" ", "-");
 
 		// Feedback
-		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
-		ffp.ActivatePrefix(true, "Upgrade Template $i&o" + config.getName());
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+		ffp.activatePrefix(true, "Upgrade Template $i&o" + config.getName());
 
 		// For ever stat
 		for (String key : config.getKeys(false)) {
@@ -55,9 +53,9 @@ public class UpgradeTemplate {
 
 			// Attempt to find stat
 			ItemStat stat = MMOItems.plugin.getStats().get(statFormat);
-			if (stat == null) { ffp.Log(FriendlyFeedbackCategory.ERROR, "Stat '$r{0}$b' $fnot found$b.", statFormat); continue; }
-			if (!(stat instanceof Upgradable)) { ffp.Log(FriendlyFeedbackCategory.ERROR, "Stat $r{0}$b is $fnot upgradeable$b.", stat.getId()); continue; }
-			if (!(stat.getClearStatData() instanceof Mergeable)) { ffp.Log(FriendlyFeedbackCategory.ERROR, "Stat Data used by $r{0}$b is $fnot mergeable$b, and thus it cannot be upgradeable. Contact the dev of this ItemStat.", stat.getId()); continue; }
+			if (stat == null) { ffp.log(FriendlyFeedbackCategory.ERROR, "Stat '$r{0}$b' $fnot found$b.", statFormat); continue; }
+			if (!(stat instanceof Upgradable)) { ffp.log(FriendlyFeedbackCategory.ERROR, "Stat $r{0}$b is $fnot upgradeable$b.", stat.getId()); continue; }
+			if (!(stat.getClearStatData() instanceof Mergeable)) { ffp.log(FriendlyFeedbackCategory.ERROR, "Stat Data used by $r{0}$b is $fnot mergeable$b, and thus it cannot be upgradeable. Contact the dev of this ItemStat.", stat.getId()); continue; }
 
 			// Attempt to parse Upgrade Info
 			try {
@@ -69,12 +67,12 @@ public class UpgradeTemplate {
 			} catch (IllegalArgumentException exception) {
 
 				// Log
-				ffp.Log(FriendlyFeedbackCategory.ERROR, exception.getMessage());
+				ffp.log(FriendlyFeedbackCategory.ERROR, exception.getMessage());
 			}
 		}
 
 		// Print all failures
-		ffp.SendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+		ffp.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
 	}
 
 	/**
@@ -132,13 +130,13 @@ public class UpgradeTemplate {
 			((Upgradable) stat).preprocess(mmoitem);
 
 			// Initializes Stat History
-			StatHistory<StatData> hist = StatHistory.From(mmoitem, stat);
+			StatHistory hist = StatHistory.from(mmoitem, stat);
 
 			// Midprocess
 			((Upgradable) stat).midprocess(mmoitem);
 
 			// The Stat History now manages applying upgrades.
-			mmoitem.setData(stat, hist.Recalculate());
+			mmoitem.setData(stat, hist.recalculate());
 
 			// Postprocess
 			((Upgradable) stat).postprocess(mmoitem);

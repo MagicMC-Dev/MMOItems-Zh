@@ -10,16 +10,15 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.util.TemplateMap;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 
 public class TemplateManager implements Reloadable {
@@ -37,19 +36,49 @@ public class TemplateManager implements Reloadable {
 
 	private static final Random random = new Random();
 
-	public boolean hasTemplate(Type type, String id) {
+	/**
+	 * @param type The MMOItem Type
+	 * @param id The MMOItem ID
+	 *
+	 * @return If these two Strings represent a loaded MMOItem Template
+	 */
+	public boolean hasTemplate(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) { return false; }
 		return templates.hasValue(type, id);
 	}
 
-	public boolean hasTemplate(NBTItem nbt) {
+	/**
+	 * @param nbt The 'processed' ItemStack you are trying to read.
+	 *
+	 * @return If there is a MMOItem Template information in this NBTItem
+	 */
+	public boolean hasTemplate(@Nullable NBTItem nbt) {
+		if (nbt == null) { return false; }
 		return hasTemplate(Type.get(nbt.getType()), nbt.getString("MMOITEMS_ITEM_ID"));
 	}
 
-	public MMOItemTemplate getTemplate(Type type, String id) {
+	/**
+	 * Gets the template of such type and ID
+	 *
+	 * @param type Type of MMOItem
+	 * @param id ID of MMOItem
+	 *
+	 * @return A template of these qualifications if it found them,
+	 */
+	@Nullable public MMOItemTemplate getTemplate(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) { return null; }
 		return templates.getValue(type, id);
 	}
 
-	public MMOItemTemplate getTemplate(NBTItem nbt) {
+	/**
+	 * Attempts to get the Item Template of this Item Stack.
+	 *
+	 * @param nbt The NBTItem you are trying to read.
+	 *
+	 * @return The MMOItem Template parent of it, if it has any.
+	 */
+	@Nullable public MMOItemTemplate getTemplate(@Nullable NBTItem nbt) {
+		if (nbt == null) { return null; }
 		return getTemplate(Type.get(nbt.getType()), nbt.getString("MMOITEMS_ITEM_ID"));
 	}
 
@@ -60,13 +89,18 @@ public class TemplateManager implements Reloadable {
 	 * @param  id   The item ID
 	 * @return      MMOItem template if it exists, or throws an IAE otherwise
 	 */
-	public MMOItemTemplate getTemplateOrThrow(Type type, String id) {
-		Validate.isTrue(hasTemplate(type, id), "Could not find a template with ID '" + id + "'");
+	@NotNull public MMOItemTemplate getTemplateOrThrow(@Nullable Type type, @Nullable String id) {
+		Validate.isTrue(type != null && hasTemplate(type, id), "Could not find a template with ID '" + id + "'");
 		return templates.getValue(type, id);
 	}
 
-	public Collection<MMOItemTemplate> getTemplates(Type type) {
+	@NotNull public Collection<MMOItemTemplate> getTemplates(@NotNull Type type) {
 		return templates.collectValues(type);
+	}
+	@NotNull public ArrayList<String> getTemplateNames(@NotNull Type type) {
+		ArrayList<String> names = new ArrayList<>();
+		for (MMOItemTemplate t : templates.collectValues(type)) { names.add(t.getId()); }
+		return names;
 	}
 
 	/**
@@ -74,7 +108,7 @@ public class TemplateManager implements Reloadable {
 	 *
 	 * @param template Template to register
 	 */
-	public void registerTemplate(MMOItemTemplate template) {
+	public void registerTemplate(@NotNull MMOItemTemplate template) {
 		Validate.notNull(template, "MMOItem template cannot be null");
 
 		templates.setValue(template.getType(), template.getId(), template);
@@ -88,7 +122,7 @@ public class TemplateManager implements Reloadable {
 	 * @param type The item type
 	 * @param id   The item ID
 	 */
-	public void unregisterTemplate(Type type, String id) {
+	public void unregisterTemplate(@NotNull Type type, @NotNull String id) {
 		templates.removeValue(type, id);
 	}
 
@@ -99,7 +133,7 @@ public class TemplateManager implements Reloadable {
 	 * @param type The item type
 	 * @param id   The item ID
 	 */
-	public void deleteTemplate(Type type, String id) {
+	public void deleteTemplate(@NotNull Type type, @NotNull String id) {
 		unregisterTemplate(type, id);
 
 		ConfigFile config = type.getConfigFile();
@@ -119,7 +153,7 @@ public class TemplateManager implements Reloadable {
 	 * @param id   The item ID
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	public MMOItemTemplate requestTemplateUpdate(Type type, String id) {
+	public MMOItemTemplate requestTemplateUpdate(@NotNull Type type, @NotNull String id) {
 		templates.removeValue(type, id);
 
 		try {
@@ -139,21 +173,13 @@ public class TemplateManager implements Reloadable {
 	 * @return Collects all existing mmoitem templates into a set so that it can
 	 *         be filtered afterwards to generate random loot
 	 */
-	public Collection<MMOItemTemplate> collectTemplates() {
-		return templates.collectValues();
-	}
+	public Collection<MMOItemTemplate> collectTemplates() { return templates.collectValues(); }
 
-	public boolean hasModifier(String id) {
-		return modifiers.containsKey(id);
-	}
+	public boolean hasModifier(String id) { return modifiers.containsKey(id); }
 
-	public TemplateModifier getModifier(String id) {
-		return modifiers.get(id);
-	}
+	public TemplateModifier getModifier(String id) { return modifiers.get(id); }
 
-	public Collection<TemplateModifier> getModifiers() {
-		return modifiers.values();
-	}
+	public Collection<TemplateModifier> getModifiers() { return modifiers.values(); }
 
 	public ItemTier rollTier() {
 
@@ -242,9 +268,9 @@ public class TemplateManager implements Reloadable {
 		templates.clear();
 		modifiers.clear();
 
-		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
-		ffp.ActivatePrefix(true, "Item Templates");
-		ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Loading template modifiers, please wait..");
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+		ffp.activatePrefix(true, "Item Templates");
+		ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading template modifiers, please wait..");
 
 		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -255,11 +281,11 @@ public class TemplateManager implements Reloadable {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Could not load template modifier '" + key + "': " + exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load template modifier '" + key + "': " + exception.getMessage());
 				}
 		}
 
-		ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...");
+		ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...");
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			for (String key : config.getKeys(false))
@@ -271,11 +297,11 @@ public class TemplateManager implements Reloadable {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Could not load item template '" + key + "': " + exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load item template '" + key + "': " + exception.getMessage());
 				}
 		}
 
 		// Print all failures
-		ffp.SendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
+		ffp.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
 	}
 }

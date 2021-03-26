@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class MMOItem implements ItemReference {
 	private final Type type;
 	private final String id;
@@ -67,7 +68,7 @@ public class MMOItem implements ItemReference {
 			//GEM//MMOItems. Log("\u00a7a + \u00a77Mergeable");
 
 			// Prepare to merge: Gather History (Also initializes the ORIGINAL stats)
-			StatHistory<StatData> sHistory = StatHistory.From(this, stat);
+			StatHistory sHistory = StatHistory.from(this, stat);
 
 			// As GemStone or as External?
 			if (associatedGemStone != null) {
@@ -85,7 +86,7 @@ public class MMOItem implements ItemReference {
 			}
 
 			// Recalculate
-			setData(stat, sHistory.Recalculate());
+			setData(stat, sHistory.recalculate());
 
 	 	// Merging means replacing if it cannot be merged
 		} else {
@@ -146,7 +147,7 @@ public class MMOItem implements ItemReference {
 			clone.stats.put(sat, stats.get(sat));
 
 			// Copy Histories
-			StatHistory<StatData> hist = getStatHistory(sat);
+			StatHistory hist = getStatHistory(sat);
 			if (hist != null) { clone.setStatHistory(sat, hist); }
 		}
 
@@ -161,14 +162,14 @@ public class MMOItem implements ItemReference {
 	 * its original stats, and from which gem stone came each stat, in order to allow
 	 * removal of gem stones in the future. This is where that is remembered.
 	 */
-	@NotNull final Map<String, StatHistory<StatData>> mergeableStatHistory = new HashMap<>();
+	@NotNull final Map<String, StatHistory> mergeableStatHistory = new HashMap<>();
 
 	/**
 	 * Gets the history associated to this stat, if there is any
 	 * <p></p>
 	 * A stat history is basically the memmory of its original stats, from when it was created, its gem stone stats, those added by which gem, and its upgrade bonuses.
 	 */
-	@Nullable public StatHistory<StatData> getStatHistory(@NotNull ItemStat stat) {
+	@Nullable public StatHistory getStatHistory(@NotNull ItemStat stat) {
 		try {
 
 			// Well that REALLY should work
@@ -178,7 +179,7 @@ public class MMOItem implements ItemReference {
 			return null;
 		}
 	}
-	@NotNull public ArrayList<StatHistory<StatData>> getStatHistories() {
+	@NotNull public ArrayList<StatHistory> getStatHistories() {
 
 		// Those
 		return new ArrayList<>(mergeableStatHistory.values());
@@ -189,7 +190,7 @@ public class MMOItem implements ItemReference {
 	 * <p></p>
 	 * A stat history is basically the memmory of its original stats, from when it was created, its gem stone stats, those added by which gem, and its upgrade bonuses.
 	 */
-	public void setStatHistory(@NotNull ItemStat stat, @NotNull StatHistory<StatData> hist) {
+	public void setStatHistory(@NotNull ItemStat stat, @NotNull StatHistory hist) {
 		mergeableStatHistory.put(stat.getNBTPath(), hist);
 	}
 	//endregion
@@ -248,6 +249,7 @@ public class MMOItem implements ItemReference {
 	 * This will fail and throw an exception if the MMOItem has no upgrade template.
 	 * @return The upgrade template by which the MMOItem would upgrade normally.
 	 */
+	@SuppressWarnings("ConstantConditions")
 	@NotNull public UpgradeTemplate getUpgradeTemplate() {
 		Validate.isTrue(hasUpgradeTemplate(), "This item has no Upgrade Information, do not call this method without checking first!");
 

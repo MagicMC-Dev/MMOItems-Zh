@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -13,11 +12,10 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.StatFormat;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -35,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -92,11 +89,11 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		if (UpgradeTemplate.isDisplayingUpgrades() && item.getMMOItem().getUpgradeLevel() != 0) {
 
 			// Get stat history
-			StatHistory<StatData> hist = item.getMMOItem().getStatHistory(this);
+			StatHistory hist = item.getMMOItem().getStatHistory(this);
 			if (hist != null) {
 
 				// Get as if it had never been upgraded
-				DoubleData uData = (DoubleData) hist.Recalculate_Unupgraded();
+				DoubleData uData = (DoubleData) hist.recalculateUnupgraded();
 
 				// Calculate Difference
 				upgradeShift = value - uData.getValue();
@@ -347,20 +344,20 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		@NotNull public static DoubleUpgradeInfo GetFrom(@Nullable Object obj) throws IllegalArgumentException {
 
 			// Shall not be null
-			Validate.notNull(obj, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Upgrade operation must not be null"));
+			Validate.notNull(obj, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation must not be null"));
 
 			// Does the string exist?
 			String str = obj.toString();
 			if (str.isEmpty()) {
 				throw new IllegalArgumentException(
-						FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Upgrade operation is empty"));
+						FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation is empty"));
 			}
 
 			// Adapt to PMP format
 			char c = str.charAt(0); if (c == 's') { str = str.substring(1); } else if (c != '+' && c != '-' && c != 'n') { str = '+' + str; }
 
 			// Is it a valid plus minus percent?
-			FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
+			FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
 			PlusMinusPercent pmpRead = PlusMinusPercent.getFromString(str, ffp);
 			if (pmpRead == null) {
 				throw new IllegalArgumentException(

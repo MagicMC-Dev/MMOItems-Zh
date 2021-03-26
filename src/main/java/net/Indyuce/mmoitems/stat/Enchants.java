@@ -2,8 +2,6 @@ package net.Indyuce.mmoitems.stat;
 
 import java.util.*;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
@@ -11,10 +9,8 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.apache.commons.lang.Validate;
@@ -157,7 +153,7 @@ public class Enchants extends ItemStat implements Upgradable {
 				 *    enchantments applied by players before StatHistory existed.
 				 *
 				 */
-				StatHistory.From(mmoitem, ItemStats.ENCHANTS);
+				StatHistory.from(mmoitem, ItemStats.ENCHANTS);
 			}
 		}
 	}
@@ -321,7 +317,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
 				// Update
 				//UPGRD//MMOItems. Log("\u00a7b      -> \u00a77Final level \u00a7f" + value);
-				dataEnchants.addEnchant(e, SilentNumbers.Round(value - 0.5));
+				dataEnchants.addEnchant(e, SilentNumbers.floor(value));
 			}
 
 			// Yes
@@ -353,7 +349,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
 			// Get that data
 			EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
-			StatHistory<StatData> hist = StatHistory.From(mmoitem, ItemStats.ENCHANTS);
+			StatHistory hist = StatHistory.from(mmoitem, ItemStats.ENCHANTS);
 
 			//SENCH//MMOItems.Log(" \u00a7b:\u00a73:\u00a79: \u00a77Early Analysis: \u00a73o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
 			//SENCH//MMOItems.Log("  \u00a73> \u00a77History:");
@@ -365,7 +361,7 @@ public class Enchants extends ItemStat implements Upgradable {
 			//SENCH//for (StatData date : hist.getExternalData()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) date).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) date).getLevel(e)); } }
 
 			// All right, whats the expected enchantment levels?
-			EnchantListData expected = (EnchantListData) hist.Recalculate();
+			EnchantListData expected = (EnchantListData) hist.recalculate();
 
 			// Gather a list of extraneous enchantments
 			HashMap<Enchantment, Integer> discrepancies = new HashMap<>();
@@ -439,14 +435,14 @@ public class Enchants extends ItemStat implements Upgradable {
 		@NotNull public static EnchantUpgradeInfo GetFrom(@Nullable Object obj) throws IllegalArgumentException {
 
 			// Shall not be null
-			Validate.notNull(obj, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Upgrade operation list must not be null"));
+			Validate.notNull(obj, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation list must not be null"));
 
 			// Does the string exist?
 			if (!(obj instanceof List)) {
 
 				// Throw exception
 				throw new IllegalArgumentException(
-						FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Expected a list of strings instead of $i{0}", obj.toString()));
+						FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Expected a list of strings instead of $i{0}", obj.toString()));
 			}
 
 			ArrayList<String> strlst = new ArrayList<>(); boolean failure = false;
@@ -463,19 +459,19 @@ public class Enchants extends ItemStat implements Upgradable {
 					failure = true;
 
 					// Append info
-					unreadableStatements.append(FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), " Invalid list entry $i{0}$b;", obj.toString()));
+					unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid list entry $i{0}$b;", obj.toString()));
 				}
 			}
 			if (failure) {
 				// Throw exception
 				throw new IllegalArgumentException(
-						FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Could not read enchantment list:") + unreadableStatements.toString());
+						FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not read enchantment list:") + unreadableStatements.toString());
 			}
 
 			// No empty lists
 			if (strlst.isEmpty()) {
 				throw new IllegalArgumentException(
-						FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Upgrade operation list is empty"));
+						FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation list is empty"));
 			}
 
 			// Create ret
@@ -496,7 +492,7 @@ public class Enchants extends ItemStat implements Upgradable {
 					char c = pmpStr.charAt(0); if (c == 's') { pmpStr = pmpStr.substring(1); } else if (c != '+' && c != '-' && c != 'n') { pmpStr = '+' + pmpStr; }
 
 					// Is it a valid plus minus percent?
-					FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
+					FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
 					PlusMinusPercent pmpRead = PlusMinusPercent.getFromString(pmpStr, ffp);
 
 					Enchantment ench = null;
@@ -504,7 +500,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
 					// L
 					if (pmpRead == null) { unreadableStatements.append(' ').append(ffp.getFeedbackOf(FriendlyFeedbackCategory.ERROR).get(0).forConsole(ffp.getPalette())); failure = true; }
-					if (ench == null) { unreadableStatements.append(FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), " Invalid Enchantment $i{0}$b.", enchStr)); failure = true; }
+					if (ench == null) { unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid Enchantment $i{0}$b.", enchStr)); failure = true; }
 
 					// Valid? add
 					if (pmpRead != null && ench != null) {
@@ -517,14 +513,14 @@ public class Enchants extends ItemStat implements Upgradable {
 
 					// Nope
 					failure = true;
-					unreadableStatements.append(FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), " Invalid list entry $i{0}$b. List entries are of the format 'esharpness +1$b'.", str));
+					unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid list entry $i{0}$b. List entries are of the format 'esharpness +1$b'.", str));
 				}
 
 			}
 			if (failure) {
 				// Throw exception
 				throw new IllegalArgumentException(
-						FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Could not read enchantment list:") + unreadableStatements.toString());
+						FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not read enchantment list:") + unreadableStatements.toString());
 			}
 
 			// Success

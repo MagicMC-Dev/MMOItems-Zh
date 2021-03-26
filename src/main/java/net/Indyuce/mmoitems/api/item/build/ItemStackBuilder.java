@@ -10,13 +10,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -119,7 +118,7 @@ public class ItemStackBuilder {
 				stat.whenApplied(this, builtMMOItem.getData(stat));
 
 				// Does the item have any stat history regarding thay?
-				StatHistory<StatData> s = builtMMOItem.getStatHistory(stat);
+				StatHistory s = builtMMOItem.getStatHistory(stat);
 
 				// Found it?
 				if (s != null) {
@@ -134,7 +133,7 @@ public class ItemStackBuilder {
 			} catch (IllegalArgumentException|NullPointerException exception) {
 
 				// That
-				MMOItems.plugin.getLogger().log(Level.WARNING, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(),
+				MMOItems.plugin.getLogger().log(Level.WARNING, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),
 						"An error occurred while trying to generate item '$f{0}$b' with stat '$f{1}$b': {2}",
 						builtMMOItem.getId(),
 						stat.getId(),

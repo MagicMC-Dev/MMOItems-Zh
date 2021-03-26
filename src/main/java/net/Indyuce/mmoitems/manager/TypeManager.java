@@ -5,11 +5,10 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public class TypeManager implements Reloadable {
@@ -71,7 +70,13 @@ public class TypeManager implements Reloadable {
 			register(type);
 	}
 
-	public Type get(String id) {
+	/**
+	 * @param id Internal ID of the type
+	 *
+	 * @return The MMOItem Type if it found.
+	 */
+	@Nullable public Type get(@Nullable String id) {
+		if (id == null) { return null; }
 		return map.get(id);
 	}
 
@@ -86,5 +91,14 @@ public class TypeManager implements Reloadable {
 
 	public Collection<Type> getAll() {
 		return map.values();
+	}
+
+	/**
+	 * @return The names of all loaded types.
+	 */
+	public ArrayList<String> getAllTypeNames() {
+		ArrayList<String> ret = new ArrayList<>();
+		for (Type t : getAll()) { ret.add(t.getId()); }
+		return ret;
 	}
 }

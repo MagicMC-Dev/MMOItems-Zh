@@ -167,9 +167,9 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
                 for (double dz = box.getMinZ(); dz <= box.getMaxZ(); dz += Math.min(1, Math.max(box.getWidthZ() - (dz - box.getMinZ()), 0.001))) {
 
                     // Exclusion
-                    int dxI =SilentNumbers.Round(dx - 0.4999);
-                    int dyI =SilentNumbers.Round(dy - 0.4999);
-                    int dzI =SilentNumbers.Round(dz - 0.4999);
+                    int dxI =SilentNumbers.floor(dx);
+                    int dyI =SilentNumbers.floor(dy);
+                    int dzI =SilentNumbers.floor(dz);
 
                     //BKK//MMOItems. Log("  \u00a77at \u00a76" + dxI + " " + dyI + " " + dzI + "\u00a78 (" + dx + " " + dy + " " + dz + ")");
 

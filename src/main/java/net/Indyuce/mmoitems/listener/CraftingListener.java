@@ -96,7 +96,7 @@ public class CraftingListener implements Listener {
     }
 
     public Optional<CachedRecipe> checkRecipes(Player player, ItemStack[] matrix) {
-        for (CustomRecipe recipe : MMOItems.plugin.getRecipes().getCustomRecipes()) {
+        for (CustomRecipe recipe : MMOItems.plugin.getRecipes().getLegacyCustomRecipes()) {
             if ((!recipe.fitsPlayerCrafting() && matrix.length == 4) || !recipe.checkPermission(player))
                 continue;
 

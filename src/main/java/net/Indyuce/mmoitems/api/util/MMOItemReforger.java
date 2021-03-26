@@ -2,29 +2,23 @@ package net.Indyuce.mmoitems.api.util;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
-import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.data.*;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
-import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -65,7 +59,7 @@ public class MMOItemReforger {
 
 	// Data
 	private final Map<ItemStat, StatData> itemData = new HashMap<>();
-	private final Map<ItemStat, StatHistory<StatData>> itemDataHistory = new HashMap<>();
+	private final Map<ItemStat, StatHistory> itemDataHistory = new HashMap<>();
 
 	//endregion
 
@@ -204,7 +198,7 @@ public class MMOItemReforger {
 		if (!options.shouldKeepGemStones()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId());
 		ItemMeta meta = nbtItem.getItem().getItemMeta();
-		Validate.isTrue(meta != null, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
+		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
 
 		// Keep name
 		if (options.shouldKeepName()) {
@@ -261,7 +255,7 @@ public class MMOItemReforger {
 			Enchants.separateEnchantments(mmoItem);
 
 			// Gather
-			StatHistory<StatData> hist = StatHistory.From(mmoItem, ItemStats.ENCHANTS);
+			StatHistory hist = StatHistory.from(mmoItem, ItemStats.ENCHANTS);
 			ambiguouslyOriginalEnchantmentCache = (EnchantListData) ((EnchantListData) hist.getOriginalData()).cloneData();
 
 
@@ -339,7 +333,7 @@ public class MMOItemReforger {
 			cachedGemStones = (GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS);
 
 			// Store all the history of stat proceedings.
-			for (StatHistory<StatData> hist : mmoItem.getStatHistories()) {
+			for (StatHistory hist : mmoItem.getStatHistories()) {
 				//UPDT//MMOItems.Log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
 
 				// Get and set
@@ -527,18 +521,18 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.Log(" \u00a72@\u00a76@ \u00a77Cached Stat History");
 
 			// Does it have history too?
-			StatHistory<StatData> histOld = itemDataHistory.get(stat);
+			StatHistory histOld = itemDataHistory.get(stat);
 			if (histOld != null) {
 				//UPDT//MMOItems.Log(" \u00a72 *\u00a76* \u00a77Of old stat \u00a7f" + histOld.getItemStat().getNBTPath());
 
 				// Regenerate the original data
-				StatHistory<StatData> hist = StatHistory.From(mmoItem, stat);
+				StatHistory hist = StatHistory.from(mmoItem, stat);
 
 				// Remember...
-				hist.Assimilate(histOld);
+				hist.assimilate(histOld);
 
 				// Recalculate
-				mmoItem.setData(hist.getItemStat(), hist.Recalculate(false));
+				mmoItem.setData(hist.getItemStat(), hist.recalculate(false));
 			}
 		}
 
@@ -557,7 +551,7 @@ public class MMOItemReforger {
 
 
 			// Register as extraneous obviously
-			StatHistory<StatData> hist = StatHistory.From(mmoItem, ItemStats.ENCHANTS);
+			StatHistory hist = StatHistory.from(mmoItem, ItemStats.ENCHANTS);
 			hist.registerExternalData(cachedEnchantments.cloneData());
 
 			//UPDT//MMOItems.Log(" \u00a7b:\u00a73:\u00a7: \u00a77Late Arcane Report: \u00a79-------------------------");
@@ -570,7 +564,7 @@ public class MMOItemReforger {
 			//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
 
 			// Recalculate and put
-			mmoItem.setData(ItemStats.ENCHANTS, hist.Recalculate());
+			mmoItem.setData(ItemStats.ENCHANTS, hist.recalculate());
 		}
 
 		// Upgrade Information

@@ -97,7 +97,7 @@ public abstract class ChooseStat extends StringStat {
         }
 
         // Get Definition
-        if (chooseableDefs.containsKey(def)) { for (String definition : SilentNumbers.Chop(chooseableDefs.get(def), 50, "")) { lore.add(ChatColor.GRAY + "   " + definition); } }
+        if (chooseableDefs.containsKey(def)) { for (String definition : SilentNumbers.chop(chooseableDefs.get(def), 50, "")) { lore.add(ChatColor.GRAY + "   " + definition); } }
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to return to default value.");

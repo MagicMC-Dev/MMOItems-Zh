@@ -199,7 +199,9 @@ public class MMOItemUIFilter implements UIFilter {
      */
     public static void register() {
         global = new MMOItemUIFilter();
-        UIFilterManager.registerUIFilter(global); }
+        UIFilterManager.registerUIFilter(global);
+        VanillaMMOItemCountermatch.enable();
+    }
 
     /**
      * @return The general instance of this MMOItem UIFilter.

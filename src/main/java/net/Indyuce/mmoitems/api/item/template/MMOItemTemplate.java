@@ -194,7 +194,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 * 		   <p></p>
 	 * 		   Default is <b>1</b> obviously.
 	 *
-	 * @deprecated Dont use this method, the Crafted Amount Stat will be deleted in the near future.
+	 * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
 	 */
 	@Deprecated
 	public int getCraftedAmount() {
@@ -205,8 +205,10 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		// Found?
 		if (ofAmount != null) {
 
+			int s = SilentNumbers.ceil(ofAmount.calculate(0));
+
 			// Well what does it read
-			return SilentNumbers.ceil(ofAmount.calculate(0));
+			return s;
 		}
 
 		// No

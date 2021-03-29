@@ -3,11 +3,16 @@ package net.Indyuce.mmoitems.listener;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -19,43 +24,44 @@ import java.util.List;
 public class DurabilityListener implements Listener {
 	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
 			DamageCause.FIRE_TICK, DamageCause.SUFFOCATION, DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
+
 	private final EquipmentSlot[] slots = { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
 
 	/**
 	 * Handles custom durability for non-'vanilla durability' items
 	 */
-//	@EventHandler(ignoreCancelled = true)
-//	public void playerDamage(EntityDamageEvent event) {
-//		if (event.getEntityType() != EntityType.PLAYER || ignoredCauses.contains(event.getCause()))
-//			return;
-//
-//		Player player = (Player) event.getEntity();
-//		int damage = Math.max((int) event.getDamage() / 4, 1);
-//		for(EquipmentSlot slot : slots)
-//			if(hasItem(player, slot))
-//				handleVanillaDamage(player.getInventory().getItem(slot), player, slot, damage);
-//	}
-//
-//	@EventHandler(ignoreCancelled = true)
-//	public void playerMeleeAttack(EntityDamageByEntityEvent event) {
-//		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
-//				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
-//			return;
-//		Player player = (Player) event.getDamager();
-//		ItemStack item = player.getInventory().getItemInMainHand();
-//
-//		handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
-//	}
-//
-//	@EventHandler(ignoreCancelled = true)
-//	public void playerBowAttack(EntityShootBowEvent event) {
-//		if (!(event.getEntity() instanceof Player))
-//			return;
-//		Player player = (Player) event.getEntity();
-//		ItemStack item = event.getBow();
-//
-//		handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
-//	}
+	@EventHandler(ignoreCancelled = true)
+	public void playerDamage(EntityDamageEvent event) {
+		if (event.getEntityType() != EntityType.PLAYER || ignoredCauses.contains(event.getCause()))
+			return;
+
+		Player player = (Player) event.getEntity();
+		int damage = Math.max((int) event.getDamage() / 4, 1);
+		for(EquipmentSlot slot : slots)
+			if(hasItem(player, slot))
+				handleVanillaDamage(player.getInventory().getItem(slot), player, slot, damage);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void playerMeleeAttack(EntityDamageByEntityEvent event) {
+		if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
+				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+			return;
+		Player player = (Player) event.getDamager();
+		ItemStack item = player.getInventory().getItemInMainHand();
+
+		handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void playerBowAttack(EntityShootBowEvent event) {
+		if (!(event.getEntity() instanceof Player))
+			return;
+		Player player = (Player) event.getEntity();
+		ItemStack item = event.getBow();
+
+		handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
+	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void itemDamage(PlayerItemDamageEvent event) {
@@ -93,7 +99,7 @@ public class DurabilityListener implements Listener {
 	private void handleVanillaDamage(ItemStack stack, Player player, EquipmentSlot slot, int damage) {
 		DurabilityItem item = new DurabilityItem(player, stack);
 
-		if (item.isValid()) {
+		if (item.isValid() && stack.getType().getMaxDurability() == 0) {
 			item.decreaseDurability(damage);
 
 			if (item.isBroken() && item.isLostWhenBroken()) {

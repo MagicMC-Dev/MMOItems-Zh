@@ -134,3 +134,4 @@ lore-format:
 - '#set#'
 - '{bar}'
 - '#tier#'
+- '%durability%'

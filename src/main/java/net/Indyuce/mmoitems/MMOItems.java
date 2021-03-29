@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems;
 
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import io.lumine.mythic.utils.plugin.LuminePlugin;
@@ -44,6 +46,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -519,17 +522,46 @@ public class MMOItems extends LuminePlugin {
 		if (rpgPlugin != null)
 			return;
 
+		String preferred = MMOItems.plugin.getConfig().getString("preferred-rpg-provider", null);
+		if (preferred != null) {
+
+			try {
+				RPGHandler.PluginEnum preferredRPG = RPGHandler.PluginEnum.valueOf(preferred.toUpperCase());
+				// Found the plugin?
+				if (Bukkit.getPluginManager().getPlugin(preferredRPG.getName()) != null) {
+
+					// Load that one
+					setRPG(preferredRPG.load());
+
+					// Mention it
+					print(null, "Using $s{0}$b as RPGPlayer provider", "RPG Provider", preferredRPG.getName());
+					return;
+				} else {
+
+					print(null, "Preferred RPGPlayer provider $r{0}$b is not installed!", "RPG Provider", preferred); }
+
+			} catch (IllegalArgumentException ignored) {
+
+				// Log error
+				FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+				ffp.activatePrefix(true, "RPG Provider");
+				ffp.log(FriendlyFeedbackCategory.ERROR, "Invalid RPG Provider '$u{0}$b' --- These are the supported ones:", preferred);
+				for (RPGHandler.PluginEnum pgrep : RPGHandler.PluginEnum.values()) { ffp.log(FriendlyFeedbackCategory.ERROR, " $r+ $b{0}", pgrep.getName()); }
+				ffp.sendTo(FriendlyFeedbackCategory.ERROR, getConsole());
+			}
+		}
+
 		// For each supported plugin
-		for (RPGHandler.PluginEnum plugin : RPGHandler.PluginEnum.values()) {
+		for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values()) {
 
 			// Found the plugin?
-			if (Bukkit.getPluginManager().getPlugin(plugin.getName()) != null) {
+			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null) {
 
 				// Load that one
-				setRPG(plugin.load());
+				setRPG(pluginEnum.load());
 
 				// Mention it
-				print(Level.INFO, "Using $s{0}$b as RPGPlayer provider", plugin.getName());
+				print(null, "Using $s{0}$b as RPGPlayer provider", "RPG Provider", pluginEnum.getName());
 				return;
 			}
 		}
@@ -683,9 +715,13 @@ public class MMOItems extends LuminePlugin {
 	 *
 	 * @author Gunging
 	 */
-	public static void print(@NotNull Level level, @Nullable String message, @NotNull String... replaces) {
+	public static void print(@Nullable Level level, @Nullable String message, @Nullable String prefix, @NotNull String... replaces) {
 		if (message == null) { message = "< null >"; }
-		MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
+		if (level != null) { MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
+		} else {
+			FriendlyFeedbackMessage p = new FriendlyFeedbackMessage("", prefix);
+			FriendlyFeedbackMessage r = FriendlyFeedbackProvider.generateMessage(p, message, replaces);
+			getConsole().sendMessage(r.forConsole(FFPMMOItems.get())); }
 	}
 
 	/**

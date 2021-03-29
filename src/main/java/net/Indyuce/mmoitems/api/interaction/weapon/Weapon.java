@@ -40,7 +40,7 @@ public class Weapon extends UseItem {
 
 		boolean asCanUse = playerData.getRPG().canUse(getNBTItem(), true);
 		boolean asFlagAllowed = true; FlagPlugin fg = MMOItems.plugin.getFlags(); if (fg != null) { asFlagAllowed = fg.isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS); }
-		else { MMOItems.print(Level.WARNING, "$fFlag plugin not found"); }
+		else { MMOItems.print(Level.WARNING,  "$fFlag plugin not found", null); }
 		return asCanUse || asFlagAllowed;
 	}
 

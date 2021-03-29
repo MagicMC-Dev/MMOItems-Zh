@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.util;
 import java.text.DecimalFormat;
 import java.util.Random;
 
+import net.Indyuce.mmoitems.MMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -11,6 +12,9 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
+/**
+ * That Gaussian spread distribution thing that no one understands.
+ */
 public class NumericStatFormula implements RandomStatData {
 	private final double base, scale, spread, maxSpread;
 
@@ -87,33 +91,81 @@ public class NumericStatFormula implements RandomStatData {
 		this.maxSpread = maxSpread;
 	}
 
-	public double getBase() {
-		return base;
-	}
+	/**
+	 * @return The 'Base' number of the item. This chooses the peak of the Gaussian Distribution.
+	 * @see #getScale()
+	 */
+	public double getBase() { return base; }
 
-	public double getScale() {
-		return scale;
-	}
 
-	public double getSpread() {
-		return spread;
-	}
+	/**
+	 * @return When the item has a certain level or tier, this is how much each level shifts
+	 * 		   the peak, so that it is centered at {@code base + scale*level}
+	 * @see #getBase()
+	 */
+	public double getScale() { return scale; }
 
-	public double getMaxSpread() {
-		return maxSpread;
-	}
+	/**
+	 * @return Standard Deviation of the Gaussian Distribution
+	 */
+	public double getSpread() { return spread; }
+
+	/**
+	 * @return For gaussian distributions, there always is that INSANELY SMALL chance of getting an INSANELY LARGE number.
+	 * 		   For example: At base atk dmg 10, and standard deviation 1:
+	 * 		   <p>68% of rolls will fall between 9 and 11;
+	 * 		   </p>95% of rolls will fall between 8 and 12;
+	 * 		   <p>99.7% of rolls will fall between 7 and 13;
+	 * 		   </p>10E-42 of a roll that will give you an epic 300 dmg sword
+	 * 		   <p></p>
+	 * 		   Whatever, this constrains to a minimum and maximum of output.
+	 */
+	public double getMaxSpread() { return maxSpread; }
+
+	public static boolean useRelativeSpread;
 
 	/**
 	 * Applies the formula for a given input x.
 	 * 
-	 * @param  x Numeric input
-	 * @return   Let A = {base} + {scale} * x, then the returned value is a
+	 * @param  levelScalingFactor When choosing the mean of the distribution,
+	 *                            the formula is <code>base + (scale*level)</code>.
+	 *                            This is the <code>level</code>
+	 *
+	 * @return   <b>Legacy formula: ???</b><br>
+	 * 			 Let A = {base} + {scale} * lvl, then the returned value is a
 	 *           random value taken in respect to a gaussian distribution
 	 *           centered on A, with average spread of {spread}%, and with a
 	 *           maximum offset of {maxSpread}% (relative to average value)
+	 *           <p></p>
+	 *           <b>Formula: Spread = Standard Deviation</b>
+	 *           The mean, the peak is located at <code>{base} + {scale}*lvl</code>. <br>
+	 *           The 'spread' is the standard deviation of the distribution. <br>
+	 *           'Max Spread' constrains the result of this operation at <code>{mean}±{max spread}</code>
 	 */
-	public double calculate(double x) {
-		return (base + scale * x) * (1 + Math.min(Math.max(RANDOM.nextGaussian() * spread, -maxSpread), maxSpread));
+	public double calculate(double levelScalingFactor) {
+
+		if (useRelativeSpread) { return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(RANDOM.nextGaussian() * spread, -maxSpread), maxSpread)); }
+
+		/*
+		 * The mean, the center of the distribution
+		 */
+		double actualBase = (base + (scale * levelScalingFactor));
+
+		/*
+		 * This is one pick from a gaussian distribution
+		 * at mean 0, and standard deviation 1, multiplied
+		 * by the spread chosen.
+		 */
+		double gaussSpread = RANDOM.nextGaussian() * spread;
+
+		/*
+		 * Does it exceed the max spread (positive or negative)? Not anymore!
+		 */
+		if (gaussSpread < (-getMaxSpread())) { gaussSpread = -getMaxSpread(); } else
+		if (gaussSpread > (getMaxSpread())) { gaussSpread = getMaxSpread(); }
+
+		// That's it
+		return actualBase + gaussSpread;
 	}
 
 	@Override
@@ -161,7 +213,9 @@ public class NumericStatFormula implements RandomStatData {
 				+ (maxSpread != 0 ? ",Max=" + maxSpread : "") + "}";
 	}
 
-	public static enum FormulaSaveOption {
+	public static void reload() { useRelativeSpread = !MMOItems.plugin.getConfig().getBoolean("additive-spread-formula", false); }
+
+	public enum FormulaSaveOption {
 
 		/**
 		 * When toggled on, if the formula is set to 0 then the configuration
@@ -176,4 +230,5 @@ public class NumericStatFormula implements RandomStatData {
 		 */
 		NONE;
 	}
+
 }

@@ -76,6 +76,7 @@ public class MMOItemUIFilter implements UIFilter {
 
     @Override
     public boolean isValid(@NotNull String argument, @NotNull String data, @Nullable FriendlyFeedbackProvider ffp) {
+        if (reg) { return true; }
         argument = argument.replace(" ", "_").replace("-", "_").toUpperCase();
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
 
@@ -201,7 +202,9 @@ public class MMOItemUIFilter implements UIFilter {
         global = new MMOItemUIFilter();
         UIFilterManager.registerUIFilter(global);
         VanillaMMOItemCountermatch.enable();
-    }
+        reg = false; }
+
+    private static boolean reg = true;
 
     /**
      * @return The general instance of this MMOItem UIFilter.

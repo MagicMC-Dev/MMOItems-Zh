@@ -165,7 +165,7 @@ public class StatHistory {
      * <p></p>
      * Use <code>StatHistory.From()</code> to get the stat history associated to an item.
      */
-    StatHistory(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat, @NotNull StatData ogData) { itemStat = ofStat; originalData = ogData; parent = ofItem; }
+    public StatHistory(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat, @NotNull StatData ogData) { itemStat = ofStat; originalData = ogData; parent = ofItem; }
 
     /**
      * Checks the item and makes sure that the UUIDs

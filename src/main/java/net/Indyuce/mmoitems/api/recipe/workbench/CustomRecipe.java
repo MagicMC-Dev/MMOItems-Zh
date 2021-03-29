@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.api.crafting.outputs.MythicRecipeOutput;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
 import io.lumine.mythic.lib.api.crafting.recipes.ShapedRecipe;
 import io.lumine.mythic.lib.api.crafting.recipes.ShapelessRecipe;
+import io.lumine.mythic.lib.api.crafting.uifilters.IngredientUIFilter;
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
@@ -216,7 +217,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			// Add
 			ProvidedUIFilter p = readIngredientFrom(str, ffp);
 			nonAirFound = true;
-			poofs.add(new MythicRecipeIngredient(new MythicIngredient(p.toString(), p)));
+			poofs.add(new MythicRecipeIngredient(p));
 		}
 		if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shapeless recipe containing only AIR, $fignored$b.")); }
 		String recipeName = type + "." + id + "." + recipeCount++;
@@ -310,9 +311,9 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			 */
 
 			// Bake
-			ShapedIngredient leftIngredient = new ShapedIngredient(new MythicIngredient(positions[0], left), 0, -rowNumber);
-			ShapedIngredient centerIngredient = new ShapedIngredient(new MythicIngredient(positions[1], center), 1, -rowNumber);
-			ShapedIngredient rightIngredient = new ShapedIngredient(new MythicIngredient(positions[2], right), 2, -rowNumber);
+			ShapedIngredient leftIngredient = new ShapedIngredient(left, 0, -rowNumber);
+			ShapedIngredient centerIngredient = new ShapedIngredient(center, 1, -rowNumber);
+			ShapedIngredient rightIngredient = new ShapedIngredient(right, 2, -rowNumber);
 
 			// Parse and add
 			poofs.add(leftIngredient);

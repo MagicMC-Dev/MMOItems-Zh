@@ -138,7 +138,7 @@ public class RecipeManager implements Reloadable {
 					} catch (IllegalArgumentException exception) {
 
 						// Add message
-						ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load recipe of $f{0} {1}$b: $r{2}",
+						ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load recipe of $f{0} {1}$b: {2}",
 								type.getId(), template.getId(), exception.getMessage());
 					}
 				}

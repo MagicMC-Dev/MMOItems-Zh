@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.command.mmoitems;
 
 import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -64,6 +65,10 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 				+ MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
 				+ MMOItems.plugin.getUpgrades().getAll().size() + ChatColor.GRAY + " Upgrade Templates");
+
+
+		// *This one is not implementing Reloadable
+		NumericStatFormula.reload();
 	}
 
 	public void reloadRecipes(CommandSender sender) {

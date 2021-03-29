@@ -83,10 +83,9 @@ public class ItemListener implements Listener {
 
 		// Should this item be updated (via the updater)
 		if (shouldUpdate(nbt, type)) {
-			mod.reforge(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null, MMOItems.plugin.getLanguage().revisionOptions);
-		}
+			mod.update(MMOItems.plugin.getLanguage().rerollOnItemUpdate ? player : null, MMOItems.plugin.getLanguage().revisionOptions); }
 
-		// Should this item be soulbount?
+		// Should this item be soulbound?
 		if (shouldSoulbind(nbt, type)) { mod.applySoulbound(player); }
 
 		// Return either the changed one or null

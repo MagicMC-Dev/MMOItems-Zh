@@ -103,7 +103,6 @@ public class ItemStats {
 			MAX_DURABILITY = new MaximumDurability(),
 			DURABILITY_BAR = new DurabilityBar(),
 			WILL_BREAK = new LostWhenBroken(),
-			DURABILITY_BAR = new DurabilityBar(),
 			NAME = new DisplayName(),
 			LORE = new Lore(),
 			NBT_TAGS = new NBTTags(),

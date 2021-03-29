@@ -222,7 +222,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		String recipeName = type + "." + id + "." + recipeCount++;
 
 		// Build Main
-		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, template.getCraftedAmount()));
+		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
 
 		// Make ingredients
 		ShapelessRecipe inputRecipe = new ShapelessRecipe(recipeName, poofs);
@@ -326,7 +326,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		String recipeName = type + "." + id + "." + recipeCount++;
 
 		// Build Main
-		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, template.getCraftedAmount()));
+		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
 
 		// Make ingredients
 		ShapedRecipe inputRecipe = ShapedRecipe.unsharpen((new ShapedRecipe(recipeName, poofs)));

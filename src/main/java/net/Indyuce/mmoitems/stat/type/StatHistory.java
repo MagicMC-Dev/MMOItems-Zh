@@ -39,6 +39,19 @@ public class StatHistory {
      */
     @NotNull public ItemStat getItemStat() { return itemStat; }
 
+    /**
+     * @return Sure there is a Stat History and all but, does it
+     *         actually have any information apart from the OG Data?
+     */
+    public boolean isClear() {
+
+        // Any gemstones? Then its NOT CLEAR
+        if (getAllGemstones().size() > 0) { return false; }
+
+        // TRUE if there are no externals
+        return getExternalData().size() == 0;
+    }
+
     /*
      * What MMOItem is this StatHistory linked to?
      */

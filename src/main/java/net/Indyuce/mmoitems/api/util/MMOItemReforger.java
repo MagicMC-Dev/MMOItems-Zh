@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
@@ -185,7 +186,7 @@ public class MMOItemReforger {
 		 */
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
-		if (!options.shouldKeepGemStones() && !options.shouldKeepExternalSH()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
+		loadLiveMMOItem();
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
 		//noinspection ConstantConditions
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
@@ -333,15 +334,21 @@ public class MMOItemReforger {
 
 		// Store all the history of stat proceedings.
 		HashMap<ItemStat, StatHistory> temporalDataHistory = new HashMap<>();
-		for (StatHistory hist : mmoItem.getStatHistories()) {
-			//UPDT//MMOItems.log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
+		//UPD//MMOItems.log(" \u00a71  * \u00a77Remembering Stats");
+		for (ItemStat stat : mmoItem.getStats()) {
+			//UPD//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
+
+			// Skip if it cant merge
+			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
+
+			StatHistory hist = StatHistory.from(mmoItem, stat);
+			//UPD//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
 
 			// Clear externals
 			if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
 
 			// Get and set
-			temporalDataHistory.put(hist.getItemStat(), hist);
-		}
+			temporalDataHistory.put(hist.getItemStat(), hist); }
 
 		/*
 		 * Generate fresh MMOItem, with stats that will be set if the chance is too low
@@ -389,11 +396,13 @@ public class MMOItemReforger {
 			// Build it again (Reroll RNG)
 			mmoItem = template.newBuilder(player).build();
 		}
+		//UPD//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
 
 		/*
 		 * Extra step: Check every stat history
 		 */
 		for (ItemStat stat : temporalDataHistory.keySet()) {
+			//UPD//MMOItems.log("\u00a7e @\u00a77 " + stat.getId());
 
 			// Get history
 			StatHistory hist = temporalDataHistory.get(stat);
@@ -409,6 +418,7 @@ public class MMOItemReforger {
 			 * If not, its gotten removed = we only keep extraneous
 			 */
 			if (source instanceof NumericStatFormula && hist.getOriginalData() instanceof DoubleData) {
+				//UPD//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure");
 
 				// Very well, chance checking is only available for NumericStatFormula class so
 				double base = ((NumericStatFormula) source).getBase() + (((NumericStatFormula) source).getScale() * determinedItemLevel);
@@ -422,9 +432,14 @@ public class MMOItemReforger {
 				// How many standard deviations away?
 				double sD = Math.abs(shift / ((NumericStatFormula) source).getSpread());
 				if (NumericStatFormula.useRelativeSpread) { sD = Math.abs(shift / (((NumericStatFormula) source).getSpread() * base)); }
+				//UPD//MMOItems.log("\u00a7b *\u00a77 Base: \u00a73" + base);
+				//UPD//MMOItems.log("\u00a7b *\u00a77 Curr: \u00a73" + current);
+				//UPD//MMOItems.log("\u00a7b *\u00a77 Shft: \u00a73" + shift);
+				//UPD//MMOItems.log("\u00a7b *\u00a77 SDev: \u00a73" + sD);
 
 				// Greater than max spread? Or heck, 0.1% Chance or less wth
 				if (sD > ((NumericStatFormula) source).getMaxSpread() || sD > 3.5) {
+					//UPD//MMOItems.log("\u00a7c -\u00a77 Ridiculous Range --- reroll");
 
 					// Adapt within reason
 					double reasonableShift = ((NumericStatFormula) source).getSpread() * Math.min(2, ((NumericStatFormula) source).getMaxSpread());
@@ -438,15 +453,17 @@ public class MMOItemReforger {
 
 				// Data arguably fine tbh, just use previous
 				} else {
+					//UPD//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
 
 					// Just clone I guess
 					clear = new StatHistory(mmoItem, stat, ((DoubleData) hist.getOriginalData()).cloneData());
 				}
 
 			} else {
+				//UPD//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
 
 				// Make a clear one
-				clear = new StatHistory(mmoItem, stat, stat.getClearStatData());
+				clear = new StatHistory(mmoItem, stat, hist.getOriginalData());
 			}
 
 			// Keep Gemstone and Extraneous data
@@ -455,6 +472,8 @@ public class MMOItemReforger {
 
 			// Store
 			itemDataHistory.put(stat, clear);
+			mmoItem.setStatHistory(stat, clear);
+			mmoItem.setData(stat, clear.recalculate(false));
 		}
 
 		/*
@@ -911,18 +930,21 @@ public class MMOItemReforger {
 
 			// Does it have history too?
 			StatHistory histOld = itemDataHistory.get(stat);
-			if (histOld != null) {
-				//UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a77Of old stat \u00a7f" + histOld.getItemStat().getNBTPath());
+			if (histOld == null) { continue; }
 
-				// Regenerate the original data
-				StatHistory hist = StatHistory.from(buildingMMOItem, stat);
+			// Is it compltely clear?
+			if (histOld.isClear()) { continue; }
 
-				// Remember...
-				hist.assimilate(histOld);
+			//UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a77Of old stat \u00a7f" + histOld.getItemStat().getNBTPath());
 
-				// Recalculate
-				buildingMMOItem.setData(hist.getItemStat(), hist.recalculate(false));
-			}
+			// Regenerate the original data
+			StatHistory hist = StatHistory.from(buildingMMOItem, stat);
+
+			// Remember...
+			hist.assimilate(histOld);
+
+			// Recalculate
+			buildingMMOItem.setData(hist.getItemStat(), hist.recalculate(false));
 		}
 
 		// Apply soulbound

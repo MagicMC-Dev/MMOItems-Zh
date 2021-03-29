@@ -5,11 +5,11 @@ import io.lumine.mythic.lib.version.SpigotPlugin;
 import io.lumine.mythic.utils.plugin.LuminePlugin;
 import net.Indyuce.mmoitems.api.*;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.recipe.MMOItemUIFilter;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import net.Indyuce.mmoitems.command.UpdateItemCommand;
-import net.Indyuce.mmoitems.command.completion.UpdateItemCompletion;
 import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
@@ -188,6 +188,7 @@ public class MMOItems extends LuminePlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
+		MMOItemUIFilter.register();
 
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
 
@@ -299,9 +300,9 @@ public class MMOItems extends LuminePlugin {
 		getCommand("mmoitems").setExecutor(mmoitemsCommand);
 		getCommand("mmoitems").setTabCompleter(mmoitemsCommand);
 
-		// update item command
-		getCommand("updateitem").setExecutor(new UpdateItemCommand());
-		getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
+		// update item command DISABLED
+		//getCommand("updateitem").setExecutor(new UpdateItemCommand());
+		//getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
 	}
 
 	@Override
@@ -508,6 +509,7 @@ public class MMOItems extends LuminePlugin {
 		return stringInputParsers;
 	}
 
+	//region Easy-Access API
 	/**
 	 * Decide by which system will the RPG Requirements of the player will be checked.
 	 * <p></p>
@@ -527,7 +529,7 @@ public class MMOItems extends LuminePlugin {
 				setRPG(plugin.load());
 
 				// Mention it
-				Print(Level.INFO, "Using $s{0}$b as RPGPlayer provider", plugin.getName());
+				print(Level.INFO, "Using $s{0}$b as RPGPlayer provider", plugin.getName());
 				return;
 			}
 		}
@@ -542,8 +544,15 @@ public class MMOItems extends LuminePlugin {
 	 *         'level-item' option. The item will pick a random tier if the
 	 *         template has the 'tiered' option
 	 */
-	public MMOItem getMMOItem(Type type, String id, PlayerData player) {
-		return templateManager.getTemplate(type, id).newBuilder(player.getRPG()).build();
+	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
+		if (type == null || id == null) { return null; }
+
+		// Valid template?
+		MMOItemTemplate found = templateManager.getTemplate(type, id);
+		if (found == null) { return null; }
+
+		// Build if found
+		return found.newBuilder(player.getRPG()).build();
 	}
 
 	/**
@@ -552,8 +561,15 @@ public class MMOItems extends LuminePlugin {
 	 *         'level-item' option. The item will pick a random tier if the
 	 *         template has the 'tiered' option
 	 */
-	public ItemStack getItem(Type type, String id, PlayerData player) {
-		return getMMOItem(type, id, player).newBuilder().build();
+	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
+		if (type == null || id == null) { return null; }
+
+		// Valid MMOItem?
+		MMOItem m = getMMOItem(type, id, player);
+		if (m == null) { return null; }
+
+		// Build if found
+		return m.newBuilder().build();
 	}
 
 	/**
@@ -562,8 +578,15 @@ public class MMOItems extends LuminePlugin {
 	 * @return           Generates an item given an item template with a
 	 *                   specific item level and item tier
 	 */
-	public MMOItem getMMOItem(Type type, String id, int itemLevel, @Nullable ItemTier itemTier) {
-		return templateManager.getTemplate(type, id).newBuilder(itemLevel, itemTier).build();
+	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
+		if (type == null || id == null) { return null; }
+
+		// Valid template?
+		MMOItemTemplate found = templateManager.getTemplate(type, id);
+		if (found == null) { return null; }
+
+		// Build if found
+		return found.newBuilder(itemLevel, itemTier).build();
 	}
 
 	/**
@@ -572,46 +595,104 @@ public class MMOItems extends LuminePlugin {
 	 * @return           Generates an item given an item template with a
 	 *                   specific item level and item tier
 	 */
-	public ItemStack getItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
-		return getMMOItem(type, id, itemLevel, itemTier).newBuilder().build();
+	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
+		if (type == null || id == null) { return null; }
+
+		// Valid MMOItem?
+		MMOItem m = getMMOItem(type, id, itemLevel, itemTier);
+		if (m == null) { return null; }
+
+		// Build if found
+		return m.newBuilder().build();
 	}
 
 	/**
 	 * @return Generates an item given an item template. The item level will be
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
+	 *         <p></p>
+	 *         Will return <code>null</code> if such MMOItem does not exist.
 	 */
-	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id) {
-		return templateManager.getTemplate(type, id).newBuilder(0, null).build();
+	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) { return null; }
+
+		// Valid template?
+		MMOItemTemplate found = templateManager.getTemplate(type, id);
+		if (found == null) { return null; }
+
+		// Build if found
+		return found.newBuilder(0, null).build();
 	}
 
 	/**
 	 * @return Generates an item given an item template. The item level will be
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
+	 *         <p></p>
+	 *         Will return <code>null</code> if such MMOItem does not exist.
 	 */
-	public ItemStack getItem(@NotNull Type type, @NotNull String id) {
-		return getMMOItem(type, id).newBuilder().build();
+
+	@Nullable public ItemStack getItem(@Nullable String type, @Nullable String id) {
+		if (type == null || id == null) { return null; }
+		return getItem(getType(type), id);
+	}
+	/**
+	 * @return Generates an item given an item template. The item level will be
+	 *         0 and the item will have no item tier unless one is specified in
+	 *         the base item data.
+	 *         <p></p>
+	 *         Will return <code>null</code> if such MMOItem does not exist.
+	 */
+	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) { return null; }
+
+		// Valid MMOItem?
+		MMOItem m = getMMOItem(type, id);
+		if (m == null) { return null; }
+
+		// Build if found
+		return m.newBuilder().build();
+	}
+
+	/**
+	 * Shorthand to get the specified type.
+	 *
+	 * @param type What do you think its called
+	 *
+	 * @return A type if such exists.
+	 */
+	@Nullable public Type getType(@Nullable String type) {
+		if (type == null) { return null; }
+		return getTypes().get(type);
 	}
 
 	/**
 	 * Logs something into the console with a cool [MMOItems] prefix :)
 	 * <p></p>
 	 * Parses color codes. <b>Mostly for DEV testing</b>. these may removed any release.
+	 *
+	 * @author Gunging
 	 */
-	public static void Log(String message) {
+	public static void log(@Nullable String message) {
+		if (message == null) { message = "< null >"; }
 		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
 	}
 
 	/**
 	 * Easily log something using the FriendlyFeedbackProvider, nice!
+	 *
+	 * @author Gunging
 	 */
-	public static void Print(@NotNull Level level, @NotNull String message, String... replaces) {
-		MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), message, replaces));
+	public static void print(@NotNull Level level, @Nullable String message, @NotNull String... replaces) {
+		if (message == null) { message = "< null >"; }
+		MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
 	}
 
 	/**
 	 * @return The server's console sender.
+	 *
+	 * @author Gunging
 	 */
 	@NotNull public static ConsoleCommandSender getConsole() { return plugin.getServer().getConsoleSender(); }
+	//endregion
 }

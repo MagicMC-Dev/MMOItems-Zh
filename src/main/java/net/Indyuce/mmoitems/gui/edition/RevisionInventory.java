@@ -50,33 +50,33 @@ public class RevisionInventory extends EditionInventory {
         // If null
         if (revisionID == null) {
 
-            name = ItemFactory.of(Material.NAME_TAG).name("\u00a73Name").lore(SilentNumbers.Chop(
+            name = ItemFactory.of(Material.NAME_TAG).name("\u00a73Name").lore(SilentNumbers.chop(
                     "The display name of the old item will be transferred to the new one"
                     , 40, "\u00a77")).build();
 
-            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7dLore").lore(SilentNumbers.Chop(
+            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7dLore").lore(SilentNumbers.chop(
                     "Specifically keeps lore lines that begin with the color code \u00a7n&7"
                     , 40, "\u00a77")).build();
 
-            enchantments = ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7bEnchantments").lore(SilentNumbers.Chop(
+            enchantments = ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7bEnchantments").lore(SilentNumbers.chop(
                     "This keeps specifically enchantments that are not accounted for in upgrades nor gem stones (presumably added by the player)."
                     , 40, "\u00a77")).build();
 
-            upgrades = ItemFactory.of(Material.NETHER_STAR).name("\u00a7aUpgrades").lore(SilentNumbers.Chop(
+            upgrades = ItemFactory.of(Material.NETHER_STAR).name("\u00a7aUpgrades").lore(SilentNumbers.chop(
                     "Will this item retain the upgrade level after updating?"
                     , 40, "\u00a77")).build();
 
-            gemstones = ItemFactory.of(Material.EMERALD).name("\u00a7eGem Stones").lore(SilentNumbers.Chop(
+            gemstones = ItemFactory.of(Material.EMERALD).name("\u00a7eGem Stones").lore(SilentNumbers.chop(
                     "Will the item retain its gem stones when updating? (Note that this allows gemstone overflow - will keep ALL old gemstones even if you reduced the gem sockets)"
                     , 40, "\u00a77")).build();
 
-            soulbind = ItemFactory.of(Material.ENDER_EYE).name("\u00a7cSoulbind").lore(SilentNumbers.Chop(
+            soulbind = ItemFactory.of(Material.ENDER_EYE).name("\u00a7cSoulbind").lore(SilentNumbers.chop(
                     "If the old item is soulbound, updating will transfer the soulbind to the new item."
                     , 40, "\u00a77")).build();
 
 
             // Fill stack
-            revisionID = ItemFactory.of(Material.ITEM_FRAME).name(REVISION).lore(SilentNumbers.Chop(
+            revisionID = ItemFactory.of(Material.ITEM_FRAME).name(REVISION).lore(SilentNumbers.chop(
                     "The updater is always active, increasing this number will update all instances of this MMOItem without further action."
                     , 40, "\u00a77")).build();
         }

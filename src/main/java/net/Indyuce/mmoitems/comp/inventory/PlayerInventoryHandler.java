@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.comp.inventory;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

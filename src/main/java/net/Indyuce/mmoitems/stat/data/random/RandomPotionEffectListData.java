@@ -6,9 +6,8 @@ import java.util.List;
 
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -54,12 +53,12 @@ public class RandomPotionEffectListData implements RandomStatData {
 
 						// L
 						} else {
-							throw new IllegalArgumentException(FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", key, spl));
+							throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", key, spl));
 						}
 
 					// L
 					} else {
-						throw new IllegalArgumentException(FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", key, spl));
+						throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", key, spl));
 					}
 
 				} else {

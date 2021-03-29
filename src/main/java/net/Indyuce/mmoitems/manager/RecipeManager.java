@@ -7,6 +7,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
+import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -37,46 +42,72 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import io.lumine.mythic.lib.MythicLib;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Manages the custom crafting of MMOItem components and stuff.
+ *
+ * @author Aria, Gunging
+ */
 public class RecipeManager implements Reloadable {
 
 	/**
 	 * Custom recipes which are handled by MMOItems
 	 */
-	private final Set<CustomRecipe> craftingRecipes = new HashSet<>();
-
+	final HashSet<CustomRecipe> legacyCraftingRecipes = new HashSet<>();
 	/**
 	 * Recipes which are handled by the vanilla spigot API. All recipes
 	 * registered here are Keyed
 	 */
-	private final Set<Recipe> loadedRecipes = new HashSet<>();
+	final HashSet<Recipe> loadedLegacyRecipes = new HashSet<>();
+
+	/**
+	 * All the custom recipes loaded by MMOItems.
+	 * <p></p>
+	 * <b>Except that for the time being, only Workbench recipes are supported
+	 * by mythic lib so for any other kind use the legacy array.</b>
+	 */
+	final HashSet<MythicRecipeBlueprint> customRecipes = new HashSet<>();
 
 	private boolean book, amounts;
 
 	/**
-	 * @param book    Vanilla knowledge book support
+	 * @param book    Vanilla knowledge book support.
+	 *
 	 * @param amounts If the recipe system should support glitchy multi amount
-	 *                recipes
+	 *                recipes. Ignored by MythicLib recipes.
 	 */
 	public void load(boolean book, boolean amounts) {
 		this.book = book;
-		this.amounts = amounts;
-	}
+		this.amounts = amounts; }
 
-	public boolean isAmounts() {
-		return amounts;
-	}
+	public boolean isAmounts() { return amounts; }
 
 	public void loadRecipes() {
-		craftingRecipes.clear();
+		legacyCraftingRecipes.clear();
 
+		// For logging
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+		ffp.activatePrefix(true, "Custom Crafting");
+
+		// Every single type yes
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
+
+			// Find their config
 			FileConfiguration config = type.getConfigFile().getConfig();
-			for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(type))
-				if (config.contains(template.getId() + ".base.crafting"))
+
+			// For every template of those types
+			for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(type)) {
+
+				// Does it have a crafting recipe?
+				if (config.contains(template.getId() + ".base.crafting")) {
+
 					try {
+
 						ConfigurationSection section = config.getConfigurationSection(template.getId() + ".base.crafting");
 
+						// Delegate recipes to their parsers
 						if (section.contains("shaped"))
 							section.getConfigurationSection("shaped").getKeys(false).forEach(
 									recipe -> registerRecipe(type, template.getId(), section.getStringList("shaped." + recipe), false, recipe));
@@ -102,14 +133,26 @@ public class RecipeManager implements Reloadable {
 						if (section.contains("smithing"))
 							section.getConfigurationSection("smithing").getKeys(false).forEach(recipe -> registerSmithingRecipe(type,
 									template.getId(), section.getConfigurationSection("smithing." + recipe), recipe));
+
+					// Uh heck
 					} catch (IllegalArgumentException exception) {
-						MMOItems.plugin.getLogger().log(Level.WARNING,
-								"Could not load recipe of '" + template.getId() + "': " + exception.getMessage());
+
+						// Add message
+						ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load recipe of $f{0} {1}$b: $r{2}",
+								type.getId(), template.getId(), exception.getMessage());
 					}
+				}
+			}
 		}
 
+		// Log all
+		ffp.sendAllTo(MMOItems.getConsole());
+
+		// Sort recipes
 		sortRecipes();
-		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedRecipes().forEach(Bukkit::addRecipe));
+
+		// Load legacy recipes onto Bukkit System
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedLegacyRecipes().forEach(Bukkit::addRecipe));
 	}
 
 	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info, String recipeId) {
@@ -119,7 +162,7 @@ public class RecipeManager implements Reloadable {
 		ItemStack stack = mmo.newBuilder().build();
 		stack.setAmount(amount);
 		CookingRecipe<?> recipe = recipeType.provideRecipe(key, stack, info.getChoice().toBukkit(), info.getExp(), info.getBurnTime());
-		loadedRecipes.add(recipe);
+		loadedLegacyRecipes.add(recipe);
 	}
 
 	public void registerSmithingRecipe(Type type, String id, ConfigurationSection section, String number) {
@@ -128,7 +171,7 @@ public class RecipeManager implements Reloadable {
 		WorkbenchIngredient input2 = getWorkbenchIngredient(section.getString("input2"));
 		SmithingRecipe recipe = new SmithingRecipe(getRecipeKey(type, id, "smithing", number), MMOItems.plugin.getItem(type, id), input1.toBukkit(),
 				input2.toBukkit());
-		loadedRecipes.add(recipe);
+		loadedLegacyRecipes.add(recipe);
 	}
 
 	/**
@@ -139,45 +182,84 @@ public class RecipeManager implements Reloadable {
 	 * @param list      The list of items (3 lines or 3 ingredients, separated
 	 *                  by spaces)
 	 * @param shapeless If the recipe is shapeless or not
-	 * @param number    Every item can have multiple recipe, there's one number
+	 * @param recipeID  Every item can have multiple recipe, there's one number
 	 *                  per recipe to differenciate them
 	 */
-	public void registerRecipe(Type type, String id, List<String> list, boolean shapeless, String number) {
+	public void registerRecipe(@NotNull Type type, @NotNull String id, @NotNull List<String> list, boolean shapeless, @Nullable String recipeID) throws IllegalArgumentException {
+
+		/*
+		 * The output of the recipe will be the MMOItem of this Type and ID which
+		 * is guaranteed to be loaded.
+		 *
+		 * The input is defined in the list in the following formats:
+		 *
+		 * SHAPELESS:
+		 *  + A list of 9 entries, which can be in any order
+		 *  + Each entry is one item, may be vanilla, MMOItem, or UIFilter.
+		 *
+		 * SHAPED
+		 *  + A list of 3 entries, which are in order.
+		 *  + Each entry is 3 items, separated by spaces, except if UIFilters are used,
+		 *    which can cause more than 3 items to be apparent.
+		 *    * Logic to parse UIFilters is included.
+		 *  + They indicate the rows of the crafting table.
+		 */
+
+		MythicRecipeBlueprint blueprint;
+		if (shapeless) {
+
+			// Generate with no shape
+			blueprint = CustomRecipe.generateShapeless(type, id, list);
+		} else {
+
+			// Generate shaped
+			blueprint = CustomRecipe.generateShaped(type, id, list);
+		}
+
+		// Remember it
+		customRecipes.add(blueprint);
+
+		// Enable it
+		blueprint.deploy(MythicRecipeStation.WORKBENCH);
+
+		/*
 		CustomRecipe recipe = new CustomRecipe(type, id, list, shapeless);
 
 		if (amounts)
 			registerRecipeAsCustom(recipe);
-		else
+		  else
 			registerRecipeAsBukkit(recipe, number);
+	    */
 	}
 
 	public void registerRecipeAsCustom(CustomRecipe recipe) {
 		if (!recipe.isEmpty())
-			craftingRecipes.add(recipe);
+			legacyCraftingRecipes.add(recipe);
 	}
 
 	public void registerRecipeAsBukkit(CustomRecipe recipe, String number) {
 		NamespacedKey key = getRecipeKey(recipe.getType(), recipe.getId(), recipe.isShapeless() ? "shapeless" : "shaped", number);
 		if (!recipe.isEmpty())
-			loadedRecipes.add(recipe.asBukkit(key));
+			loadedLegacyRecipes.add(recipe.asBukkit(key));
 	}
 
-	public Set<Recipe> getLoadedRecipes() {
-		return loadedRecipes;
+	public Set<Recipe> getLoadedLegacyRecipes() {
+		return loadedLegacyRecipes;
 	}
 
-	public Set<CustomRecipe> getCustomRecipes() {
-		return craftingRecipes;
+	public Set<CustomRecipe> getLegacyCustomRecipes() {
+		return legacyCraftingRecipes;
 	}
+	public HashSet<MythicRecipeBlueprint> getCustomRecipes() { return customRecipes; }
 
 	public Set<NamespacedKey> getNamespacedKeys() {
-		return loadedRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).collect(Collectors.toSet());
+		return loadedLegacyRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).collect(Collectors.toSet());
 	}
 
 	public void sortRecipes() {
-		List<CustomRecipe> temporary = new ArrayList<>(craftingRecipes);
-		craftingRecipes.clear();
-		craftingRecipes.addAll(temporary.stream().sorted().collect(Collectors.toList()));
+		List<CustomRecipe> temporary = new ArrayList<>(legacyCraftingRecipes);
+		legacyCraftingRecipes.clear();
+		legacyCraftingRecipes.addAll(temporary.stream().sorted().collect(Collectors.toList()));
 	}
 
 	public NamespacedKey getRecipeKey(Type type, String id, String recipeType, String number) {
@@ -185,42 +267,57 @@ public class RecipeManager implements Reloadable {
 	}
 
 	/**
-	 * Unregisters bukkit recipes and loads everything again
+	 * Unregisters bukkit and MythicLib recipes and loads everything again.
 	 */
 	public void reload() {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-			for (NamespacedKey recipe : getNamespacedKeys())
-				Bukkit.removeRecipe(recipe);
-			loadedRecipes.clear();
+
+			// Remove all recipes
+			for (NamespacedKey recipe : getNamespacedKeys()) { Bukkit.removeRecipe(recipe); }
+
+			// Clear loaded recipes
+			loadedLegacyRecipes.clear();
+
+			// Disable and forget all blueprints
+			for (MythicRecipeBlueprint b : customRecipes) { b.disable(); }
+			customRecipes.clear();
+
+			// Load all recipes
 			loadRecipes();
-			if (book)
-				for (Player player : Bukkit.getOnlinePlayers())
-					refreshRecipeBook(player);
+
+			// Refresh the book I suppose
+			if (book) { for (Player player : Bukkit.getOnlinePlayers()) { refreshRecipeBook(player); } }
+
 		});
 	}
 
 	public void refreshRecipeBook(Player player) {
+
+		// Book disabled?
 		if (!book) {
-			for (NamespacedKey key : player.getDiscoveredRecipes())
-				if (key.getNamespace().equals("mmoitems"))
-					player.undiscoverRecipe(key);
+
+			// Hide all recipes
+			for (NamespacedKey key : player.getDiscoveredRecipes()) { if (key.getNamespace().equals("mmoitems")) { player.undiscoverRecipe(key); } }
+
+			// Done woah
 			return;
 		}
+
 
 		if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
-			for (NamespacedKey key : player.getDiscoveredRecipes())
-				if (key.getNamespace().equals("mmoitems") && !getNamespacedKeys().contains(key))
-					player.undiscoverRecipe(key);
 
-			for (NamespacedKey recipe : getNamespacedKeys())
-				if (!player.hasDiscoveredRecipe(recipe))
-					player.discoverRecipe(recipe);
+			// Undiscovers the recipes apparently
+			for (NamespacedKey key : player.getDiscoveredRecipes()) { if (key.getNamespace().equals("mmoitems") && !getNamespacedKeys().contains(key)) { player.undiscoverRecipe(key); } }
 
+			// And discovers them again, sweet!
+			for (NamespacedKey recipe : getNamespacedKeys()) { if (!player.hasDiscoveredRecipe(recipe)) { player.discoverRecipe(recipe); } }
+
+			// Done woah
 			return;
 		}
 
-		for (NamespacedKey recipe : getNamespacedKeys())
-			player.discoverRecipe(recipe);
+		// Discovers all recipes
+		for (NamespacedKey recipe : getNamespacedKeys()) { player.discoverRecipe(recipe); }
 	}
 
 	public WorkbenchIngredient getWorkbenchIngredient(String input) {

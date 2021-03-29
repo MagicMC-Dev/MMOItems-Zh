@@ -52,7 +52,7 @@ public class VolatileMMOItem extends ReadMMOItem {
 				if (hisTag != null) {
 
 					// Aye
-					StatHistory<StatData> hist =  StatHistory.fromNBTString(this, (String) hisTag.getValue());
+					StatHistory hist =  StatHistory.fromNBTString(this, (String) hisTag.getValue());
 					if (hist != null) { this.setStatHistory(stat, hist); }
 				}
 

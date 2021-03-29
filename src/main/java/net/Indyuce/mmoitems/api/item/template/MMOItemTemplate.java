@@ -3,13 +3,16 @@ package net.Indyuce.mmoitems.api.item.template;
 import io.lumine.mythic.lib.api.util.PostLoadObject;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
@@ -17,7 +20,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.logging.Level;
 
 public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	private final Type type;
@@ -64,8 +66,8 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	@Override
 	protected void whenPostLoaded(ConfigurationSection config) {
 
-		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FriendlyFeedbackPalette_MMOItems.get());
-		ffp.ActivatePrefix(true, getType().toString() + " " + getId());
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+		ffp.activatePrefix(true, getType().toString() + " " + getId());
 
 		if (config.contains("option"))
 			for (TemplateOption option : TemplateOption.values())
@@ -81,14 +83,14 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Could not load modifier '$f{0}$b': {1}", key, exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load modifier '$f{0}$b': {1}", key, exception.getMessage());
 				}
 
-		Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(),"Could not find base item data"));
+		Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Could not find base item data"));
 		for (String key : config.getConfigurationSection("base").getKeys(false))
 			try {
 				String id = key.toUpperCase().replace("-", "_");
-				Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(),"Could not find stat with ID '$i{0}$b'", id));
+				Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Could not find stat with ID '$i{0}$b'", id));
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				RandomStatData data = stat.whenInitialized(config.get("base." + key));
@@ -98,11 +100,11 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 			} catch (IllegalArgumentException exception) {
 
 				// Log
-				ffp.Log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
+				ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
 			}
 
 		// Print all failures
-		ffp.SendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
+		ffp.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
 	}
 
 	public Map<ItemStat, RandomStatData> getBaseItemData() {
@@ -185,5 +187,29 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		 * level 0
 		 */
 		LEVEL_ITEM
+	}
+
+	/**
+	 * @return Attempts to get the crafted amount registered in the Stat.
+	 * 		   <p></p>
+	 * 		   Default is <b>1</b> obviously.
+	 *
+	 * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
+	 */
+	@Deprecated
+	public int getCraftedAmount() {
+
+		// Attempt to find	|
+		NumericStatFormula ofAmount = (NumericStatFormula) base.get(ItemStats.CRAFT_AMOUNT);
+
+		// Found?
+		if (ofAmount != null) {
+
+			// Well what does it read
+			return SilentNumbers.ceil(ofAmount.calculate(0));
+		}
+
+		// No
+		return 0;
 	}
 }

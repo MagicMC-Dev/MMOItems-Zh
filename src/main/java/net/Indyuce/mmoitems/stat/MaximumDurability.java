@@ -1,17 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,8 +19,6 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import org.bukkit.entity.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

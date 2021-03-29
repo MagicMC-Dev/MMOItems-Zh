@@ -101,6 +101,7 @@ public class ItemStats {
 			DURABILITY = new ItemDamage(),
 			CUSTOM_MODEL_DATA = new CustomModelData(),
 			MAX_DURABILITY = new MaximumDurability(),
+			DURABILITY_BAR = new DurabilityBar(),
 			WILL_BREAK = new LostWhenBroken(),
 			DURABILITY_BAR = new DurabilityBar(),
 			NAME = new DisplayName(),

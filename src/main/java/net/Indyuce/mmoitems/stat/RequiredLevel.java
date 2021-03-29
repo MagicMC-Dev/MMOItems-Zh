@@ -110,13 +110,13 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 		return true;
 	}
 
-
+	/*
 	@NotNull
 	@Override
 	public StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level) {
 		//UPGRD//MMOItems. Log("\u00a7a  --> \u00a77Applying Enchants Upgrade");
 
-		// Must be DoubleData
+		// Must be RequiredLevelData
 		if (original instanceof RequiredLevelData && info instanceof DoubleUpgradeInfo) {
 
 			// Get value
@@ -158,7 +158,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 			}
 
 			// Update
-			originalLevel.setValue(SilentNumbers.Round(value - 0.5));
+			originalLevel.setValue(SilentNumbers.floor(value));
 
 			// Yes
 			return originalLevel;
@@ -166,7 +166,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
 		// Upgraded
 		return original;
-	}
+	}	///*/
 
 	@Override
 	public @NotNull StatData getClearStatData() {

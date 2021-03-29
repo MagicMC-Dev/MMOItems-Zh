@@ -10,7 +10,7 @@ import java.util.Set;
 import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.api.util.message.FriendlyFeedbackPalette_MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -49,7 +49,7 @@ public class Effects extends ItemStat {
 
 	@Override
 	public RandomStatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(),"Must specify a config section"));
+		Validate.isTrue(object instanceof ConfigurationSection, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Must specify a config section"));
 		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
 
@@ -76,10 +76,10 @@ public class Effects extends ItemStat {
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split("\\|");
-		Validate.isTrue(split.length > 1, FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get(),"Use this format: $e{Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}$b."));
+		Validate.isTrue(split.length > 1, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Use this format: $e{Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}$b."));
 
 		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_").replace(" ", "_").toUpperCase());
-		Validate.notNull(effect, split[0] + FriendlyFeedbackProvider.QuickForConsole(FriendlyFeedbackPalette_MMOItems.get()," is not a valid potion effect. All potion effects can be found here:$e https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"));
+		Validate.notNull(effect, split[0] + FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get()," is not a valid potion effect. All potion effects can be found here:$e https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"));
 
 		NumericStatFormula duration = new NumericStatFormula(split[1]);
 		NumericStatFormula amplifier = split.length > 2 ? new NumericStatFormula(split[2]) : new NumericStatFormula(1, 0, 0, 0);

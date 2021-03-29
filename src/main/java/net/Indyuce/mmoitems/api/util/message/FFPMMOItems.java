@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
  *   ' Presentation '
  */
 @SuppressWarnings("unused")
-public class FriendlyFeedbackPalette_MMOItems extends FriendlyFeedbackPalette {
+public class FFPMMOItems extends FriendlyFeedbackPalette {
 
     /*
      *   The instance of this palette :p
      */
-    FriendlyFeedbackPalette_MMOItems() {}
-    @NotNull static FriendlyFeedbackPalette_MMOItems instance = new FriendlyFeedbackPalette_MMOItems();
-    @NotNull public static FriendlyFeedbackPalette_MMOItems get() { return instance; }
+    FFPMMOItems() {}
+    @NotNull static FFPMMOItems instance = new FFPMMOItems();
+    @NotNull public static FFPMMOItems get() { return instance; }
 
     @NotNull @Override public String getBodyFormat() { return "§x§a§5§b§5§a§7"; }
     @NotNull @Override public String consoleBodyFormat() { return ChatColor.GRAY.toString(); }

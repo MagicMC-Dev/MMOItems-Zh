@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.interaction.util;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.event.item.CustomDurabilityDamage;
@@ -20,11 +19,12 @@ import java.util.Random;
 public class DurabilityItem {
 	private final NBTItem nbtItem;
 	private final Player player;
-	private int maxDurability, unbreakingLevel;
+	private final int maxDurability, unbreakingLevel;
+	private final boolean usingBar, unbreakable;
 
 	private int durability;
 
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	/**
 	 * Use to handle durability changes for MMOItems without using heavy MMOItem
@@ -34,7 +34,7 @@ public class DurabilityItem {
 	 * @param item   Item with durability
 	 */
 	public DurabilityItem(Player player, ItemStack item) {
-		this(player, MythicLib.plugin.getVersion().getWrapper().getNBTItem(item));
+		this(player, NBTItem.get(item));
 	}
 
 	/**
@@ -45,18 +45,18 @@ public class DurabilityItem {
 	 * @param item   Item with durability
 	 */
 	public DurabilityItem(Player player, NBTItem item) {
-
-
 		this.player = player;
 		this.nbtItem = item;
 
-
+		unbreakable = nbtItem.getBoolean("Unbreakable");
 		durability = nbtItem.getInteger("MMOITEMS_DURABILITY");
 		maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");
+		usingBar = nbtItem.getBoolean("MMOITEMS_DURABILITY_BAR");
 
 		unbreakingLevel = (nbtItem.getItem().getItemMeta() != null && nbtItem.getItem().getItemMeta().hasEnchant(Enchantment.DURABILITY)) ?
 						nbtItem.getItem().getItemMeta().getEnchantLevel(Enchantment.DURABILITY) :
 						0;
+
 	}
 
 	public Player getPlayer() {
@@ -69,6 +69,15 @@ public class DurabilityItem {
 
 	public int getDurability() {
 		return durability;
+	}
+
+	// if the green vanilla durability bar should show
+	public boolean isUsingBar() {
+		return usingBar;
+	}
+
+	public boolean isUnbreakable() {
+		return unbreakable;
 	}
 
 	public int getUnbreakingLevel() {
@@ -92,9 +101,9 @@ public class DurabilityItem {
 	}
 
 	public DurabilityItem addDurability(int gain) {
-		CustomDurabilityRepair evG = new CustomDurabilityRepair(this, gain);
-		Bukkit.getPluginManager().callEvent(evG);
-		if (evG.isCancelled()) { return this; }
+		CustomDurabilityRepair event = new CustomDurabilityRepair(this, gain);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled()) { return this; }
 
 		Validate.isTrue(gain > 0, "Durability gain must be greater than 0");
 		durability = Math.max(0, Math.min(durability + gain, maxDurability));
@@ -102,9 +111,9 @@ public class DurabilityItem {
 	}
 
 	public DurabilityItem decreaseDurability(int loss) {
-		CustomDurabilityDamage evG = new CustomDurabilityDamage(this, loss);
-		Bukkit.getPluginManager().callEvent(evG);
-		if (evG.isCancelled()) { return this; }
+		CustomDurabilityDamage event = new CustomDurabilityDamage(this, loss);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled()) { return this; }
 
 		/*
 		 * Calculate the chance of the item not losing any durability because of
@@ -112,22 +121,23 @@ public class DurabilityItem {
 		 * 1 chance out of (X + 1) to lose a durability point, that's 50% chance
 		 * -> 33% chance -> 25% chance -> 20% chance...
 		 */
-		if (getUnbreakingLevel() > 0 && random.nextInt(getUnbreakingLevel()) > 0)
-			return this;
+		if (!unbreakable) {
+			if (getUnbreakingLevel() > 0 && RANDOM.nextInt(getUnbreakingLevel()) > 0)
+				return this;
 
-		durability = Math.max(0, Math.min(durability - loss, maxDurability));
+			durability = Math.max(0, Math.min(durability - loss, maxDurability));
 
-		// When the item breaks
-		if (durability <= 0) {
-			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-			PlayerData.get(player).getInventory().scheduleUpdate();
+			// When the item breaks
+			if (durability <= 0) {
+				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+				PlayerData.get(player).getInventory().scheduleUpdate();
+			}
 		}
 
 		return this;
 	}
 
 	public ItemStack toItem() {
-
 		/*
 		 * Cross multiplication to display the current item durability on the
 		 * item durability bar. (1 - ratio) because minecraft works with item
@@ -138,9 +148,15 @@ public class DurabilityItem {
 		 * issues. Also makes sure the item can be mended using the vanilla
 		 * enchant.
 		 */
-		int damage = durability == maxDurability ? 0
-				: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
-		nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability), new ItemTag("Damage", damage));
+		if (!unbreakable) {
+			if (usingBar) {
+				int damage = (durability == maxDurability) ? 0
+						: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
+				nbtItem.addTag(new ItemTag("Damage", damage));
+			}
+
+			nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability));
+		}
 
 		return new DynamicLore(nbtItem).build();
 	}

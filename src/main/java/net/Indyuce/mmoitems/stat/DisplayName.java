@@ -41,15 +41,55 @@ public class DisplayName extends StringStat {
 
 			if (suffix != null) {
 
-				// Bake old indices for removal
+				// Crop lvl
+				int lvlOFFSET = suffix.indexOf("#lvl#");
+				String sB4 = suffix.substring(0, lvlOFFSET);
+				String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
+				String sB4_alt = sB4.replace("+", "-");
+				String aFt_alt = sB4.replace("+", "-");
+
+				// Remove it
+				if (format.contains(sB4)) {
+
+					// Get offsets
+					int sB4_offset = format.indexOf(sB4);
+					int aFt_offset = format.lastIndexOf(aFt);
+
+					// No after = to completion
+					if (aFt_offset < 0) { aFt_offset = format.length(); } else { aFt_offset += aFt.length(); }
+
+					// Remove that
+					String beforePrefix = format.substring(0, sB4_offset);
+					String afterPrefix = format.substring(aFt_offset);
+
+					// Replace
+					format = beforePrefix + afterPrefix; }
+
+				// Remove it
+				if (format.contains(sB4_alt)) {
+
+					// Get offsets
+					int sB4_offset = format.indexOf(sB4_alt);
+					int aFt_offset = format.lastIndexOf(aFt_alt);
+
+					// No after = to completion
+					if (aFt_offset < 0) { aFt_offset = format.length(); } else { aFt_offset += aFt_alt.length(); }
+
+					// Remove that
+					String beforePrefix = format.substring(0, sB4_offset);
+					String afterPrefix = format.substring(aFt_offset);
+
+					// Replace
+					format = beforePrefix + afterPrefix; }
+
+				/*/ Bake old indices for removal
 				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
 				if (upgradeLevel < 0) { upgradeLevel = -upgradeLevel; negativity = true; }
 				for (int i = upgradeLevel + 3; i >= 1; i--) {
 					if (negativity) {
 						oldSuffixii.add(levelPrefix(suffix, -i));
 					} else {
-						oldSuffixii.add(levelPrefix(suffix, i)); }}
-
+						oldSuffixii.add(levelPrefix(suffix, i)); } }
 				for (String str : oldSuffixii) {
 
 					//MMOItems.getConsole().sendMessage("Found " + str);
@@ -58,7 +98,7 @@ public class DisplayName extends StringStat {
 					format = format.replace(str, "");
 
 					//MMOItems.getConsole().sendMessage("Edited " + format);
-				}
+				} //*/
 
 				// Add a prefix anew if the upgrade level worked
 				if (upgradeLevel != 0) {

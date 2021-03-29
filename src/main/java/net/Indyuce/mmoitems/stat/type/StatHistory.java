@@ -208,7 +208,7 @@ public class StatHistory {
 
         // Unregister
         for (UUID ext : extraneous) {
-            //UPGRD//MMOItems.Log("\u00a76 ||\u00a77 Purged Stone: \u00a7e" + ext.toString());
+            //UPGRD//MMOItems.log("\u00a76 ||\u00a77 Purged Stone: \u00a7e" + ext.toString());
 
             // Remove
             perGemstoneData.remove(ext);
@@ -232,6 +232,8 @@ public class StatHistory {
      *                  what you're doing.
      */
     @NotNull public StatData recalculate(boolean withPurge) {
+        //UPGRD//MMOItems.log("\u00a7d|||\u00a77 Recalculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77, Purge? \u00a7e" + withPurge);
+
         if (withPurge) { purgeGemstones(); }
 
         // If its upgradeable and not level ZERO, it must apply upgrades
@@ -282,7 +284,7 @@ public class StatHistory {
      * <p>5: Sums external data (modifiers that are not linked to an ID, I suppose by external plugins).
      */
     private StatData recalculateUpgradeable() {
-        //UPGRD//MMOItems.Log("\u00a76|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Upgradeable");
+        //UPGRD//MMOItems.log("\u00a76|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Upgradeable");
 
         // Get Upgrade Info?
         UpgradeInfo inf = getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat());
@@ -361,7 +363,7 @@ public class StatHistory {
      * <p>4: Sums external data (modifiers that are not linked to an ID, I suppose by external plugins).
      */
     private StatData recalculateMergeable() {
-        //UPGRD//MMOItems.Log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Mergeable");
+        //UPGRD//MMOItems.log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Mergeable");
 
         // Just clone bro
         StatData ret =  ((Mergeable) getOriginalData()).cloneData();

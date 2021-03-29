@@ -195,9 +195,8 @@ public class MMOItemReforger {
 	public void reforge(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
-		if (!options.shouldKeepGemStones()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
-		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId());
-		ItemMeta meta = nbtItem.getItem().getItemMeta();
+		if (!options.shouldKeepGemStones() && !options.shouldKeepExternalSH()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
 
 		// Keep name
@@ -326,15 +325,22 @@ public class MMOItemReforger {
 		}
 
 		// Gather Gemstones
-		if (options.shouldKeepGemStones() && mmoItem.hasData(ItemStats.GEM_SOCKETS)) {
-			//UPDT//MMOItems.Log(" \u00a7a> \u00a77Keeping Gem Sockets");
+		if (options.shouldKeepGemStones() || options.shouldKeepExternalSH()) {
 
-			// Cache that gemstone data
-			cachedGemStones = (GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS);
+			// Got any gem sockets bro?
+			if (mmoItem.hasData(ItemStats.GEM_SOCKETS) && options.shouldKeepGemStones()) {
+
+				//UPDT//MMOItems.Log(" \u00a7a> \u00a77Keeping Gem Sockets");
+
+				// Cache that gemstone data
+				cachedGemStones = (GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS); }
 
 			// Store all the history of stat proceedings.
 			for (StatHistory hist : mmoItem.getStatHistories()) {
 				//UPDT//MMOItems.Log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
+
+				// Clear externals
+				if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
 
 				// Get and set
 				itemDataHistory.put(hist.getItemStat(), hist);
@@ -499,6 +505,7 @@ public class MMOItemReforger {
 	public boolean hasChanges() { return mmoItem != null; }
 
 	public ItemStack toStack() {
+		MMOItem buildingMMOItem = mmoItem.clone();
 
 		// For every cached stat (presumably due to its importance)
 		for (ItemStat stat : itemData.keySet()) {
@@ -512,7 +519,7 @@ public class MMOItemReforger {
 				//UPDT//MMOItems.Log(" \u00a72@\u00a78@ \u00a77Old stat \u00a7f" + stat.getNBTPath());
 
 				// Set, replace, begone the previous!
-				mmoItem.setData(stat, data);
+				buildingMMOItem.setData(stat, data);
 			}
 		}
 
@@ -526,13 +533,13 @@ public class MMOItemReforger {
 				//UPDT//MMOItems.Log(" \u00a72 *\u00a76* \u00a77Of old stat \u00a7f" + histOld.getItemStat().getNBTPath());
 
 				// Regenerate the original data
-				StatHistory hist = StatHistory.from(mmoItem, stat);
+				StatHistory hist = StatHistory.from(buildingMMOItem, stat);
 
 				// Remember...
 				hist.assimilate(histOld);
 
 				// Recalculate
-				mmoItem.setData(hist.getItemStat(), hist.recalculate(false));
+				buildingMMOItem.setData(hist.getItemStat(), hist.recalculate(false));
 			}
 		}
 
@@ -541,7 +548,7 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.Log(" \u00a7c@ \u00a77Applying Soulbind");
 
 			// Apply
-			mmoItem.setData(ItemStats.SOULBOUND, cachedSoulbound);
+			buildingMMOItem.setData(ItemStats.SOULBOUND, cachedSoulbound);
 		}
 
 		// Contained enchantments huh
@@ -551,7 +558,7 @@ public class MMOItemReforger {
 
 
 			// Register as extraneous obviously
-			StatHistory hist = StatHistory.from(mmoItem, ItemStats.ENCHANTS);
+			StatHistory hist = StatHistory.from(buildingMMOItem, ItemStats.ENCHANTS);
 			hist.registerExternalData(cachedEnchantments.cloneData());
 
 			//UPDT//MMOItems.Log(" \u00a7b:\u00a73:\u00a7: \u00a77Late Arcane Report: \u00a79-------------------------");
@@ -564,35 +571,39 @@ public class MMOItemReforger {
 			//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
 
 			// Recalculate and put
-			mmoItem.setData(ItemStats.ENCHANTS, hist.recalculate());
+			buildingMMOItem.setData(ItemStats.ENCHANTS, hist.recalculate());
 		}
 
 		// Upgrade Information
 		if (cachedUpgradeLevel != null) {
+
 			//UPDT//MMOItems.Log(" \u00a7e@ \u00a77Applying Upgrade");
 
 			// If has a upgrade template defined, just remember the level
-			if (mmoItem.hasData(ItemStats.UPGRADE)) {
+			if (buildingMMOItem.hasData(ItemStats.UPGRADE)) {
 				//UPDT//MMOItems.Log("  \u00a7e* \u00a77Existing Upgrade Detected");
 
 				// Get current ig
-				UpgradeData current = ((UpgradeData) mmoItem.getData(ItemStats.UPGRADE));
+				UpgradeData current = ((UpgradeData) buildingMMOItem.getData(ItemStats.UPGRADE));
+				UpgradeData processed = new UpgradeData(current.getReference(), current.getTemplateName(), current.isWorkbench(), current.isDestroy(), current.getMax(), current.getSuccess());
 
 				// Edit level
-				current.setLevel(Math.min(cachedUpgradeLevel.getLevel(), current.getMaxUpgrades()));
+				processed.setLevel(Math.min(cachedUpgradeLevel.getLevel(), current.getMaxUpgrades()));
 				//UPDT//MMOItems.Log("  \u00a7e + \u00a77Set to level \u00a7f" + current.getLevel());
 
 				// Re-set cuz why not
-				mmoItem.setData(ItemStats.UPGRADE, current);
+				buildingMMOItem.setData(ItemStats.UPGRADE, processed);
 
 			// Otherwise, the level AND template shall prevail
-			} else {
+			}
+
+			/*else {
 				//UPDT//MMOItems.Log("  \u00a7e* \u00a77Using Cached");
 
 				// Set from the cached
-				mmoItem.setData(ItemStats.UPGRADE, cachedUpgradeLevel);
+				buildingMMOItem.setData(ItemStats.UPGRADE, new UpgradeData(cachedUpgradeLevel.getReference(), cachedUpgradeLevel.getTemplateName(), cachedUpgradeLevel.isWorkbench(), cachedUpgradeLevel.isDestroy(), cachedUpgradeLevel.getMax(), cachedUpgradeLevel.getSuccess()));
 				//UPDT//MMOItems.Log("  \u00a7e + \u00a77Set to level \u00a7f" + cachedUpgradeLevel.getLevel());
-			}
+			} //*/
 		}
 
 		// Gem Stones
@@ -600,11 +611,11 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.Log(" \u00a7a@ \u00a77Applying Gemstones");
 
 			// If has a upgrade template defined, just remember the level
-			if (mmoItem.hasData(ItemStats.GEM_SOCKETS)) {
+			if (buildingMMOItem.hasData(ItemStats.GEM_SOCKETS)) {
 				//UPDT//MMOItems.Log("  \u00a7a* \u00a77Existing Data Detected");
 
 				// Get current ig
-				GemSocketsData current = ((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS));
+				GemSocketsData current = ((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
 
 				// Get those damn empty sockets
 				ArrayList<String> availableSockets = new ArrayList<>(current.getEmptySlots());
@@ -656,7 +667,7 @@ public class MMOItemReforger {
 			}
 
 			// Set the data, as changed as it may be
-			mmoItem.setData(ItemStats.GEM_SOCKETS, cachedGemStones);
+			buildingMMOItem.setData(ItemStats.GEM_SOCKETS, cachedGemStones);
 		}
 
 		// Lore
@@ -664,11 +675,11 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.Log(" \u00a7d@ \u00a77Applying Lore");
 
 			// If it has lore, add I guess
-			if (mmoItem.hasData(ItemStats.LORE)) {
+			if (buildingMMOItem.hasData(ItemStats.LORE)) {
 				//UPDT//MMOItems.Log("  \u00a7d* \u00a77Inserting first");
 
 				// Get current ig
-				StringListData current = ((StringListData) mmoItem.getData(ItemStats.LORE));
+				StringListData current = ((StringListData) buildingMMOItem.getData(ItemStats.LORE));
 
 				// Get those damn empty sockets
 				ArrayList<String> listYes = new ArrayList<>(current.getList());
@@ -682,7 +693,7 @@ public class MMOItemReforger {
 			//UPDT//for (String lr : cachedLore) { //UPDT//MMOItems.Log(" \u00a7d  + \u00a77" + lr); }
 
 			// Set that as the lore
-			mmoItem.setData(ItemStats.LORE, sData);
+			buildingMMOItem.setData(ItemStats.LORE, sData);
 		}
 
 		// Name
@@ -690,14 +701,14 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.Log(" \u00a73@ \u00a77Applying Name \u00a7f" + cachedName);
 
 			// Replace name completely
-			mmoItem.setData(ItemStats.NAME, new StringData(cachedName));
+			buildingMMOItem.setData(ItemStats.NAME, new StringData(cachedName));
 		}
 
 		// Apply upgrades
-		if (mmoItem.hasUpgradeTemplate()) { mmoItem.getUpgradeTemplate().upgradeTo(mmoItem, mmoItem.getUpgradeLevel()); }
+		if (buildingMMOItem.hasUpgradeTemplate()) { buildingMMOItem.getUpgradeTemplate().upgradeTo(buildingMMOItem, buildingMMOItem.getUpgradeLevel()); }
 
 		// Build and set amount
-		ItemStack stack = mmoItem.newBuilder().build();
+		ItemStack stack = buildingMMOItem.newBuilder().build();
 		stack.setAmount(amount);
 		return stack;
 	}

@@ -9,7 +9,8 @@ public class ReforgeOptions {
 			keepEnchantments,
 			keepUpgrades,
 			keepGemStones,
-			keepSoulbind;
+			keepSoulbind,
+			keepExternalSH;
 
 	public ReforgeOptions(ConfigurationSection config) {
 		this.keepName = config.getBoolean("display-name");
@@ -18,6 +19,7 @@ public class ReforgeOptions {
 		this.keepUpgrades = config.getBoolean("upgrades");
 		this.keepGemStones = config.getBoolean("gemstones");
 		this.keepSoulbind = config.getBoolean("soulbound");
+		this.keepExternalSH = config.getBoolean("external-sh", true);
 	}
 
 	/**
@@ -41,6 +43,13 @@ public class ReforgeOptions {
 	 */
 	public boolean shouldKeepEnchantments() {
 		return keepEnchantments;
+	}
+
+	/**
+	 * Keep 'extraneous' data registered onto the Stat History
+	 */
+	public boolean shouldKeepExternalSH() {
+		return keepExternalSH;
 	}
 
 	/**

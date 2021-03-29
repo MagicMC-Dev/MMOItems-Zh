@@ -39,6 +39,7 @@ public class RevisionInventory extends EditionInventory {
     static ItemStack upgrades;
     static ItemStack gemstones;
     static ItemStack soulbind;
+    static ItemStack external;
 
     static ItemStack revisionID;
 
@@ -63,7 +64,7 @@ public class RevisionInventory extends EditionInventory {
                     , 40, "\u00a77")).build();
 
             upgrades = ItemFactory.of(Material.NETHER_STAR).name("\u00a7aUpgrades").lore(SilentNumbers.chop(
-                    "Will this item retain the upgrade level after updating?"
+                    "Will this item retain the upgrade level after updating? Only the Upgrade Level is kept (as long as it does not exceed the new max)."
                     , 40, "\u00a77")).build();
 
             gemstones = ItemFactory.of(Material.EMERALD).name("\u00a7eGem Stones").lore(SilentNumbers.chop(
@@ -72,6 +73,10 @@ public class RevisionInventory extends EditionInventory {
 
             soulbind = ItemFactory.of(Material.ENDER_EYE).name("\u00a7cSoulbind").lore(SilentNumbers.chop(
                     "If the old item is soulbound, updating will transfer the soulbind to the new item."
+                    , 40, "\u00a77")).build();
+
+            external = ItemFactory.of(Material.SPRUCE_SIGN).name("\u00a79External SH").lore(SilentNumbers.chop(
+                    "Data registered onto the item's StatHistory by external plugins (like GemStones but not removable)"
                     , 40, "\u00a77")).build();
 
 
@@ -104,6 +109,10 @@ public class RevisionInventory extends EditionInventory {
                 case 21:
                     which = enchantments.clone();
                     enable = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepEnchantments();
+                    break;
+                case 22:
+                    which = external.clone();
+                    enable = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepExternalSH();
                     break;
                 case 28:
                     which = upgrades.clone();

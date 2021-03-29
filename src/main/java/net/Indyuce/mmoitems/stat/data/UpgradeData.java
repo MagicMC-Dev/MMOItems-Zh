@@ -7,9 +7,11 @@ import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,19 +24,46 @@ import org.jetbrains.annotations.Nullable;
  * </p> • May it get destroyed if unsucessful upgrade?
  */
 public class UpgradeData implements StatData, RandomStatData {
+
+	/**
+	 * @return The String a consumable must match to Upgrade this Item
+	 */
+	@Nullable public String getReference() { return reference; }
+
+	/**
+	 * @return If upgrades must be done through workbench
+	 */
+	public boolean isWorkbench() {
+		return workbench;
+	}
+
+	/**
+	 * @return Will this destroy the item if they fail?
+	 */
+	public boolean isDestroy() {
+		return destroy;
+	}
+
+	/**
+	 * @return Max amount of upgrades this can hold
+	 */
+	public int getMax() {
+		return max;
+	}
+
 	@Nullable private final String reference, template;
 	private final boolean workbench, destroy;
 	private final double success;
 	private final int max;
 	private int level;
 
-	public UpgradeData(@Nullable String referenc, @Nullable String templat, boolean workbenc, boolean destro, int maxx, double succes) {
-		reference = referenc;
-		template = templat;
-		workbench = workbenc;
-		destroy = destro;
-		max = maxx;
-		success = succes;
+	public UpgradeData(@Nullable String reference, @Nullable String template, boolean workbench, boolean destroy, int max, double success) {
+		this.reference = reference;
+		this.template = template;
+		this.workbench = workbench;
+		this.destroy = destroy;
+		this.max = max;
+		this.success = success;
 	}
 
 	public UpgradeData(ConfigurationSection section) {
@@ -60,8 +89,11 @@ public class UpgradeData implements StatData, RandomStatData {
 	 * @return The template associated to this data, if it is loaded.
 	 */
 	@Nullable public UpgradeTemplate getTemplate() {
+		if (template == null) { return null; }
 		return MMOItems.plugin.getUpgrades().getTemplate(template);
 	}
+
+	@Nullable public String getTemplateName() {return template; }
 
 	public int getLevel() { return level; }
 

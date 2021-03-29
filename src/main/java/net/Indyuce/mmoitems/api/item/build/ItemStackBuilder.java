@@ -114,9 +114,6 @@ public class ItemStackBuilder {
 
 				//GEM//MMOItems.Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
 
-				// Make necessary lore changes
-				stat.whenApplied(this, builtMMOItem.getData(stat));
-
 				// Does the item have any stat history regarding thay?
 				StatHistory s = builtMMOItem.getStatHistory(stat);
 
@@ -127,7 +124,13 @@ public class ItemStackBuilder {
 
 					// Add to NBT
 					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));
+
+					// Recalculate
+					builtMMOItem.setData(stat, s.recalculate(true));
 				}
+
+				// Make necessary lore changes
+				stat.whenApplied(this, builtMMOItem.getData(stat));
 
 			// Something went wrong...
 			} catch (IllegalArgumentException|NullPointerException exception) {

@@ -199,16 +199,14 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	@Deprecated
 	public int getCraftedAmount() {
 
-		// Attempt to find
+		// Attempt to find	|
 		NumericStatFormula ofAmount = (NumericStatFormula) base.get(ItemStats.CRAFT_AMOUNT);
 
 		// Found?
 		if (ofAmount != null) {
 
-			int s = SilentNumbers.ceil(ofAmount.calculate(0));
-
 			// Well what does it read
-			return s;
+			return SilentNumbers.ceil(ofAmount.calculate(0));
 		}
 
 		// No

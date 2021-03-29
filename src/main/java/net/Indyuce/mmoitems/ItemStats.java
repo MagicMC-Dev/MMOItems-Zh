@@ -21,6 +21,7 @@ import net.Indyuce.mmoitems.stat.CustomSounds;
 import net.Indyuce.mmoitems.stat.DisableAdvancedEnchantments;
 import net.Indyuce.mmoitems.stat.DisableDeathDrop;
 import net.Indyuce.mmoitems.stat.DisplayName;
+import net.Indyuce.mmoitems.stat.DurabilityBar;
 import net.Indyuce.mmoitems.stat.DyeColor;
 import net.Indyuce.mmoitems.stat.Effects;
 import net.Indyuce.mmoitems.stat.Elements;
@@ -100,6 +101,7 @@ public class ItemStats {
 			DURABILITY = new ItemDamage(),
 			CUSTOM_MODEL_DATA = new CustomModelData(),
 			MAX_DURABILITY = new MaximumDurability(),
+			DURABILITY_BAR = new DurabilityBar(),
 			WILL_BREAK = new LostWhenBroken(),
 			NAME = new DisplayName(),
 			LORE = new Lore(),

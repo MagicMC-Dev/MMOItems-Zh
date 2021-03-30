@@ -16,11 +16,11 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.recipe.CustomSmithingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.UpgradeCombinationType;
+import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.recipe.MMOItemUIFilter;
+import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
@@ -350,12 +350,13 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	 * @return A baked recipe, ready to deploy.
 	 * @throws IllegalArgumentException If the recipe is in incorrect format
 	 */
-	@NotNull public static MythicRecipeBlueprint generateSmithing(@NotNull Type type, @NotNull String id, @NotNull String item, @NotNull String ingot, boolean dropGems, @NotNull String upgradeBehaviour) throws IllegalArgumentException {
+	@NotNull public static MythicRecipeBlueprint generateSmithing(@NotNull Type type, @NotNull String id, @NotNull String item, @NotNull String ingot, boolean dropGems, @NotNull String enchantmentBehaviour, @NotNull String upgradeBehaviour) throws IllegalArgumentException {
 
 		// Get it
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, id);
 		Validate.isTrue(template != null, "Unexpected Error Occurred: Template does not exist.");
-		UpgradeCombinationType upgradeEffect = UpgradeCombinationType.valueOf(upgradeBehaviour.toUpperCase());
+		SmithingCombinationType upgradeEffect = SmithingCombinationType.valueOf(upgradeBehaviour.toUpperCase());
+		SmithingCombinationType enchantEffect = SmithingCombinationType.valueOf(enchantmentBehaviour.toUpperCase());
 
 		// Identify the Provided UIFilters
 		ArrayList<ShapedIngredient> poofs = new ArrayList<>();
@@ -382,7 +383,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		ShapelessRecipe inputIngot = new ShapelessRecipe(recipeName, ingotIngredient);
 
 		// Create Output
-		MythicRecipeOutput outputRecipe = new CustomSmithingRecipe(template, dropGems, upgradeEffect);
+		MythicRecipeOutput outputRecipe = new CustomSmithingRecipe(template, dropGems, enchantEffect, upgradeEffect);
 
 		MythicRecipeBlueprint recipe = new MythicRecipeBlueprint(inputItem, outputRecipe);
 		recipe.addSideCheck("ingot", inputIngot);

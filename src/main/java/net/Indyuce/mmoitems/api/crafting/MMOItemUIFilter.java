@@ -1,6 +1,5 @@
-package net.Indyuce.mmoitems.api.recipe;
+package net.Indyuce.mmoitems.api.crafting;
 
-import io.lumine.mythic.lib.api.crafting.uifilters.EnchantmentUIFilter;
 import io.lumine.mythic.lib.api.crafting.uifilters.UIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -9,7 +8,6 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

@@ -7,6 +7,7 @@ import com.codisimus.plugins.phatloots.events.PlayerLootEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import org.bukkit.event.EventHandler;
@@ -49,6 +50,9 @@ public class PhatLootsHook implements Listener {
             if (!loot.hasType()) {
                 //UPD//MMOItems.log("\u00a71*\u00a78 Vanilla");
                 continue; }
+
+            // The MMOItem does not exist anymore (must have been deleted after being added
+            if (MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getType(loot), MMOItems.plugin.getID(loot)) == null) { continue; }
 
             // All right update the bitch
             MMOItemReforger mod = new MMOItemReforger(loot);

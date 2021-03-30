@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.api.crafting.recipe.UpgradeCombinationType;
+import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -28,7 +27,6 @@ import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmokingRecipe;
 
 import net.Indyuce.mmoitems.ItemStats;
@@ -173,11 +171,13 @@ public class RecipeManager implements Reloadable {
 		String ingot = section.getString("input2");
 		boolean dropGems = section.getBoolean("drop-gems", false);
 		String upgrade = section.getString("upgrades" );
+		String enchants = section.getString("enchantments" );
 		if (item == null) { item = ""; }
 		if (ingot == null) { ingot = ""; }
-		if (upgrade == null) { upgrade = UpgradeCombinationType.MAXIMUM.toString(); }
+		if (upgrade == null) { upgrade = SmithingCombinationType.MAXIMUM.toString(); }
+		if (enchants == null) { enchants = SmithingCombinationType.MAXIMUM.toString(); }
 
-		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, upgrade);
+		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade);
 
 		// Remember it
 		customRecipes.add(blueprint);

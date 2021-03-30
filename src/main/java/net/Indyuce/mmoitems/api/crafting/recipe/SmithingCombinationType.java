@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
-public enum UpgradeCombinationType {
+public enum SmithingCombinationType {
 
     /**
      * Adds the upgrade levels of both items

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.recipe;
+package net.Indyuce.mmoitems.api.crafting;
 
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterCountermatch;

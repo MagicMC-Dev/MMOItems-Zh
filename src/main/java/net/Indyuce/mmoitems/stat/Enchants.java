@@ -111,9 +111,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
-		return new EnchantListData();
-	}
+	public StatData getClearStatData() { return new EnchantListData(); }
 
 	@Override
 	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {

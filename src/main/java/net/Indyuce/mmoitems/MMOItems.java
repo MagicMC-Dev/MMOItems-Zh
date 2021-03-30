@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
@@ -9,7 +12,7 @@ import net.Indyuce.mmoitems.api.*;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.recipe.MMOItemUIFilter;
+import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
@@ -46,7 +49,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -686,6 +688,20 @@ public class MMOItems extends LuminePlugin {
 
 		// Build if found
 		return m.newBuilder().build();
+	}
+
+	@Nullable public Type getType(@Nullable NBTItem nbtitem) {
+		if (nbtitem == null || !nbtitem.hasType()) { return null; }
+
+		// Try that one instead
+		return getType(nbtitem.getType());
+	}
+	@Nullable public String getID(@Nullable NBTItem nbtitem) {
+		if (nbtitem == null || !nbtitem.hasType()) { return null; }
+
+		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtitem, SupportedNBTTagValues.STRING);
+		if (type == null) { return null; }
+		return (String) type.getValue();
 	}
 
 	/**

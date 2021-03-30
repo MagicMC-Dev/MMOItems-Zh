@@ -14,9 +14,12 @@ import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -40,11 +43,13 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
     /**
      * @param outputItem The MMOItem that results from the completion of these recipes.
      * @param dropGemstones Should extra gemstones be dropped? (Otherwise lost)
+     * @param enchantmentTreatment Should enchantments be destroyed?
      * @param upgradeTreatment How will upgrades combine?
      */
-    public CustomSmithingRecipe(@NotNull MMOItemTemplate outputItem, boolean dropGemstones, @NotNull UpgradeCombinationType upgradeTreatment) {
+    public CustomSmithingRecipe(@NotNull MMOItemTemplate outputItem, boolean dropGemstones, @NotNull SmithingCombinationType enchantmentTreatment, @NotNull SmithingCombinationType upgradeTreatment) {
         this.outputItem = outputItem;
         this.dropGemstones = dropGemstones;
+        this.enchantmentTreatment = enchantmentTreatment;
         this.upgradeTreatment = upgradeTreatment; }
 
 
@@ -61,6 +66,14 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
      * Will the extra gemstones be dropped to the ground?
      */
     final boolean dropGemstones;
+    /**
+     * Will the enchantments be...??
+     */
+    @NotNull final SmithingCombinationType enchantmentTreatment;
+    /**
+     * Will the enchantments be...??
+     */
+    @NotNull public SmithingCombinationType getEnchantmentTreatment() { return enchantmentTreatment; }
 
     /**
      * @return Will the extra gemstones be dropped to the ground?
@@ -71,11 +84,11 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
      * @return How to treat upgrade level combinations?
      */
     @NotNull
-    public UpgradeCombinationType getUpgradeTreatment() { return upgradeTreatment; }
+    public SmithingCombinationType getUpgradeTreatment() { return upgradeTreatment; }
     /**
      * How to treat upgrade level combinations?
      */
-    @NotNull final UpgradeCombinationType upgradeTreatment;
+    @NotNull final SmithingCombinationType upgradeTreatment;
 
     /**
      * Is this a MMOItem? Well fetch
@@ -367,8 +380,34 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         // Set value
         Ref.setValue(rem, remainingStones);
 
+        // Enchantments?
+        if (!getEnchantmentTreatment().equals(SmithingCombinationType.NONE)) {
+
+            // Get enchantment data
+            EnchantListData genEnchants = (EnchantListData) gen.getData(ItemStats.ENCHANTS);
+            EnchantListData itemEnchants = item != null ? (EnchantListData) item.getData(ItemStats.ENCHANTS) : (EnchantListData) ItemStats.ENCHANTS.getClearStatData();
+            EnchantListData ingotEnchants = ingot != null ? (EnchantListData) ingot.getData(ItemStats.ENCHANTS) : (EnchantListData) ItemStats.ENCHANTS.getClearStatData();
+
+            // For every enchant
+            for (Enchantment observedEnchantment : Enchantment.values()) {
+
+                int genLevel = genEnchants.getLevel(observedEnchantment);
+                int itemLevel = itemEnchants.getLevel(observedEnchantment);
+                int ingotLevel = ingotEnchants.getLevel(observedEnchantment);
+                int finalLevel;
+
+                switch (getEnchantmentTreatment()) {
+                    case ADDITIVE: finalLevel = itemLevel + ingotLevel + genLevel; break;
+                    case MAXIMUM: if (genLevel == 0) { genLevel = itemLevel; } finalLevel = Math.max(genLevel, Math.max(itemLevel, ingotLevel)); break;
+                    case MINIMUM: if (genLevel == 0) { genLevel = itemLevel; } finalLevel = Math.max(genLevel, Math.min(itemLevel, ingotLevel)); break;
+                    default:  if (genLevel == 0) { finalLevel = SilentNumbers.ceil((itemLevel + ingotLevel) / 2D); } else { finalLevel = SilentNumbers.ceil((itemLevel + ingotLevel + genLevel) / 3D); }  break; }
+
+                genEnchants.addEnchant(observedEnchantment, finalLevel);
+            }
+        }
+
         // All right whats the level stuff up now
-        if (gen.hasUpgradeTemplate() && !(getUpgradeTreatment().equals(UpgradeCombinationType.NONE))) {
+        if (gen.hasUpgradeTemplate() && !(getUpgradeTreatment().equals(SmithingCombinationType.NONE))) {
 
             // All right get the levels of them both
             int itemLevel = 0; if (item != null) { itemLevel = item.getUpgradeLevel(); }
@@ -379,8 +418,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
                 case ADDITIVE: finalLevel = itemLevel + ingotLevel; break;
                 case MAXIMUM: finalLevel = Math.max(itemLevel, ingotLevel); break;
                 case MINIMUM: finalLevel = Math.min(itemLevel, ingotLevel); break;
-                default: finalLevel = SilentNumbers.ceil((itemLevel + ingotLevel) / 2D); break;
-            }
+                default: finalLevel = SilentNumbers.ceil((itemLevel + ingotLevel) / 2D); break; }
 
             // Upgrade yes
             gen.getUpgradeTemplate().upgradeTo(gen, Math.min(finalLevel, gen.getMaxUpgradeLevel())); }

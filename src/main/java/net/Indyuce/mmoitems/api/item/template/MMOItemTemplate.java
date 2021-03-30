@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -150,7 +151,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 *                matter when rolling for the 'item level'
 	 * @return        Item builder with random level and tier?
 	 */
-	public MMOItemBuilder newBuilder(RPGPlayer player) {
+	public MMOItemBuilder newBuilder(@NotNull RPGPlayer player) {
 		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
 		ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
 		return new MMOItemBuilder(this, itemLevel, itemTier);

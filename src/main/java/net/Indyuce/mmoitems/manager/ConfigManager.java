@@ -43,7 +43,7 @@ public class ConfigManager implements Reloadable {
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
 	public NumericStatFormula defaultItemCapacity;
-	public ReforgeOptions revisionOptions;
+	public ReforgeOptions revisionOptions, phatLootsOptions;
 
 	/** DE-TAREAS: Implement reward system for good users? */
 	@SuppressWarnings("unused")
@@ -205,8 +205,11 @@ public class ConfigManager implements Reloadable {
 		abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
 		healIndicatorFormat = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
 		damageIndicatorFormat = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));
-		healIndicatorDecimalFormat = new DecimalFormat(MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format"));
-		damageIndicatorDecimalFormat = new DecimalFormat(MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format"));
+
+		String healDecimal = MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format");
+		String harmDecimal = MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format");
+		healIndicatorDecimalFormat = healDecimal != null ? new DecimalFormat(healDecimal) : new DecimalFormat("0.#");
+		damageIndicatorDecimalFormat = harmDecimal != null ? new DecimalFormat(harmDecimal) : new DecimalFormat("0.#");
 		abilitySplitter = getStatFormat("ability-splitter");
 		dodgeKnockbackForce = MMOItems.plugin.getConfig().getDouble("mitigation.dodge.knockback.force");
 		dodgeKnockbackEnabled = MMOItems.plugin.getConfig().getBoolean("mitigation.dodge.knockback.enabled");
@@ -217,7 +220,10 @@ public class ConfigManager implements Reloadable {
 		rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
 		levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
 
-		revisionOptions = new ReforgeOptions(MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data"));
+		ConfigurationSection keepData = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data");
+		ConfigurationSection phatLoots = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
+		revisionOptions = keepData != null ? new ReforgeOptions(keepData) : new ReforgeOptions(false, false, false, false, false, false, false, true);
+		phatLootsOptions = phatLoots != null ? new ReforgeOptions(phatLoots) : new ReforgeOptions(false, false, false, false, false, false, false, true);
 
 		try {
 			defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));

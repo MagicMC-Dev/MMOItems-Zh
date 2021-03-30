@@ -1,16 +1,23 @@
 package net.Indyuce.mmoitems.api;
 
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ReforgeOptions {
 	private final boolean
-			keepName,
-			keepLore,
-			keepEnchantments,
-			keepUpgrades,
-			keepGemStones,
-			keepSoulbind,
-			keepExternalSH;
+			keepName;
+	private final boolean keepLore;
+	private final boolean keepEnchantments;
+	private final boolean keepUpgrades;
+	private final boolean keepGemStones;
+	private final boolean keepSoulbind;
+	private final boolean keepExternalSH;
+
+	public boolean isRegenerate() {
+		return regenerate;
+	}
+
+	private final boolean regenerate;
 
 	public ReforgeOptions(ConfigurationSection config) {
 		this.keepName = config.getBoolean("display-name");
@@ -20,6 +27,18 @@ public class ReforgeOptions {
 		this.keepGemStones = config.getBoolean("gemstones");
 		this.keepSoulbind = config.getBoolean("soulbound");
 		this.keepExternalSH = config.getBoolean("external-sh", true);
+		this.regenerate = false;
+	}
+
+	public ReforgeOptions(boolean keepName, boolean keepLore, boolean keepEnchantments, boolean keepUpgrades, boolean keepGemStones, boolean keepSoulbind, boolean keepExternalSH, boolean regenerate) {
+		this.keepName = keepName;
+		this.keepLore = keepLore;
+		this.keepEnchantments = keepEnchantments;
+		this.keepUpgrades = keepUpgrades;
+		this.keepGemStones = keepGemStones;
+		this.keepSoulbind = keepSoulbind;
+		this.keepExternalSH = keepExternalSH;
+		this.regenerate = regenerate;
 	}
 
 	/**

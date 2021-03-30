@@ -191,6 +191,8 @@ public class MMOItems extends LuminePlugin {
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
+		if (Bukkit.getPluginManager().getPlugin("PhatLoots") != null) {
+			Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), this); }
 		MMOItemUIFilter.register();
 
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);

@@ -51,12 +51,10 @@ public class MMOItemReforger {
 	//region Config Values
 	static int autoSoulboundLevel = 1;
 	static int defaultItemLevel = -32767;
-	static boolean rerollWhenUpdated = false;
 	static boolean keepTiersWhenReroll = true;
 	
 	public static void reload() {
 		autoSoulboundLevel = MMOItems.plugin.getConfig().getInt("soulbound.auto-bind.level", 1);
-		rerollWhenUpdated = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated", false);
 		defaultItemLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -32767);
 		keepTiersWhenReroll = MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers");
 	}
@@ -161,15 +159,9 @@ public class MMOItemReforger {
 	 *
 	 * @see RevisionID
 	 */
+	@SuppressWarnings("ConstantConditions")
 	public void update(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
-
-		// Should it re-roll RNG?
-		if (rerollWhenUpdated) {
-
-			// Reroute to Reforge
-			reforge(player, options);
-			return;
-		}
+		if (options.isRegenerate()) { regenerate(player); return; }
 
 		/*
 		 *   Has to store every stat into itemData, then check each stat of
@@ -353,49 +345,7 @@ public class MMOItemReforger {
 		/*
 		 * Generate fresh MMOItem, with stats that will be set if the chance is too low
 		 */
-		int determinedItemLevel;
-		if (player == null) {
-
-			// Get default Item Level
-			final int iLevel = defaultItemLevel;
-
-			// What level with the regenerated item will be hmmmm.....
-			determinedItemLevel =
-
-					// No default level specified?
-					(iLevel == -32767) ?
-
-							// Does the item have level?
-							(mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0 )
-
-							// Default level was specified, use that.
-							: iLevel;
-
-
-			// Identify tier.
-			ItemTier tier =
-
-					// Does the item have a tier, and it should keep it?
-					(keepTiersWhenReroll && mmoItem.hasData(ItemStats.TIER)) ?
-
-							// The tier will be the current tier
-							MMOItems.plugin.getTiers().get(mmoItem.getData(ItemStats.TIER).toString())
-
-							// The item either has no tier, or shouldn't keep it. Null
-							: null;
-
-			// Build it again (Reroll RNG)
-			mmoItem = template.newBuilder(determinedItemLevel, tier).build();
-
-			// No player provided, use defaults.
-		} else {
-
-			// What level with the regenerated item will be hmmmm.....
-			determinedItemLevel = (mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0 );
-
-			// Build it again (Reroll RNG)
-			mmoItem = template.newBuilder(player).build();
-		}
+		int determinedItemLevel = regenerate(player, template);
 		//UPD//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
 
 		/*
@@ -581,6 +531,72 @@ public class MMOItemReforger {
 		}
 	}
 
+	void regenerate(@Nullable RPGPlayer p) {
+
+		loadVolatileMMOItem();
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
+		//noinspection ConstantConditions
+		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
+
+		//UPD//MMOItems.log("\u00a79*\u00a77 Regenerating... \u00a7d" + template.getId() + " " + template.getType());
+
+		if (p != null) {
+
+			mmoItem = template.newBuilder(p).build();
+		} else {
+
+			mmoItem = template.newBuilder((mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0 ), null).build();
+		}
+	}
+	int regenerate(@Nullable RPGPlayer player, @NotNull MMOItemTemplate template) {
+
+		int determinedItemLevel;
+		if (player == null) {
+
+			// Get default Item Level
+			final int iLevel = defaultItemLevel;
+
+			// What level with the regenerated item will be hmmmm.....
+			determinedItemLevel =
+
+					// No default level specified?
+					(iLevel == -32767) ?
+
+							// Does the item have level?
+							(mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0 )
+
+							// Default level was specified, use that.
+							: iLevel;
+
+
+			// Identify tier.
+			ItemTier tier =
+
+					// Does the item have a tier, and it should keep it?
+					(keepTiersWhenReroll && mmoItem.hasData(ItemStats.TIER)) ?
+
+							// The tier will be the current tier
+							MMOItems.plugin.getTiers().get(mmoItem.getData(ItemStats.TIER).toString())
+
+							// The item either has no tier, or shouldn't keep it. Null
+							: null;
+
+			// Build it again (Reroll RNG)
+			mmoItem = template.newBuilder(determinedItemLevel, tier).build();
+
+			// No player provided, use defaults.
+		} else {
+
+			// What level with the regenerated item will be hmmmm.....
+			determinedItemLevel = (mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0 );
+
+			// Build it again (Reroll RNG)
+			mmoItem = template.newBuilder(player).build();
+		}
+
+		return determinedItemLevel;
+	}
+
 	/**
 	 * Generates a new item of the same Type-ID and transfers the data
 	 * from the old one following the options.
@@ -609,6 +625,7 @@ public class MMOItemReforger {
 	 *               or default values if needed.
 	 */
 	public void reforge(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
+		if (options.isRegenerate()) { regenerate(player); return; }
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
 		if (!options.shouldKeepGemStones() && !options.shouldKeepExternalSH()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
@@ -771,45 +788,7 @@ public class MMOItemReforger {
 			cachedSoulbound = mmoItem.getData(ItemStats.SOULBOUND);
 		}
 
-		if (player == null) {
-
-			// Get default Item Level
-			final int iLevel = defaultItemLevel;
-
-			// What level with the regenerated item will be hmmmm.....
-			int level =
-
-					// No default level specified?
-					(iLevel == -32767) ?
-
-							// Does the item have level?
-							(mmoItem.hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) mmoItem.getData(ItemStats.ITEM_LEVEL)).getValue() : 0 )
-
-					// Default level was specified, use that.
-					: iLevel;
-
-
-			// Identify tier.
-			ItemTier tier =
-
-					// Does the item have a tier, and it should keep it?
-					(keepTiersWhenReroll && mmoItem.hasData(ItemStats.TIER)) ?
-
-							// The tier will be the current tier
-							MMOItems.plugin.getTiers().get(mmoItem.getData(ItemStats.TIER).toString())
-
-					// The item either has no tier, or shouldn't keep it. Null
-					: null;
-
-			// Build it again (Reroll RNG)
-			mmoItem = template.newBuilder(level, tier).build();
-
-		// No player provided, use defaults.
-		} else {
-
-			// Build it again (Reroll RNG)
-			mmoItem = template.newBuilder(player).build();
-		}
+		regenerate(player, template);
 
 		/*
 		 *  todo We cannot yet assume (for a few months) that the Original Enchantment Data

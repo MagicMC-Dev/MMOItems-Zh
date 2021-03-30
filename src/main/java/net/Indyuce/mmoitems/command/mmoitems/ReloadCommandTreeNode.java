@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.command.mmoitems;
 
 import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -69,6 +70,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 
 		// *This one is not implementing Reloadable
 		NumericStatFormula.reload();
+		MMOItemReforger.reload();
 	}
 
 	public void reloadRecipes(CommandSender sender) {

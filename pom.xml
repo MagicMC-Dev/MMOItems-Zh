@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOCore</artifactId>
-			<version>1.7.0</version>
+			<version>1.7.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

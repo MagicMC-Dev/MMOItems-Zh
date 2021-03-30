@@ -1,5 +1,15 @@
 package net.Indyuce.mmoitems.gui.listener;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.AltChar;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.gui.ItemBrowser;
+import net.Indyuce.mmoitems.gui.PluginInventory;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.gui.edition.ItemEdition;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeEdition;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,17 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.gui.ItemBrowser;
-import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeEdition;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.AltChar;
 
 public class GuiListener implements Listener {
 
@@ -44,7 +43,7 @@ public class GuiListener implements Listener {
 						player.getWorld().dropItemNaturally(player.getLocation(), drop);
 
 					// this refreshes the item if it's unstackable
-					if (NBTItem.get(event.getInventory().getItem(4)).getBoolean("UNSTACKABLE")) {
+					if (NBTItem.get(event.getInventory().getItem(4)).getBoolean("MMOITEMS_UNSTACKABLE")) {
 						((EditionInventory) inventory).updateCachedItem();
 						event.getInventory().setItem(4, ((EditionInventory) inventory).getCachedItem());
 					}

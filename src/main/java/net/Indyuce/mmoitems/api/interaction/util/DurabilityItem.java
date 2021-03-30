@@ -20,7 +20,7 @@ public class DurabilityItem {
 	private final NBTItem nbtItem;
 	private final Player player;
 	private final int maxDurability, unbreakingLevel;
-	private final boolean usingBar, unbreakable;
+	private final boolean barHidden, unbreakable;
 
 	private int durability;
 
@@ -51,7 +51,7 @@ public class DurabilityItem {
 		unbreakable = nbtItem.getBoolean("Unbreakable");
 		durability = nbtItem.getInteger("MMOITEMS_DURABILITY");
 		maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");
-		usingBar = nbtItem.getBoolean("MMOITEMS_DURABILITY_BAR");
+		barHidden = nbtItem.getBoolean("MMOITEMS_DURABILITY_BAR");
 
 		unbreakingLevel = (nbtItem.getItem().getItemMeta() != null && nbtItem.getItem().getItemMeta().hasEnchant(Enchantment.DURABILITY)) ?
 						nbtItem.getItem().getItemMeta().getEnchantLevel(Enchantment.DURABILITY) :
@@ -72,8 +72,8 @@ public class DurabilityItem {
 	}
 
 	// if the green vanilla durability bar should show
-	public boolean isUsingBar() {
-		return usingBar;
+	public boolean isBarHidden() {
+		return barHidden;
 	}
 
 	public boolean isUnbreakable() {
@@ -138,18 +138,18 @@ public class DurabilityItem {
 	}
 
 	public ItemStack toItem() {
-		/*
-		 * Cross multiplication to display the current item durability on the
-		 * item durability bar. (1 - ratio) because minecraft works with item
-		 * damage, and item damage is the complementary of the remaining
-		 * durability.
-		 * 
-		 * Make sure the vanilla bar displays at least 1 damage for display
-		 * issues. Also makes sure the item can be mended using the vanilla
-		 * enchant.
-		 */
 		if (!unbreakable) {
-			if (usingBar) {
+			/*
+			 * Cross multiplication to display the current item durability on the
+			 * item durability bar. (1 - ratio) because minecraft works with item
+			 * damage, and item damage is the complementary of the remaining
+			 * durability.
+			 *
+			 * Make sure the vanilla bar displays at least 1 damage for display
+			 * issues. Also makes sure the item can be mended using the vanilla
+			 * enchant.
+			 */
+			if (!barHidden) {
 				int damage = (durability == maxDurability) ? 0
 						: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
 				nbtItem.addTag(new ItemTag("Damage", damage));

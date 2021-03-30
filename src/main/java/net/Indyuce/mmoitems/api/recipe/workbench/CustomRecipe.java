@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.recipe.workbench;
 
-import io.lumine.mythic.lib.api.crafting.ingredients.MythicIngredient;
 import io.lumine.mythic.lib.api.crafting.ingredients.MythicRecipeIngredient;
 import io.lumine.mythic.lib.api.crafting.ingredients.ShapedIngredient;
 import io.lumine.mythic.lib.api.crafting.outputs.MRORecipe;
@@ -8,7 +7,6 @@ import io.lumine.mythic.lib.api.crafting.outputs.MythicRecipeOutput;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
 import io.lumine.mythic.lib.api.crafting.recipes.ShapedRecipe;
 import io.lumine.mythic.lib.api.crafting.recipes.ShapelessRecipe;
-import io.lumine.mythic.lib.api.crafting.uifilters.IngredientUIFilter;
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
@@ -17,6 +15,8 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.crafting.recipe.CustomSmithingRecipe;
+import net.Indyuce.mmoitems.api.crafting.recipe.UpgradeCombinationType;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -218,7 +218,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			// Add
 			ProvidedUIFilter p = readIngredientFrom(str, ffp);
 			nonAirFound = true;
-			poofs.add(new MythicRecipeIngredient(new MythicIngredient(p.toString(), p)));
+			poofs.add(new MythicRecipeIngredient(p));
 		}
 		if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shapeless recipe containing only AIR, $fignored$b.")); }
 		String recipeName = type + "." + id + "." + recipeCount++;
@@ -296,9 +296,9 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			ProvidedUIFilter left = readIngredientFrom(positions[0], ffp);
 			ProvidedUIFilter center = readIngredientFrom(positions[1], ffp);
 			ProvidedUIFilter right = readIngredientFrom(positions[2], ffp);
-			if (!(left.getParent() instanceof VanillaUIFilter) || !left.getArgument().equalsIgnoreCase("AIR")) { nonAirFound = true; }
-			if (!(center.getParent() instanceof VanillaUIFilter) || !center.getArgument().equalsIgnoreCase("AIR")) { nonAirFound = true; }
-			if (!(right.getParent() instanceof VanillaUIFilter) || !right.getArgument().equalsIgnoreCase("AIR")) { nonAirFound = true; }
+			if (!left.isAir()) { nonAirFound = true; }
+			if (!center.isAir()) { nonAirFound = true; }
+			if (!right.isAir()) { nonAirFound = true; }
 
 			/*
 			 * To detect if a recipe can be crafted in the survival inventory (and remove extra AIR),
@@ -312,9 +312,9 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			 */
 
 			// Bake
-			ShapedIngredient leftIngredient = new ShapedIngredient(new MythicIngredient(positions[0], left), 0, -rowNumber);
-			ShapedIngredient centerIngredient = new ShapedIngredient(new MythicIngredient(positions[1], center), 1, -rowNumber);
-			ShapedIngredient rightIngredient = new ShapedIngredient(new MythicIngredient(positions[2], right), 2, -rowNumber);
+			ShapedIngredient leftIngredient = new ShapedIngredient(left, 0, -rowNumber);
+			ShapedIngredient centerIngredient = new ShapedIngredient(center, 1, -rowNumber);
+			ShapedIngredient rightIngredient = new ShapedIngredient(right, 2, -rowNumber);
 
 			// Parse and add
 			poofs.add(leftIngredient);
@@ -341,6 +341,57 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	}
 
 	/**
+	 * Reads this list of strings as a Smithing Recipe to craft this MMOItem.
+	 *
+	 * @param type The TYPE of the crafted MMOItem
+	 * @param id The ID of the crafted MMOItem
+	 * @param item First item you need to put in the Smithing Station
+	 * @param ingot Second item to put in the smithing station
+	 * @return A baked recipe, ready to deploy.
+	 * @throws IllegalArgumentException If the recipe is in incorrect format
+	 */
+	@NotNull public static MythicRecipeBlueprint generateSmithing(@NotNull Type type, @NotNull String id, @NotNull String item, @NotNull String ingot, boolean dropGems, @NotNull String upgradeBehaviour) throws IllegalArgumentException {
+
+		// Get it
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, id);
+		Validate.isTrue(template != null, "Unexpected Error Occurred: Template does not exist.");
+		UpgradeCombinationType upgradeEffect = UpgradeCombinationType.valueOf(upgradeBehaviour.toUpperCase());
+
+		// Identify the Provided UIFilters
+		ArrayList<ShapedIngredient> poofs = new ArrayList<>();
+
+		// Error yes
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+		ffp.activatePrefix(true, "Recipe of $u" + type + " " + id);
+		int rowNumber = 0;
+
+		// All right lets read them
+		ProvidedUIFilter itemPoof = readIngredientFrom(item, ffp);
+		ProvidedUIFilter ingotPoof = readIngredientFrom(ingot, ffp);
+		if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Smithing recipe containing AIR, $fignored$b.")); }
+
+		MythicRecipeIngredient itemIngredient = new MythicRecipeIngredient(itemPoof);
+		MythicRecipeIngredient ingotIngredient = new MythicRecipeIngredient(ingotPoof);
+		String recipeName = type + "." + id + "." + recipeCount++;
+
+		// Build Main
+		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
+
+		// Make ingredients
+		ShapelessRecipe inputItem = new ShapelessRecipe(recipeName, itemIngredient);
+		ShapelessRecipe inputIngot = new ShapelessRecipe(recipeName, ingotIngredient);
+
+		// Create Output
+		MythicRecipeOutput outputRecipe = new CustomSmithingRecipe(template, dropGems, upgradeEffect);
+
+		MythicRecipeBlueprint recipe = new MythicRecipeBlueprint(inputItem, outputRecipe);
+		recipe.addSideCheck("ingot", inputIngot);
+
+		// That's our blueprint :)
+		return recipe;
+	}
+
+	/**
 	 * To support legacy formats, at least for now, we use this method
 	 * to read individual ingredients.
 	 * <p></p>
@@ -357,7 +408,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	 *
 	 * @return An ingredient read from this string.
 	 */
-	@NotNull static ProvidedUIFilter readIngredientFrom(@NotNull String str, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
+	@NotNull public static ProvidedUIFilter readIngredientFrom(@NotNull String str, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
 		/*
 		 * This entry, is it a vanilla material?

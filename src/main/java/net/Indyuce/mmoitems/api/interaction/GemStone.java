@@ -7,6 +7,8 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
@@ -23,6 +25,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GemStone extends UseItem {
 
@@ -30,13 +34,18 @@ public class GemStone extends UseItem {
 		super(player, item);
 	}
 
-	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
+	@NotNull public ApplyResult applyOntoItem(@NotNull NBTItem target, @NotNull Type targetType) {
 
 		/*
 		 * Entirely loads the MMOItem and checks if it has the required empty
 		 * socket for the gem
 		 */
 		MMOItem targetMMO = new LiveMMOItem(target);
+		return applyOntoItem(targetMMO, targetType, MMOUtils.getDisplayName(target.getItem()), true, false);
+	}
+
+	@NotNull public ApplyResult applyOntoItem(@NotNull MMOItem targetMMO, @NotNull Type targetType, @NotNull String itemName, boolean buildStack, boolean silent){
+
 		if (!targetMMO.hasData(ItemStats.GEM_SOCKETS))
 			return new ApplyResult(ResultType.NONE);
 
@@ -59,10 +68,11 @@ public class GemStone extends UseItem {
 		// check for success rate
 		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
 		if (successRate != 0 && RANDOM.nextDouble() > successRate / 100) {
-			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-			Message.GEM_STONE_BROKE
-					.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))
-					.send(player);
+
+			if (!silent) {
+				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+				Message.GEM_STONE_BROKE.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", itemName).send(player); }
+
 			return new ApplyResult(ResultType.FAILURE);
 		}
 
@@ -124,38 +134,46 @@ public class GemStone extends UseItem {
 			}
 		}
 
-		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-		Message.GEM_STONE_APPLIED
-				.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", MMOUtils.getDisplayName(target.getItem()))
-				.send(player);
+		if (!silent) {
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", itemName).send(player); }
 
-		return new ApplyResult(targetMMO.newBuilder().build());
+		if (buildStack) {
+			return new ApplyResult(targetMMO.newBuilder().build());
+
+		} else { return new ApplyResult(targetMMO, ResultType.SUCCESS); }
 	}
 
 	public static class ApplyResult {
-		private final ResultType type;
-		private final ItemStack result;
+		@NotNull private final ResultType type;
+		@Nullable private final ItemStack result;
+		@Nullable private final MMOItem resultAsMMOItem;
 
-		public ApplyResult(ResultType type) {
-			this(null, type);
+		public ApplyResult(@NotNull ResultType type) {
+			this((ItemStack) null, type);
 		}
 
-		public ApplyResult(ItemStack result) {
-			this(result, ResultType.SUCCESS);
-		}
+		public ApplyResult(@Nullable ItemStack result) { this(result, ResultType.SUCCESS); }
 
-		public ApplyResult(ItemStack result, ResultType type) {
+		public ApplyResult(@Nullable ItemStack result, @NotNull ResultType type) {
 			this.type = type;
 			this.result = result;
+			this.resultAsMMOItem = null;
+		}
+		public ApplyResult(@Nullable MMOItem result, @NotNull  ResultType type) {
+			this.type = type;
+			this.result = null;
+			this.resultAsMMOItem = result;
 		}
 
-		public ResultType getType() {
+		@NotNull public ResultType getType() {
 			return type;
 		}
 
-		public ItemStack getResult() {
+		@Nullable public ItemStack getResult() {
 			return result;
 		}
+		@Nullable public MMOItem getResultAsMMOItem() { return resultAsMMOItem; }
 	}
 
 	public enum ResultType {

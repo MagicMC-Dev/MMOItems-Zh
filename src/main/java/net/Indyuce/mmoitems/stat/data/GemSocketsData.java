@@ -7,6 +7,7 @@ import java.util.Set;
 
 import io.lumine.mythic.lib.api.util.Ref;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.apache.commons.lang.Validate;
 
 import com.google.gson.JsonArray;

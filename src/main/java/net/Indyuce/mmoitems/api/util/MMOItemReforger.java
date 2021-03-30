@@ -1040,7 +1040,7 @@ public class MMOItemReforger {
 					} else {
 
 						// Get colour
-						String colour = data.getColour();
+						String colour = data.getSocketColor();
 						String remembrance;
 
 						// Not null?

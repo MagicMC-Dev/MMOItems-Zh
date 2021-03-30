@@ -21,6 +21,24 @@ public class GemstoneData {
 	@Nullable Integer levelPut = 0;
 	@NotNull final UUID historicUUID;
 
+	@Nullable
+	public String getMMOItemType() {
+		return mmoitemType;
+	}
+
+	@Nullable
+	public String getMMOItemID() {
+		return mmoitemID;
+	}
+
+	/**
+	 *  If known, the socket colour this gem was put into
+	 */
+	@Nullable
+	public String getSocketColor() {
+		return socketColor;
+	}
+
 	@Nullable final String mmoitemType;
 	@Nullable final String mmoitemID;
 	@Nullable
@@ -172,11 +190,6 @@ public class GemstoneData {
 	@NotNull public String getName() {
 		return name;
 	}
-
-	/**
-	 *  If known, the socket colour this gem was put into
-	 */
-	@Nullable public String getColour() { return socketColor; }
 
 	/**
 	 *  If known, the socket colour this gem was put into

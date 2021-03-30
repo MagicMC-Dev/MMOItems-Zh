@@ -26,7 +26,7 @@ import java.util.*;
  * <p></p>
  * This class will store the different sources of each stat UPON being modified.
  */
-@SuppressWarnings({"unused", "unchecked", "SpellCheckingInspection"})
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class StatHistory {
 
     /*
@@ -84,7 +84,7 @@ public class StatHistory {
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
      */
-    @NotNull public StatData getGemstoneData(UUID of) { return perGemstoneData.get(of); }
+    @Nullable public StatData getGemstoneData(UUID of) { return perGemstoneData.get(of); }
 
     /**
      * All the Stat Datas provided by GemStones
@@ -330,6 +330,7 @@ public class StatHistory {
                     if (gData.isScaling()) {
 
                         // Ok
+                        //noinspection ConstantConditions
                         level = gData.getLevel();
 
                     } else {
@@ -346,6 +347,7 @@ public class StatHistory {
 
             //DBL//if (getGemstoneData(d) instanceof DoubleData) MMOItems. Log("\u00a76  \u00a7b|>\u00a77 Gemstone Base: \u00a7e" + ((DoubleData) getGemstoneData(d)).getValue());
             // Apply upgrades
+            //noinspection ConstantConditions
             StatData gRet = ((Upgradable) getItemStat()).apply(((Mergeable) getGemstoneData(d)).cloneData(), inf, gLevel);
             //DBL//if (gRet instanceof DoubleData) MMOItems.Log("\u00a76  \u00a7b|>\u00a77 Leveled Base: \u00a7e" + ((DoubleData) gRet).getValue());
 
@@ -428,6 +430,7 @@ public class StatHistory {
             JsonObject yes = new JsonObject();
 
             // Compress tags
+            //noinspection ConstantConditions
             JsonArray yesCompressed = ItemTag.compressTags(getItemStat().getAppliedNBT(getGemstoneData(gem)));
 
             // Put
@@ -640,7 +643,9 @@ public class StatHistory {
            //UPDT//MMOItems.Log("     \u00a76:\u00a72: \u00a77Original Externals \u00a7f" + perExternalData.size());
 
             // Register gemstones
-            for (UUID exUID : other.perGemstoneData.keySet()) { registerGemstoneData(exUID, other.getGemstoneData(exUID)); }
+            for (UUID exUID : other.perGemstoneData.keySet()) {
+                //noinspection ConstantConditions
+                registerGemstoneData(exUID, other.getGemstoneData(exUID)); }
 
             // Register externals
             for (StatData ex : other.perExternalData) { registerExternalData((ex)); }

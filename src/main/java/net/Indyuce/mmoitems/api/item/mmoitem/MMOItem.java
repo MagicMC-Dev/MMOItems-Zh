@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
@@ -244,6 +245,22 @@ public class MMOItem implements ItemReference {
 	}
 
 	/**
+	 * @return The upgrade level, or 0 if there is none.
+	 */
+	public int getMaxUpgradeLevel() {
+
+		// Does it have Upgrade Data?
+		if (hasData(ItemStats.UPGRADE)) {
+
+			// Return the registered level.
+			return ((UpgradeData) getData(ItemStats.UPGRADE)).getMax();
+		}
+
+		// Nope? Well its level 0 I guess.
+		return 0;
+	}
+
+	/**
 	 * <b>Make sure to check {@link #hasUpgradeTemplate()} before calling.</b>
 	 * <p></p>
 	 * This will fail and throw an exception if the MMOItem has no upgrade template.
@@ -281,5 +298,73 @@ public class MMOItem implements ItemReference {
 			return new HashSet<>();
 		}
 	}
+	//endregion
+
+	//region Gem Sockets API
+	/**
+	 * It is not 100% fool proof, since some GemStones just don't have
+	 * enough information to be extracted (legacy gemstones).
+	 * <p></p>
+	 * Note that this is somewhat an expensive operation, restrain
+	 * from calling it much because it completely loads all the stats
+	 * of every Gem Stone.
+	 *
+	 * @see #getColor()
+	 *
+	 * @return The list of GemStones contained here.
+	 */
+	@NotNull public ArrayList<MMOItem> extractGemstones() {
+
+		// Found?
+		GemSocketsData thisSocketsData = (GemSocketsData) getData(ItemStats.GEM_SOCKETS);
+		if (thisSocketsData == null) { return new ArrayList<>(); }
+
+		// All right, whats all yous data
+		HashMap<UUID, MMOItem> regeneratedGems = new HashMap<>();
+		for (GemstoneData gem : thisSocketsData.getGemstones()) {
+
+			// Can we generate?
+			MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(gem.getMMOItemType()), gem.getMMOItemID());
+
+			// Valid? neat-o
+			if (restored != null) {
+				restored.color = gem.getSocketColor();
+				regeneratedGems.put(gem.getHistoricUUID(), restored);
+			} }
+
+		// Identify actual attributes
+		for (ItemStat stat : getStats()) {
+
+			// Mergeable right
+			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
+
+			// Any stat affected by gems is sure to have a Stat History
+			StatHistory hist = getStatHistory(stat);
+			if (hist == null) { continue; }
+
+			// Data associated with any of the gems?
+			for (Map.Entry<UUID, MMOItem> gem : regeneratedGems.entrySet()) {
+
+				// History got gem registered?
+				StatData historicGemData = hist.getGemstoneData(gem.getKey());
+				if (historicGemData == null) { continue;}
+
+				// This gemstone had this data... Override.
+				gem.getValue().setData(stat, historicGemData);
+
+			} }
+
+		// Thats the gemstones we was searching for
+		return new ArrayList<>(regeneratedGems.values());
+	}
+
+	@Nullable String color;
+
+	/**
+	 * @return Supposing this MMOItem is a Gem Stone within an item,
+	 * 		   obtained via {@link #extractGemstones()}, then this
+	 * 		   will be the color of the slot it occupies.
+	 */
+	@Nullable public String getColor() { return color; }
 	//endregion
 }

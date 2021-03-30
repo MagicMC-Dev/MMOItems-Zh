@@ -11,6 +11,7 @@ import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.api.crafting.recipe.UpgradeCombinationType;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -165,13 +166,24 @@ public class RecipeManager implements Reloadable {
 		loadedLegacyRecipes.add(recipe);
 	}
 
-	public void registerSmithingRecipe(Type type, String id, ConfigurationSection section, String number) {
+	public void registerSmithingRecipe(@NotNull Type type, @NotNull String id, @NotNull ConfigurationSection section, @NotNull String number) throws IllegalArgumentException {
 		Validate.isTrue(section.isString("input1") && section.isString("input2"), "Invalid smithing recipe for '" + type.getId() + " . " + id + "'");
-		WorkbenchIngredient input1 = getWorkbenchIngredient(section.getString("input1"));
-		WorkbenchIngredient input2 = getWorkbenchIngredient(section.getString("input2"));
-		SmithingRecipe recipe = new SmithingRecipe(getRecipeKey(type, id, "smithing", number), MMOItems.plugin.getItem(type, id), input1.toBukkit(),
-				input2.toBukkit());
-		loadedLegacyRecipes.add(recipe);
+
+		String item = section.getString("input1");
+		String ingot = section.getString("input2");
+		boolean dropGems = section.getBoolean("drop-gems", false);
+		String upgrade = section.getString("upgrades" );
+		if (item == null) { item = ""; }
+		if (ingot == null) { ingot = ""; }
+		if (upgrade == null) { upgrade = UpgradeCombinationType.MAXIMUM.toString(); }
+
+		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, upgrade);
+
+		// Remember it
+		customRecipes.add(blueprint);
+
+		// Enable it
+		blueprint.deploy(MythicRecipeStation.SMITHING);
 	}
 
 	/**

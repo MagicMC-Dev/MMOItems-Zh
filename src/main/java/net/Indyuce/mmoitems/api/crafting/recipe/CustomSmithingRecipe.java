@@ -384,7 +384,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         if (!getEnchantmentTreatment().equals(SmithingCombinationType.NONE)) {
 
             // Get enchantment data
-            EnchantListData genEnchants = (EnchantListData) gen.getData(ItemStats.ENCHANTS);
+            EnchantListData genEnchants = (EnchantListData) gen.getData(ItemStats.ENCHANTS); if (genEnchants == null) { genEnchants = (EnchantListData) ItemStats.ENCHANTS.getClearStatData(); }
             EnchantListData itemEnchants = item != null ? (EnchantListData) item.getData(ItemStats.ENCHANTS) : (EnchantListData) ItemStats.ENCHANTS.getClearStatData();
             EnchantListData ingotEnchants = ingot != null ? (EnchantListData) ingot.getData(ItemStats.ENCHANTS) : (EnchantListData) ItemStats.ENCHANTS.getClearStatData();
 

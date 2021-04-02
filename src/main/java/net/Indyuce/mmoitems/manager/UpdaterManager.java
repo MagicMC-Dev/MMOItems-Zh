@@ -134,7 +134,7 @@ public class UpdaterManager implements Listener {
 		//if (did.hasOption(KeepOption.KEEP_LORE)) {
 		int n = 0;
 		for (Component component : nbtItem.getLoreComponents()) {
-			if (component.color() == NamedTextColor.GRAY) break;
+			if (component.color() != NamedTextColor.GRAY) break;
 			lore.add(n++, component);
 		}
 		//}

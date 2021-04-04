@@ -173,6 +173,11 @@
 			<systemPath>${basedir}/lib/BossShopPro.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>io.lumine</groupId>
+			<artifactId>MythicEnchants</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.bekvon.bukkit</groupId>
 			<artifactId>Residence</artifactId>
 			<version>4.8.7.2</version>

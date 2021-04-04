@@ -1,18 +1,15 @@
 package net.Indyuce.mmoitems.api.player;
 
-import java.text.DecimalFormat;
-
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
+import java.text.DecimalFormat;
 
 public abstract class RPGPlayer {
 	private final PlayerData playerData;
@@ -91,7 +88,7 @@ public abstract class RPGPlayer {
 	 */
 	public boolean canUse(NBTItem item, boolean message) { return canUse(item, message, false); }
 
-	/**
+	/**g
 	 *  If this item can be used by this player
 	 * @param message Should the player be notified that they cant use the item?
 	 *                <p>Use for active checks (the player actually clicking)</p>

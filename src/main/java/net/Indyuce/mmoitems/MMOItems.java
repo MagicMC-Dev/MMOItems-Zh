@@ -27,6 +27,7 @@ import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
+import net.Indyuce.mmoitems.comp.mythicenchants.MythicEnchantsSupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
 import net.Indyuce.mmoitems.comp.parse.IridescentParser;
@@ -92,6 +93,7 @@ public class MMOItems extends LuminePlugin {
 	private HologramSupport hologramSupport;
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
+	private MythicEnchantsSupport mythicEnchantsSupport;
 
 	@Override
 	public void load() {
@@ -128,6 +130,9 @@ public class MMOItems extends LuminePlugin {
 
 		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
 			statManager.register(McMMOHook.disableMcMMORepair);
+		if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
+			mythicEnchantsSupport = new MythicEnchantsSupport();
+
 	}
 	@Override
 	public void enable() {
@@ -502,6 +507,10 @@ public class MMOItems extends LuminePlugin {
 	 */
 	public boolean hasPermissions() {
 		return vaultSupport != null && vaultSupport.getPermissions() != null;
+	}
+
+	public MythicEnchantsSupport getMythicEnchantsSupport(){
+		return this.mythicEnchantsSupport;
 	}
 
 	public boolean hasEconomy() {

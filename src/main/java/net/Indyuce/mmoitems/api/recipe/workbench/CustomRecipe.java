@@ -12,6 +12,7 @@ import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -421,7 +422,11 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		if (asMaterial != null) {
 
 			// Is it AIR?
-			if (asMaterial.isAir()) { return new ProvidedUIFilter(VanillaUIFilter.get(), "AIR", "0", 1); }
+			if (asMaterial.isAir()) {
+
+				ProvidedUIFilter result = new ProvidedUIFilter(VanillaUIFilter.get(), "AIR", "0");
+				result.setAmountRange(new QuickNumberRange(null, null));
+				return result; }
 
 			// We snooze if its AIR or such
 			if (!asMaterial.isItem()) { throw new IllegalArgumentException("Invalid Ingredient $u" + str + "$b ($fNot an Item$b)."); }

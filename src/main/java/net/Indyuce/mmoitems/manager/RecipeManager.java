@@ -175,7 +175,7 @@ public class RecipeManager implements Reloadable {
 		if (upgrade == null) { upgrade = SmithingCombinationType.MAXIMUM.toString(); }
 		if (enchants == null) { enchants = SmithingCombinationType.MAXIMUM.toString(); }
 
-		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade, number);
+		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade, getRecipeKey(type, id, "smithing", number).getKey());
 
 		// Enable it
 		Ref<NamespacedKey> nk = new Ref<>();
@@ -196,7 +196,7 @@ public class RecipeManager implements Reloadable {
 	 * @param recipeID  Every item can have multiple recipe, there's one number
 	 *                  per recipe to differenciate them
 	 */
-	public void registerRecipe(@NotNull Type type, @NotNull String id, @NotNull List<String> list, boolean shapeless, @Nullable String recipeID) throws IllegalArgumentException {
+	public void registerRecipe(@NotNull Type type, @NotNull String id, @NotNull List<String> list, boolean shapeless, @NotNull String recipeID) throws IllegalArgumentException {
 
 		/*
 		 * The output of the recipe will be the MMOItem of this Type and ID which
@@ -220,11 +220,11 @@ public class RecipeManager implements Reloadable {
 		if (shapeless) {
 
 			// Generate with no shape
-			blueprint = CustomRecipe.generateShapeless(type, id, list, recipeID);
+			blueprint = CustomRecipe.generateShapeless(type, id, list, getRecipeKey(type, id, "shapeless", recipeID).getKey());
 		} else {
 
 			// Generate shaped
-			blueprint = CustomRecipe.generateShaped(type, id, list, recipeID);
+			blueprint = CustomRecipe.generateShaped(type, id, list, getRecipeKey(type, id, "shaped", recipeID).getKey());
 		}
 
 		// Enable it

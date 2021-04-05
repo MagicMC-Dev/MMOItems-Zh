@@ -10,12 +10,14 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.Previewable;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -103,7 +105,16 @@ public class ItemStackBuilder {
 	/**
 	 * @return Returns built NBTItem with applied tags and lore
 	 */
-	public NBTItem buildNBT() {
+	public NBTItem buildNBT() { return buildNBT(false); }
+
+	/**
+	 * @return Returns built NBTItem with applied tags and lore
+	 *
+	 * @param forDisplay Should this item's lore display potential stats
+	 *                   (like RNG ranges before rolling) rather than the
+	 *                   stats it will have?
+	 */
+	public NBTItem buildNBT(boolean forDisplay) {
 		// Clone as to not conflict in any way
 		MMOItem builtMMOItem = mmoitem.clone();
 		//GEM//MMOItems.Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.getStatHistories().size() + "\u00a77 Historic)");
@@ -131,8 +142,20 @@ public class ItemStackBuilder {
 					builtMMOItem.setData(stat, s.recalculate(true));
 				}
 
-				// Make necessary lore changes
-				stat.whenApplied(this, builtMMOItem.getData(stat));
+				if (forDisplay && stat instanceof Previewable) {
+
+					// Get Template
+					MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(builtMMOItem.getType(), builtMMOItem.getId());
+					if (template == null) { throw new IllegalArgumentException("MMOItem $r" + builtMMOItem.getType().getId() + " " + builtMMOItem.getId() + "$b doesn't exist."); }
+
+					// Make necessary lore changes
+					((Previewable) stat).whenPreviewed(this, builtMMOItem.getData(stat), template.getBaseItemData().get(stat));
+
+				} else {
+
+					// Make necessary lore changes
+					stat.whenApplied(this, builtMMOItem.getData(stat));
+				}
 
 			// Something went wrong...
 			} catch (IllegalArgumentException|NullPointerException exception) {

@@ -593,7 +593,7 @@ public class MMOItems extends LuminePlugin {
 		if (type == null || id == null) { return null; }
 
 		// Valid template?
-		MMOItemTemplate found = templateManager.getTemplate(type, id);
+		MMOItemTemplate found = getTemplates().getTemplate(type, id);
 		if (found == null) { return null; }
 
 		// Build if found
@@ -627,7 +627,7 @@ public class MMOItems extends LuminePlugin {
 		if (type == null || id == null) { return null; }
 
 		// Valid template?
-		MMOItemTemplate found = templateManager.getTemplate(type, id);
+		MMOItemTemplate found = getTemplates().getTemplate(type, id);
 		if (found == null) { return null; }
 
 		// Build if found
@@ -662,7 +662,7 @@ public class MMOItems extends LuminePlugin {
 		if (type == null || id == null) { return null; }
 
 		// Valid template?
-		MMOItemTemplate found = templateManager.getTemplate(type, id);
+		MMOItemTemplate found = getTemplates().getTemplate(type, id);
 		if (found == null) { return null; }
 
 		// Build if found

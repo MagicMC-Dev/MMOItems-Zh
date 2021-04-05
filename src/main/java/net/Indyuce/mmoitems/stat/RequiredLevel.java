@@ -10,6 +10,8 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
@@ -19,6 +21,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +50,35 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
 		// Insert NBT
 		item.addItemTag(getAppliedNBT(data));
+	}
+	@Override
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+		Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
+		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+
+		// Get Value
+		double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
+		double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
+
+		// Cancel if it its NEGATIVE and this doesn't support negative stats.
+		if (techMaximum < 0 && !handleNegativeStats()) { return; }
+		if (techMinimum < 0 && !handleNegativeStats()) { techMinimum = 0; }
+		if (techMinimum < ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread()) { techMinimum = ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread(); }
+		if (techMaximum > ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread()) { techMaximum = ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread(); }
+
+		// Add NBT Path
+		item.addItemTag(getAppliedNBT(currentData));
+
+		// Display if not ZERO
+		if (techMinimum != 0 || techMaximum != 0) {
+
+			String builtRange;
+			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = SilentNumbers.readableRounding(techMinimum, 0); }
+			else { builtRange = SilentNumbers.readableRounding(techMinimum, 0) + "-" + SilentNumbers.readableRounding(techMaximum, 0); }
+
+			// Just display normally
+			item.getLore().insert("required-level", formatNumericStat(techMinimum, "#", builtRange));
+		}
 	}
 
 	@NotNull

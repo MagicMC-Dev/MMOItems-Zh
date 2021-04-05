@@ -6,9 +6,14 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.utils.items.ItemFactory;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,7 +84,7 @@ public class MMOItemUIFilter implements UIFilter {
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
 
         // Type exists?
-        Type t = MMOItems.plugin.getTypes().get(argument);
+        Type t = MMOItems.plugin.getType(argument);
 
         // Nope
         if (t == null) {
@@ -92,7 +97,7 @@ public class MMOItemUIFilter implements UIFilter {
         }
 
         // Can find item?
-        if (!MMOItems.plugin.getTemplates().hasTemplate(t, data)) {
+        if (MMOItems.plugin.getMMOItem(t, data) == null) {
 
 
             // Error
@@ -143,7 +148,25 @@ public class MMOItemUIFilter implements UIFilter {
     @Override
     public ItemStack getItemStack(@NotNull String argument, @NotNull String data, @Nullable FriendlyFeedbackProvider ffp) {
         if (!isValid(argument, data, ffp)) { return null; }
+        argument = argument.replace(" ", "_").replace("-", "_").toUpperCase();
+        data = data.replace(" ", "_").replace("-", "_").toUpperCase();
         return MMOItems.plugin.getItem(argument, data);
+    }
+
+    @NotNull
+    @Override
+    public ItemStack getDisplayStack(@NotNull String argument, @NotNull String data, @Nullable FriendlyFeedbackProvider ffp) {
+        if (!isValid(argument, data, ffp)) { return ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a7cInvalid MMOItem \u00a7e" + argument + " " + data).build(); }
+        argument = argument.replace(" ", "_").replace("-", "_").toUpperCase();
+        data = data.replace(" ", "_").replace("-", "_").toUpperCase();
+        MMOItem m = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(argument), data);
+
+        //noinspection ConstantConditions
+        ItemStackBuilder builder = m.newBuilder();
+
+        // Build display NBT and roll
+        NBTItem nbt = builder.buildNBT(true);
+        return new DynamicLore(nbt).build();
     }
 
     @NotNull
@@ -152,6 +175,8 @@ public class MMOItemUIFilter implements UIFilter {
 
         // Check validity
         if (!isValid(argument, data, null)) { return SilentNumbers.toArrayList("This MMOItem is $finvalid$b."); }
+        argument = argument.replace(" ", "_").replace("-", "_").toUpperCase();
+        data = data.replace(" ", "_").replace("-", "_").toUpperCase();
         return SilentNumbers.toArrayList(SilentNumbers.getItemName(MMOItems.plugin.getItem(argument, data)));
     }
 

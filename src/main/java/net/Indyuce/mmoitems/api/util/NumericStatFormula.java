@@ -62,7 +62,7 @@ public class NumericStatFormula implements RandomStatData {
 			maxSpread = config.getDouble("max-spread", .3);
 
 			Validate.isTrue(spread >= 0, "Spread must be positive");
-			Validate.isTrue(maxSpread >= 0, "Max spread must be positive and lower than 1");
+			Validate.isTrue(maxSpread >= 0, "Max spread must be positive");
 			return;
 		}
 
@@ -144,7 +144,19 @@ public class NumericStatFormula implements RandomStatData {
 	 */
 	public double calculate(double levelScalingFactor) {
 
-		if (useRelativeSpread) { return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(RANDOM.nextGaussian() * spread, -maxSpread), maxSpread)); }
+		// Calculate yes
+		return calculate(levelScalingFactor, RANDOM.nextGaussian());
+	}
+
+	/**
+	 * @param levelScalingFactor Level to scale the scale with
+	 * @param random Result of <code>RANDOM.nextGaussian()</code> or whatever other
+	 *               value that you actually want to pass.
+	 * @return The calculated value
+	 */
+	public double calculate(double levelScalingFactor, double random) {
+
+		if (useRelativeSpread) { return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)); }
 
 		/*
 		 * The mean, the center of the distribution
@@ -156,7 +168,7 @@ public class NumericStatFormula implements RandomStatData {
 		 * at mean 0, and standard deviation 1, multiplied
 		 * by the spread chosen.
 		 */
-		double gaussSpread = RANDOM.nextGaussian() * spread;
+		double gaussSpread = random * spread;
 
 		/*
 		 * Does it exceed the max spread (positive or negative)? Not anymore!

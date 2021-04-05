@@ -1,12 +1,16 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 public class SoulboundLevel extends DoubleStat {
@@ -21,4 +25,6 @@ public class SoulboundLevel extends DoubleStat {
 		item.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", value));
 		item.getLore().insert("soulbound-level", formatNumericStat(value, "#", MMOUtils.intToRoman(value)));
 	}
+	@Override
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData);}
 }

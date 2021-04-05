@@ -183,9 +183,6 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		return recipe;
 	}
 
-
-	static int recipeCount = 0;
-
 	/**
 	 * Reads this list of strings as a Shapeless Recipe
 	 * to craft this MMOItem.
@@ -222,7 +219,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			poofs.add(new MythicRecipeIngredient(p));
 		}
 		if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shapeless recipe containing only AIR, $fignored$b.")); }
-		String recipeName = type + "." + id + "." + recipeCount++;
+		String recipeName = type + "." + id;
 
 		// Build Main
 		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
@@ -326,7 +323,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			rowNumber++;
 		}
 		if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shaped recipe containing only AIR, $fignored$b.")); }
-		String recipeName = type + "." + id + "." + recipeCount++;
+		String recipeName = type + "." + id;
 
 		// Build Main
 		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
@@ -374,7 +371,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 
 		MythicRecipeIngredient itemIngredient = new MythicRecipeIngredient(itemPoof);
 		MythicRecipeIngredient ingotIngredient = new MythicRecipeIngredient(ingotPoof);
-		String recipeName = type + "." + id + "." + recipeCount++;
+		String recipeName = type + "." + id;
 
 		// Build Main
 		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));

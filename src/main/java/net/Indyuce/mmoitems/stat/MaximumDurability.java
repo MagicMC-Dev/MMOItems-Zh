@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.bukkit.ChatColor;
@@ -36,6 +37,10 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		super.whenApplied(item, data);
 	}
+
+
+	@Override
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
 
 	@Override
 	public @NotNull

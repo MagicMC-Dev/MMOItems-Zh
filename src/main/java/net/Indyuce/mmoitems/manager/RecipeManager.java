@@ -1,13 +1,11 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
+import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
@@ -67,7 +65,7 @@ public class RecipeManager implements Reloadable {
 	 * <b>Except that for the time being, only Workbench recipes are supported
 	 * by mythic lib so for any other kind use the legacy array.</b>
 	 */
-	final HashSet<MythicRecipeBlueprint> customRecipes = new HashSet<>();
+	final HashMap<NamespacedKey, MythicRecipeBlueprint> customRecipes = new HashMap<>();
 
 	private boolean book, amounts;
 
@@ -179,11 +177,12 @@ public class RecipeManager implements Reloadable {
 
 		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade);
 
-		// Remember it
-		customRecipes.add(blueprint);
-
 		// Enable it
-		blueprint.deploy(MythicRecipeStation.SMITHING);
+		Ref<NamespacedKey> nk = new Ref<>();
+		blueprint.deploy(MythicRecipeStation.SMITHING, nk);
+
+		// Remember it
+		customRecipes.put(nk.getValue(), blueprint);
 	}
 
 	/**
@@ -228,11 +227,12 @@ public class RecipeManager implements Reloadable {
 			blueprint = CustomRecipe.generateShaped(type, id, list);
 		}
 
-		// Remember it
-		customRecipes.add(blueprint);
-
 		// Enable it
-		blueprint.deploy(MythicRecipeStation.WORKBENCH);
+		Ref<NamespacedKey> nk = new Ref<>();
+		blueprint.deploy(MythicRecipeStation.WORKBENCH, nk);
+
+		// Remember it
+		customRecipes.put(nk.getValue(), blueprint);
 
 		/*
 		CustomRecipe recipe = new CustomRecipe(type, id, list, shapeless);
@@ -262,10 +262,19 @@ public class RecipeManager implements Reloadable {
 	public Set<CustomRecipe> getLegacyCustomRecipes() {
 		return legacyCraftingRecipes;
 	}
-	public HashSet<MythicRecipeBlueprint> getCustomRecipes() { return customRecipes; }
+	public HashMap<NamespacedKey, MythicRecipeBlueprint> getCustomRecipes() { return customRecipes; }
 
-	public Set<NamespacedKey> getNamespacedKeys() {
-		return loadedLegacyRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).collect(Collectors.toSet());
+	ArrayList<NamespacedKey> generatedNKs = null;
+	public ArrayList<NamespacedKey> getNamespacedKeys() {
+
+		if (generatedNKs != null) { return generatedNKs; }
+
+		// Collect all Namespaces
+		ArrayList<NamespacedKey> nkMythic = new ArrayList<>(customRecipes.keySet());
+		ArrayList<NamespacedKey> nkLegacy = loadedLegacyRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).distinct().collect(Collectors.toCollection(ArrayList::new));
+		nkMythic.addAll(nkLegacy);
+		generatedNKs = nkMythic;
+		return generatedNKs;
 	}
 
 	public void sortRecipes() {
@@ -291,10 +300,11 @@ public class RecipeManager implements Reloadable {
 			loadedLegacyRecipes.clear();
 
 			// Disable and forget all blueprints
-			for (MythicRecipeBlueprint b : customRecipes) { b.disable(); }
+			for (NamespacedKey b : customRecipes.keySet()) { Bukkit.removeRecipe(b); customRecipes.get(b).disable(); }
 			customRecipes.clear();
 
 			// Load all recipes
+			generatedNKs = null;
 			loadRecipes();
 
 			// Refresh the book I suppose

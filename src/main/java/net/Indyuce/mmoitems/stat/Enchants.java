@@ -1,16 +1,29 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.*;
-
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythicenchants.MythicEnchants;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.EnchantListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomEnchantListData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.apache.commons.lang.Validate;
@@ -21,23 +34,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.EnchantListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomEnchantListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class Enchants extends ItemStat implements Upgradable {
 	public Enchants() {
@@ -74,15 +79,13 @@ public class Enchants extends ItemStat implements Upgradable {
 	 * getByName is deprecated, but it's safe to
 	 * use and will make the user experience better
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length >= 2, "Use this format: {Enchant Name} {Enchant Level Numeric Formula}. Example: 'sharpness 5 0.3' "
 				+ "stands for Sharpness 5, plus 0.3 level per item level (rounded up to lower integer)");
 
-		Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(split[0].toLowerCase().replace("-", "_")));		
-		if(enchant == null) enchant = Enchantment.getByName(split[0].toUpperCase());
+		Enchantment enchant = getEnchant(split[0]);
 		Validate.notNull(enchant, split[0]
 				+ " is not a valid enchantment! All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
 
@@ -189,7 +192,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
 					// Get Namespaced
 					Enchantment ench = null;
-					try { ench = Enchantment.getByKey(NamespacedKey.minecraft(enchantment)); } catch (Exception ignored) {}
+					try { ench = getEnchant(enchantment); } catch (Exception ignored) {}
 
 					// Parse Integer
 					Integer lvl = SilentNumbers.IntegerParse(level);
@@ -414,6 +417,23 @@ public class Enchants extends ItemStat implements Upgradable {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	public static Enchantment getEnchant(String key) {
+		key = key.toLowerCase().replace("-", "_");
+		Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(key));
+
+		if (enchant == null) {
+			if (MMOItems.plugin.getMythicEnchantsSupport() != null) {
+				enchant = Enchantment.getByKey(new NamespacedKey(MythicEnchants.inst(), key));
+				if (enchant != null)
+					return enchant;
+			}
+			enchant = Enchantment.getByName(key);
+		}
+
+		return enchant;
+	}
+
 	public static class EnchantUpgradeInfo implements UpgradeInfo {
 		@NotNull HashMap<Enchantment, PlusMinusPercent> perEnchantmentOperations = new HashMap<>();
 
@@ -494,7 +514,7 @@ public class Enchants extends ItemStat implements Upgradable {
 					PlusMinusPercent pmpRead = PlusMinusPercent.getFromString(pmpStr, ffp);
 
 					Enchantment ench = null;
-					try { ench = Enchantment.getByKey(NamespacedKey.minecraft(enchStr)); } catch (Exception ignored) {}
+					try { ench = getEnchant(enchStr); } catch (Exception ignored) {}
 
 					// L
 					if (pmpRead == null) { unreadableStatements.append(' ').append(ffp.getFeedbackOf(FriendlyFeedbackCategory.ERROR).get(0).forConsole(ffp.getPalette())); failure = true; }

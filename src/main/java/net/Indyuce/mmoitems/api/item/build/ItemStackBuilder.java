@@ -5,21 +5,23 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythicenchants.enchants.MythicEnchant;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -163,7 +165,22 @@ public class ItemStackBuilder {
 			lore.insert("lore", parsed);
 		}
 
-		final List<String> list = lore.build();
+		List<String> list = lore.build();
+		if (MMOItems.plugin.getMythicEnchantsSupport() != null && mmoitem.hasData(ItemStats.ENCHANTS)) {
+			ItemStack metaItem = item.clone();
+			ItemMeta meta = metaItem.getItemMeta();
+			meta.setLore(list);
+			metaItem.setItemMeta(meta);
+
+			EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
+			for (Enchantment enchant : data.getEnchants()) {
+				int lvl = data.getLevel(enchant);
+				if (lvl != 0 && enchant instanceof MythicEnchant) {
+					MMOItems.plugin.getMythicEnchantsSupport().handleEnchant(metaItem, enchant, lvl);
+				}
+			}
+			list = metaItem.getItemMeta().getLore();
+		}
 		JsonArray array = new JsonArray();
 		for (String s : list)
 			array.add(s);

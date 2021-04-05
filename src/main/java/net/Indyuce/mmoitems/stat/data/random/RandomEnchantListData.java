@@ -1,18 +1,17 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.data.EnchantListData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.stat.data.EnchantListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class RandomEnchantListData implements RandomStatData {
 	private final Map<Enchantment, NumericStatFormula> enchants = new HashMap<>();
@@ -21,7 +20,7 @@ public class RandomEnchantListData implements RandomStatData {
 		Validate.notNull(config, "Config cannot be null");
 
 		for (String key : config.getKeys(false)) {
-			Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase().replace("-", "_")));
+			Enchantment enchant = Enchants.getEnchant(key);
 			Validate.notNull(enchant, "Could not find enchant with key '" + key + "'");
 			addEnchant(enchant, new NumericStatFormula(config.get(key)));
 		}

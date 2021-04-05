@@ -193,7 +193,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	 * @return A baked recipe, ready to deploy.
 	 * @throws IllegalArgumentException If the recipe is in incorrect format
 	 */
-	@NotNull public static MythicRecipeBlueprint generateShapeless(@NotNull Type type, @NotNull String id, @NotNull List<String> recipe) throws IllegalArgumentException {
+	@NotNull public static MythicRecipeBlueprint generateShapeless(@NotNull Type type, @NotNull String id, @NotNull List<String> recipe, @NotNull String namespaceKey) throws IllegalArgumentException {
 
 		// Get it
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, id);
@@ -219,13 +219,12 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			poofs.add(new MythicRecipeIngredient(p));
 		}
 		if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shapeless recipe containing only AIR, $fignored$b.")); }
-		String recipeName = type + "." + id;
 
 		// Build Main
-		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
+		ShapedRecipe shapedRecipe = ShapedRecipe.single(namespaceKey,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
 
 		// Make ingredients
-		ShapelessRecipe inputRecipe = new ShapelessRecipe(recipeName, poofs);
+		ShapelessRecipe inputRecipe = new ShapelessRecipe(namespaceKey, poofs);
 
 		// Create Output
 		MythicRecipeOutput outputRecipe = new MRORecipe(shapedRecipe);
@@ -244,7 +243,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	 * @return A baked recipe, ready to deploy.
 	 * @throws IllegalArgumentException If the recipe is in incorrect format
 	 */
-	@NotNull public static MythicRecipeBlueprint generateShaped(@NotNull Type type, @NotNull String id, @NotNull List<String> recipe) throws IllegalArgumentException {
+	@NotNull public static MythicRecipeBlueprint generateShaped(@NotNull Type type, @NotNull String id, @NotNull List<String> recipe, @NotNull String namespaceKey) throws IllegalArgumentException {
 
 		// Get it
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, id);
@@ -323,13 +322,12 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 			rowNumber++;
 		}
 		if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shaped recipe containing only AIR, $fignored$b.")); }
-		String recipeName = type + "." + id;
 
 		// Build Main
-		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
+		ShapedRecipe shapedRecipe = ShapedRecipe.single(namespaceKey,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
 
 		// Make ingredients
-		ShapedRecipe inputRecipe = ShapedRecipe.unsharpen((new ShapedRecipe(recipeName, poofs)));
+		ShapedRecipe inputRecipe = ShapedRecipe.unsharpen((new ShapedRecipe(namespaceKey, poofs)));
 
 		// Create Output
 		MythicRecipeOutput outputRecipe = new MRORecipe(shapedRecipe);
@@ -348,7 +346,7 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 	 * @return A baked recipe, ready to deploy.
 	 * @throws IllegalArgumentException If the recipe is in incorrect format
 	 */
-	@NotNull public static MythicRecipeBlueprint generateSmithing(@NotNull Type type, @NotNull String id, @NotNull String item, @NotNull String ingot, boolean dropGems, @NotNull String enchantmentBehaviour, @NotNull String upgradeBehaviour) throws IllegalArgumentException {
+	@NotNull public static MythicRecipeBlueprint generateSmithing(@NotNull Type type, @NotNull String id, @NotNull String item, @NotNull String ingot, boolean dropGems, @NotNull String enchantmentBehaviour, @NotNull String upgradeBehaviour, @NotNull String namespaceKey) throws IllegalArgumentException {
 
 		// Get it
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(type, id);
@@ -371,14 +369,10 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 
 		MythicRecipeIngredient itemIngredient = new MythicRecipeIngredient(itemPoof);
 		MythicRecipeIngredient ingotIngredient = new MythicRecipeIngredient(ingotPoof);
-		String recipeName = type + "." + id;
-
-		// Build Main
-		ShapedRecipe shapedRecipe = ShapedRecipe.single(recipeName,  new ProvidedUIFilter(MMOItemUIFilter.get(), type.getId(), id, Math.max(template.getCraftedAmount(), 1)));
 
 		// Make ingredients
-		ShapelessRecipe inputItem = new ShapelessRecipe(recipeName, itemIngredient);
-		ShapelessRecipe inputIngot = new ShapelessRecipe(recipeName, ingotIngredient);
+		ShapelessRecipe inputItem = new ShapelessRecipe(namespaceKey, itemIngredient);
+		ShapelessRecipe inputIngot = new ShapelessRecipe(namespaceKey, ingotIngredient);
 
 		// Create Output
 		MythicRecipeOutput outputRecipe = new CustomSmithingRecipe(template, dropGems, enchantEffect, upgradeEffect);

@@ -175,7 +175,7 @@ public class RecipeManager implements Reloadable {
 		if (upgrade == null) { upgrade = SmithingCombinationType.MAXIMUM.toString(); }
 		if (enchants == null) { enchants = SmithingCombinationType.MAXIMUM.toString(); }
 
-		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade);
+		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade, number);
 
 		// Enable it
 		Ref<NamespacedKey> nk = new Ref<>();
@@ -220,11 +220,11 @@ public class RecipeManager implements Reloadable {
 		if (shapeless) {
 
 			// Generate with no shape
-			blueprint = CustomRecipe.generateShapeless(type, id, list);
+			blueprint = CustomRecipe.generateShapeless(type, id, list, recipeID);
 		} else {
 
 			// Generate shaped
-			blueprint = CustomRecipe.generateShaped(type, id, list);
+			blueprint = CustomRecipe.generateShaped(type, id, list, recipeID);
 		}
 
 		// Enable it
@@ -283,7 +283,7 @@ public class RecipeManager implements Reloadable {
 		legacyCraftingRecipes.addAll(temporary.stream().sorted().collect(Collectors.toList()));
 	}
 
-	public NamespacedKey getRecipeKey(Type type, String id, String recipeType, String number) {
+	@NotNull public NamespacedKey getRecipeKey(@NotNull Type type, @NotNull String id, @NotNull String recipeType, @NotNull String number) {
 		return new NamespacedKey(MMOItems.plugin, recipeType + "_" + type.getId() + "_" + id + "_" + number);
 	}
 

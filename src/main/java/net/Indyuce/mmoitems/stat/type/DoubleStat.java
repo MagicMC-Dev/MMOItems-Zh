@@ -7,6 +7,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
@@ -37,7 +38,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 
-public class DoubleStat extends ItemStat implements Upgradable {
+public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	private static final DecimalFormat digit = new DecimalFormat("0.####");
 
 	public DoubleStat(String id, Material mat, String name, String[] lore) {
@@ -120,6 +121,37 @@ public class DoubleStat extends ItemStat implements Upgradable {
 		// Add NBT Path
 		item.addItemTag(getAppliedNBT(data));
 	}
+
+	@Override
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+		Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
+		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+
+		// Get Value
+		double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
+		double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
+
+		// Cancel if it its NEGATIVE and this doesn't support negative stats.
+		if (techMaximum < 0 && !handleNegativeStats()) { return; }
+		if (techMinimum < 0 && !handleNegativeStats()) { techMinimum = 0; }
+		if (techMinimum < ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread()) { techMinimum = ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread(); }
+		if (techMaximum > ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread()) { techMaximum = ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread(); }
+
+		// Add NBT Path
+		item.addItemTag(getAppliedNBT(currentData));
+
+		// Display if not ZERO
+		if (techMinimum != 0 || techMaximum != 0) {
+
+			String builtRange;
+			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = new StatFormat("##").format(techMinimum); }
+			else { builtRange = new StatFormat("##").format(techMinimum) + "-" + new StatFormat("##").format(techMaximum); }
+
+			// Just display normally
+			item.getLore().insert(getPath(), formatNumericStat(techMinimum, "#", builtRange));
+		}
+	}
+
 	@NotNull String plus(double amount) { if (amount >= 0) { return "+"; } else return ""; }
 
 	/**

@@ -10,6 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -81,7 +82,14 @@ public class Chicken_Wraith extends Ability {
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-		public void a(EntityDamageByEntityEvent event) {
+		public void a(PlayerEggThrowEvent event) {
+			if (entities.contains(event.getEgg().getEntityId())) {
+				event.setHatching(false);
+			}
+		}
+
+		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+		public void b(EntityDamageByEntityEvent event) {
 			if (entities.contains(event.getDamager().getEntityId()))
 				event.setDamage(damage);
 		}

@@ -82,9 +82,14 @@ public class Corrupted_Fangs extends Ability implements Listener {
 
 		@EventHandler
 		public void a(EntityDamageByEntityEvent event) {
-			if (event.getDamager() instanceof EvokerFangs && entities.contains(event.getDamager().getEntityId())
-					&& MMOUtils.canDamage(stats.getPlayer(), event.getEntity()))
-				new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) event.getEntity());
+			if (event.getDamager() instanceof EvokerFangs && entities.contains(event.getDamager().getEntityId())) {
+				event.setDamage(0); // Fangs do 6 damage in vanilla so lets set to 0 to not do extra damage
+				if (MMOUtils.canDamage(stats.getPlayer(), event.getEntity())) {
+					new AttackResult(damage, DamageType.SKILL, DamageType.MAGIC).damage(stats.getPlayer(), (LivingEntity) event.getEntity());
+				} else {
+					event.setCancelled(true); // Cancel the event if we cannot damage the target such as a player
+				}
+			}
 		}
 	}
 }

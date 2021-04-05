@@ -35,6 +35,7 @@ public class Corrupted_Fangs extends Ability implements Listener {
 		addModifier("cooldown", 12);
 		addModifier("mana", 0);
 		addModifier("stamina", 0);
+		addModifier("fangs", 6);
 	}
 
 	@Override
@@ -47,13 +48,14 @@ public class Corrupted_Fangs extends Ability implements Listener {
 
 		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
+			double fangAmount = ability.getModifier("fangs");
 			final Vector vec = ((VectorAbilityResult) ability).getTarget().setY(0).multiply(2);
 			final Location loc = stats.getPlayer().getLocation();
 			double ti = 0;
 			final FangsHandler handler = new FangsHandler(stats, ability.getModifier("damage"));
 
 			public void run() {
-				if (ti++ > 6) {
+				if (ti++ >= fangAmount) {
 					handler.close(3 * 20);
 					cancel();
 					return;

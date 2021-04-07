@@ -30,6 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Projectile Particles are the particles fired in place of a projectile for certain weapons such as the Lute, Musket, or Whip [WIP]
+ * @author Kasprr
+ */
+
 public class ProjectileParticles extends StringStat {
   public ProjectileParticles() {
     super("PROJECTILE_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toMaterial(), "Projectile Particles",

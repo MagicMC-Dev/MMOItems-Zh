@@ -76,6 +76,7 @@ import net.Indyuce.mmoitems.stat.Unbreakable;
 import net.Indyuce.mmoitems.stat.Unstackable;
 import net.Indyuce.mmoitems.stat.UpgradeStat;
 import net.Indyuce.mmoitems.stat.VanillaEatingAnimation;
+import net.Indyuce.mmoitems.stat.*;
 import net.Indyuce.mmoitems.stat.block.BlockID;
 import net.Indyuce.mmoitems.stat.block.GenTemplate;
 import net.Indyuce.mmoitems.stat.block.MaxXP;
@@ -122,6 +123,7 @@ public class ItemStats {
 			PERMISSION = new Permission(),
 			ITEM_PARTICLES = new ItemParticles(),
 			ARROW_PARTICLES = new ArrowParticles(),
+			PROJECTILE_PARTICLES = new ProjectileParticles(),
 
 	// Disable Interaction Stats
 	DISABLE_INTERACTION = new DisableStat("INTERACTION", VersionMaterial.GRASS_BLOCK.toMaterial(), "Disable Interaction", new String[]{"!block", "all"}, "Disable any unwanted interaction:", "block placement, item use..."),

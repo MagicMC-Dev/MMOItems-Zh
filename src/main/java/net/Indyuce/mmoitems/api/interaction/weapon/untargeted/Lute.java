@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -13,6 +16,7 @@ import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionSound;
+import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -65,10 +69,30 @@ public class Lute extends UntargetedWeapon {
 			public void run() {
 				if (ti++ > range)
 					cancel();
+				// If the item has projectile particle attribute, use selected particle
+				if (getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES")) {
+					JsonObject obj = MythicLib.plugin.getJson().parse(getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES"), JsonObject.class);
+					Particle particle = Particle.valueOf(obj.get("Particle").getAsString());
+					// If the selected particle is colored, use the provided color
+					if (ProjectileParticlesData.isColorable(particle)) {
+						double red = Double.parseDouble(String.valueOf(obj.get("Red")));
+						double green = Double.parseDouble(String.valueOf(obj.get("Green")));
+						double blue = Double.parseDouble(String.valueOf(obj.get("Blue")));
+						ProjectileParticlesData.shootParticle(player, particle, loc, red, green, blue);
+						// If it's not colored, just shoot the particle
+					} else {
+						ProjectileParticlesData.shootParticle(player, particle, loc, 0, 0, 0);
+					}
+					// If no particle has been provided via projectile particle attribute, default to this particle
+				} else {
+					loc.getWorld().spawnParticle(Particle.NOTE, loc, 0, 1, 0, 0, 1);
+				}
 
-				List<Entity> entities = MMOUtils.getNearbyChunkEntities(loc);
-				loc.getWorld().spawnParticle(Particle.NOTE, loc, 0);
+				// play the sound
 				sound.play(loc, 2, (float) (.5 + (double) ti / range));
+
+				// damage entities
+				List<Entity> entities = MMOUtils.getNearbyChunkEntities(loc);
 				for (int j = 0; j < 3; j++) {
 					loc.add(vec.add(weight));
 					if (loc.getBlock().getType().isSolid()) {

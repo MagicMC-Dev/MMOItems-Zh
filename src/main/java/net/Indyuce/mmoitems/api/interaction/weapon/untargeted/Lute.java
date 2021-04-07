@@ -72,7 +72,6 @@ public class Lute extends UntargetedWeapon {
 				// If the item has projectile particle attribute, use selected particle
 				if (getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES")) {
 					JsonObject obj = MythicLib.plugin.getJson().parse(getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES"), JsonObject.class);
-					System.out.println(obj.get("Particle"));
 					Particle particle = Particle.valueOf(obj.get("Particle").getAsString());
 					// If the selected particle is colored, use the provided color
 					if (ProjectileParticlesData.isColorable(particle)) {

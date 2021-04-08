@@ -273,7 +273,8 @@ public class RecipeManager implements Reloadable {
 		ArrayList<NamespacedKey> nkMythic = new ArrayList<>(customRecipes.keySet());
 		ArrayList<NamespacedKey> nkLegacy = loadedLegacyRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).distinct().collect(Collectors.toCollection(ArrayList::new));
 		nkMythic.addAll(nkLegacy);
-		generatedNKs = nkMythic;
+		generatedNKs = new ArrayList<>();
+		for (NamespacedKey nk : nkMythic) { if (nk != null) { generatedNKs.add(nk); }}
 		return generatedNKs;
 	}
 
@@ -294,7 +295,11 @@ public class RecipeManager implements Reloadable {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
 
 			// Remove all recipes
-			for (NamespacedKey recipe : getNamespacedKeys()) { Bukkit.removeRecipe(recipe); }
+			for (NamespacedKey recipe : getNamespacedKeys()) {
+				if (recipe == null) { continue; }
+				try { Bukkit.removeRecipe(recipe); }
+				catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage()); }
+			}
 
 			// Clear loaded recipes
 			loadedLegacyRecipes.clear();
@@ -329,10 +334,15 @@ public class RecipeManager implements Reloadable {
 		if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
 
 			// Undiscovers the recipes apparently
-			for (NamespacedKey key : player.getDiscoveredRecipes()) { if (key.getNamespace().equals("mmoitems") && !getNamespacedKeys().contains(key)) { player.undiscoverRecipe(key); } }
+			for (NamespacedKey key : player.getDiscoveredRecipes()) {
+				if (key.getNamespace().equals("mmoitems") && !getNamespacedKeys().contains(key)) { player.undiscoverRecipe(key); } }
 
 			// And discovers them again, sweet!
-			for (NamespacedKey recipe : getNamespacedKeys()) { if (!player.hasDiscoveredRecipe(recipe)) { player.discoverRecipe(recipe); } }
+			for (NamespacedKey recipe : getNamespacedKeys()) {
+				if (recipe == null) { continue; }
+				try { if (!player.hasDiscoveredRecipe(recipe)) { player.discoverRecipe(recipe); } }
+				catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage()); }
+			}
 
 			// Done woah
 			return;
@@ -341,11 +351,9 @@ public class RecipeManager implements Reloadable {
 		// Discovers all recipes
 		for (NamespacedKey recipe : getNamespacedKeys()) {
 			if (recipe == null) { continue; }
-
-			try { player.discoverRecipe(recipe); } catch (Throwable e) {
-
-				MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
-			} }
+			try { player.discoverRecipe(recipe); }
+			catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage()); }
+		}
 	}
 
 	public WorkbenchIngredient getWorkbenchIngredient(String input) {

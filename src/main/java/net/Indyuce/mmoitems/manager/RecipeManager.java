@@ -339,7 +339,11 @@ public class RecipeManager implements Reloadable {
 		}
 
 		// Discovers all recipes
-		for (NamespacedKey recipe : getNamespacedKeys()) { player.discoverRecipe(recipe); }
+		for (NamespacedKey recipe : getNamespacedKeys()) {
+			try { player.discoverRecipe(recipe); } catch (Throwable e) {
+
+				MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
+			} }
 	}
 
 	public WorkbenchIngredient getWorkbenchIngredient(String input) {

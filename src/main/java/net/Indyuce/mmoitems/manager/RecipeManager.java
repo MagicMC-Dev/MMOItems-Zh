@@ -183,10 +183,8 @@ public class RecipeManager implements Reloadable {
 		blueprint.deploy(MythicRecipeStation.SMITHING, nk);
 
 		// Remember it
-		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else {
-
-			if (book) { MMOItems.print(null, "Cannot register custom smithing recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id);}
-			booklessRecipes.add(blueprint); }
+		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else { booklessRecipes.add(blueprint);
+			if (book) { MMOItems.print(null, "Cannot register custom smithing recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id);} }
 	}
 
 	/**
@@ -236,10 +234,8 @@ public class RecipeManager implements Reloadable {
 		blueprint.deploy(MythicRecipeStation.WORKBENCH, nk);
 
 		// Remember it
-		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else {
-
-			if (book) { MMOItems.print(null, "Cannot register custom {2} recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id, (shapeless ? "shapeless" : "shaped"));}
-			booklessRecipes.add(blueprint); }
+		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else { booklessRecipes.add(blueprint);
+			if (book) { MMOItems.print(null, "Cannot register custom {2} recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id, (shapeless ? "shapeless" : "shaped"));} }
 
 		/*
 		CustomRecipe recipe = new CustomRecipe(type, id, list, shapeless);

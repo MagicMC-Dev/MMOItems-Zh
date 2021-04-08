@@ -340,6 +340,8 @@ public class RecipeManager implements Reloadable {
 
 		// Discovers all recipes
 		for (NamespacedKey recipe : getNamespacedKeys()) {
+			if (recipe == null) { continue; }
+
 			try { player.discoverRecipe(recipe); } catch (Throwable e) {
 
 				MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());

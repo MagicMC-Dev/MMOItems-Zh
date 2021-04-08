@@ -66,6 +66,7 @@ public class RecipeManager implements Reloadable {
 	 * by mythic lib so for any other kind use the legacy array.</b>
 	 */
 	final HashMap<NamespacedKey, MythicRecipeBlueprint> customRecipes = new HashMap<>();
+	final ArrayList<MythicRecipeBlueprint> booklessRecipes = new ArrayList<>();
 
 	private boolean book, amounts;
 
@@ -182,7 +183,10 @@ public class RecipeManager implements Reloadable {
 		blueprint.deploy(MythicRecipeStation.SMITHING, nk);
 
 		// Remember it
-		customRecipes.put(nk.getValue(), blueprint);
+		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else {
+
+			if (book) { MMOItems.print(null, "Cannot register custom smithing recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id);}
+			booklessRecipes.add(blueprint); }
 	}
 
 	/**
@@ -232,7 +236,10 @@ public class RecipeManager implements Reloadable {
 		blueprint.deploy(MythicRecipeStation.WORKBENCH, nk);
 
 		// Remember it
-		customRecipes.put(nk.getValue(), blueprint);
+		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else {
+
+			if (book) { MMOItems.print(null, "Cannot register custom {2} recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id, (shapeless ? "shapeless" : "shaped"));}
+			booklessRecipes.add(blueprint); }
 
 		/*
 		CustomRecipe recipe = new CustomRecipe(type, id, list, shapeless);
@@ -305,8 +312,15 @@ public class RecipeManager implements Reloadable {
 			loadedLegacyRecipes.clear();
 
 			// Disable and forget all blueprints
-			for (NamespacedKey b : customRecipes.keySet()) { Bukkit.removeRecipe(b); customRecipes.get(b).disable(); }
+			for (NamespacedKey b : customRecipes.keySet()) {
+				if (b == null) { continue; }
+				customRecipes.get(b).disable();
+				try { Bukkit.removeRecipe(b); }
+				catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", b.getKey(), e.getMessage()); } }
 			customRecipes.clear();
+
+			for (MythicRecipeBlueprint b : booklessRecipes) { b.disable(); }
+			booklessRecipes.clear();
 
 			// Load all recipes
 			generatedNKs = null;

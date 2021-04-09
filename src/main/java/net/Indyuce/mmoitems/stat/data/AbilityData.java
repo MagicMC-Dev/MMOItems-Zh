@@ -18,6 +18,28 @@ public class AbilityData {
 	private final CastingMode castMode;
 	private final Map<String, Double> modifiers = new HashMap<>();
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AbilityData)) { return false; }
+
+		// Compare casitng mode
+		if (((AbilityData) obj).getCastingMode() != getCastingMode()) { return false; }
+
+		// Not same ability
+		if (!((AbilityData) obj).getAbility().equals(getAbility())) { return false; }
+
+		// Check modifiers
+		for (String mod : ((AbilityData) obj).getModifiers()) {
+
+			// Any difference?
+			double objMod = ((AbilityData) obj).getModifier(mod);
+			double thisMod = getModifier(mod);
+			if (objMod != thisMod) { return false; } }
+
+		// Success
+		return true;
+	}
+
 	public AbilityData(JsonObject object) {
 		ability = MMOItems.plugin.getAbilities().getAbility(object.get("Id").getAsString());
 		castMode = CastingMode.valueOf(object.get("CastMode").getAsString());

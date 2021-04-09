@@ -36,5 +36,15 @@ public class DoubleData implements StatData, Mergeable {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DoubleData)) { return false; }
+		return ((DoubleData) obj).getValue() == getValue(); }
+
+	@Override
 	public @NotNull StatData cloneData() { return new DoubleData(getValue()); }
+
+	@Override
+	public boolean isClear() { return getValue() == 0; }
+
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.lumine.mythic.lib.api.util.Ref;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.apache.commons.lang.Validate;
@@ -27,6 +28,32 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 
 	public GemSocketsData(@NotNull List<String> emptySlots) {
 		this.emptySlots = emptySlots;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GemSocketsData)) { return false; }
+		if (((GemSocketsData) obj).getEmptySlots().size() != getEmptySlots().size()) { return false; }
+		if (((GemSocketsData) obj).getGemstones().size() != getGemstones().size()) { return false; }
+		if (!SilentNumbers.hasAll(((GemSocketsData) obj).getEmptySlots(), getEmptySlots())) { return false; }
+
+		for (GemstoneData objGem : ((GemSocketsData) obj).getGemstones()) {
+
+			if (objGem == null) { continue; }
+
+			// Validate with ours
+			boolean unmatched = true;
+			for (GemstoneData thisGem : getGemstones()) {
+
+				// Test match
+				if (objGem.equals(thisGem)) {
+					unmatched = false;
+					break; }
+			}
+			if (unmatched) { return false; } }
+
+		// All equal
+		return true;
 	}
 
 	/**
@@ -102,6 +129,9 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 
 		return ret;
 	}
+
+	@Override
+	public boolean isClear() { return getGemstones().size() == 0 && getEmptySlots().size() == 0; }
 
 	@Override
 	public StatData randomize(MMOItemBuilder builder) {

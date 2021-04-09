@@ -41,6 +41,27 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof SoundListData)) { return false; }
+		if (((SoundListData) obj).getCustomSounds().size() != getCustomSounds().size()) { return false; }
+
+		for (CustomSound sound : ((SoundListData) obj).getCustomSounds()) {
+
+			if (sound == null) { continue; }
+
+			boolean unmatched = true;
+			for (CustomSound thi : getCustomSounds()) {
+
+				if (sound.equals(thi)) {
+					unmatched = false;
+					break;  } }
+			if (unmatched) { return false; }
+		}
+
+		return true;
+	}
+
+	@Override
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof SoundListData, "Cannot merge two different stat data types");
 		SoundListData cast = (SoundListData) data;
@@ -49,6 +70,11 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 
 	@Override
 	public @NotNull StatData cloneData() { return new SoundListData(mapData()); }
+
+	@Override
+	public boolean isClear() {
+		return mapData().size() == 0;
+	}
 
 	@Override
 	public StatData randomize(MMOItemBuilder builder) {

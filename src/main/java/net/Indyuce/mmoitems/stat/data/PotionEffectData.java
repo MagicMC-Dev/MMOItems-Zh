@@ -10,6 +10,15 @@ public class PotionEffectData {
 	private final double duration;
 	private final int level;
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PotionEffectData)) { return false; }
+
+		if (((PotionEffectData) obj).getLevel() != getLevel()) { return false; }
+		if (((PotionEffectData) obj).getDuration() != getDuration()) { return false; }
+		return type.equals(((PotionEffectData) obj).getType());
+	}
+
 	public PotionEffectData(PotionEffectType type, int level) {
 		this(type, (double) MMOUtils.getEffectDuration(type) / 20d, level);
 	}

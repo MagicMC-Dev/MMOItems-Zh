@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
 
 import com.google.gson.JsonArray;
@@ -16,6 +17,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class StringListData implements StatData, RandomStatData, Mergeable {
 	@NotNull private final List<String> list;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof StringListData)) { return false; }
+		if (((StringListData) obj).getList().size() != getList().size()) { return false; }
+		return SilentNumbers.hasAll(((StringListData) obj).getList(), getList());
+	}
 
 	public StringListData() {
 		this(new ArrayList<>());
@@ -52,4 +60,7 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 
 	@Override
 	public @NotNull StatData cloneData() { return new StringListData(getList()); }
+
+	@Override
+	public boolean isClear() { return getList().size() == 0; }
 }

@@ -24,6 +24,14 @@ public abstract class Ability {
 
 	protected static final Random random = new Random();
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Ability)) { return false; }
+
+		// Same name means same ability
+		return ((Ability) obj).getName().equals(getName());
+	}
+
 	public Ability(CastingMode... allowedModes) {
 		this.id = getClass().getSimpleName().toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
 		this.name = getClass().getSimpleName().replace("_", " ");

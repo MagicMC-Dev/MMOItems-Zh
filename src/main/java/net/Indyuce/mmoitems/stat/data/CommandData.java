@@ -7,6 +7,19 @@ public class CommandData {
 	private final double delay;
 	private final boolean console, op;
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CommandData)) { return false; }
+
+		// Any difference in these will cause this to not be equal
+		if (((CommandData) obj).getDelay() != getDelay()) { return false; }
+		if (((CommandData) obj).isConsoleCommand() != isConsoleCommand()) { return false; }
+		if (((CommandData) obj).hasOpPerms() != hasOpPerms()) { return false; }
+
+		// Finally, if the command strings match.
+		return ((CommandData) obj).getCommand().equals(getCommand());
+	}
+
 	public CommandData(String command, double delay, boolean console, boolean op) {
 		Validate.notNull(command, "Command cannot be null");
 

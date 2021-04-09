@@ -362,7 +362,7 @@ public class Enchants extends ItemStat implements Upgradable {
 			//SENCH//for (StatData date : hist.getExternalData()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) date).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) date).getLevel(e)); } }
 
 			// All right, whats the expected enchantment levels?
-			EnchantListData expected = (EnchantListData) hist.recalculate();
+			EnchantListData expected = (EnchantListData) hist.recalculate(mmoitem.getUpgradeLevel());
 
 			// Gather a list of extraneous enchantments
 			HashMap<Enchantment, Integer> discrepancies = new HashMap<>();

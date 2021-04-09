@@ -739,6 +739,8 @@ public class MMOItems extends LuminePlugin {
 
 	/**
 	 * Easily log something using the FriendlyFeedbackProvider, nice!
+	 * <p></p>
+	 * Use a null level to use the normal console sender.
 	 *
 	 * @author Gunging
 	 */

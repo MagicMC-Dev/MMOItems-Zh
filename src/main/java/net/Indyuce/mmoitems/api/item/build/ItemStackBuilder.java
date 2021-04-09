@@ -13,6 +13,8 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
@@ -117,7 +119,15 @@ public class ItemStackBuilder {
 	public NBTItem buildNBT(boolean forDisplay) {
 		// Clone as to not conflict in any way
 		MMOItem builtMMOItem = mmoitem.clone();
-		//GEM//MMOItems.Log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.getStatHistories().size() + "\u00a77 Historic)");
+		//GEM//MMOItems.log("\u00a7e+ \u00a77Building \u00a7c" + mmoitem.getType().getName() + " " + mmoitem.getId() + "\u00a77 (Size \u00a7e" + mmoitem.getStatHistories().size() + "\u00a77 Historic)");
+
+		/*
+		 * As an assumption for several enchantment recognition operations,
+		 * Enchantment data must never be clear and lack history. This is
+		 * the basis for when an item is 'old'
+		 */
+		if (!builtMMOItem.hasData(ItemStats.ENCHANTS)) { builtMMOItem.setData(ItemStats.ENCHANTS, ItemStats.ENCHANTS.getClearStatData()); }
+		//GEM// else {MMOItems.log("\u00a73 -?- \u00a77Apparently found enchantment data \u00a7b" + (mmoitem.getData(ItemStats.ENCHANTS) == null ? "null" : ((EnchantListData) mmoitem.getData(ItemStats.ENCHANTS)).getEnchants().size())); }
 
 		// For every stat within this item
 		for (ItemStat stat : builtMMOItem.getStats())
@@ -125,21 +135,21 @@ public class ItemStackBuilder {
 			// Attempt to add
 			try {
 
-				//GEM//MMOItems.Log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
+				//GEM//MMOItems.log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
 
 				// Does the item have any stat history regarding thay?
-				StatHistory s = builtMMOItem.getStatHistory(stat);
+ 				StatHistory s = builtMMOItem.getStatHistory(stat); int l = mmoitem.getUpgradeLevel();
 
 				// Found it?
-				if (s != null) {
+				if (s != null && (!s.isClear() || stat instanceof Enchants)) {
 
-					//GEM//MMOItems.Log("\u00a7a -+- \u00a77Found History");
+					//GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
 
 					// Add to NBT
 					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));
 
 					// Recalculate
-					builtMMOItem.setData(stat, s.recalculate(true));
+					builtMMOItem.setData(stat, s.recalculate(l));
 				}
 
 				if (forDisplay && stat instanceof Previewable) {

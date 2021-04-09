@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
@@ -34,5 +35,30 @@ public class AbilityListData implements StatData, Mergeable {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AbilityListData)) { return false; }
+
+		// Different number of abilities? Not equal
+		if (getAbilities().size() != ((AbilityListData) obj).getAbilities().size()) { return false; }
+
+		// Examine each
+		for (AbilityData ab : ((AbilityListData) obj).getAbilities()) {
+
+			if (ab == null) { continue; }
+
+			boolean unmatched = true;
+			for (AbilityData thi : getAbilities()) { if (ab.equals(thi)) { unmatched = false; break; } }
+
+			// Extraneous ability found, not equal.
+			if (unmatched) { return false; }
+		}
+
+		return true; }
+
+	@Override
 	public @NotNull StatData cloneData() { return new AbilityListData(getAbilities()); }
+
+	@Override
+	public boolean isClear() { return getAbilities().size() == 0; }
+
 }

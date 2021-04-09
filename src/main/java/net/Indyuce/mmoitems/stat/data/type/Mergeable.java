@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
  * when used through Gem Stones. However, this serves a crucial internal
  * role in determining which stats generate {@link StatHistory}es, which in
  * turn allows them to be {@link Upgradable}.
+ * <p></p>
+ * <b>Strongly encouraged to override the <code>equals</code> method
+ * to something fitting here as Mergeable stats should support comparisons.</b>
  */
 public interface Mergeable {
 
@@ -23,4 +26,10 @@ public interface Mergeable {
 	 * Returns a Data with the same values as this, but that is not this.
 	 */
 	@NotNull StatData cloneData();
+
+	/**
+	 * @return <code>true</code> If this is the default state of the StatData, like an enchantment
+	 * 		   list data having 0 enchantments, or a percent bonus double stat having a value of 0.
+	 */
+	 boolean isClear();
 }

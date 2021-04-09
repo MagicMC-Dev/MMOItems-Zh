@@ -21,6 +21,20 @@ public class GemstoneData {
 	@Nullable Integer levelPut = 0;
 	@NotNull final UUID historicUUID;
 
+	/**
+	 * Gemstone equals method is for practical purposes and only checks that
+	 * this other thing is both a GemstoneData and has the same UUID.
+	 *
+	 * @param obj Object to compare with
+	 * @return <code>true</code> if they have the same {@link #getHistoricUUID()}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof GemstoneData)) { return false; }
+
+		return ((GemstoneData) obj).getHistoricUUID().equals(getHistoricUUID());
+	}
+
 	@Nullable
 	public String getMMOItemType() {
 		return mmoitemType;

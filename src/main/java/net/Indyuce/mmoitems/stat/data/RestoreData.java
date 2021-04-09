@@ -40,6 +40,11 @@ public class RestoreData implements StatData, Mergeable {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof RestoreData)) { return false; }
+		return ((RestoreData) obj).getFood() == getFood() && ((RestoreData) obj).getHealth() == getHealth() && ((RestoreData) obj).getSaturation() == getSaturation(); }
+
+	@Override
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof RestoreData, "Cannot merge two different stat data types");
 		health += ((RestoreData) data).health;
@@ -50,5 +55,10 @@ public class RestoreData implements StatData, Mergeable {
 	@Override
 	public @NotNull StatData cloneData() {
 		return new RestoreData(getHealth(), getFood(), getSaturation());
+	}
+
+	@Override
+	public boolean isClear() {
+		return getFood() == 0 && getHealth() == 0 && getSaturation() == 0;
 	}
 }

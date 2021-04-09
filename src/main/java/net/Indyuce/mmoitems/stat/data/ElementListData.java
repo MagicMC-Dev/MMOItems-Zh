@@ -30,6 +30,24 @@ public class ElementListData implements StatData, Mergeable {
 		return damage.keySet();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ElementListData)) { return false; }
+		if (((ElementListData) obj).damage.size() != damage.size() || ((ElementListData) obj).defense.size() != defense.size()) { return false; }
+
+		for (Element e : Element.values()) {
+
+			double expectedDA = getDamage(e);
+			double expectedDE = getDefense(e);
+			double realDA = ((ElementListData) obj).getDamage(e);
+			double realDE = ((ElementListData) obj).getDefense(e);
+
+			// Any differene?
+			if (expectedDA != realDA || expectedDE != realDE) { return false; }  }
+
+		return true;
+	}
+
 	/**
 	 * No way to add the elements directly from the constructor.
 	 * <p></p>
@@ -81,6 +99,11 @@ public class ElementListData implements StatData, Mergeable {
 
 		// Return cloned
 		return ret;
+	}
+
+	@Override
+	public boolean isClear() {
+		return getDamageElements().size() == 0 && getDefenseElements().size() == 0;
 	}
 
 

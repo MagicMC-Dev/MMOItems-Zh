@@ -2,7 +2,9 @@ package net.Indyuce.mmoitems.stat.data;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.stat.StoredTags;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
@@ -24,6 +26,23 @@ public class StoredTagsData implements StatData, Mergeable {
 		this(NBTItem.get(stack));
 	}
 	public StoredTagsData(List<ItemTag> tgs) { tags.addAll(tgs); }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof StoredTagsData)) { return false; }
+
+		if (((StoredTagsData) obj).getTags().size() != getTags().size()) { return false; }
+
+		for (ItemTag tag : ((StoredTagsData) obj).getTags()) {
+
+			if (tag == null) { continue; }
+
+			boolean unmatched = true;
+			for (ItemTag tg : getTags()) {
+				if (tag.equals(tg)) { unmatched = false; break; } }
+			if (unmatched) { return false; } }
+		return true;
+	}
 
 	public StoredTagsData(NBTItem nbt) {
 		for (String tag : nbt.getTags()) {
@@ -100,4 +119,9 @@ public class StoredTagsData implements StatData, Mergeable {
 	@Override
 	public @NotNull
 	StatData cloneData() { return new StoredTagsData(getTags()); }
+
+	@Override
+	public boolean isClear() {
+		return getTags().size() == 0;
+	}
 }

@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
@@ -87,7 +88,7 @@ public class MMOItem implements ItemReference {
 			}
 
 			// Recalculate
-			setData(stat, sHistory.recalculate());
+			setData(stat, sHistory.recalculate(getUpgradeLevel()));
 
 	 	// Merging means replacing if it cannot be merged
 		} else {
@@ -171,6 +172,17 @@ public class MMOItem implements ItemReference {
 	 * A stat history is basically the memmory of its original stats, from when it was created, its gem stone stats, those added by which gem, and its upgrade bonuses.
 	 */
 	@Nullable public StatHistory getStatHistory(@NotNull ItemStat stat) {
+
+		/*
+		 * As an assumption for several enchantment recognition operations,
+		 * Enchantment data must never be clear and lack history. This is
+		 * the basis for when an item is 'old'
+		 */
+		if (stat instanceof Enchants) { return mergeableStatHistory.getOrDefault(stat.getNBTPath(), StatHistory.from(this, stat, true)); }
+
+		/*
+		 * Normal stat, just fetch.
+		 */
 		try {
 
 			// Well that REALLY should work

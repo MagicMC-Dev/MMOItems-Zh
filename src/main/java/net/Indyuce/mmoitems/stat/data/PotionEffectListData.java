@@ -20,6 +20,29 @@ public class PotionEffectListData implements StatData, Mergeable {
 	// PotionEffectData(config.getConfigurationSection(key)));
 	// }
 
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PotionEffectListData)) { return false; }
+
+		if (((PotionEffectListData) obj).getEffects().size() != getEffects().size()) { return false; }
+
+		for (PotionEffectData eff : ((PotionEffectListData) obj).getEffects()) {
+
+			if (eff == null) { continue; }
+
+			// COmpare
+			boolean unmatched = true;
+			for (PotionEffectData thi : getEffects()) {
+
+				if (eff.equals(thi)) {
+					unmatched = false;
+					break; } }
+			if (unmatched) { return false; }
+		}
+		return true;
+	}
+
 	public PotionEffectListData(PotionEffectData... effects) {
 		add(effects);
 	}
@@ -40,4 +63,9 @@ public class PotionEffectListData implements StatData, Mergeable {
 
 	@Override
 	public @NotNull StatData cloneData() { return new PotionEffectListData(getEffects().toArray(new PotionEffectData[0])); }
+
+	@Override
+	public boolean isClear() {
+		return getEffects().size() == 0;
+	}
 }

@@ -74,7 +74,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
 			String builtRange;
 			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = SilentNumbers.readableRounding(techMinimum, 0); }
-			else { builtRange = SilentNumbers.readableRounding(techMinimum, 0) + "-" + SilentNumbers.readableRounding(techMaximum, 0); }
+			else { builtRange = SilentNumbers.removeDecimalZeros(String.valueOf(techMinimum)) + "-" + SilentNumbers.removeDecimalZeros(String.valueOf(techMaximum)); }
 
 			// Just display normally
 			item.getLore().insert("required-level", formatNumericStat(techMinimum, "#", builtRange));

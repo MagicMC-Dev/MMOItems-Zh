@@ -116,27 +116,34 @@ public class UpgradeTemplate {
 
 		// Make sure to not overwrite player's enchantments when upgrading.
 		Enchants.separateEnchantments(mmoitem);
+		//UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Separated enchantments");
 
 		// Set the items level
 		UpgradeData dat;
-		if (mmoitem.hasData(ItemStats.UPGRADE)) { dat = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE); } else { dat = new UpgradeData(null, null, false, false, 0, 100); }
+		if (mmoitem.hasData(ItemStats.UPGRADE)) {
+			dat = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE);
+		} else { dat = new UpgradeData(null, null, false, false, 0, 100); }
 		dat.setLevel(level);
 		mmoitem.setData(ItemStats.UPGRADE, dat);
+		//UPGR//MMOItems.log("\u00a76>\u00a73>\u00a7a> \u00a77Upgrading to level \u00a7e" + dat.getLevel());
 
 		// For every Stat-UpgradeInfo pair
 		for (ItemStat stat : perStatUpgradeInfos.keySet()) {
+			//UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Upgrading stat \u00a7e" + stat.getId());
 
 			// Preprocess
 			((Upgradable) stat).preprocess(mmoitem);
 
 			// Initializes Stat History
 			StatHistory hist = StatHistory.from(mmoitem, stat);
+			//UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Stat History Initialized");
 
 			// Midprocess
 			((Upgradable) stat).midprocess(mmoitem);
 
 			// The Stat History now manages applying upgrades.
-			mmoitem.setData(stat, hist.recalculate());
+			mmoitem.setData(stat, hist.recalculate(level));
+			//UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Recalculated");
 
 			// Postprocess
 			((Upgradable) stat).postprocess(mmoitem);

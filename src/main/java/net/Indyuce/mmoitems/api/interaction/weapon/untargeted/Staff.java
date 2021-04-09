@@ -72,12 +72,14 @@ public class Staff extends UntargetedWeapon {
 			return;
 
 		double power = MMOItems.plugin.getConfig().getDouble("item-ability.staff.power");
-		Vector vec = target.getLocation().toVector().subtract(getPlayer().getLocation().toVector()).setY(0).normalize().multiply(1.75 * power)
-				.setY(.65 * power);
-		target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
-		target.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, target.getLocation().add(0, 1, 0), 16, 0, 0, 0, .1);
-		target.setVelocity(vec);
-		target.playEffect(EntityEffect.HURT);
-		target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
+
+		try {
+			Vector vec = target.getLocation().toVector().subtract(getPlayer().getLocation().toVector()).setY(0).normalize().multiply(1.75 * power).setY(.65 * power);
+			target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
+			target.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, target.getLocation().add(0, 1, 0), 16, 0, 0, 0, .1);
+			target.setVelocity(vec);
+			target.playEffect(EntityEffect.HURT);
+			target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
+		} catch (IllegalArgumentException ignored) {}
 	}
 }

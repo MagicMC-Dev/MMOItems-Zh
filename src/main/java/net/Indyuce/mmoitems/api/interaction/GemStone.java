@@ -10,6 +10,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
@@ -80,6 +81,11 @@ public class GemStone extends UseItem {
 		Bukkit.getPluginManager().callEvent(called);
 		if (called.isCancelled())
 			return new ApplyResult(ResultType.NONE);
+
+		/*
+		 * To not clear enchantments put by players
+		 */
+		Enchants.separateEnchantments(targetMMO);
 
 		/*
 		 * Gem stone can be successfully applied. apply stats then abilities and

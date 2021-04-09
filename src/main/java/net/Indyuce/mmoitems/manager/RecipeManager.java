@@ -312,6 +312,7 @@ public class RecipeManager implements Reloadable {
 				if (b == null) { continue; }
 				customRecipes.get(b).disable();
 				try { Bukkit.removeRecipe(b); }
+
 				catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", b.getKey(), e.getMessage()); } }
 			customRecipes.clear();
 

@@ -243,13 +243,6 @@ public class Elements extends ItemStat implements Previewable {
 			double techMinimumDEF = nsfDEF.calculate(0, -2.5);
 			double techMaximumDEF = nsfDEF.calculate(0, 2.5);
 
-			// Cancel if it its NEGATIVE and this doesn't support negative stats.
-			if (techMinimum < (nsf.getBase() - nsf.getMaxSpread())) { techMinimum = nsf.getBase() - nsf.getMaxSpread(); }
-			if (techMaximum > (nsf.getBase() + nsf.getMaxSpread())) { techMaximum = nsf.getBase() + nsf.getMaxSpread(); }
-
-			if (techMinimumDEF < (nsfDEF.getBase() - nsfDEF.getMaxSpread())) { techMinimumDEF = nsfDEF.getBase() - nsfDEF.getMaxSpread(); }
-			if (techMaximumDEF > (nsfDEF.getBase() + nsfDEF.getMaxSpread())) { techMaximumDEF = nsfDEF.getBase() + nsfDEF.getMaxSpread(); }
-
 			// Display if not ZERO
 			if (techMinimum != 0 || techMaximum != 0) {
 

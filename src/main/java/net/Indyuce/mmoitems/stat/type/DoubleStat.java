@@ -160,15 +160,13 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
 
 		// Get Value
+		//SPRD//MMOItems.log("\u00a7c༺\u00a77 Calulating deviations of \u00a7b" + item.getMMOItem().getType().toString() + " " + item.getMMOItem().getId() + "\u00a77's \u00a7e" + getId());
 		double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
 		double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
 
 		// Cancel if it its NEGATIVE and this doesn't support negative stats.
 		if (techMaximum < 0 && !handleNegativeStats()) { return; }
 		if (techMinimum < 0 && !handleNegativeStats()) { techMinimum = 0; }
-		if (techMinimum < ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread()) { techMinimum = ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread(); }
-		if (techMaximum > ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread()) { techMaximum = ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread(); }
-
 		// Add NBT Path
 		item.addItemTag(getAppliedNBT(currentData));
 

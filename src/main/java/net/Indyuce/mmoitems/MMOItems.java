@@ -13,6 +13,8 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
@@ -186,6 +188,10 @@ public class MMOItems extends LuminePlugin {
 		getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
 		layoutManager.reload();
 		stationRecipeManager.reload();
+
+		// This ones are not implementing Reloadable
+		NumericStatFormula.reload();
+		MMOItemReforger.reload();
 
 		Bukkit.getPluginManager().registerEvents(entityManager, this);
 		Bukkit.getPluginManager().registerEvents(dropTableManager, this);

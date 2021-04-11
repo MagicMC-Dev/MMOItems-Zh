@@ -156,7 +156,9 @@ public class NumericStatFormula implements RandomStatData {
 	 */
 	public double calculate(double levelScalingFactor, double random) {
 
-		if (useRelativeSpread) { return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)); }
+		if (useRelativeSpread) {
+			//SPRD//if (spread > 0) MMOItems.log("\u00a7c༺\u00a77 Using \u00a7eRelative\u00a77 spread formula: \u00a76μ=" + (base + scale * levelScalingFactor) + "\u00a77, \u00a73σ=" + (spread * (base + scale * levelScalingFactor) + "\u00a7b=" + spread + "×" + (base + scale * levelScalingFactor)) + " \u00a7c@" + random + "\u00a7e = " + (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)));
+			return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)); }
 
 		/*
 		 * The mean, the center of the distribution
@@ -177,6 +179,7 @@ public class NumericStatFormula implements RandomStatData {
 		if (gaussSpread > (getMaxSpread())) { gaussSpread = getMaxSpread(); }
 
 		// That's it
+		//SPRD//if (spread > 0) MMOItems.log("\u00a7c༺\u00a77 Using \u00a7aAdditive\u00a77 spread formula, \u00a76μ=" + (base + scale * levelScalingFactor) + "\u00a77, \u00a73σ=" + (spread)  + " \u00a7c@" + random + "\u00a7e = " + (actualBase + gaussSpread));
 		return actualBase + gaussSpread;
 	}
 

@@ -41,12 +41,18 @@ import java.util.logging.Level;
 public class RandomUnsocket extends DoubleStat implements ConsumableItemInteraction {
     public RandomUnsocket() {
         super("RANDOM_UNSOCKET", Material.BOWL, "Random Unsocket",
-                new String[] { "Number of gems (rounded down) that", "will pop out of an item when", "this is applied." },
+                new String[] { "Number of gems (rounded down)", "that will pop out of an item when", "this is applied." },
                 new String[] { "consumable" });
     }
 
     @Override
     public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
+
+        /*
+         * Must also check that the consumable itself does have this stat... bruh
+         */
+        VolatileMMOItem consumableVol = consumable.getMMOItem();
+        if (!consumableVol.hasData(ItemStats.RANDOM_UNSOCKET)) { return false; }
 
         /*
          * Cancel if the target is just not an MMOItem
@@ -74,12 +80,8 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
             return false; }
 
         // Get removed gems amount
-        int s = 1;
-        if (consumable.getMMOItem().hasData(ItemStats.RANDOM_UNSOCKET)) {
-
-            // Get
-            DoubleData unsocket = (DoubleData) consumable.getMMOItem().getData(ItemStats.RANDOM_UNSOCKET);
-            if (unsocket != null) { s = SilentNumbers.floor(unsocket.getValue()); } }
+        DoubleData unsocket = (DoubleData) consumable.getMMOItem().getData(ItemStats.RANDOM_UNSOCKET);
+        int s = 1;  if (unsocket != null) { s = SilentNumbers.floor(unsocket.getValue()); }
         //GEM//for (String str : SilentNumbers.transcribeList(mmoGemStones, (lam) -> "\u00a73Found \u00a77 " + ((MMOItem) lam).getType().getId() + " " + ((MMOItem) lam).getId() )) { MMOItems.log(str); };
 
         // Drop gemstones to the ground :0

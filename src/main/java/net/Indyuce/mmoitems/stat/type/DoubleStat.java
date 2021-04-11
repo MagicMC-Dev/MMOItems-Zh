@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -97,30 +98,61 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 				DoubleData uData = (DoubleData) hist.recalculateUnupgraded();
 
 				// Calculate Difference
-				upgradeShift = value - uData.getValue();
-			}
-
-		}
+				upgradeShift = value - uData.getValue(); } }
 
 		// Display if not ZERO
 		if (value != 0 || upgradeShift != 0) {
 
+			// Get path and modify
+			String pathFormat = MMOItems.plugin.getLanguage().getStatFormat(getPath());
+
 			// Displaying upgrades?
 			if (upgradeShift != 0) {
 
-				item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value))
+				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value)
+
+						// Add upgrade format
 						+ MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift) + (new StatFormat("##").format(upgradeShift)), !isGood(upgradeShift))));
 
 			} else {
 
 				// Just display normally
-				item.getLore().insert(getPath(), formatNumericStat(value, "#", new StatFormat("##").format(value)));
-			}
-		}
+				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value));
+
+			} }
 
 		// Add NBT Path
 		item.addItemTag(getAppliedNBT(data));
 	}
+
+	@NotNull public static String formatPath(@NotNull String format, boolean moreIsBetter, double value) {
+
+		// Thats it
+		return format
+
+				// Replace conditional pluses with +value
+				.replace("<plus>#",getColorPrefix(value < 0 && moreIsBetter) + (value > 0 ? "+" : "") + new StatFormat("##").format(value))
+
+				// Replace loose pounds with the value
+				.replace("#",getColorPrefix(value < 0 && moreIsBetter) + new StatFormat("##").format(value))
+
+				// Replace loose <plus>es
+				.replace("<plus>", (value > 0 ? "+" : ""));
+	}
+
+	@NotNull public static String formatPath(@NotNull String format, boolean moreIsBetter, double min, double max) {
+
+		// Thats it
+		return format
+
+				// Replace conditional pluses with +value
+				.replace("<plus>","")
+
+				// Replace loose pounds with the value
+				.replace("#", getColorPrefix(min < 0 && moreIsBetter) +
+						(min > 0 ? "+" : "") + new StatFormat("##").format(min)
+							+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "\u00a7f\u00a7l⎓") + getColorPrefix(max < 0 && moreIsBetter) +
+						(min < 0 && max > 0 ? "+" : "") + new StatFormat("##").format(max)); }
 
 	@Override
 	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
@@ -144,12 +176,25 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		if (techMinimum != 0 || techMaximum != 0) {
 
 			String builtRange;
-			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = new StatFormat("##").format(techMinimum); }
-			else { builtRange = new StatFormat("##").format(techMinimum) + "-" + new StatFormat("##").format(techMaximum); }
+			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
+				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMaximum);
+
+			} else {
+				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMinimum, techMaximum); }
 
 			// Just display normally
-			item.getLore().insert(getPath(), formatNumericStat(techMinimum, "#", builtRange));
-		}
+			item.getLore().insert(getPath(), builtRange); }
+	}
+
+
+	@NotNull public static String getColorPrefix(boolean isNegative) {
+
+		// Get the base
+		if (isNegative) {
+			return Objects.requireNonNull(MMOItems.plugin.getConfig().getString("stats-displaying.color-negative", ""));
+
+		} else {
+			return Objects.requireNonNull(MMOItems.plugin.getConfig().getString("stats-displaying.color-positive", "")); }
 	}
 
 	@NotNull String plus(double amount) { if (amount >= 0) { return "+"; } else return ""; }

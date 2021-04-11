@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMod
 import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class Ingredient {
@@ -53,7 +54,7 @@ public abstract class Ingredient {
 	 */
 	public abstract String formatDisplay(String string);
 
-	public abstract ItemStack generateItemStack(RPGPlayer player);
+	@NotNull public abstract ItemStack generateItemStack(@NotNull RPGPlayer player);
 
 	public CheckedIngredient evaluateIngredient(IngredientInventory inv) {
 		return new CheckedIngredient(this, inv.getIngredient(this, IngredientLookupMode.BASIC));

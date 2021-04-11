@@ -11,6 +11,7 @@ import io.lumine.xikage.mythicmobs.items.MythicItem;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.jetbrains.annotations.NotNull;
 
 public class MythicItemIngredient extends Ingredient {
 	private final MythicItem mythicitem;
@@ -38,8 +39,9 @@ public class MythicItemIngredient extends Ingredient {
 		return string.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 
-	@Override
-	public ItemStack generateItemStack(RPGPlayer player) {
+	@NotNull
+    @Override
+	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 		return BukkitAdapter.adapt(mythicitem.generateItemStack(getAmount()));
 	}
 

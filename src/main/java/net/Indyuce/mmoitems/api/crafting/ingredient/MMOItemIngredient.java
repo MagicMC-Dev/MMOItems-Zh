@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.jetbrains.annotations.NotNull;
 
 public class MMOItemIngredient extends Ingredient {
 	private final MMOItemTemplate template;
@@ -52,9 +53,12 @@ public class MMOItemIngredient extends Ingredient {
 		return string.replace("#item#", display).replace("#level#", level != 0 ? "lvl." + level + " " : "").replace("#amount#", "" + getAmount());
 	}
 
+	@NotNull
 	@Override
-	public ItemStack generateItemStack(RPGPlayer player) {
-		ItemStack item = template.newBuilder(player).build().newBuilder().build();
+	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+
+		// For display, obviously
+		ItemStack item = template.newBuilder(player).build().newBuilder().build(true);
 		item.setAmount(getAmount());
 		return item;
 	}

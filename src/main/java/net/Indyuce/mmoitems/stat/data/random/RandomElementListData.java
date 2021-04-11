@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.ElementListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class RandomElementListData implements StatData, RandomStatData {
 	private final Map<Element, NumericStatFormula> damage = new HashMap<>(), defense = new HashMap<>();
@@ -36,13 +37,8 @@ public class RandomElementListData implements StatData, RandomStatData {
 		return defense.containsKey(element);
 	}
 
-	public NumericStatFormula getDefense(Element element) {
-		return defense.getOrDefault(element, NumericStatFormula.ZERO);
-	}
-
-	public NumericStatFormula getDamage(Element element) {
-		return damage.getOrDefault(element, NumericStatFormula.ZERO);
-	}
+	@NotNull public NumericStatFormula getDefense(@NotNull Element element) { return defense.getOrDefault(element, NumericStatFormula.ZERO); }
+	@NotNull public NumericStatFormula getDamage(@NotNull Element element) { return damage.getOrDefault(element, NumericStatFormula.ZERO); }
 
 	public Set<Element> getDefenseElements() {
 		return defense.keySet();

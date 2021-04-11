@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class VanillaIngredient extends Ingredient {
 	private final Material material;
@@ -39,8 +40,9 @@ public class VanillaIngredient extends Ingredient {
 		return string.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 
-	@Override
-	public ItemStack generateItemStack(RPGPlayer player) {
+	@NotNull
+    @Override
+	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 		NBTItem item = NBTItem.get(new ItemStack(material, getAmount()));
 		if (displayName != null) {
 			item.setDisplayNameComponent(LegacyComponent.parse(displayName));

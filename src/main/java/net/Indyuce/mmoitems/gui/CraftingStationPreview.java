@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
@@ -41,29 +42,56 @@ public class CraftingStationPreview extends PluginInventory {
 
 	@Override
 	public Inventory getInventory() {
+
+		// Create inventory of a nice size (5x6)
 		Inventory inv = Bukkit.createInventory(this, 45, Message.RECIPE_PREVIEW.formatRaw(ChatColor.RESET));
 		ingredients.clear();
+
+		// Include each ingredient
 		for (CheckedIngredient ing : recipe.getIngredients()) {
+
+			// Amount exceeds 64?
 			if (ing.getIngredient().getAmount() > 64) {
+
+				// Generate new item for display
 				ItemStack sample = ing.getIngredient().generateItemStack(playerData.getRPG());
 				sample.setAmount(64);
+
+				/*
+				 * Time to calculate the stacks and put through the crafting station space.
+				 */
 				int amount = ing.getIngredient().getAmount();
-				// calculate how many full stacks there are
-				int stacks = amount / 64;
-				// check for remainders
-				if ((stacks % 64) == 0)
-					// simply add the desired amount of ingredients
-					for (int i = 0; i < stacks; i++)
+				int stacks = SilentNumbers.floor(amount / 64D);
+
+				// Add what must be added
+				while (amount > 0) {
+
+					// Still too large?
+					if (amount > 64) {
+
+						// Put a whole stack
 						ingredients.add(sample.clone());
-				else
-					// iterate stacks + 1 for the final one
-					for (int i = 0; i < (stacks + 1); i++) {
-						if (i == stacks)
-							sample.setAmount(amount - (stacks * 64));
+
+						// Subtract a whole stack
+						amount-= 64;
+
+					// No longer greater than 64, :sleep:
+					} else {
+
+						// Add remaining amount
+						sample.setAmount(amount);
 						ingredients.add(sample.clone());
-					}
-			} else
+
+						// Done
+						amount-=amount;
+
+					} }
+
+			// Not greater than 64, just put it like that.
+			} else {
+
 				ingredients.add(ing.getIngredient().generateItemStack(playerData.getRPG()));
+			}
 		}
 
 		int min = (page - 1) * slots.length, max = page * slots.length;

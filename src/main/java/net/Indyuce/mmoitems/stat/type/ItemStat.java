@@ -220,8 +220,7 @@ public abstract class ItemStat {
 
 	public String formatNumericStat(double value, String... replace) {
 		String format = MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("<plus>", value > 0 ? "+" : "");
-		for (int j = 0; j < replace.length; j += 2)
-			format = format.replace(replace[j], replace[j + 1]);
+		for (int j = 0; j < replace.length; j += 2) { format = format.replace(replace[j], replace[j + 1]); }
 		return format;
 	}
 

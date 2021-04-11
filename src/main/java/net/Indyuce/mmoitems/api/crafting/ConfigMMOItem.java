@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfigMMOItem {
 	private final MMOItemTemplate template;
@@ -32,7 +33,14 @@ public class ConfigMMOItem {
 		this.amount = Math.max(1, amount);
 	}
 
-	public ItemStack generate(RPGPlayer player) {
+	/**
+	 * This actually generates the item the player wanted to craft.
+	 *
+	 * @param player Player to roll RNG in base of
+	 *
+	 * @return A freshly-crafted item to be used by the player.
+	 */
+	@NotNull public ItemStack generate(@NotNull RPGPlayer player) {
 		ItemStack item = template.newBuilder(player).build().newBuilder().build();
 		item.setAmount(amount);
 		return item;
@@ -47,7 +55,7 @@ public class ConfigMMOItem {
 	 * needs to be displayed
 	 */
 	public ItemStack getPreview() {
-		return preview == null ? (preview = template.newBuilder(0, null).build().newBuilder().build()).clone() : preview.clone();
+		return preview == null ? (preview = template.newBuilder(0, null).build().newBuilder().build(true)).clone() : preview.clone();
 	}
 
 	public int getAmount() {

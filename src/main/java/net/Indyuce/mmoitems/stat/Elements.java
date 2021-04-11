@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Element;
@@ -12,11 +13,14 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.ElementListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.Previewable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class Elements extends ItemStat {
+public class Elements extends ItemStat implements Previewable {
 	public Elements() {
 		super("ELEMENT", Material.SLIME_BALL, "Elements", new String[] { "The elements of your item." },
 				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
@@ -126,11 +130,11 @@ public class Elements extends ItemStat {
 		for (Element element : elements.getDamageElements()) {
 			String path = element.name().toLowerCase() + "-damage";
 			double value = elements.getDamage(element);
-			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value))); }
+			item.getLore().insert(path, DoubleStat.formatPath(ItemStat.translate(path), true, value)); }
 		for (Element element : elements.getDefenseElements()) {
 			String path = element.name().toLowerCase() + "-defense";
 			double value = elements.getDefense(element);
-			item.getLore().insert(path, ItemStat.translate(path).replace("#", new StatFormat("##").format(value))); }
+			item.getLore().insert(path, DoubleStat.formatPath(ItemStat.translate(path), true, value)); }
 
 		// Addtags
 		item.addItemTag(getAppliedNBT(data));
@@ -219,4 +223,61 @@ public class Elements extends ItemStat {
 
 	static HashMap<Element, String> defenseNBTpaths = null;
 	static HashMap<Element, String> damageNBTpaths = null;
+
+	@Override
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+		Validate.isTrue(currentData instanceof ElementListData, "Current Data is not ElementListData");
+		Validate.isTrue(templateData instanceof RandomElementListData, "Template Data is not RandomElementListData");
+
+		// Examine every element
+		for (Element element : Element.values()) {
+
+			NumericStatFormula nsf = ((RandomElementListData) templateData).getDamage(element);
+			NumericStatFormula nsfDEF = ((RandomElementListData) templateData).getDefense(element);
+
+			// Get Value
+			double techMinimum = nsf.calculate(0, -2.5);
+			double techMaximum = nsf.calculate(0, 2.5);
+
+			// Get Value
+			double techMinimumDEF = nsfDEF.calculate(0, -2.5);
+			double techMaximumDEF = nsfDEF.calculate(0, 2.5);
+
+			// Cancel if it its NEGATIVE and this doesn't support negative stats.
+			if (techMinimum < (nsf.getBase() - nsf.getMaxSpread())) { techMinimum = nsf.getBase() - nsf.getMaxSpread(); }
+			if (techMaximum > (nsf.getBase() + nsf.getMaxSpread())) { techMaximum = nsf.getBase() + nsf.getMaxSpread(); }
+
+			if (techMinimumDEF < (nsfDEF.getBase() - nsfDEF.getMaxSpread())) { techMinimumDEF = nsfDEF.getBase() - nsfDEF.getMaxSpread(); }
+			if (techMaximumDEF > (nsfDEF.getBase() + nsfDEF.getMaxSpread())) { techMaximumDEF = nsfDEF.getBase() + nsfDEF.getMaxSpread(); }
+
+			// Display if not ZERO
+			if (techMinimum != 0 || techMaximum != 0) {
+
+				// Get path
+				String path = element.name().toLowerCase() + "-damage";
+
+				String builtRange;
+				if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum); }
+				else { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum, techMaximum); }
+
+				// Just display normally
+				item.getLore().insert(path, builtRange); }
+
+			// Display if not ZERO
+			if (techMinimumDEF != 0 || techMaximumDEF != 0) {
+
+				// Get path
+				String path = element.name().toLowerCase() + "-defense";
+
+				String builtRange;
+				if (SilentNumbers.round(techMinimumDEF, 2) == SilentNumbers.round(techMaximumDEF, 2)) { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimumDEF); }
+				else { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimumDEF, techMaximumDEF); }
+
+				// Just display normally
+				item.getLore().insert(path, builtRange); }
+		}
+
+		// Addtags
+		item.addItemTag(getAppliedNBT(currentData));
+	}
 }

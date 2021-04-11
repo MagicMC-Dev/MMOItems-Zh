@@ -246,4 +246,9 @@ public class ItemStackBuilder {
 	 * @return Builds the item
 	 */
 	public ItemStack build() { return new DynamicLore(buildNBT()).build(); }
+
+	/**
+	 * @return Builds the item
+	 */
+	public ItemStack build(boolean forDisplay) { return new DynamicLore(buildNBT(forDisplay)).build(); }
 }

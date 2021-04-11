@@ -91,6 +91,13 @@ item-upgrading:
     stat-change-positive: '&a'
     stat-change-negative: '&c'
 
+stats-displaying:
+
+    # This will be a prefix to numeric stats,
+    # changing their color when they are undesirable.
+    color-positive: ''
+    color-negative: ''
+
 soulbound:
 
     # Edit soulbound damage when players try to use

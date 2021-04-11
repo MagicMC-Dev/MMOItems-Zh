@@ -102,7 +102,6 @@ public class ItemStats {
 			DURABILITY = new ItemDamage(),
 			CUSTOM_MODEL_DATA = new CustomModelData(),
 			MAX_DURABILITY = new MaximumDurability(),
-			DURABILITY_BAR = new DurabilityBar(),
 			WILL_BREAK = new LostWhenBroken(),
 			NAME = new DisplayName(),
 			LORE = new Lore(),
@@ -191,6 +190,7 @@ public class ItemStats {
 			EQUIP_PRIORITY = new DoubleStat("EQUIP_PRIORITY", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "Equip Priority", new String[]{"Sets the level of priority this item has for the", "right click to swap equipped armor feature."}),
 			REQUIRED_BIOMES = new RequiredBiomes(),
 			DROP_ON_DEATH = new DisableDeathDrop(),
+			DURABILITY_BAR = new DurabilityBar(),
 
 	// Permanent Effects
 	PERM_EFFECTS = new PermanentEffects(),
@@ -218,8 +218,6 @@ public class ItemStats {
 			ITEM_TYPE_RESTRICTION = new ItemTypeRestriction(),
 			MAX_CONSUME = new DoubleStat("MAX_CONSUME", Material.BLAZE_POWDER, "Max Consume", new String[]{"Max amount of usage before", "item disappears."}, new String[]{"consumable"}),
 			SUCCESS_RATE = new SuccessRate(),
-			COMPATIBLE_TYPES = new CompatibleTypes(),
-			COMPATIBLE_IDS = new CompatibleIds(),
 
 	// Crafting Stats
 	CRAFTING = new Crafting(),
@@ -238,7 +236,11 @@ public class ItemStats {
 			LUTE_ATTACK_EFFECT = new LuteAttackEffectStat(),
 			NOTE_WEIGHT = new DoubleStat("NOTE_WEIGHT", VersionMaterial.MUSIC_DISC_MALL.toMaterial(), "Note Weight", new String[]{"Defines how the projectile cast", "by your lute tilts downwards."}, new String[]{"lute"}),
 			REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "Remove on Craft", new String[]{"If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket."}, new String[]{"all"}, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
+			COMPATIBLE_TYPES = new CompatibleTypes(),
+			COMPATIBLE_IDS = new CompatibleIds(),
 			GEM_SOCKETS = new GemSockets(),
+			RANDOM_UNSOCKET = new RandomUnsocket(),
+			//todo CAN_UNSOCKET = new CanUnsocket(),
 			REPAIR = new RepairPower(),
 			REPAIR_TYPE = new RepairType(),
 	KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),

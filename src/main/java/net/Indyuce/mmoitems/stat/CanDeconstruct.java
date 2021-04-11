@@ -21,6 +21,7 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
 
 public class CanDeconstruct extends BooleanStat implements ConsumableItemInteraction {
 	public CanDeconstruct() {
@@ -30,7 +31,7 @@ public class CanDeconstruct extends BooleanStat implements ConsumableItemInterac
 	}
 
 	@Override
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
 		String itemTierTag = target.getString("MMOITEMS_TIER");
 		if (itemTierTag.equals("") || !consumable.getNBTItem().getBoolean("MMOITEMS_CAN_DECONSTRUCT"))
 			return false;

@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
 
 public class CanIdentify extends BooleanStat implements ConsumableItemInteraction {
 	public CanIdentify() {
@@ -25,7 +26,7 @@ public class CanIdentify extends BooleanStat implements ConsumableItemInteractio
 	}
 
 	@Override
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
 		if (targetType != null)
 			return false;
 

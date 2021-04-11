@@ -14,7 +14,9 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.Lore;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -163,7 +165,27 @@ public class MMOItemReforger {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public void update(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
-		if (options.isRegenerate()) { regenerate(player); return; }
+
+		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
+		loadLiveMMOItem();
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
+		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", mmoItem.getType().toString(), mmoItem.getId()); mmoItem = null; return; }
+		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
+
+		// Skip all this trash and just regenerate completely
+		if (options.isRegenerate()) {
+			// Store all the history of stat proceedings.
+			HashMap<ItemStat, StatHistory> temporalDataHistory = extratStatDataHistory(options);
+
+			/*
+			 * Generate fresh MMOItem, with stats that will be set if the chance is too low
+			 */
+			int determinedItemLevel = regenerate(player, template);
+			//UPDT//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
+
+			// Restore stats
+			restorePreRNGStats(temporalDataHistory, options, template, determinedItemLevel);
+			return; }
 
 		/*
 		 *   Has to store every stat into itemData, then check each stat of
@@ -178,13 +200,6 @@ public class MMOItemReforger {
 		 *      3: If the stat is gone completely, its again a ZERO chance
 		 * 		   so it is removed (the updated value of 0 prevailing).
 		 */
-
-		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
-		loadLiveMMOItem();
-		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
-		//noinspection ConstantConditions
-		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
-
 		// Keep name
 		if (options.shouldKeepName()) { keepName(meta); }
 
@@ -205,22 +220,7 @@ public class MMOItemReforger {
 		if (options.shouldKeepSoulbind() && mmoItem.hasData(ItemStats.SOULBOUND)) { keepSoulbound(); }
 
 		// Store all the history of stat proceedings.
-		HashMap<ItemStat, StatHistory> temporalDataHistory = new HashMap<>();
-		//UPDT//MMOItems.log(" \u00a71  * \u00a77Remembering Stats");
-		for (ItemStat stat : mmoItem.getStats()) {
-			//UPDT//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
-
-			// Skip if it cant merge
-			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
-
-			StatHistory hist = StatHistory.from(mmoItem, stat);
-			//UPDT//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
-
-			// Clear externals
-			if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
-
-			// Get and set
-			temporalDataHistory.put(hist.getItemStat(), hist); }
+		HashMap<ItemStat, StatHistory> temporalDataHistory = extratStatDataHistory(options);
 
 		/*
 		 * Generate fresh MMOItem, with stats that will be set if the chance is too low
@@ -228,15 +228,24 @@ public class MMOItemReforger {
 		int determinedItemLevel = regenerate(player, template);
 		//UPDT//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
 
+		// Restore stats
+		restorePreRNGStats(temporalDataHistory, options, template, determinedItemLevel);
+
+		// Choose enchantments to keep
+		if (options.shouldKeepEnchantments() && ambiguouslyOriginalEnchantmentCache != null) { ambiguouslyOriginalEnchantmentCache.identifyTrueOriginalEnchantments(mmoItem, cachedEnchantments);}
+	}
+
+	void restorePreRNGStats(@NotNull HashMap<ItemStat, StatHistory> backup, @NotNull ReforgeOptions options, @NotNull MMOItemTemplate template, int determinedItemLevel) {
+
 		/*
 		 * Extra step: Check every stat history
 		 */
 		int l = mmoItem.getUpgradeLevel();
-		for (ItemStat stat : temporalDataHistory.keySet()) {
+		for (ItemStat stat : backup.keySet()) {
 			//UPDT//MMOItems.log("\u00a7e @\u00a77 " + stat.getId());
 
 			// Get history
-			StatHistory hist = temporalDataHistory.get(stat);
+			StatHistory hist = backup.get(stat);
 			if (hist == null) { continue; }
 
 			// Alr what the template say
@@ -282,7 +291,7 @@ public class MMOItemReforger {
 					// Make a clear one
 					clear = new StatHistory(mmoItem, stat, finalData);
 
-				// Data arguably fine tbh, just use previous
+					// Data arguably fine tbh, just use previous
 				} else {
 					//UPDT//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
 
@@ -293,8 +302,17 @@ public class MMOItemReforger {
 			} else {
 				//UPDT//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
 
-				// Make a clear one
-				clear = new StatHistory(mmoItem, stat, hist.getOriginalData());
+				// Delete lore
+				if (ItemStats.LORE.equals(stat) || ItemStats.NAME.equals(stat)) {
+
+					// Keep regenerated one
+					clear = new StatHistory(mmoItem, stat, mmoItem.getData(stat));
+
+				} else {
+
+					// Make a clear one
+					clear = new StatHistory(mmoItem, stat, hist.getOriginalData());
+				}
 			}
 
 			// Keep Gemstone and Extraneous data
@@ -306,9 +324,29 @@ public class MMOItemReforger {
 			mmoItem.setStatHistory(stat, clear);
 			mmoItem.setData(stat, clear.recalculate(false, l));
 		}
+	}
 
-		// Choose enchantments to keep
-		if (options.shouldKeepEnchantments() && ambiguouslyOriginalEnchantmentCache != null) { ambiguouslyOriginalEnchantmentCache.identifyTrueOriginalEnchantments(mmoItem, cachedEnchantments);}
+	@NotNull HashMap<ItemStat, StatHistory> extratStatDataHistory(@NotNull ReforgeOptions options) {
+		HashMap<ItemStat, StatHistory> ret = new HashMap<>();
+
+		//UPDT//MMOItems.log(" \u00a71  * \u00a77Remembering Stats");
+		for (ItemStat stat : mmoItem.getStats()) {
+			//UPDT//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
+
+			// Skip if it cant merge
+			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
+
+			StatHistory hist = StatHistory.from(mmoItem, stat);
+			//UPDT//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
+
+			// Clear externals
+			if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
+
+			// Get and set
+			ret.put(hist.getItemStat(), hist); }
+
+		// Yes
+		return ret;
 	}
 
 	/**
@@ -420,6 +458,7 @@ public class MMOItemReforger {
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
 		if (!options.shouldKeepGemStones() && !options.shouldKeepExternalSH()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
+		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", mmoItem.getType().toString(), mmoItem.getId()); mmoItem = null; return; }
 		//noinspection ConstantConditions
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
 
@@ -474,21 +513,30 @@ public class MMOItemReforger {
 	 * lines are desirable to keep (Those that start with §7)
 	 */
 	void keepLore() {
+		if (!mmoItem.hasData(ItemStats.LORE)) { return; }
+		cachedLore = extractLore(((StringListData) mmoItem.getData(ItemStats.LORE)).getList());
+	}
+
+	@NotNull ArrayList<String> extractLore(@NotNull List<String> lore) {
+
 		//UPDT//MMOItems.log(" \u00a7d> \u00a77Keeping Lore");
+		ArrayList<String> ret = new ArrayList<>();
 
 		// Examine every element
-		for (String str : ((StringListData) mmoItem.getData(ItemStats.LORE)).getList()) {
+		for (String str : lore) {
 			//UPDT//MMOItems.log(" \u00a7d>\u00a7c-\u00a7e- \u00a77Line:\u00a7f " + str);
 
 			// Does it start with the promised...?
 			if (str.startsWith("\u00a77")) {
 				//UPDT//MMOItems.log(" \u00a72>\u00a7a-\u00a7e- \u00a77Kept");
-				cachedLore.add(str); }
+				ret.add(str); }
 		}
 
 		//UPDT//MMOItems.log(" \u00a7d> \u00a77Result");
 		//UPDT//for (String lr : cachedLore) { //UPDT//MMOItems.log(" \u00a7d  + \u00a77" + lr); }
+		return ret;
 	}
+
 	/**
 	 *
 	 * Step #1: Identify the current (not-null) enchantment data (creates one if missing)

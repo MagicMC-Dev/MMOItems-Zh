@@ -46,6 +46,8 @@ public enum Message {
 	SKIN_BROKE("Your skin broke while trying to apply it onto your &6#item#&c."),
 	SKIN_REJECTED("A skin has already been applied onto your &6#item#&c!"),
 	SKIN_INCOMPATIBLE("This skin is not compatible with your &6#item#&c!"),
+	RANDOM_UNSOCKET_GEM_TOO_OLD("The gems have bonded strongly with your item. Cannot remove."),
+	RANDOM_UNSOCKET_SUCCESS("&aYou removed &3#gem# &afrom your &6#item#&a!"),
 
 	// soulbound
 	CANT_BIND_ITEM("This item is currently linked to #player# by a Lvl #level# soulbound. You will have to break this soulbound first."),

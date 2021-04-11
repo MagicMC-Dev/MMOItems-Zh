@@ -21,6 +21,7 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
 
 public class RepairPower extends DoubleStat implements ConsumableItemInteraction {
 	public RepairPower() {
@@ -29,7 +30,7 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 	}
 
 	@Override
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
 		int repairPower = (int) consumable.getNBTItem().getStat(ItemStats.REPAIR.getId());
 		if (repairPower <= 0)
 			return false;

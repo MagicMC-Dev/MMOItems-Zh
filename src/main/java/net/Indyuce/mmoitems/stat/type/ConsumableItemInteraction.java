@@ -6,6 +6,8 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Stats which implement a consumable action like deconstructing, identifying,
@@ -29,5 +31,5 @@ public interface ConsumableItemInteraction {
 	 *                    (basically return true if it should be the only
 	 *                    consumable effect applied).
 	 */
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType);
+	boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, @Nullable Type targetType);
 }

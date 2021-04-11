@@ -170,7 +170,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	public StatData getClearStatData() { return new UpgradeData(null, null, false, false, 0, 0D); }
 
 	@Override
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
 		VolatileMMOItem mmoitem = consumable.getMMOItem();
 		Player player = playerData.getPlayer();
 

@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,6 +95,12 @@ public class StatHistory {
      */
     @NotNull public StatData getOriginalData() { return originalData; }
 
+    /**
+     * The first value ever recorded of this stat, in this item.
+     * Presumably from when it was first generated.
+     */
+    public void setOriginalData(@NotNull StatData s) { originalData = s;}
+
     /*
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
@@ -104,7 +111,10 @@ public class StatHistory {
      * The final modifier being provided by each gemstone.
      * GemStones may have scaled with upgrades, that will be accounted for.
      */
-    @Nullable public StatData getGemstoneData(UUID of) { return perGemstoneData.get(of); }
+    @Contract("null -> null")
+    @Nullable public StatData getGemstoneData(@Nullable UUID of) { if (of == null) { return null; } return perGemstoneData.get(of); }
+
+    public void removeGemData(@NotNull UUID of) { perGemstoneData.remove(of); }
 
     /**
      * All the Stat Datas provided by GemStones
@@ -196,8 +206,8 @@ public class StatHistory {
             original = ofStat.getClearStatData();
             ofItem.setData(ofStat, original);
             //UPGRD//MMOItems.log("\u00a7e   +\u00a77 Item didnt have this stat, original set as blanc.");
-        }
-        else {
+
+        } else {
             original = ((Mergeable) original).cloneData();
             //UPGRD//MMOItems.log("\u00a7a   +\u00a77 Found original data");
         } 
@@ -263,7 +273,7 @@ public class StatHistory {
             //UPGRD//MMOItems.log("\u00a76 ||\u00a77 Purged Stone: \u00a7e" + ext.toString());
 
             // Remove
-            perGemstoneData.remove(ext);
+            removeGemData(ext);
         }
     }
 

@@ -30,6 +30,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.SmartGive;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
 
 public class CanDeskin extends BooleanStat implements ConsumableItemInteraction {
 	public CanDeskin() {
@@ -39,7 +40,7 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
 
 	// TODO needs some cleanup
 	@Override
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
 		String skinId = target.getString("MMOITEMS_SKIN_ID");
 		Player player = playerData.getPlayer();
 

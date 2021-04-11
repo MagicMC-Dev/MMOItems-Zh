@@ -21,6 +21,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -28,6 +29,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class GemStone extends UseItem {
 
@@ -94,31 +97,75 @@ public class GemStone extends UseItem {
 		 */
 		LiveMMOItem gemMMOItem = new LiveMMOItem(getNBTItem());
 		GemstoneData gemData = new GemstoneData(gemMMOItem, foundSocketColor);
-		sockets.apply(gemType, gemData);
-		//UPGRD//MMOItems. Log("Applying Gemstone: \u00a73" + foundSocketColor);
+
+		/*
+		 * Now must apply the gem sockets data to the Stat History and then recalculate.
+		 *
+		 * Gotta, however, find the correct StatData to which apply it to. Damn this can
+		 * be pretty complicated!
+		 */
+		StatHistory gemStory = StatHistory.from(targetMMO, ItemStats.GEM_SOCKETS);
+
+		// Original?
+		if (((GemSocketsData) gemStory.getOriginalData()).getEmptySocket(gemType) != null) {
+			//UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Original\u00a77: \u00a73" + foundSocketColor);
+
+			// Charmer
+			((GemSocketsData) gemStory.getOriginalData()).apply(gemType, gemData);
+
+		} else {
+
+			// Check gem gems lol
+			boolean success = false;
+			for (UUID registeredGem : gemStory.getAllGemstones()) {
+
+				// Get that gem
+				GemSocketsData registeredGemData = (GemSocketsData) gemStory.getGemstoneData(registeredGem);
+				if (registeredGemData == null) { continue; }
+
+				if (registeredGemData.getEmptySocket(gemType) != null) {
+					//UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Gemstone\u00a77: \u00a73" + foundSocketColor);
+
+					// Charmer
+					success = true;
+					registeredGemData.apply(gemType, gemData); break; } }
+
+			if (!success) {
+
+				for (StatData extraneousGem : gemStory.getExternalData()) {
+
+					// Get that gem
+					GemSocketsData registeredGemData = (GemSocketsData) extraneousGem;
+					if (registeredGemData == null) { continue; }
+
+					if (registeredGemData.getEmptySocket(gemType) != null) {
+						//UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76External\u00a77: \u00a73" + foundSocketColor);
+
+						// Charmer
+						registeredGemData.apply(gemType, gemData); break; } } } }
+
+		// Recalculate
+		targetMMO.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(targetMMO.getUpgradeLevel()));
+		//UPGRD//MMOItems.log("Applied Gemstone: \u00a73" + foundSocketColor);
 
 		/*
 		 * Get the item's level, important for the GemScalingStat
 		 */
 		Integer levelIdentified = null; String scaling = GemUpgradeScaling.SUBSEQUENT;
 		if (gemMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)) { scaling = gemMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString(); }
-		//UPGRD//MMOItems. Log("Scaling Identified: \u00a73" + scaling);
+		//UPGRD//MMOItems.log("Scaling Identified: \u00a73" + scaling);
 		switch (scaling) {
 			case GemUpgradeScaling.HISTORIC:
 				levelIdentified = 0;
 				break;
 			case GemUpgradeScaling.SUBSEQUENT:
-				StatData upgradeLevel = targetMMO.getData(ItemStats.UPGRADE);
-				if (upgradeLevel != null) { levelIdentified = ((UpgradeData) upgradeLevel).getLevel(); }
+				levelIdentified = targetMMO.getUpgradeLevel();
 				break;
 			case GemUpgradeScaling.NEVER:
-			default:
-				levelIdentified = null;
-				break;
-		}
-		gemData.setLevel(levelIdentified);
-		//UPGRD//MMOItems. Log("Set Level: \u00a7b" + gemData.getLevel());
+			default: break; }
 
+		gemData.setLevel(levelIdentified);
+		//UPGRD//MMOItems.log("Set Level: \u00a7b" + gemData.getLevel());
 		/*
 		 * Only applies NON PROPER and MERGEABLE item stats
 		 */
@@ -132,7 +179,7 @@ public class GemStone extends UseItem {
 
 				// If the data is MERGEABLE
 				if (data instanceof Mergeable) {
-					//GEM////UPGRD//MMOItems. Log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
+					//UPGRD//MMOItems.log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath());
 
 					// Merge into it
 					targetMMO.mergeData(stat, data, gemData.getHistoricUUID());

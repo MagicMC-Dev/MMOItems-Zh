@@ -46,7 +46,7 @@ public class DisplayName extends StringStat {
 				String sB4 = suffix.substring(0, lvlOFFSET);
 				String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
 				String sB4_alt = sB4.replace("+", "-");
-				String aFt_alt = sB4.replace("+", "-");
+				String aFt_alt = aFt.replace("+", "-");
 
 				// Remove it
 				if (format.contains(sB4)) {

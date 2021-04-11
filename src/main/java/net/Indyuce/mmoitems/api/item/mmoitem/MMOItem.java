@@ -7,7 +7,6 @@ import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
@@ -63,31 +62,32 @@ public class MMOItem implements ItemReference {
 	 * stored as a GemStone in the history, allowing to be removed from the item with that same UUID.
 	 */
 	public void mergeData(@NotNull ItemStat stat, @NotNull StatData data, @Nullable UUID associatedGemStone) {
-		//GEM//MMOItems. Log("Merging stone stat \u00a76" + stat.getNBTPath() + "\u00a77 into \u00a7c" + getType().getName() + " " + getId());
+		//GEM//MMOItems.log("Merging stone stat \u00a76" + stat.getNBTPath() + "\u00a77 into \u00a7c" + getType().getName() + " " + getId());
 
 		// Do we already have the data?
 		if (data instanceof Mergeable) {
-			//GEM//MMOItems. Log("\u00a7a + \u00a77Mergeable");
+			//GEM//MMOItems.log("\u00a7a + \u00a77Mergeable");
 
 			// Prepare to merge: Gather History (Also initializes the ORIGINAL stats)
 			StatHistory sHistory = StatHistory.from(this, stat);
 
 			// As GemStone or as External?
 			if (associatedGemStone != null) {
-				//GEM//MMOItems. Log(" \u00a79++\u00a77 As Gemstone \u00a7b" + associatedGemStone.toString());
+				//GEM//MMOItems.log(" \u00a79++\u00a77 As Gemstone \u00a7b" + associatedGemStone.toString());
 
 				// As GemStone
 				sHistory.registerGemstoneData(associatedGemStone, data);
 
 			// As External
 			} else {
-				//GEM//MMOItems. Log(" \u00a7c++\u00a77 As External");
+				//GEM//MMOItems.log(" \u00a7c++\u00a77 As External");
 
 				// As External, UUIDless modifier
 				sHistory.registerExternalData(data);
 			}
 
 			// Recalculate
+			//GEM//MMOItems.log(" \u00a76+++\u00a77 Recalculating...");
 			setData(stat, sHistory.recalculate(getUpgradeLevel()));
 
 	 	// Merging means replacing if it cannot be merged
@@ -321,38 +321,51 @@ public class MMOItem implements ItemReference {
 	 * from calling it much because it completely loads all the stats
 	 * of every Gem Stone.
 	 *
-	 * @see #getColor()
+	 * @see #getAsGemColor()
 	 *
 	 * @return The list of GemStones contained here.
 	 */
 	@NotNull public ArrayList<MMOItem> extractGemstones() {
+		//XTC//MMOItems.log("\u00a73   *\u00a77 Extracting gems from this\u00a7b " + getType() + " " + getId());
 
 		// Found?
 		GemSocketsData thisSocketsData = (GemSocketsData) getData(ItemStats.GEM_SOCKETS);
-		if (thisSocketsData == null) { return new ArrayList<>(); }
+		if (thisSocketsData == null) {
+			//XTC//MMOItems.log("\u00a7a   *\u00a77 Clear array - no data");
+			return new ArrayList<>(); }
 
 		// All right, whats all yous data
 		HashMap<UUID, MMOItem> regeneratedGems = new HashMap<>();
 		for (GemstoneData gem : thisSocketsData.getGemstones()) {
+			//XTC//MMOItems.log("\u00a7a   *\u00a77 Found gem stone -\u00a7a " + gem.getMMOItemType() + " " + gem.getMMOItemID());
 
 			// Can we generate?
 			MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(gem.getMMOItemType()), gem.getMMOItemID());
 
 			// Valid? neat-o
 			if (restored != null) {
-				restored.color = gem.getSocketColor();
+				//XTC//MMOItems.log("\u00a7a   *\u00a73>\u00a77 Valid, regenerated \u00a7e" + ((StringData) restored.getData(ItemStats.NAME)));
+
+				restored.asGemColor = gem.getSocketColor();
+				restored.asGemUUID = gem.getHistoricUUID();
 				regeneratedGems.put(gem.getHistoricUUID(), restored);
+				//XTC//MMOItems.log("\u00a7a   >\u00a77 Color \u00a7e" + restored.getAsGemColor());
+				//XTC//MMOItems.log("\u00a7a   >\u00a77 UUID \u00a7e" + restored.getAsGemUUID().toString());
 			} }
+		//XTC//MMOItems.log("\u00a7b   *\u00a77 Regen Size:\u00a79 " + regeneratedGems.values().size());
 
 		// Identify actual attributes
 		for (ItemStat stat : getStats()) {
 
 			// Mergeable right
-			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
+			if (!(stat.getClearStatData() instanceof Mergeable)) {
+				continue; }
 
 			// Any stat affected by gems is sure to have a Stat History
 			StatHistory hist = getStatHistory(stat);
-			if (hist == null) { continue; }
+			if (hist == null) {
+				continue; }
+			//XTC//MMOItems.log("\u00a7a   *\u00a7c>\u00a7a Found Stat History \u00a79" + stat.getId());
 
 			// Data associated with any of the gems?
 			for (Map.Entry<UUID, MMOItem> gem : regeneratedGems.entrySet()) {
@@ -360,6 +373,7 @@ public class MMOItem implements ItemReference {
 				// History got gem registered?
 				StatData historicGemData = hist.getGemstoneData(gem.getKey());
 				if (historicGemData == null) { continue;}
+				//XTC//MMOItems.log("\u00a7a   *\u00a77 Found data for gem \u00a7e" + gem.getKey());
 
 				// This gemstone had this data... Override.
 				gem.getValue().setData(stat, historicGemData);
@@ -367,16 +381,54 @@ public class MMOItem implements ItemReference {
 			} }
 
 		// Thats the gemstones we was searching for
+		//XTC//MMOItems.log("\u00a7b   *\u00a77 Result Size:\u00a79 " + regeneratedGems.values().size());
 		return new ArrayList<>(regeneratedGems.values());
 	}
 
-	@Nullable String color;
+	@Nullable String asGemColor;
+	@NotNull UUID asGemUUID = UUID.randomUUID();
 
 	/**
 	 * @return Supposing this MMOItem is a Gem Stone within an item,
 	 * 		   obtained via {@link #extractGemstones()}, then this
 	 * 		   will be the color of the slot it occupies.
 	 */
-	@Nullable public String getColor() { return color; }
+	@Nullable public String getAsGemColor() { return asGemColor; }
+
+	/**
+	 * @return Supposing this MMOItem is a Gem Stone within an item,
+	 * 		   obtained via {@link #extractGemstones()}, then what
+	 * 		   was its UUID?
+	 */
+	@NotNull public UUID getAsGemUUID() { return asGemUUID; }
+
+	/**
+	 * Deletes this UUID from all Stat Histories.
+	 *
+	 * @param gemUUID UUID of gem to remove
+	 * @param color Color of the gem socket to restore. <code>null</code> to not restore socket.
+	 */
+	public void removeGemStone(@NotNull UUID gemUUID, @Nullable String color) {
+
+		// Get gemstone data
+		if (!hasData(ItemStats.GEM_SOCKETS)) { return; }
+
+		//GEM//MMOItems.log("\u00a7b-\u00a78-\u00a79-\u00a77 Extracting \u00a7e" + gemUUID.toString());
+		StatHistory gemStory = StatHistory.from(this, ItemStats.GEM_SOCKETS);
+
+		/*
+		 * We must only find the StatData where this gem resides,
+		 * and eventually the StatHistories of the affected stats
+		 * will purge themselves from extraneous gems (that are
+		 * no longer registered onto the GEM_SOCKETS history).
+		 */
+		if (GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getOriginalData()), gemUUID, color)) { return; }
+
+		// Attempt gems
+		for (UUID gemDataUUID : gemStory.getAllGemstones()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getGemstoneData(gemDataUUID)), gemUUID, color)) { return; } }
+
+		// Attempt externals
+		for (StatData externalData : gemStory.getExternalData()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) externalData), gemUUID, color)) { return; } }
+	}
 	//endregion
 }

@@ -20,6 +20,20 @@ public class GemstoneData {
 	@NotNull private final String name;
 	@Nullable Integer levelPut = 0;
 	@NotNull final UUID historicUUID;
+	@Nullable final String mmoitemType;
+	@Nullable final String mmoitemID;
+	@Nullable String socketColor;
+
+	public GemstoneData cloneGem() {
+
+		GemstoneData ret = new GemstoneData(getName(), getMMOItemType(), getMMOItemID(), getSocketColor(), getHistoricUUID());
+		for (AbilityData d : abilities) { ret.addAbility(d); }
+		for (PotionEffectData d : effects) { ret.addPermanentEffect(d); }
+		for (ItemStat d : stats.keySet()) { ret.setStat(d, stats.get(d)); }
+		ret.setLevel(getLevel());
+
+		return ret;
+	}
 
 	/**
 	 * Gemstone equals method is for practical purposes and only checks that
@@ -52,11 +66,6 @@ public class GemstoneData {
 	public String getSocketColor() {
 		return socketColor;
 	}
-
-	@Nullable final String mmoitemType;
-	@Nullable final String mmoitemID;
-	@Nullable
-	String socketColor;
 
 	/**
 	 * This constructor is not really performance friendly. It should only be
@@ -171,11 +180,24 @@ public class GemstoneData {
 	 */
 	public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color) {
 		this.name = name;
-		mmoitemID = type;
-		mmoitemType = id;
+		mmoitemID = id;
+		mmoitemType = type;
 		socketColor = color;
-		historicUUID = UUID.randomUUID();
-	}
+		historicUUID = UUID.randomUUID(); }
+
+	/**
+	 * This is a completely empty builder.
+	 * <p></p>
+	 * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
+	 * @param name Name to display in the lore of the item when you put the gemstone into it.
+	 * @param color Color of the socket this gem is inserted onto
+	 */
+	public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color, @NotNull UUID uiid) {
+		this.name = name;
+		mmoitemID = id;
+		mmoitemType = type;
+		socketColor = color;
+		historicUUID = uiid; }
 
 	/**
 	 * Add an ability to this Gem Stone
@@ -227,6 +249,7 @@ public class GemstoneData {
 		if (mmoitemID != null) { object.addProperty("Id", mmoitemID); }
 		if (mmoitemType != null) { object.addProperty("Type", mmoitemType); }
 		object.addProperty("Level", levelPut);
+		object.addProperty("Color", socketColor);
 
 		/*
 		 * These seem obsolete. Abilities, effects, and stats, are merged into the

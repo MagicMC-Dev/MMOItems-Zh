@@ -23,6 +23,7 @@ import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.jetbrains.annotations.NotNull;
 
 public class SoulbindingChance extends DoubleStat implements ConsumableItemInteraction {
 	private static final Random random = new Random();
@@ -34,7 +35,7 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 	}
 
 	@Override
-	public boolean handleConsumableEffect(InventoryClickEvent event, PlayerData playerData, Consumable consumable, NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
 		Player player = playerData.getPlayer();
 
 		double soulbindingChance = consumable.getNBTItem().getStat("SOULBINDING_CHANCE");

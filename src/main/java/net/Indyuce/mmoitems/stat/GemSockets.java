@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public class GemSockets extends ItemStat {
 	public GemSockets() {
 		super("GEM_SOCKETS", Material.EMERALD, "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." },
-				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory" });
+				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory", "!gem_stone" });
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
@@ -72,21 +69,20 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	 */
 	@Nullable public String getEmptySocket(@NotNull String gem) {
 		for (String slot : emptySlots)
-			if (gem.equals("") || slot.equals(MMOItems.plugin.getConfig().getString("gem-sockets.uncolored")) || gem.equals(slot))
+			if (gem.equals("") || slot.equals(getUncoloredGemSlot()) || gem.equals(slot))
 				return slot;
 		return null;
 	}
+
+	@NotNull public static String getUncoloredGemSlot() { String s = MMOItems.plugin.getConfig().getString("gem-sockets.uncolored"); return s == null ? "Uncolored" : s; }
 
 	public void add(GemstoneData gem) {
 		gems.add(gem);
 	}
 
-	public void apply(String gem, GemstoneData gemstone) {
-		emptySlots.remove(getEmptySocket(gem));
-		gems.add(gemstone);
-	}
+	public void apply(String gem, GemstoneData gemstone) { emptySlots.remove(getEmptySocket(gem)); gems.add(gemstone); }
 
-	public void addEmptySlot(String slot) {
+	public void addEmptySlot(@NotNull String slot) {
 		emptySlots.add(slot);
 	}
 
@@ -96,6 +92,47 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 
 	@NotNull public Set<GemstoneData> getGemstones() {
 		return gems;
+	}
+
+	public void removeGem(@NotNull UUID gem) {
+
+		// Find
+		GemstoneData d = null;
+		for (GemstoneData data : getGemstones()) {
+			if (data.getHistoricUUID().equals(gem)) {
+				//GEM//MMOItems.log("\u00a7b*\u00a77 Found gem to unregister: \u00a7a" + data.getName());
+				d = data; break; }}
+
+		// Remove
+		gems.remove(d);
+	}
+
+	/**
+	 * Removes such gem from this GemSocketsData, if it exists.
+	 *
+	 * @param data The Data from which to remove the gem
+	 * @param gemUUID The Gem to remove
+	 * @param socket The socket color to replace the gem with, <code>null</code> for no socket.
+	 * @return Whether a gem was removed from the data.
+	 */
+	public static boolean removeGemFrom(@NotNull GemSocketsData data, @NotNull UUID gemUUID, @Nullable String socket) {
+
+		boolean removal = false;
+		for (GemstoneData gem : data.getGemstones()) {
+
+			// Is it the one we are searching for?
+			if (gem.getHistoricUUID().equals(gemUUID)) {
+
+				// Found it, restore the socket and we're done.
+				if (socket != null) { data.addEmptySlot(socket); }
+
+				// Remove
+				removal = true; break; } }
+
+		// Its time.
+		if (removal) { data.removeGem(gemUUID); }
+
+		return removal;
 	}
 
 	public JsonObject toJson() {
@@ -115,17 +152,29 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	@Override
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof GemSocketsData, "Cannot merge two different stat data types");
+
+		//MRG//MMOItems.log("\u00a73||| \u00a77Merging slots; Original:");
+		//MRG//for (String str : SilentNumbers.transcribeList(emptySlots, (s) -> "\u00a73|+ \u00a77" + ((String) s))) { MMOItems.log(str); }
+		//MRG//MMOItems.log("\u00a73||| \u00a77Including");
+		//MRG//for (String str : SilentNumbers.transcribeList(((GemSocketsData) data).emptySlots, (s) -> "\u00a73|+ \u00a77" + ((String) s))) { MMOItems.log(str); }
+
+		// Combine both actual gems, and empty slots
 		emptySlots.addAll(((GemSocketsData) data).emptySlots);
+		gems.addAll(((GemSocketsData) data).getGemstones());
+
+		//MRG//MMOItems.log("\u00a73||| \u00a7aResult");
+		//MRG//for (String str : SilentNumbers.transcribeList(emptySlots, (s) -> "\u00a73|+ \u00a77" + ((String) s))) { MMOItems.log(str); }
+		//MRG//MMOItems.log("\u00a73||| \u00a7a---------------------------------------");
 	}
 
 	@Override
 	public @NotNull StatData cloneData() {
 
 		// Start Fresh
-		GemSocketsData ret = new GemSocketsData(emptySlots);
+		GemSocketsData ret = new GemSocketsData(new ArrayList<>(emptySlots));
 
 		// Add Gems
-		for (GemstoneData g : getGemstones()) { ret.add(g); }
+		for (GemstoneData g : getGemstones()) { ret.add(g.cloneGem()); }
 
 		return ret;
 	}

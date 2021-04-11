@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -116,8 +117,11 @@ public class MMOUtils {
 		return type.equals(PotionEffectType.NIGHT_VISION) || type.equals(PotionEffectType.CONFUSION) ? 260 : type.equals(PotionEffectType.BLINDNESS) ? 140 : 80;
 	}
 
-	public static String getDisplayName(ItemStack item) {
-		return item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
+	@NotNull public static String getDisplayName(@Nullable ItemStack item) {
+		if (item == null) { return "null"; }
+		return (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ?
+				item.getItemMeta().getDisplayName() :
+				caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
 	}
 
 	/**

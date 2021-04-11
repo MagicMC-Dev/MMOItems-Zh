@@ -18,6 +18,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class Consumable extends UseItem {
 	 * @param  target The item on which the consumable is being applied
 	 * @return        If the consumable was successfully applied on the item
 	 */
-	public boolean useOnItem(InventoryClickEvent event, NBTItem target) {
+	public boolean useOnItem(@NotNull InventoryClickEvent event, @NotNull NBTItem target) {
 		if (event.getClickedInventory() != event.getWhoClicked().getInventory())
 			return false;
 

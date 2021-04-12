@@ -6,7 +6,6 @@ import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -23,6 +22,7 @@ public class DisplayName extends StringStat {
 				new String[] { "all" });
 	}
 
+	// TODO: 4/12/2021 WHAT THE FUCK IS HAPPENING HERE
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 		String format = data.toString();

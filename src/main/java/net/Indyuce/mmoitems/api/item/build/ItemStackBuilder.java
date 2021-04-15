@@ -149,6 +149,7 @@ public class ItemStackBuilder {
 					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));
 
 					// Recalculate
+					//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77ItemStack Building Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 					builtMMOItem.setData(stat, s.recalculate(l));
 				}
 

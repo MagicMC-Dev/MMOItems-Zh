@@ -88,6 +88,7 @@ public class MMOItem implements ItemReference {
 
 			// Recalculate
 			//GEM//MMOItems.log(" \u00a76+++\u00a77 Recalculating...");
+			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Merge Gem Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 			setData(stat, sHistory.recalculate(getUpgradeLevel()));
 
 	 	// Merging means replacing if it cannot be merged

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat.data;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
@@ -18,7 +19,7 @@ public class GemstoneData {
 	@NotNull private final List<PotionEffectData> effects = new ArrayList<>();
 	@NotNull private final Map<ItemStat, Double> stats = new HashMap<>();
 	@NotNull private final String name;
-	@Nullable Integer levelPut = 0;
+	@Nullable Integer levelPut;
 	@NotNull final UUID historicUUID;
 	@Nullable final String mmoitemType;
 	@Nullable final String mmoitemID;
@@ -103,6 +104,7 @@ public class GemstoneData {
 
 			JsonElement level = object.get("Level");
 			if (level != null && level.isJsonPrimitive()) { levelPut = level.getAsJsonPrimitive().getAsInt(); } else { levelPut = null; }
+			//LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Read Level: \u00a7b" + levelPut);
 
 			JsonElement color = object.get("Color");
 			if (color != null && color.isJsonPrimitive()) { socketColor = color.getAsJsonPrimitive().getAsString(); } else { socketColor = null; }
@@ -157,7 +159,9 @@ public class GemstoneData {
 	 * <p></p>
 	 * For scaling purposes of stat {@link GemUpgradeScaling}
 	 */
-	public void setLevel(@Nullable Integer l) { levelPut = l; }
+	public void setLevel(@Nullable Integer l) {
+		//LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Set Level: \u00a7b" + l);
+		levelPut = l; }
 	/**
 	 * This is at which level (of the item) the gemstone was placed onto the item.
 	 * <p>A null level means this gem does not scale.</p>
@@ -248,7 +252,9 @@ public class GemstoneData {
 		object.addProperty("History", historicUUID.toString());
 		if (mmoitemID != null) { object.addProperty("Id", mmoitemID); }
 		if (mmoitemType != null) { object.addProperty("Type", mmoitemType); }
-		object.addProperty("Level", levelPut);
+		if (levelPut != null) {
+			//LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Saving Level: \u00a7b" + levelPut);
+			object.addProperty("Level", levelPut); }
 		object.addProperty("Color", socketColor);
 
 		/*

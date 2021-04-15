@@ -98,6 +98,11 @@ stats-displaying:
     color-positive: ''
     color-negative: ''
 
+    # When items with RNG are displayed in crafting
+    # stations, this is the separator between the low
+    # and high bound:  Attack Damage  +5⎓7.5
+    range-dash: '⎓'
+
 soulbound:
 
     # Edit soulbound damage when players try to use

@@ -322,6 +322,7 @@ public class MMOItemReforger {
 			// Store
 			itemDataHistory.put(stat, clear);
 			mmoItem.setStatHistory(stat, clear);
+			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Update Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
 			mmoItem.setData(stat, clear.recalculate(false, l));
 		}
 	}
@@ -703,6 +704,7 @@ public class MMOItemReforger {
 			hist.assimilate(histOld);
 
 			// Recalculate
+			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Reforging Prep Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
 			buildingMMOItem.setData(hist.getItemStat(), hist.recalculate(false, l));
 		}
 
@@ -734,6 +736,7 @@ public class MMOItemReforger {
 			//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
 
 			// Recalculate and put
+			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Reforging Final Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 			buildingMMOItem.setData(ItemStats.ENCHANTS, hist.recalculate(mmoItem.getUpgradeLevel()));
 		}
 

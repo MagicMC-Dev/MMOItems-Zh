@@ -142,6 +142,7 @@ public class UpgradeTemplate {
 			((Upgradable) stat).midprocess(mmoitem);
 
 			// The Stat History now manages applying upgrades.
+			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Upgrade Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 			mmoitem.setData(stat, hist.recalculate(level));
 			//UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Recalculated");
 

@@ -145,6 +145,7 @@ public class GemStone extends UseItem {
 						registeredGemData.apply(gemType, gemData); break; } } } }
 
 		// Recalculate
+		//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Gem Application Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 		targetMMO.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(targetMMO.getUpgradeLevel()));
 		//UPGRD//MMOItems.log("Applied Gemstone: \u00a73" + foundSocketColor);
 

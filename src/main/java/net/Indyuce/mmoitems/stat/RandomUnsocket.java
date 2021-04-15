@@ -131,6 +131,7 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
         }
 
         // Replace
+        //HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Gem Unsocketing Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
         mmo.setData(ItemStats.GEM_SOCKETS, StatHistory.from(mmo, ItemStats.GEM_SOCKETS).recalculate(mmo.getUpgradeLevel()));
         //GEM//MMOItems.log("\u00a7b*\u00a77 Final at \u00a7b" + ((GemSocketsData) mmo.getData(ItemStats.GEM_SOCKETS)).getEmptySlots().size() + " Empty\u00a77 and \u00a7e" + ((GemSocketsData) mmo.getData(ItemStats.GEM_SOCKETS)).getGemstones().size() + " Gems");
         event.setCurrentItem(mmo.newBuilder().build());

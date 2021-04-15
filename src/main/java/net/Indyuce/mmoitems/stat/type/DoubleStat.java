@@ -151,7 +151,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 				// Replace loose pounds with the value
 				.replace("#", getColorPrefix(min < 0 && moreIsBetter) +
 						(min > 0 ? "+" : "") + new StatFormat("##").format(min)
-							+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "\u00a7f\u00a7l⎓") + getColorPrefix(max < 0 && moreIsBetter) +
+							+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + getColorPrefix(max < 0 && moreIsBetter) +
 						(min < 0 && max > 0 ? "+" : "") + new StatFormat("##").format(max)); }
 
 	@Override

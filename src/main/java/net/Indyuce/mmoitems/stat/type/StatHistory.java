@@ -55,22 +55,22 @@ public class StatHistory {
          */
         if(getOriginalData() instanceof EnchantListData) {
             if (((EnchantListData) getOriginalData()).getEnchants().size() != 0) {
-                //GEM//MMOItems.log("\u00a7a -+- \u00a77Found Enchantments, \u00a7cnot clear.");
+                //CLR//MMOItems.log("\u00a7a -+- \u00a77Found Enchantments, \u00a7cnot clear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
                 return false;
             } }
 
         // Any gemstones or external SH? Then its NOT CLEAR
         if (getAllGemstones().size() > 0 || getExternalData().size() > 0) {
-            //GEM//MMOItems.log("\u00a7a -+- \u00a77Found Gemstones / ESH, \u00a7cnot clear.");
+            //CLR//MMOItems.log("\u00a7a -+- \u00a77Found Gemstones / ESH, \u00a7cnot clear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
             return false; }
 
         // Is it clear?
-        if (((Mergeable) getOriginalData()).isClear()) {
-            //GEM//MMOItems.log("\u00a7a -+- \u00a77Original data is clear, \u00a7aclear.");
+        if (((Mergeable) getOriginalData()).isClear() && (!isUpgradeable() || getMMOItem().getUpgradeLevel() == 0)) {
+            //CLR//MMOItems.log("\u00a7a -+- \u00a77Original data is clear, \u00a7aclear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
             return true; }
 
         // Exactly the same as the MMOItem? [This check should basically always be true though]
-        //GEM//if (getOriginalData().equals(getMMOItem().getData(getItemStat()))) { MMOItems.log("\u00a7a -+- \u00a77Original data has never been merged, \u00a7aclear."); }
+        //CLR//if (getOriginalData().equals(getMMOItem().getData(getItemStat()))) { MMOItems.log("\u00a7a -+- \u00a77Original data has never been merged, \u00a7aclear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}"); }
         return getOriginalData().equals(getMMOItem().getData(getItemStat())); }
 
     /*
@@ -278,6 +278,21 @@ public class StatHistory {
     }
 
     /**
+     * @return If this stat changes when the MMOItem is upgraded.
+     */
+    public boolean isUpgradeable() {
+
+        // No upgrades no possible
+        if (!getMMOItem().hasUpgradeTemplate()) { return false; }
+
+        // Get Upgrade Info?
+        UpgradeInfo inf = getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat());
+
+        // No Upgrade Information? Looks like you're calculating as a normal merge stat
+        return inf != null;
+    }
+
+    /**
      * This recalculates final value of the stats of the item.
      * <p></p>
      * This will not apply the changes, it will just give you the final
@@ -363,9 +378,9 @@ public class StatHistory {
         
         // Level up
         //UPGRD//MMOItems.log("\u00a76 ||\u00a77 Item Level: \u00a7e" + lvl);
-        //DBL//if (ogCloned instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Original Base: \u00a7e" + ((DoubleData) ogCloned).getValue());
+        //DBL//if (ogCloned instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Original Base: \u00a7e" + ((DoubleData) ogCloned).getValue() + "\u00a78 {Original:\u00a77 " + ((DoubleData) getOriginalData()).getValue() + "\u00a78}");
         StatData ret = ((Upgradable) getItemStat()).apply(ogCloned, inf, lvl);
-        //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Leveled Base: \u00a7e" + ((DoubleData) ret).getValue());
+        //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Leveled Base: \u00a7e" + ((DoubleData) ret).getValue() + "\u00a78 {Original:\u00a77 " + ((DoubleData) getOriginalData()).getValue() + "\u00a78}");
 
         // Add up gemstones
         for (UUID d : perGemstoneData.keySet()) {
@@ -375,6 +390,8 @@ public class StatHistory {
 
             // Whats this gemstone's upgrade level?
             for (GemstoneData gData : getMMOItem().getGemStones()) {
+                if (gData == null) { continue; }
+                //UPGRD//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a77 Gemstone " + gData.getName() + "\u00a77 " + gData.getHistoricUUID().toString());
 
                 // Find that one of matching UUID
                 if (gData.getHistoricUUID().equals(d)) {
@@ -382,13 +399,14 @@ public class StatHistory {
                     if (gData.isScaling()) {
 
                         // Ok
-                        //noinspection ConstantConditions
                         level = gData.getLevel();
+                        //UPGRD//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a7a- Found:\u00a77" + level);
 
                     } else {
 
                         // No scaling
                         level = lvl;
+                        //UPGRD//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a7a- Found,\u00a77 Unscaling");
                     }
                 }
             }
@@ -416,7 +434,7 @@ public class StatHistory {
         }
 
         // Return result
-        //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a76:::\u00a77 Result: \u00a7e" + ((DoubleData) ret).getValue());
+        //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a76:::\u00a77 Result: \u00a7e" + ((DoubleData) ret).getValue() + "\u00a78 {Original:\u00a77 " + ((DoubleData) getOriginalData()).getValue() + "\u00a78}");
         return ret;
     }
 

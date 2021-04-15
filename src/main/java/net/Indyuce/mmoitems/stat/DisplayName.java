@@ -10,13 +10,17 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class DisplayName extends StringStat {
+	private final String[] cleanFilter = {ChatColor.BOLD.toString(), ChatColor.ITALIC.toString(), ChatColor.UNDERLINE.toString(), ChatColor.STRIKETHROUGH.toString(), ChatColor.MAGIC.toString()};
 	public DisplayName() {
 		super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "Display Name", new String[] { "The item display name." },
 				new String[] { "all" });
@@ -30,6 +34,13 @@ public class DisplayName extends StringStat {
 		ItemTier tier = MMOItems.plugin.getTiers().findTier(item.getMMOItem());
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
+		if (tier != null) {
+			for (String filter: cleanFilter){
+				if (ChatColor.getLastColors(tier.getName()).contains(filter)){
+					format = format.replace("<tier-color-cleaned>", ChatColor.getLastColors(tier.getName().replace(filter, "")));
+				}
+			}
+		}
 
 		// Is this upgradable?
 		if (item.getMMOItem().hasUpgradeTemplate()) {
@@ -118,6 +129,7 @@ public class DisplayName extends StringStat {
 
 		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
 	}
+
 
 	String levelPrefix(@NotNull String template, int toLevel) {
 

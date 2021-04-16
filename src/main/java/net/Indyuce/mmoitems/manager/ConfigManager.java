@@ -222,6 +222,7 @@ public class ConfigManager implements Reloadable {
 
 		ConfigurationSection keepData = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data");
 		ConfigurationSection phatLoots = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
+		ReforgeOptions.dropRestoredGems = MMOItems.plugin.getConfig().getBoolean("item-revision.drop-extra-gems", true);
 		revisionOptions = keepData != null ? new ReforgeOptions(keepData) : new ReforgeOptions(false, false, false, false, false, false, false, true);
 		phatLootsOptions = phatLoots != null ? new ReforgeOptions(phatLoots) : new ReforgeOptions(false, false, false, false, false, false, false, true);
 

@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.api.util;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -182,7 +181,7 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
 
 			// Restore stats
-			restorePreRNGStats(temporalDataHistory, options, template, determinedItemLevel);
+			restorePreRNGStats(temporalDataHistory, template, determinedItemLevel);
 			return; }
 
 		/*
@@ -227,7 +226,7 @@ public class MMOItemReforger {
 		//UPDT//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
 
 		// Restore stats
-		restorePreRNGStats(temporalDataHistory, options, template, determinedItemLevel);
+		restorePreRNGStats(temporalDataHistory, template, determinedItemLevel);
 
 		// Choose enchantments to keep
 		if (options.shouldKeepEnchantments() && ambiguouslyOriginalEnchantmentCache != null) { ambiguouslyOriginalEnchantmentCache.identifyTrueOriginalEnchantments(mmoItem, cachedEnchantments);}
@@ -261,7 +260,8 @@ public class MMOItemReforger {
 		return ret;
 	}
 
-	void restorePreRNGStats(@NotNull HashMap<ItemStat, StatHistory> backup, @NotNull ReforgeOptions options, @NotNull MMOItemTemplate template, int determinedItemLevel) {
+	@SuppressWarnings("ConstantConditions")
+	void restorePreRNGStats(@NotNull HashMap<ItemStat, StatHistory> backup, @NotNull MMOItemTemplate template, int determinedItemLevel) {
 
 		/*
 		 * Extra step: Check every stat history
@@ -815,6 +815,7 @@ public class MMOItemReforger {
 		// Gem Stones
 		if (cachedGemStones != null) {
 			//UPDT//MMOItems.log(" \u00a7a@ \u00a77Applying Gemstones");
+			ArrayList<GemstoneData> lostGems = new ArrayList<>();
 
 			// If has a upgrade template defined, just remember the level
 			if (buildingMMOItem.hasData(ItemStats.GEM_SOCKETS)) {
@@ -824,6 +825,7 @@ public class MMOItemReforger {
 				GemSocketsData current = ((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
 
 				// Get those damn empty sockets
+				ArrayList<GemstoneData> putGems = new ArrayList<>();
 				ArrayList<String> availableSockets = new ArrayList<>(current.getEmptySlots());
 				ArrayList<GemstoneData> oldSockets = new ArrayList<>(cachedGemStones.getGemstones());
 
@@ -835,44 +837,46 @@ public class MMOItemReforger {
 					if (availableSockets.size() <= 0) {
 						//UPDT//MMOItems.log(" \u00a7a  +\u00a7c+ \u00a77No More Sockets");
 
-						// They all will fit anyway
-						break;
+						// This gemstone could not be inserted, it is thus lost
+						lostGems.add(data);
+						//UPDT//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone lost - \u00a7cno socket \u00a78" + data.getHistoricUUID());
 
 					// Still some sockets to fill hMMM
 					} else {
 
-						// Get colour
+						// Get colour, uncolored if Unknown
 						String colour = data.getSocketColor();
-						String remembrance;
+						if (colour == null) { colour = GemSocketsData.getUncoloredGemSlot(); }
+						String remembrance = null;
 
-						// Not null?
-						if (colour != null) {
+						// Does the gem data have an available socket?
+						for (String slot : availableSockets) { if (slot.equals(GemSocketsData.getUncoloredGemSlot()) || colour.equals(slot)) { remembrance = slot; } }
 
-							// Contained? Remove
-							remembrance = colour;
+						// Existed?
+						if (remembrance != null) {
+							//UPDT//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone fit - \u00a7e " + remembrance + " \u00a78" + data.getHistoricUUID());
 
-					 	// No colour data, just remove a random slot ig
+							// Remove
+							availableSockets.remove(remembrance);
+
+							// And guess what... THAT is the colour of this gem! Fabulous huh?
+							data.setColour(remembrance);
+
+							// Remember as a put gem
+							putGems.add(data);
+
+						// No space/valid socket hmm
 						} else {
+							//UPDT//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone lost - \u00a7cno color \u00a78" + data.getHistoricUUID());
 
-							// Get and remove
-							remembrance = availableSockets.get(0);
-						}
-
-						// Remove
-						availableSockets.remove(remembrance);
-
-						// And guess what... THAT is the colour of this gem! Fabulous huh?
-						data.setColour(remembrance);
-						//UPDT//MMOItems.log(" \u00a7a  + \u00a77Fit into color \u00a7f" + remembrance);
+							// Include as lost gem
+							lostGems.add(data); }
 					}
 				}
 
-				// Update list of empty sockets
-				cachedGemStones.getEmptySlots().clear();
-
 				// Create with select socket slots and gems
 				GemSocketsData primeGems = new GemSocketsData(availableSockets);
-				for (GemstoneData gem : cachedGemStones.getGemstones()) { if (gem == null) { continue; } primeGems.add(gem); }
+				for (GemstoneData gem : putGems) { if (gem == null) { continue; } primeGems.add(gem); }
 
 				// That's the original data
 				StatHistory gemStory = StatHistory.from(buildingMMOItem, ItemStats.GEM_SOCKETS);
@@ -880,9 +884,23 @@ public class MMOItemReforger {
 
 				//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Restore Gemstones Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 				buildingMMOItem.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(l));
-			}
 
 			// Could not fit any gems: No gem sockets!
+			} else {
+				//UPDT//MMOItems.log("\u00a7c *\u00a7e*\u00a77 All gemstones were lost -  \u00a7cno data");
+
+				// ALl were lost
+				lostGems.addAll(cachedGemStones.getGemstones()); }
+
+			// Config option enabled? Build the lost gem MMOItems!
+			if (ReforgeOptions.dropRestoredGems) {
+				for (GemstoneData lost : lostGems) {
+
+					// Get MMOItem
+					MMOItem restoredGem = buildingMMOItem.extractGemstone(lost);
+
+					// Success?
+					if (restoredGem != null) { destroyedGems.add(restoredGem); } } }
 		}
 		//GEM//MMOItems.log(" \u00a7a>\u00a7e2 \u00a77Regenerated Gem Sockets:\u00a7f " + buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
 		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+>\u00a7e2 \u00a77Gem: \u00a7a" + str); }
@@ -951,4 +969,16 @@ public class MMOItemReforger {
 		if (mmoItem != null) { return;}
 		mmoItem = new VolatileMMOItem(nbtItem);
 	}
+
+	@NotNull ArrayList<MMOItem> destroyedGems = new ArrayList<>();
+
+	/**
+	 * @return List of gems that have been destroyed from an item, presumably due
+	 * 		   to updating it without keeping gemstones, or they simply could not
+	 * 		   fit.
+	 * 		   <br>
+	 * 		   Currently, it is only ever filled if the config option drop-gems
+	 * 		   for item revision is enabled.
+	 */
+	@NotNull public ArrayList<MMOItem> getDestroyedGems() { return destroyedGems; }
 }

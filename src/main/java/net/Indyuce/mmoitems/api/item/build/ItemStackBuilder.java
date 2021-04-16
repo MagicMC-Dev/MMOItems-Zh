@@ -141,16 +141,16 @@ public class ItemStackBuilder {
  				StatHistory s = builtMMOItem.getStatHistory(stat); int l = mmoitem.getUpgradeLevel();
 
 				// Found it?
-				if (s != null && (!s.isClear() || stat instanceof Enchants)) {
+				if (s != null) {
 
 					//GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
-
-					// Add to NBT
-					addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString()));
 
 					// Recalculate
 					//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77ItemStack Building Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 					builtMMOItem.setData(stat, s.recalculate(l));
+
+					// Add to NBT, if the gemstones were not purged
+					if ((!s.isClear() || stat instanceof Enchants)) { addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString())); }
 				}
 
 				if (forDisplay && stat instanceof Previewable) {

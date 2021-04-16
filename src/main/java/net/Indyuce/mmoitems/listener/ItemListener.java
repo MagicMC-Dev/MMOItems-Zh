@@ -1,7 +1,10 @@
 package net.Indyuce.mmoitems.listener;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ReforgeOptions;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.entity.EntityType;
@@ -17,6 +20,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 public class ItemListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
@@ -93,8 +98,41 @@ public class ItemListener implements Listener {
 		// Should this item be soulbound?
 		if (shouldSoulbind(nbt, type)) { mod.applySoulbound(player); }
 
-		// Return either the changed one or null
-		return mod.hasChanges() ? mod.toStack() : null;
+		// L
+		if (!mod.hasChanges()) { return null; }
+
+		// Perform all operations (including extracting lost gems)
+		ItemStack ret = mod.toStack();
+
+		// Give the gems to the player
+		if (ReforgeOptions.dropRestoredGems) {
+			//XTC//MMOItems.log("\u00a7a *\u00a7e*\u00a77 Dropping lost gemstones (\u00a73" + mod.getDestroyedGems().size() + "\u00a78)");
+
+			// Get Items
+			ArrayList<ItemStack> items = new ArrayList<>();
+
+			// Build and drop every lost gemstone
+			for (MMOItem item : mod.getDestroyedGems()) {
+
+				// Build
+				ItemStack built = item.newBuilder().build();
+				//XTC//MMOItems.log("\u00a7e   *\u00a77 Saved " + SilentNumbers.getItemName(built));
+
+				// Include
+				items.add(built); }
+
+			// Drop those gems
+			for (ItemStack drop : player.getInventory().addItem(
+					items.toArray(new ItemStack[0])).values()) {
+
+				// Not air right
+				if (SilentNumbers.isAir(drop)) { continue; }
+
+				// Drop to the world
+				player.getWorld().dropItem(player.getLocation(), drop); } }
+
+		// Return the modified version
+		return ret;
 	}
 
 	/* Checks whether or not an item should be automatically soulbound */

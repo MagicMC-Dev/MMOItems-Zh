@@ -4,6 +4,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ReforgeOptions {
+	public static boolean dropRestoredGems;
+
 	private final boolean
 			keepName;
 	private final boolean keepLore;

@@ -122,8 +122,13 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 
 			} }
 
-		// Add NBT Path
-		item.addItemTag(getAppliedNBT(data));
+		/*
+		 * Add NBT Data if it is not equal to ZERO, in which case it will just get removed.
+		 *
+		 * It is important that the tags are not excluded in getAppliedNBT() because the StatHistory does
+		 * need that blanc tag information to remember when an Item did not initially have any of a stat.
+		 */
+		if (((DoubleData) data).getValue() != 0) { item.addItemTag(getAppliedNBT(data)); }
 	}
 
 	@NotNull public static String formatPath(@NotNull String format, boolean moreIsBetter, double value) {

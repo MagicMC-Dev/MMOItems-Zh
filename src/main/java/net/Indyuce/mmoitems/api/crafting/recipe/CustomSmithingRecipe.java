@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -155,6 +156,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
          */
         eventTrigger.setCancelled(true);
         if (!(eventTrigger.getWhoClicked() instanceof Player)) { return; }
+        Player player = (Player) eventTrigger.getWhoClicked();
 
         // Get the two combinant items
         ItemStack item = otherInventories.getMainInventory().getFirst();
@@ -165,7 +167,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
 
         // Get the display
         Ref<ArrayList<ItemStack>> droppedGemstones = new Ref<>();
-        MMOItem display = fromCombinationWith(itemMMO, ingotMMO, (Player) eventTrigger.getWhoClicked(), droppedGemstones);
+        MMOItem display = fromCombinationWith(itemMMO, ingotMMO, player, droppedGemstones);
 
         // Result
         MythicRecipeInventory result = otherInventories.getResultInventory().clone();
@@ -259,7 +261,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
             // Build the result
             ArrayList<ItemStack> outputItems = MRORecipe.toItemsList(result);
             HashMap<Integer, ItemStack> modifiedInventory = null;
-            Inventory inven = eventTrigger.getWhoClicked().getInventory();
+            Inventory inven = player.getInventory();
             int trueTimes = 0;
 
             // For every time
@@ -303,17 +305,17 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         }
 
         // Drop?
-        if (isDropGemstones() && (droppedGemstones.getValue() != null) && (eventTrigger.getWhoClicked().getLocation().getWorld() != null)) {
-            Location l = eventTrigger.getWhoClicked().getLocation();
+        if (isDropGemstones() && (droppedGemstones.getValue() != null) && (player.getLocation().getWorld() != null)) {
 
-            // Drop each yea
-            for (ItemStack gem : droppedGemstones.getValue()) {
+            // Give the gems back
+            for (ItemStack drop : player.getInventory().addItem(
+                    droppedGemstones.getValue().toArray(new ItemStack[0])).values()) {
 
-                if (SilentNumbers.isAir(gem)) { continue; }
+                // Not air right
+                if (SilentNumbers.isAir(drop)) { continue; }
 
-                // God damn drop yo
-                l.getWorld().dropItemNaturally(l, gem);
-            } }
+                // Drop to the world
+                player.getWorld().dropItem(player.getLocation(), drop); } }
 
         // Consume ingredients
         consumeIngredients(otherInventories, cache, eventTrigger.getInventory(), map, times);

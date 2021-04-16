@@ -300,6 +300,11 @@ item-revision:
     # Please note, that this value has no effect if
     # ´reroll-when-updated´ is set to true.
     keep-tiers: true
+
+    # If an item is updated, and the new version does not
+    # keep its gems, this will give the gems back to the
+    # player so that they don't get lost forever.
+    drop-extra-gems: true
     
     # Whether or not specific stats should be kept
     # when an item is updated to latest revision.

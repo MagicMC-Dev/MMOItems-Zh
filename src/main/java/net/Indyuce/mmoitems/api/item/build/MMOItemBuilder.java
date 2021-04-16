@@ -21,6 +21,8 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
+import org.jetbrains.annotations.NotNull;
 
 public class MMOItemBuilder {
 	private final MMOItem mmoitem;
@@ -72,10 +74,10 @@ public class MMOItemBuilder {
 				continue;
 
 			capacity -= modifier.getWeight();
-			if (modifier.hasNameModifier())
-				addModifier(modifier.getNameModifier());
-			modifier.getItemData().forEach((stat, data) -> applyData(stat, data.randomize(this)));
-		}
+			if (modifier.hasNameModifier()) { addModifier(modifier.getNameModifier()); }
+			for (ItemStat stat : modifier.getItemData().keySet()) {
+				addModifierData(stat, modifier.getItemData().get(stat).randomize(this));
+				applyModifierData(stat); } }
 	}
 
 	public int getLevel() {
@@ -120,10 +122,50 @@ public class MMOItemBuilder {
 	 *            StatData to apply
 	 */
 	public void applyData(ItemStat stat, StatData data) {
-		if (mmoitem.hasData(stat) && data instanceof Mergeable)
+
+		// Is the data mergeable? Apply as External SH
+		if (mmoitem.hasData(stat) && data instanceof Mergeable) {
+
 			((Mergeable) mmoitem.getData(stat)).merge(data);
-		else
+		} else {
+
+			// Set, there is no more.
 			mmoitem.setData(stat, data);
+		}
+	}
+
+	/**
+	 * Builds the Modifier StatData, which is in the end applied with
+	 * {@link #applyModifierData(ItemStat)}
+	 *
+	 * @param stat
+	 *            Stat owning the data
+	 * @param data
+	 *            StatData to apply
+	 */
+	public void addModifierData(@NotNull ItemStat stat, @NotNull StatData data) {
+
+		// Is the data mergeable? Apply as External SH
+		if (mmoitem.hasData(stat) && data instanceof Mergeable) {
+
+			// Merge
+			if (modifierData == null) { modifierData = data; }
+			else { ((Mergeable) modifierData).merge(data); }
+
+		} else {
+
+			// Set, there is no more.
+			modifierData = data;
+		}
+	}
+	StatData modifierData;
+	public void applyModifierData(@NotNull ItemStat stat) {
+
+		// Apply onto Stat History
+		StatHistory hist = StatHistory.from(mmoitem, stat);
+
+		// Apply
+		hist.setModifiersBonus(modifierData);
 	}
 
 	/**

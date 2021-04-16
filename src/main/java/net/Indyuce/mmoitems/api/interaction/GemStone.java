@@ -115,20 +115,21 @@ public class GemStone extends UseItem {
 
 		} else {
 
-			// Check gem gems lol
+			// Check Gem gems are not supported >:l. Check the modifiers ig
 			boolean success = false;
-			for (UUID registeredGem : gemStory.getAllGemstones()) {
+			if (gemStory.getModifiersBonus() != null) {
 
 				// Get that gem
-				GemSocketsData registeredGemData = (GemSocketsData) gemStory.getGemstoneData(registeredGem);
-				if (registeredGemData == null) { continue; }
+				GemSocketsData registeredGemData = (GemSocketsData) gemStory.getModifiersBonus();
+				if (registeredGemData != null) {
 
-				if (registeredGemData.getEmptySocket(gemType) != null) {
-					//UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Gemstone\u00a77: \u00a73" + foundSocketColor);
+					if (registeredGemData.getEmptySocket(gemType) != null) {
+						//UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Gemstone\u00a77: \u00a73" + foundSocketColor);
 
-					// Charmer
-					success = true;
-					registeredGemData.apply(gemType, gemData); break; } }
+						// Charmer
+						success = true;
+						registeredGemData.apply(gemType, gemData);
+					} } }
 
 			if (!success) {
 

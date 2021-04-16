@@ -489,6 +489,9 @@ public class MMOItem implements ItemReference {
 
 		// Attempt externals
 		for (StatData externalData : gemStory.getExternalData()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) externalData), gemUUID, color)) { return; } }
+
+		// Attempt externals
+		if (gemStory.getModifiersBonus() != null) { GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getModifiersBonus()), gemUUID, color); }
 	}
 	//endregion
 }

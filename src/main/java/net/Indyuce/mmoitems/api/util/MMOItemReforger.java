@@ -350,12 +350,13 @@ public class MMOItemReforger {
 			// Keep Gemstone and Extraneous data
 			for (UUID gem : hist.getAllGemstones()) { clear.registerGemstoneData(gem, hist.getGemstoneData(gem)); }
 			for (StatData ex : hist.getExternalData()) { clear.registerExternalData(ex); }
+			clear.setModifiersBonus(hist.getModifiersBonus());
 
 			// Store
 			itemDataHistory.put(stat, clear);
 			mmoItem.setStatHistory(stat, clear);
 			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Update Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
-			mmoItem.setData(stat, clear.recalculate(false, l));
+			//todo EXPERIMENTAL no longer recalculate here mmoItem.setData(stat, clear.recalculate(false, l));
 		}
 	}
 

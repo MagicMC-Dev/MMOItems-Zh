@@ -322,8 +322,7 @@ public class MMOItemReforger {
 					//UPDT//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
 
 					// Just clone I guess
-					clear = new StatHistory(mmoItem, stat, ((DoubleData) hist.getOriginalData()).cloneData());
-				}
+					clear = new StatHistory(mmoItem, stat, ((DoubleData) hist.getOriginalData()).cloneData()); }
 
 			} else {
 				//UPDT//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
@@ -335,7 +334,8 @@ public class MMOItemReforger {
 				 */
 				if (ItemStats.LORE.equals(stat) ||
 					ItemStats.NAME.equals(stat) ||
-					ItemStats.GEM_SOCKETS.equals(stat)) {
+					ItemStats.GEM_SOCKETS.equals(stat) ||
+					ItemStats.ABILITIES.equals(stat)) {
 
 					// Keep regenerated one
 					clear = new StatHistory(mmoItem, stat, mmoItem.getData(stat));

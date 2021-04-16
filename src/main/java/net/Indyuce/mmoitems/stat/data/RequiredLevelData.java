@@ -36,4 +36,7 @@ public class RequiredLevelData extends DoubleData {
 	@Override
 	public @NotNull
 	StatData cloneData() { return new RequiredLevelData(getValue()); }
+
+	@Override
+	public String toString() { return String.valueOf(getValue()); }
 }

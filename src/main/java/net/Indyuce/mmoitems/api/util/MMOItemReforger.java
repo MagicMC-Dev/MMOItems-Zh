@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.util;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -14,9 +15,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.Lore;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -25,7 +24,6 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -175,7 +173,7 @@ public class MMOItemReforger {
 		// Skip all this trash and just regenerate completely
 		if (options.isRegenerate()) {
 			// Store all the history of stat proceedings.
-			HashMap<ItemStat, StatHistory> temporalDataHistory = extratStatDataHistory(options);
+			HashMap<ItemStat, StatHistory> temporalDataHistory = extractStatDataHistory(options);
 
 			/*
 			 * Generate fresh MMOItem, with stats that will be set if the chance is too low
@@ -220,7 +218,7 @@ public class MMOItemReforger {
 		if (options.shouldKeepSoulbind() && mmoItem.hasData(ItemStats.SOULBOUND)) { keepSoulbound(); }
 
 		// Store all the history of stat proceedings.
-		HashMap<ItemStat, StatHistory> temporalDataHistory = extratStatDataHistory(options);
+		HashMap<ItemStat, StatHistory> temporalDataHistory = extractStatDataHistory(options);
 
 		/*
 		 * Generate fresh MMOItem, with stats that will be set if the chance is too low
@@ -233,6 +231,34 @@ public class MMOItemReforger {
 
 		// Choose enchantments to keep
 		if (options.shouldKeepEnchantments() && ambiguouslyOriginalEnchantmentCache != null) { ambiguouslyOriginalEnchantmentCache.identifyTrueOriginalEnchantments(mmoItem, cachedEnchantments);}
+	}
+
+	@NotNull HashMap<ItemStat, StatHistory> extractStatDataHistory(@NotNull ReforgeOptions options) {
+		HashMap<ItemStat, StatHistory> ret = new HashMap<>();
+
+		//UPDT//MMOItems.log(" \u00a71*** \u00a77Remembering Stats");
+		for (ItemStat stat : mmoItem.getStats()) {
+			//UPDT//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
+
+			// Skip if it cant merge
+			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
+
+			StatHistory hist = StatHistory.from(mmoItem, stat);
+			//UPDT//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
+
+			// Clear externals
+			if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
+
+			// Get and set
+			ret.put(hist.getItemStat(), hist);
+			//UPDT//MMOItems.log(" \u00a79  + \u00a77Storing for Update, History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
+			//GEM//MMOItems.log(" \u00a71  +-+ \u00a77Storing for Update, \u00a7bOG\u00a77: \u00a7f" + hist.getOriginalData().toString());
+			//GEM//for (String str : SilentNumbers.transcribeList(hist.getAllGemstones(), (s) -> (s instanceof UUID ? hist.getGemstoneData((UUID) s) + "\u00a73 (\u00a78" + s + "\u00a73)" : "null"))) { MMOItems.log(" \u00a71  +-+ \u00a77Storing for Update, \u00a7bGM\u00a77: \u00a7f" + str); }
+			//GEM//for (String str : SilentNumbers.transcribeList(hist.getExternalData(), (s) -> (s instanceof StatData ? s.toString() : "null"))) { MMOItems.log(" \u00a71  +-+ \u00a77Storing for Update, \u00a7bEX\u00a77: \u00a7f" + str); }
+		}
+
+		// Yes
+		return ret;
 	}
 
 	void restorePreRNGStats(@NotNull HashMap<ItemStat, StatHistory> backup, @NotNull ReforgeOptions options, @NotNull MMOItemTemplate template, int determinedItemLevel) {
@@ -258,7 +284,7 @@ public class MMOItemReforger {
 			 * If not, its gotten removed = we only keep extraneous
 			 */
 			if (source instanceof NumericStatFormula && hist.getOriginalData() instanceof DoubleData) {
-				//UPDT//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure");
+				//UPDT//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure\u00a78 {Original:\u00a77 " + ((DoubleData) hist.getOriginalData()).getValue() + "\u00a78}");
 
 				// Very well, chance checking is only available for NumericStatFormula class so
 				double base = ((NumericStatFormula) source).getBase() + (((NumericStatFormula) source).getScale() * determinedItemLevel);
@@ -302,8 +328,14 @@ public class MMOItemReforger {
 			} else {
 				//UPDT//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
 
-				// Delete lore
-				if (ItemStats.LORE.equals(stat) || ItemStats.NAME.equals(stat)) {
+				/*
+				 * These stats are exempt from this 'keeping' operation.
+				 * Probably because there is a ReforgeOption specifically
+				 * designed for them that keeps them separately
+				 */
+				if (ItemStats.LORE.equals(stat) ||
+					ItemStats.NAME.equals(stat) ||
+					ItemStats.GEM_SOCKETS.equals(stat)) {
 
 					// Keep regenerated one
 					clear = new StatHistory(mmoItem, stat, mmoItem.getData(stat));
@@ -325,29 +357,6 @@ public class MMOItemReforger {
 			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Update Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
 			mmoItem.setData(stat, clear.recalculate(false, l));
 		}
-	}
-
-	@NotNull HashMap<ItemStat, StatHistory> extratStatDataHistory(@NotNull ReforgeOptions options) {
-		HashMap<ItemStat, StatHistory> ret = new HashMap<>();
-
-		//UPDT//MMOItems.log(" \u00a71  * \u00a77Remembering Stats");
-		for (ItemStat stat : mmoItem.getStats()) {
-			//UPDT//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
-
-			// Skip if it cant merge
-			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
-
-			StatHistory hist = StatHistory.from(mmoItem, stat);
-			//UPDT//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
-
-			// Clear externals
-			if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
-
-			// Get and set
-			ret.put(hist.getItemStat(), hist); }
-
-		// Yes
-		return ret;
 	}
 
 	/**
@@ -457,10 +466,9 @@ public class MMOItemReforger {
 		if (options.isRegenerate()) { regenerate(player); return; }
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
-		if (!options.shouldKeepGemStones() && !options.shouldKeepExternalSH()) { loadVolatileMMOItem(); } else { loadLiveMMOItem(); }
+		loadLiveMMOItem();
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
 		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", mmoItem.getType().toString(), mmoItem.getId()); mmoItem = null; return; }
-		//noinspection ConstantConditions
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
 
 		// Keep name
@@ -629,6 +637,7 @@ public class MMOItemReforger {
 
 		// Get Level
 		cachedUpgradeLevel = ((UpgradeData) mmoItem.getData(ItemStats.UPGRADE));
+		//UPDT//MMOItems.log(" \u00a7e>-- \u00a77Level: \u00a7b" + (cachedUpgradeLevel != null ? cachedUpgradeLevel.getLevel() : "0 \u00a78(null)"));
 	}
 	/**
 	 * Caches the full history of these items.
@@ -641,20 +650,29 @@ public class MMOItemReforger {
 		// Got any gem sockets bro?
 		if (mmoItem.hasData(ItemStats.GEM_SOCKETS) && !clearGems) {
 
-			//UPDT//MMOItems.log(" \u00a7a> \u00a77Keeping Gem Sockets");
+			//UPDT//MMOItems.log(" \u00a7a> \u00a77Keeping Gem Sockets Gx\u00a7b" + ((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getGemstones().size() + "\u00a77, Ex\u00a7b" + ((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots().size());
+			//GEM//for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+> \u00a77Gem: \u00a7a" + str); }
+			//GEM//for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+> \u00a77Emp: \u00a76" + str); }
 
 			// Cache that gemstone data
 			cachedGemStones = (GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS); }
 
+		//UPDT//MMOItems.log(" \u00a7a++ \u00a77Saving current histories (the information on current RNG rolls)");
 		// Store all the history of stat proceedings.
 		for (StatHistory hist : mmoItem.getStatHistories()) {
-			//UPDT//MMOItems.log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
+			//UPDT//MMOItems.log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
 
 			// Clear externals
-			if (clearExternalSH) { hist.getExternalData().clear(); }
+			if (clearExternalSH) {
+				//UPDT//MMOItems.log(" \u00a7a  + \u00a77Clearing EXSH... \u00a7f");
+				hist.getExternalData().clear(); }
 
 			// Get and set
 			itemDataHistory.put(hist.getItemStat(), hist);
+			//UPDT//MMOItems.log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
+			//GEM//MMOItems.log(" \u00a73  +-+ \u00a77OG: \u00a7f" + hist.getOriginalData().toString());
+			//GEM//for (String str : SilentNumbers.transcribeList(hist.getAllGemstones(), (s) -> (s instanceof UUID ? hist.getGemstoneData((UUID) s) + "\u00a73 (\u00a78" + s + "\u00a73)" : "null"))) { MMOItems.log(" \u00a73  +-+ \u00a77GM: \u00a7f" + str); }
+			//GEM//for (String str : SilentNumbers.transcribeList(hist.getExternalData(), (s) -> (s instanceof StatData ? s.toString() : "null"))) { MMOItems.log(" \u00a73  +-+ \u00a77EX: \u00a7f" + str); }
 		}
 	}
 	/**
@@ -678,12 +696,60 @@ public class MMOItemReforger {
 	 * @return Built item with changes applied
 	 */
 	public ItemStack toStack() {
+		//UPDT//MMOItems.log(" \u00a7e@ \u00a73@ \u00a7a@ \u00a7d@ \u00a77Building Item Stack \u00a7e@ \u00a73@ \u00a7a@ \u00a7d@ ");
 		MMOItem buildingMMOItem = mmoItem.clone();
+		//LVL//MMOItems.log(" \u00a7d?\u00a77?\u00a76? \u00a77Lvl: \u00a7b" + buildingMMOItem.getUpgradeLevel());
+		//GEM//MMOItems.log(" \u00a7a>0 \u00a77Regenerated Gem Sockets:\u00a7f " + buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+>0 \u00a77Gem: \u00a7a" + str); }
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+>0 \u00a77Emp: \u00a76" + str); }
+
+		/*
+		 * Upgrade Information
+		 *
+		 * It is important to do this before the Stat History Caches so that
+		 * it knows to remember the original value of those stats that do get
+		 * upgraded.
+		 *
+		 * (Without this, it thinks that the Original Data is clear and must
+		 * not be included, since the upgrade hasn't been applied so it would
+		 * be redundant to store the history tag)
+		 */
+		if (cachedUpgradeLevel != null) {
+
+			//UPDT//MMOItems.log(" \u00a7e@ \u00a77Applying Upgrade");
+
+			// If has a upgrade template defined, just remember the level
+			if (buildingMMOItem.hasData(ItemStats.UPGRADE)) {
+				//UPDT//MMOItems.log("  \u00a7e* \u00a77Existing Upgrade Detected");
+
+				// Get current ig
+				UpgradeData current = ((UpgradeData) buildingMMOItem.getData(ItemStats.UPGRADE));
+				UpgradeData processed = new UpgradeData(current.getReference(), current.getTemplateName(), current.isWorkbench(), current.isDestroy(), current.getMax(), current.getSuccess());
+
+				// Edit level
+				processed.setLevel(Math.min(cachedUpgradeLevel.getLevel(), current.getMaxUpgrades()));
+				//UPDT//MMOItems.log("  \u00a7e + \u00a77Set to level \u00a7f" + processed.getLevel() + " \u00a78Curr\u00a77 " + current.getLevel() + "\u00a78, Cache \u00a77" + cachedUpgradeLevel.getLevel());
+
+				// Re-set cuz why not
+				buildingMMOItem.setData(ItemStats.UPGRADE, processed); }
+
+			// Actually decided that if the upgrade template is removed, server owner probably intends to clear upgrades so...
+			/*else {
+			    // New item has no Upgrade data? Then the old level AND template shall prevail
+				//----//MMOItems.log("  \u00a7e* \u00a77Using Cached");
+
+				// Set from the cached
+				buildingMMOItem.setData(ItemStats.UPGRADE, new UpgradeData(cachedUpgradeLevel.getReference(), cachedUpgradeLevel.getTemplateName(), cachedUpgradeLevel.isWorkbench(), cachedUpgradeLevel.isDestroy(), cachedUpgradeLevel.getMax(), cachedUpgradeLevel.getSuccess()));
+				//----//MMOItems.log("  \u00a7e + \u00a77Set to level \u00a7f" + cachedUpgradeLevel.getLevel());
+			} //*/
+		}
+		//LVL//MMOItems.log(" \u00a7d?\u00a77?\u00a76? \u00a77Lvl: \u00a7b" + buildingMMOItem.getUpgradeLevel());
 
 		// Apply histories
 		int l = mmoItem.getUpgradeLevel();
 		for (ItemStat stat : itemDataHistory.keySet()) {
 			//UPDT//MMOItems.log(" \u00a72@\u00a76@ \u00a77Found Cached Stat History \u00a76" + stat.getId());
+			//LVL//MMOItems.log(" \u00a7d?\u00a77?\u00a76? \u00a77Lvl: \u00a7b" + buildingMMOItem.getUpgradeLevel());
 
 			// Does it have history too?
 			StatHistory histOld = itemDataHistory.get(stat);
@@ -691,11 +757,12 @@ public class MMOItemReforger {
 				//UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cMissing");
 				continue; }
 
-			// Is it compltely clear?
+			/*/ Is it completely clear?
 			if (histOld.isClear()) {
-				//UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cClear");
+				/UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cClear " + (histOld.getOriginalData() instanceof DoubleData ? "\u00a78 {Original:\u00a77 " + ((DoubleData) histOld.getOriginalData()).getValue() + "\u00a78}" : ""));
 				continue; }
-			//UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cNot clear: \u00a73Gems" + histOld.getAllGemstones().size() + " \u00a78|\u00a7b ExSH " + histOld.getExternalData().size());
+			/UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cNot clear: \u00a73Gems" + histOld.getAllGemstones().size() + " \u00a78|\u00a7b ExSH " + histOld.getExternalData().size() + (histOld.getOriginalData() instanceof DoubleData ? "\u00a78 {Original:\u00a77 " + ((DoubleData) histOld.getOriginalData()).getValue() + "\u00a78}" : ""));
+			//*/
 
 			// Regenerate the original data
 			StatHistory hist = StatHistory.from(buildingMMOItem, stat);
@@ -706,7 +773,12 @@ public class MMOItemReforger {
 			// Recalculate
 			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Reforging Prep Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
 			buildingMMOItem.setData(hist.getItemStat(), hist.recalculate(false, l));
+
+			//LVL//MMOItems.log(" \u00a7d?\u00a77?\u00a76? \u00a77Lvl: \u00a7b" + buildingMMOItem.getUpgradeLevel());
 		}
+		//GEM//MMOItems.log(" \u00a7a>1 \u00a77Regenerated Gem Sockets:\u00a7f " + buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+>1 \u00a77Gem: \u00a7a" + str); }
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+>1 \u00a77Emp: \u00a76" + str); }
 
 		// Apply soulbound
 		if (cachedSoulbound != null) {
@@ -736,41 +808,8 @@ public class MMOItemReforger {
 			//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
 
 			// Recalculate and put
-			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Reforging Final Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
+			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Reforge Enchantments Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 			buildingMMOItem.setData(ItemStats.ENCHANTS, hist.recalculate(mmoItem.getUpgradeLevel()));
-		}
-
-		// Upgrade Information
-		if (cachedUpgradeLevel != null) {
-
-			//UPDT//MMOItems.log(" \u00a7e@ \u00a77Applying Upgrade");
-
-			// If has a upgrade template defined, just remember the level
-			if (buildingMMOItem.hasData(ItemStats.UPGRADE)) {
-				//UPDT//MMOItems.log("  \u00a7e* \u00a77Existing Upgrade Detected");
-
-				// Get current ig
-				UpgradeData current = ((UpgradeData) buildingMMOItem.getData(ItemStats.UPGRADE));
-				UpgradeData processed = new UpgradeData(current.getReference(), current.getTemplateName(), current.isWorkbench(), current.isDestroy(), current.getMax(), current.getSuccess());
-
-				// Edit level
-				processed.setLevel(Math.min(cachedUpgradeLevel.getLevel(), current.getMaxUpgrades()));
-				//UPDT//MMOItems.log("  \u00a7e + \u00a77Set to level \u00a7f" + current.getLevel());
-
-				// Re-set cuz why not
-				buildingMMOItem.setData(ItemStats.UPGRADE, processed);
-
-			}
-
-			// Actually decided that if the upgrade template is removed, server owner probably intends to clear upgrades so...
-			/*else {
-			    // New item has no Upgrade data? Then the old level AND template shall prevail
-				//----//MMOItems.log("  \u00a7e* \u00a77Using Cached");
-
-				// Set from the cached
-				buildingMMOItem.setData(ItemStats.UPGRADE, new UpgradeData(cachedUpgradeLevel.getReference(), cachedUpgradeLevel.getTemplateName(), cachedUpgradeLevel.isWorkbench(), cachedUpgradeLevel.isDestroy(), cachedUpgradeLevel.getMax(), cachedUpgradeLevel.getSuccess()));
-				//----//MMOItems.log("  \u00a7e + \u00a77Set to level \u00a7f" + cachedUpgradeLevel.getLevel());
-			} //*/
 		}
 
 		// Gem Stones
@@ -790,7 +829,7 @@ public class MMOItemReforger {
 
 				// Remaining
 				for (GemstoneData data : oldSockets) {
-					//UPDT//MMOItems.log("  \u00a7a*\u00a7e* \u00a77Fitting \u00a7f" + data.getHistoricUUID().toString());
+					//UPDT//MMOItems.log("  \u00a7a*\u00a7e* \u00a77Fitting \u00a7f" + data.getHistoricUUID().toString() + "\u00a77 '" + data.getName());
 
 					// No more if no more sockets left
 					if (availableSockets.size() <= 0) {
@@ -830,12 +869,24 @@ public class MMOItemReforger {
 
 				// Update list of empty sockets
 				cachedGemStones.getEmptySlots().clear();
-				cachedGemStones.getEmptySlots().addAll(availableSockets);
+
+				// Create with select socket slots and gems
+				GemSocketsData primeGems = new GemSocketsData(availableSockets);
+				for (GemstoneData gem : cachedGemStones.getGemstones()) { if (gem == null) { continue; } primeGems.add(gem); }
+
+				// That's the original data
+				StatHistory gemStory = StatHistory.from(buildingMMOItem, ItemStats.GEM_SOCKETS);
+				gemStory.setOriginalData(primeGems);
+
+				//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Restore Gemstones Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
+				buildingMMOItem.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(l));
 			}
 
-			// Set the data, as changed as it may be
-			buildingMMOItem.setData(ItemStats.GEM_SOCKETS, cachedGemStones);
+			// Could not fit any gems: No gem sockets!
 		}
+		//GEM//MMOItems.log(" \u00a7a>\u00a7e2 \u00a77Regenerated Gem Sockets:\u00a7f " + buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+>\u00a7e2 \u00a77Gem: \u00a7a" + str); }
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+>\u00a7e2 \u00a77Emp: \u00a76" + str); }
 
 		// Lore
 		if (!cachedLore.isEmpty()) {
@@ -876,6 +927,9 @@ public class MMOItemReforger {
 			//UPDT//MMOItems.log(" \u00a7f@ \u00a77Recalculating Upgrades");
 
 			buildingMMOItem.getUpgradeTemplate().upgradeTo(buildingMMOItem, buildingMMOItem.getUpgradeLevel()); }
+		//GEM//MMOItems.log(" \u00a7a>3 \u00a77Regenerated Gem Sockets:\u00a7f " + buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+>3 \u00a77Gem: \u00a7a" + str); }
+		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+>3 \u00a77Emp: \u00a76" + str); }
 
 		// Build and set amount
 		ItemStack stack = buildingMMOItem.newBuilder().build();

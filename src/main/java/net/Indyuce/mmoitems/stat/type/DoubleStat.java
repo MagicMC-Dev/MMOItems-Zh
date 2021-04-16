@@ -95,6 +95,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 			if (hist != null) {
 
 				// Get as if it had never been upgraded
+				//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Stat Change Display Recalculation \u00a73-\u00a7a-\u00a73-");
 				DoubleData uData = (DoubleData) hist.recalculateUnupgraded();
 
 				// Calculate Difference

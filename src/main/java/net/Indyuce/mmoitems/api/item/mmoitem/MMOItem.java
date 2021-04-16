@@ -88,7 +88,7 @@ public class MMOItem implements ItemReference {
 
 			// Recalculate
 			//GEM//MMOItems.log(" \u00a76+++\u00a77 Recalculating...");
-			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Merge Gem Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
+			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Gem Application Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 			setData(stat, sHistory.recalculate(getUpgradeLevel()));
 
 	 	// Merging means replacing if it cannot be merged
@@ -151,7 +151,7 @@ public class MMOItem implements ItemReference {
 
 			// Copy Histories
 			StatHistory hist = getStatHistory(sat);
-			if (hist != null) { clone.setStatHistory(sat, hist); }
+			if (hist != null) { clone.setStatHistory(sat, hist.clone(clone)); }
 		}
 
 		// Thats it
@@ -248,10 +248,12 @@ public class MMOItem implements ItemReference {
 
 		// Does it have Upgrade Data?
 		if (hasData(ItemStats.UPGRADE)) {
+			//UPGR//MMOItems.log(" \u00a7b?\u00a7c?\u00a7e? \u00a77Found Upgrade Data: \u00a7b" + ((UpgradeData) getData(ItemStats.UPGRADE)).getLevel());
 
 			// Return the registered level.
 			return ((UpgradeData) getData(ItemStats.UPGRADE)).getLevel();
 		}
+		//UPGR//MMOItems.log(" \u00a7b?\u00a7c?\u00a7e? \u00a77No Upgrade Data: \u00a7b0");
 
 		// Nope? Well its level 0 I guess.
 		return 0;

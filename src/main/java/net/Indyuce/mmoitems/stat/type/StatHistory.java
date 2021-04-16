@@ -66,7 +66,7 @@ public class StatHistory {
 
         // Is it clear?
         if (((Mergeable) getOriginalData()).isClear() && (!isUpgradeable() || getMMOItem().getUpgradeLevel() == 0)) {
-            //CLR//MMOItems.log("\u00a7a -+- \u00a77Original data is clear, \u00a7aclear. \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
+            //CLR//MMOItems.log("\u00a7a -+- \u00a77Original data is clear & unupgraded, \u00a7aclear. \u00A73(\u00a78Upgradeable? \u00a7b" + isUpgradeable() + "\u00a78, Upgrade Level:\u00a7b " + getMMOItem().getUpgradeLevel() + "\u00a73) \u00a78{\u00a77" + getItemStat().getId() + "\u00a78}");
             return true; }
 
         // Exactly the same as the MMOItem? [This check should basically always be true though]
@@ -185,7 +185,7 @@ public class StatHistory {
      */
     @NotNull
     public static StatHistory from(@NotNull MMOItem ofItem, @NotNull ItemStat ofStat, boolean forceNew) {
-
+        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a761? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
         // Get history :B
         StatHistory hist;
         if (!forceNew) {
@@ -202,6 +202,7 @@ public class StatHistory {
 
         // Get original data
         StatData original = ofItem.getData(ofStat);
+        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a762? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
         if (original == null) {
             original = ofStat.getClearStatData();
             ofItem.setData(ofStat, original);
@@ -210,14 +211,19 @@ public class StatHistory {
         } else {
             original = ((Mergeable) original).cloneData();
             //UPGRD//MMOItems.log("\u00a7a   +\u00a77 Found original data");
-        } 
+        }
+        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a763? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
         
         // Create new
         hist = new StatHistory(ofItem, ofStat, original);
 
+        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a764? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
         // Append to the item
         ofItem.setStatHistory(ofStat, hist);
 
+        //LVL//MMOItems.log(" \u00a7d*\u00a77-\u00a7a-\u00a765? \u00a77Lvl: \u00a7b" + ofItem.getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
+
+        //LVL//MMOItems.log(" \u00a7d*\u00a77*\u00a7a*\u00a766? \u00a77Lvl: \u00a7b" + hist.getMMOItem().getUpgradeLevel() + "\u00a7d-\u00a77-\u00a7a-\u00a7d-\u00a77-\u00a7a-");
         // Thats it
         return hist;
     }
@@ -270,7 +276,7 @@ public class StatHistory {
 
         // Unregister
         for (UUID ext : extraneous) {
-            //UPGRD//MMOItems.log("\u00a76 ||\u00a77 Purged Stone: \u00a7e" + ext.toString());
+            //RECALCULATE//MMOItems.log("\u00a76 ||\u00a77 Purged Stone: \u00a7e" + ext.toString() + "\u00a78 (\u00a73" + getItemStat().getId() + "\u00a78)");
 
             // Remove
             removeGemData(ext);
@@ -309,7 +315,7 @@ public class StatHistory {
      *                  what you're doing.
      */
     @NotNull public StatData recalculate(boolean withPurge, int level) {
-        //UPGRD//MMOItems.log("\u00a7d|||\u00a77 Recalculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77, Purge? \u00a7e" + withPurge);
+        //RECALCULATE//MMOItems.log("\u00a7d|||\u00a77 Recalculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77, Purge? \u00a7e" + withPurge);
 
         if (withPurge) { purgeGemstones(); }
 
@@ -365,7 +371,7 @@ public class StatHistory {
      * <p>5: Sums external data (modifiers that are not linked to an ID, I suppose by external plugins).
      */
     private StatData recalculateUpgradeable(int lvl) {
-        //UPGRD//MMOItems.log("\u00a76|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Upgradeable");
+        //RECALCULATE//MMOItems.log("\u00a76|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Upgradeable");
 
         // Get Upgrade Info?
         UpgradeInfo inf = getMMOItem().getUpgradeTemplate().getUpgradeInfo(getItemStat());
@@ -377,7 +383,7 @@ public class StatHistory {
         StatData ogCloned = ((Mergeable) originalData).cloneData(); 
         
         // Level up
-        //UPGRD//MMOItems.log("\u00a76 ||\u00a77 Item Level: \u00a7e" + lvl);
+        //RECALCULATE//MMOItems.log("\u00a76 ||\u00a77 Item Level: \u00a7e" + lvl);
         //DBL//if (ogCloned instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Original Base: \u00a7e" + ((DoubleData) ogCloned).getValue() + "\u00a78 {Original:\u00a77 " + ((DoubleData) getOriginalData()).getValue() + "\u00a78}");
         StatData ret = ((Upgradable) getItemStat()).apply(ogCloned, inf, lvl);
         //DBL//if (ret instanceof DoubleData) MMOItems.log("\u00a76  >\u00a77 Leveled Base: \u00a7e" + ((DoubleData) ret).getValue() + "\u00a78 {Original:\u00a77 " + ((DoubleData) getOriginalData()).getValue() + "\u00a78}");
@@ -391,7 +397,7 @@ public class StatHistory {
             // Whats this gemstone's upgrade level?
             for (GemstoneData gData : getMMOItem().getGemStones()) {
                 if (gData == null) { continue; }
-                //UPGRD//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a77 Gemstone " + gData.getName() + "\u00a77 " + gData.getHistoricUUID().toString());
+                //RECALCULATE//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a77 Gemstone " + gData.getName() + "\u00a77 " + gData.getHistoricUUID().toString());
 
                 // Find that one of matching UUID
                 if (gData.getHistoricUUID().equals(d)) {
@@ -400,20 +406,20 @@ public class StatHistory {
 
                         // Ok
                         level = gData.getLevel();
-                        //UPGRD//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a7a- Found:\u00a77" + level);
+                        //RECALCULATE//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a7a- Found:\u00a77" + level);
 
                     } else {
 
                         // No scaling
                         level = lvl;
-                        //UPGRD//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a7a- Found,\u00a77 Unscaling");
+                        //RECALCULATE//MMOItems.log("\u00a76 -\u00a7b-\u00a76-\u00a7a- Found,\u00a77 Unscaling");
                     }
                 }
             }
 
             // Calculate level difference
             int gLevel = lvl - level;
-            //UPGRD//MMOItems.log("\u00a76 |\u00a7b|\u00a76>\u00a77 Gemstone Level: \u00a7e" + gLevel + "\u00a77 (Put at \u00a7b" + level + "\u00a77)");
+            //RECALCULATE//MMOItems.log("\u00a76 |\u00a7b|\u00a76>\u00a77 Gemstone Level: \u00a7e" + gLevel + "\u00a77 (Put at \u00a7b" + level + "\u00a77)");
 
             //DBL//if (getGemstoneData(d) instanceof DoubleData) MMOItems.log("\u00a76  \u00a7b|>\u00a77 Gemstone Base: \u00a7e" + ((DoubleData) getGemstoneData(d)).getValue());
             // Apply upgrades
@@ -448,7 +454,7 @@ public class StatHistory {
      * <p>4: Sums external data (modifiers that are not linked to an ID, I suppose by external plugins).
      */
     private StatData recalculateMergeable() {
-        //UPGRD//MMOItems.log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Mergeable");
+        //RECALCULATE//MMOItems.log("\u00a73|||\u00a77 Calculating \u00a7f" + getItemStat().getNBTPath() + "\u00a77 as Mergeable");
 
         // Just clone bro
         StatData ret =  ((Mergeable) getOriginalData()).cloneData();
@@ -458,7 +464,6 @@ public class StatHistory {
         // Add up gemstones
         for (StatData d : perGemstoneData.values()) {
             //DBL//if (d instanceof DoubleData) MMOItems.log("\u00a73  >\u00a7b> \u00a77 Gemstone Base: \u00a7e" + ((DoubleData) d).getValue());
-            //DBL//if (d instanceof RequiredLevelData) MMOItems.log("\u00a73  >\u00a7e> \u00a76 Required Level Data Apparently");
             ((Mergeable) ret).merge(d);
         }
 
@@ -726,6 +731,37 @@ public class StatHistory {
            //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Final Gemstones \u00a7f" + perGemstoneData.size());
            //UPDT//MMOItems.log("     \u00a76:\u00a72: \u00a77Final Externals \u00a7f" + perExternalData.size());
         }
+    }
+
+    /**
+     * Clones this history but linked to another MMOItem
+     *
+     * @param clonedMMOItem Usually this is called when you are cloning the MMOItem itself,
+     *                      this is a reference to the new one.
+     */
+    public StatHistory clone(@NotNull MMOItem clonedMMOItem) {
+
+        // Clone
+        StatHistory res = new StatHistory(clonedMMOItem, getItemStat(), ((Mergeable) getOriginalData()).cloneData());
+
+        // Add all
+        for (UUID uid : getAllGemstones()) {
+            if (uid == null) { continue; }
+
+            StatData gem = getGemstoneData(uid);
+            if (!(gem instanceof Mergeable)) { continue; }
+
+            // Clone
+            res.registerGemstoneData(uid, ((Mergeable) gem).cloneData()); }
+        // Add all
+        for (StatData ex : getExternalData()) {
+            if (!(ex instanceof Mergeable)) { continue; }
+
+            // Clone
+            res.registerExternalData(((Mergeable) ex).cloneData()); }
+
+        // Thats it
+        return res;
     }
 
     static final String enc_Stat = "Stat";

@@ -46,5 +46,6 @@ public class DoubleData implements StatData, Mergeable {
 	@Override
 	public boolean isClear() { return getValue() == 0; }
 
-
+	@Override
+	public String toString() { return String.valueOf(getValue()); }
 }

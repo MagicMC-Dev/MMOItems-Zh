@@ -186,4 +186,7 @@ public class GemSocketsData implements StatData, Mergeable, RandomStatData {
 	public StatData randomize(MMOItemBuilder builder) {
 		return new GemSocketsData(new ArrayList<>(emptySlots));
 	}
+
+	@Override
+	public String toString() { return "Empty:\u00a7b " + getEmptySlots().size() + "\u00a77, Gems:\u00a7b " + getGemstones().size(); }
 }

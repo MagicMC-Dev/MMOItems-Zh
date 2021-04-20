@@ -38,6 +38,7 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 		addParameter(new Parameter("(unidentify-chance)", (explore, list) -> list.add("(unidentify-chance)")));
 		addParameter(new Parameter("(drop-chance)", (explore, list) -> list.add("(drop-chance)")));
 		addParameter(new Parameter("(soulbound-chance)", (explore, list) -> list.add("(soulbound-chance)")));
+		addParameter(new Parameter("(silent)", (explore, list) -> list.addAll(Arrays.asList("silent", "s"))));
 	}
 
 	@Override
@@ -59,6 +60,7 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 			double unidentify = args.length > 5 ? Double.parseDouble(args[5]) / 100 : 0;
 			double drop = args.length > 6 ? Double.parseDouble(args[6]) / 100 : 1;
 			double soulbound = args.length > 7 ? Double.parseDouble(args[7]) / 100 : 0;
+			boolean silent = args.length > 8 ? args[8].equalsIgnoreCase("silent") || args[8].equalsIgnoreCase("s") : false;
 
 			// roll drop chance
 			if (random.nextDouble() > drop)
@@ -81,12 +83,13 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 			item.setAmount(amount.getRandomAmount());
 
 			// message
-			if (!sender.equals(target))
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "Successfully gave " + ChatColor.GOLD
-						+ MMOUtils.getDisplayName(item) + (item.getAmount() > 1 ? " x" + item.getAmount() : "") + ChatColor.YELLOW + " to "
-						+ ChatColor.GOLD + target.getName() + ChatColor.YELLOW + ".");
-			Message.RECEIVED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item), "#amount#",
-					(item.getAmount() > 1 ? " x" + item.getAmount() : "")).send(target);
+				if (!sender.equals(target))
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "Successfully gave " + ChatColor.GOLD
+							+ MMOUtils.getDisplayName(item) + (item.getAmount() > 1 ? " x" + item.getAmount() : "") + ChatColor.YELLOW + " to "
+							+ ChatColor.GOLD + target.getName() + ChatColor.YELLOW + ".");
+			if (!silent)
+				Message.RECEIVED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item), "#amount#",
+						(item.getAmount() > 1 ? " x" + item.getAmount() : "")).send(target);
 
 			// item
 			new SmartGive(target).give(item);

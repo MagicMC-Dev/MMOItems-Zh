@@ -705,16 +705,26 @@ public class MMOItems extends LuminePlugin {
 		return m.newBuilder().build();
 	}
 
-	@Nullable public Type getType(@Nullable NBTItem nbtitem) {
-		if (nbtitem == null || !nbtitem.hasType()) { return null; }
+
+	/**
+	 * @param nbtItem The NBTItem you are testing
+	 * @return The MMOItem Type of this item, if it is a MMOItem
+	 */
+	@Nullable public Type getType(@Nullable NBTItem nbtItem) {
+		if (nbtItem == null || !nbtItem.hasType()) { return null; }
 
 		// Try that one instead
-		return getType(nbtitem.getType());
+		return getType(nbtItem.getType());
 	}
-	@Nullable public String getID(@Nullable NBTItem nbtitem) {
-		if (nbtitem == null || !nbtitem.hasType()) { return null; }
 
-		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtitem, SupportedNBTTagValues.STRING);
+	/**
+	 * @param nbtItem The NBTItem you are testing
+	 * @return The MMOItem ID of this item, if it is a MMOItem
+	 */
+	@Nullable public String getID(@Nullable NBTItem nbtItem) {
+		if (nbtItem == null || !nbtItem.hasType()) { return null; }
+
+		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtItem, SupportedNBTTagValues.STRING);
 		if (type == null) { return null; }
 		return (String) type.getValue();
 	}
@@ -765,5 +775,31 @@ public class MMOItems extends LuminePlugin {
 	 * @author Gunging
 	 */
 	@NotNull public static ConsoleCommandSender getConsole() { return plugin.getServer().getConsoleSender(); }
+
+	/**
+	 * @param item The item stack you are testing.
+	 * @param type MMOItem Type you are expecting {@link Type#getId()}
+	 * @param id MMOItem ID you are expecting
+	 *
+	 * @return If the given item is the desired MMOItem
+	 */
+	public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String type, @NotNull String id) {
+		if (item == null) { return false; }
+
+		// Make it into an NBT Item
+		NBTItem asNBT = NBTItem.get(item);
+
+		// ID Matches?
+		String itemID = MMOItems.plugin.getID(asNBT);
+
+		// Not a MMOItem
+		if (itemID == null) { return false; }
+
+		// ID matches?
+		if (!itemID.equals(id)) { return false; }
+
+		// If the type matches too, we are set.
+		return asNBT.getType().equals(type);
+	}
 	//endregion
 }

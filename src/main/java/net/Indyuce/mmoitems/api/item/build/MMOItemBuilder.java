@@ -150,7 +150,15 @@ public class MMOItemBuilder {
 
 			// Merge
 			if (modifierData == null) { modifierData = data; }
-			else { ((Mergeable) modifierData).merge(data); }
+			else {
+				try {
+					((Mergeable) modifierData).merge(data);
+				} catch (IllegalArgumentException ignored) {
+
+					MMOItems.print(null, "Could not merge $f{2}$b modifier data into $f{3}$b of $e{4}$b when generating $r{0} {1}$b. ", "Item Generation", mmoitem.getType().toString(), mmoitem.getId(), data.getClass().getSimpleName(), modifierData.getClass().getSimpleName(), stat.getId());
+					modifierData = data;
+				}
+			}
 
 		} else {
 

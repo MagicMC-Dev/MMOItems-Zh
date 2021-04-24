@@ -40,6 +40,7 @@ public class CraftingManager implements Reloadable {
 		// conditions
 		registerCondition("level", LevelCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
 		registerCondition("permission", PermissionCondition::new, null);
+		registerCondition("placeholder", PlaceholderCondition::new, null);
 		registerCondition("mana", ManaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
 		registerCondition("stamina", StaminaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
 		registerCondition("food", FoodCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));

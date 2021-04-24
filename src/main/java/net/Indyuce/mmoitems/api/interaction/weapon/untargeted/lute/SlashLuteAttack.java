@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 
+import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -7,6 +9,7 @@ import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -32,7 +35,24 @@ public class SlashLuteAttack implements LuteAttackHandler {
 						loc.setDirection(vec);
 						loc.setYaw(loc.getYaw() + k);
 						loc.setPitch(stats.getPlayer().getEyeLocation().getPitch());
-						loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), 0);
+
+						if (nbt.hasTag("MMOITEMS_PROJECTILE_PARTICLES")) {
+							JsonObject obj = MythicLib.plugin.getJson().parse(nbt.getString("MMOITEMS_PROJECTILE_PARTICLES"), JsonObject.class);
+							Particle particle = Particle.valueOf(obj.get("Particle").getAsString());
+							// If the selected particle is colored, use the provided color
+							if (ProjectileParticlesData.isColorable(particle)) {
+								double red = Double.parseDouble(String.valueOf(obj.get("Red")));
+								double green = Double.parseDouble(String.valueOf(obj.get("Green")));
+								double blue = Double.parseDouble(String.valueOf(obj.get("Blue")));
+								ProjectileParticlesData.shootParticle(stats.getPlayer(), particle, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), red, green, blue);
+								// If it's not colored, just shoot the particle
+							} else {
+								ProjectileParticlesData.shootParticle(stats.getPlayer(), particle, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), 0, 0, 0);
+							}
+							// If no particle has been provided via projectile particle attribute, default to this particle
+						} else {
+							loc.getWorld().spawnParticle(Particle.NOTE, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), 0);
+						}
 					}
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);

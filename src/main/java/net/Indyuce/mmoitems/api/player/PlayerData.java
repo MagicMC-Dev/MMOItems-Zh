@@ -216,6 +216,9 @@ public class PlayerData {
 			inventory.getEquipped().add(new EquippedPlayerItem(item));
 		}
 
+		RefreshInventoryEvent riev = new RefreshInventoryEvent(inventory.getEquipped(), getPlayer(), this);
+		Bukkit.getPluginManager().callEvent(riev);
+
 		for (EquippedPlayerItem equipped : inventory.getEquipped()) {
 			VolatileMMOItem item = equipped.getItem();
 
@@ -244,7 +247,7 @@ public class PlayerData {
 			/*
 			 * Apply abilities
 			 */
-			if (item.hasData(ItemStats.ABILITIES))
+			if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering", false) || !fullHands))
 				if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
 					itemAbilities.addAll(((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities());
 

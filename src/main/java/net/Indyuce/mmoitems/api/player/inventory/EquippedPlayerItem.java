@@ -12,7 +12,6 @@ public class EquippedPlayerItem {
 	 * An item equipped by a player in a specific slot
 	 * 
 	 * @param item The item equipped
-	 * @param slot The corresponding MMOItems slot type, must not be null!
 	 */
 	public EquippedPlayerItem(EquippedItem item) {
 		this.item = new VolatileMMOItem(item.getItem());

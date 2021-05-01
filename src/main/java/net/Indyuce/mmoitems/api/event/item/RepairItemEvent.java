@@ -14,6 +14,7 @@ public class RepairItemEvent extends PlayerDataEvent {
 	private final NBTItem target;
 
 	private int repaired;
+	private double repairedPercent;
 
 	/**
 	 * Called when a player repairs an item using a consumable
@@ -35,6 +36,14 @@ public class RepairItemEvent extends PlayerDataEvent {
 		this.repaired = repaired;
 	}
 
+	public RepairItemEvent(PlayerData playerData, VolatileMMOItem consumable, NBTItem target, double repaired) {
+		super(playerData);
+
+		this.consumable = consumable;
+		this.target = target;
+		this.repairedPercent = repaired;
+	}
+
 	public VolatileMMOItem getConsumable() {
 		return consumable;
 	}
@@ -45,6 +54,10 @@ public class RepairItemEvent extends PlayerDataEvent {
 
 	public int getRepaired() {
 		return repaired;
+	}
+
+	public double getRepairedPercent(){
+		return repairedPercent;
 	}
 
 	public void setRepaired(int repaired) {

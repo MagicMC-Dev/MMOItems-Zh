@@ -242,6 +242,7 @@ public class ItemStats {
 			RANDOM_UNSOCKET = new RandomUnsocket(),
 			//todo CAN_UNSOCKET = new CanUnsocket(),
 			REPAIR = new RepairPower(),
+			REPAIR_PERCENT = new RepairPowerPercent(),
 			REPAIR_TYPE = new RepairType(),
 	KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),
 			RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Recoil", new String[]{"Corresponds to the shooting innacuracy."}, new String[]{"musket"}),

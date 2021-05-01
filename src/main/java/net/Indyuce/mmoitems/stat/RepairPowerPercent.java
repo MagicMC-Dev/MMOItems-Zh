@@ -55,7 +55,7 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
 
             DurabilityItem durItem = new DurabilityItem(player, target);
             if (durItem.getDurability() < durItem.getMaxDurability()) {
-                target.getItem().setItemMeta(durItem.addDurability(durItem.getMaxDurability()*called.getRepaired()).toItem().getItemMeta());
+                target.getItem().setItemMeta(durItem.addDurability((int) (durItem.getMaxDurability()*called.getRepairedPercent())).toItem().getItemMeta());
                 Message.REPAIRED_ITEM
                         .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
                         .send(player);

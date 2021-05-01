@@ -57,7 +57,7 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
             if (durItem.getDurability() < durItem.getMaxDurability()) {
                 target.getItem().setItemMeta(durItem.addDurability((int) (durItem.getMaxDurability()*called.getRepairedPercent())).toItem().getItemMeta());
                 Message.REPAIRED_ITEM
-                        .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
+                        .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepairedPercent(),"%")
                         .send(player);
                 CustomSoundListener.playConsumableSound(consumable.getItem(), player);
             }

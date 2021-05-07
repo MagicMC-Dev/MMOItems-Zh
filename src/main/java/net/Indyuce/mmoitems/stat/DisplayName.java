@@ -2,34 +2,45 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.NameData;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
-public class DisplayName extends StringStat {
+public class DisplayName extends StringStat implements GemStoneStat {
 	private final String[] cleanFilter = {ChatColor.BOLD.toString(), ChatColor.ITALIC.toString(), ChatColor.UNDERLINE.toString(), ChatColor.STRIKETHROUGH.toString(), ChatColor.MAGIC.toString()};
 	public DisplayName() {
 		super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "Display Name", new String[] { "The item display name." },
 				new String[] { "all" });
 	}
 
-	// TODO: 4/12/2021 WHAT THE FUCK IS HAPPENING HERE
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		String format = data.toString();
+		// Bake
+		String format;
+		if (data instanceof NameData) {
+
+			format = ((NameData) data).bake();
+
+		} else {
+
+			format = data.toString();
+		}
 
 		ItemTier tier = MMOItems.plugin.getTiers().findTier(item.getMMOItem());
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
@@ -43,55 +54,63 @@ public class DisplayName extends StringStat {
 		}
 
 		// Is this upgradable?
-		if (item.getMMOItem().hasUpgradeTemplate()) {
-			int upgradeLevel = item.getMMOItem().getUpgradeLevel();
-			String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+		format = cropUpgrade(format);
+		if (item.getMMOItem().hasUpgradeTemplate()) { format = appendUpgradeLevel(format, item.getMMOItem().getUpgradeLevel()); }
 
-			//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
-			//MMOItems.getConsole().sendMessage("Format " + format);
+		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
 
-			if (suffix != null) {
+		// Add NBT
+		item.addItemTag(getAppliedNBT(data));
+	}
 
-				// Crop lvl
-				int lvlOFFSET = suffix.indexOf("#lvl#");
-				String sB4 = suffix.substring(0, lvlOFFSET);
-				String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
-				String sB4_alt = sB4.replace("+", "-");
-				String aFt_alt = aFt.replace("+", "-");
+	@NotNull String cropUpgrade(@NotNull String format) {
+		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 
-				// Remove it
-				if (format.contains(sB4)) {
+		//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
+		//MMOItems.getConsole().sendMessage("Format " + format);
 
-					// Get offsets
-					int sB4_offset = format.indexOf(sB4);
-					int aFt_offset = format.lastIndexOf(aFt);
+		if (suffix != null) {
 
-					// No after = to completion
-					if (aFt_offset < 0) { aFt_offset = format.length(); } else { aFt_offset += aFt.length(); }
+			// Crop lvl
+			int lvlOFFSET = suffix.indexOf("#lvl#");
+			String sB4 = suffix.substring(0, lvlOFFSET);
+			String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
+			String sB4_alt = sB4.replace("+", "-");
+			String aFt_alt = aFt.replace("+", "-");
 
-					// Remove that
-					String beforePrefix = format.substring(0, sB4_offset);
-					String afterPrefix = format.substring(aFt_offset);
+			// Remove it
+			if (format.contains(sB4)) {
 
-					// Replace
-					format = beforePrefix + afterPrefix; }
+				// Get offsets
+				int sB4_offset = format.indexOf(sB4);
+				int aFt_offset = format.lastIndexOf(aFt);
 
-				// Remove it
-				if (format.contains(sB4_alt)) {
+				// No after = to completion
+				if (aFt_offset < 0) { aFt_offset = format.length(); } else { aFt_offset += aFt.length(); }
 
-					// Get offsets
-					int sB4_offset = format.indexOf(sB4_alt);
-					int aFt_offset = format.lastIndexOf(aFt_alt);
+				// Remove that
+				String beforePrefix = format.substring(0, sB4_offset);
+				String afterPrefix = format.substring(aFt_offset);
 
-					// No after = to completion
-					if (aFt_offset < 0) { aFt_offset = format.length(); } else { aFt_offset += aFt_alt.length(); }
+				// Replace
+				format = beforePrefix + afterPrefix; }
 
-					// Remove that
-					String beforePrefix = format.substring(0, sB4_offset);
-					String afterPrefix = format.substring(aFt_offset);
+			// Remove it
+			if (format.contains(sB4_alt)) {
 
-					// Replace
-					format = beforePrefix + afterPrefix; }
+				// Get offsets
+				int sB4_offset = format.indexOf(sB4_alt);
+				int aFt_offset = format.lastIndexOf(aFt_alt);
+
+				// No after = to completion
+				if (aFt_offset < 0) { aFt_offset = format.length(); } else { aFt_offset += aFt_alt.length(); }
+
+				// Remove that
+				String beforePrefix = format.substring(0, sB4_offset);
+				String afterPrefix = format.substring(aFt_offset);
+
+				// Replace
+				format = beforePrefix + afterPrefix; }
 
 				/*/ Bake old indices for removal
 				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
@@ -111,23 +130,30 @@ public class DisplayName extends StringStat {
 					//MMOItems.getConsole().sendMessage("Edited " + format);
 				} //*/
 
-				// Add a prefix anew if the upgrade level worked
-				if (upgradeLevel != 0) {
-
-					// Get the current suffix
-					String actSuffix = levelPrefix(suffix, upgradeLevel);
-
-					//MMOItems.getConsole().sendMessage("Current " + actSuffix);
-
-					// Append it
-					format = format + actSuffix;
-				}
-
-				//MMOItems.getConsole().sendMessage("Final " + format);
-			}
+			//MMOItems.getConsole().sendMessage("Final " + format);
 		}
 
-		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
+		return format;
+	}
+
+	@NotNull String appendUpgradeLevel(@NotNull String format, int lvl) {
+		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+
+		//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
+		//MMOItems.getConsole().sendMessage("Format " + format);
+
+		if (suffix != null && lvl != 0) {
+
+			// Get the current suffix
+			String actSuffix = levelPrefix(suffix, lvl);
+
+			//MMOItems.getConsole().sendMessage("Current " + actSuffix);
+
+			// Append it
+			return format + actSuffix;
+		}
+
+		return format;
 	}
 
 
@@ -151,6 +177,18 @@ public class DisplayName extends StringStat {
 	@Override
 	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
 
+		if (data instanceof NameData) {
+
+			ArrayList<ItemTag> tags = new ArrayList<>();
+
+			// Append those
+			tags.add(new ItemTag(getNBTPath(), ((NameData) data).getMainName()));
+			if (((NameData) data).hasPrefixes()) { tags.add(((NameData) data).compressPrefixes(getNBTPath() + "_PRE"));}
+			if (((NameData) data).hasSuffixes()) { tags.add(((NameData) data).compressSuffixes(getNBTPath() + "_SUF"));}
+
+			return tags;
+		}
+
 		// Thats it
 		return new ArrayList<>();
 	}
@@ -158,23 +196,105 @@ public class DisplayName extends StringStat {
 	@Override
 	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
-		// No need to continue if the item has no display name
-		if (!mmoitem.getNBT().getItem().getItemMeta().hasDisplayName()) { return; }
-
 		// Get tags
-		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+		ArrayList<ItemTag> relevantTags = new ArrayList<>(); boolean stored = false;
+		ItemTag mainName = ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
 
-		// Add sole tag
-		relevantTags.add(new ItemTag(getNBTPath(), mmoitem.getNBT().getItem().getItemMeta().getDisplayName()));
+		//NME//MMOItems.log("\u00a7b\u00a2\u00a2\u00a2\u00a77 Loading name of \u00a7b" + mmoitem.getType() + " " + mmoitem.getId());
+
+		if (mainName != null) {
+
+			// Ah yes
+			ItemTag prefixes = ItemTag.getTagAtPath(getNBTPath() + "_PRE", mmoitem.getNBT(), SupportedNBTTagValues.STRING);
+			ItemTag suffixes = ItemTag.getTagAtPath(getNBTPath() + "_SUF", mmoitem.getNBT(), SupportedNBTTagValues.STRING);
+			relevantTags.add(mainName);
+			relevantTags.add(prefixes);
+			relevantTags.add(suffixes);
+
+			// No need to evaluate anvil changes if the item has no display name
+			if (mmoitem.getNBT().getItem().getItemMeta().hasDisplayName()) { stored = true; }
+
+		} else {
+
+			// No need to continue if the item has no display name
+			if (!mmoitem.getNBT().getItem().getItemMeta().hasDisplayName()) { return; }
+
+			//NME//MMOItems.log("\u00a7a\u00a2\u00a2\u00a2\u00a77 Older item, decrypting as main name as:\u00a7f " + cropUpgrade(mmoitem.getNBT().getItem().getItemMeta().getDisplayName()));
+
+			// Add sole tag
+			relevantTags.add(new ItemTag(getNBTPath(), cropUpgrade(mmoitem.getNBT().getItem().getItemMeta().getDisplayName())));
+		}
 
 		// Use that
-		StringData bakedData = (StringData) getLoadedNBT(relevantTags);
+		NameData bakedData = (NameData) getLoadedNBT(relevantTags);
 
 		// Valid?
 		if (bakedData != null) {
 
+			//NME//MMOItems.log("\u00a7e\u00a2\u00a2\u00a2\u00a77 Built:\u00a7f " + bakedData.toString());
+			/*
+			 * Suppose we expect an item name with prefixes and suffixes,
+			 * well, removing those should leave the bare name, right?
+			 *
+			 * If the player has renamed their item, this bare name will be somewhat
+			 * different, and this is where those changes are updated.
+			 */
+
+			@Nullable String itemName = null;
+			if (stored) {
+
+				// Could the player have renamed?
+				itemName = mmoitem.getNBT().getItem().getItemMeta().getDisplayName();
+				String colorless = ChatColor.stripColor(itemName);
+
+				//NME//MMOItems.log("\u00a7b\u00a2\u00a2\u00a2\u00a77 Comparing: " + itemName + " | " + colorless);
+				// By player
+				if (!itemName.equals(colorless)) {
+					//NME//MMOItems.log("\u00a7b\u00a2\u00a2\u00a2\u00a77 Not anvil");
+					itemName = null;
+
+				} else {
+					//NME//MMOItems.log("\u00a7b\u00a2\u00a2\u00a2\u00a77 Replaced main with \u00a7b " + itemName);
+					bakedData.setString(itemName);
+				}
+
+			}
+
 			// Set
 			mmoitem.setData(this, bakedData);
+
+			// Update in SH. Must happen after setting the data
+			if (stored && itemName != null) {
+
+				// History not prematurely loaded?
+				if (mmoitem.getStatHistory(this) == null) {
+
+					// Also load history :think ing:
+					ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.histroy_keyword + getId(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
+
+					if (hisTag != null) {
+
+						// Aye
+						StatHistory hist =  StatHistory.fromNBTString(mmoitem, (String) hisTag.getValue());
+
+						// History valid? Record
+						if (hist != null) {
+
+							// Original Data
+							NameData og = (NameData) hist.getOriginalData();
+
+							// Overwrite
+							og.setString(itemName);
+
+							// Load its stat history
+							mmoitem.setStatHistory(this, hist);
+
+							//NME//MMOItems.log("\u00a7b\u00a2\u00a2\u00a2\u00a77 Name History:");
+							//NME//hist.log();
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -182,7 +302,7 @@ public class DisplayName extends StringStat {
 	@Override
 	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
-		// You got a double righ
+		// You got a double right
 		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 
 		// Found righ
@@ -191,11 +311,27 @@ public class DisplayName extends StringStat {
 			// Get number
 			String value = (String) tg.getValue();
 
-			// Thats it
-			return new StringData(value);
+			// That's it
+			NameData nd = new NameData(value);
+
+			nd.readPrefixes(ItemTag.getTagAtPath(getNBTPath() + "_PRE", storedTags));
+			nd.readSuffixes(ItemTag.getTagAtPath(getNBTPath() + "_SUF", storedTags));
+
+			return nd;
 		}
 
 		// Fail
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new NameData("");
+	}
+
+	@Override
+	public RandomStatData whenInitialized(Object object) {
+		return new NameData(object.toString());
 	}
 }

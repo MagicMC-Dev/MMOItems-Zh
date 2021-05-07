@@ -465,7 +465,7 @@ public class MMOItem implements ItemReference {
 	 * Deletes this UUID from all Stat Histories.
 	 *
 	 * @param gemUUID UUID of gem to remove
-	 * @param color Color of the gem socket to restore. <code>null</code> to not restore socket.
+	 * @param color Color of the gem socket to restore. {@code null} to not restore socket.
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public void removeGemStone(@NotNull UUID gemUUID, @Nullable String color) {
@@ -490,8 +490,8 @@ public class MMOItem implements ItemReference {
 		// Attempt externals
 		for (StatData externalData : gemStory.getExternalData()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) externalData), gemUUID, color)) { return; } }
 
-		// Attempt externals
-		if (gemStory.getModifiersBonus() != null) { GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getModifiersBonus()), gemUUID, color); }
+		// Attempt gems
+		for (UUID gemDataUUID : gemStory.getAllModifiers()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getModifiersBonus(gemDataUUID)), gemUUID, color)) { return; } }
 	}
 	//endregion
 }

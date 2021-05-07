@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.util;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -21,11 +22,13 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.apache.commons.lang.Validate;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,6 +72,7 @@ public class MMOItemReforger {
 	private final int amount;
 
 	// Not initialized at first for performance reasons
+	@Nullable
 	private MMOItem mmoItem;
 
 	// Data
@@ -94,7 +98,7 @@ public class MMOItemReforger {
 	@Nullable UpgradeData cachedUpgradeLevel;
 
 	// Soulbound
-	private StatData cachedSoulbound;
+	@Nullable StatData cachedSoulbound;
 
 	//endregion
 
@@ -105,7 +109,13 @@ public class MMOItemReforger {
 	public MMOItemReforger(@NotNull NBTItem nbt) {
 		this.nbtItem = nbt;
 		this.amount = nbt.getItem().getAmount();
+
+		VolatileMMOItem vol = new VolatileMMOItem(nbt);
+		if (vol.hasData(ItemStats.DURABILITY)) { cachedDurability = (DoubleData) vol.getData(ItemStats.DURABILITY); }
+		else if (nbt.getItem().getItemMeta() instanceof Damageable) { cachedDur = ((double) (((Damageable) nbt.getItem().getItemMeta()).getDamage())) / ((double) nbt.getItem().getType().getMaxDurability()); }
 	}
+	@Nullable DoubleData cachedDurability = null;
+	@Nullable Double cachedDur = null;
 
 	/**
 	 * Apply a quick soulbound based on the config value <code>soulbound.auto-bind.level</code> (default = 1)
@@ -113,7 +123,6 @@ public class MMOItemReforger {
 	public void applySoulbound(@NotNull Player p) {
 		applySoulbound(p, autoSoulboundLevel);
 	}
-
 	/**
 	 * Apply a quick soulbound of this level
 	 */
@@ -172,16 +181,16 @@ public class MMOItemReforger {
 		// Skip all this trash and just regenerate completely
 		if (options.isRegenerate()) {
 			// Store all the history of stat proceedings.
-			HashMap<ItemStat, StatHistory> temporalDataHistory = extractStatDataHistory(options);
+			HashMap<ItemStat, StatHistory> temporalDataHistory = extractStatDataHistory();
 
 			/*
 			 * Generate fresh MMOItem, with stats that will be set if the chance is too low
 			 */
 			int determinedItemLevel = regenerate(player, template);
-			//UPDT//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
+			//UPGRD//MMOItems.log("Determined Level: \u00a7a" + determinedItemLevel + " \u00a78{ Regeneration }");
 
 			// Restore stats
-			restorePreRNGStats(temporalDataHistory, template, determinedItemLevel);
+			restorePreRNGStats(temporalDataHistory, template, determinedItemLevel, true);
 			return; }
 
 		/*
@@ -201,74 +210,92 @@ public class MMOItemReforger {
 		if (options.shouldKeepName()) { keepName(meta); }
 
 		// Keep specific lore components
-		if (options.shouldKeepLore() && mmoItem.hasData(ItemStats.LORE)) { keepLore(); }
+		if (options.shouldKeepLore() && mmoItem.hasData(ItemStats.LORE)) { keepLore(options.getKeepCase()); }
 
-		EnchantListData ambiguouslyOriginalEnchantmentCache = null; //todo Corresponding to the block at the end of this method.
+		EnchantListData ambiguouslyOriginalEnchantmentCache = null;
 		// Choose enchantments to keep
 		if (options.shouldKeepEnchantments()) { Ref<EnchantListData> rf = new Ref<>(); keepEnchantments(rf); ambiguouslyOriginalEnchantmentCache = rf.getValue(); }
 
 		// Acquire old upgrade level
 		if (options.shouldKeepUpgrades() && mmoItem.hasData(ItemStats.UPGRADE)) { keepUpgrades(); }
 
-		// Gather Gemstones
+		// Gather Gemstones and ExSH in a Stat History clone.
 		if (options.shouldKeepGemStones() || options.shouldKeepExternalSH()) { cacheFullHistory(!options.shouldKeepGemStones(), !options.shouldKeepExternalSH()); }
 
 		// Soulbound transfer
 		if (options.shouldKeepSoulbind() && mmoItem.hasData(ItemStats.SOULBOUND)) { keepSoulbound(); }
 
-		// Store all the history of stat proceedings.
-		HashMap<ItemStat, StatHistory> temporalDataHistory = extractStatDataHistory(options);
+		// Store all the history of stat proceedings. This clears ExSH and Gems so they must already be remembered.
+		HashMap<ItemStat, StatHistory> temporalDataHistory = extractStatDataHistory();
 
 		/*
 		 * Generate fresh MMOItem, with stats that will be set if the chance is too low
 		 */
 		int determinedItemLevel = regenerate(player, template);
-		//UPDT//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
+		//UPGRD//MMOItems.log("Determined Level: \u00a7e" + determinedItemLevel);
 
-		// Restore stats
-		restorePreRNGStats(temporalDataHistory, template, determinedItemLevel);
+		// Restore stats, handles Original Data and Modifiers.
+		restorePreRNGStats(temporalDataHistory, template, determinedItemLevel, false);
 
 		// Choose enchantments to keep
 		if (options.shouldKeepEnchantments() && ambiguouslyOriginalEnchantmentCache != null) { ambiguouslyOriginalEnchantmentCache.identifyTrueOriginalEnchantments(mmoItem, cachedEnchantments);}
 	}
 
-	@NotNull HashMap<ItemStat, StatHistory> extractStatDataHistory(@NotNull ReforgeOptions options) {
+	@NotNull HashMap<ItemStat, StatHistory> extractStatDataHistory() {
 		HashMap<ItemStat, StatHistory> ret = new HashMap<>();
 
-		//UPDT//MMOItems.log(" \u00a71*** \u00a77Remembering Stats");
+		//UPGRD//MMOItems.log(" \u00a71*** \u00a77Extracting History Data prior to RNG Reroll");
 		for (ItemStat stat : mmoItem.getStats()) {
-			//UPDT//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
+			//UPGRD//MMOItems.log(" \u00a79  * \u00a77Stat \u00a7f" + stat.getNBTPath());
 
 			// Skip if it cant merge
 			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
 
 			StatHistory hist = StatHistory.from(mmoItem, stat);
-			//UPDT//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
+			//UPGRD//MMOItems.log(" \u00a73  * \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath());
 
-			// Clear externals
-			if (!options.shouldKeepExternalSH()) { hist.getExternalData().clear(); }
+			// Externals handled elsewhere
+			//UPGRD//MMOItems.log(" \u00a7c  *\u00a71*\u00a78* \u00a77GEMS Handled Elsewhere, cleared them \u00a7f" + hist.getAllGemstones().size());
+			hist.clearGemstones();
+
+			// Externals handled elsewhere
+			//UPGRD//MMOItems.log(" \u00a73  *\u00a79*\u00a79* \u00a77EXSH Handled Elsewhere, cleared them \u00a7f" + hist.getExternalData().size());
+			hist.clearExternalData();
 
 			// Get and set
-			ret.put(hist.getItemStat(), hist);
-			//UPDT//MMOItems.log(" \u00a79  + \u00a77Storing for Update, History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
-			//GEM//MMOItems.log(" \u00a71  +-+ \u00a77Storing for Update, \u00a7bOG\u00a77: \u00a7f" + hist.getOriginalData().toString());
-			//GEM//for (String str : SilentNumbers.transcribeList(hist.getAllGemstones(), (s) -> (s instanceof UUID ? hist.getGemstoneData((UUID) s) + "\u00a73 (\u00a78" + s + "\u00a73)" : "null"))) { MMOItems.log(" \u00a71  +-+ \u00a77Storing for Update, \u00a7bGM\u00a77: \u00a7f" + str); }
-			//GEM//for (String str : SilentNumbers.transcribeList(hist.getExternalData(), (s) -> (s instanceof StatData ? s.toString() : "null"))) { MMOItems.log(" \u00a71  +-+ \u00a77Storing for Update, \u00a7bEX\u00a77: \u00a7f" + str); }
+			ret.put(hist.getItemStat(), hist.clone(mmoItem));
+			//UPGRD//MMOItems.log(" \u00a79  + \u00a77Storing for Update, History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size()+ "\u00a77, Md:\u00a7e" + hist.getAllModifiers().size());
+			//UPGRD//hist.log();
 		}
 
 		// Yes
 		return ret;
 	}
-
 	@SuppressWarnings("ConstantConditions")
-	void restorePreRNGStats(@NotNull HashMap<ItemStat, StatHistory> backup, @NotNull MMOItemTemplate template, int determinedItemLevel) {
+	void restorePreRNGStats(@NotNull HashMap<? extends ItemStat, ? extends StatHistory> backup, @NotNull MMOItemTemplate template, int determinedItemLevel, boolean cleanModifiers) {
+
+		// Clean older
+		if (!cleanModifiers) {
+			//UPGRD//MMOItems.log("\u00a73 Clearing RNG Modifiers\u00a77 -->\u00a78-------------------------------------\u00a77-\u00a73-");
+
+			for (ItemStat stat : mmoItem.getStats()) {
+
+				if (mmoItem.getData(stat) instanceof Mergeable) {
+					//UPGRD//MMOItems.log("\u00a77   --> \u00a73" + stat.getId() + "\u00a78-------\u00a7f " + mmoItem.getData(stat) + " \u00a78------\u00a77-\u00a73-");
+
+					// Clear modifiers
+					StatHistory clear = StatHistory.from(mmoItem, stat); //UPGRD//clear.log();
+					clear.clearModifiersBonus();
+				}
+			} }
 
 		/*
 		 * Extra step: Check every stat history
 		 */
+		//UPGRD//MMOItems.log("\u00a7e Restore PreRNG Stats\u00a77 -->\u00a78-------------------------------------\u00a77-\u00a7e-");
 		int l = mmoItem.getUpgradeLevel();
 		for (ItemStat stat : backup.keySet()) {
-			//UPDT//MMOItems.log("\u00a7e @\u00a77 " + stat.getId());
+			//UPGRD//MMOItems.log("\u00a7e @\u00a77 " + stat.getId());
 
 			// Get history
 			StatHistory hist = backup.get(stat);
@@ -276,87 +303,122 @@ public class MMOItemReforger {
 
 			// Alr what the template say
 			RandomStatData source = template.getBaseItemData().get(stat);
-			StatHistory clear;
+
+			StatData keptData = shouldRerollRegardless(stat, source, hist.getOriginalData(), determinedItemLevel);
+			StatHistory clear = StatHistory.from(mmoItem, stat);
+			if (keptData != null) { clear.setOriginalData(keptData); }
+
+			//MOD//MMOItems.log("\u00a77 --> \u00a7cPre-Modified History of this Stat:");
+			//MOD//clear.log();
+
+			//MOD//MMOItems.log("\u00a77 --> \u00a7cModifiers History of this Stat:");
+			//MOD//hist.log();
+
+			// Clean Modifiers = Forget old ones and generate new ones
+			if (cleanModifiers) {
+				//MOD//MMOItems.log("\u00a77 --* \u00a7cCleared cached modifiers");
+				hist.clearModifiersBonus();
+
+			// Unclean Modifiers - Keep old ones
+			} else {
+				//MOD//MMOItems.log("\u00a77 --* \u00a76Cleared newer modifiers");
+
+				// Remove any newly-generated modifiers
+				clear.clearModifiersBonus();
+
+				// Include old modifiers
+				for (UUID gem : hist.getAllModifiers()) {
+					//MOD//MMOItems.log("\u00a77 --* \u00a7bTransferred old \u00a78" + gem.toString() + " \u00a7e" + hist.getModifiersBonus(gem));
+					clear.registerModifierBonus(gem, hist.getModifiersBonus(gem)); }
+			}
+
+			// Store
+			StatHistory cachedGemsEX = itemDataHistory.get(stat);
+			if (cachedGemsEX != null) { clear.assimilate(cachedGemsEX); }
+			itemDataHistory.put(stat, clear);
+			mmoItem.setStatHistory(stat, clear);
+
+			//UPGRD//MMOItems.log("\u00a77 --> \u00a7aFinal History of this Stat:");
+			//UPGRD//clear.log();
+		}
+	}
+	/**
+	 * @return The item is supposedly being updated, but that doesnt mean all its stats must remain the same.
+	 *
+	 * 		   In contrast to reforging, in which it is expected its RNG to be rerolled, updating should not do it
+	 * 		   except in the most dire scenarios:
+	 * 		    + The mean/standard deviation changing significantly:
+	 * 		    	If the chance of getting the same roll is ridiculously low (3.5SD) under the new settings, reroll.
+	 *
+	 * 		    + The stat is no longer there, or a new stat was added
+	 * 		       The chance of getting a roll of 0 will be evaluated per the rule above.
+	 *
+	 *
+	 */
+	@Nullable StatData shouldRerollRegardless(@NotNull ItemStat stat, @NotNull RandomStatData source, @NotNull StatData original, int determinedItemLevel) {
+
+		/*
+		 * Does the new item have it?
+		 *
+		 * If not, its gotten removed = we only keep extraneous
+		 */
+		if (source instanceof NumericStatFormula && original instanceof DoubleData) {
+			//UPGRD//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure\u00a78 {Original:\u00a77 " + ((DoubleData) original).getValue() + "\u00a78}");
+
+			// Very well, chance checking is only available for NumericStatFormula class so
+			double base = ((NumericStatFormula) source).getBase() + (((NumericStatFormula) source).getScale() * determinedItemLevel);
+
+			// Determine current
+			double current = ((DoubleData) original).getValue();
+
+			// What was the shift?
+			double shift = current - base;
+
+			// How many standard deviations away?
+			double sD = Math.abs(shift / ((NumericStatFormula) source).getSpread());
+			if (NumericStatFormula.useRelativeSpread) { sD = Math.abs(shift / (((NumericStatFormula) source).getSpread() * base)); }
+			//UPGRD//MMOItems.log("\u00a7b *\u00a77 Base: \u00a73" + base);
+			//UPGRD//MMOItems.log("\u00a7b *\u00a77 Curr: \u00a73" + current);
+			//UPGRD//MMOItems.log("\u00a7b *\u00a77 Shft: \u00a73" + shift);
+			//UPGRD//MMOItems.log("\u00a7b *\u00a77 SDev: \u00a73" + sD);
+
+			// Greater than max spread? Or heck, 0.1% Chance or less wth
+			if (sD > ((NumericStatFormula) source).getMaxSpread() || sD > 3.5) {
+				//UPGRD//MMOItems.log("\u00a7c -\u00a77 Ridiculous Range --- reroll");
+
+				// Adapt within reason
+				double reasonableShift = ((NumericStatFormula) source).getSpread() * Math.min(2, ((NumericStatFormula) source).getMaxSpread());
+				if (shift < 0) { reasonableShift *= -1;}
+
+				// That's the data we'll use
+				return new DoubleData(reasonableShift + base);
+
+				// Data arguably fine tbh, just use previous
+			} else {
+				//UPGRD//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
+
+				// Just clone I guess
+				return ((Mergeable) original).cloneData(); }
+
+		} else {
+			//UPGRD//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
 
 			/*
-			 * Does the new item have it?
-			 *
-			 * If not, its gotten removed = we only keep extraneous
+			 * These stats are exempt from this 'keeping' operation.
+			 * Probably because there is a ReforgeOption specifically
+			 * designed for them that keeps them separately
 			 */
-			if (source instanceof NumericStatFormula && hist.getOriginalData() instanceof DoubleData) {
-				//UPDT//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure\u00a78 {Original:\u00a77 " + ((DoubleData) hist.getOriginalData()).getValue() + "\u00a78}");
-
-				// Very well, chance checking is only available for NumericStatFormula class so
-				double base = ((NumericStatFormula) source).getBase() + (((NumericStatFormula) source).getScale() * determinedItemLevel);
-
-				// Determine current
-				double current = ((DoubleData) hist.getOriginalData()).getValue();
-
-				// What was the shift?
-				double shift = current - base;
-
-				// How many standard deviations away?
-				double sD = Math.abs(shift / ((NumericStatFormula) source).getSpread());
-				if (NumericStatFormula.useRelativeSpread) { sD = Math.abs(shift / (((NumericStatFormula) source).getSpread() * base)); }
-				//UPDT//MMOItems.log("\u00a7b *\u00a77 Base: \u00a73" + base);
-				//UPDT//MMOItems.log("\u00a7b *\u00a77 Curr: \u00a73" + current);
-				//UPDT//MMOItems.log("\u00a7b *\u00a77 Shft: \u00a73" + shift);
-				//UPDT//MMOItems.log("\u00a7b *\u00a77 SDev: \u00a73" + sD);
-
-				// Greater than max spread? Or heck, 0.1% Chance or less wth
-				if (sD > ((NumericStatFormula) source).getMaxSpread() || sD > 3.5) {
-					//UPDT//MMOItems.log("\u00a7c -\u00a77 Ridiculous Range --- reroll");
-
-					// Adapt within reason
-					double reasonableShift = ((NumericStatFormula) source).getSpread() * Math.min(2, ((NumericStatFormula) source).getMaxSpread());
-					if (shift < 0) { reasonableShift *= -1;}
-
-					// That's the data we'll use
-					DoubleData finalData = new DoubleData(reasonableShift + base);
-
-					// Make a clear one
-					clear = new StatHistory(mmoItem, stat, finalData);
-
-					// Data arguably fine tbh, just use previous
-				} else {
-					//UPDT//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
-
-					// Just clone I guess
-					clear = new StatHistory(mmoItem, stat, ((DoubleData) hist.getOriginalData()).cloneData()); }
-
-			} else {
-				//UPDT//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
-
-				/*
-				 * These stats are exempt from this 'keeping' operation.
-				 * Probably because there is a ReforgeOption specifically
-				 * designed for them that keeps them separately
-				 */
-				if (ItemStats.LORE.equals(stat) ||
+			// Keep regenerated one
+			if (ItemStats.LORE.equals(stat) ||
 					ItemStats.NAME.equals(stat) ||
 					ItemStats.GEM_SOCKETS.equals(stat) ||
 					ItemStats.ABILITIES.equals(stat)) {
 
-					// Keep regenerated one
-					clear = new StatHistory(mmoItem, stat, mmoItem.getData(stat));
+				return null;
+			} else {
 
-				} else {
-
-					// Make a clear one
-					clear = new StatHistory(mmoItem, stat, hist.getOriginalData());
-				}
+				return original;
 			}
-
-			// Keep Gemstone and Extraneous data
-			for (UUID gem : hist.getAllGemstones()) { clear.registerGemstoneData(gem, hist.getGemstoneData(gem)); }
-			for (StatData ex : hist.getExternalData()) { clear.registerExternalData(ex); }
-			clear.setModifiersBonus(hist.getModifiersBonus());
-
-			// Store
-			itemDataHistory.put(stat, clear);
-			mmoItem.setStatHistory(stat, clear);
-			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Update Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
-			//todo EXPERIMENTAL no longer recalculate here mmoItem.setData(stat, clear.recalculate(false, l));
 		}
 	}
 
@@ -371,7 +433,7 @@ public class MMOItemReforger {
 		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", mmoItem.getType().toString(), mmoItem.getId()); mmoItem = null; return; }
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
 
-		//UPDT//MMOItems.log("\u00a79*\u00a77 Regenerating... \u00a7d" + template.getId() + " " + template.getType());
+		//UPGRD//MMOItems.log("\u00a79*\u00a77 Regenerating... \u00a7d" + template.getId() + " " + template.getType());
 
 		if (p != null) {
 
@@ -392,7 +454,7 @@ public class MMOItemReforger {
 		if (player == null) {
 
 			// Get default Item Level
-			final int iLevel = defaultItemLevel;
+			int iLevel = defaultItemLevel;
 
 			// What level with the regenerated item will be hmmmm.....
 			determinedItemLevel =
@@ -451,6 +513,7 @@ public class MMOItemReforger {
 		if (p == null) { reforge((RPGPlayer) null, options); } else {
 			PlayerData dat = PlayerData.get(p);
 			if (dat == null) { reforge((RPGPlayer) null, options); } else { reforge(dat.getRPG(), options); } } }
+
 	/**
 	 * Generates a new item of the same Type-ID and transfers the data
 	 * from the old one following the options.
@@ -476,9 +539,9 @@ public class MMOItemReforger {
 		if (options.shouldKeepName()) { keepName(meta);}
 
 		// Keep specific lore components
-		if (options.shouldKeepLore() && mmoItem.hasData(ItemStats.LORE)) { keepLore(); }
+		if (options.shouldKeepLore() && mmoItem.hasData(ItemStats.LORE)) { keepLore(options.getKeepCase()); }
 
-		EnchantListData ambiguouslyOriginalEnchantmentCache = null; //todo Corresponding to the block at the end of this method.
+		EnchantListData ambiguouslyOriginalEnchantmentCache = null;
 		// Choose enchantments to keep
 		if (options.shouldKeepEnchantments()) { Ref<EnchantListData> rf = new Ref<>(); keepEnchantments(rf); ambiguouslyOriginalEnchantmentCache = rf.getValue(); }
 
@@ -509,7 +572,7 @@ public class MMOItemReforger {
 		if (mmoItem.hasData(ItemStats.NAME)) {
 
 			// Cache it
-			cachedName = mmoItem.getData(ItemStats.NAME).toString();
+			cachedName = ((NameData) mmoItem.getData(ItemStats.NAME)).getMainName();
 
 			// No name defined, use display name I guess (pretty unusual btw)
 		} else if (meta.hasDisplayName()) {
@@ -522,28 +585,28 @@ public class MMOItemReforger {
 	 * Examines the MMOItems Lore of the item being updated, and chooses which lore
 	 * lines are desirable to keep (Those that start with §7)
 	 */
-	void keepLore() {
+	void keepLore(@NotNull String keepCase) {
 		if (!mmoItem.hasData(ItemStats.LORE)) { return; }
-		cachedLore = extractLore(((StringListData) mmoItem.getData(ItemStats.LORE)).getList());
+		cachedLore = extractLore(((StringListData) mmoItem.getData(ItemStats.LORE)).getList(), keepCase);
 	}
 
-	@NotNull ArrayList<String> extractLore(@NotNull List<String> lore) {
+	@NotNull ArrayList<String> extractLore(@NotNull List<String> lore, @NotNull String keepCase) {
 
-		//UPDT//MMOItems.log(" \u00a7d> \u00a77Keeping Lore");
+		//UPGRD//MMOItems.log(" \u00a7d> \u00a77Keeping Lore");
 		ArrayList<String> ret = new ArrayList<>();
 
 		// Examine every element
 		for (String str : lore) {
-			//UPDT//MMOItems.log(" \u00a7d>\u00a7c-\u00a7e- \u00a77Line:\u00a7f " + str);
+			//UPGRD//MMOItems.log(" \u00a7d>\u00a7c-\u00a7e- \u00a77Line:\u00a7f " + str);
 
 			// Does it start with the promised...?
-			if (str.startsWith("\u00a77")) {
-				//UPDT//MMOItems.log(" \u00a72>\u00a7a-\u00a7e- \u00a77Kept");
+			if (str.startsWith(keepCase)) {
+				//UPGRD//MMOItems.log(" \u00a72>\u00a7a-\u00a7e- \u00a77Kept");
 				ret.add(str); }
 		}
 
-		//UPDT//MMOItems.log(" \u00a7d> \u00a77Result");
-		//UPDT//for (String lr : cachedLore) { //UPDT//MMOItems.log(" \u00a7d  + \u00a77" + lr); }
+		//UPGRD//MMOItems.log(" \u00a7d> \u00a77Result");
+		//UPGRD//for (String lr : cachedLore) { MMOItems.log(" \u00a7d  + \u00a77" + lr); }
 		return ret;
 	}
 
@@ -561,36 +624,36 @@ public class MMOItemReforger {
 	 *                                            which may not be original (and thus contain player enchantments)
 	 */
 	void keepEnchantments(@NotNull Ref<EnchantListData> ambiguouslyOriginalEnchantmentCache) {
-		//UPDT//MMOItems.log(" \u00a7b> \u00a77Keeping Enchantments");
+		//UPGRD//MMOItems.log(" \u00a7b> \u00a77Keeping Enchantments");
 
 		// Enchant list data
 		cachedEnchantments = new EnchantListData();
 
 		// Does it have MMOItems enchantment data?
 		if (!mmoItem.hasData(ItemStats.ENCHANTS)) {
-			//UPDT//MMOItems.log("  \u00a7b* \u00a77No Data, created blanc");
+			//UPGRD//MMOItems.log("  \u00a7b* \u00a77No Data, created blanc");
 			mmoItem.setData(ItemStats.ENCHANTS, new EnchantListData()); }
-		//UPDT//else { MMOItems.log("  \u00a7b* \u00a77Found Data"); }
+		//UPGRD//else { MMOItems.log("  \u00a7b* \u00a77Found Data"); }
 
 		// Make sure they are consolidated
 		Enchants.separateEnchantments(mmoItem);
 
 		// Gather
 		StatHistory hist = StatHistory.from(mmoItem, ItemStats.ENCHANTS);
-		ambiguouslyOriginalEnchantmentCache.setValue((EnchantListData) ((EnchantListData) hist.getOriginalData()).cloneData());
+		ambiguouslyOriginalEnchantmentCache.setValue((EnchantListData) ((Mergeable) hist.getOriginalData()).cloneData());
 
-		//UPDT//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Prime Arcane Report: \u00a7b-------------------------");
-		//UPDT//MMOItems.log("  \u00a73> \u00a77History:");
-		//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
-		//UPDT//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
-		//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
-		//UPDT//for (UUID data : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + data.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(data)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(data)).getLevel(e)); } }
-		//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
-		//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
-		//UPDT//MMOItems.log("  \u00a73> \u00a77Cached:");
-		//UPDT//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
-		//UPDT//MMOItems.log("  \u00a73> \u00a77Ambiguous:");
-		//UPDT//for (Enchantment e : ambiguouslyOriginalEnchantmentCache.getValue().getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ambiguouslyOriginalEnchantmentCache.getValue().getLevel(e)); }
+		//UPGRD//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Prime Arcane Report: \u00a7b-------------------------");
+		//UPGRD//MMOItems.log("  \u00a73> \u00a77History:");
+		//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
+		//UPGRD//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
+		//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
+		//UPGRD//for (UUID data : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + data.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(data)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(data)).getLevel(e)); } }
+		//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
+		//UPGRD//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
+		//UPGRD//MMOItems.log("  \u00a73> \u00a77Cached:");
+		//UPGRD//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
+		//UPGRD//MMOItems.log("  \u00a73> \u00a77Ambiguous:");
+		//UPGRD//for (Enchantment e : ambiguouslyOriginalEnchantmentCache.getValue().getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ambiguouslyOriginalEnchantmentCache.getValue().getLevel(e)); }
 
 		// Reap
 		for (StatData pEnchants : hist.getExternalData()) {
@@ -599,7 +662,7 @@ public class MMOItemReforger {
 			if (pEnchants instanceof EnchantListData) {
 
 				// Merge bruh
-				((EnchantListData) pEnchants).merge(cachedEnchantments);
+				((Mergeable) pEnchants).merge(cachedEnchantments);
 
 				// For every stat
 				for (Enchantment e : ((EnchantListData) pEnchants).getEnchants()) {
@@ -609,7 +672,7 @@ public class MMOItemReforger {
 
 					// Put
 					cachedEnchantments.addEnchant(e, calculated);
-					//UPDT//MMOItems.log("  \u00a7b + \u00a77" + e.getName() + " " + calculated);
+					//UPGRD//MMOItems.log("  \u00a7b + \u00a77" + e.getName() + " " + calculated);
 				}
 			}
 		}
@@ -617,28 +680,28 @@ public class MMOItemReforger {
 		// The cache now stores the full extent of extraneous data. Separate from thy history. (As to not include it in this in the cached data later)
 		hist.getExternalData().clear();
 
-		//UPDT//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Arcane Report: \u00a7b-------------------------");
-		//UPDT//MMOItems.log("  \u00a73> \u00a77History:");
-		//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
-		//UPDT//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
-		//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
-		//UPDT//for (UUID data : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + data.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(data)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(data)).getLevel(e)); } }
-		//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
-		//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
-		//UPDT//MMOItems.log("  \u00a73> \u00a77Cached:");
-		//UPDT//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
-		//UPDT//MMOItems.log("  \u00a73> \u00a77Ambiguous:");
-		//UPDT//for (Enchantment e : ambiguouslyOriginalEnchantmentCache.getValue().getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ambiguouslyOriginalEnchantmentCache.getValue().getLevel(e)); }
+		//UPGRD//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Arcane Report: \u00a7b-------------------------");
+		//UPGRD//MMOItems.log("  \u00a73> \u00a77History:");
+		//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
+		//UPGRD//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
+		//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
+		//UPGRD//for (UUID data : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + data.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(data)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(data)).getLevel(e)); } }
+		//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
+		//UPGRD//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
+		//UPGRD//MMOItems.log("  \u00a73> \u00a77Cached:");
+		//UPGRD//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
+		//UPGRD//MMOItems.log("  \u00a73> \u00a77Ambiguous:");
+		//UPGRD//for (Enchantment e : ambiguouslyOriginalEnchantmentCache.getValue().getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ambiguouslyOriginalEnchantmentCache.getValue().getLevel(e)); }
 	}
 	/**
 	 * Just copies the upgrade data, with info on the level of course.
 	 */
 	void keepUpgrades() {
-		//UPDT//MMOItems.log(" \u00a7e> \u00a77Keeping Upgrade Data");
+		//UPGRD//MMOItems.log(" \u00a7e> \u00a77Keeping Upgrade Data");
 
 		// Get Level
 		cachedUpgradeLevel = ((UpgradeData) mmoItem.getData(ItemStats.UPGRADE));
-		//UPDT//MMOItems.log(" \u00a7e>-- \u00a77Level: \u00a7b" + (cachedUpgradeLevel != null ? cachedUpgradeLevel.getLevel() : "0 \u00a78(null)"));
+		//UPGRD//MMOItems.log(" \u00a7e>-- \u00a77Level: \u00a7b" + (cachedUpgradeLevel != null ? cachedUpgradeLevel.getLevel() : "0 \u00a78(null)"));
 	}
 	/**
 	 * Caches the full history of these items.
@@ -652,8 +715,6 @@ public class MMOItemReforger {
 		if (mmoItem.hasData(ItemStats.GEM_SOCKETS) && !clearGems) {
 
 			//UPDT//MMOItems.log(" \u00a7a> \u00a77Keeping Gem Sockets Gx\u00a7b" + ((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getGemstones().size() + "\u00a77, Ex\u00a7b" + ((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots().size());
-			//GEM//for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+> \u00a77Gem: \u00a7a" + str); }
-			//GEM//for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+> \u00a77Emp: \u00a76" + str); }
 
 			// Cache that gemstone data
 			cachedGemStones = (GemSocketsData) mmoItem.getData(ItemStats.GEM_SOCKETS); }
@@ -661,26 +722,29 @@ public class MMOItemReforger {
 		//UPDT//MMOItems.log(" \u00a7a++ \u00a77Saving current histories (the information on current RNG rolls)");
 		// Store all the history of stat proceedings.
 		for (StatHistory hist : mmoItem.getStatHistories()) {
-			//UPDT//MMOItems.log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
+			//UPDT//MMOItems.log(" \u00a7c  + \u00a77Original History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
+			StatHistory cloned = hist.clone(mmoItem);
 
 			// Clear externals
 			if (clearExternalSH) {
-				//UPDT//MMOItems.log(" \u00a7a  + \u00a77Clearing EXSH... \u00a7f");
-				hist.getExternalData().clear(); }
+				//UPDT//MMOItems.log(" \u00a7e + \u00a77Clearing \u00a73 " + cloned.getExternalData().size() + " \u00a77EXSH... \u00a7f");
+				cloned.clearExternalData(); }
+
+			// Modifiers handled elsewhere
+			//UPDT//MMOItems.log(" \u00a7e  + \u00a77Clearing \u00a7c" + cloned.getAllModifiers().size() + " \u00a77Modifiers... \u00a7f");
+			cloned.clearModifiersBonus();
 
 			// Get and set
-			itemDataHistory.put(hist.getItemStat(), hist);
-			//UPDT//MMOItems.log(" \u00a7a  + \u00a77History of \u00a7f" + hist.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + hist.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
-			//GEM//MMOItems.log(" \u00a73  +-+ \u00a77OG: \u00a7f" + hist.getOriginalData().toString());
-			//GEM//for (String str : SilentNumbers.transcribeList(hist.getAllGemstones(), (s) -> (s instanceof UUID ? hist.getGemstoneData((UUID) s) + "\u00a73 (\u00a78" + s + "\u00a73)" : "null"))) { MMOItems.log(" \u00a73  +-+ \u00a77GM: \u00a7f" + str); }
-			//GEM//for (String str : SilentNumbers.transcribeList(hist.getExternalData(), (s) -> (s instanceof StatData ? s.toString() : "null"))) { MMOItems.log(" \u00a73  +-+ \u00a77EX: \u00a7f" + str); }
+			itemDataHistory.put(cloned.getItemStat(), cloned);
+			//UPDT//MMOItems.log(" \u00a7a +++ \u00a77Cloned History of \u00a7f" + cloned.getItemStat().getNBTPath() + "\u00a77, Gx:\u00a7e" + cloned.getAllGemstones().size() + "\u00a77, Ex:\u00a7e" + hist.getExternalData().size());
+			//UPDT//cloned.log();
 		}
 	}
 	/**
 	 * Just copies the soulbound :B
 	 */
 	void keepSoulbound() {
-		//UPDT//MMOItems.log(" \u00a7c> \u00a77Keeping Soulbind");
+		//UPGRD//MMOItems.log(" \u00a7c> \u00a77Keeping Soulbind");
 
 		// Find data
 		cachedSoulbound = mmoItem.getData(ItemStats.SOULBOUND);
@@ -717,11 +781,11 @@ public class MMOItemReforger {
 		 */
 		if (cachedUpgradeLevel != null) {
 
-			//UPDT//MMOItems.log(" \u00a7e@ \u00a77Applying Upgrade");
+			//UPGRD//MMOItems.log(" \u00a7e@ \u00a77Applying Upgrade");
 
 			// If has a upgrade template defined, just remember the level
 			if (buildingMMOItem.hasData(ItemStats.UPGRADE)) {
-				//UPDT//MMOItems.log("  \u00a7e* \u00a77Existing Upgrade Detected");
+				//UPGRD//MMOItems.log("  \u00a7e* \u00a77Existing Upgrade Detected");
 
 				// Get current ig
 				UpgradeData current = ((UpgradeData) buildingMMOItem.getData(ItemStats.UPGRADE));
@@ -757,23 +821,25 @@ public class MMOItemReforger {
 			if (histOld == null) {
 				//UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cMissing");
 				continue; }
-
-			/*/ Is it completely clear?
-			if (histOld.isClear()) {
-				/UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cClear " + (histOld.getOriginalData() instanceof DoubleData ? "\u00a78 {Original:\u00a77 " + ((DoubleData) histOld.getOriginalData()).getValue() + "\u00a78}" : ""));
-				continue; }
-			/UPDT//MMOItems.log(" \u00a72 *\u00a76* \u00a7cNot clear: \u00a73Gems" + histOld.getAllGemstones().size() + " \u00a78|\u00a7b ExSH " + histOld.getExternalData().size() + (histOld.getOriginalData() instanceof DoubleData ? "\u00a78 {Original:\u00a77 " + ((DoubleData) histOld.getOriginalData()).getValue() + "\u00a78}" : ""));
-			//*/
+			//UPDT//MMOItems.log(" \u00a72 *\u00a76*\u00a7c->>>> \u00a77Cached History (histOLD)");
+			//UPDT//histOld.log();
 
 			// Regenerate the original data
 			StatHistory hist = StatHistory.from(buildingMMOItem, stat);
 
-			// Remember...
+			//UPDT//MMOItems.log(" \u00a72 *\u00a76*\u00a7c->>>> \u00a77Current History");
+			//UPDT//hist.log();
+
+			// Remember... (but the modifiers are already in there)
+			histOld.clearModifiersBonus();
+			hist.getExternalData().clear();
 			hist.assimilate(histOld);
 
 			// Recalculate
 			//HSY//MMOItems.log(" \u00a7b-\u00a7e- \u00a77Reforging Prep Recalculation \u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-\u00a7b-\u00a7e-");
 			buildingMMOItem.setData(hist.getItemStat(), hist.recalculate(false, l));
+			//UPDT//MMOItems.log(" \u00a72-\u00a76---> \u00a77Final \u00a76<---\u00a72-");
+			//UPDT//hist.log();
 
 			//LVL//MMOItems.log(" \u00a7d?\u00a77?\u00a76? \u00a77Lvl: \u00a7b" + buildingMMOItem.getUpgradeLevel());
 		}
@@ -783,7 +849,7 @@ public class MMOItemReforger {
 
 		// Apply soulbound
 		if (cachedSoulbound != null) {
-			//UPDT//MMOItems.log(" \u00a7c@ \u00a77Applying Soulbind");
+			//UPGRD//MMOItems.log(" \u00a7c@ \u00a77Applying Soulbind");
 
 			// Apply
 			buildingMMOItem.setData(ItemStats.SOULBOUND, cachedSoulbound);
@@ -791,22 +857,22 @@ public class MMOItemReforger {
 
 		// Contained enchantments huh
 		if (cachedEnchantments != null) {
-			//UPDT//MMOItems.log(" \u00a7b@ \u00a77Applying Enchantments");
-			//UPDT//for (Enchantment lr : cachedEnchantments.getEnchants()) { MMOItems.log(" \u00a7b  + \u00a77" + lr.getName() + " \u00a7f" + cachedEnchantments.getLevel(lr)); }
+			//UPGRD//MMOItems.log(" \u00a7b@ \u00a77Applying Enchantments");
+			//UPGRD//for (Enchantment lr : cachedEnchantments.getEnchants()) { MMOItems.log(" \u00a7b  + \u00a77" + lr.getName() + " \u00a7f" + cachedEnchantments.getLevel(lr)); }
 
 
 			// Register as extraneous obviously
 			StatHistory hist = StatHistory.from(buildingMMOItem, ItemStats.ENCHANTS);
 			hist.registerExternalData(cachedEnchantments.cloneData());
 
-			//UPDT//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Late Arcane Report: \u00a79-------------------------");
-			//UPDT//MMOItems.log("  \u00a73> \u00a77History:");
-			//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
-			//UPDT//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
-			//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
-			//UPDT//for (UUID data : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + data.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(data)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(data)).getLevel(e)); } }
-			//UPDT//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
-			//UPDT//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
+			//UPGRD//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Late Arcane Report: \u00a79-------------------------");
+			//UPGRD//MMOItems.log("  \u00a73> \u00a77History:");
+			//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
+			//UPGRD//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
+			//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
+			//UPGRD//for (UUID data : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + data.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(data)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(data)).getLevel(e)); } }
+			//UPGRD//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
+			//UPGRD//for (StatData data : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) data).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) data).getLevel(e)); } }
 
 			// Recalculate and put
 			//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Reforge Enchantments Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
@@ -909,11 +975,11 @@ public class MMOItemReforger {
 
 		// Lore
 		if (!cachedLore.isEmpty()) {
-			//UPDT//MMOItems.log(" \u00a7d@ \u00a77Applying Lore");
+			//UPGRD//MMOItems.log(" \u00a7d@ \u00a77Applying Lore");
 
 			// If it has lore, add I guess
 			if (buildingMMOItem.hasData(ItemStats.LORE)) {
-				//UPDT//MMOItems.log("  \u00a7d* \u00a77Inserting first");
+				//UPGRD//MMOItems.log("  \u00a7d* \u00a77Inserting first");
 
 				// Get current ig
 				StringListData current = ((StringListData) buildingMMOItem.getData(ItemStats.LORE));
@@ -927,7 +993,7 @@ public class MMOItemReforger {
 
 			// Create stat
 			StringListData sData = new StringListData(cachedLore);
-			//UPDT//for (String lr : cachedLore) { MMOItems.log(" \u00a7d  + \u00a77" + lr); }
+			//UPGRD//for (String lr : cachedLore) { MMOItems.log(" \u00a7d  + \u00a77" + lr); }
 
 			// Set that as the lore
 			buildingMMOItem.setData(ItemStats.LORE, sData);
@@ -935,17 +1001,29 @@ public class MMOItemReforger {
 
 		// Name
 		if (cachedName != null) {
-			//UPDT//MMOItems.log(" \u00a73@ \u00a77Applying Name \u00a7f" + cachedName);
+			//UPDT//MMOItems.log(" \u00a73@ \u00a77Restoring Name");
 
-			// Replace name completely
-			buildingMMOItem.setData(ItemStats.NAME, new StringData(cachedName));
+			// Find SH
+			StatHistory hist = StatHistory.from(buildingMMOItem, ItemStats.NAME);
+
+			// Overwrite whatever is the current name with the cached main name yea
+			((NameData) hist.getOriginalData()).setString(cachedName);
+
+			// Recalculate Name
+			buildingMMOItem.setData(ItemStats.NAME, hist.recalculate(buildingMMOItem.getUpgradeLevel()));
+
+			//UPDT//hist.log();
 		}
 
 		// Apply upgrades
 		if (buildingMMOItem.hasUpgradeTemplate()) {
-			//UPDT//MMOItems.log(" \u00a7f@ \u00a77Recalculating Upgrades");
+			//UPGRD//MMOItems.log(" \u00a7f@ \u00a77Recalculating Upgrades");
 
 			buildingMMOItem.getUpgradeTemplate().upgradeTo(buildingMMOItem, buildingMMOItem.getUpgradeLevel()); }
+
+		// Apply durability
+		if (cachedDurability != null) { mmoItem.setData(ItemStats.DURABILITY, cachedDurability); }
+
 		//GEM//MMOItems.log(" \u00a7a>3 \u00a77Regenerated Gem Sockets:\u00a7f " + buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
 		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getGemstones()), (s) -> (s instanceof GemstoneData ? ((GemstoneData) s).getHistoricUUID() + "\u00a7f " + ((GemstoneData) s).getName() : "null"))) { MMOItems.log(" \u00a7a+>3 \u00a77Gem: \u00a7a" + str); }
 		//GEM//if (buildingMMOItem.getData(ItemStats.GEM_SOCKETS) instanceof GemSocketsData) for (String str : SilentNumbers.transcribeList(new ArrayList<>(((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS)).getEmptySlots()), (s) -> s + "")) { MMOItems.log(" \u00a7a+>3 \u00a77Emp: \u00a76" + str); }
@@ -953,6 +1031,9 @@ public class MMOItemReforger {
 		// Build and set amount
 		ItemStack stack = buildingMMOItem.newBuilder().build();
 		stack.setAmount(amount);
+
+		if (cachedDur != null && stack.getItemMeta() instanceof Damageable) { ((Damageable) stack.getItemMeta()).setDamage(SilentNumbers.floor(cachedDur * stack.getType().getMaxDurability())); }
+
 		return stack;
 	}
 

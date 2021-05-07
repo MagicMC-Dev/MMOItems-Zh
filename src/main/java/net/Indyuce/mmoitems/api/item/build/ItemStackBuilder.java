@@ -142,15 +142,18 @@ public class ItemStackBuilder {
 
 				// Found it?
 				if (s != null) {
-
-					//GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
+					//GEM//MMOItems.log("\u00a7a -+- \u00a77History exists...");
+					//GEM//s.log();
 
 					// Recalculate
 					//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77ItemStack Building Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 					builtMMOItem.setData(stat, s.recalculate(l));
 
 					// Add to NBT, if the gemstones were not purged
-					if ((!s.isClear() || stat instanceof Enchants)) { addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString())); }
+					if ((!s.isClear() || stat instanceof Enchants)) {
+
+						//GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
+						addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString())); }
 				}
 
 				if (forDisplay && stat instanceof Previewable) {

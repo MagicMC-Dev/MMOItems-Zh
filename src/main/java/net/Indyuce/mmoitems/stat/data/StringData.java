@@ -14,6 +14,7 @@ public class StringData implements StatData, RandomStatData {
 	public void setString(String str) {
 		this.value = str;
 	}
+	public String getString() { return value; }
 
 	@Override
 	public String toString() {

@@ -58,6 +58,13 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 
 	/**
+	 * @return For example knockback resistance, 0.01 = 1% so multiplies by 100 when displaying.
+	 */
+	public double multiplyWhenDisplaying() {
+		return 1;
+	}
+
+	/**
 	 * Usually, a greater magnitude of stat benefits the player (more health, more attack damage).
 	 * <p>However, its not impossible for a stat to be evil instead, who knows?
 	 */
@@ -110,15 +117,15 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 			// Displaying upgrades?
 			if (upgradeShift != 0) {
 
-				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value)
+				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value * multiplyWhenDisplaying())
 
 						// Add upgrade format
-						+ MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift) + (new StatFormat("##").format(upgradeShift)), !isGood(upgradeShift))));
+						+ MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (new StatFormat("##").format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying()))));
 
 			} else {
 
 				// Just display normally
-				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value));
+				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value * multiplyWhenDisplaying()));
 
 			} }
 
@@ -181,10 +188,10 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 
 			String builtRange;
 			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
-				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMaximum);
+				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMaximum * multiplyWhenDisplaying());
 
 			} else {
-				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMinimum, techMaximum); }
+				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMinimum * multiplyWhenDisplaying(), techMaximum * multiplyWhenDisplaying()); }
 
 			// Just display normally
 			item.getLore().insert(getPath(), builtRange); }
@@ -220,7 +227,8 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 
 	@Override
-	public @NotNull ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	@NotNull
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
 
 		// Create Fresh
 		ArrayList<ItemTag> ret = new ArrayList<>();
@@ -253,7 +261,8 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		}
 	}
 	@Override
-	public @Nullable StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	@Nullable
+	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// You got a double righ
 		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -261,11 +270,8 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		// Found righ
 		if (tg != null) {
 
-			// Get number
-			Double value = (Double) tg.getValue();
-
 			// Thats it
-			return new DoubleData(value);
+			return new DoubleData(SilentNumbers.round((Double) tg.getValue(), 4));
 		}
 
 		// Fail
@@ -353,7 +359,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 
 	@Override
-	public @NotNull StatData getClearStatData() {
+	@NotNull public StatData getClearStatData() {
 		return new DoubleData(0D);
 	}
 
@@ -370,35 +376,36 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	public StatData apply(@NotNull StatData original, @NotNull UpgradeInfo info, int level) {
 
 		// Must be DoubleData
+		int i = level;
 		if (original instanceof DoubleData && info instanceof DoubleUpgradeInfo) {
 
 			// Get value
 			double value = ((DoubleData) original).getValue();
 
 			// If leveling up
-			if (level > 0) {
+			if (i > 0) {
 
 				// While still positive
-				while (level > 0) {
+				while (i > 0) {
 
 					// Apply PMP Operation Positively
 					value = ((DoubleUpgradeInfo) info).getPMP().apply(value);
 
 					// Decrease
-					level--;
+					i--;
 				}
 
 			// Degrading the item
-			} else if (level < 0) {
+			} else if (i < 0) {
 
 				// While still negative
-				while (level < 0) {
+				while (i < 0) {
 
 					// Apply PMP Operation Reversibly
 					value = ((DoubleUpgradeInfo) info).getPMP().reverse(value);
 
 					// Decrease
-					level++;
+					i++;
 				}
 			}
 

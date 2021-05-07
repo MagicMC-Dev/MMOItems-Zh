@@ -1,11 +1,6 @@
 package net.Indyuce.mmoitems.api.item.build;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -21,6 +16,7 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +29,7 @@ public class MMOItemBuilder {
 	 * Name modifiers, prefixes or suffixes, with priorities. They are saved
 	 * because they must be applied after the modifier selection process
 	 */
-	private final Set<NameModifier> nameModifiers = new HashSet<>();
+	private final HashMap<UUID, NameModifier> nameModifiers = new HashMap<>();
 
 	/**
 	 * Instance which is created everytime an mmoitem is being randomly
@@ -56,7 +52,7 @@ public class MMOItemBuilder {
 		 * applied
 		 */
 		double capacity = (tier != null && tier.hasCapacity() ? tier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
-		this.mmoitem = new MMOItem(template.getType(), template.getId());
+		mmoitem = new MMOItem(template.getType(), template.getId());
 
 		// apply base item data
 		template.getBaseItemData().forEach((stat, random) -> applyData(stat, random.randomize(this)));
@@ -73,11 +69,16 @@ public class MMOItemBuilder {
 			if (!modifier.rollChance() || modifier.getWeight() > capacity)
 				continue;
 
+			UUID modUUID = UUID.randomUUID();
+
 			capacity -= modifier.getWeight();
-			if (modifier.hasNameModifier()) { addModifier(modifier.getNameModifier()); }
+			if (modifier.hasNameModifier()) { addModifier(modifier.getNameModifier(), modUUID); }
+
 			for (ItemStat stat : modifier.getItemData().keySet()) {
-				addModifierData(stat, modifier.getItemData().get(stat).randomize(this));
-				applyModifierData(stat); } }
+
+				addModifierData(stat, modifier.getItemData().get(stat).randomize(this), modUUID);
+			}
+		}
 	}
 
 	public int getLevel() {
@@ -98,15 +99,27 @@ public class MMOItemBuilder {
 	public MMOItem build() {
 
 		if (!nameModifiers.isEmpty()) {
-			StringBuilder displayName = new StringBuilder(mmoitem.hasData(ItemStats.NAME) ? mmoitem.getData(ItemStats.NAME).toString() : "Item");
-			for (NameModifier mod : nameModifiers) {
-				if (mod.getType() == ModifierType.PREFIX)
-					displayName.insert(0, mod.getFormat() + " ");
-				if (mod.getType() == ModifierType.SUFFIX)
-					displayName.append(" ").append(mod.getFormat());
+
+			// Get name data
+			StatHistory hist = StatHistory.from(mmoitem, ItemStats.NAME);
+			if (!mmoitem.hasData(ItemStats.NAME)) { mmoitem.setData(ItemStats.NAME, new NameData("Item")); }
+
+			for (UUID obs : nameModifiers.keySet()) {
+
+				// Create new Name Data
+				NameModifier mod = nameModifiers.get(obs);
+				NameData modName = new NameData("");
+
+				// Include modifier information
+				if (mod.getType() == ModifierType.PREFIX) { modName.addPrefix(mod.getFormat()); }
+				if (mod.getType() == ModifierType.SUFFIX) { modName.addSuffix(mod.getFormat()); }
+
+				// Register onto SH
+				hist.registerModifierBonus(obs, modName);
 			}
 
-			mmoitem.setData(ItemStats.NAME, new StringData(displayName.toString()));
+			// Recalculate name
+			mmoitem.setData(ItemStats.NAME, hist.recalculate(mmoitem.getUpgradeLevel()));
 		}
 
 		return mmoitem;
@@ -127,6 +140,7 @@ public class MMOItemBuilder {
 		if (mmoitem.hasData(stat) && data instanceof Mergeable) {
 
 			((Mergeable) mmoitem.getData(stat)).merge(data);
+
 		} else {
 
 			// Set, there is no more.
@@ -135,45 +149,22 @@ public class MMOItemBuilder {
 	}
 
 	/**
-	 * Builds the Modifier StatData, which is in the end applied with
-	 * {@link #applyModifierData(ItemStat)}
+	 * Registers the modifier onto the item
 	 *
 	 * @param stat
 	 *            Stat owning the data
 	 * @param data
 	 *            StatData to apply
 	 */
-	public void addModifierData(@NotNull ItemStat stat, @NotNull StatData data) {
-
-		// Is the data mergeable? Apply as External SH
-		if (mmoitem.hasData(stat) && data instanceof Mergeable) {
-
-			// Merge
-			if (modifierData == null) { modifierData = data; }
-			else {
-				try {
-					((Mergeable) modifierData).merge(data);
-				} catch (IllegalArgumentException ignored) {
-
-					MMOItems.print(null, "Could not merge $f{2}$b modifier data into $f{3}$b of $e{4}$b when generating $r{0} {1}$b. ", "Item Generation", mmoitem.getType().toString(), mmoitem.getId(), data.getClass().getSimpleName(), modifierData.getClass().getSimpleName(), stat.getId());
-					modifierData = data;
-				}
-			}
-
-		} else {
-
-			// Set, there is no more.
-			modifierData = data;
-		}
-	}
-	StatData modifierData;
-	public void applyModifierData(@NotNull ItemStat stat) {
+	public void addModifierData(@NotNull ItemStat stat, @NotNull StatData data, @NotNull UUID uuid) {
 
 		// Apply onto Stat History
 		StatHistory hist = StatHistory.from(mmoitem, stat);
+		//MOD//MMOItems.log("\u00a7c+---------->\u00a77 Modifying Item");
+		//MOD//hist.log();
 
 		// Apply
-		hist.setModifiersBonus(modifierData);
+		hist.registerModifierBonus(uuid, data);
 	}
 
 	/**
@@ -183,15 +174,39 @@ public class MMOItemBuilder {
 	 * 
 	 * @param modifier
 	 *            Name modifier which needs to be added
+	 *
+	 * @param mod
+	 * 			  UUID of storage into the Stat History of name
 	 */
-	public void addModifier(NameModifier modifier) {
+	public void addModifier(@NotNull NameModifier modifier, @NotNull UUID mod) {
 
-		for (NameModifier current : nameModifiers)
-			if (current.getType() == modifier.getType() && current.getPriority() > modifier.getPriority())
-				return;
+		// Might overwrite a modifier yes
+		ArrayList<UUID> removedObs = new ArrayList<>();
+		for (UUID cUID : nameModifiers.keySet()) {
 
-		nameModifiers.removeIf(current -> current.getType() == modifier.getType() && current.getPriority() < modifier.getPriority());
-		nameModifiers.add(modifier);
+			// Remove obs?
+			NameModifier obs = nameModifiers.get(cUID);
+
+			// Are they the same type?
+			if (obs.getType() == modifier.getType()) {
+
+				// Choose greater priority
+				if (obs.getPriority() > modifier.getPriority()) {
+
+					// Keep old one
+					return;
+
+				} else if (obs.getPriority() < modifier.getPriority()) {
+
+					// Remove old one and add new one
+					removedObs.add(cUID);
+				}
+			}
+		}
+
+		// Remove
+		for (UUID ro : removedObs) { nameModifiers.remove(ro); }
+		nameModifiers.put(mod, modifier);
 	}
 
 	/**

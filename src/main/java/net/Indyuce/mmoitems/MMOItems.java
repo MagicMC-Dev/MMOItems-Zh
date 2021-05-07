@@ -750,7 +750,9 @@ public class MMOItems extends LuminePlugin {
 	 */
 	public static void log(@Nullable String message) {
 		if (message == null) { message = "< null >"; }
-		plugin.getServer().getConsoleSender().sendMessage("\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77" + message);
+		//String prefix = "\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77";
+		String prefix = "";
+		plugin.getServer().getConsoleSender().sendMessage(prefix + message);
 	}
 
 	/**

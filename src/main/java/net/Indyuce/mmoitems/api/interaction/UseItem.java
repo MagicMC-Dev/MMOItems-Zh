@@ -22,6 +22,7 @@ import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
 
 public class UseItem {
 	protected final Player player;
@@ -106,7 +107,7 @@ public class UseItem {
 		return getItem(player, item, Type.get(type));
 	}
 
-	public static UseItem getItem(Player player, NBTItem item, Type type) {
+	public static UseItem getItem(@NotNull Player player, @NotNull NBTItem item, @NotNull Type type) {
 		if (type.corresponds(Type.CONSUMABLE))
 			return new Consumable(player, item);
 		if (type.corresponds(Type.SKIN))

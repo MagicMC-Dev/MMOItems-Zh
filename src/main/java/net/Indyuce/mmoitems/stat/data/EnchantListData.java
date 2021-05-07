@@ -127,11 +127,8 @@ public class EnchantListData implements StatData, Mergeable {
 			clear();
 
 			//UPDT//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Trime Arcane Report: \u00a73-------------------------");
-			//UPDT//MMOItems.log("  \u00a73> \u00a77Cached:");
-			//UPDT//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
-
-			//UPDT//MMOItems.log("  \u00a73> \u00a77Ambiguous:");
-			//UPDT//for (Enchantment e : ambiguouslyOriginalEnchantmentCache.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ambiguouslyOriginalEnchantmentCache.getLevel(e)); }
+			//UPDT//MMOItems.log("  \u00a73> \u00a77Output:");
+			//UPDT//for (Enchantment e : output.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + output.getLevel(e)); }
 
 			return;
 		}
@@ -145,12 +142,8 @@ public class EnchantListData implements StatData, Mergeable {
 			output.merge(this);
 
 			//UPDT//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Trime Arcane Report: \u00a73-------------------------");
-			//UPDT//MMOItems.log("  \u00a73> \u00a77Cached:");
-			//UPDT//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
-
-			//UPDT//MMOItems.log("  \u00a73> \u00a77Ambiguous:");
-			//UPDT//for (Enchantment e : ambiguouslyOriginalEnchantmentCache.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ambiguouslyOriginalEnchantmentCache.getLevel(e)); }
-
+			//UPDT//MMOItems.log("  \u00a73> \u00a77Output:");
+			//UPDT//for (Enchantment e : output.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + output.getLevel(e)); }
 			return;
 		}
 
@@ -192,8 +185,8 @@ public class EnchantListData implements StatData, Mergeable {
 		output.merge(processed);
 
 		//UPDT//MMOItems.log(" \u00a7b:\u00a73:\u00a7: \u00a77Trime Arcane Report: \u00a73-------------------------");
-		//UPDT//MMOItems.log("  \u00a73> \u00a77Cached:");
-		//UPDT//for (Enchantment e : cachedEnchantments.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + cachedEnchantments.getLevel(e)); }
+		//UPDT//MMOItems.log("  \u00a73> \u00a77Output:");
+		//UPDT//for (Enchantment e : output.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + output.getLevel(e)); }
 
 		//UPDT//MMOItems.log("  \u00a73> \u00a77Processed:");
 		//UPDT//for (Enchantment e : processed.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + processed.getLevel(e)); }

@@ -16,4 +16,9 @@ public class KnockbackResistance extends AttributeStat {
 				"The chance of your item to block the", "knockback from explosions, creepers...", "1.0 corresponds to 100%, 0.7 to 70%..." },
 				Attribute.GENERIC_KNOCKBACK_RESISTANCE);
 	}
+
+	@Override
+	public double multiplyWhenDisplaying() {
+		return 100;
+	}
 }

@@ -59,8 +59,21 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 	}
 
 	@Override
-	public @NotNull StatData cloneData() { return new StringListData(getList()); }
+	@NotNull
+	public StatData cloneData() { return new StringListData(new ArrayList<>(getList())); }
 
 	@Override
 	public boolean isClear() { return getList().size() == 0; }
+
+	@Override
+	public String toString() {
+
+		StringBuilder b = new StringBuilder("\u00a77");
+		for (String str : getList()) {
+			if (b.length() > 0) { b.append("\u00a78;\u00a77 "); }
+			b.append(str);
+		}
+
+		return b.toString();
+	}
 }

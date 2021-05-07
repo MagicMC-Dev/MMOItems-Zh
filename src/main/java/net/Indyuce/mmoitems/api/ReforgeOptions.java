@@ -1,7 +1,10 @@
 package net.Indyuce.mmoitems.api;
 
 import net.Indyuce.mmoitems.MMOItems;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ReforgeOptions {
 	public static boolean dropRestoredGems;
@@ -21,6 +24,10 @@ public class ReforgeOptions {
 
 	private final boolean regenerate;
 
+	@NotNull String keepCase = ChatColor.GRAY.toString();
+	public void  setKeepCase(@NotNull String kc) { keepCase = kc; }
+	@NotNull public String getKeepCase() { return keepCase; }
+
 	public ReforgeOptions(ConfigurationSection config) {
 		this.keepName = config.getBoolean("display-name");
 		this.keepLore = config.getBoolean("lore");
@@ -28,6 +35,7 @@ public class ReforgeOptions {
 		this.keepUpgrades = config.getBoolean("upgrades");
 		this.keepGemStones = config.getBoolean("gemstones");
 		this.keepSoulbind = config.getBoolean("soulbound");
+		this.keepCase = config.getString("kept-lore-prefix", ChatColor.GRAY.toString());
 		this.keepExternalSH = config.getBoolean("external-sh", true);
 		this.regenerate = false;
 	}

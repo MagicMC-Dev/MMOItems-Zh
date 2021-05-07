@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
@@ -47,13 +48,19 @@ public class VolatileMMOItem extends ReadMMOItem {
 			try {
 				stat.whenLoaded(this);
 
-				// Also laod history :think ing:
-				ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.histroy_keyword + stat.getId(), getNBT(), SupportedNBTTagValues.STRING);
-				if (hisTag != null) {
+				// History not prematurely loaded?
+				if (getStatHistory(stat) == null) {
 
-					// Aye
-					StatHistory hist =  StatHistory.fromNBTString(this, (String) hisTag.getValue());
-					if (hist != null) { this.setStatHistory(stat, hist); }
+					// Also load history :think ing:
+					ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.histroy_keyword + stat.getId(), getNBT(), SupportedNBTTagValues.STRING);
+
+					if (hisTag != null) {
+						// Aye
+						StatHistory hist =  StatHistory.fromNBTString(this, (String) hisTag.getValue());
+
+						// History valid? Record
+						if (hist != null) { this.setStatHistory(stat, hist); }
+					}
 				}
 
 			// Nope
@@ -66,6 +73,7 @@ public class VolatileMMOItem extends ReadMMOItem {
 								+ ChatColor.RED + getId() + ChatColor.GRAY + "': "
 								+ ChatColor.YELLOW + exception.getMessage());
 			}
+
 		return super.hasData(stat);
 	}
 }

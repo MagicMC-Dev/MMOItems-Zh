@@ -117,10 +117,10 @@ public class GemStone extends UseItem {
 
 			// Check Gem gems are not supported >:l. Check the modifiers ig
 			boolean success = false;
-			if (gemStory.getModifiersBonus() != null) {
+			for (UUID uid : gemStory.getAllModifiers()) {
 
 				// Get that gem
-				GemSocketsData registeredGemData = (GemSocketsData) gemStory.getModifiersBonus();
+				GemSocketsData registeredGemData = (GemSocketsData) gemStory.getModifiersBonus(uid);
 				if (registeredGemData != null) {
 
 					if (registeredGemData.getEmptySocket(gemType) != null) {

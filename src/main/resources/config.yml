@@ -286,6 +286,8 @@ item-revision:
     # according to the players current level or if
     # they should keep the level and tier from when
     # the item was first generated.
+    #
+    # Setting this to false will keep modifiers.
     reroll-when-updated: false
 
     # This is the value to set the Item Level to when
@@ -309,16 +311,29 @@ item-revision:
     # Whether or not specific stats should be kept
     # when an item is updated to latest revision.
     keep-data:
+
+        # Name of the item, usually renamed via anvil
         display-name: true
-        lore: false # Warning, this prevents stats in the lore from updating visually!
+
+        # Enchantments put on the item by the player
         enchantments: true
+
+        # Soulbound applied to the item
         soulbound: true
-        
-        # Modifications are Gemstones and Upgrades
-        # Please note that some stats will be unable to update
-        # to the latest changes if you enable these.
-        modifications: true
-        
+
+        # Gems on the item
+        gems: true
+
+        # Upgrade level of the item
+        upgrades: true
+
+        # Specific lore lines of the item...
+        # Warning, this prevents stats in the lore from updating visually!
+        lore: false
+
+        # Data that may have been put there by external plugins.
+        exsh: true
+
     # Here you can disable individual events for when
     # Items should update when a higher revision ID is found
     disable-on:

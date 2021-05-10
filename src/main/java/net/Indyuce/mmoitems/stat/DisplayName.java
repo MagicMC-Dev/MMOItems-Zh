@@ -136,7 +136,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 		return format;
 	}
 
-	@NotNull String appendUpgradeLevel(@NotNull String format, int lvl) {
+	@NotNull public static String appendUpgradeLevel(@NotNull String format, int lvl) {
 		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
 
 		//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
@@ -157,7 +157,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 	}
 
 
-	String levelPrefix(@NotNull String template, int toLevel) {
+	@NotNull public static String levelPrefix(@NotNull String template, int toLevel) {
 
 		// Ez
 		template = template.replace("#lvl#", String.valueOf(toLevel));
@@ -334,4 +334,6 @@ public class DisplayName extends StringStat implements GemStoneStat {
 	public RandomStatData whenInitialized(Object object) {
 		return new NameData(object.toString());
 	}
+
+
 }

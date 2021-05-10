@@ -55,7 +55,28 @@ public class GemSockets extends ItemStat {
 		// Edit Lore
 		String empty = ItemStat.translate("empty-gem-socket"), filled = ItemStat.translate("filled-gem-socket");
 		List<String> lore = new ArrayList<>();
-		sockets.getGemstones().forEach(gem -> lore.add(filled.replace("#", gem.getName())));
+		for (GemstoneData gem : sockets.getGemstones()) {
+			String gemName = gem.getName();
+
+			// Upgrades?
+			if (item.getMMOItem().hasUpgradeTemplate()) {
+
+				int iLvl = item.getMMOItem().getUpgradeLevel();
+				if (iLvl != 0) {
+
+					Integer gLvl = gem.getLevel();
+
+					if (gLvl != null) {
+
+						int dLevel = iLvl - gLvl;
+
+						gemName = DisplayName.appendUpgradeLevel(gemName, dLevel);
+					}
+				}
+			}
+
+			lore.add(filled.replace("#", gemName));
+		}
 		sockets.getEmptySlots().forEach(slot -> lore.add(empty.replace("#", slot)));
 		item.getLore().insert("gem-stones", lore);
 	}

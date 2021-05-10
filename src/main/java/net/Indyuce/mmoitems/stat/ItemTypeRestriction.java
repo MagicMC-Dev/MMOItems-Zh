@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,6 +28,7 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemTypeRestriction extends StringStat {
 	public ItemTypeRestriction() {
@@ -117,19 +122,68 @@ public class ItemTypeRestriction extends StringStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last element.");
 	}
 
+	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Add NBT
+		item.addItemTag(getAppliedNBT(data));
+	}
+
+	@NotNull
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		// List<String> displayedTypes = new ArrayList<String>();
-		//
-		// for (String typeId : (List<String>) values[0])
-		// try {
-		// displayedTypes.add(Type.valueOf(typeId).getName());
-		// } catch (Exception e) {
-		// }
-		//
-		// String joined = String.join(", ", displayedTypes);
-		// item.getLore().insert(getPath(), translate().replace("#", joined));
-		item.addItemTag(new ItemTag("MMOITEMS_ITEM_TYPE_RESTRICTION", String.join(",", ((StringListData) data).getList())));
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+
+		// Make Array
+		ArrayList<ItemTag> ret = new ArrayList<>();
+
+		// Add that tag
+		String joined = data instanceof StringListData ? String.join(",", ((StringListData) data).getList()) : ((StringData) data).getString();
+		ret.add(new ItemTag(getNBTPath(), joined));
+
+		// Thats it
+		return ret;
+	}
+
+	@Override public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+
+		// Get tags
+		ArrayList<ItemTag> relevantTags = new ArrayList<>();
+
+		// Add sole tag
+		if (mmoitem.getNBT().hasTag(getNBTPath()))
+			relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
+
+		// Use that
+		StringListData bakedData = (StringListData) getLoadedNBT(relevantTags);
+
+		// Valid?
+		if (bakedData != null) {
+
+			// Set
+			mmoitem.setData(this, bakedData);
+		}
+	}
+	@Nullable @Override public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+
+		// You got a double righ
+		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+
+		// Found righ
+		if (tg != null) {
+
+			// Get number
+			String value = (String) tg.getValue();
+			ArrayList<String> tag = new ArrayList<>();
+			if (value.contains(",")) {
+				for (String t : value.split(",")) {
+					if (!t.isEmpty()) { tag.add(t); } }
+			} else { tag.add(value); }
+
+			// That's it
+			return new StringListData(tag);
+		}
+
+		// Fail
+		return null;
 	}
 
 	private boolean isValid(String format) {
@@ -145,5 +199,11 @@ public class ItemTypeRestriction extends StringStat {
 				return true;
 
 		return false;
+	}
+
+	@NotNull
+	@Override
+	public StatData getClearStatData() {
+		return new StringListData();
 	}
 }

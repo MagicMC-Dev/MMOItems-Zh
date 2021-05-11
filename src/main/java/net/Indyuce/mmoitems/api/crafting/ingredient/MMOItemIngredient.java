@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.stat.DisplayName;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
@@ -69,11 +70,15 @@ public class MMOItemIngredient extends Ingredient {
 	}
 
 	private String findName() {
+		String name = null;
 		if (template.getBaseItemData().containsKey(ItemStats.NAME))
-			return template.getBaseItemData().get(ItemStats.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "").replace("<tier-color-cleaned>", "");
-		if (template.getBaseItemData().containsKey(ItemStats.MATERIAL))
-			return MMOUtils.caseOnWords(
-					((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
-		return "Unrecognized Item";
+			 name = template.getBaseItemData().get(ItemStats.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "").replace("<tier-color-cleaned>", "");
+
+		if (template.getBaseItemData().containsKey(ItemStats.MATERIAL) && name == null)
+			name = MMOUtils.caseOnWords(((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
+
+		if (name == null) { name = "Unrecognized Item"; }
+		if (level != 0) { return DisplayName.appendUpgradeLevel(name, level); }
+		return name;
 	}
 }

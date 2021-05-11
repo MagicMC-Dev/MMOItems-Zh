@@ -431,6 +431,7 @@ public class MMOItems extends LuminePlugin {
 	 *             will clear all other PlayerInventories for now, as to keep
 	 *             backwards compatibility.
 	 */
+	@Deprecated
 	public void setPlayerInventory(PlayerInventory value) {
 
 		// Unregisters those previously registered

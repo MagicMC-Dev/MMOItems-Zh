@@ -1,18 +1,8 @@
 package net.Indyuce.mmoitems.gui;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.SmartGive;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
@@ -26,18 +16,24 @@ import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.SmartGive;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.List;
+import java.util.UUID;
 
 public class CraftingStationView extends PluginInventory {
 	private final CraftingStation station;
 	private final Layout layout;
-	private final PlayerData data;
-
 	private List<CheckedRecipe> recipes;
 	private IngredientInventory ingredients;
 
@@ -46,7 +42,6 @@ public class CraftingStationView extends PluginInventory {
 	public CraftingStationView(Player player, CraftingStation station, int page) {
 		super(player);
 
-		this.data = PlayerData.get(player);
 		this.station = station;
 		this.layout = station.getLayout();
 		this.page = page;
@@ -60,7 +55,7 @@ public class CraftingStationView extends PluginInventory {
 
 	void updateData() {
 		ingredients = new IngredientInventory(getPlayer());
-		recipes = station.getAvailableRecipes(data, ingredients);
+		recipes = station.getAvailableRecipes(playerData, ingredients);
 	}
 
 	@Override
@@ -83,7 +78,7 @@ public class CraftingStationView extends PluginInventory {
 		if (page > 1)
 			inv.setItem(layout.getRecipePreviousSlot(), ConfigItems.PREVIOUS_PAGE.getItem());
 
-		CraftingQueue queue = data.getCrafting().getQueue(station);
+		CraftingQueue queue = playerData.getCrafting().getQueue(station);
 		for (int j = queueOffset; j < queueOffset + layout.getQueueSlots().size(); j++) {
 			if (j >= queue.getCrafts().size()) {
 				if (station.getItemOptions().hasNoQueueItem())
@@ -131,7 +126,7 @@ public class CraftingStationView extends PluginInventory {
 
 	@Override
 	public void whenClicked(InventoryClickEvent event) {
-		if (!data.isOnline())
+		if (!playerData.isOnline())
 			return;
 		event.setCancelled(true);
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
@@ -177,7 +172,7 @@ public class CraftingStationView extends PluginInventory {
 
 		if (!(tag = item.getString("queueId")).equals("")) {
 			UUID uuid = UUID.fromString(tag);
-			CraftingInfo recipeInfo = data.getCrafting().getQueue(station).getCraft(uuid);
+			CraftingInfo recipeInfo = playerData.getCrafting().getQueue(station).getCraft(uuid);
 			CraftingRecipe recipe = recipeInfo.getRecipe();
 
 			/*
@@ -185,14 +180,14 @@ public class CraftingStationView extends PluginInventory {
 			 * to the player and remove the recipe from the queue
 			 */
 			if (recipeInfo.isReady()) {
-				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(data, station, recipe,
+				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe,
 						PlayerUseCraftingStationEvent.StationAction.CRAFTING_QUEUE);
 				Bukkit.getPluginManager().callEvent(called);
 				if (called.isCancelled())
 					return;
 
-				data.getCrafting().getQueue(station).remove(recipeInfo);
-				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(data));
+				playerData.getCrafting().getQueue(station).remove(recipeInfo);
+				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(playerData));
 				ItemStack craftedItem = recipe.getOutput().generate(playerData.getRPG());
 				CustomSoundListener.stationCrafting(craftedItem, getPlayer());
 				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
@@ -205,13 +200,13 @@ public class CraftingStationView extends PluginInventory {
 				 * ingredients back to the player
 				 */
 			} else {
-				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(data, station, recipe,
+				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe,
 						PlayerUseCraftingStationEvent.StationAction.CANCEL_QUEUE);
 				Bukkit.getPluginManager().callEvent(called);
 				if (called.isCancelled())
 					return;
 
-				data.getCrafting().getQueue(station).remove(recipeInfo);
+				playerData.getCrafting().getQueue(station).remove(recipeInfo);
 				getPlayer().playSound(getPlayer().getLocation(), station.getSound(), 1, 1);
 				for (Ingredient ingredient : recipeInfo.getRecipe().getIngredients())
 					new SmartGive(getPlayer()).give(ingredient.generateItemStack(playerData.getRPG()));
@@ -235,20 +230,20 @@ public class CraftingStationView extends PluginInventory {
 			return;
 		}
 
-		if (!recipe.getRecipe().canUse(data, ingredients, recipe, station)) {
+		if (!recipe.getRecipe().canUse(playerData, ingredients, recipe, station)) {
 			updateData();
 			return;
 		}
 
-		PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(data, station, recipe,
+		PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe,
 				PlayerUseCraftingStationEvent.StationAction.INTERACT_WITH_RECIPE);
 		Bukkit.getPluginManager().callEvent(called);
 		if (called.isCancelled())
 			return;
 
-		recipe.getRecipe().whenUsed(data, ingredients, recipe, station);
+		recipe.getRecipe().whenUsed(playerData, ingredients, recipe, station);
 		recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
-		recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(data));
+		recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(playerData));
 
 		updateData();
 	}

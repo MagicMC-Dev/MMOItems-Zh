@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -13,8 +15,9 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.ElementListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class RandomElementListData implements StatData, RandomStatData {
+public class RandomElementListData implements StatData, RandomStatData, UpdatableRandomStatData {
 	private final Map<Element, NumericStatFormula> damage = new HashMap<>(), defense = new HashMap<>();
 
 	public RandomElementListData(ConfigurationSection config) {
@@ -62,5 +65,36 @@ public class RandomElementListData implements StatData, RandomStatData {
 		damage.forEach((element, formula) -> elements.setDamage(element, formula.calculate(builder.getLevel())));
 		defense.forEach((element, formula) -> elements.setDefense(element, formula.calculate(builder.getLevel())));
 		return elements;
+	}
+
+	@NotNull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel) {
+
+		// Start brand new
+		ElementListData elements = new ElementListData();
+		ElementListData originalElements = (ElementListData) original;
+
+		// Evaluate each
+		for (Element elm : Element.values()) {
+
+			// Whats its
+			NumericStatFormula damageGen = getDamage(elm);
+			NumericStatFormula defenseGen = getDefense(elm);
+			DoubleData damageVal = new DoubleData(originalElements.getDamage(elm));
+			DoubleData defenseVal = new DoubleData(originalElements.getDefense(elm));
+			
+			// Evaluate
+			DoubleData damageResult = damageGen.reroll(stat, damageVal, determinedItemLevel);
+			DoubleData defenseResult = defenseGen.reroll(stat, defenseVal, determinedItemLevel);
+
+			// Apply
+			elements.setDamage(elm, damageResult.getValue());
+			elements.setDefense(elm, defenseResult.getValue());
+		}
+
+		// THats it
+		return (T) elements;
 	}
 }

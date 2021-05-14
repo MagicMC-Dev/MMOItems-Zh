@@ -59,6 +59,9 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
 		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
 
+		// Force Stat History generation
+		StatHistory.from(item.getMMOItem(), this);
+
 		// Add NBT
 		item.addItemTag(getAppliedNBT(data));
 	}

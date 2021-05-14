@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -357,69 +358,22 @@ public class MMOItemReforger {
 	 */
 	@Nullable StatData shouldRerollRegardless(@NotNull ItemStat stat, @NotNull RandomStatData source, @NotNull StatData original, int determinedItemLevel) {
 
+		// Not Mergeable, impossible to keep
+		if (!(source instanceof UpdatableRandomStatData)) { return null; }
+
 		/*
-		 * Does the new item have it?
-		 *
-		 * If not, its gotten removed = we only keep extraneous
+		 * These stats are exempt from this 'keeping' operation.
+		 * Probably because there is a ReforgeOption specifically
+		 * designed for them that keeps them separately
 		 */
-		if (source instanceof NumericStatFormula && original instanceof DoubleData) {
-			//UPGRD//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure\u00a78 {Original:\u00a77 " + ((DoubleData) original).getValue() + "\u00a78}");
+		if (ItemStats.LORE.equals(stat) ||
+			ItemStats.NAME.equals(stat) ||
+			ItemStats.GEM_SOCKETS.equals(stat)) {
 
-			// Very well, chance checking is only available for NumericStatFormula class so
-			double base = ((NumericStatFormula) source).getBase() + (((NumericStatFormula) source).getScale() * determinedItemLevel);
+			return null; }
 
-			// Determine current
-			double current = ((DoubleData) original).getValue();
-
-			// What was the shift?
-			double shift = current - base;
-
-			// How many standard deviations away?
-			double sD = Math.abs(shift / ((NumericStatFormula) source).getSpread());
-			if (NumericStatFormula.useRelativeSpread) { sD = Math.abs(shift / (((NumericStatFormula) source).getSpread() * base)); }
-			//UPGRD//MMOItems.log("\u00a7b *\u00a77 Base: \u00a73" + base);
-			//UPGRD//MMOItems.log("\u00a7b *\u00a77 Curr: \u00a73" + current);
-			//UPGRD//MMOItems.log("\u00a7b *\u00a77 Shft: \u00a73" + shift);
-			//UPGRD//MMOItems.log("\u00a7b *\u00a77 SDev: \u00a73" + sD);
-
-			// Greater than max spread? Or heck, 0.1% Chance or less wth
-			if (sD > ((NumericStatFormula) source).getMaxSpread() || sD > 3.5) {
-				//UPGRD//MMOItems.log("\u00a7c -\u00a77 Ridiculous Range --- reroll");
-
-				// Adapt within reason
-				double reasonableShift = ((NumericStatFormula) source).getSpread() * Math.min(2, ((NumericStatFormula) source).getMaxSpread());
-				if (shift < 0) { reasonableShift *= -1;}
-
-				// That's the data we'll use
-				return new DoubleData(reasonableShift + base);
-
-				// Data arguably fine tbh, just use previous
-			} else {
-				//UPGRD//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
-
-				// Just clone I guess
-				return ((Mergeable) original).cloneData(); }
-
-		} else {
-			//UPGRD//MMOItems.log("\u00a7e +\u00a77 Not contained / unmerged --- reroll I suppose");
-
-			/*
-			 * These stats are exempt from this 'keeping' operation.
-			 * Probably because there is a ReforgeOption specifically
-			 * designed for them that keeps them separately
-			 */
-			// Keep regenerated one
-			if (ItemStats.LORE.equals(stat) ||
-					ItemStats.NAME.equals(stat) ||
-					ItemStats.GEM_SOCKETS.equals(stat) ||
-					ItemStats.ABILITIES.equals(stat)) {
-
-				return null;
-			} else {
-
-				return original;
-			}
-		}
+		// Just pass on
+		return ((UpdatableRandomStatData) source).reroll(stat, original, determinedItemLevel);
 	}
 
 	/**
@@ -886,10 +840,10 @@ public class MMOItemReforger {
 
 			// If has a upgrade template defined, just remember the level
 			if (buildingMMOItem.hasData(ItemStats.GEM_SOCKETS)) {
-				//UPDT//MMOItems.log("  \u00a7a* \u00a77Existing Data Detected");
 
 				// Get current ig
 				GemSocketsData current = ((GemSocketsData) buildingMMOItem.getData(ItemStats.GEM_SOCKETS));
+				//UPDT//MMOItems.log("  \u00a7a* \u00a77Existing Data Detected\u00a7a " + current.toString());
 
 				// Get those damn empty sockets
 				ArrayList<GemstoneData> putGems = new ArrayList<>();
@@ -944,10 +898,13 @@ public class MMOItemReforger {
 				// Create with select socket slots and gems
 				GemSocketsData primeGems = new GemSocketsData(availableSockets);
 				for (GemstoneData gem : putGems) { if (gem == null) { continue; } primeGems.add(gem); }
+				//UPDT//MMOItems.log("  \u00a7a* \u00a77Operation Result\u00a7a " + primeGems.toString());
 
 				// That's the original data
 				StatHistory gemStory = StatHistory.from(buildingMMOItem, ItemStats.GEM_SOCKETS);
 				gemStory.setOriginalData(primeGems);
+				//UPDT//MMOItems.log("  \u00a7a* \u00a77History Final\u00a7a --------");
+				//UPDT//gemStory.log();
 
 				//HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Restore Gemstones Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
 				buildingMMOItem.setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(l));

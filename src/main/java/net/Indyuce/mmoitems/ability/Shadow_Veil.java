@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.ability;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ability.Ability;
@@ -27,6 +28,7 @@ public class Shadow_Veil extends Ability implements Listener {
 
 		addModifier("cooldown", 35);
 		addModifier("duration", 5);
+		addModifier("deception", 1);
 		addModifier("mana", 0);
 		addModifier("stamina", 0);
 	}
@@ -51,13 +53,17 @@ public class Shadow_Veil extends Ability implements Listener {
 			if (serverEntities.getTarget() != null && serverEntities.getTarget().equals(stats.getPlayer()))
 				serverEntities.setTarget(null);
 
-		new ShadowVeilHandler(stats.getPlayer(), duration);
+		ShadowVeilHandler svh = new ShadowVeilHandler(stats.getPlayer(), duration);
+		svh.setDeceptions(SilentNumbers.floor(ability.getModifier("deception")));
 	}
 
 	public static class ShadowVeilHandler extends BukkitRunnable implements Listener {
 		private final Player player;
 		private final double duration;
 		private final Location loc;
+
+		int deceptions = 1;
+		public void setDeceptions(int dec) { deceptions = dec; }
 
 		double ti = 0;
 		double y = 0;
@@ -111,8 +117,9 @@ public class Shadow_Veil extends Ability implements Listener {
 
 		@EventHandler
 		public void cancelShadowVeil(EntityDamageByEntityEvent event) {
-			if (event.getDamager().equals(player))
-				close();
+			if (event.getDamager().equals(player)) {
+				deceptions--;
+				if (deceptions <= 0) { close(); } }
 		}
 
 		@EventHandler

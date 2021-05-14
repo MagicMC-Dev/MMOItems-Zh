@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 import java.util.Random;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -11,11 +14,13 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * That Gaussian spread distribution thing that no one understands.
  */
-public class NumericStatFormula implements RandomStatData {
+public class NumericStatFormula implements RandomStatData, UpdatableRandomStatData {
 	private final double base, scale, spread, maxSpread;
 
 	private static final Random RANDOM = new Random();
@@ -229,6 +234,48 @@ public class NumericStatFormula implements RandomStatData {
 	}
 
 	public static void reload() { useRelativeSpread = !MMOItems.plugin.getConfig().getBoolean("additive-spread-formula", false); }
+
+	@NotNull
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel) {
+		//UPGRD//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure\u00a78 {Original:\u00a77 " + ((DoubleData) original).getValue() + "\u00a78}");
+
+		// Very well, chance checking is only available for NumericStatFormula class so
+		double scaledBase = getBase() + (getScale() * determinedItemLevel);
+
+		// Determine current
+		double current = ((DoubleData) original).getValue();
+
+		// What was the shift?
+		double shift = current - scaledBase;
+
+		// How many standard deviations away?
+		double sD = Math.abs(shift / getSpread());
+		if (useRelativeSpread) { sD = Math.abs(shift / (getSpread() * scaledBase)); }
+		//UPGRD//MMOItems.log("\u00a7b *\u00a77 Base: \u00a73" + base);
+		//UPGRD//MMOItems.log("\u00a7b *\u00a77 Curr: \u00a73" + current);
+		//UPGRD//MMOItems.log("\u00a7b *\u00a77 Shft: \u00a73" + shift);
+		//UPGRD//MMOItems.log("\u00a7b *\u00a77 SDev: \u00a73" + sD);
+
+		// Greater than max spread? Or heck, 0.1% Chance or less wth
+		if (sD > getMaxSpread() || sD > 3.5) {
+			//UPGRD//MMOItems.log("\u00a7c -\u00a77 Ridiculous Range --- reroll");
+
+			// Adapt within reason
+			double reasonableShift = getSpread() * Math.min(2, getMaxSpread());
+			if (shift < 0) { reasonableShift *= -1;}
+
+			// That's the data we'll use
+			return (T) new DoubleData(reasonableShift + scaledBase);
+
+			// Data arguably fine tbh, just use previous
+		} else {
+			//UPGRD//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
+
+			// Just clone I guess
+			return (T) ((Mergeable) original).cloneData(); }
+	}
 
 	public enum FormulaSaveOption {
 

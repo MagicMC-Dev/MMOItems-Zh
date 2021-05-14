@@ -117,7 +117,7 @@ public class Shadow_Veil extends Ability implements Listener {
 
 		@EventHandler
 		public void cancelMobTarget(EntityTargetEvent event) {
-			if (player.equals(event.getTarget()))
+			if (event.getTarget() != null && event.getTarget().equals(player))
 				event.setCancelled(true);
 		}
 	}

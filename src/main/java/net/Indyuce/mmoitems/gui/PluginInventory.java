@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.gui;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public abstract class PluginInventory implements InventoryHolder {
 	protected final PlayerData playerData;
@@ -47,8 +46,8 @@ public abstract class PluginInventory implements InventoryHolder {
 	 */
 	public void open() {
 		if (Bukkit.isPrimaryThread())
-			getPlayer().openInventory(getInventory());
+			player.openInventory(getInventory());
 		else
-			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getPlayer().openInventory(getInventory()));
+			Bukkit.getScheduler().runTask(MMOItems.plugin, () -> player.openInventory(getInventory()));
 	}
 }

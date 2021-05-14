@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.crafting.trigger;
 
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import io.lumine.mythic.lib.api.MMOLineConfig;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -26,20 +26,20 @@ public class CommandTrigger extends Trigger {
 	private void dispatchCommand(Player player, boolean console, boolean op) {
 
 		// Adds back using "%player%" in the command trigger string.
-		command = command.replaceAll("(?i)%player%", player.getName());
+		String parsed = command.replaceAll("(?i)%player%", player.getName());
 
 		if (console) {
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsed);
 			return;
 		}
 
 		if (op && !player.isOp()) {
 			player.setOp(true);
 			try {
-				Bukkit.dispatchCommand(player, command);
+				Bukkit.dispatchCommand(player, parsed);
 			} catch (Exception ignored) {}
 			player.setOp(false);
 		} else
-			Bukkit.dispatchCommand(player, command);
+			Bukkit.dispatchCommand(player, parsed);
 	}
 }

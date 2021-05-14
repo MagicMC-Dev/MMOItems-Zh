@@ -122,7 +122,7 @@ public class ItemBrowser extends PluginInventory {
 		Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
 		for (int j = min; j < Math.min(max, templates.size()); j++) {
 			MMOItemTemplate template = templates.get(j);
-			ItemStack item = template.newBuilder(getPlayerData().getRPG()).build().newBuilder().build();
+			ItemStack item = template.newBuilder(playerData.getRPG()).build().newBuilder().build();
 			if (item == null || item.getType() == Material.AIR) {
 				cached.put(template.getId(), error);
 				inv.setItem(slots[n++], error);

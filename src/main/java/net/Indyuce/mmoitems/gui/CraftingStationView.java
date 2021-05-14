@@ -54,7 +54,7 @@ public class CraftingStationView extends PluginInventory {
 	}
 
 	void updateData() {
-		ingredients = new IngredientInventory(getPlayer());
+		ingredients = new IngredientInventory(player);
 		recipes = station.getAvailableRecipes(playerData, ingredients);
 	}
 
@@ -187,13 +187,18 @@ public class CraftingStationView extends PluginInventory {
 					return;
 
 				playerData.getCrafting().getQueue(station).remove(recipeInfo);
+
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(playerData));
+
 				ItemStack craftedItem = recipe.getOutput().generate(playerData.getRPG());
-				CustomSoundListener.stationCrafting(craftedItem, getPlayer());
+
+				CustomSoundListener.stationCrafting(craftedItem, player);
+
 				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
-					getPlayer().playSound(getPlayer().getLocation(), station.getSound(), 1, 1);
+					player.playSound(player.getLocation(), station.getSound(), 1, 1);
+
 				if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
-					new SmartGive(getPlayer()).give(craftedItem);
+					new SmartGive(player).give(craftedItem);
 
 				/*
 				 * If the recipe is not ready, cancel the recipe and give the
@@ -207,9 +212,9 @@ public class CraftingStationView extends PluginInventory {
 					return;
 
 				playerData.getCrafting().getQueue(station).remove(recipeInfo);
-				getPlayer().playSound(getPlayer().getLocation(), station.getSound(), 1, 1);
+				player.playSound(player.getLocation(), station.getSound(), 1, 1);
 				for (Ingredient ingredient : recipeInfo.getRecipe().getIngredients())
-					new SmartGive(getPlayer()).give(ingredient.generateItemStack(playerData.getRPG()));
+					new SmartGive(player).give(ingredient.generateItemStack(playerData.getRPG()));
 			}
 
 			updateData();
@@ -219,14 +224,14 @@ public class CraftingStationView extends PluginInventory {
 
 	public void processRecipe(CheckedRecipe recipe) {
 		if (!recipe.areConditionsMet()) {
-			Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(getPlayer());
-			getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(player);
+			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return;
 		}
 
 		if (!recipe.allIngredientsHad()) {
-			Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(getPlayer());
-			getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+			Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(player);
+			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return;
 		}
 

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.item.util;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -10,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +73,22 @@ public class ConfigItem {
 
 		setName(config.getString("name", ""));
 		setLore(config.contains("lore") ? config.getStringList("lore") : new ArrayList<>());
+
+		String mat = config.getString("material");
+		if (mat != null && !mat.isEmpty()) {
+			try {
+				// Get the material
+				Material m = Material.valueOf(config.getString("material"));
+
+				if (m.isItem()) {
+
+					// That's the material
+					setMaterial(m); }
+
+			} catch (IllegalArgumentException ignored) {} }
+
+		setModel(SilentNumbers.IntegerParse(config.getString("model")));
+
 		updateItem();
 	}
 
@@ -124,4 +142,33 @@ public class ConfigItem {
 	protected void setItem(ItemStack item) {
 		this.item = item;
 	}
+
+
+	/**
+	 * Unidentified items are ruined when, using a custom resourcepack, they get the material and
+	 * custom model data of what they should be, making them not really unidentified.... this will
+	 * kick in for unidentified items when being built, thus making them no longer identifiable by
+	 * their texture.
+	 *
+	 * @param mat Material to set (optional)
+	 *
+	 * @author Gunging
+	 * @see #setModel(Integer)
+	 */
+	protected void setMaterial(@Nullable Material mat) { material = mat;}
+	@Nullable protected Material material = null;
+
+	/**
+	 * Unidentified items are ruined when, using a custom resourcepack, they get the material and
+	 * custom model data of what they should be, making them not really unidentified.... this will
+	 * kick in for unidentified items when being built, thus making them no longer identifiable by
+	 * their texture.
+	 *
+	 * @param cmd Custom Model Data to set (optional)
+	 *
+	 * @author Gunging
+	 * @see #setMaterial(Material)
+	 */
+	protected void setModel(@Nullable Integer cmd) { customModelData = cmd;}
+	@Nullable protected Integer customModelData = null;
 }

@@ -108,7 +108,11 @@ public class UnidentifiedItem extends ConfigItem {
 			meta.setUnbreakable(true);
 			meta.setDisplayName(MythicLib.plugin.parseColors(name));
 			meta.setLore(lore);
+			if (customModelData != null) { meta.setCustomModelData(customModelData);}
 			unidentified.setItemMeta(meta);
+
+			// Has model?
+			if (material != null && material.isItem()) { unidentified.setType(material); }
 
 			return unidentified;
 		}

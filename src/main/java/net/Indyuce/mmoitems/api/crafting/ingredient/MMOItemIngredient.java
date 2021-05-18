@@ -1,6 +1,10 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.DisplayName;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,31 +16,37 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class MMOItemIngredient extends Ingredient {
 	private final MMOItemTemplate template;
 
-	// TODO check level code.
-	private final int level;
+	@NotNull private final QuickNumberRange level;
 	private final String display;
 
 	public MMOItemIngredient(MMOLineConfig config) {
 		super("mmoitem", config);
 
+		// Which MMOItem?
 		config.validate("type", "id");
 		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
 		template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, config.getString("id"));
 
-		level = config.getInt("level", 0);
+		// Read level, the default is that any level will work
+		QuickNumberRange qnr = QuickNumberRange.getFromString(config.getString("level", ".."));
+		if (qnr != null) { level = qnr; } else { level = new QuickNumberRange(null, null); }
+
+		// Find the display name of the item
 		display = config.contains("display") ? config.getString("display") : findName();
 	}
 
 	public MMOItemIngredient(ConfigMMOItem mmoitem) {
 		super("mmoitem", mmoitem.getAmount());
 
+		// Just the defaults
 		template = mmoitem.getTemplate();
-		level = 0;
+		level = new QuickNumberRange(null, null);
 		display = findName();
 	}
 
@@ -46,21 +56,34 @@ public class MMOItemIngredient extends Ingredient {
 
 	@Override
 	public String getKey() {
-		return "mmoitem:" + template.getType().getId().toLowerCase() + (level != 0 ? "-" + level : "") + "_" + template.getId().toLowerCase();
+		return "mmoitem:" + template.getType().getId().toLowerCase() + (level.hasMax() || level.hasMax() ? "-" + level.toString() : "") + "_" + template.getId().toLowerCase();
 	}
 
 	@Override
-	public String formatDisplay(String string) {
-		return string.replace("#item#", display).replace("#level#", level != 0 ? "lvl." + level + " " : "").replace("#amount#", "" + getAmount());
+	public String formatDisplay(String s) {
+		return s.replace("#item#", display).replace("#level#", (level.hasMax() || level.hasMax()) ? "lvl." + level.toString() + " " : "").replace("#amount#", String.valueOf(getAmount()));
 	}
 
-	@NotNull
-	@Override
-	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+	@NotNull @Override public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 
-		// For display, obviously
-		ItemStack item = template.newBuilder(player).build().newBuilder().build(true);
+		// Generate fresh from the template
+		MMOItem mmo = template.newBuilder(player).build();
+
+		// Build it for display, obviously
+		ItemStack item = mmo.newBuilder().build(true);
+
+		// Set level lma0
+		int lvl = SilentNumbers.floor(level.getAsDouble(0));
+		if (lvl != 0 && item.getItemMeta() != null) {
+
+			ItemMeta iMeta = item.getItemMeta();
+			iMeta.setDisplayName(MythicLib.plugin.parseColors(findName()));
+			item.setItemMeta(iMeta); }
+
+		// Set the amount
 		item.setAmount(getAmount());
+
+		// Lets go
 		return item;
 	}
 
@@ -78,7 +101,9 @@ public class MMOItemIngredient extends Ingredient {
 			name = MMOUtils.caseOnWords(((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 
 		if (name == null) { name = "Unrecognized Item"; }
-		if (level != 0) { return DisplayName.appendUpgradeLevel(name, level); }
+
+		// Append upgrade level
+		if (SilentNumbers.floor(level.getAsDouble(0)) != 0) { return DisplayName.appendUpgradeLevel(name, SilentNumbers.floor(level.getAsDouble(0))); }
 		return name;
 	}
 }

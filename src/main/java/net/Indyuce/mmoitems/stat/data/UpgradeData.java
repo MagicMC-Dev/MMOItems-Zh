@@ -1,17 +1,12 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import com.google.gson.JsonObject;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import io.lumine.mythic.lib.MythicLib;
-import net.Indyuce.mmoitems.stat.type.StatHistory;
-import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * <p> • Chance of successful upgrade
  * </p> • May it get destroyed if unsucessful upgrade?
  */
-public class UpgradeData implements StatData, RandomStatData {
+public class UpgradeData implements StatData, RandomStatData, Cloneable {
 
 	/**
 	 * @return The String a consumable must match to Upgrade this Item
@@ -169,4 +164,10 @@ public class UpgradeData implements StatData, RandomStatData {
 	public StatData randomize(MMOItemBuilder builder) {
 		return this;
 	}
+
+	@Override
+	public UpgradeData clone() {
+		try { super.clone(); } catch (CloneNotSupportedException ignored) { }
+
+		return new UpgradeData(reference, template, workbench, destroy, max, success); }
 }

@@ -153,7 +153,7 @@ public class GemStone extends UseItem {
 		/*
 		 * Get the item's level, important for the GemScalingStat
 		 */
-		Integer levelIdentified = null; String scaling = GemUpgradeScaling.SUBSEQUENT;
+		Integer levelIdentified = null; String scaling = GemUpgradeScaling.defaultValue;
 		if (gemMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)) { scaling = gemMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString(); }
 		//UPGRD//MMOItems.log("Scaling Identified: \u00a73" + scaling);
 		switch (scaling) {

@@ -87,9 +87,6 @@ public class NBTTags extends StringListStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last tag.");
 	}
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
-
 	/**
 	 * Unlike other StringLists, this adds every content of the array as a different tag rather than as a JsonArray compound.
 	 */
@@ -119,7 +116,6 @@ public class NBTTags extends StringListStat {
 		// Ready.
 		return ret;
 	}
-
 
 	public Object calculateObjectType(String input) {
 		if (input.equalsIgnoreCase("true"))

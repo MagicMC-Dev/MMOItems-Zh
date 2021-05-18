@@ -36,8 +36,8 @@ public class VanillaIngredient extends Ingredient {
 	}
 
 	@Override
-	public String formatDisplay(String string) {
-		return string.replace("#item#", display).replace("#amount#", "" + getAmount());
+	public String formatDisplay(String s) {
+		return s.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 
 	@NotNull

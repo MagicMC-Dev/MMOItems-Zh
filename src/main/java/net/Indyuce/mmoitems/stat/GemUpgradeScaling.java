@@ -17,6 +17,7 @@ import java.util.HashMap;
  */
 public class GemUpgradeScaling extends ChooseStat implements GemStoneStat {
     public static final String NEVER = "NEVER", HISTORIC = "HISTORIC", SUBSEQUENT = "SUBSEQUENT";
+    public static String defaultValue = SUBSEQUENT;
 
     public GemUpgradeScaling() {
         super("GEM_UPGRADE_SCALING", VersionMaterial.LIME_DYE.toMaterial(), "Gem Upgrade Scaling", new String[] { "Gem stones add their stats to items, but you may also", "upgrade your items via crafting stations or consumables.", "", "\u00a76Should this gem stone stats be affected by upgrading?" }, new String[] { "gem_stone" });
@@ -38,5 +39,5 @@ public class GemUpgradeScaling extends ChooseStat implements GemStoneStat {
         HintChooseableDefs(definitions);
     }
 
-    @NotNull @Override public StatData getClearStatData() { return new StringData(SUBSEQUENT); }
+    @NotNull @Override public StatData getClearStatData() { return new StringData(defaultValue); }
 }

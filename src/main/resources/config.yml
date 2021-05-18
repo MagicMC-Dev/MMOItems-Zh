@@ -307,7 +307,11 @@ item-revision:
     # keep its gems, this will give the gems back to the
     # player so that they don't get lost forever.
     drop-extra-gems: true
-    
+
+    # When keeping lore data, only lore that starts with this
+    # will actually be kept.
+    kept-lore-prefix: '&7'
+
     # Whether or not specific stats should be kept
     # when an item is updated to latest revision.
     keep-data:
@@ -351,6 +355,10 @@ lootsplosion:
     color: true
     offset: .2
     height: .6
+
+# When Upgrading meets Gems, one must decide if
+# gems' stats will increase as well.
+gem-upgrade-default: 'NEVER'
 
 # When I was a kid, I saw the Mona Lisa in my school art book...
 # The fist time I saw her, with her hands on her knee... how do I say this...

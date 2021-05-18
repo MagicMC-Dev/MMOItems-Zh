@@ -9,7 +9,7 @@ import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Ingredient {
 	private final String id;
@@ -49,23 +49,32 @@ public abstract class Ingredient {
 	/**
 	 * Apply specific placeholders to display the ingredient in the item lore.
 	 * 
-	 * @param  string String with unparsed placeholders
+	 * @param  s String with unparsed placeholders
 	 * @return        String with parsed placeholders
 	 */
-	public abstract String formatDisplay(String string);
+	public abstract String formatDisplay(String s);
 
+	/**
+	 * When the player right-clicks one of the items in a station, they can
+	 * preview the stats if itself and the components it is made of. This
+	 * is called to displace those preview elements.
+	 *
+	 * @param player Player looking at the recipe
+	 *
+	 * @return The ItemStack to display to the player
+	 */
 	@NotNull public abstract ItemStack generateItemStack(@NotNull RPGPlayer player);
 
-	public CheckedIngredient evaluateIngredient(IngredientInventory inv) {
+	public CheckedIngredient evaluateIngredient(@NotNull IngredientInventory inv) {
 		return new CheckedIngredient(this, inv.getIngredient(this, IngredientLookupMode.BASIC));
 	}
 
 	public static class CheckedIngredient {
-		private final Ingredient ingredient;
-		private final PlayerIngredient found;
+		@NotNull private final Ingredient ingredient;
+		@Nullable private final PlayerIngredient found;
 
 		/**
-		 * Instanciated everytime an ingredient is evaluated for a player when a
+		 * Instantiated everytime an ingredient is evaluated for a player when a
 		 * CheckedRecipe is being created (when a player is opening a crafting
 		 * station). This helps greatly reducing ingredient checkups by caching
 		 * the items the plugin will need to take off the player's ingredient
@@ -74,28 +83,20 @@ public abstract class Ingredient {
 		 * @param found      The corresponding ingredient found in the player's
 		 *                   ingredient
 		 */
-		private CheckedIngredient(Ingredient ingredient, PlayerIngredient found) {
+		private CheckedIngredient(@NotNull Ingredient ingredient, @Nullable PlayerIngredient found) {
 			this.ingredient = ingredient;
 			this.found = found;
 		}
 
-		/*
-		 * checks if the player has a specific item or not
+		/**
+		 * @return If the player has enough of the specific item or not
 		 */
-		public boolean isHad() {
-			return found != null && found.getAmount() >= ingredient.getAmount();
-		}
+		public boolean isHad() { return found != null && found.getAmount() >= ingredient.getAmount(); }
 
-		public Ingredient getIngredient() {
-			return ingredient;
-		}
+		@NotNull public Ingredient getIngredient() { return ingredient; }
 
-		public PlayerIngredient getPlayerIngredient() {
-			return found;
-		}
+		@Nullable public PlayerIngredient getPlayerIngredient() { return found; }
 
-		public String format() {
-			return ingredient.formatDisplay(isHad() ? ingredient.getDisplay().getPositive() : ingredient.getDisplay().getNegative());
-		}
+		@NotNull public String format() { return ingredient.formatDisplay(isHad() ? ingredient.getDisplay().getPositive() : ingredient.getDisplay().getNegative()); }
 	}
 }

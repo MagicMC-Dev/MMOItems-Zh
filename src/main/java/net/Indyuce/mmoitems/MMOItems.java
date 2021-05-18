@@ -52,6 +52,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -287,8 +288,21 @@ public class MMOItems extends LuminePlugin {
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
-			new MMOItemsRewardTypes().register();
 			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
+			(new BukkitRunnable() {
+				public void run() {
+
+					//noinspection ProhibitedExceptionCaught
+					try {
+
+						// Apparently might generate a null pointer exception when DungeonsXL is present.
+						new MMOItemsRewardTypes().register();
+					} catch (NullPointerException ignored) { getLogger().log(Level.INFO, "Could not Hook onto BossShopPro"); }
+
+				}
+
+			}).runTaskLater(this, 10L);
+
 		}
 
 		// compatibility with /reload

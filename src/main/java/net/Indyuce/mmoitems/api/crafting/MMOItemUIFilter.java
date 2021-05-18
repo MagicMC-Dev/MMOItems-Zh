@@ -5,14 +5,18 @@ import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.utils.items.ItemFactory;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +62,15 @@ public class MMOItemUIFilter implements UIFilter {
             return false;
         }
 
+        // Strip data
+        @NotNull String dataments = "";
+        if (data.contains("{")) {
+
+            // Just clip them out for now yea
+            dataments = data.substring(data.indexOf('{') + 1);
+            data = data.substring(0, data.indexOf('{'));
+            if (dataments.endsWith("}")) { dataments = dataments.substring(0, dataments.length()-1); } }
+
         // All right get its Type and ID
         if (!mmo.getType().getId().equals(argument) || !mmo.getId().equals(data)) {
 
@@ -68,6 +81,32 @@ public class MMOItemUIFilter implements UIFilter {
 
             // Fail
             return false;
+        }
+
+        // Find upgrade?
+        if (!dataments.isEmpty()) {
+            VolatileMMOItem vmmo = new VolatileMMOItem(asNBT);
+
+            // Get
+            QuickNumberRange upgradeReq = SilentNumbers.rangeFromBracketsTab(dataments, "level");
+            if (upgradeReq != null) {
+
+                // Upgrade data?
+                int identifiedLvl = 0;
+                if (vmmo.hasData(ItemStats.UPGRADE)) { identifiedLvl = vmmo.getUpgradeLevel(); }
+
+                // Not matched?
+                if (!upgradeReq.inRange(identifiedLvl)) {
+
+                    // Notify
+                    FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.FAILURE,
+                            "MMOItem $r{0} {1}$b is of level $u{2}$b though $r{3}$b was expected. $fNo Match. ",
+                            mmo.getType().getId(), mmo.getId(), String.valueOf(identifiedLvl), upgradeReq.toString());
+
+                    // Fail
+                    return false;
+                }
+            }
         }
 
         // Notify
@@ -96,6 +135,12 @@ public class MMOItemUIFilter implements UIFilter {
             return false;
         }
 
+        // Parse data
+        if (data.contains("{") && data.contains("}")) {
+
+            // Just clip them out for now yea
+            data = data.substring(0, data.indexOf('{')); }
+
         // Can find item?
         if (MMOItems.plugin.getMMOItem(t, data) == null) {
 
@@ -106,7 +151,6 @@ public class MMOItemUIFilter implements UIFilter {
 
             return false;
         }
-
 
         // Error
         FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.SUCCESS,
@@ -131,15 +175,69 @@ public class MMOItemUIFilter implements UIFilter {
         
         if (t != null) {
 
+            // Strip data
+            @NotNull String dataments = "", datamentsTab = "";
+            if (data.contains("{")) {
+
+                // Just clip them out for now yea
+                dataments = data.substring(data.indexOf('{') + 1);
+                data = data.substring(0, data.indexOf('{'));
+
+                int datashort = 0;
+                if (dataments.contains(",")) { datashort = dataments.lastIndexOf(',') + 1; }
+
+                datamentsTab = dataments.substring(datashort);
+                dataments = dataments.substring(0, datashort);
+            }
+
             // Just filter among template names of this type
-            return SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(t), data, true);
-            
+            ArrayList<String> suggestions = SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(t), data, true);
+            ArrayList<String> trueSuggestions = suggestions;
+
+            // So, what things may be put in data?
+            if (!datamentsTab.isEmpty()) {
+                ArrayList<String> datamentsSug = new ArrayList<>();
+
+                // All right, so right now
+                if (datamentsTab.contains("=")) {
+
+                    // All right grab
+                    String datamentsUsed = datamentsTab.substring(0, datamentsTab.indexOf('='));
+                    switch (datamentsUsed.toLowerCase()) {
+                        case "level":
+                            SilentNumbers.addAll(datamentsSug, "level=1..", "level=2..4", "level=..6");
+                            break;
+                        default:
+                            datamentsSug.add(datamentsTab);
+                            break;
+                    }
+
+                // No equals sign, suggest dataments
+                } else {
+
+                    // Suggest that
+                    datamentsSug = SilentNumbers.smartFilter(getValidDataments(), datamentsTab, true);
+                }
+
+                // Compile
+                for (String sug : suggestions) {
+                    for (String comp : datamentsSug) {
+                        // All the suggestions that could complete this..
+                        trueSuggestions.add(sug + "{" + dataments + comp); } }
+            }
+
+            // That's it
+            return trueSuggestions;
+
         } else {
 
             // Typo in the Type
             return SilentNumbers.toArrayList("Type_not_found,_check_your_spelling");
         }
     }
+
+    ArrayList<String> validDataments;
+    @NotNull public ArrayList<String> getValidDataments() { if (validDataments != null) { return validDataments; } validDataments = SilentNumbers.toArrayList("level"); return validDataments; }
 
     @Override
     public boolean fullyDefinesItem() { return true; }
@@ -158,8 +256,38 @@ public class MMOItemUIFilter implements UIFilter {
     public ItemStack getDisplayStack(@NotNull String argument, @NotNull String data, @Nullable FriendlyFeedbackProvider ffp) {
         if (!isValid(argument, data, ffp)) { return ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a7cInvalid MMOItem \u00a7e" + argument + " " + data).build(); }
         argument = argument.replace(" ", "_").replace("-", "_").toUpperCase();
+
+        // Strip data
+        @NotNull String dataments = "";
+        if (data.contains("{")) {
+
+            // Just clip them out for now yea
+            dataments = data.substring(data.indexOf('{') + 1);
+            data = data.substring(0, data.indexOf('{'));
+            if (dataments.endsWith("}")) { dataments = dataments.substring(0, dataments.length()-1); } }
+
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
         MMOItem m = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(argument), data);
+
+        // Find upgrade?
+        if (!dataments.isEmpty()) {
+            //UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Dataments of \u00a7e" + argument + " " + data + "\u00a77: \u00a73 " + dataments);
+
+            // Requires upgrade template :flushed:
+            //noinspection ConstantConditions
+            if (m.hasUpgradeTemplate()) {
+                //UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Seeking upgrade\u00a7b " + SilentNumbers.valueFromBracketsTab(dataments, "level"));
+
+                // Get
+                QuickNumberRange upgradeReq = SilentNumbers.rangeFromBracketsTab(dataments, "level");
+                if (upgradeReq != null) {
+                    //UPGR//MMOItems.log(" \u00a73>\u00a7a> \u00a77Found upgrade\u00a76 " + upgradeReq);
+                    UpgradeData ud = ((UpgradeData) m.getData(ItemStats.UPGRADE)).clone();
+                    ud.setLevel(SilentNumbers.floor(upgradeReq.getAsDouble(0)));
+                    m.setData(ItemStats.UPGRADE, ud);
+                }
+            }
+        }
 
         //noinspection ConstantConditions
         ItemStackBuilder builder = m.newBuilder();

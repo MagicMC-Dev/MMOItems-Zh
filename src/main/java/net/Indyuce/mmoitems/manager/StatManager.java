@@ -12,12 +12,7 @@ import java.util.logging.Level;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.stat.type.AttributeStat;
-import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.*;
 
 public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
@@ -31,6 +26,7 @@ public class StatManager {
 	private final Set<AttributeStat> attributeBased = new HashSet<>();
 	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
 	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
+	private final Set<SelfConsumable> selfConsumables = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -84,6 +80,12 @@ public class StatManager {
 		return consumableActions;
 	}
 
+	/**
+	 * @return Collection of all stats implementing self consumable like
+	 *         restore health, mana, hunger...
+	 */
+	public Set<SelfConsumable> getSelfConsumables() { return selfConsumables; }
+
 	public boolean has(String id) {
 		return stats.containsKey(id);
 	}
@@ -130,6 +132,9 @@ public class StatManager {
 
 		if (stat instanceof ConsumableItemInteraction)
 			consumableActions.add((ConsumableItemInteraction) stat);
+
+		if (stat instanceof SelfConsumable)
+			selfConsumables.add((SelfConsumable) stat);
 
 		/*
 		 * cache stat for every type which may have this stat. really important

@@ -33,7 +33,6 @@ import net.Indyuce.mmoitems.stat.GrantedPermissions;
 import net.Indyuce.mmoitems.stat.HideDye;
 import net.Indyuce.mmoitems.stat.HideEnchants;
 import net.Indyuce.mmoitems.stat.HidePotionEffects;
-import net.Indyuce.mmoitems.stat.Inedible;
 import net.Indyuce.mmoitems.stat.InternalRevisionID;
 import net.Indyuce.mmoitems.stat.ItemDamage;
 import net.Indyuce.mmoitems.stat.ItemLevel;
@@ -82,11 +81,7 @@ import net.Indyuce.mmoitems.stat.block.GenTemplate;
 import net.Indyuce.mmoitems.stat.block.MaxXP;
 import net.Indyuce.mmoitems.stat.block.MinXP;
 import net.Indyuce.mmoitems.stat.block.RequiredPower;
-import net.Indyuce.mmoitems.stat.type.BooleanStat;
-import net.Indyuce.mmoitems.stat.type.DisableStat;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.Indyuce.mmoitems.stat.type.*;
 import org.bukkit.Material;
 
 /**
@@ -133,7 +128,6 @@ public class ItemStats {
 			DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "Disable Repairing", new String[]{"!block", "all"}, "Players can't use this item in anvils."),
 			DISABLE_ARROW_SHOOTING = new DisableStat("ARROW_SHOOTING", Material.ARROW, "Disable Arrow Shooting", new Material[]{Material.ARROW}, "Players can't shoot this", "item using a bow."),
 			DISABLE_ATTACK_PASSIVE = new DisableStat("ATTACK_PASSIVE", Material.BARRIER, "Disable Attack Passive", new String[]{"piercing", "slashing", "blunt"}, "Disables the blunt/slashing/piercing", "passive effects on attacks."),
-			DISABLE_RIGHT_CLICK_CONSUME = new DisableStat("RIGHT_CLICK_CONSUME", Material.BARRIER, "Disable Right Click Consume", new String[]{"consumable"}, "This item will not be consumed", "when eaten by players."),
 
 	// RPG Stats
 	REQUIRED_LEVEL = new RequiredLevel(),
@@ -197,11 +191,11 @@ public class ItemStats {
 			GRANTED_PERMISSIONS = new GrantedPermissions(),
 
 	// Consumable Stats
-	RESTORE_HEALTH = new DoubleStat("RESTORE_HEALTH", VersionMaterial.RED_DYE.toMaterial(), "Health Restoration", new String[]{"Health given when consumed."}, new String[]{"consumable"}),
-			RESTORE_FOOD = new DoubleStat("RESTORE_FOOD", VersionMaterial.PORKCHOP.toMaterial(), "Food Restoration", new String[]{"Food units given when consumed."}, new String[]{"consumable"}),
-			RESTORE_SATURATION = new DoubleStat("RESTORE_SATURATION", Material.GOLDEN_CARROT, "Saturation Restoration", new String[]{"Saturation given when consumed."}, new String[]{"consumable"}),
-			RESTORE_MANA = new DoubleStat("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Restore Mana", new String[]{"The amount of mana", "your consumable restores."}, new String[]{"consumable"}),
-			RESTORE_STAMINA = new DoubleStat("RESTORE_STAMINA", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "Restore Stamina", new String[]{"The amount of stamina/power", "your consumable restores."}, new String[]{"consumable"}),
+	RESTORE_HEALTH = new RestoreHealth(),
+			RESTORE_FOOD = new RestoreFood(),
+			RESTORE_SATURATION = new RestoreSaturation(),
+			RESTORE_MANA = new RestoreMana(),
+			RESTORE_STAMINA = new RestoreStamina(),
 			CAN_IDENTIFY = new CanIdentify(),
 			CAN_DECONSTRUCT = new CanDeconstruct(),
 			CAN_DESKIN = new CanDeskin(),
@@ -212,7 +206,6 @@ public class ItemStats {
 			AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
 			ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "Item Cooldown", new String[]{"This cooldown applies for consumables", "as well as for item commands."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
 			VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(),
-			INEDIBLE = new Inedible(),
 			GEM_COLOR = new GemColor(),
 			GEM_UPGRADE_SCALING = new GemUpgradeScaling(),
 			ITEM_TYPE_RESTRICTION = new ItemTypeRestriction(),
@@ -244,7 +237,9 @@ public class ItemStats {
 			REPAIR = new RepairPower(),
 			REPAIR_PERCENT = new RepairPowerPercent(),
 			REPAIR_TYPE = new RepairType(),
-	KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),
+			INEDIBLE = new BooleanStat("INEDIBLE", Material.POISONOUS_POTATO, "Inedible", new String[] { "Players won't be able to right-click this consumable.", "", "No effects of it will take place." }, new String[] { "consumable" }),
+			DISABLE_RIGHT_CLICK_CONSUME = new DisableStat("RIGHT_CLICK_CONSUME", Material.BAKED_POTATO, "Infinite Consume", new String[]{"consumable"}, "Players will be able to right-click this consumable", "and benefit from its effects, but it won't be consumed."),
+			KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),
 			RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Recoil", new String[]{"Corresponds to the shooting innacuracy."}, new String[]{"musket"}),
 			HANDWORN = new BooleanStat("HANDWORN", Material.STRING, "Handworn", new String[]{"This item ignores two-handedness.", "", "Basically for a ring or a glove that you", " can wear and still have your hand free", " to carry a two-handed weapon."}, new String[]{ "offhand" }),
 			AMPHIBIAN = new Amphibian(),

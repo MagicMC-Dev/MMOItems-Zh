@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
+import net.Indyuce.mmoitems.stat.type.SelfConsumable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -31,7 +35,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomSounds extends ItemStat implements GemStoneStat {
+public class CustomSounds extends ItemStat implements GemStoneStat, SelfConsumable {
 	public CustomSounds() {
 		super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[] { "The custom sounds your item will use." },
 				new String[] { "all" });
@@ -218,4 +222,24 @@ public class CustomSounds extends ItemStat implements GemStoneStat {
 			mmoitem.setData(ItemStats.CUSTOM_SOUNDS, sounds);
 		}
 	}
+
+	@Override
+	public boolean onSelfConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+
+		// No sound, straight up default-yo
+		if (!mmo.hasData(ItemStats.CUSTOM_SOUNDS)) { playDefaultSound(player); return false; }
+
+		// Find data
+		SoundListData slData = (SoundListData) mmo.getData(ItemStats.CUSTOM_SOUNDS);
+		SoundData cs = slData.get(CustomSound.ON_CONSUME);
+
+		// Default sound :sleep:
+		if (cs == null) { playDefaultSound(player); return false; }
+
+		// Play custom sound lets go
+		player.getWorld().playSound(player.getLocation(), cs.getSound(), (float) cs.getVolume(), (float) cs.getPitch());
+		return true;
+	}
+
+	void playDefaultSound(@NotNull Player player) { player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1); }
 }

@@ -10,11 +10,14 @@ import java.util.Set;
 import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.stat.type.SelfConsumable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.potion.PotionEffectType;
@@ -39,7 +42,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Effects extends ItemStat {
+public class Effects extends ItemStat implements SelfConsumable {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public Effects() {
@@ -218,5 +221,25 @@ public class Effects extends ItemStat {
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean onSelfConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+
+		// Does it have effects?
+		if (!mmo.hasData(ItemStats.EFFECTS)) { return false; }
+
+		// Get Data
+		PotionEffectListData pelData = (PotionEffectListData) mmo.getData(ItemStats.EFFECTS);
+
+		// Apply
+		for (PotionEffectData ped : pelData.getEffects()) {
+			if (ped == null) { continue; }
+
+			player.removePotionEffect(ped.getType());
+			player.addPotionEffect(ped.toEffect()); }
+
+		// It was applied it seems
+		return true;
 	}
 }

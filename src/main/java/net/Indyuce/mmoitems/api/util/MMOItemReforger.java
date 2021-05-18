@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
+import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
@@ -111,10 +112,17 @@ public class MMOItemReforger {
 		this.nbtItem = nbt;
 		this.amount = nbt.getItem().getAmount();
 
+		// Spec the name and ID
 		VolatileMMOItem vol = new VolatileMMOItem(nbt);
+		miTypeName = vol.getType();
+		miID = vol.getId();
+
+		// Attempt to cache durability
 		if (vol.hasData(ItemStats.DURABILITY)) { cachedDurability = (DoubleData) vol.getData(ItemStats.DURABILITY); }
 		else if (nbt.getItem().getItemMeta() instanceof Damageable) { cachedDur = ((double) (((Damageable) nbt.getItem().getItemMeta()).getDamage())) / ((double) nbt.getItem().getType().getMaxDurability()); }
 	}
+	@NotNull final String miID;
+	@NotNull final Type miTypeName;
 	@Nullable DoubleData cachedDurability = null;
 	@Nullable Double cachedDur = null;
 
@@ -174,10 +182,10 @@ public class MMOItemReforger {
 	public void update(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
-		loadLiveMMOItem();
-		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
-		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", mmoItem.getType().toString(), mmoItem.getId()); mmoItem = null; return; }
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(miTypeName, miID); ItemMeta meta = nbtItem.getItem().getItemMeta();
+		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", miTypeName.toString(), miID); mmoItem = null; return; }
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
+
 
 		// Skip all this trash and just regenerate completely
 		if (options.isRegenerate()) {
@@ -193,6 +201,9 @@ public class MMOItemReforger {
 			// Restore stats
 			restorePreRNGStats(temporalDataHistory, template, determinedItemLevel, true);
 			return; }
+
+		// Load live
+		loadLiveMMOItem();
 
 		/*
 		 *   Has to store every stat into itemData, then check each stat of
@@ -481,13 +492,15 @@ public class MMOItemReforger {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public void reforge(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
-		if (options.isRegenerate()) { regenerate(player); return; }
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
-		loadLiveMMOItem();
-		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId()); ItemMeta meta = nbtItem.getItem().getItemMeta();
-		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", mmoItem.getType().toString(), mmoItem.getId()); mmoItem = null; return; }
+		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(miTypeName, miID); ItemMeta meta = nbtItem.getItem().getItemMeta();
+		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", miTypeName.toString(), miID); mmoItem = null; return; }
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
+		if (options.isRegenerate()) { regenerate(player, template); return; }
+
+		// Load live
+		loadLiveMMOItem();
 
 		// Keep name
 		if (options.shouldKeepName()) { keepName(meta);}

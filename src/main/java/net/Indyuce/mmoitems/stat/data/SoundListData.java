@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SoundListData implements StatData, Mergeable, RandomStatData {
 	private final Map<CustomSound, SoundData> sounds;
@@ -32,9 +33,9 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 		return sounds;
 	}
 
-	public SoundData get(CustomSound sound) {
-		return sounds.get(sound);
-	}
+	@Nullable public SoundData get(@Nullable CustomSound sound) {
+		if (sound == null) { return null; }
+		return sounds.get(sound); }
 
 	public void set(CustomSound type, SoundData data) {
 		this.sounds.put(type, data);

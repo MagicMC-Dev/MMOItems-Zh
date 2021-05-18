@@ -289,21 +289,10 @@ public class MMOItems extends LuminePlugin {
 
 		if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
 			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
-			(new BukkitRunnable() {
-				public void run() {
-
+			(new BukkitRunnable() { public void run() {
 					//noinspection ProhibitedExceptionCaught
-					try {
-
-						// Apparently might generate a null pointer exception when DungeonsXL is present.
-						new MMOItemsRewardTypes().register();
-					} catch (NullPointerException ignored) { getLogger().log(Level.INFO, "Could not Hook onto BossShopPro"); }
-
-				}
-
-			}).runTaskLater(this, 10L);
-
-		}
+					try { new MMOItemsRewardTypes().register(); } catch (NullPointerException ignored) { getLogger().log(Level.INFO, "Could not Hook onto BossShopPro"); } }
+			}).runTaskLater(this, 1L); }
 
 		// compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));

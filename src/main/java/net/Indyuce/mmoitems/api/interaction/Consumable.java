@@ -8,17 +8,18 @@ import io.lumine.mythic.lib.api.util.SmartGive;
 import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
+import net.Indyuce.mmoitems.stat.type.SelfConsumable;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,51 +59,26 @@ public class Consumable extends UseItem {
 	public boolean useWithoutItem() {
 		NBTItem nbtItem = getNBTItem();
 
-		if (nbtItem.getBoolean("MMOITEMS_INEDIBLE"))
-			return false;
+		// Inedible stat cancels this operation from the beginning
+		if (nbtItem.getBoolean(ItemStats.INEDIBLE.getNBTPath())) { return false; }
 
-		double health = nbtItem.getStat("RESTORE_HEALTH");
-		if (health > 0)
-			MMOUtils.heal(player, health);
+		// So a consumable is being consumed, eh
+		ConsumableConsumedEvent event = new ConsumableConsumedEvent(mmoitem, player, this);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled()) { return If(event.isConsume()); }
 
-		double food = nbtItem.getStat("RESTORE_FOOD");
-		if (food > 0)
-			MMOUtils.feed(player, (int) food);
+		// Run through all all
+		boolean success = false;
+		for (SelfConsumable sc : MMOItems.plugin.getStats().getSelfConsumables()) { if (sc.onSelfConsume(mmoitem, player)) { success = true;} }
 
-		double saturation = nbtItem.getStat("RESTORE_SATURATION");
-		saturation = saturation == 0 ? 6 : saturation;
-		if (saturation > 0)
-			MMOUtils.saturate(player, (float) saturation);
-
-		double mana = nbtItem.getStat("RESTORE_MANA");
-		if (mana > 0)
-			playerData.getRPG().giveMana(mana);
-
-		double stamina = nbtItem.getStat("RESTORE_STAMINA");
-		if (stamina > 0)
-			playerData.getRPG().giveStamina(stamina);
-
-		// potion effects
-		if (mmoitem.hasData(ItemStats.EFFECTS))
-			((PotionEffectListData) mmoitem.getData(ItemStats.EFFECTS)).getEffects().forEach(effect -> {
-				player.removePotionEffect(effect.getType());
-				player.addPotionEffect(effect.toEffect());
-			});
-
-		if (nbtItem.hasTag("MMOITEMS_SOUND_ON_CONSUME"))
-			player.getWorld().playSound(player.getLocation(), nbtItem.getString("MMOITEMS_SOUND_ON_CONSUME").toLowerCase(),
-					(float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_VOL"), (float) nbtItem.getDouble("MMOITEMS_SOUND_ON_CONSUME_PIT"));
-		else
-			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
-
-		int maxConsume = (int) nbtItem.getStat("MAX_CONSUME");
-		if (maxConsume > 1) {
+		int maxConsume = (int) nbtItem.getStat(ItemStats.MAX_CONSUME.getNBTPath());
+		if (maxConsume > 1 && success) {
 			ItemStack item = nbtItem.toItem().clone();
 			String configMaxConsumeLore = MythicLib.plugin.parseColors(MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
 			String maxConsumeLore = configMaxConsumeLore.replace("#", Integer.toString(maxConsume));
 
 			maxConsume -= 1;
-			nbtItem.addTag(new ItemTag("MMOITEMS_MAX_CONSUME", maxConsume));
+			nbtItem.addTag(new ItemTag(ItemStats.MAX_CONSUME.getNBTPath(), maxConsume));
 
 
 			List<String> itemLores = nbtItem.toItem().clone().getItemMeta().getLore();
@@ -135,8 +111,10 @@ public class Consumable extends UseItem {
 			return false;
 		}
 
-		return !nbtItem.getBoolean("MMOITEMS_DISABLE_RIGHT_CLICK_CONSUME");
+		return (!nbtItem.getBoolean(ItemStats.DISABLE_RIGHT_CLICK_CONSUME.getNBTPath()) && success) || If(event.isConsume());
 	}
+
+	boolean If(@Nullable Boolean cond) { if (cond == null) { return false; } return cond; }
 
 	public boolean hasVanillaEating() {
 		return (getItem().getType().isEdible() || getItem().getType() == Material.POTION || getItem().getType() == Material.MILK_BUCKET)

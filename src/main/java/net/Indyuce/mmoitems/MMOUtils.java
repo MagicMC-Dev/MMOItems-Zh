@@ -156,18 +156,55 @@ public class MMOUtils {
 		return item != null && item.getType() != Material.AIR && item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null && (!lore || item.getItemMeta().getLore() != null);
 	}
 
-	public static void saturate(Player player, double saturation) {
-		if (saturation > 0) player.setSaturation(Math.min(20, player.getSaturation() + (float) saturation));
-	}
+	//region Restoration
+	/**
+	 * @param player Player to heal
+	 * @param saturation Saturation amount
+	 *             <br>
+	 *             Negative values are just ignored
+	 */
+	public static void saturate(@NotNull Player player, double saturation) { saturate(player, saturation, false); }
+	/**
+	 * @param player Player to heal
+	 * @param saturation Saturation amount
+	 * @param allowNegatives If passing a negative saturation value will desaturatie the entity x)
+	 *                       <br>
+	 *                       If <code>false</code>, negative values are just ignored
+	 */
+	public static void saturate(@NotNull Player player, double saturation, boolean allowNegatives) { if (saturation > 0 || allowNegatives) player.setSaturation(Math.min(0, Math.min(20, player.getSaturation() + (float) saturation))); }
 
-	public static void feed(Player player, int feed) {
-		if (feed > 0) player.setFoodLevel(Math.min(20, player.getFoodLevel() + feed));
-	}
+	/**
+	 * @param player Player to heal
+	 * @param feed Food amount
+	 *             <br>
+	 *             Negative values are just ignored
+	 */
+	public static void feed(@NotNull Player player, int feed) { feed(player, feed, false); }
+	/**
+	 * @param player Player to heal
+	 * @param feed Food amount
+	 * @param allowNegatives If passing a negative feed value will hunger the entity x)
+	 *                       <br>
+	 *                       If <code>false</code>, negative values are just ignored
+	 */
+	public static void feed(@NotNull Player player, int feed, boolean allowNegatives) { if (feed > 0 || allowNegatives) player.setFoodLevel(Math.max(Math.min(20, player.getFoodLevel() + feed), 0)); }
 
-	public static void heal(LivingEntity player, double heal) {
-		if (heal > 0)
-			player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), player.getHealth() + heal));
-	}
+	/**
+	 * @param player Player to heal
+	 * @param heal Heal amount
+	 *             <br>
+	 *             Negative values are just ignored
+	 */
+	public static void heal(@NotNull LivingEntity player, double heal) { heal(player, heal, false); }
+	/**
+	 * @param player Player to heal
+	 * @param heal Heal amount
+	 * @param allowNegatives If passing a negative health value will damage the entity x)
+	 *                       <br>
+	 *                       If <code>false</code>, negative values are just ignored
+	 */
+	public static void heal(@NotNull LivingEntity player, double heal, boolean allowNegatives) { if (heal > 0 || allowNegatives) player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), player.getHealth() + heal)); }
+	//endregion
 
 	public static boolean canDamage(Player player, Entity target) {
 		return canDamage(player, null, target);

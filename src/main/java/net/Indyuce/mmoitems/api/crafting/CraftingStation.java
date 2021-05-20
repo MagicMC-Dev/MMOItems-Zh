@@ -31,7 +31,7 @@ public class CraftingStation extends PostLoadObject {
 		super(config);
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = MythicLib.plugin.parseColors(config.getString("name"));
+		this.name = MythicLib.plugin.parseColors(config.getString("name", "Station"));
 		this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
 		this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 

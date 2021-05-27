@@ -186,6 +186,13 @@ public class MMOItemReforger {
 		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", miTypeName.toString(), miID); mmoItem = null; return; }
 		Validate.isTrue(meta != null, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Invalid item meta prevented $f{0}$b from updating.", template.getType().toString() + " " + template.getId()));
 
+		/*
+		 * Load live.
+		 *
+		 * Must happen before extractStatDataHistory() is called or it will
+		 * generate a null pointer exception.
+		 */
+		loadLiveMMOItem();
 
 		// Skip all this trash and just regenerate completely
 		if (options.isRegenerate()) {
@@ -201,9 +208,6 @@ public class MMOItemReforger {
 			// Restore stats
 			restorePreRNGStats(temporalDataHistory, template, determinedItemLevel, true);
 			return; }
-
-		// Load live
-		loadLiveMMOItem();
 
 		/*
 		 *   Has to store every stat into itemData, then check each stat of

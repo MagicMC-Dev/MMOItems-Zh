@@ -27,7 +27,7 @@ deploy:
   stage: deploy
   script:
     - mvn $MAVEN_CLI_OPTS deploy
-    - ssh lumine@proxy.mythiccraft.io -p 2222 "mkdir -p /tmp/builds/$CI_JOB_ID && exit"
-    - scp -rp -o StrictHostKeyChecking=no -o Port=2222 ./target/ lumine@proxy.mythiccraft.io:/tmp/builds/$CI_JOB_ID/
+    - ssh builder@proxy.mythiccraft.io -p 2222 "mkdir -p /tmp/builds/$CI_JOB_ID && exit"
+    - scp -rp -o StrictHostKeyChecking=no -o Port=2222 ./target/ builder@proxy.mythiccraft.io:/tmp/builds/$CI_JOB_ID/
   only:
     - master

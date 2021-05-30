@@ -1,23 +1,24 @@
 package net.Indyuce.mmoitems.comp.holograms;
 
-import java.util.UUID;
-
+import me.arasple.mc.trhologram.api.TrHologramAPI;
+import me.arasple.mc.trhologram.module.display.Hologram;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import me.arasple.mc.trhologram.api.TrHologramAPI;
-import me.arasple.mc.trhologram.hologram.Hologram;
-import net.Indyuce.mmoitems.MMOItems;
-
-public class TrHologramPlugin extends HologramSupport {
-	public TrHologramPlugin() {
-		super();
-	}
-
+/**
+ *
+ * updated comp provided through discord
+ * @author TUCAOEVER
+ */
+public class TrHologramPlugin extends HologramSupport
+{
 	@Override
-	public void displayIndicator(Location loc, String format, Player player) {
-		Hologram hologram = TrHologramAPI.createHologram(MMOItems.plugin, "mmoitems-"  + UUID.randomUUID().toString(), loc, format);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, hologram::delete, 20);
+	public void displayIndicator(final Location loc, final String format, final Player player) {
+		Hologram hologram = TrHologramAPI.builder(loc)
+				.append(format)
+				.build();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, hologram::destroy, 20L);
 	}
 }

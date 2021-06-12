@@ -1,14 +1,15 @@
 package net.Indyuce.mmoitems.api;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.Indyuce.mmoitems.MMOItems;
-import io.lumine.mythic.lib.api.item.NBTItem;
-
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
 
 public class ArrowParticles extends BukkitRunnable {
 	private final Arrow arrow;

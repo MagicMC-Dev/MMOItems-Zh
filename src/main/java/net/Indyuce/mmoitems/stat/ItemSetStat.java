@@ -1,14 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemSet;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.StringStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
+import java.util.ArrayList;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +9,13 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemSet;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.StringStat;
 
 public class ItemSetStat extends StringStat {
 	public ItemSetStat() {

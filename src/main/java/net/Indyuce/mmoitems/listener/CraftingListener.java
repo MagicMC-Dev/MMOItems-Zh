@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.event.CraftMMOItemEvent;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
-import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
-import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,8 +19,12 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.Map.Entry;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.event.CraftMMOItemEvent;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.recipe.workbench.CachedRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
+import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 
 public class CraftingListener implements Listener {
     final Map<UUID, CachedRecipe> cachedRecipe = new HashMap<>();

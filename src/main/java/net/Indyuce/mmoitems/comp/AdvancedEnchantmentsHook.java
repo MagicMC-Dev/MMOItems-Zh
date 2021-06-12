@@ -3,9 +3,9 @@ package net.Indyuce.mmoitems.comp;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import n3kas.ae.api.EnchantApplyEvent;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import n3kas.ae.api.EnchantApplyEvent;
 
 public class AdvancedEnchantmentsHook implements Listener {
 	@EventHandler

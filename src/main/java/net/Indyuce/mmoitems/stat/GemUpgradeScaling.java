@@ -1,16 +1,16 @@
 package net.Indyuce.mmoitems.stat;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
+import org.jetbrains.annotations.NotNull;
+
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ChooseStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * Defines how gem stats will scale when the item they are put on upgrades.

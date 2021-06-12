@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.api;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOUtils;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.MMOUtils;
 
 public enum CustomSound {
 	ON_ATTACK(Material.IRON_SWORD, 19, "Plays when attacking an entity."),

@@ -5,7 +5,9 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -21,8 +23,6 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import org.jetbrains.annotations.NotNull;
 
 public class UseItem {
 	protected final Player player;

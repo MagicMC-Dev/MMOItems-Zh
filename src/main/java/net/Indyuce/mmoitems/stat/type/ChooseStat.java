@@ -1,16 +1,10 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,10 +12,11 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 
 /**
  * Choose Stats present a list of options from which the user may choose one.

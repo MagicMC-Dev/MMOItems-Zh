@@ -1,7 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import org.bukkit.Material;
+
+import net.Indyuce.mmoitems.stat.type.BooleanStat;
 
 public class DurabilityBar extends BooleanStat {
     public DurabilityBar() {

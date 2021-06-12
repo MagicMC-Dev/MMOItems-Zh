@@ -2,14 +2,14 @@ package net.Indyuce.mmoitems.stat;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import org.jetbrains.annotations.NotNull;
 
 public class LoreFormat extends StringStat {
 	public LoreFormat() {

@@ -1,13 +1,13 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ItemSet;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemSet;
 
 public class SetManager implements Reloadable {
 	private final Map<String, ItemSet> itemSets = new HashMap<>();

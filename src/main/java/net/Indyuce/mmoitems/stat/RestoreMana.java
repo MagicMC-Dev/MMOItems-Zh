@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.SelfConsumable;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * When a consumable is eaten, restores health.

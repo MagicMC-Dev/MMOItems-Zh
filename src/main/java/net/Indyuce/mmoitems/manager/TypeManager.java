@@ -1,15 +1,19 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.Nullable;
+
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.manager.ConfigManager.DefaultFile;
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
-import java.util.logging.Level;
 
 public class TypeManager implements Reloadable {
 	private final Map<String, Type> map = new LinkedHashMap<>();

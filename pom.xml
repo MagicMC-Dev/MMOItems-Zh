@@ -90,30 +90,23 @@
 
 	</repositories>
 
+	<!-- Order of dependencies matters in Maven because the first wins when 
+		multiple classes match. -->
+
 	<dependencies>
 
-		<!-- Minecraft -->
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>GoogleGSON</artifactId>
+			<version>2.8.5</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.mojang</groupId>
 			<artifactId>authlib</artifactId>
 			<version>1.5.21</version>
 		</dependency>
 
-
-		<!-- USING THIS FOR INTERNAL TESTING -->
-		<!-- <dependency> -->
-		<!-- <groupId>io.lumine</groupId> -->
-		<!-- <artifactId>MythicLib</artifactId> -->
-		<!-- <version>1.0. 0</version> -->
-		<!-- <scope>system</scope> -->
-		<!-- <systemPath>${basedir}/lib/MythicLib.jar</systemPath> -->
-		<!-- </dependency> -->
-
-		<!-- <dependency> <groupId>net.Indyuce</groupId> <artifactId>MMOLib</artifactId> 
-			<version>1.7.3</version> <scope>system</scope> <systemPath>${basedir}/lib/MMOLib.jar</systemPath> 
-			</dependency> -->
-
-		<!-- Handled via repositories -->
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOCore</artifactId>
@@ -149,9 +142,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.MilkBowl</groupId>
-			<artifactId>VaultAPI</artifactId>
-			<version>1.7</version>
+			<groupId>me.clip</groupId>
+			<artifactId>placeholderapi</artifactId>
+			<version>2.9.2</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -175,55 +168,12 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
 			<version>1.17-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-1.16.5</artifactId>
-			<version>dev</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-1.16.2</artifactId>
-			<version>dev</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-1.16.1</artifactId>
-			<version>dev</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-1.15</artifactId>
-			<version>dev</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-1.14</artifactId>
-			<version>dev</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<!-- Local Repo Dependencies -->
 		<dependency>
 			<groupId>net.Indyuce.mmoitems.lib</groupId>
 			<artifactId>SkillAPI</artifactId>
@@ -234,12 +184,6 @@
 			<groupId>net.Indyuce.mmoitems.lib</groupId>
 			<artifactId>WorldGuard</artifactId>
 			<version>7.0.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>net.Indyuce.mmoitems.lib</groupId>
-			<artifactId>GoogleGSON</artifactId>
-			<version>2.8.5</version>
 		</dependency>
 
 		<dependency>
@@ -340,6 +284,12 @@
 
 		<dependency>
 			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Holograms</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
 			<artifactId>RacesAndClasses</artifactId>
 			<version>1.2.6</version>
 		</dependency>
@@ -352,8 +302,14 @@
 
 		<dependency>
 			<groupId>net.Indyuce.mmoitems.lib</groupId>
-			<artifactId>Holograms</artifactId>
-			<version>2.9.1</version>
+			<artifactId>Vault</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>AureliumSkills</artifactId>
+			<version>1.0.6</version>
 		</dependency>
 
 		<dependency>

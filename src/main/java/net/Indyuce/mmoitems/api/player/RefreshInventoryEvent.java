@@ -1,12 +1,13 @@
 package net.Indyuce.mmoitems.api.player;
 
-import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 
 public class RefreshInventoryEvent extends Event {
 

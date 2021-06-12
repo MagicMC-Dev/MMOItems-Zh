@@ -1,10 +1,8 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ReforgeOptions {
 	public static boolean dropRestoredGems;

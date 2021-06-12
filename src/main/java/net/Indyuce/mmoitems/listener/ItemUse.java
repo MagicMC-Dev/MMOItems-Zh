@@ -1,27 +1,7 @@
 package net.Indyuce.mmoitems.listener;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.interaction.Consumable;
-import net.Indyuce.mmoitems.api.interaction.GemStone;
-import net.Indyuce.mmoitems.api.interaction.ItemSkin;
-import net.Indyuce.mmoitems.api.interaction.Tool;
-import net.Indyuce.mmoitems.api.interaction.UseItem;
-import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
-import net.Indyuce.mmoitems.api.util.message.Message;
+import java.text.DecimalFormat;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -45,7 +25,28 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.TypeSet;
+import net.Indyuce.mmoitems.api.interaction.Consumable;
+import net.Indyuce.mmoitems.api.interaction.GemStone;
+import net.Indyuce.mmoitems.api.interaction.ItemSkin;
+import net.Indyuce.mmoitems.api.interaction.Tool;
+import net.Indyuce.mmoitems.api.interaction.UseItem;
+import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
 
 public class ItemUse implements Listener {
 	private static final DecimalFormat DIGIT = new DecimalFormat("0.#");

@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.api.util.SoundReader;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -21,6 +19,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.util.SoundReader;
 
 public class CustomSoundListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)

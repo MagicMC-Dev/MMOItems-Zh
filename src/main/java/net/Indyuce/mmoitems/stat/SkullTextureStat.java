@@ -1,27 +1,28 @@
 package net.Indyuce.mmoitems.stat;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.BooleanData;
-import net.Indyuce.mmoitems.stat.data.SkullTextureData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.StringStat;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.UUID;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.UUID;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.SkullTextureData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.StringStat;
 
 public class SkullTextureStat extends StringStat {
 	public SkullTextureStat() {

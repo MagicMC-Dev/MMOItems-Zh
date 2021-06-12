@@ -1,13 +1,13 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Stats which implement a consumable action like deconstructing, identifying,

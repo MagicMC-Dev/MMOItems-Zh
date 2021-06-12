@@ -1,19 +1,18 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.stat.StoredTags;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class StoredTagsData implements StatData, Mergeable {
 	private final List<ItemTag> tags = new ArrayList<>();

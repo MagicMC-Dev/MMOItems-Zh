@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class InternalStat extends ItemStat {
 

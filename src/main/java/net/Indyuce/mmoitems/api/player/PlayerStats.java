@@ -1,5 +1,10 @@
 package net.Indyuce.mmoitems.api.player;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.entity.Player;
+
 import io.lumine.mythic.lib.api.stat.StatInstance;
 import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.api.stat.modifier.ModifierType;
@@ -9,10 +14,6 @@ import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PlayerStats {
 	private final PlayerData playerData;

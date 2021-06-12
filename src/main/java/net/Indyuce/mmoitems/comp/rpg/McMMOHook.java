@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

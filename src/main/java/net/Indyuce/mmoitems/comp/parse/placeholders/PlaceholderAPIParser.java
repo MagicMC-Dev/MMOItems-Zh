@@ -2,8 +2,8 @@ package net.Indyuce.mmoitems.comp.parse.placeholders;
 
 import org.bukkit.OfflinePlayer;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import io.lumine.mythic.lib.MythicLib;
+import me.clip.placeholderapi.PlaceholderAPI;
 
 public class PlaceholderAPIParser implements PlaceholderParser {
 	public PlaceholderAPIParser() {

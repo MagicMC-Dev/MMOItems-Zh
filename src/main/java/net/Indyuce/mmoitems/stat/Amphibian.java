@@ -1,27 +1,25 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ChooseStat;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ChooseStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 
 /**
  * @author Gunging

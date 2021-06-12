@@ -1,27 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
-import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
-import net.Indyuce.mmoitems.stat.data.GemSocketsData;
-import net.Indyuce.mmoitems.stat.data.GemstoneData;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.stat.type.StatHistory;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -30,7 +10,23 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
+import net.Indyuce.mmoitems.stat.data.GemSocketsData;
+import net.Indyuce.mmoitems.stat.data.GemstoneData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 
 public class GemStone extends UseItem {
 

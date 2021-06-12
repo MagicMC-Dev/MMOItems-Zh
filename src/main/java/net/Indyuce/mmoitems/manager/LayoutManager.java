@@ -1,14 +1,15 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.crafting.Layout;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.crafting.Layout;
 
 public class LayoutManager implements Reloadable {
 	private final Map<String, Layout> layouts = new HashMap<>();

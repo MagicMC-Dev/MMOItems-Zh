@@ -1,15 +1,12 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
-import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
-import io.lumine.mythic.lib.api.util.Ref;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
-import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -26,10 +23,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.SmokingRecipe;
+import org.jetbrains.annotations.NotNull;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
+import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
+import io.lumine.mythic.lib.api.util.Ref;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.recipe.workbench.CustomRecipe;
@@ -37,10 +42,8 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import io.lumine.mythic.lib.MythicLib;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages the custom crafting of MMOItem components and stuff.

@@ -1,11 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
+import org.jetbrains.annotations.NotNull;
+
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import org.jetbrains.annotations.NotNull;
 
 public class GemColor extends StringStat {
 	public GemColor() {

@@ -7,12 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.google.gson.*;
-import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.stat.type.SelfConsumable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,14 +15,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
@@ -37,10 +45,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.Indyuce.mmoitems.stat.type.SelfConsumable;
 
 public class Effects extends ItemStat implements SelfConsumable {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");

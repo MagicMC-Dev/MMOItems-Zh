@@ -15,7 +15,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +25,6 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythicenchants.MythicEnchants;
-import io.lumine.utils.plugin.LuminePlugin;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -428,10 +425,10 @@ public class Enchants extends ItemStat implements Upgradable {
 
 		if (enchant == null) {
 			if (MMOItems.plugin.getMythicEnchantsSupport() != null) {
-				LuminePlugin enchants = MythicEnchants.inst();
-				enchant = Enchantment.getByKey(new NamespacedKey((Plugin) MythicEnchants.inst(), key));
-				if (enchant != null)
-					return enchant;
+//				Object enchants = MythicEnchants.inst();
+//				enchant = Enchantment.getByKey(new NamespacedKey((Plugin) MythicEnchants.inst(), key));
+//				if (enchant != null)
+//					return enchant;
 			}
 			enchant = Enchantment.getByName(key);
 		}

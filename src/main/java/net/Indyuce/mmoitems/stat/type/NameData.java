@@ -1,14 +1,14 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import io.lumine.mythic.lib.api.item.ItemTag;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
+import java.util.ArrayList;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 /**
  * Data that stores what an item is originally named like and prefixes or whatever.

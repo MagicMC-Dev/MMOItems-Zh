@@ -1,16 +1,17 @@
 package net.Indyuce.mmoitems.manager;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.apache.commons.lang.Validate;
+
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import org.apache.commons.lang.Validate;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
 
 public class TierManager implements Reloadable{
 	private final Map<String, ItemTier> tiers = new HashMap<>();

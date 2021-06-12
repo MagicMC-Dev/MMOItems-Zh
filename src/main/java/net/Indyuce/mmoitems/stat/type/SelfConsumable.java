@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 
 /**
  * Self consumables just means that the player eats this

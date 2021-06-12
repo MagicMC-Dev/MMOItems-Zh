@@ -7,10 +7,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 
 public class ProjectileData {
 	private final NBTItem sourceItem;

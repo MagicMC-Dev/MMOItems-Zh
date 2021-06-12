@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 
 /**
  * Stats which implement an item restriction. They are automatically collected

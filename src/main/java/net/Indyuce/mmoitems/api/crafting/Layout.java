@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import java.util.List;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.List;
 
 public class Layout {
     private final String id;

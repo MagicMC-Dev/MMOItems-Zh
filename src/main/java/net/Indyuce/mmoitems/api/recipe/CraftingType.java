@@ -1,10 +1,11 @@
 package net.Indyuce.mmoitems.api.recipe;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOUtils;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 public enum CraftingType {
 	SHAPED(21, "The C. Table Recipe (Shaped) for this item", VersionMaterial.CRAFTING_TABLE),

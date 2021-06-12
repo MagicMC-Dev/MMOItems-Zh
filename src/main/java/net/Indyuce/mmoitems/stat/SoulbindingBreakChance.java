@@ -7,7 +7,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -21,9 +24,6 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import org.jetbrains.annotations.NotNull;
 
 public class SoulbindingBreakChance extends DoubleStat implements ConsumableItemInteraction {
 	private static final Random random = new Random();

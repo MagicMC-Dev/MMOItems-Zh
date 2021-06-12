@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -18,8 +20,7 @@ import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.List;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 
 public class DurabilityListener implements Listener {
 	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,

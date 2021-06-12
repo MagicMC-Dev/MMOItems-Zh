@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.jetbrains.annotations.NotNull;
 
 public class ElementListData implements StatData, Mergeable {
 	@NotNull private final Map<Element, Double> damage = new HashMap<>(), defense = new HashMap<>();

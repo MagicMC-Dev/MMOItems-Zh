@@ -1,9 +1,10 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
+
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 
 public class RequiredLevelData extends DoubleData {
 	public RequiredLevelData(double value) {

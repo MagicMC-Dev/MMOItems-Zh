@@ -1,5 +1,12 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import java.util.ArrayList;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import io.lumine.mythic.lib.api.crafting.uifilters.UIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -7,7 +14,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.utils.items.ItemFactory;
+import io.lumine.utils.items.ItemFactory;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -17,12 +24,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
 
 /**
  * A filter to identify MMOItems :)

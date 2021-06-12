@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.Optional;
+import java.util.Random;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -21,9 +21,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.logging.Level;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
 
 public class CustomBlockListener implements Listener {
 

@@ -1,9 +1,10 @@
 package net.Indyuce.mmoitems.manager;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.Indyuce.mmoitems.api.block.WorldGenTemplate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Level;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,10 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.Indyuce.mmoitems.api.block.WorldGenTemplate;
 
 public class WorldGenManager implements Listener, Reloadable {
 	private final Map<String, WorldGenTemplate> templates = new HashMap<>();

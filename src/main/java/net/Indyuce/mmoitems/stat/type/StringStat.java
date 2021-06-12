@@ -1,5 +1,16 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
@@ -12,16 +23,6 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class StringStat extends ItemStat {
 	public StringStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {

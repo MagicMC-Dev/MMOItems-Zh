@@ -1,16 +1,8 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import com.sucy.skill.SkillAPI;
-import com.sucy.skill.api.event.PlayerLevelUpEvent;
-import com.sucy.skill.api.event.SkillDamageEvent;
-import com.sucy.skill.api.player.PlayerData;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.AttackResult;
-import io.lumine.mythic.lib.api.DamageHandler;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.RegisteredAttack;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,8 +10,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.event.PlayerLevelUpEvent;
+import com.sucy.skill.api.event.SkillDamageEvent;
+import com.sucy.skill.api.player.PlayerData;
+
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageHandler;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.RegisteredAttack;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 
 public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<Integer, RegisteredAttack> damageInfo = new HashMap<>();

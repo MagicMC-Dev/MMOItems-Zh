@@ -1,29 +1,29 @@
 package net.Indyuce.mmoitems.stat;
 
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.Indyuce.mmoitems.stat.type.Upgradable;
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import net.Indyuce.mmoitems.stat.type.Upgradable;
 
 public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat, Upgradable {
 	public MaximumDurability() {

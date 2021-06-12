@@ -22,10 +22,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import com.mojang.authlib.GameProfile;
 
-import net.Indyuce.mmoitems.MMOItems;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
 
 public class NoClipItem implements Listener {
 	private final Item item;

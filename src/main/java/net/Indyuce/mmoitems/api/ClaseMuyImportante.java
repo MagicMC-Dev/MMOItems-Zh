@@ -1,6 +1,9 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.MMOItems;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -14,9 +17,7 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import net.Indyuce.mmoitems.MMOItems;
 
 public class ClaseMuyImportante {
 	public static void metodoMuyImportante() {

@@ -11,12 +11,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import ru.endlesscode.rpginventory.api.InventoryAPI;
 
 /**

@@ -4,12 +4,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.skills.api.events.SkillLevelUpEvent;
 import org.skills.data.managers.SkilledPlayer;
 import org.skills.main.SkillsPro;
+
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 
 public class SkillsProHook implements RPGHandler, Listener {
 

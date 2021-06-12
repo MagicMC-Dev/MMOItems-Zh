@@ -1,13 +1,14 @@
 package net.Indyuce.mmoitems.listener;
 
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.utils.Events;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.manager.Reloadable;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.utils.Events;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.manager.Reloadable;
 
 public class EquipListener implements Reloadable, Listener {
     public EquipListener(){

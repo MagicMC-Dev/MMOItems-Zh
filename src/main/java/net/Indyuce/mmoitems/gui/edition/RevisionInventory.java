@@ -1,18 +1,10 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.utils.items.ItemFactory;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.util.MMOItemReforger;
-import net.Indyuce.mmoitems.stat.RevisionID;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,8 +13,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.utils.items.ItemFactory;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
+import net.Indyuce.mmoitems.stat.RevisionID;
 
 /**
  * Inventory displayed when enabling the item updater.

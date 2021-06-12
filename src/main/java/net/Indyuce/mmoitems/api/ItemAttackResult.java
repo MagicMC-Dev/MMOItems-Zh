@@ -1,12 +1,13 @@
 package net.Indyuce.mmoitems.api;
 
+import org.bukkit.entity.LivingEntity;
+
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.AttackResult;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import org.bukkit.entity.LivingEntity;
 
 public class ItemAttackResult extends AttackResult {
 	public ItemAttackResult(boolean successful, DamageType... types) {

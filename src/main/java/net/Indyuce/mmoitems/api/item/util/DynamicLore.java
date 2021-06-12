@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.item.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.mythic.utils.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.JsonArray;
@@ -11,7 +12,6 @@ import com.google.gson.JsonElement;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
 
 public class DynamicLore {

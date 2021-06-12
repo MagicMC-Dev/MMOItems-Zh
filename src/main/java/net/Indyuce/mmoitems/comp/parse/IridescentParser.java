@@ -1,8 +1,7 @@
 package net.Indyuce.mmoitems.comp.parse;
 
-import org.bukkit.entity.Player;
-
 import com.github.klyser8.iridescent.api.ColorUtil;
+import org.bukkit.entity.Player;
 
 public class IridescentParser implements StringInputParser {
 

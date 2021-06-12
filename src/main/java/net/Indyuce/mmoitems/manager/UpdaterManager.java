@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.utils.adventure.text.Component;
+import io.lumine.mythic.utils.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,9 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.utils.adventure.text.Component;
-import io.lumine.utils.adventure.text.format.NamedTextColor;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;

@@ -1,8 +1,18 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.lib.api.util.SmartGive;
+import io.lumine.mythic.utils.adventure.text.Component;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
+import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
+import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
+import net.Indyuce.mmoitems.stat.type.SelfConsumable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,19 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.mythic.lib.api.util.SmartGive;
-import io.lumine.utils.adventure.text.Component;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
-import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
-import net.Indyuce.mmoitems.stat.type.SelfConsumable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Consumable extends UseItem {
 	public Consumable(Player player, NBTItem item) {

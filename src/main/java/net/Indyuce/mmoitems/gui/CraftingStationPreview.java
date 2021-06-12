@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.mythic.utils.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;

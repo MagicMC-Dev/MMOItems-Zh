@@ -12,7 +12,6 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.command.item.IdentifyCommandTreeNode;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
@@ -81,6 +80,7 @@ public class ConfigManager implements Reloadable {
 			} else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
 		}
 
+
 		for (String language : languages) {
 			File languageFolder = new File(MMOItems.plugin.getDataFolder() + "/language/" + language);
 			if (!languageFolder.exists())
@@ -107,6 +107,7 @@ public class ConfigManager implements Reloadable {
 		 * setup /item files after generating the default /item files otherwise
 		 * they will be empty!
 		 */
+
 		MMOItems.plugin.getTypes().getAll().forEach(type -> type.getConfigFile().setup());
 
 		ConfigFile items = new ConfigFile("/language", "items");
@@ -153,6 +154,7 @@ public class ConfigManager implements Reloadable {
 			if (!potionEffects.getConfig().contains(path))
 				potionEffects.getConfig().set(path, MMOUtils.caseOnWords(effect.getName().toLowerCase().replace("_", " ")));
 		}
+
 		potionEffects.save();
 
 		final String f = new String(b);
@@ -161,7 +163,6 @@ public class ConfigManager implements Reloadable {
 		} catch (IllegalAccessException | NoSuchFieldException e) {
 			e.printStackTrace();
 		}
-
 		ConfigFile attackEffects = new ConfigFile("/language", "attack-effects");
 		for (StaffSpirit spirit : StaffSpirit.values()) {
 			String path = spirit.name().toLowerCase().replace("_", "-");
@@ -169,7 +170,7 @@ public class ConfigManager implements Reloadable {
 				attackEffects.getConfig().set("staff-spirit." + path, "&7" + AltChar.listSquare + " " + spirit.getDefaultName());
 		}
 
-		arruinarElPrograma = IdentifyCommandTreeNode.obtenerNuevoProhibidoDeLaWeb().contains(elDescargadorLaIdentidad);
+		//arruinarElPrograma = IdentifyCommandTreeNode.obtenerNuevoProhibidoDeLaWeb().contains(elDescargadorLaIdentidad);
 
 		for (LuteAttackEffect effect : LuteAttackEffect.values()) {
 			String path = effect.name().toLowerCase().replace("_", "-");
@@ -275,7 +276,7 @@ public class ConfigManager implements Reloadable {
 		return loreFormat.getConfig().getStringList("lore-format");
 	}
 
-	public final boolean arruinarElPrograma;
+	public final boolean arruinarElPrograma = false;
 
 	public String getPotionEffectName(PotionEffectType type) {
 		return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));

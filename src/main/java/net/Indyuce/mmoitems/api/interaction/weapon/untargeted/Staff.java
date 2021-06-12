@@ -62,6 +62,7 @@ public class Staff extends UntargetedWeapon {
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,
 				(tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
+
 	}
 
 	public void specialAttack(LivingEntity target) {

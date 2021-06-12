@@ -36,6 +36,7 @@ public class CustomBlock {
 		return id;
 	}
 
+
 	public MushroomState getState() {
 		return state;
 	}

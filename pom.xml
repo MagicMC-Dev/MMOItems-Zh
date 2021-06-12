@@ -49,6 +49,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>lumine-repo</id>
@@ -67,36 +68,69 @@
 			<url>https://repo.inventivetalent.org/content/groups/public/</url>
 		</repository>
 		<repository>
-			<id>placeholderapi</id>
-			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-		</repository>
-		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
+		<repository>
+			<id>placeholderapi</id>
+			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+		</repository>
+		<!-- Repository used to fetch all Spigot builds -->
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<!-- Local reposity used to save external libraries with no repos -->
+		<repository>
+			<id>local-repo</id>
+			<url>file://${project.basedir}/local-repo</url>
+		</repository>
 	</repositories>
+
 	<dependencies>
+
 		<!-- Minecraft -->
 		<dependency>
 			<groupId>com.mojang</groupId>
 			<artifactId>authlib</artifactId>
 			<version>1.5.21</version>
 		</dependency>
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>amalgam</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/spigot.jar</systemPath>
-		</dependency>
 
-		<!-- MMOs -->
+
+		<!-- USING THIS FOR INTERNAL TESTING -->
+		<!-- <dependency> -->
+		<!-- <groupId>io.lumine</groupId> -->
+		<!-- <artifactId>MythicLib</artifactId> -->
+		<!-- <version>1.0. 0</version> -->
+		<!-- <scope>system</scope> -->
+		<!-- <systemPath>${basedir}/lib/MythicLib.jar</systemPath> -->
+		<!-- </dependency> -->
+
+		<!-- <dependency> <groupId>net.Indyuce</groupId> <artifactId>MMOLib</artifactId> 
+			<version>1.7.3</version> <scope>system</scope> <systemPath>${basedir}/lib/MMOLib.jar</systemPath> 
+			</dependency> -->
+
+		<!-- Handled via repositories -->
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOCore</artifactId>
 			<version>1.7.1</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>io.lumine</groupId>
+			<artifactId>LumineUtils</artifactId>
+			<version>1.16.1-20210326.031037-28</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>*</artifactId>
+					<groupId>*</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>io.lumine</groupId>
 			<artifactId>MythicLib</artifactId>
@@ -104,45 +138,19 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- USING THIS FOR INTERNAL TESTING -->
-<!--		<dependency>-->
-<!--			<groupId>io.lumine</groupId>-->
-<!--			<artifactId>MythicLib</artifactId>-->
-<!--			<version>1.0. 0</version>-->
-<!--			<scope>system</scope>-->
-<!--			<systemPath>${basedir}/lib/MythicLib.jar</systemPath>-->
-<!--		</dependency>-->
-
-		<!--
 		<dependency>
-			<groupId>net.Indyuce</groupId>
-			<artifactId>MMOLib</artifactId>
-			<version>1.7.3</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/MMOLib.jar</systemPath>
+			<groupId>io.lumine</groupId>
+			<artifactId>MythicEnchants</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
-		-->
 
-		<!-- APIs -->
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 			<version>19.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.5</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/GoogleGSON.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.github.klyser8.iridescent</groupId>
-			<artifactId>Iridescent</artifactId>
-			<version>1.2.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Iridescent.jar</systemPath>
-		</dependency>
+
 		<dependency>
 			<groupId>com.github.RednedEpic</groupId>
 			<artifactId>PhatLoots</artifactId>
@@ -150,186 +158,211 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Other Plugins -->
 		<dependency>
-			<groupId>com.github.Eniripsa96</groupId>
-			<artifactId>SkillAPI</artifactId>
-			<version>master-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/SkillAPI.jar</systemPath>
+			<groupId>com.github.MilkBowl</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.7</version>
+			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>n3kas</groupId>
-			<artifactId>ae.api</artifactId>
-			<version>5.7.6</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/AE-API.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>org.black_ixx</groupId>
-			<artifactId>BossShop</artifactId>
-			<version>2.0.9</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/BossShopPro.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>io.lumine</groupId>
-			<artifactId>MythicEnchants</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.bekvon.bukkit</groupId>
-			<artifactId>Residence</artifactId>
-			<version>4.8.7.2</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Residence.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.Zrips</groupId>
-			<artifactId>CMI</artifactId>
-			<version>8.6.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/CMI.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.herocraftonline</groupId>
-			<artifactId>heroes</artifactId>
-			<version>1.9.3</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Heroes.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.gmail.nossr50</groupId>
-			<artifactId>mcMMO</artifactId>
-			<version>2.1.104</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/mcMMO.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>us.eunoians</groupId>
-			<artifactId>McRPG</artifactId>
-			<version>1.1.2</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/McRPG.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>me.baks</groupId>
-			<artifactId>rpl</artifactId>
-			<version>3.9.30</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/RPGPlayerLeveling.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>me.leothepro555</groupId>
-			<artifactId>skills</artifactId>
-			<version>12.3.5</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Skills.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>org.skills.main</groupId>
-			<artifactId>SkillsPro</artifactId>
-			<version>18.9.0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/SkillsPro.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>me.robin</groupId>
-			<artifactId>BattleLevels</artifactId>
-			<version>6.9.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/BattleLevels.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.evill4mer</groupId>
-			<artifactId>RealDualWield</artifactId>
-			<version>1.1.12</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/RealDualWield.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>me.arasple.mc</groupId>
-			<artifactId>TrHologram</artifactId>
-			<version>1.11</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/TrHologram.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.gmail.filoghost</groupId>
-			<artifactId>HolographicDisplays</artifactId>
-			<version>6.9.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/HolographicDisplays.jar</systemPath>
-		</dependency>
+
 		<dependency>
 			<groupId>io.lumine.xikage</groupId>
 			<artifactId>MythicMobs</artifactId>
-			<version>4.8.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/MythicMobs.jar</systemPath>
+			<version>4.11.0-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
+
+		<!-- Spigot API -->
 		<dependency>
-			<groupId>de.tobiyas</groupId>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.17-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-1.16.5</artifactId>
+			<version>dev</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-1.16.2</artifactId>
+			<version>dev</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-1.16.1</artifactId>
+			<version>dev</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-1.15</artifactId>
+			<version>dev</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-1.14</artifactId>
+			<version>dev</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Local Repo Dependencies -->
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>SkillAPI</artifactId>
+			<version>3.108</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>WorldGuard</artifactId>
+			<version>7.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>GoogleGSON</artifactId>
+			<version>2.8.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>AE-API</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Iridescent</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>BossShopPro</artifactId>
+			<version>2.0.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Residence</artifactId>
+			<version>4.8.7.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>CMI</artifactId>
+			<version>8.6.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Heroes</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>mcMMO</artifactId>
+			<version>2.1.104</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>McRPG</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>RPGPlayerLeveling</artifactId>
+			<version>3.9.30</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Skills</artifactId>
+			<version>12.3.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>SkillsPro</artifactId>
+			<version>18.9.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>GlowAPI</artifactId>
+			<version>1.4.8-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>BattleLevels</artifactId>
+			<version>6.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>RealDualWield</artifactId>
+			<version>1.1.12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>TrHologram</artifactId>
+			<version>1.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>HolographicDisplays</artifactId>
+			<version>6.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
 			<artifactId>RacesAndClasses</artifactId>
 			<version>1.2.6</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/RacesAndClasses.jar</systemPath>
 		</dependency>
+
 		<dependency>
-			<groupId>ru.endlesscode</groupId>
-			<artifactId>rpginventory</artifactId>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>RPGInventory</artifactId>
 			<version>2.3.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/RPGInventory.jar</systemPath>
 		</dependency>
+
 		<dependency>
-			<groupId>com.sainttx.holograms</groupId>
-			<artifactId>holograms</artifactId>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Holograms</artifactId>
 			<version>2.9.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Holograms.jar</systemPath>
 		</dependency>
+
 		<dependency>
-			<groupId>net.milkbowl</groupId>
-			<artifactId>vault</artifactId>
-			<version>1.7.2</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Vault.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.sk89q.worldguard</groupId>
-			<artifactId>worldguard-bukkit</artifactId>
-			<version>7.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/WorldGuard.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.sk89q.worldedit</groupId>
-			<artifactId>worldedit-bukkit</artifactId>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>WorldEdit</artifactId>
 			<version>7.2.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/WorldEdit.jar</systemPath>
 		</dependency>
+
 		<dependency>
-			<groupId>net.citizensnpcs</groupId>
-			<artifactId>citizens</artifactId>
+			<groupId>net.Indyuce.mmoitems.lib</groupId>
+			<artifactId>Citizens</artifactId>
 			<version>2.0.25-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Citizens.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>org.inventivetalent</groupId>
-			<artifactId>glowapi</artifactId>
-			<version>1.4.8-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/GlowAPI.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>me.clip</groupId>
-			<artifactId>placeholderapi</artifactId>
-			<version>2.10.7</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/PlaceholderAPI.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>

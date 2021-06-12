@@ -1,5 +1,23 @@
 package net.Indyuce.mmoitems;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
@@ -7,8 +25,12 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
-import io.lumine.mythic.utils.plugin.LuminePlugin;
-import net.Indyuce.mmoitems.api.*;
+import io.lumine.utils.plugin.LuminePlugin;
+import net.Indyuce.mmoitems.api.ClaseMuyImportante;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -17,14 +39,28 @@ import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import net.Indyuce.mmoitems.comp.*;
+import net.Indyuce.mmoitems.comp.AdvancedEnchantmentsHook;
+import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
+import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
+import net.Indyuce.mmoitems.comp.McMMONonRPGHook;
+import net.Indyuce.mmoitems.comp.PhatLootsHook;
+import net.Indyuce.mmoitems.comp.RealDualWieldHook;
+import net.Indyuce.mmoitems.comp.WorldEditSupport;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
 import net.Indyuce.mmoitems.comp.flags.WorldGuardFlags;
-import net.Indyuce.mmoitems.comp.holograms.*;
-import net.Indyuce.mmoitems.comp.inventory.*;
+import net.Indyuce.mmoitems.comp.holograms.CMIPlugin;
+import net.Indyuce.mmoitems.comp.holograms.HologramSupport;
+import net.Indyuce.mmoitems.comp.holograms.HologramsPlugin;
+import net.Indyuce.mmoitems.comp.holograms.HolographicDisplaysPlugin;
+import net.Indyuce.mmoitems.comp.holograms.TrHologramPlugin;
+import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
+import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
+import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
+import net.Indyuce.mmoitems.comp.inventory.PlayerInventoryHandler;
+import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
@@ -42,25 +78,34 @@ import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
-import net.Indyuce.mmoitems.listener.*;
-import net.Indyuce.mmoitems.manager.*;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
+import net.Indyuce.mmoitems.listener.CraftingListener;
+import net.Indyuce.mmoitems.listener.CustomBlockListener;
+import net.Indyuce.mmoitems.listener.CustomSoundListener;
+import net.Indyuce.mmoitems.listener.DisableInteractions;
+import net.Indyuce.mmoitems.listener.DurabilityListener;
+import net.Indyuce.mmoitems.listener.ElementListener;
+import net.Indyuce.mmoitems.listener.EquipListener;
+import net.Indyuce.mmoitems.listener.ItemListener;
+import net.Indyuce.mmoitems.listener.ItemUse;
+import net.Indyuce.mmoitems.listener.PlayerListener;
+import net.Indyuce.mmoitems.manager.AbilityManager;
+import net.Indyuce.mmoitems.manager.BlockManager;
+import net.Indyuce.mmoitems.manager.ConfigManager;
+import net.Indyuce.mmoitems.manager.CraftingManager;
+import net.Indyuce.mmoitems.manager.DropTableManager;
+import net.Indyuce.mmoitems.manager.EntityManager;
+import net.Indyuce.mmoitems.manager.ItemManager;
+import net.Indyuce.mmoitems.manager.LayoutManager;
+import net.Indyuce.mmoitems.manager.LoreFormatManager;
+import net.Indyuce.mmoitems.manager.PluginUpdateManager;
+import net.Indyuce.mmoitems.manager.RecipeManager;
+import net.Indyuce.mmoitems.manager.SetManager;
+import net.Indyuce.mmoitems.manager.StatManager;
+import net.Indyuce.mmoitems.manager.TemplateManager;
+import net.Indyuce.mmoitems.manager.TierManager;
+import net.Indyuce.mmoitems.manager.TypeManager;
+import net.Indyuce.mmoitems.manager.UpgradeManager;
+import net.Indyuce.mmoitems.manager.WorldGenManager;
 
 public class MMOItems extends LuminePlugin {
 	public static MMOItems plugin;
@@ -137,6 +182,7 @@ public class MMOItems extends LuminePlugin {
 			mythicEnchantsSupport = new MythicEnchantsSupport();
 
 	}
+
 	@Override
 	public void enable() {
 
@@ -207,7 +253,8 @@ public class MMOItems extends LuminePlugin {
 		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 		if (Bukkit.getPluginManager().getPlugin("PhatLoots") != null) {
-			Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), this); }
+			Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), this);
+		}
 		MMOItemUIFilter.register();
 
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
@@ -234,8 +281,8 @@ public class MMOItems extends LuminePlugin {
 			Bukkit.getPluginManager().registerEvents(new McMMONonRPGHook(), this);
 
 		/*
-		 * Registers Player Inventories. Each of these add locations of items to search for
-		 * when doing inventory updates.
+		 * Registers Player Inventories. Each of these add locations of items to
+		 * search for when doing inventory updates.
 		 */
 		registerPlayerInventory(new DefaultPlayerInventory());
 		if (Bukkit.getPluginManager().getPlugin("RPGInventory") != null) {
@@ -290,10 +337,17 @@ public class MMOItems extends LuminePlugin {
 
 		if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
 			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
-			(new BukkitRunnable() { public void run() {
-					//noinspection ProhibitedExceptionCaught
-					try { new MMOItemsRewardTypes().register(); } catch (NullPointerException ignored) { getLogger().log(Level.INFO, "Could not Hook onto BossShopPro"); } }
-			}).runTaskLater(this, 1L); }
+			(new BukkitRunnable() {
+				public void run() {
+					// noinspection ProhibitedExceptionCaught
+					try {
+						new MMOItemsRewardTypes().register();
+					} catch (NullPointerException ignored) {
+						getLogger().log(Level.INFO, "Could not Hook onto BossShopPro");
+					}
+				}
+			}).runTaskLater(this, 1L);
+		}
 
 		// compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));
@@ -323,8 +377,8 @@ public class MMOItems extends LuminePlugin {
 		getCommand("mmoitems").setTabCompleter(mmoitemsCommand);
 
 		// update item command DISABLED
-		//getCommand("updateitem").setExecutor(new UpdateItemCommand());
-		//getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
+		// getCommand("updateitem").setExecutor(new UpdateItemCommand());
+		// getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
 	}
 
 	@Override
@@ -428,12 +482,13 @@ public class MMOItems extends LuminePlugin {
 	 * <p>
 	 * Default instance is DefaultPlayerInventory in comp.inventory
 	 *
-	 * @param value The player inventory subclass
-	 * @deprecated Rather than setting this to the only inventory MMOItems will
-	 *             search equipment within, you must add your inventory to the
-	 *             handler with <code>getInventory().Register()</code>. This method
-	 *             will clear all other PlayerInventories for now, as to keep
-	 *             backwards compatibility.
+	 * @param      value The player inventory subclass
+	 * @deprecated       Rather than setting this to the only inventory MMOItems
+	 *                   will search equipment within, you must add your
+	 *                   inventory to the handler with
+	 *                   <code>getInventory().Register()</code>. This method
+	 *                   will clear all other PlayerInventories for now, as to
+	 *                   keep backwards compatibility.
 	 */
 	@Deprecated
 	public void setPlayerInventory(PlayerInventory value) {
@@ -496,7 +551,8 @@ public class MMOItems extends LuminePlugin {
 	public HologramSupport getHolograms() {
 		return hologramSupport;
 	}
-	public EquipListener getEquipListener(){
+
+	public EquipListener getEquipListener() {
 		return equipListener;
 	}
 
@@ -520,7 +576,7 @@ public class MMOItems extends LuminePlugin {
 		return vaultSupport != null && vaultSupport.getPermissions() != null;
 	}
 
-	public MythicEnchantsSupport getMythicEnchantsSupport(){
+	public MythicEnchantsSupport getMythicEnchantsSupport() {
 		return this.mythicEnchantsSupport;
 	}
 
@@ -536,11 +592,14 @@ public class MMOItems extends LuminePlugin {
 		return stringInputParsers;
 	}
 
-	//region Easy-Access API
+	// region Easy-Access API
 	/**
-	 * Decide by which system will the RPG Requirements of the player will be checked.
-	 * <p></p>
-	 * For example, required level, is that vanilla XP levels, MMOCore levels, McMMO Leves or what?
+	 * Decide by which system will the RPG Requirements of the player will be
+	 * checked.
+	 * <p>
+	 * </p>
+	 * For example, required level, is that vanilla XP levels, MMOCore levels,
+	 * McMMO Leves or what?
 	 */
 	public void findRpgPlugin() {
 		if (rpgPlugin != null)
@@ -562,7 +621,8 @@ public class MMOItems extends LuminePlugin {
 					return;
 				} else {
 
-					print(null, "Preferred RPGPlayer provider $r{0}$b is not installed!", "RPG Provider", preferred); }
+					print(null, "Preferred RPGPlayer provider $r{0}$b is not installed!", "RPG Provider", preferred);
+				}
 
 			} catch (IllegalArgumentException ignored) {
 
@@ -570,7 +630,9 @@ public class MMOItems extends LuminePlugin {
 				FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
 				ffp.activatePrefix(true, "RPG Provider");
 				ffp.log(FriendlyFeedbackCategory.ERROR, "Invalid RPG Provider '$u{0}$b' --- These are the supported ones:", preferred);
-				for (RPGHandler.PluginEnum pgrep : RPGHandler.PluginEnum.values()) { ffp.log(FriendlyFeedbackCategory.ERROR, " $r+ $b{0}", pgrep.getName()); }
+				for (RPGHandler.PluginEnum pgrep : RPGHandler.PluginEnum.values()) {
+					ffp.log(FriendlyFeedbackCategory.ERROR, " $r+ $b{0}", pgrep.getName());
+				}
 				ffp.sendTo(FriendlyFeedbackCategory.ERROR, getConsole());
 			}
 		}
@@ -600,12 +662,17 @@ public class MMOItems extends LuminePlugin {
 	 *         'level-item' option. The item will pick a random tier if the
 	 *         template has the 'tiered' option
 	 */
-	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) { return null; }
+		if (found == null) {
+			return null;
+		}
 
 		// Build if found
 		return found.newBuilder(player.getRPG()).build();
@@ -617,12 +684,17 @@ public class MMOItems extends LuminePlugin {
 	 *         'level-item' option. The item will pick a random tier if the
 	 *         template has the 'tiered' option
 	 */
-	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id, player);
-		if (m == null) { return null; }
+		if (m == null) {
+			return null;
+		}
 
 		// Build if found
 		return m.newBuilder().build();
@@ -634,12 +706,17 @@ public class MMOItems extends LuminePlugin {
 	 * @return           Generates an item given an item template with a
 	 *                   specific item level and item tier
 	 */
-	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) { return null; }
+		if (found == null) {
+			return null;
+		}
 
 		// Build if found
 		return found.newBuilder(itemLevel, itemTier).build();
@@ -651,12 +728,17 @@ public class MMOItems extends LuminePlugin {
 	 * @return           Generates an item given an item template with a
 	 *                   specific item level and item tier
 	 */
-	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id, itemLevel, itemTier);
-		if (m == null) { return null; }
+		if (m == null) {
+			return null;
+		}
 
 		// Build if found
 		return m.newBuilder().build();
@@ -666,15 +748,21 @@ public class MMOItems extends LuminePlugin {
 	 * @return Generates an item given an item template. The item level will be
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
-	 *         <p></p>
+	 *         <p>
+	 *         </p>
 	 *         Will return <code>null</code> if such MMOItem does not exist.
 	 */
-	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) { return null; }
+		if (found == null) {
+			return null;
+		}
 
 		// Build if found
 		return found.newBuilder(0, null).build();
@@ -684,96 +772,127 @@ public class MMOItems extends LuminePlugin {
 	 * @return Generates an item given an item template. The item level will be
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
-	 *         <p></p>
+	 *         <p>
+	 *         </p>
 	 *         Will return <code>null</code> if such MMOItem does not exist.
 	 */
 
-	@Nullable public ItemStack getItem(@Nullable String type, @Nullable String id) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@Nullable String type, @Nullable String id) {
+		if (type == null || id == null) {
+			return null;
+		}
 		return getItem(getType(type), id);
 	}
+
 	/**
 	 * @return Generates an item given an item template. The item level will be
 	 *         0 and the item will have no item tier unless one is specified in
 	 *         the base item data.
-	 *         <p></p>
+	 *         <p>
+	 *         </p>
 	 *         Will return <code>null</code> if such MMOItem does not exist.
 	 */
-	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id);
-		if (m == null) { return null; }
+		if (m == null) {
+			return null;
+		}
 
 		// Build if found
 		return m.newBuilder().build();
 	}
 
-
 	/**
-	 * @param nbtItem The NBTItem you are testing
-	 * @return The MMOItem Type of this item, if it is a MMOItem
+	 * @param  nbtItem The NBTItem you are testing
+	 * @return         The MMOItem Type of this item, if it is a MMOItem
 	 */
-	@Nullable public Type getType(@Nullable NBTItem nbtItem) {
-		if (nbtItem == null || !nbtItem.hasType()) { return null; }
+	@Nullable
+	public Type getType(@Nullable NBTItem nbtItem) {
+		if (nbtItem == null || !nbtItem.hasType()) {
+			return null;
+		}
 
 		// Try that one instead
 		return getType(nbtItem.getType());
 	}
 
 	/**
-	 * @param nbtItem The NBTItem you are testing
-	 * @return The MMOItem ID of this item, if it is a MMOItem
+	 * @param  nbtItem The NBTItem you are testing
+	 * @return         The MMOItem ID of this item, if it is a MMOItem
 	 */
-	@Nullable public String getID(@Nullable NBTItem nbtItem) {
-		if (nbtItem == null || !nbtItem.hasType()) { return null; }
+	@Nullable
+	public String getID(@Nullable NBTItem nbtItem) {
+		if (nbtItem == null || !nbtItem.hasType()) {
+			return null;
+		}
 
 		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtItem, SupportedNBTTagValues.STRING);
-		if (type == null) { return null; }
+		if (type == null) {
+			return null;
+		}
 		return (String) type.getValue();
 	}
 
 	/**
 	 * Shorthand to get the specified type.
 	 *
-	 * @param type What do you think its called
+	 * @param  type What do you think its called
 	 *
-	 * @return A type if such exists.
+	 * @return      A type if such exists.
 	 */
-	@Nullable public Type getType(@Nullable String type) {
-		if (type == null) { return null; }
+	@Nullable
+	public Type getType(@Nullable String type) {
+		if (type == null) {
+			return null;
+		}
 		return getTypes().get(type);
 	}
 
 	/**
 	 * Logs something into the console with a cool [MMOItems] prefix :)
-	 * <p></p>
-	 * Parses color codes. <b>Mostly for DEV testing</b>. these may removed any release.
+	 * <p>
+	 * </p>
+	 * Parses color codes. <b>Mostly for DEV testing</b>. these may removed any
+	 * release.
 	 *
 	 * @author Gunging
 	 */
 	public static void log(@Nullable String message) {
-		if (message == null) { message = "< null >"; }
-		//String prefix = "\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77";
+		if (message == null) {
+			message = "< null >";
+		}
+		// String prefix = "\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78]
+		// \u00a77";
 		String prefix = "";
 		plugin.getServer().getConsoleSender().sendMessage(prefix + message);
 	}
 
 	/**
 	 * Easily log something using the FriendlyFeedbackProvider, nice!
-	 * <p></p>
+	 * <p>
+	 * </p>
 	 * Use a null level to use the normal console sender.
 	 *
 	 * @author Gunging
 	 */
 	public static void print(@Nullable Level level, @Nullable String message, @Nullable String prefix, @NotNull String... replaces) {
-		if (message == null) { message = "< null >"; }
-		if (level != null) { MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
+		if (message == null) {
+			message = "< null >";
+		}
+		if (level != null) {
+			MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
 		} else {
 			FriendlyFeedbackMessage p = new FriendlyFeedbackMessage("", prefix);
 			FriendlyFeedbackMessage r = FriendlyFeedbackProvider.generateMessage(p, message, replaces);
-			getConsole().sendMessage(r.forConsole(FFPMMOItems.get())); }
+			getConsole().sendMessage(r.forConsole(FFPMMOItems.get()));
+		}
 	}
 
 	/**
@@ -781,17 +900,22 @@ public class MMOItems extends LuminePlugin {
 	 *
 	 * @author Gunging
 	 */
-	@NotNull public static ConsoleCommandSender getConsole() { return plugin.getServer().getConsoleSender(); }
+	@NotNull
+	public static ConsoleCommandSender getConsole() {
+		return plugin.getServer().getConsoleSender();
+	}
 
 	/**
-	 * @param item The item stack you are testing.
-	 * @param type MMOItem Type you are expecting {@link Type#getId()}
-	 * @param id MMOItem ID you are expecting
+	 * @param  item The item stack you are testing.
+	 * @param  type MMOItem Type you are expecting {@link Type#getId()}
+	 * @param  id   MMOItem ID you are expecting
 	 *
-	 * @return If the given item is the desired MMOItem
+	 * @return      If the given item is the desired MMOItem
 	 */
 	public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String type, @NotNull String id) {
-		if (item == null) { return false; }
+		if (item == null) {
+			return false;
+		}
 
 		// Make it into an NBT Item
 		NBTItem asNBT = NBTItem.get(item);
@@ -800,13 +924,17 @@ public class MMOItems extends LuminePlugin {
 		String itemID = MMOItems.plugin.getID(asNBT);
 
 		// Not a MMOItem
-		if (itemID == null) { return false; }
+		if (itemID == null) {
+			return false;
+		}
 
 		// ID matches?
-		if (!itemID.equals(id)) { return false; }
+		if (!itemID.equals(id)) {
+			return false;
+		}
 
 		// If the type matches too, we are set.
 		return asNBT.getType().equals(type);
 	}
-	//endregion
+	// endregion
 }

@@ -10,9 +10,8 @@ Wiki: https://git.lumine.io/mythiccraft/mmoitems/-/wikis/home
 ```
 mvn deploy:deploy-file -Durl=file:///C:\Users\cympe\Desktop -DgroupId=net.Indyuce.mmoitems.lib -Dpackaging=jar -Dfile=<JarFileName>.jar -DartifactId=<ArtifactName> -Dversion=<ArtifactVersion>
 ```
-where 1.0 is replaced by the artifact version
 
-This will generate a folder that you can place in the MI local repo.
+This will generate a folder on your desktop that you can place in the MI local repo.
 
 3. Head to the MMOItems pom.xml config file and add a dependency:
 

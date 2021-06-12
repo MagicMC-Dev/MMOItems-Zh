@@ -75,16 +75,19 @@
 			<id>placeholderapi</id>
 			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
+		
 		<!-- Repository used to fetch all Spigot builds -->
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
+		
 		<!-- Local reposity used to save external libraries with no repos -->
 		<repository>
 			<id>local-repo</id>
-			<url>file://${project.basedir}/local-repo</url>
+			<url>${project.basedir}/local-repo</url>
 		</repository>
+		
 	</repositories>
 
 	<dependencies>

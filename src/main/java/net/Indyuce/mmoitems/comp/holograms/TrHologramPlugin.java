@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
- *
  * updated comp provided through discord
  * @author TUCAOEVER
  */

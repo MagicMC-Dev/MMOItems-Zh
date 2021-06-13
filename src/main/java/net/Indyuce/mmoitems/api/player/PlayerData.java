@@ -1,24 +1,5 @@
 package net.Indyuce.mmoitems.api.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -44,12 +25,20 @@ import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.AbilityListData;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
-import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.*;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.*;
 
 public class PlayerData {
 	private static final Map<UUID, PlayerData> data = new HashMap<>();

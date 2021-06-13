@@ -1,22 +1,6 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import com.google.gson.JsonParser;
-
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -24,25 +8,21 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
-import net.Indyuce.mmoitems.api.crafting.condition.ClassCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.Condition;
-import net.Indyuce.mmoitems.api.crafting.condition.FoodCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.LevelCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.ManaCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.PermissionCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.PlaceholderCondition;
-import net.Indyuce.mmoitems.api.crafting.condition.StaminaCondition;
+import net.Indyuce.mmoitems.api.crafting.condition.*;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.VanillaIngredient;
-import net.Indyuce.mmoitems.api.crafting.trigger.CommandTrigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.MMOItemTrigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.MessageTrigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.SoundTrigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
-import net.Indyuce.mmoitems.api.crafting.trigger.VanillaTrigger;
+import net.Indyuce.mmoitems.api.crafting.trigger.*;
 import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
 import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicMobsSkillTrigger;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.logging.Level;
 
 public class CraftingManager implements Reloadable {
 

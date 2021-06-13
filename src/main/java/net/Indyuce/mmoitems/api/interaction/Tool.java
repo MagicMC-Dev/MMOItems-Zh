@@ -1,6 +1,10 @@
 package net.Indyuce.mmoitems.api.interaction;
 
 
+import io.lumine.mythic.lib.UtilityMethods;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -11,11 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
-import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 
 public class Tool extends UseItem {
 	public Tool(Player player, NBTItem item) {

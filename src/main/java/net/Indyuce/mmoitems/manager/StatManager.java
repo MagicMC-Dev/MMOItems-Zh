@@ -12,13 +12,7 @@ import java.util.logging.Level;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.stat.type.AttributeStat;
-import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
-import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
-import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.SelfConsumable;
+import net.Indyuce.mmoitems.stat.type.*;
 
 public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();

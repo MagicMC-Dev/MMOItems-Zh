@@ -8,9 +8,9 @@ import java.util.UUID;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.manager.UpdaterManager.KeepOption;
+import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class UpdaterData {
 

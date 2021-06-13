@@ -1,9 +1,17 @@
 package net.Indyuce.mmoitems.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.LegacyComponent;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.utils.adventure.text.Component;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
+import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
+import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
+import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
+import net.Indyuce.mmoitems.api.item.util.ConfigItems;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,16 +21,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
-import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
-import net.Indyuce.mmoitems.api.item.util.ConfigItems;
-import net.Indyuce.mmoitems.api.util.message.Message;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftingStationPreview extends PluginInventory {
 	private final CraftingStationView previous;
@@ -61,7 +61,7 @@ public class CraftingStationPreview extends PluginInventory {
 				 * Time to calculate the stacks and put through the crafting station space.
 				 */
 				int amount = ing.getIngredient().getAmount();
-//				int stacks = SilentNumbers.floor(amount / 64D);
+				int stacks = SilentNumbers.floor(amount / 64D);
 
 				// Add what must be added
 				while (amount > 0) {

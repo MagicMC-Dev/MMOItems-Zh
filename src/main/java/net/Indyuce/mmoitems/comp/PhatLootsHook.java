@@ -1,19 +1,22 @@
 package net.Indyuce.mmoitems.comp;
 
+import com.codisimus.plugins.phatloots.events.LootEvent;
+import com.codisimus.plugins.phatloots.events.MobDropLootEvent;
+import com.codisimus.plugins.phatloots.events.PhatLootsEvent;
+import com.codisimus.plugins.phatloots.events.PlayerLootEvent;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.codisimus.plugins.phatloots.events.LootEvent;
-import com.codisimus.plugins.phatloots.events.MobDropLootEvent;
-import com.codisimus.plugins.phatloots.events.PlayerLootEvent;
-
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.MMOItemReforger;
+import java.util.ArrayList;
 
 /**
  * Its absolute <b><i><u>pain</u></i></b> that PhatLoots keeps giving outdated

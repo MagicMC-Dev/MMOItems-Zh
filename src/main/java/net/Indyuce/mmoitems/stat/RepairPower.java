@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -8,9 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 
-import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -19,9 +18,10 @@ import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.NotNull;
 
 public class RepairPower extends DoubleStat implements ConsumableItemInteraction {
 	public RepairPower() {

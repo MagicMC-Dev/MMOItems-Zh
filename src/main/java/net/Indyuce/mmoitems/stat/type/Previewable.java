@@ -1,10 +1,9 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import org.jetbrains.annotations.NotNull;
-
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Suppose this stat may display different in an item before

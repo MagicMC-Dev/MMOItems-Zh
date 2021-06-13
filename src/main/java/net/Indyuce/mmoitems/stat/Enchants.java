@@ -1,23 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -25,6 +7,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythicenchants.MythicEnchants;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -43,6 +26,23 @@ import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.Upgradable;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class Enchants extends ItemStat implements Upgradable {
 	public Enchants() {
@@ -425,10 +425,9 @@ public class Enchants extends ItemStat implements Upgradable {
 
 		if (enchant == null) {
 			if (MMOItems.plugin.getMythicEnchantsSupport() != null) {
-//				Object enchants = MythicEnchants.inst();
-//				enchant = Enchantment.getByKey(new NamespacedKey((Plugin) MythicEnchants.inst(), key));
-//				if (enchant != null)
-//					return enchant;
+				enchant = Enchantment.getByKey(new NamespacedKey(MythicEnchants.inst(), key));
+				if (enchant != null)
+					return enchant;
 			}
 			enchant = Enchantment.getByName(key);
 		}

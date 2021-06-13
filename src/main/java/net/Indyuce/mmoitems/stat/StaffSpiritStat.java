@@ -1,23 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.LightningSpirit;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.ManaSpirit;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.NetherSpirit;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.StaffAttackHandler;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.SunfireSpirit;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.ThunderSpirit;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.VoidSpirit;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.XRaySpirit;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.*;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.jetbrains.annotations.NotNull;
 
 
 public class StaffSpiritStat extends StringStat {

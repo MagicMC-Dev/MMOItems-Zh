@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.api.crafting;
 
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterCountermatch;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * To make MMOItems not match as vanilla items (bruh)

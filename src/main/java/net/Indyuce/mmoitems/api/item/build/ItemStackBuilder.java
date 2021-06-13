@@ -232,9 +232,9 @@ public class ItemStackBuilder {
 		 */
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
-//		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
-//			meta.setDisplayName(getMeta().getDisplayName());
-//		}
+		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
+			meta.setDisplayName(getMeta().getDisplayName());
+		}
 
 		item.setItemMeta(meta);
 		NBTItem nbtItem = NBTItem.get(item);

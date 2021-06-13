@@ -4,16 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.jetbrains.annotations.NotNull;
-
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EnchantListData implements StatData, Mergeable {
 	private final Map<Enchantment, Integer> enchants = new HashMap<>();

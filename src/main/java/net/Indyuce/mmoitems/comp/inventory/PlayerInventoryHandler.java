@@ -1,14 +1,15 @@
 package net.Indyuce.mmoitems.comp.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Previously, only one Player Inventory was allowed.

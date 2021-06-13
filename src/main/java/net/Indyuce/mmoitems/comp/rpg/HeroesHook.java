@@ -1,20 +1,11 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.SkillUseInfo;
 import com.herocraftonline.heroes.api.events.ClassChangeEvent;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.skill.SkillType;
-
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.AttackResult;
 import io.lumine.mythic.lib.api.DamageHandler;
@@ -23,6 +14,13 @@ import io.lumine.mythic.lib.api.RegisteredAttack;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 	private final Map<SkillType, DamageType> damages = new HashMap<>();

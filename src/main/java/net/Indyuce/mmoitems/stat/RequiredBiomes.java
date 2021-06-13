@@ -1,17 +1,18 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.ArrayList;
-
-import org.bukkit.Material;
-
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import net.Indyuce.mmoitems.stat.type.StringListStat;
+import org.bukkit.Material;
+
+import java.util.ArrayList;
 
 /**
  * @author Gunging

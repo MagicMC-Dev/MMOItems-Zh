@@ -1,24 +1,21 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class GemstoneData {

@@ -1,8 +1,7 @@
 package net.Indyuce.mmoitems.stat.block;
 
-import org.bukkit.Material;
-
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.bukkit.Material;
 
 public class GenTemplate extends StringStat {
     public GenTemplate() {

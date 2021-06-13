@@ -4,11 +4,12 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class AbilityListData implements StatData, Mergeable {
 	@NotNull private final Set<AbilityData> abilities = new LinkedHashSet<>();

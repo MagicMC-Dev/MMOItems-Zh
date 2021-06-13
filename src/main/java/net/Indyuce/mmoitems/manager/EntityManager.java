@@ -1,9 +1,13 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
-
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ArrowParticles;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ProjectileData;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
@@ -16,14 +20,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ArrowParticles;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ProjectileData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class EntityManager implements Listener {
 

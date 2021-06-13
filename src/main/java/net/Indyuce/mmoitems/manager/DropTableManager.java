@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-
+import io.lumine.mythic.lib.UtilityMethods;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.block.CustomBlock;
+import net.Indyuce.mmoitems.api.droptable.DropTable;
+import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -22,14 +24,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import io.lumine.mythic.lib.UtilityMethods;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.block.CustomBlock;
-import net.Indyuce.mmoitems.api.droptable.DropTable;
-import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.listener.CustomBlockListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
 
 public class DropTableManager implements Listener, Reloadable {
 	private final Map<EntityType, DropTable> monsters = new HashMap<>();

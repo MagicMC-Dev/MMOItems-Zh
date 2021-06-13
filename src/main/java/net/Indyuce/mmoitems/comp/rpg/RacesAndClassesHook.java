@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import de.tobiyas.racesandclasses.eventprocessing.events.leveling.LevelDownEvent;
 import de.tobiyas.racesandclasses.eventprocessing.events.leveling.LevelUpEvent;
 import de.tobiyas.racesandclasses.playermanagement.player.RaCPlayer;
@@ -10,6 +7,8 @@ import de.tobiyas.racesandclasses.playermanagement.player.RaCPlayerManager;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 public class RacesAndClassesHook implements RPGHandler, Listener {
 

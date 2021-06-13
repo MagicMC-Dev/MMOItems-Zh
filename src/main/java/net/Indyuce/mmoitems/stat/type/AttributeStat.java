@@ -1,7 +1,12 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.util.StatFormat;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Attribute stats are also collected when registered in the StatManager because

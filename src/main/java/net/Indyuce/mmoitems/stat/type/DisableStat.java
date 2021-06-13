@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
 
-import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import org.jetbrains.annotations.NotNull;
 
 public class DisableStat extends BooleanStat {
 	public DisableStat(String id, Material material, String name, String... lore) {

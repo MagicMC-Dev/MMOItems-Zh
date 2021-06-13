@@ -1,8 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.Material;
-
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
+import org.bukkit.Material;
 
 public class DisableDeathDrop extends BooleanStat {
     public DisableDeathDrop() {

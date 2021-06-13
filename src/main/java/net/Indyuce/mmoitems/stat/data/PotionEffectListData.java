@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.jetbrains.annotations.NotNull;
 
 public class PotionEffectListData implements StatData, Mergeable {
 	private final List<PotionEffectData> effects = new ArrayList<>();

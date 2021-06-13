@@ -1,24 +1,18 @@
 package net.Indyuce.mmoitems.stat;
 
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
-
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.BruteLuteAttack;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.CircularLuteAttack;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.LuteAttackHandler;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SimpleLuteAttack;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.SlashLuteAttack;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.WaveLuteAttack;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute.*;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class LuteAttackEffectStat extends StringStat {
 	public LuteAttackEffectStat() {

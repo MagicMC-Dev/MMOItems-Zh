@@ -1,7 +1,12 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.Random;
-
+import io.lumine.mythic.lib.version.VersionSound;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
+import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -10,13 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import io.lumine.mythic.lib.version.VersionSound;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import java.util.Random;
 
 public enum TypeSet {
 

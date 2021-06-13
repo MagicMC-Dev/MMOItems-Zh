@@ -1,15 +1,16 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.UpgradeTemplate;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 
 public class UpgradeManager implements Reloadable {
 	private final Map<String, UpgradeTemplate> templates = new HashMap<>();

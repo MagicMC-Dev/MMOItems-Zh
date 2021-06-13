@@ -1,5 +1,9 @@
 package net.Indyuce.mmoitems.listener;
 
+import net.Indyuce.mmoitems.MMOItems;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.Keyed;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
@@ -21,11 +25,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 
 public class DisableInteractions implements Listener {
 

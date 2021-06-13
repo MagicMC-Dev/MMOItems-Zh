@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.api.player;
 
-import java.text.DecimalFormat;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
+import java.text.DecimalFormat;
 
 public abstract class RPGPlayer {
 	private final PlayerData playerData;

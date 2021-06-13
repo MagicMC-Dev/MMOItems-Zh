@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.item.mmoitem;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
 import net.Indyuce.mmoitems.api.item.ItemReference;
@@ -9,7 +10,6 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
-import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -45,8 +45,7 @@ public class MMOItem implements ItemReference {
 
 	@Override public String getId() { return id; }
 
-	//region Item Stats - Where the Magic Happens
-	/*
+	/**
 	 * Where data about all the item stats is stored. When the item is
 	 * generated, this map is read and all the stats are applied. The order in
 	 * which stats are added is not very important anymore
@@ -54,7 +53,7 @@ public class MMOItem implements ItemReference {
 	@NotNull private final Map<ItemStat, StatData> stats = new HashMap<>();
 
 	/**
-	 * Will merge that data into this item's:
+	 * Will merge that data into this item:
 	 * <p></p>
 	 * If the item does not have this stat yet, it will be set with <code>MMOItem.setData()</code>
 	 * <p>If this data is not <code>Mergeable</code>, it will also be set</p>
@@ -208,9 +207,7 @@ public class MMOItem implements ItemReference {
 	public void setStatHistory(@NotNull ItemStat stat, @NotNull StatHistory hist) {
 		mergeableStatHistory.put(stat.getNBTPath(), hist);
 	}
-	//endregion
 
-	//region Upgrading API
 	/**
 	 * Upgrades this MMOItem one level.
 	 * <p></p>
@@ -227,37 +224,14 @@ public class MMOItem implements ItemReference {
 	 * required to call
 	 */
 	public boolean hasUpgradeTemplate() {
-
-		// Does it have Upgrade Stat?
-		if (hasData(ItemStats.UPGRADE)) {
-
-			// Get that data
-			UpgradeData data = (UpgradeData) getData(ItemStats.UPGRADE);
-
-			// A template its all that's required
-			return data.getTemplate() != null;
-		}
-
-		// Nope
-		return false;
+		return hasData(ItemStats.UPGRADE) && ((UpgradeData) getData(ItemStats.UPGRADE)).getTemplate() != null;
 	}
 
 	/**
 	 * @return The upgrade level, or 0 if there is none.
 	 */
 	public int getUpgradeLevel() {
-
-		// Does it have Upgrade Data?
-		if (hasData(ItemStats.UPGRADE)) {
-			//UPGR//MMOItems.log(" \u00a7b?\u00a7c?\u00a7e? \u00a77Found Upgrade Data: \u00a7b" + ((UpgradeData) getData(ItemStats.UPGRADE)).getLevel());
-
-			// Return the registered level.
-			return ((UpgradeData) getData(ItemStats.UPGRADE)).getLevel();
-		}
-		//UPGR//MMOItems.log(" \u00a7b?\u00a7c?\u00a7e? \u00a77No Upgrade Data: \u00a7b0");
-
-		// Nope? Well its level 0 I guess.
-		return 0;
+		return hasData(ItemStats.UPGRADE) ? ((UpgradeData) getData(ItemStats.UPGRADE)).getLevel() : 0;
 	}
 
 	/**
@@ -284,7 +258,7 @@ public class MMOItem implements ItemReference {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	@NotNull public UpgradeTemplate getUpgradeTemplate() {
-		Validate.isTrue(hasUpgradeTemplate(), "This item has no Upgrade Information, do not call this method without checking first!");
+		Validate.isTrue(hasUpgradeTemplate(), "Item without upgrade information");
 
 		// All Right
 		UpgradeData data = (UpgradeData) getData(ItemStats.UPGRADE);
@@ -344,7 +318,7 @@ public class MMOItem implements ItemReference {
 			//XTC//MMOItems.log("\u00a7a   *\u00a77 Found gem stone -\u00a7a " + gem.getMMOItemType() + " " + gem.getMMOItemID());
 
 			// Can we generate?
-			MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(gem.getMMOItemType()), gem.getMMOItemID());
+			MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
 
 			// Valid? neat-o
 			if (restored != null) {
@@ -404,7 +378,7 @@ public class MMOItem implements ItemReference {
 		//XTC//MMOItems.log("\u00a7a   *\u00a77 Extracting gem stone -\u00a7a " + gem.getMMOItemType() + " " + gem.getMMOItemID());
 
 		// Can we generate?
-		MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(gem.getMMOItemType()), gem.getMMOItemID());
+		MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
 
 		// Valid? neat-o
 		if (restored != null) {

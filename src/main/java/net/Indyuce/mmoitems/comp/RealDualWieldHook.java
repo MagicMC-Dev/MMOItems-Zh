@@ -51,7 +51,7 @@ public class RealDualWieldHook implements Listener {
 				return;
 			}
 
-			if (!weapon.applyItemCosts()) {
+			if (!weapon.checkItemRequirements()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -70,7 +70,7 @@ public class RealDualWieldHook implements Listener {
 				return;
 			}
 
-			if (!weapon.applyItemCosts()) {
+			if (!weapon.checkItemRequirements()) {
 				event.setCancelled(true);
 				return;
 			}

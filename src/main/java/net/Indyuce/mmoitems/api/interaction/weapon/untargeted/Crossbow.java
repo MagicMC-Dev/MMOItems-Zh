@@ -27,7 +27,7 @@ public class Crossbow extends UntargetedWeapon {
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
 			return;
 
-		if (!ItemUse.eitherHandSuccess(getPlayer(), getNBTItem(), slot))
+		if (!ItemUse.checkDualWield(getPlayer(), getNBTItem(), slot))
 			return;
 		PlayerStats stats = getPlayerData().getStats();
 		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),

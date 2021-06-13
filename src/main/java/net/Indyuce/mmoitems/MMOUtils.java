@@ -2,18 +2,18 @@ package net.Indyuce.mmoitems;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,13 +23,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class MMOUtils {
+
+	/**
+	 * @return The skull texture URL from a given player head
+	 */
 	public static String getSkullTextureURL(ItemStack item) {
 		try {
 			ItemMeta meta = item.getItemMeta();
@@ -44,7 +45,67 @@ public class MMOUtils {
 	}
 
 	/**
-	 * Returns either the normalized vector, or null vector if input is null
+	 * @param item The item stack you are testing.
+	 * @param type MMOItem Type you are expecting {@link Type#getId()}
+	 * @param id   MMOItem ID you are expecting
+	 * @return If the given item is the desired MMOItem
+	 */
+	public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String type, @NotNull String id) {
+		if (item == null) {
+			return false;
+		}
+
+		// Make it into an NBT Item
+		NBTItem asNBT = NBTItem.get(item);
+
+		// ID Matches?
+		String itemID = getID(asNBT);
+
+		// Not a MMOItem
+		if (itemID == null)
+			return false;
+
+		// ID matches?
+		if (!itemID.equals(id))
+			return false;
+
+		// If the type matches too, we are set.
+		return asNBT.getType().equals(type);
+	}
+
+	/**
+	 * @param nbtItem The NBTItem you are testing
+	 * @return The MMOItem Type of this item, if it is a MMOItem
+	 */
+	@Nullable
+	public static Type getType(@Nullable NBTItem nbtItem) {
+		if (nbtItem == null || !nbtItem.hasType()) {
+			return null;
+		}
+
+		// Try that one instead
+		return MMOItems.plugin.getTypes().get(nbtItem.getType());
+	}
+
+	/**
+	 * @param nbtItem The NBTItem you are testing
+	 * @return The MMOItem ID of this item, if it is a MMOItem
+	 */
+	@Nullable
+	public static String getID(@Nullable NBTItem nbtItem) {
+		if (nbtItem == null || !nbtItem.hasType()) {
+			return null;
+		}
+
+		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtItem, SupportedNBTTagValues.STRING);
+		if (type == null) {
+			return null;
+		}
+		return (String) type.getValue();
+	}
+
+	/**
+	 * * Returns either the normalized vector, or null vector if input is null
 	 * vector which cannot be normalized.
 	 *
 	 * @param vector Vector which can be of length 0
@@ -68,6 +129,24 @@ public class MMOUtils {
 		} catch (IllegalArgumentException exception) {
 			throw new IllegalArgumentException("Could not read number from '" + format + "'");
 		}
+	}
+
+	/**
+	 * Returns an UUID from thay string, or null if it is not in UUID format.
+	 */
+	@Nullable
+	public static UUID UUIDFromString(@org.jetbrains.annotations.Nullable String anything) {
+		if (anything == null) { return null; }
+
+		// Correct Format?
+		if (anything.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+
+			// Return thay
+			return UUID.fromString(anything);
+		}
+
+		// No
+		return null;
 	}
 
 	public static String getProgressBar(double ratio, int n, String barChar) {

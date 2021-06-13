@@ -1,15 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import io.lumine.mythic.lib.api.item.ItemTag;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -17,11 +8,19 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 public abstract class ItemStat {
-	@NotNull private final String id, name;
+	@NotNull private final String id, name, configPath, nbtPath;
 	@NotNull private final Material material;
 
 	private final String[] lore;
@@ -56,6 +55,9 @@ public abstract class ItemStat {
 		this.compatibleTypes = types == null ? new ArrayList<>() : Arrays.asList(types);
 		this.name = name;
 		this.compatibleMaterials = Arrays.asList(materials);
+
+		this.configPath = id.toLowerCase().replace("_", "-");
+		this.nbtPath = "MMOITEMS_" +id;
 	}
 
 	/**
@@ -164,23 +166,22 @@ public abstract class ItemStat {
 		return id;
 	}
 
-	String path_Built = null;
-	@NotNull public String getPath() {
-		if (path_Built != null) { return path_Built; }
-		path_Built = id.toLowerCase().replace("_", "-");
-		return path_Built;
+	/**
+	 * @return Path being used to reference this item stat in MMOItems config files. It's the stat path users are familiar with
+	 */
+	@NotNull
+	public String getPath() {
+		return configPath;
 	}
 
-	String nbtPath_Built = null;
 	/**
 	 * @return The NBT path used by the stat to save data in an item's NBTTags.
-	 *         The format is 'MMOITEMS_' followed by the stat name in capital
-	 *         letters only using _
+	 * The format is 'MMOITEMS_' followed by the stat name in capital
+	 * letters only using _
 	 */
-	@NotNull public String getNBTPath() {
-		if (nbtPath_Built != null) { return nbtPath_Built; }
-		nbtPath_Built = "MMOITEMS_" + id;
-		return nbtPath_Built;
+	@NotNull
+	public String getNBTPath() {
+		return nbtPath;
 	}
 
 	public Material getDisplayMaterial() {

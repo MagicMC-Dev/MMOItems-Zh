@@ -88,10 +88,13 @@ public abstract class RPGPlayer {
 	 */
 	public boolean canUse(NBTItem item, boolean message) { return canUse(item, message, false); }
 
-	/**g
-	 *  If this item can be used by this player
-	 * @param message Should the player be notified that they cant use the item?
-	 *                <p>Use for active checks (the player actually clicking)</p>
+	/**
+	 * Calculates passive and dynamic item requirements. This does NOT apply item costs
+	 * like Mana or Stamina costs and does not check for required stamina or mana either.
+	 * Mana, stamina and cooldowns are handled in Weapon.applyWeaponCosts()
+	 *
+	 * @param message      Should the player be notified that they cant use the item?
+	 *                     <p>Use for active checks (the player actually clicking)</p>
 	 * @param allowDynamic If a Stat Restriction is dynamic, it will be ignored
 	 *                     if it fails (returning true even if it is not met).
 	 * @see ItemRestriction#isDynamic()
@@ -106,18 +109,22 @@ public abstract class RPGPlayer {
 		}
 
 		//REQ//MMOItems. Log("Checking REQS");
-		for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats()) {
-			//REQ//MMOItems. Log(" \u00a7a> \u00a77" + ((ItemStat) condition).getNBTPath());
-			if (!condition.isDynamic() || !allowDynamic) {
-				//REQ//MMOItems. Log(" \u00a78> \u00a77Nondynamic / Dynamic Unallowed");
-				if (!condition.canUse(this, item, message)) {
-					//REQ//MMOItems. Log(" \u00a7c> Cant use");
-					return false; } } }
+		for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats())
+			if (!condition.isDynamic() || !allowDynamic)
+				if (!condition.canUse(this, item, message))
+					return false;
 
 		//REQ//MMOItems. Log(" \u00a7a> Success use");
 		return true;
 	}
 
+	/**
+	 * This does not apply ability costs like Mana or Stamina costs. This does not
+	 * apply ability cooldown either but it does check if the ability is still on cooldown
+	 *
+	 * @param data Ability being cast
+	 * @return If the player can cast the ability
+	 */
 	public boolean canCast(AbilityData data) {
 
 		if (playerData.hasCooldownInfo(data.getAbility())) {

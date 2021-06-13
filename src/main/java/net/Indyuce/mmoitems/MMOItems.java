@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems;
 
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
@@ -237,14 +234,13 @@ public class MMOItems extends LuminePlugin {
 		 * Registers Player Inventories. Each of these add locations of items to search for
 		 * when doing inventory updates.
 		 */
-		registerPlayerInventory(new DefaultPlayerInventory());
+		getInventory().register(new DefaultPlayerInventory());
 		if (Bukkit.getPluginManager().getPlugin("RPGInventory") != null) {
-			registerPlayerInventory(new RPGInventoryHook());
+			getInventory().register(new RPGInventoryHook());
 			getLogger().log(Level.INFO, "Hooked onto RPGInventory");
 		}
-		if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory")) {
-			registerPlayerInventory(new OrnamentPlayerInventory());
-		}
+		if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
+			getInventory().register(new OrnamentPlayerInventory());
 
 		if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
 			Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this);
@@ -411,19 +407,6 @@ public class MMOItems extends LuminePlugin {
 	 * in player inventories whe doing inventory updates. By default, it only
 	 * checks held items + armor slots. However other plugins like MMOInv do
 	 * implement custom slots and therefore must register a custom
-	 * PlayerInventory instance that tells of additional items to look for.
-	 */
-	public void registerPlayerInventory(PlayerInventory value) {
-
-		// Registers in the Inventory Handler
-		getInventory().register(value);
-	}
-
-	/**
-	 * The PlayerInventory interface lets MMOItems knows what items to look for
-	 * in player inventories whe doing inventory updates. By default, it only
-	 * checks held items + armor slots. However other plugins like MMOInv do
-	 * implement custom slots and therefore must register a custom
 	 * PlayerInventory instance.
 	 * <p>
 	 * Default instance is DefaultPlayerInventory in comp.inventory
@@ -431,7 +414,7 @@ public class MMOItems extends LuminePlugin {
 	 * @param value The player inventory subclass
 	 * @deprecated Rather than setting this to the only inventory MMOItems will
 	 *             search equipment within, you must add your inventory to the
-	 *             handler with <code>getInventory().Register()</code>. This method
+	 *             handler with <code>getInventory().register()</code>. This method
 	 *             will clear all other PlayerInventories for now, as to keep
 	 *             backwards compatibility.
 	 */
@@ -560,9 +543,9 @@ public class MMOItems extends LuminePlugin {
 					// Mention it
 					print(null, "Using $s{0}$b as RPGPlayer provider", "RPG Provider", preferredRPG.getName());
 					return;
-				} else {
+				} else
 
-					print(null, "Preferred RPGPlayer provider $r{0}$b is not installed!", "RPG Provider", preferred); }
+					print(null, "Preferred RPGPlayer provider $r{0}$b is not installed!", "RPG Provider", preferred);
 
 			} catch (IllegalArgumentException ignored) {
 
@@ -596,16 +579,19 @@ public class MMOItems extends LuminePlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will
-	 *         scale according to the player RPG level if the template has the
-	 *         'level-item' option. The item will pick a random tier if the
-	 *         template has the 'tiered' option
+	 * scale according to the player RPG level if the template has the
+	 * 'level-item' option. The item will pick a random tier if the
+	 * template has the 'tiered' option
 	 */
-	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id, @NotNull PlayerData player) {
+		Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(id, "ID cannot be null");
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) { return null; }
+		if (found == null)
+			return null;
 
 		// Build if found
 		return found.newBuilder(player.getRPG()).build();
@@ -613,50 +599,59 @@ public class MMOItems extends LuminePlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will
-	 *         scale according to the player RPG level if the template has the
-	 *         'level-item' option. The item will pick a random tier if the
-	 *         template has the 'tiered' option
+	 * scale according to the player RPG level if the template has the
+	 * 'level-item' option. The item will pick a random tier if the
+	 * template has the 'tiered' option
 	 */
-	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@NotNull Type type, @NotNull String id, @NotNull PlayerData player) {
+		Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(id, "ID cannot be null");
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id, player);
-		if (m == null) { return null; }
+		if (m == null)
+			return null;
 
 		// Build if found
 		return m.newBuilder().build();
 	}
 
 	/**
-	 * @param  itemLevel The desired item level
-	 * @param  itemTier  The desired item tier, can be null
-	 * @return           Generates an item given an item template with a
-	 *                   specific item level and item tier
+	 * @param itemLevel The desired item level
+	 * @param itemTier  The desired item tier, can be null
+	 * @return Generates an item given an item template with a
+	 * specific item level and item tier
 	 */
-	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
+		Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(id, "ID cannot be null");
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) { return null; }
+		if (found == null)
+			return null;
 
 		// Build if found
 		return found.newBuilder(itemLevel, itemTier).build();
 	}
 
 	/**
-	 * @param  itemLevel The desired item level
-	 * @param  itemTier  The desired item tier, can be null
-	 * @return           Generates an item given an item template with a
-	 *                   specific item level and item tier
+	 * @param itemLevel The desired item level
+	 * @param itemTier  The desired item tier, can be null
+	 * @return Generates an item given an item template with a
+	 * specific item level and item tier
 	 */
-	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
+		Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(id, "ID cannot be null");
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id, itemLevel, itemTier);
-		if (m == null) { return null; }
+		if (m == null)
+			return null;
 
 		// Build if found
 		return m.newBuilder().build();
@@ -664,17 +659,19 @@ public class MMOItems extends LuminePlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will be
-	 *         0 and the item will have no item tier unless one is specified in
-	 *         the base item data.
-	 *         <p></p>
-	 *         Will return <code>null</code> if such MMOItem does not exist.
+	 * 0 and the item will have no item tier unless one is specified in
+	 * the base item data.
+	 * <p></p>
+	 * Will return <code>null</code> if such MMOItem does not exist.
 	 */
-	@Nullable public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id) {
+		Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(id, "ID cannot be null");
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) { return null; }
+		if (found == null) return null;
 
 		// Build if found
 		return found.newBuilder(0, null).build();
@@ -682,68 +679,41 @@ public class MMOItems extends LuminePlugin {
 
 	/**
 	 * @return Generates an item given an item template. The item level will be
-	 *         0 and the item will have no item tier unless one is specified in
-	 *         the base item data.
-	 *         <p></p>
-	 *         Will return <code>null</code> if such MMOItem does not exist.
+	 * 0 and the item will have no item tier unless one is specified in
+	 * the base item data.
+	 * <p></p>
+	 * Will return <code>null</code> if such MMOItem does not exist.
 	 */
 
-	@Nullable public ItemStack getItem(@Nullable String type, @Nullable String id) {
-		if (type == null || id == null) { return null; }
-		return getItem(getType(type), id);
+	@Nullable
+	public ItemStack getItem(@Nullable String type, @Nullable String id) {
+		if (type == null || id == null) {
+			return null;
+		}
+		return getItem(getTypes().get(type), id);
 	}
+
 	/**
 	 * @return Generates an item given an item template. The item level will be
-	 *         0 and the item will have no item tier unless one is specified in
-	 *         the base item data.
-	 *         <p></p>
-	 *         Will return <code>null</code> if such MMOItem does not exist.
+	 * 0 and the item will have no item tier unless one is specified in
+	 * the base item data.
+	 * <p></p>
+	 * Will return <code>null</code> if such MMOItem does not exist.
 	 */
-	@Nullable public ItemStack getItem(@Nullable Type type, @Nullable String id) {
-		if (type == null || id == null) { return null; }
+	@Nullable
+	public ItemStack getItem(@Nullable Type type, @Nullable String id) {
+		if (type == null || id == null) {
+			return null;
+		}
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id);
-		if (m == null) { return null; }
+		if (m == null) {
+			return null;
+		}
 
 		// Build if found
 		return m.newBuilder().build();
-	}
-
-
-	/**
-	 * @param nbtItem The NBTItem you are testing
-	 * @return The MMOItem Type of this item, if it is a MMOItem
-	 */
-	@Nullable public Type getType(@Nullable NBTItem nbtItem) {
-		if (nbtItem == null || !nbtItem.hasType()) { return null; }
-
-		// Try that one instead
-		return getType(nbtItem.getType());
-	}
-
-	/**
-	 * @param nbtItem The NBTItem you are testing
-	 * @return The MMOItem ID of this item, if it is a MMOItem
-	 */
-	@Nullable public String getID(@Nullable NBTItem nbtItem) {
-		if (nbtItem == null || !nbtItem.hasType()) { return null; }
-
-		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtItem, SupportedNBTTagValues.STRING);
-		if (type == null) { return null; }
-		return (String) type.getValue();
-	}
-
-	/**
-	 * Shorthand to get the specified type.
-	 *
-	 * @param type What do you think its called
-	 *
-	 * @return A type if such exists.
-	 */
-	@Nullable public Type getType(@Nullable String type) {
-		if (type == null) { return null; }
-		return getTypes().get(type);
 	}
 
 	/**
@@ -782,31 +752,4 @@ public class MMOItems extends LuminePlugin {
 	 * @author Gunging
 	 */
 	@NotNull public static ConsoleCommandSender getConsole() { return plugin.getServer().getConsoleSender(); }
-
-	/**
-	 * @param item The item stack you are testing.
-	 * @param type MMOItem Type you are expecting {@link Type#getId()}
-	 * @param id MMOItem ID you are expecting
-	 *
-	 * @return If the given item is the desired MMOItem
-	 */
-	public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String type, @NotNull String id) {
-		if (item == null) { return false; }
-
-		// Make it into an NBT Item
-		NBTItem asNBT = NBTItem.get(item);
-
-		// ID Matches?
-		String itemID = MMOItems.plugin.getID(asNBT);
-
-		// Not a MMOItem
-		if (itemID == null) { return false; }
-
-		// ID matches?
-		if (!itemID.equals(id)) { return false; }
-
-		// If the type matches too, we are set.
-		return asNBT.getType().equals(type);
-	}
-	//endregion
 }

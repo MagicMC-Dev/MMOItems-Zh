@@ -73,7 +73,7 @@ public class ItemUse implements Listener {
 		/*
 		 * (BUG FIX) cancel the event to prevent things like shield blocking
 		 */
-		if (!useItem.applyItemCosts()) {
+		if (!useItem.checkItemRequirements()) {
 			event.setCancelled(true);
 			return;
 		}
@@ -141,7 +141,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!weapon.applyItemCosts()) {
+			if (!weapon.checkItemRequirements()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -172,7 +172,7 @@ public class ItemUse implements Listener {
 			return;
 
 		Tool tool = new Tool(player, item);
-		if (!tool.applyItemCosts()) {
+		if (!tool.checkItemRequirements()) {
 			event.setCancelled(true);
 			return;
 		}
@@ -196,7 +196,7 @@ public class ItemUse implements Listener {
 			return;
 
 		UseItem weapon = UseItem.getItem(player, item, item.getType());
-		if (!weapon.applyItemCosts())
+		if (!weapon.checkItemRequirements())
 			return;
 
 		// special staff attack
@@ -220,7 +220,7 @@ public class ItemUse implements Listener {
 			return;
 
 		UseItem useItem = UseItem.getItem(player, item, item.getType());
-		if (!useItem.applyItemCosts())
+		if (!useItem.checkItemRequirements())
 			return;
 
 		if (useItem instanceof ItemSkin) {
@@ -277,7 +277,7 @@ public class ItemUse implements Listener {
 		PlayerData playerData = PlayerData.get((Player) event.getEntity());
 		if (type != null) {
 			Weapon weapon = new Weapon(playerData, item);
-			if (!weapon.applyItemCosts() || !weapon.applyWeaponCosts()) {
+			if (!weapon.checkItemRequirements() || !weapon.applyWeaponCosts()) {
 				event.setCancelled(true);
 				return;
 			}
@@ -285,7 +285,7 @@ public class ItemUse implements Listener {
 			ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
 			EquipmentSlot bowSlot = (itemInMainHand.isSimilar(event.getBow())) ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
 
-			if (!eitherHandSuccess((Player) event.getEntity(), item, bowSlot)) {
+			if (!checkDualWield((Player) event.getEntity(), item, bowSlot)) {
 				event.setCancelled(true);
 				return;
 			}
@@ -298,6 +298,36 @@ public class ItemUse implements Listener {
 				event.getForce());
 	}
 
+	@EventHandler
+	public void g(PlayerItemConsumeEvent event) {
+		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+		if (!item.hasType())
+			return;
+
+		Player player = event.getPlayer();
+		UseItem useItem = UseItem.getItem(player, item, item.getType());
+		if (!useItem.checkItemRequirements()) {
+			event.setCancelled(true);
+			return;
+		}
+
+		if (useItem instanceof Consumable) {
+
+			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
+				Message.ITEM_ON_COOLDOWN.format(ChatColor.RED).send(player);
+				return;
+			}
+
+			if (!((Consumable) useItem).useWithoutItem()) {
+				event.setCancelled(true);
+				return;
+			}
+
+			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+			useItem.executeCommands();
+		}
+	}
+
 	/**
 	 * It is undesirable to fire bows whose arrows have the stats of the Mainhand weapon.
 	 * <p></p>
@@ -305,7 +335,7 @@ public class ItemUse implements Listener {
 	 * check when you really suspect it is an EITHER_HAND weapon. Otherwise the check already
 	 * happened when its stats where added in the first place.
 	 */
-	public static boolean eitherHandSuccess(@NotNull Player p, @NotNull NBTItem item, @NotNull EquipmentSlot held) {
+	public static boolean checkDualWield(@NotNull Player player, @NotNull NBTItem item, @NotNull EquipmentSlot held) {
 
 		/*
 		 * Make sure it is a plugin item to begin with
@@ -319,7 +349,7 @@ public class ItemUse implements Listener {
 		Type.EquipmentSlot mainheld_type = null;
 
 		// Get Mainhand Item
-		ItemStack mainheld = p.getInventory().getItemInMainHand();
+		ItemStack mainheld = player.getInventory().getItemInMainHand();
 
 		// Existed?
 		if (mainheld.getType().isItem()) {
@@ -369,35 +399,5 @@ public class ItemUse implements Listener {
 
 		// Does it match?
 		return eitem.matches(itemType, mainheld_type);
-	}
-
-	@EventHandler
-	public void g(PlayerItemConsumeEvent event) {
-		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
-		if (!item.hasType())
-			return;
-
-		Player player = event.getPlayer();
-		UseItem useItem = UseItem.getItem(player, item, item.getType());
-		if (!useItem.applyItemCosts()) {
-			event.setCancelled(true);
-			return;
-		}
-
-		if (useItem instanceof Consumable) {
-
-			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
-				Message.ITEM_ON_COOLDOWN.format(ChatColor.RED).send(player);
-				return;
-			}
-
-			if (!((Consumable) useItem).useWithoutItem()) {
-				event.setCancelled(true);
-				return;
-			}
-
-			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
-			useItem.executeCommands();
-		}
 	}
 }

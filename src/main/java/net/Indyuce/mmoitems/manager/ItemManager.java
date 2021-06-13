@@ -12,9 +12,9 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
  * register methods are now in the TemplateManager.
  * 
  * @author cympe
- *
  */
 public class ItemManager {
+
 	/**
 	 * @param      type The item type
 	 * @param      id   The item id

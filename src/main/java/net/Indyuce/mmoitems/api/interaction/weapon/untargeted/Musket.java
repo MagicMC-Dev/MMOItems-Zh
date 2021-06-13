@@ -26,7 +26,7 @@ public class Musket extends UntargetedWeapon {
 
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
-		if (!ItemUse.eitherHandSuccess(getPlayer(), getNBTItem(), slot))
+		if (!ItemUse.checkDualWield(getPlayer(), getNBTItem(), slot))
 			return;
 		CachedStats stats = getPlayerData().getStats().newTemporary();
 

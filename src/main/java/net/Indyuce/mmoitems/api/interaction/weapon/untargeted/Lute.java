@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.ItemStats;
@@ -36,7 +35,7 @@ public class Lute extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
-		if (!ItemUse.eitherHandSuccess(getPlayer(), getNBTItem(), slot))
+		if (!ItemUse.checkDualWield(getPlayer(), getNBTItem(), slot))
 			return;
 		CachedStats stats = getPlayerData().getStats().newTemporary();
 		double attackSpeed = 1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));

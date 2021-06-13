@@ -4,9 +4,6 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -20,46 +17,35 @@ import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * @author Gunging
  */
 public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneStat {
     public static final String
-        NORMAL = "UNRESTRICTED",
-        DRY = "DRY",
-        WET = "WET",
-        DAMP = "DAMP",
-        LAVA = "LAVA",
-        MOLTEN = "MOLTEN",
-        LIQUID = "LIQUID",
-        SUBMERGED = "SUBMERGED";
+            NORMAL = "UNRESTRICTED",
+            DRY = "DRY",
+            WET = "WET",
+            DAMP = "DAMP",
+            LAVA = "LAVA",
+            MOLTEN = "MOLTEN",
+            LIQUID = "LIQUID",
+            SUBMERGED = "SUBMERGED";
 
     public Amphibian() {
-        super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[] { "May this item only be used in specific", "environments regarding liquids?" }, new String[] { "!block", "all" });
+        super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[]{"May this item only be used in specific", "environments regarding liquids?"}, new String[]{"!block", "all"});
 
-        // Create the list
-        ArrayList<String> amphibianStuff = new ArrayList<>();
-        Collections.addAll(amphibianStuff, NORMAL, DRY, WET, DAMP, LAVA, MOLTEN, LIQUID, SUBMERGED);
-
-        // Set the acceptable values
-        InitializeChooseableList(amphibianStuff);
+        addChoices(NORMAL, DRY, WET, DAMP, LAVA, MOLTEN, LIQUID, SUBMERGED);
 
         // Put definitions
-        HashMap<String, String> definitions = new HashMap<>();
-        definitions.put(NORMAL, "No liquids dependency");
-        definitions.put(DRY, "The item does not work if the player is touching a liquid block.");
-        definitions.put(WET, "The only works if the player is touching water (rain does not count).");
-        definitions.put(DAMP, "The only works if the player is completely submerged in water.");
-        definitions.put(LAVA, "The only works if the player is touching lava.");
-        definitions.put(MOLTEN, "The only works if the player is completely submerged in lava.");
-        definitions.put(LIQUID, "The only works if the player is touching any liquid.");
-        definitions.put(SUBMERGED, "The only works if the player is completely submerged in any liquid.");
-
-        // Update
-        HintChooseableDefs(definitions);
+        setHint(NORMAL, "No liquids dependency");
+        setHint(DRY, "The item does not work if the player is touching a liquid block.");
+        setHint(WET, "The only works if the player is touching water (rain does not count).");
+        setHint(DAMP, "The only works if the player is completely submerged in water.");
+        setHint(LAVA, "The only works if the player is touching lava.");
+        setHint(MOLTEN, "The only works if the player is completely submerged in lava.");
+        setHint(LIQUID, "The only works if the player is touching any liquid.");
+        setHint(SUBMERGED, "The only works if the player is completely submerged in any liquid.");
     }
 
     @NotNull

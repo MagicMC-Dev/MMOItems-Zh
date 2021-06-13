@@ -67,7 +67,7 @@ public class UseItem {
 	 * 
 	 * @return If the item can be used
 	 */
-	public boolean applyItemCosts() {
+	public boolean checkItemRequirements() {
 		return playerData.getRPG().canUse(mmoitem.getNBT(), true);
 	}
 

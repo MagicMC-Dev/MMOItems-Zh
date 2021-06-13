@@ -96,7 +96,7 @@ public class GemstoneData {
 
 			// Its of this gen of gemstones...
 			String hUUID = uuid.getAsString();
-			UUID hisUUID = UUIDFromString(hUUID);
+			UUID hisUUID = MMOUtils.UUIDFromString(hUUID);
 			if (hisUUID != null) { historicUUID = hisUUID; }
 			else { historicUUID = UUID.randomUUID(); }
 
@@ -281,27 +281,6 @@ public class GemstoneData {
 		object.add("Effects", effects);
 		*/
 
-		// This has been commented a long time. I dont know why or waht I'll just not touch it.
-		// if (particle != null)
-		// object.add("Particles", particle.toJson());
-
 		return object;
-	}
-
-	/**
-	 * Returns an UUID from thay string, or null if it is not in UUID format.
-	 */
-	@Nullable public static UUID UUIDFromString(@Nullable String anything) {
-		if (anything == null) { return null; }
-
-		// Correct Format?
-		if (anything.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-
-			// Return thay
-			return UUID.fromString(anything);
-		}
-
-		// No
-		return null;
 	}
 }

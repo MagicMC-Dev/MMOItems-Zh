@@ -22,7 +22,7 @@ public class Tool extends UseItem {
 	}
 
 	@Override
-	public boolean applyItemCosts() {
+	public boolean checkItemRequirements() {
 		return MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_TOOLS) && playerData.getRPG().canUse(getNBTItem(), true);
 	}
 

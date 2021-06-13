@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -160,7 +159,7 @@ public class PlayerListener implements Listener {
 
 		if (type != null) {
 			Weapon weapon = new Weapon(playerData, nbtItem);
-			if (!weapon.applyItemCosts() || !weapon.applyWeaponCosts()) {
+			if (!weapon.checkItemRequirements() || !weapon.applyWeaponCosts()) {
 				event.setCancelled(true);
 				return;
 			}

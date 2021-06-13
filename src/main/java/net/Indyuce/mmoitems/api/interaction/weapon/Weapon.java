@@ -1,13 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction.weapon;
 
-import javax.annotation.Nullable;
-
-import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -17,10 +10,14 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
-import java.util.logging.Level;
+import javax.annotation.Nullable;
 
 public class Weapon extends UseItem {
 	public Weapon(Player player, NBTItem item) {
@@ -32,21 +29,25 @@ public class Weapon extends UseItem {
 	}
 
 	@Override
-	public boolean applyItemCosts() {
+	public boolean checkItemRequirements() {
 		if (MMOUtils.twoHandedCase(getPlayer())) {
 			Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer(), "two-handed");
 			return false;
 		}
 
+		// Check for class, level...
 		boolean asCanUse = playerData.getRPG().canUse(getNBTItem(), true);
-		boolean asFlagAllowed = true; FlagPlugin fg = MMOItems.plugin.getFlags(); if (fg != null) { asFlagAllowed = fg.isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS); }
-		else { MMOItems.print(Level.WARNING,  "$fFlag plugin not found", null); }
-		return asCanUse || asFlagAllowed;
+
+		// Check for flags
+		FlagPlugin flagPlugin = MMOItems.plugin.getFlags();
+		boolean asFlagAllowed = flagPlugin == null || flagPlugin.isFlagAllowed(getPlayer(), CustomFlag.MI_WEAPONS);
+
+		return asCanUse && asFlagAllowed;
 	}
 
 	/**
-	 * Applies mana and stamina weapon costs
-	 * 
+	 * Only applies mana and stamina weapon costs
+	 *
 	 * @return If the attack was cast successfully
 	 */
 	public boolean applyWeaponCosts() {
@@ -55,11 +56,11 @@ public class Weapon extends UseItem {
 
 	/**
 	 * Applies cooldown, mana and stamina weapon costs
-	 * 
-	 * @param  attackSpeed The weapon attack speed
-	 * @param  cooldown    The weapon cooldown type. When set to null, no
-	 *                     cooldown will be applied. This is made to handle
-	 * @return             If the attack was cast successfully
+	 *
+	 * @param attackSpeed The weapon attack speed
+	 * @param cooldown    The weapon cooldown type. When set to null, no
+	 *                    cooldown will be applied. This is made to handle
+	 * @return If requirements were met ie the attack was cast successfully
 	 */
 	public boolean applyWeaponCosts(double attackSpeed, @Nullable CooldownType cooldown) {
 		if (cooldown != null && getPlayerData().isOnCooldown(cooldown))

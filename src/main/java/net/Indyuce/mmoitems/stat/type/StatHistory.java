@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.*;
@@ -34,7 +35,7 @@ public class StatHistory {
      * Which stat is this the history of?
      */
     @NotNull
-    ItemStat itemStat;
+    private final ItemStat itemStat;
 
     /**
      * Which stat is this the history of?
@@ -781,7 +782,7 @@ public class StatHistory {
                         String gemUUID = entry.getKey();
 
                         // Attempt to parse gemuuid
-                        UUID actualUUID = GemstoneData.UUIDFromString(gemUUID);
+                        UUID actualUUID = MMOUtils.UUIDFromString(gemUUID);
 
                         // Get Stat compressed tag
                         JsonElement compressedTags = entry.getValue();
@@ -856,7 +857,7 @@ public class StatHistory {
                         String modUUID = entry.getKey();
 
                         // Attempt to parse gemuuid
-                        UUID actualUUID = GemstoneData.UUIDFromString(modUUID);
+                        UUID actualUUID = MMOUtils.UUIDFromString(modUUID);
 
                         // Get Stat compressed tag
                         JsonElement compressedTags = entry.getValue();

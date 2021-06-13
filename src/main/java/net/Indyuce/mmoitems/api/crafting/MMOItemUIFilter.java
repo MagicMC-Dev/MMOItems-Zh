@@ -123,7 +123,7 @@ public class MMOItemUIFilter implements UIFilter {
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
 
         // Type exists?
-        Type t = MMOItems.plugin.getType(argument);
+        Type t = MMOItems.plugin.getTypes().get(argument);
 
         // Nope
         if (t == null) {
@@ -267,7 +267,7 @@ public class MMOItemUIFilter implements UIFilter {
             if (dataments.endsWith("}")) { dataments = dataments.substring(0, dataments.length()-1); } }
 
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
-        MMOItem m = MMOItems.plugin.getMMOItem(MMOItems.plugin.getType(argument), data);
+        MMOItem m = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(argument), data);
 
         // Find upgrade?
         if (!dataments.isEmpty()) {

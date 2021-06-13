@@ -19,12 +19,12 @@
         <repository>
             <id>nexus</id>
             <name>Lumine Releases</name>
-            <url>http://mvn.lumine.io/repository/maven-releases/</url>
+            <url>https://mvn.lumine.io/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus</id>
             <name>Lumine Snapshots</name>
-            <url>http://mvn.lumine.io/repository/maven-snapshots/</url>
+            <url>https://mvn.lumine.io/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -79,7 +79,7 @@
 
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
 
         <!-- Repository used to fetch all Spigot builds -->

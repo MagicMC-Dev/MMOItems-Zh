@@ -113,6 +113,7 @@
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -167,19 +168,14 @@
             <groupId>io.lumine</groupId>
             <artifactId>LumineUtils</artifactId>
             <version>1.16.1-20210326.031037-28</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>*</artifactId>
-                    <groupId>*</groupId>
-                </exclusion>
-            </exclusions>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.17-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

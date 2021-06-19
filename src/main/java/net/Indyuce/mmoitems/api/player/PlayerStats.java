@@ -58,12 +58,6 @@ public class PlayerStats {
 			playerData.getSetBonuses().getStats()
 					.forEach((stat, value) -> getInstance(stat).addModifier("MMOItemSetBonus", new StatModifier(value, ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER)));
 
-		for (EquippedPlayerItem item : playerData.getInventory().getEquipped()) {
-			Type type = item.getItem().getType();
-			ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
-			System.out.println("Inv -> " + source + " " + item.getSlot());
-		}
-
 		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
 
 			/**

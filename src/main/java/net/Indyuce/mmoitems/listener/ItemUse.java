@@ -3,16 +3,13 @@ package net.Indyuce.mmoitems.listener;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.interaction.Consumable;
-import net.Indyuce.mmoitems.api.interaction.GemStone;
-import net.Indyuce.mmoitems.api.interaction.ItemSkin;
-import net.Indyuce.mmoitems.api.interaction.Tool;
-import net.Indyuce.mmoitems.api.interaction.UseItem;
+import net.Indyuce.mmoitems.api.interaction.*;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
@@ -20,7 +17,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -41,9 +37,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
@@ -51,7 +45,7 @@ public class ItemUse implements Listener {
 	private static final DecimalFormat DIGIT = new DecimalFormat("0.#");
 
 	@EventHandler
-	public void a(PlayerInteractEvent event) {
+	public void rightClickEffects(PlayerInteractEvent event) {
 		if (!event.hasItem())
 			// || event.getHand() != EquipmentSlot.HAND
 			return;
@@ -60,10 +54,8 @@ public class ItemUse implements Listener {
 		if (!item.hasType())
 			return;
 
-		/*
-		 * some consumables cannot be used by right clicking since they need to
-		 * be eaten by waiting the vanilla eating animation in order to be
-		 * successfully consumed
+		/**
+		 * Some consumables must be fully eaten through the vanilla eating animation and are not handled here
 		 */
 		Player player = event.getPlayer();
 		UseItem useItem = UseItem.getItem(player, item, item.getType());
@@ -107,7 +99,7 @@ public class ItemUse implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void b(EntityDamageByEntityEvent event) {
+	public void meleeAttacks(EntityDamageByEntityEvent event) {
 
 		/*
 		 * Citizens and Sentinels NPC support; damage = 0 check to ignore safety
@@ -146,7 +138,7 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(), target, result);
+			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND), target, result);
 			if (!result.isSuccessful()) {
 				event.setCancelled(true);
 				return;
@@ -156,12 +148,12 @@ public class ItemUse implements Listener {
 		/*
 		 * cast on-hit abilities and add the extra damage to the damage event
 		 */
-		result.applyEffects(stats == null ? playerData.getStats().newTemporary() : stats, item, target);
+		result.applyEffects(stats == null ? playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND) : stats, item, target);
 		event.setDamage(result.getDamage());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void c(BlockBreakEvent event) {
+	public void specialToolAbilities(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		if (player.getGameMode() == GameMode.CREATIVE)
@@ -182,7 +174,7 @@ public class ItemUse implements Listener {
 	}
 
 	@EventHandler
-	public void d(PlayerInteractEntityEvent event) {
+	public void rightClickWeaponInteractions(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		if (!(event.getRightClicked() instanceof LivingEntity))
 			return;
@@ -210,7 +202,7 @@ public class ItemUse implements Listener {
 
 	// TODO: Rewrite this with a custom 'ApplyMMOItemEvent'?
 	@EventHandler
-	public void e(InventoryClickEvent event) {
+	public void gemStonesAndItemStacks(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
 		if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR)
 			return;
@@ -267,7 +259,7 @@ public class ItemUse implements Listener {
 	}
 
 	@EventHandler
-	public void f(EntityShootBowEvent event) {
+	public void handleCustomBows(EntityShootBowEvent event) {
 		if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
 			return;
 
@@ -281,25 +273,26 @@ public class ItemUse implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			// Have to get hand manually because 1.15 and below does not have event.getHand()
-			ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
-			EquipmentSlot bowSlot = (itemInMainHand.isSimilar(event.getBow())) ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
 
-			if (!checkDualWield((Player) event.getEntity(), item, bowSlot)) {
+			/*if (!checkDualWield((Player) event.getEntity(), item, bowSlot)) {
 				event.setCancelled(true);
 				return;
-			}
+			}*/
 		}
+
+		// Have to get hand manually because 1.15 and below does not have event.getHand()
+		ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
+		EquipmentSlot bowSlot = (itemInMainHand.isSimilar(event.getBow())) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
 
 		Arrow arrow = (Arrow) event.getProjectile();
 		if (item.getStat("ARROW_VELOCITY") > 0)
 			arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
-		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(), event.getProjectile(), type != null,
+		MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), type != null,
 				event.getForce());
 	}
 
 	@EventHandler
-	public void g(PlayerItemConsumeEvent event) {
+	public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (!item.hasType())
 			return;
@@ -311,10 +304,16 @@ public class ItemUse implements Listener {
 			return;
 		}
 
+		/**
+		 * Consumables which can be eaten using the vanilla eating animation are handled here.
+		 */
 		if (useItem instanceof Consumable) {
 
 			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
-				Message.ITEM_ON_COOLDOWN.format(ChatColor.RED).send(player);
+				Message.ITEM_ON_COOLDOWN
+						.format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
+						.send(player, "item-cooldown");
+				event.setCancelled(true);
 				return;
 			}
 
@@ -326,78 +325,5 @@ public class ItemUse implements Listener {
 			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
 			useItem.executeCommands();
 		}
-	}
-
-	/**
-	 * It is undesirable to fire bows whose arrows have the stats of the Mainhand weapon.
-	 * <p></p>
-	 * If such an item succeeds in this check, that means it can be fired. Only makes sense to
-	 * check when you really suspect it is an EITHER_HAND weapon. Otherwise the check already
-	 * happened when its stats where added in the first place.
-	 */
-	public static boolean checkDualWield(@NotNull Player player, @NotNull NBTItem item, @NotNull EquipmentSlot held) {
-
-		/*
-		 * Make sure it is a plugin item to begin with
-		 */
-		Type itemType = Type.get(item.getType());
-		if (itemType == null) { return false; }
-
-		/*
-		 * Get the held type of the item held
-		 */
-		Type.EquipmentSlot mainheld_type = null;
-
-		// Get Mainhand Item
-		ItemStack mainheld = player.getInventory().getItemInMainHand();
-
-		// Existed?
-		if (mainheld.getType().isItem()) {
-
-			// Get as NBTItem
-			NBTItem mainnbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(mainheld);
-
-			// Existed?
-			if (mainnbt != null) {
-
-				// Get MMOItem Type
-				Type maintype = Type.get(mainnbt.getType());
-
-				// Existed?
-				if (maintype != null) {
-
-					// Remember Equipment Type
-					mainheld_type = maintype.getEquipmentType();
-				}
-			}
-		}
-
-		/*
-		 * Perform Equipped Item Check
-		 */
-		Type.EquipmentSlot heldTranslated;
-		switch (held) {
-			case HAND:
-				heldTranslated = Type.EquipmentSlot.MAIN_HAND;
-				break;
-			case OFF_HAND:
-				heldTranslated = Type.EquipmentSlot.OFF_HAND;
-				break;
-			case FEET:
-			case HEAD:
-			case LEGS:
-			case CHEST:
-				heldTranslated = Type.EquipmentSlot.ARMOR;
-				break;
-			default:
-				heldTranslated = Type.EquipmentSlot.ACCESSORY;
-				break;
-		}
-
-		// Just do as if it was actually a real thing
-		EquippedItem eitem = new EquippedItem(item, heldTranslated);
-
-		// Does it match?
-		return eitem.matches(itemType, mainheld_type);
 	}
 }

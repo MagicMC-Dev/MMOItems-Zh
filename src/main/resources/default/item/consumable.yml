@@ -10,6 +10,14 @@ SANDWITCH:
     - '&7Are you really that hungry?!'
     item-cooldown: 15
     restore-food: 5.0
+A_BIG_CARROT:
+  base:
+    material: CARROT
+    lore:
+      - '&7&oThere will always be carrot left'
+    disable-right-click-consume: true
+    vanilla-eating: true
+    restore-food: 1.0
 ROCK:
   base:
     material: COBBLESTONE

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.listener;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.utils.Schedulers;
 import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -139,9 +140,8 @@ public class PlayerListener implements Listener {
 		RPGPlayer rpgPlayer = PlayerData.get(p.getUniqueId()).getRPG();
 		NBTItem item = NBTItem.get(event.getNewArmorPiece());
 
-		if (!rpgPlayer.canUse(item, true)) {
+		if (!rpgPlayer.canUse(item, true))
 			event.setCancelled(true);
-		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -165,6 +165,6 @@ public class PlayerListener implements Listener {
 			}
 		}
 
-		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(), event.getEntity(), type != null);
+		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), type != null);
 	}
 }

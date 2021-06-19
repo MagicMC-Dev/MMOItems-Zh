@@ -1,17 +1,18 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
-import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class AbilityCommandTreeNode extends CommandTreeNode {
 	public AbilityCommandTreeNode(CommandTreeNode parent) {
@@ -72,7 +73,8 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 			}
 		}
 
-		PlayerData.get(target).cast(ability);
+		PlayerData data = PlayerData.get(target);
+		data.cast(data.getStats().newTemporary(EquipmentSlot.MAIN_HAND), null, new ItemAttackResult(0), ability);
 		return CommandResult.SUCCESS;
 	}
 }

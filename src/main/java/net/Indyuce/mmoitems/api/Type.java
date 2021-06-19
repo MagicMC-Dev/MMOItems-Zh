@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
@@ -116,9 +117,12 @@ public class Type {
 		(unidentifiedTemplate = new UnidentifiedItem(this)).update(config.getConfigurationSection("unident-item"));
 	}
 
+	/**
+	 * @deprecated Type is no longer an enum so that external plugins can register their own types. Use getId() instead
+	 */
 	@Deprecated
 	public String name() {
-		return id;
+		return getId();
 	}
 
 	/**
@@ -187,7 +191,8 @@ public class Type {
 
 	/**
 	 * @param  stat The stat to check
-	 * @return      If the stat can be handled by this type of item
+	 * @return If the stat can be handled by this type of item
+	 * @deprecated Use ItemStat.isCompatible(Type) instead
 	 */
 	@Deprecated
 	public boolean canHave(ItemStat stat) {
@@ -207,14 +212,19 @@ public class Type {
 		return split.length > 1 ? MythicLib.plugin.getVersion().getWrapper().textureItem(material, Integer.parseInt(split[1])) : new ItemStack(material);
 	}
 
+	@Override
+	public String toString() {
+		return getId();
+	}
+
 	/**
 	 * Reads an ItemStack in hopes for finding its MMOItem Type.
 	 *
-	 * @param      item The item to retrieve the type from
-	 *
-	 * @return          The type of the item, if it has a type.
+	 * @param item The item to retrieve the type from
+	 * @return The type of the item, if it has a type.
 	 */
-	@Nullable public static Type get(@Nullable ItemStack item) {
+	@Nullable
+	public static Type get(@Nullable ItemStack item) {
 		if (item == null) { return null; }
 		return get(NBTItem.get(item).getType()); }
 
@@ -230,9 +240,6 @@ public class Type {
 		return MMOItems.plugin.getTypes().has(format) ? MMOItems.plugin.getTypes().get(format) : null;
 	}
 
-	@Override
-	public String toString() { return getId(); }
-
 	/**
 	 * Used in command executors and completions for easier manipulation
 	 * 
@@ -241,67 +248,5 @@ public class Type {
 	 */
 	public static boolean isValid(@Nullable String id) {
 		return id != null && MMOItems.plugin.getTypes().has(id.toUpperCase().replace("-", "_").replace(" ", "_"));
-	}
-
-	/**
-	 * Used by player inventory updates to store where the items are equipped
-	 * and if they should be updated when some specific event happens.
-	 * 
-	 * @author cympe
-	 *
-	 */
-	public enum EquipmentSlot {
-
-		/**
-		 * Can only apply stats in armor slots
-		 */
-		ARMOR,
-
-		/**
-		 * Can't apply stats in vanilla slots
-		 */
-		ACCESSORY,
-
-		/**
-		 * Cannot apply its stats anywhere
-		 */
-		OTHER,
-
-		/**
-		 * Always apply its stats. may only be used by EquippedItems, and not
-		 * Types since default types do not use it and extra types keep their
-		 * parent equipment slot
-		 */
-		ANY,
-
-		/**
-		 * Apply stats in main hands only
-		 */
-		MAIN_HAND,
-
-		/**
-		 * Apply stats in off hand slot only (off hand catalysts mainly)
-		 */
-		OFF_HAND,
-
-		/**
-		 * Apply stats in both hands, ie shields or catalysts
-		 */
-		BOTH_HANDS,
-
-		/**
-		 * Apply stats when actually held. Bows may be held in offhand but
-		 * it is undesirable if players dual-wield bows and add their stats
-		 * together.
-		 * <p></p>
-		 * This will work if the player:
-		 * <p> > Holds this in their Main Hand
-		 * </p> > Holds this in their Off Hand, and the mainhand held item is not of <code>MAIN_HAND</code> nor <code>EITHER_HAND</code>
-		 */
-		EITHER_HAND;
-
-		public boolean isHand() {
-			return this == MAIN_HAND || this == OFF_HAND || this == BOTH_HANDS;
-		}
 	}
 }

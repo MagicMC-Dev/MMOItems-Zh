@@ -1,23 +1,23 @@
 package net.Indyuce.mmoitems.api.player.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
-import net.Indyuce.mmoitems.api.player.PlayerData;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
+ * TODO
+ * <p>
  * It's one of the most urgent systems to update. Moving everything to a new
  * class to mark everything that needs to be changed
- * 
- * @author cympe
  *
+ * @author indyuce
  */
 public class InventoryUpdateHandler {
 	private final PlayerData player;

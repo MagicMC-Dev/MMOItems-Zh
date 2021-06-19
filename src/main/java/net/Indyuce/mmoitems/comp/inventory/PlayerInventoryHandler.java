@@ -22,7 +22,7 @@ public class PlayerInventoryHandler {
      * Gets the registered Player Inventories --- The places where MMOItems determines player equipped items.
      */
     @NotNull
-    List<PlayerInventory> registeredInventories = new ArrayList<>();
+    private final List<PlayerInventory> registeredInventories = new ArrayList<>();
 
     /**
      * Use this to tell MMOItems to search equipment here ---

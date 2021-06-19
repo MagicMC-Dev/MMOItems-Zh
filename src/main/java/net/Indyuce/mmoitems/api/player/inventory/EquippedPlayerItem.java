@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.player.inventory;
 
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 
 public class EquippedPlayerItem {
@@ -24,10 +24,5 @@ public class EquippedPlayerItem {
 
 	public EquipmentSlot getSlot() {
 		return slot;
-	}
-
-	public boolean matches(Type type) {
-		return slot == EquipmentSlot.ANY || (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS ? slot.isHand()
-				: slot == EquipmentSlot.BOTH_HANDS ? type.getEquipmentType().isHand() : slot == type.getEquipmentType());
 	}
 }

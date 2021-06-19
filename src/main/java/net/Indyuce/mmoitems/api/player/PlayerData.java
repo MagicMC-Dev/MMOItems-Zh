@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.api.player;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -12,7 +12,6 @@ import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
@@ -37,6 +36,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -57,8 +58,7 @@ public class PlayerData {
 	private final Map<CooldownType, Long> extraCooldowns = new HashMap<>();
 
 	/*
-	 * specific stat calculation TODO compress it in Map<ItemStat,
-	 * DynamicStatData>
+	 * specific stat calculation TODO compress it in Map<ItemStat, DynamicStatData>
 	 */
 	private final Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
 	private final Set<ParticleRunnable> itemParticles = new HashSet<>();
@@ -131,7 +131,7 @@ public class PlayerData {
 
 	/*
 	 * returns true if the player hands are full, i.e if the player is holding
-	 * one two handed item and one other item at the same time. this will
+	 * one two handed item and one other item at the same time
 	 */
 	public boolean areHandsFull() {
 		if (!mmoData.isOnline())
@@ -210,7 +210,7 @@ public class PlayerData {
 			 * If the item is a custom item, apply slot and item use
 			 * restrictions (items which only work in a specific equipment slot)
 			 */
-			if (type != null && (!item.matches(type, mainheld_type) || !getRPG().canUse(nbtItem, false, false)))
+			if (type != null && (!item.matches(type) || !getRPG().canUse(nbtItem, false, false)))
 				continue;
 
 			inventory.getEquipped().add(new EquippedPlayerItem(item));
@@ -375,19 +375,35 @@ public class PlayerData {
 		return false;
 	}
 
-	// While we may never use the return value, external plugins may need to.
+	/**
+	 * Casts all the abilities of a player under a specific casting mode onto a certain enemy
+	 * <p>
+	 * Used internally by MMOItems to avoid caching the player stats (which costs
+	 * a lot of calculations) before checking if the player can cast any ability.
+	 * <p>
+	 * Mainly due to random player clicks with no or few MMOItems being equipped
+	 * still caching a lot of player stats.
+	 *
+	 * @param target   The ability target, can be null.
+	 * @param result   The current attack, cannot be null.
+	 * @param castMode The action the player performed to cast the ability
+	 */
 	@SuppressWarnings("UnusedReturnValue")
-	public ItemAttackResult castAbilities(LivingEntity target, ItemAttackResult result, CastingMode castMode) {
-		/*
-		 * performance improvement, do not cache the player stats into a
-		 * CachedStats if the player has no ability on that cast mode
-		 */
+	public ItemAttackResult castAbilities(@Nullable LivingEntity target, @NotNull ItemAttackResult result, @NotNull CastingMode castMode) {
 		if (!hasAbility(castMode))
 			return result;
 
-		return castAbilities(getStats().newTemporary(), target, result, castMode);
+		return castAbilities(getStats().newTemporary(EquipmentSlot.OTHER), target, result, castMode);
 	}
 
+	/**
+	 * Casts all the abilities of a player under a specific casting mode onto a certain enemy
+	 *
+	 * @param stats    The player stats
+	 * @param target   The ability target, can be null.
+	 * @param result   The current attack, cannot be null.
+	 * @param castMode The action the player performed to cast the ability
+	 */
 	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
 		if (!mmoData.isOnline())
 			return result;
@@ -399,7 +415,7 @@ public class PlayerData {
 		 */
 		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_ABILITIES)
 				: !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
-						|| !MMOUtils.canDamage(getPlayer(), target))
+				|| !MMOUtils.canDamage(getPlayer(), target))
 			return result.setSuccessful(false);
 
 		for (AbilityData ability : itemAbilities)
@@ -409,20 +425,15 @@ public class PlayerData {
 		return result;
 	}
 
-	/*
-	 * shall only be used with right click abilites since the on-hit abilities
-	 * also requires the initial damage value and a target to be successfully
-	 * cast
+	/**
+	 * Makes the player cast an ability. Checks for cooldown and mana cost before casting it.
+	 * Also calls a Bukkit event right before casting it.
+	 *
+	 * @param stats   The player stats
+	 * @param target  The ability target, can be null.
+	 * @param attack  The current attack, cannot be null.
+	 * @param ability Ability to cast
 	 */
-	@Deprecated
-	public void cast(Ability ability) {
-		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), new AbilityData(ability, CastingMode.RIGHT_CLICK));
-	}
-
-	public void cast(AbilityData data) {
-		cast(getStats().newTemporary(), null, new ItemAttackResult(true, DamageType.SKILL), data);
-	}
-
 	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability) {
 
 		/*

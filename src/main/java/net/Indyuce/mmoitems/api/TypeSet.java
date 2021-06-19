@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api;
 
+import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -23,7 +24,7 @@ public enum TypeSet {
 	 * Slashing weapons deal damage in a cone behind the player's initial
 	 * target, which makes it a deadly AoE weapon for warriors
 	 */
-	SLASHING((stats, target, weapon, result) -> {
+	SLASHING(ModifierSource.MELEE_WEAPON, (stats, target, weapon, result) -> {
 		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.slashing.enabled") || stats.getData().isOnCooldown(CooldownType.SET_TYPE_ATTACK))
 			return;
 
@@ -49,7 +50,7 @@ public enum TypeSet {
 	 * increased which makes it a perfect 'double or nothing' weapon for
 	 * assassins
 	 */
-	PIERCING((stats, target, weapon, result) -> {
+	PIERCING(ModifierSource.MELEE_WEAPON, (stats, target, weapon, result) -> {
 		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.piercing.enabled") || stats.getData().isOnCooldown(CooldownType.SET_TYPE_ATTACK))
 			return;
 
@@ -73,7 +74,7 @@ public enum TypeSet {
 	 * Blunt weapons are like 1.9 sweep attacks. They damage all enemies nearby
 	 * and apply a slight knockback
 	 */
-	BLUNT((stats, target, weapon, result) -> {
+	BLUNT(ModifierSource.MELEE_WEAPON, (stats, target, weapon, result) -> {
 		final Random random = new Random();
 		float pitchRange = 0.7f + random.nextFloat() * (0.9f - 0.7f);
 
@@ -110,29 +111,43 @@ public enum TypeSet {
 	 * Any item type can may apply their stats even when worn in offhand.
 	 * They're the only items with that specific property
 	 */
-	OFFHAND,
+	OFFHAND(ModifierSource.OTHER),
 
 	/**
 	 * Ranged attacks based weapons. when the player is too squishy to fight in
 	 * the middle of the battle-field, these weapons allow him to take some
 	 * distance and still deal some good damage
 	 */
-	RANGE,
+	RANGE(ModifierSource.RANGED_WEAPON),
 
 	/**
 	 * Any other item type, like armor, consumables, etc. They all have their
 	 * very specific passive depending on their item type
 	 */
-	EXTRA;
+	EXTRA(ModifierSource.OTHER);
+
+	/**
+	 * Interface between MMOItems' type sets and MythicLibs' modifierSources which let
+	 * MythicLib know what type of item is giving some stat modifiers to a player
+	 */
+	private final ModifierSource modifierSource;
 
 	private final SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler;
+	private final String name;
 
-	TypeSet() {
-		this(null);
+	private TypeSet(ModifierSource modifierSource) {
+		this(modifierSource, null);
 	}
 
-	TypeSet(SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {
+	private TypeSet(ModifierSource modifierSource, SetAttackHandler<CachedStats, LivingEntity, Weapon, ItemAttackResult> attackHandler) {
 		this.attackHandler = attackHandler;
+		this.modifierSource = modifierSource;
+
+		this.name = MMOUtils.caseOnWords(name().toLowerCase());
+	}
+
+	public ModifierSource getModifierSource() {
+		return modifierSource;
 	}
 
 	public boolean hasAttackEffect() {
@@ -144,7 +159,7 @@ public enum TypeSet {
 	}
 
 	public String getName() {
-		return MMOUtils.caseOnWords(name().toLowerCase());
+		return name;
 	}
 
 	@FunctionalInterface

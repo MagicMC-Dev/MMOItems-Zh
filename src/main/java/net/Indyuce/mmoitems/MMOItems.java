@@ -75,6 +75,8 @@ public class MMOItems extends LuminePlugin {
 	private final LayoutManager layoutManager = new LayoutManager();
 	private final TypeManager typeManager = new TypeManager();
 	private final ItemManager itemManager = new ItemManager();
+	private final PlayerInventoryHandler inventory = new PlayerInventoryHandler();
+	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -86,9 +88,7 @@ public class MMOItems extends LuminePlugin {
 	private SetManager setManager;
 	private EquipListener equipListener;
 
-	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
-	private PlayerInventoryHandler inventory = new PlayerInventoryHandler();
 	private FlagPlugin flagPlugin = new DefaultFlags();
 	private HologramSupport hologramSupport;
 	private VaultSupport vaultSupport;

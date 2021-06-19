@@ -43,6 +43,10 @@ public class InteractItem {
 		this.item = slot == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
 	}
 
+	public EquipmentSlot getSlot() {
+		return slot;
+	}
+
 	public boolean hasItem() {
 		return slot != null;
 	}

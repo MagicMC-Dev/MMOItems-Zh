@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.comp.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.api.Type.EquipmentSlot;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tells MMOItems where to find equipment.

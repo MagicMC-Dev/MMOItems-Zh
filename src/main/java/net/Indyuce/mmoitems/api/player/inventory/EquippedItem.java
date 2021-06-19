@@ -47,7 +47,12 @@ public class EquippedItem {
 	 * An <code>OFF_CATALYST</code> may only add in the <code>OFFHAND</code>, and such.
 	 */
 	public boolean matches(@NotNull Type type) {
-		return slot == EquipmentSlot.ANY || (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS ? slot.isHand()
-				: slot == EquipmentSlot.BOTH_HANDS ? type.getEquipmentType().isHand() : slot == type.getEquipmentType());
+		if (slot == EquipmentSlot.ANY)
+			return true;
+
+		if (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS)
+			return slot.isHand();
+
+		return slot == type.getEquipmentType();
 	}
 }

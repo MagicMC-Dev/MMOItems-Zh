@@ -70,7 +70,7 @@ public class PlayerStats {
 			 * at least one item which grants this stat the final value must be lowered
 			 * by a flat amount
 			 */
-			boolean mainHand = false;
+			boolean isHoldingWeapon = false;
 
 			/**
 			 * The index of the mmoitem stat modifier being added
@@ -85,12 +85,12 @@ public class PlayerStats {
 					ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
 					packet.addModifier("MMOItem-" + index++, new StatModifier(value, ModifierType.FLAT, item.getSlot(), source));
-					if (!mainHand && item.getSlot() == EquipmentSlot.MAIN_HAND)
-						mainHand = true;
+					if (!isHoldingWeapon && item.getSlot().isHand())
+						isHoldingWeapon = true;
 				}
 			}
 
-			if (mainHand && stat instanceof AttributeStat)
+			if (isHoldingWeapon && stat instanceof AttributeStat)
 				packet.addModifier("MMOItemOffset", new StatModifier(-((AttributeStat) stat).getOffset()));
 
 			/**
@@ -99,7 +99,6 @@ public class PlayerStats {
 			packet.runUpdate();
 		}
 	}
-
 
 	public class CachedStats {
 		private final Player player;
@@ -134,12 +133,6 @@ public class PlayerStats {
 				for (StatInstance ins : getMap().getInstances())
 					this.stats.put(ins.getStat(), ins.getTotal());
 		}
-
-		/*public CachedStats() {
-			player = playerData.getPlayer();
-			for (StatInstance ins : getMap().getInstances())
-				this.stats.put(ins.getStat(), ins.getTotal());
-		}*/
 
 		public PlayerData getData() {
 			return playerData;

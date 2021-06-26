@@ -1,11 +1,12 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import com.archyx.aureliumskills.AureliumSkills;
 import com.archyx.aureliumskills.api.event.SkillLevelUpEvent;
+import com.archyx.aureliumskills.data.PlayerDataLoadEvent;
+import net.Indyuce.mmoitems.api.player.EmptyRPGPlayer;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -24,17 +25,30 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
     @Override
     public RPGPlayer getInfo(PlayerData data) {
-        return new SkillsPlayer(data);
+
+        /**
+         * AureliumSkills does not load player data directly on startup, instead we have to
+         * listen to the PlayerDataLoadEvent before caching the rpg player data instance.
+         *
+         * See PlayerDataLoadEvent event handler below.
+         */
+        return new EmptyRPGPlayer(data);
     }
 
-    public static class SkillsPlayer extends RPGPlayer {
+    @EventHandler
+    public void a(PlayerDataLoadEvent event) {
+        Player player = event.getPlayerData().getPlayer();
+        PlayerData playerData = PlayerData.get(player);
+        playerData.setRPGPlayer(new AureliumSkillsPlayer(playerData, event.getPlayerData()));
+    }
+
+    public static class AureliumSkillsPlayer extends RPGPlayer {
         private final com.archyx.aureliumskills.data.PlayerData info;
 
-        public SkillsPlayer(PlayerData playerData) {
+        public AureliumSkillsPlayer(PlayerData playerData, com.archyx.aureliumskills.data.PlayerData rpgPlayerData) {
             super(playerData);
 
-            AureliumSkills plugin = (AureliumSkills) Bukkit.getPluginManager().getPlugin("AureliumSkills");
-            info = plugin.getPlayerManager().getPlayerData(playerData.getUniqueId());
+            info = rpgPlayerData;
         }
 
         @Override

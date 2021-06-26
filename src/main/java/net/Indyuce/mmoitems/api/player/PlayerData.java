@@ -153,6 +153,15 @@ public class PlayerData {
 		return (mainhand_twohanded && offhand_encumbering) || (mainhand_encumbering && offhand_twohanded);
 	}
 
+	/**
+	 * Some plugins require to update the RPGPlayer after server startup
+	 *
+	 * @param rpgPlayer New RPGPlayer instance
+	 */
+	public void setRPGPlayer(RPGPlayer rpgPlayer) {
+		this.rpgPlayer = rpgPlayer;
+	}
+
 	@SuppressWarnings("deprecation")
 	public void updateInventory() {
 		if (!mmoData.isOnline())

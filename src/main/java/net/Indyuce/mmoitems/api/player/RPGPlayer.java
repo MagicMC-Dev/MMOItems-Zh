@@ -11,6 +11,12 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
+/**
+ * Interface class between RPG core plugins like Heroes, MythicCore, SkillAPI
+ * and MMOItems
+ *
+ * @author indyuce
+ */
 public abstract class RPGPlayer {
 	private final PlayerData playerData;
 	private final Player player;
@@ -19,6 +25,7 @@ public abstract class RPGPlayer {
 	public RPGPlayer(Player player) {
 		this(PlayerData.get(player));
 	}
+
 
 	/**
 	 * Used to retrieve useful information like class name, level, mana and

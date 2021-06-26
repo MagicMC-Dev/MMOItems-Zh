@@ -1,20 +1,18 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
-import net.Indyuce.mmocore.api.experience.Profession;
-import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
-import net.Indyuce.mmocore.api.event.PlayerDataLoadEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
+import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
+import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 public class MMOCoreHook implements RPGHandler, Listener {
 
@@ -51,10 +49,15 @@ public class MMOCoreHook implements RPGHandler, Listener {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
 	}
 
-	@EventHandler
+	/**
+	 * Removing this as it is causing issues when players log on for the first time.
+	 * Right after MMOCore loads the player data, MMOItems player data is not loaded yet
+	 * so net.Indyuce.mmoitems.api.player.PlayerData.get() returns null so this can't work
+	 */
+	/*@EventHandler
 	public void updateInventoryOnPlayerDataLoad(PlayerDataLoadEvent event) {
 		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-	}
+	}*/
 
 	public static class MMOCoreRPGPlayer extends RPGPlayer {
 		private final PlayerData data;

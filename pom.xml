@@ -53,8 +53,8 @@
     <repositories>
 
         <repository>
-            <id>lumine-repo</id>
-            <url>https://mvn.lumine.io/repository/maven-public/</url>
+            <id>lumine</id>
+            <url>https://mvn.lumine.io/repository/maven/</url>
         </repository>
 
         <repository>
@@ -128,7 +128,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicLib</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
 

@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.item.BlockDropItem;
 import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,18 +22,22 @@ public class DropTable {
 	private final Map<String, Subtable> subtables = new HashMap<>();
 
 	public DropTable(ConfigurationSection config) {
-		Validate.notNull(config, "Could not read the config");
+		Validate.notNull(config, "Could not read the drop table config");
 		for (String key : config.getKeys(false))
 			try {
 
-				// add subtable to list & then to map
+				// Add subtable to list & then to map
 				for (int j = 0; j < config.getInt(key + ".coef"); j++)
 					subtablesList.add(key);
 
+				// Include parsed subtable
 				subtables.put(key, new Subtable(config.getConfigurationSection(key)));
+
+			// Ew
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"Could not read subtable '" + key + "' from drop table '" + config.getName() + "': " + exception.getMessage());
+
+				// Print that error message
+				MMOItems.print(null, "Could not read subtable '$r{0}$b' from drop table '$e{1}$b';&f {2}", key, config.getName(), exception.getMessage());
 			}
 
 		Validate.notEmpty(subtablesList, "Your droptable must contain at least one subtable");

@@ -80,7 +80,7 @@ public class TypeManager implements Reloadable {
 		return map.get(id);
 	}
 
-	public Type getOrThrow(String id) {
+	@NotNull public Type getOrThrow(@Nullable String id) {
 		Validate.isTrue(map.containsKey(id), "Could not find item type with ID '" + id + "'");
 		return map.get(id);
 	}

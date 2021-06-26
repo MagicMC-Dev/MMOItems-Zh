@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class PluginInventory implements InventoryHolder {
 	protected final PlayerData playerData;
@@ -14,7 +15,7 @@ public abstract class PluginInventory implements InventoryHolder {
 
 	protected int page = 1;
 
-	public PluginInventory(Player player) {
+	public PluginInventory(@NotNull Player player) {
 		this(PlayerData.get(player));
 	}
 

@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.edition;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
@@ -79,11 +80,27 @@ public class StatEdition implements Edition {
 		}
 
 		try {
+
+			// Perform WhenInput Operation
 			stat.whenInput(inv, input, info);
+
+			// Success
 			return true;
 
 		} catch (IllegalArgumentException exception) {
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + exception.getMessage());
+
+			// Add message to the FFP
+			if (!exception.getMessage().isEmpty()) { inv.getFFP().log(FriendlyFeedbackCategory.ERROR, exception.getMessage()); }
+			MMOItems.log("\u00a73Sending \u00a7e" + inv.getFFP().messagesTotal() + "\u00a73 to \u00a7e" + inv.getPlayer().getName());
+
+			// Log all
+			inv.getFFP().sendTo(FriendlyFeedbackCategory.ERROR, inv.getPlayer());
+			inv.getFFP().sendTo(FriendlyFeedbackCategory.FAILURE, inv.getPlayer());
+			inv.getFFP().clearFeedback();
+
+			MMOItems.log("\u00a73Cleared to \u00a7e" + inv.getFFP().messagesTotal());
+
+			// No success
 			return false;
 		}
 	}

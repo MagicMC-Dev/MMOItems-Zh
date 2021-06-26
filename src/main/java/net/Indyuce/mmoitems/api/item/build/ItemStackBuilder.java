@@ -13,6 +13,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
@@ -150,7 +151,7 @@ public class ItemStackBuilder {
 					builtMMOItem.setData(stat, s.recalculate(l));
 
 					// Add to NBT, if the gemstones were not purged
-					if ((!s.isClear() || stat instanceof Enchants)) {
+					if ((!s.isClear() || stat instanceof Enchants || stat instanceof DisplayName)) {
 
 						//GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
 						addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString())); }

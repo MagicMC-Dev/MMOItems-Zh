@@ -4,13 +4,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
-import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
+import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
+import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import org.apache.commons.lang.Validate;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
+import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.BurningRecipeInformation;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -27,7 +33,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.SmokingRecipe;
 
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -37,7 +42,6 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
 import io.lumine.mythic.lib.MythicLib;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,6 +71,7 @@ public class RecipeManager implements Reloadable {
 	 */
 	final HashMap<NamespacedKey, MythicRecipeBlueprint> customRecipes = new HashMap<>();
 	final ArrayList<MythicRecipeBlueprint> booklessRecipes = new ArrayList<>();
+	@NotNull ArrayList<NamespacedKey> blacklistedFromAutomaticDiscovery = new ArrayList<>();
 
 	private boolean book, amounts;
 
@@ -101,50 +106,72 @@ public class RecipeManager implements Reloadable {
 				// Does it have a crafting recipe?
 				if (config.contains(template.getId() + ".base.crafting")) {
 
-					try {
+					// Get section containing the crafting recipes
+					ConfigurationSection section = RecipeMakerGUI.getSection(config, template.getId() + ".base.crafting");
 
-						ConfigurationSection section = config.getConfigurationSection(template.getId() + ".base.crafting");
+					// All loaded recipes
+					for (String recipeType : RecipeBrowserGUI.getRegisteredRecipes()) {
 
-						// Delegate recipes to their parsers
-						if (section.contains("shaped"))
-							section.getConfigurationSection("shaped").getKeys(false).forEach(
-									recipe -> registerRecipe(type, template.getId(), section.getStringList("shaped." + recipe), false, recipe));
-						if (section.contains("shapeless"))
-							section.getConfigurationSection("shapeless").getKeys(false).forEach(
-									recipe -> registerRecipe(type, template.getId(), section.getStringList("shapeless." + recipe), true, recipe));
-						if (section.contains("furnace"))
-							section.getConfigurationSection("furnace").getKeys(false)
-									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.FURNACE, type, template.getId(),
-											new BurningRecipeInformation(section.getConfigurationSection("furnace." + recipe)), recipe));
-						if (section.contains("blast"))
-							section.getConfigurationSection("blast").getKeys(false)
-									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.BLAST, type, template.getId(),
-											new BurningRecipeInformation(section.getConfigurationSection("blast." + recipe)), recipe));
-						if (section.contains("smoker"))
-							section.getConfigurationSection("smoker").getKeys(false)
-									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.SMOKER, type, template.getId(),
-											new BurningRecipeInformation(section.getConfigurationSection("smoker." + recipe)), recipe));
-						if (section.contains("campfire"))
-							section.getConfigurationSection("campfire").getKeys(false)
-									.forEach(recipe -> registerBurningRecipe(BurningRecipeType.CAMPFIRE, type, template.getId(),
-											new BurningRecipeInformation(section.getConfigurationSection("campfire." + recipe)), recipe));
-						if (section.contains("smithing"))
-							section.getConfigurationSection("smithing").getKeys(false).forEach(recipe -> registerSmithingRecipe(type,
-									template.getId(), section.getConfigurationSection("smithing." + recipe), recipe));
+						// Is it in-yo?
+						if (section.contains(recipeType)) {
 
-					// Uh heck
-					} catch (IllegalArgumentException exception) {
+							// Get Registry
+							RecipeRegistry rr = RecipeBrowserGUI.getRegisteredRecipe(recipeType);
 
-						// Add message
-						ffp.log(FriendlyFeedbackCategory.ERROR, "Could not load recipe of $f{0} {1}$b: {2}",
-								type.getId(), template.getId(), exception.getMessage());
+							// Get recipe type section
+							ConfigurationSection typeSection = RecipeMakerGUI.getSection(section, recipeType);
+
+							// Register dem
+							for (String recipeName : typeSection.getKeys(false)) {
+
+								// Generate its key
+								NamespacedKey nk = getRecipeKey(template.getType(), template.getId(), recipeType, recipeName);
+
+								// Wrap
+								Ref<NamespacedKey> nkRef = new Ref<>(nk);
+
+								// Error yes
+								FriendlyFeedbackProvider ffpMinor = new FriendlyFeedbackProvider(FFPMMOItems.get());
+								ffpMinor.activatePrefix(true, "Recipe of $u" + template.getType() + " " + template.getId());
+
+								// Send to mythiclib
+								try {
+
+									// The result of sending to MythicLib
+									MythicRecipeBlueprint blueprint = rr.sendToMythicLib(template, typeSection, recipeName, nkRef, ffpMinor);
+
+									// Was it registered in the book, then?
+									if (nkRef.getValue() != null) {
+										customRecipes.put(nkRef.getValue(), blueprint);
+
+										// Bookless, include in the other list.
+									} else { booklessRecipes.add(blueprint); }
+
+
+								// Well something went wrong...
+								} catch (IllegalArgumentException error) {
+
+									// Empty message? Snooze that
+									if (!error.getMessage().isEmpty()) {
+
+										// Log error
+										MMOItems.print(null, "Cannot register custom recipe '$u{2}$b' for $e{0} {1}$b;$f {3}", "Custom Crafting", type.getId(), template.getId(), recipeName, error.getMessage());
+
+										// Include failures in the report
+										ffpMinor.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+										ffpMinor.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 
-		// Log all
-		ffp.sendAllTo(MMOItems.getConsole());
+		// Log relevant messages
+		ffp.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+		ffp.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
 
 		// Sort recipes
 		sortRecipes();
@@ -153,97 +180,19 @@ public class RecipeManager implements Reloadable {
 		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedLegacyRecipes().forEach(Bukkit::addRecipe));
 	}
 
-	public void registerBurningRecipe(BurningRecipeType recipeType, Type type, String id, BurningRecipeInformation info, String recipeId) {
-		NamespacedKey key = getRecipeKey(type, id, recipeType.getPath(), recipeId);
-		MMOItem mmo = MMOItems.plugin.getMMOItem(type, id);
-		final int amount = mmo.hasData(ItemStats.CRAFT_AMOUNT) ? (int) ((DoubleData) mmo.getData(ItemStats.CRAFT_AMOUNT)).getValue() : 1;
+	public void registerBurningRecipe(@NotNull BurningRecipeType recipeType, @NotNull MMOItem mmo, @NotNull BurningRecipeInformation info, int amount, @NotNull NamespacedKey key, boolean hidden) {
+
+		// Build its item stacc
 		ItemStack stack = mmo.newBuilder().build();
 		stack.setAmount(amount);
+
+		// Do whatever this is / I just wont touch it
 		CookingRecipe<?> recipe = recipeType.provideRecipe(key, stack, info.getChoice().toBukkit(), info.getExp(), info.getBurnTime());
+
+		// Register that recipe lets goo
 		loadedLegacyRecipes.add(recipe);
-	}
 
-	public void registerSmithingRecipe(@NotNull Type type, @NotNull String id, @NotNull ConfigurationSection section, @NotNull String number) throws IllegalArgumentException {
-		Validate.isTrue(section.isString("input1") && section.isString("input2"), "Invalid smithing recipe for '" + type.getId() + " . " + id + "'");
-
-		String item = section.getString("input1");
-		String ingot = section.getString("input2");
-		boolean dropGems = section.getBoolean("drop-gems", false);
-		String upgrade = section.getString("upgrades" );
-		String enchants = section.getString("enchantments" );
-		if (item == null) { item = ""; }
-		if (ingot == null) { ingot = ""; }
-		if (upgrade == null) { upgrade = SmithingCombinationType.MAXIMUM.toString(); }
-		if (enchants == null) { enchants = SmithingCombinationType.MAXIMUM.toString(); }
-
-		MythicRecipeBlueprint blueprint = CustomRecipe.generateSmithing(type, id, item, ingot, dropGems, enchants, upgrade, getRecipeKey(type, id, "smithing", number).getKey());
-
-		// Enable it
-		Ref<NamespacedKey> nk = new Ref<>();
-		blueprint.deploy(MythicRecipeStation.SMITHING, nk);
-
-		// Remember it
-		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else { booklessRecipes.add(blueprint); }
-	}
-
-	/**
-	 * Parses a shapeless or shaped workbench crafting recipe and registers it.
-	 * 
-	 * @param type      The item type
-	 * @param id        The item ID
-	 * @param list      The list of items (3 lines or 3 ingredients, separated
-	 *                  by spaces)
-	 * @param shapeless If the recipe is shapeless or not
-	 * @param recipeID  Every item can have multiple recipe, there's one number
-	 *                  per recipe to differenciate them
-	 */
-	public void registerRecipe(@NotNull Type type, @NotNull String id, @NotNull List<String> list, boolean shapeless, @NotNull String recipeID) throws IllegalArgumentException {
-
-		/*
-		 * The output of the recipe will be the MMOItem of this Type and ID which
-		 * is guaranteed to be loaded.
-		 *
-		 * The input is defined in the list in the following formats:
-		 *
-		 * SHAPELESS:
-		 *  + A list of 9 entries, which can be in any order
-		 *  + Each entry is one item, may be vanilla, MMOItem, or UIFilter.
-		 *
-		 * SHAPED
-		 *  + A list of 3 entries, which are in order.
-		 *  + Each entry is 3 items, separated by spaces, except if UIFilters are used,
-		 *    which can cause more than 3 items to be apparent.
-		 *    * Logic to parse UIFilters is included.
-		 *  + They indicate the rows of the crafting table.
-		 */
-
-		MythicRecipeBlueprint blueprint;
-		if (shapeless) {
-
-			// Generate with no shape
-			blueprint = CustomRecipe.generateShapeless(type, id, list, getRecipeKey(type, id, "shapeless", recipeID).getKey());
-		} else {
-
-			// Generate shaped
-			blueprint = CustomRecipe.generateShaped(type, id, list, getRecipeKey(type, id, "shaped", recipeID).getKey());
-		}
-
-		// Enable it
-		Ref<NamespacedKey> nk = new Ref<>();
-		blueprint.deploy(MythicRecipeStation.WORKBENCH, nk);
-
-		// Remember it
-		if (nk.getValue() != null) { customRecipes.put(nk.getValue(), blueprint); } else { booklessRecipes.add(blueprint);
-			if (book) { MMOItems.print(null, "Cannot register custom {2} recipe for $e{0} {1}$b into crafting book", "Custom Crafting", type.getId(), id, (shapeless ? "shapeless" : "shaped"));} }
-
-		/*
-		CustomRecipe recipe = new CustomRecipe(type, id, list, shapeless);
-
-		if (amounts)
-			registerRecipeAsCustom(recipe);
-		  else
-			registerRecipeAsBukkit(recipe, number);
-	    */
+		if (hidden) { blacklistedFromAutomaticDiscovery.add(key); }
 	}
 
 	public void registerRecipeAsCustom(CustomRecipe recipe) {
@@ -266,7 +215,8 @@ public class RecipeManager implements Reloadable {
 	}
 	public HashMap<NamespacedKey, MythicRecipeBlueprint> getCustomRecipes() { return customRecipes; }
 
-	ArrayList<NamespacedKey> generatedNKs = null;
+	@Nullable
+	ArrayList<NamespacedKey> generatedNKs;
 	public ArrayList<NamespacedKey> getNamespacedKeys() {
 
 		if (generatedNKs != null) { return generatedNKs; }
@@ -305,6 +255,7 @@ public class RecipeManager implements Reloadable {
 
 			// Clear loaded recipes
 			loadedLegacyRecipes.clear();
+			blacklistedFromAutomaticDiscovery.clear();
 
 			// Disable and forget all blueprints
 			for (NamespacedKey b : customRecipes.keySet()) {
@@ -330,11 +281,21 @@ public class RecipeManager implements Reloadable {
 
 	public void refreshRecipeBook(Player player) {
 
+		/*
+		 * todo For some reason, we have to refresh the book every time
+		 *      the player joins the server or something; the thing is
+		 *      that recipes that are hidden from the book are lost when
+		 *      doing this (if they had unlocked them somehow).
+		 *      -
+		 *      Kind of need to somehow remember what recipes have been
+		 *      unlocked by who so that they don't get lost...
+		 */
+
 		// Book disabled?
 		if (!book) {
 
 			// Hide all recipes
-			for (NamespacedKey key : player.getDiscoveredRecipes()) { if (key.getNamespace().equals("mmoitems")) { player.undiscoverRecipe(key); } }
+			for (NamespacedKey key : player.getDiscoveredRecipes()) { if ("mmoitems".equals(key.getNamespace())) { player.undiscoverRecipe(key); } }
 
 			// Done woah
 			return;
@@ -345,11 +306,19 @@ public class RecipeManager implements Reloadable {
 
 			// Undiscovers the recipes apparently
 			for (NamespacedKey key : player.getDiscoveredRecipes()) {
-				if (key.getNamespace().equals("mmoitems") && !getNamespacedKeys().contains(key)) { player.undiscoverRecipe(key); } }
+				if ("mmoitems".equals(key.getNamespace()) && !getNamespacedKeys().contains(key)) { player.undiscoverRecipe(key); } }
 
-			// And discovers them again, sweet!
+			// And discovers them again
 			for (NamespacedKey recipe : getNamespacedKeys()) {
 				if (recipe == null) { continue; }
+
+				// Not blacklisted right
+				boolean blacklisted = false;
+				for (NamespacedKey black : blacklistedFromAutomaticDiscovery) {
+
+					if (recipe.equals(black)) { blacklisted = true; break; } }
+				if (blacklisted) { continue; }
+
 				try { if (!player.hasDiscoveredRecipe(recipe)) { player.discoverRecipe(recipe); } }
 				catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage()); }
 			}
@@ -361,33 +330,66 @@ public class RecipeManager implements Reloadable {
 		// Discovers all recipes
 		for (NamespacedKey recipe : getNamespacedKeys()) {
 			if (recipe == null) { continue; }
+
+			// Not blacklisted aight
+			boolean blacklisted = false;
+			for (NamespacedKey black : blacklistedFromAutomaticDiscovery) {
+
+				if (recipe.equals(black)) { blacklisted = true; break; } }
+			if (blacklisted) { continue; }
+
 			try { player.discoverRecipe(recipe); }
 			catch (Throwable e) { MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage()); }
 		}
 	}
 
-	public WorkbenchIngredient getWorkbenchIngredient(String input) {
-		String[] split = input.split(":");
-		int amount = split.length > 1 ? Integer.parseInt(split[1]) : 1;
+	@NotNull public static WorkbenchIngredient getWorkbenchIngredient(@NotNull String input) throws IllegalArgumentException {
 
-		if (split[0].contains(".")) {
-			String[] split1 = split[0].split("\\.");
-			Type type = MMOItems.plugin.getTypes().getOrThrow(split1[0].toUpperCase().replace("-", "_").replace(" ", "_"));
-			MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type,
-					split1[1].toUpperCase().replace("-", "_").replace(" ", "_"));
-			return new MMOItemIngredient(type, template.getId(), amount);
+		// Read it this other way ~
+		ProvidedUIFilter poof = ProvidedUIFilter.getFromString(RecipeMakerGUI.poofFromLegacy(input), null);
+
+		// Air is AIR
+		if (poof == null) { return new AirIngredient(); }
+
+		// With class, obviously - no need for prefix tho
+		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+
+		// Valid right
+		if (!poof.isValid(ffp)) {
+
+			// Snooze that
+			//noinspection ConstantConditions
+			throw new IllegalArgumentException(SilentNumbers.collapseList(SilentNumbers.transcribeList(ffp.getFeedbackOf(FriendlyFeedbackCategory.ERROR), s -> ((FriendlyFeedbackMessage) s).forConsole(FFPMMOItems.get())), ". "));
 		}
 
-		if (split[0].equalsIgnoreCase("air"))
-			return new AirIngredient();
+		// Get amount
+		int amount = poof.getAmount(0);
 
-		return new VanillaIngredient(Material.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_")), amount);
+		// MMOItem?
+		if (poof.getParent() instanceof MMOItemUIFilter) {
+
+			// Get those
+			Type miType = MMOItems.plugin.getTypes().getOrThrow(poof.getArgument());
+
+			// Find template
+			MMOItemTemplate mmo = MMOItems.plugin.getTemplates().getTemplateOrThrow(miType, poof.getData());
+
+			// Treat is as MMOItem :pogyoo:
+			return new MMOItemIngredient(miType, mmo.getId(), amount);
+
+		// Must be vanilla
+		} else if (poof.getParent() instanceof VanillaUIFilter) {
+
+			return new VanillaIngredient(Material.valueOf(poof.getArgument().toUpperCase().replace("-", "_").replace(" ", "_")), amount);
+		}
+
+		throw new IllegalArgumentException("Unsupported ingredient, you may only specify vanilla or mmoitems.");
 	}
 
 	/**
 	 * Easier control of furnace, smoker, campfire and blast recipes so there is
 	 * no need to have four time the same method to register this type of recipe
-	 * 
+	 *
 	 * @author cympe
 	 */
 	public enum BurningRecipeType {
@@ -412,37 +414,5 @@ public class RecipeManager implements Reloadable {
 	}
 
 	@FunctionalInterface
-	public interface RecipeProvider {
-		CookingRecipe<?> provide(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime);
-	}
-
-	/**
-	 * Used to handle furnace/smoker/campfire/furnace extra crafting recipe
-	 * parameters
-	 * 
-	 * @author ASangarin
-	 */
-	public class BurningRecipeInformation {
-		private final WorkbenchIngredient choice;
-		private final float exp;
-		private final int burnTime;
-
-		public BurningRecipeInformation(ConfigurationSection config) {
-			choice = getWorkbenchIngredient(config.getString("item"));
-			exp = (float) config.getDouble("exp", 0.35);
-			burnTime = config.getInt("time", 200);
-		}
-
-		public int getBurnTime() {
-			return burnTime;
-		}
-
-		public WorkbenchIngredient getChoice() {
-			return choice;
-		}
-
-		public float getExp() {
-			return exp;
-		}
-	}
+	public interface RecipeProvider { CookingRecipe<?> provide(NamespacedKey key, ItemStack result, RecipeChoice source, float experience, int cookTime);}
 }

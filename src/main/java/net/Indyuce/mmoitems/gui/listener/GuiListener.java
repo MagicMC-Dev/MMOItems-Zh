@@ -8,8 +8,11 @@ import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeEdition;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,12 +64,18 @@ public class GuiListener implements Listener {
 
 			MMOItemTemplate template = ((EditionInventory) inventory).getEdited();
 			if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " Back")) {
-				if (inventory instanceof ItemEdition)
-					new ItemBrowser(player, template.getType()).open();
-				else if (inventory instanceof RecipeEdition)
-					new RecipeListEdition(player, template).open(((EditionInventory) inventory).getPreviousPage());
-				else
-					new ItemEdition(player, template).onPage(((EditionInventory) inventory).getPreviousPage()).open();
+
+				// Open the Item Browser yes
+				if (inventory instanceof ItemEdition) { new ItemBrowser(player, template.getType()).open(); }
+
+				// Open the RECIPE TYPE BROWSER stat thing
+				else if ((inventory instanceof RecipeListGUI)) { new RecipeBrowserGUI(player, template).open(((EditionInventory) inventory).getPreviousPage()); }
+
+				// Open the RECIPE LIST thing
+				else if ((inventory instanceof RecipeMakerGUI)) { new RecipeListGUI(player, template, ((RecipeMakerGUI) inventory).getRecipeRegistry()).open(((EditionInventory) inventory).getPreviousPage()); }
+
+				// Just open the ITEM EDITION I guess
+				else { new ItemEdition(player, template).onPage(((EditionInventory) inventory).getPreviousPage()).open(); }
 			}
 		}
 	}

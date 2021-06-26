@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.TemplateModifier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +49,16 @@ public abstract class EditionInventory extends PluginInventory {
 	private TemplateModifier editedModifier;
 
 	private ItemStack cachedItem;
-	private int previousPage;
+	int previousPage;
 
-	public EditionInventory(Player player, MMOItemTemplate template) {
+	public EditionInventory(@NotNull Player player, @NotNull MMOItemTemplate template) {
 		super(player);
 
+		// For logging back to the player
+		ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+		ffp.activatePrefix(true, "Edition");
+
+		// For building the Inventory
 		this.template = template;
 		this.configFile = template.getType().getConfigFile();
 		player.getOpenInventory();
@@ -158,4 +166,7 @@ public abstract class EditionInventory extends PluginInventory {
 	public int getPreviousPage() {
 		return previousPage;
 	}
+
+	@NotNull final FriendlyFeedbackProvider ffp;
+	@NotNull public FriendlyFeedbackProvider getFFP() { return ffp; }
 }

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.item.mmoitem;
 
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
@@ -207,6 +208,12 @@ public class MMOItem implements ItemReference {
 	public void setStatHistory(@NotNull ItemStat stat, @NotNull StatHistory hist) {
 		mergeableStatHistory.put(stat.getNBTPath(), hist);
 	}
+
+	//region Upgrading API
+	/**
+	 * @return The tier of this item, if it has one.
+	 */
+	@Nullable public ItemTier getTier() { return MMOItems.plugin.getTiers().findTier(this); }
 
 	/**
 	 * Upgrades this MMOItem one level.

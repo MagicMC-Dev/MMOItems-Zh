@@ -1,25 +1,27 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
-import io.lumine.mythic.lib.api.crafting.ingredients.MythicBlueprintInventory;
-import io.lumine.mythic.lib.api.crafting.ingredients.MythicRecipeInventory;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.crafting.ingredients.*;
 import io.lumine.mythic.lib.api.crafting.outputs.MRORecipe;
 import io.lumine.mythic.lib.api.crafting.outputs.MythicRecipeOutput;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicCachedResult;
+import io.lumine.mythic.lib.api.crafting.recipes.MythicCraftingManager;
+import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipe;
 import io.lumine.mythic.lib.api.crafting.recipes.vmp.VanillaInventoryMapping;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.Ref;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -47,12 +49,165 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
      * @param enchantmentTreatment Should enchantments be destroyed?
      * @param upgradeTreatment How will upgrades combine?
      */
-    public CustomSmithingRecipe(@NotNull MMOItemTemplate outputItem, boolean dropGemstones, @NotNull SmithingCombinationType enchantmentTreatment, @NotNull SmithingCombinationType upgradeTreatment) {
+    public CustomSmithingRecipe(@NotNull MMOItemTemplate outputItem, boolean dropGemstones, @NotNull SmithingCombinationType enchantmentTreatment, @NotNull SmithingCombinationType upgradeTreatment, int outputAmount) {
         this.outputItem = outputItem;
         this.dropGemstones = dropGemstones;
         this.enchantmentTreatment = enchantmentTreatment;
-        this.upgradeTreatment = upgradeTreatment; }
+        this.upgradeTreatment = upgradeTreatment;
+        this.outputAmount = outputAmount;
+    }
 
+    //region Advanced Variant
+
+    /**
+     * If this is not null, then the ingredients themselves will change as this output resolves
+     * (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    @Nullable
+    MythicRecipe mainInputConsumption;
+    /**
+     * If this is not null, then the ingredients themselves will change as this output resolves
+     * (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    @Nullable public MythicRecipe getMainInputConsumption() { return mainInputConsumption; }
+    /**
+     * @param mic If this is not null, then the ingredients themselves will change as this output resolves
+     *            (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    public void setMainInputConsumption(@Nullable MythicRecipe mic) {  mainInputConsumption = nullifyIfEmpty(mic); }
+
+    /**
+     * @return If the ingredients themselves will change as this output resolves
+     *         (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    public boolean hasInputConsumption() { return ingotInputConsumption != null || mainInputConsumption != null; }
+
+    /**
+     * @param mic Some mythic recipe
+     *
+     * @return <code>null</code> if there is not a single actual item in this MythicRecipe,
+     *         or the MythicRecipe itself.
+     */
+    @Nullable public MythicRecipe nullifyIfEmpty(@Nullable MythicRecipe mic) {
+
+        // Null is just null
+        if (mic == null) { return null; }
+
+        // Anything not air will count a success
+        for (MythicRecipeIngredient mri : mic.getIngredients()) {
+            if (mri == null) { continue; }
+            if (mri.getIngredient().isDefinesItem()) { return mic; } }
+
+        // Nope, nothing that wasn't air
+        return null;
+    }
+
+    /**
+     * If this is not null, then the ingredients themselves will change as this output resolves
+     * (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    @Nullable
+    MythicRecipe ingotInputConsumption;
+    /**
+     * If this is not null, then the ingredients themselves will change as this output resolves
+     * (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    @Nullable public MythicRecipe getIngotInputConsumption() { return ingotInputConsumption; }
+    /**
+     * @param mic If this is not null, then the ingredients themselves will change as this output resolves
+     *            (like milk buckets turning into normal buckets when crafting a cake).
+     */
+    public void setIngotInputConsumption(@Nullable MythicRecipe mic) { ingotInputConsumption = nullifyIfEmpty(mic); }
+
+
+    /**
+     * Generates a new, independent MythicRecipeInventory
+     * from the recipe, with random output where possible.
+     *
+     * @return A new result to be given to the player.
+     */
+    @NotNull MythicRecipeInventory generateResultOf(@NotNull MythicRecipe mythicRecipe) {
+
+        // Rows yes
+        HashMap<Integer, ItemStack[]> rowsInformation = new HashMap<>();
+
+        // Ok it doesn't exist lets build it
+        for (MythicRecipeIngredient mmIngredient : mythicRecipe.getIngredients()) {
+
+            // Ignore
+            if (mmIngredient == null) { continue; }
+
+            // Identify Ingredient
+            ShapedIngredient shaped = ((ShapedIngredient) mmIngredient);
+            MythicIngredient ingredient = mmIngredient.getIngredient();
+
+            // Does not define an item? I sleep
+            if (!ingredient.isDefinesItem()) { continue; }
+
+            // Any errors yo?
+            FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+            ffp.activatePrefix(true, "Recipe of " + getOutputItem().getType().getId() + " " + getOutputItem().getId());
+
+            /*
+             * First we must get the material of the base, a dummy
+             * item basically (since this is for display) which we
+             * may only display if its the only substitute of this
+             * ingredient.
+             *
+             * If the ingredient has more substitutes, the ingredient
+             * description will be used instead, replacing the meta of
+             * this item entirely.
+             */
+            ItemStack gen = mmIngredient.getIngredient().getRandomSubstituteItem(ffp);
+
+            // Valid?
+            if (gen != null) {
+
+                // Get current row
+                ItemStack[] row = rowsInformation.get(-shaped.getVerticalOffset());
+                if (row == null) { row = new ItemStack[(shaped.getHorizontalOffset() + 1)]; }
+                if (row.length < (shaped.getHorizontalOffset() + 1)) {
+                    ItemStack[] newRow = new ItemStack[(shaped.getHorizontalOffset() + 1)];
+                    //noinspection ManualArrayCopy
+                    for (int r = 0; r < row.length; r++) { newRow[r] = row[r]; }
+                    row = newRow;
+                }
+
+                // Yes
+                row[shaped.getHorizontalOffset()] = gen;
+
+                // Put
+                rowsInformation.put(-shaped.getVerticalOffset(), row);
+
+                // Log those
+            } else {
+
+                // All those invalid ones should log.
+                ffp.sendTo(FriendlyFeedbackCategory.ERROR, MythicLib.plugin.getServer().getConsoleSender());
+            }
+        }
+
+        // Add all rows into new
+        MythicRecipeInventory ret = new MythicRecipeInventory();
+        for (Integer h : rowsInformation.keySet()) { ret.setRow(h, rowsInformation.get(h)); }
+
+        // Yes
+        return ret;
+    }
+    //endregion
+
+    /**
+     * The amount of output produced by one smithing
+     */
+    int outputAmount;
+    /**
+     * @return The amount of output produced by one smithing
+     */
+    public int getOutputAmount() { return outputAmount; }
+    /**
+     * @param amount The amount of output produced by one smithing
+     */
+    public void setOutputAmount(int amount) { outputAmount = amount; }
 
     /**
      * The MMOItem that results from the completion of these recipes.
@@ -169,9 +324,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         Ref<ArrayList<ItemStack>> droppedGemstones = new Ref<>();
         MMOItem display = fromCombinationWith(itemMMO, ingotMMO, player, droppedGemstones);
 
-        // Result
-        MythicRecipeInventory result = otherInventories.getResultInventory().clone();
-        result.setItemAt(map.getResultWidth(map.getResultInventoryStart()), map.getResultHeight(map.getResultInventoryStart()), display.newBuilder().build());
+        //RDR// MythicCraftingManager.log("\u00a78RDR \u00a748\u00a77 Custom Smithing Recipe Result\u00a7e" + times + "\u00a77 times\u00a78 ~\u00a71 " + eventTrigger.getAction().toString());
 
         /*
          * Crafting the item only once allows to put it in the cursor.
@@ -181,6 +334,10 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
          * 2 Move it to those inventory slots
          */
         if (times == 1 && (eventTrigger.getAction() != InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
+
+            // Result
+            MythicRecipeInventory result = otherInventories.getResultInventory().clone();
+            result.setItemAt(map.getResultWidth(map.getResultInventoryStart()), map.getResultHeight(map.getResultInventoryStart()), display.newBuilder().build());
 
             /*
              * When crafting with the cursor, we must make sure that:
@@ -202,7 +359,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
 
             // Apply the result
             //RDR//MythicCraftingManager.log("\u00a78RDR \u00a748\u00a77 Processing Result Inventory");
-            processInventory(resultInventory, result, times);
+            processInventory(resultInventory, result, 1);
             //RR//for (String str : resultInventory.toStrings("\u00a78Result \u00a79PR-")) { MythicCraftingManager.log(str); }
 
             //RDR//MythicCraftingManager.log("\u00a78RDR \u00a749\u00a77 Finding item to put on cursor");
@@ -250,7 +407,56 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
             // Apply result to the cursor
             eventTrigger.getView().setCursor(actualCursor);
 
-            // Player is crafting to completion - move to inventory style.
+            // Consume ingredients
+            consumeIngredients(otherInventories, cache, eventTrigger.getInventory(), map, 1);
+
+            /*
+             * Ok now, the ingredients have been consumed, the item is now in the cursor of the player.
+             *
+             * We must now read each of the affected inventories again and apply them with changes.
+             */
+            if (hasInputConsumption()) {
+
+                // Items to spit back to the player
+                ArrayList<ItemStack> inputConsumptionOverflow = new ArrayList<>();
+
+                // Changes in the main inventory?
+                if (getMainInputConsumption() != null) {
+
+                    // Extract the new values
+                    MythicRecipeInventory mainRead = map.getMainMythicInventory(eventTrigger.getInventory());
+
+                    // Generate a result from the main input consumption
+                    MythicRecipeInventory addedStuff = generateResultOf(getMainInputConsumption());
+
+                    // Include overflow
+                    inputConsumptionOverflow.addAll(MRORecipe.stackWhatsPossible(mainRead, addedStuff));
+
+                    // Apply
+                    map.applyToMainInventory(eventTrigger.getInventory(), mainRead, false);
+                }
+
+                // Changes in the main inventory?
+                if (getIngotInputConsumption() != null) {
+
+                    // Extract the new values
+                    MythicRecipeInventory sideRead = map.getSideMythicInventory("ingot", eventTrigger.getInventory());
+
+                    // Generate a result from the main input consumption
+                    MythicRecipeInventory addedStuff = generateResultOf(getIngotInputConsumption());
+
+                    // Include overflow
+                    inputConsumptionOverflow.addAll(MRORecipe.stackWhatsPossible(sideRead, addedStuff));
+
+                    // Apply
+                    map.applyToSideInventory(eventTrigger.getInventory(), sideRead, "ingot", false);
+                }
+
+                // Distribute in inventory call
+                MRORecipe.distributeInInventoryOrDrop(eventTrigger.getWhoClicked().getInventory(), inputConsumptionOverflow, eventTrigger.getWhoClicked().getLocation());
+            }
+
+        // Player is crafting to completion - move to inventory style.
         } else {
 
             /*
@@ -259,7 +465,6 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
             //RDR//MythicCraftingManager.log("\u00a78RDR \u00a747\u00a77 Reading/Generating Result");
 
             // Build the result
-            ArrayList<ItemStack> outputItems = MRORecipe.toItemsList(result);
             HashMap<Integer, ItemStack> modifiedInventory = null;
             Inventory inven = player.getInventory();
             int trueTimes = 0;
@@ -268,10 +473,41 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
             for (int t = 1; t <= times; t++) {
                 //RDR//MythicCraftingManager.log("\u00a78RDR \u00a748\u00a77 Iteration \u00a7c#" + t);
 
+                // Result
+                MythicRecipeInventory result = otherInventories.getResultInventory().clone();
+                result.setItemAt(map.getResultWidth(map.getResultInventoryStart()), map.getResultHeight(map.getResultInventoryStart()), display.newBuilder().build());
+                ArrayList<ItemStack> localOutput = MRORecipe.toItemsList(result);
+
                 //RR//for (String str : localResult.toStrings("\u00a78Result \u00a79RR-")) { io.lumine.mythic.lib.api.crafting.recipes.MythicCraftingManager.log(str); }
 
+                /*
+                 * Is this generating other kinds of output? Account for them
+                 */
+                if (hasInputConsumption()) {
+
+                    // Changes in the main inventory?
+                    if (getMainInputConsumption() != null) {
+
+                        // Generate a result from the main input consumption
+                        MythicRecipeInventory addedStuff = generateResultOf(getMainInputConsumption());
+
+                        // Add these to the output
+                        localOutput.addAll(MRORecipe.toItemsList(addedStuff));
+                    }
+
+                    // Changes in the ingot inventory?
+                    if (getIngotInputConsumption() != null) {
+
+                        // Generate a result from the main input consumption
+                        MythicRecipeInventory addedStuff = generateResultOf(getIngotInputConsumption());
+
+                        // Add these to the output
+                        localOutput.addAll(MRORecipe.toItemsList(addedStuff));
+                    }
+                }
+
                 // Send to
-                HashMap<Integer, ItemStack> localIterationResult = MRORecipe.distributeInInventory(inven, outputItems, modifiedInventory);
+                HashMap<Integer, ItemStack> localIterationResult = MRORecipe.distributeInInventory(inven, localOutput, modifiedInventory);
 
                 // Failed? Break
                 if (localIterationResult == null) {
@@ -280,7 +516,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
                     //RR//io.lumine.mythic.lib.api.crafting.recipes.MythicCraftingManager.log("\u00a78Result \u00a7cIC\u00a77 Iteration Cancelled: \u00a7cNo Inventory Space");
                     break;
 
-                    // Prepare for next iteration
+                // Prepare for next iteration
                 } else {
 
                     // Store changes
@@ -302,6 +538,9 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
 
                 // Set
                 inven.setItem(s, putt); }
+
+            // Consume ingredients
+            consumeIngredients(otherInventories, cache, eventTrigger.getInventory(), map, times);
         }
 
         // Drop?
@@ -316,9 +555,6 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
 
                 // Drop to the world
                 player.getWorld().dropItem(player.getLocation(), drop); } }
-
-        // Consume ingredients
-        consumeIngredients(otherInventories, cache, eventTrigger.getInventory(), map, times);
     }
 
     /**
@@ -368,7 +604,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
             GemStone.ApplyResult res = asGem.applyOntoItem(gen, gen.getType(), "", false, true);
 
             // None?
-            if (res.getType().equals(GemStone.ResultType.SUCCESS) && (res.getResultAsMMOItem() != null)) {
+            if (res.getType() == GemStone.ResultType.SUCCESS && (res.getResultAsMMOItem() != null)) {
 
                 // Success that's nice
                 gen = res.getResultAsMMOItem();
@@ -383,7 +619,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         Ref.setValue(rem, remainingStones);
 
         // Enchantments?
-        if (!getEnchantmentTreatment().equals(SmithingCombinationType.NONE)) {
+        if (getEnchantmentTreatment() != SmithingCombinationType.NONE) {
 
             // Get enchantment data
             EnchantListData genEnchants = (EnchantListData) gen.getData(ItemStats.ENCHANTS); if (genEnchants == null) { genEnchants = (EnchantListData) ItemStats.ENCHANTS.getClearStatData(); }
@@ -409,7 +645,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         }
 
         // All right whats the level stuff up now
-        if (gen.hasUpgradeTemplate() && !(getUpgradeTreatment().equals(SmithingCombinationType.NONE))) {
+        if (gen.hasUpgradeTemplate() && getUpgradeTreatment() != SmithingCombinationType.NONE) {
 
             // All right get the levels of them both
             int itemLevel = 0; if (item != null) { itemLevel = item.getUpgradeLevel(); }
@@ -428,5 +664,6 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         // That's it
         return gen;
     }
+
 }
 

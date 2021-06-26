@@ -38,6 +38,7 @@ import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
 import net.Indyuce.mmoitems.listener.*;
 import net.Indyuce.mmoitems.manager.*;
@@ -140,6 +141,7 @@ public class MMOItems extends LuminePlugin {
 		new SpigotPlugin(39267, this).checkForUpdate();
 		new MMOItemsMetrics();
 
+		RecipeBrowserGUI.registerNativeRecipes();
 		abilityManager.initialize();
 		configManager = new ConfigManager();
 

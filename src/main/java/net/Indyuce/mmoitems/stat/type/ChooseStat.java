@@ -20,6 +20,8 @@ import java.util.*;
  * You could consider them a more advanced DisableStat, while DisableStat only
  * allows to choose <b>true</b> or <b>false</b>, alternating when clicked, Choose
  * Stats cycle through a list instead.
+ *
+ * @author Gunging
  */
 public abstract class ChooseStat extends StringStat {
 

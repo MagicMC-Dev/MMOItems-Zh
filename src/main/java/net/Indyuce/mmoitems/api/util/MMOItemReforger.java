@@ -181,6 +181,9 @@ public class MMOItemReforger {
 	@SuppressWarnings("ConstantConditions")
 	public void update(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
 
+		// Cancel if blacklisted
+		if (options.isBlacklisted(miID)) { return; }
+
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(miTypeName, miID); ItemMeta meta = nbtItem.getItem().getItemMeta();
 		if (template == null) { MMOItems.print(null, "Could not find template for $r{0} {1}$b. ", "MMOItems Reforger", miTypeName.toString(), miID); mmoItem = null; return; }
@@ -419,6 +422,8 @@ public class MMOItemReforger {
 	 */
 	int regenerate(@Nullable RPGPlayer player, @NotNull MMOItemTemplate template) {
 
+		if (mmoItem == null) { loadLiveMMOItem(); }
+
 		int determinedItemLevel;
 		if (player == null) {
 
@@ -496,6 +501,9 @@ public class MMOItemReforger {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	public void reforge(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
+
+		// Cancel if blacklisted
+		if (options.isBlacklisted(miID)) { return; }
 
 		// Initialize as Volatile, find source template. GemStones require a Live MMOItem though (to correctly load all Stat Histories and sh)
 		MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(miTypeName, miID); ItemMeta meta = nbtItem.getItem().getItemMeta();

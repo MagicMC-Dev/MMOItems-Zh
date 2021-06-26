@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
+import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMG_RecipeInterpreter;
+import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
 import net.Indyuce.mmoitems.stat.data.StringData;
-import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -34,7 +40,7 @@ public class Crafting extends ItemStat {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new RecipeListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+			new RecipeBrowserGUI(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
 		else if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("crafting")) {
 			inv.getEditedSection().set("crafting", null);
@@ -63,90 +69,164 @@ public class Crafting extends ItemStat {
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		String type = (String) info[0];
-
-		switch (type) {
 
 		/*
-		 * Handles shaped and shapeless crafting recipes
+		 * #1 Type - Is it input, output, or a button being pressed?
 		 */
-		case "recipe":
-			int slot = (int) info[2];
-			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(message), "Invalid ingredient");
+		int type = (int) info[0];
 
-			/*
-			 * Handles shaped crafting recipes
-			 */
-			if ((info[1]).equals("shaped")) {
-				List<String> newList = inv.getEditedSection().getStringList("crafting.shaped.1");
-				String[] newArray = newList.get(slot / 3).split(" ");
-				newArray[slot % 3] = message;
-				newList.set(slot / 3, (newArray[0] + " " + newArray[1] + " " + newArray[2]));
+		switch (type) {
+			case RecipeMakerGUI.INPUT:
+			case RecipeMakerGUI.OUTPUT:
 
-				for (String s : newList) {
-					if (s.equals("AIR AIR AIR"))
-						continue;
+				//region Transcribe from old format to new
+				int spc = message.indexOf(' ');
+				QuickNumberRange qnr = null;
+				if (spc > 0) {
 
-					inv.getEditedSection().set("crafting.shaped.1", newList);
-					inv.registerTemplateEdition();
-					break;
+					// Any space? attempt to parse that as a number
+					String qnrp = message.substring(spc + 1);
+
+					// Is it just a number 'X' ?
+					if (SilentNumbers.DoubleTryParse(qnrp)) {
+
+						/*
+						 * In technical QNR jargon, X means "requires exactly this",
+						 * however, many times when crafting, specifying X means that
+						 * crafting it once requires that many ingredients.
+						 *
+						 * Translating the crafting intention into QNR outputs X..
+						 *
+						 * If anyone truly means that the recipe can only be crafted
+						 * having X in the same slot of the crafting table, they will
+						 * have to write X..X
+						 */
+						qnrp += "..";
+					}
+
+					// Parse QNR
+					qnr = QuickNumberRange.getFromString(qnrp);
 				}
 
 				/*
-				 * Handles shapeless crafting recipes
+				 * Changes easy MMOItems input into MythicLib NBT Filter.
 				 */
-			} else {
-				List<String> newList = inv.getEditedSection().getStringList("crafting.shapeless.1");
-				newList.set(slot, message);
+				if (spc <= 0 || qnr != null) {
 
-				for (String s : newList) {
-					if (s.equals("AIR"))
-						continue;
-					inv.getEditedSection().set("crafting.shapeless.1", newList);
-					inv.registerTemplateEdition();
-					break;
+					// No amount specified=
+					if (qnr == null) {
+
+						// Default is one and onward, 1..
+						qnr = new QuickNumberRange(1D, null);
+
+					// Amount was specified
+					} else {
+
+						// Crop from message
+						message = message.substring(0, spc);
+					}
+
+					// MMOItem?
+					if (message.contains(".")) {
+
+						// Split
+						String[] midSplit = message.split("\\.");
+
+						// MMOItem UIFilter
+						message = "m " + midSplit[0] + " " + midSplit[1] + " " + qnr;
+
+						// Vanilla material
+					} else {
+
+						// Vanilla UIFilter
+						message = "v " + message + " - " + qnr;
+					}
 				}
-			}
+				//endregion
 
-			break;
+				/*
+				 * #2 Recipe Interpreter - Correctly edits the configuration section in the files,
+				 *                         depending on how the recipe is supposed to be saved.
+				 */
+				RMG_RecipeInterpreter interpreter = (RMG_RecipeInterpreter) info[1];
+
+				/*
+				 * #3 Slot - Which slot was pressed?
+				 */
+				int slot = (int) info[2];
+
+				// Attempt to get
+				ProvidedUIFilter read = UIFilterManager.getUIFilter(message, inv.getFFP());
+
+				// Null? Cancel
+				if (read == null) { throw new IllegalArgumentException(""); }
+				if (!read.isValid(inv.getFFP())) { throw new IllegalArgumentException(""); }
+
+				// Find section
+				ConfigurationSection section = RecipeMakerGUI.getSection(inv.getEditedSection(), "crafting");
+				section = RecipeMakerGUI.getSection(section, ((RecipeMakerGUI) inv).getRecipeRegistry().getRecipeConfigPath());
+				section = RecipeMakerGUI.getSection(section, ((RecipeMakerGUI) inv).getRecipeName());
+
+				// Redirect
+				if (type == RecipeMakerGUI.INPUT)  {
+					interpreter.editInput(section, read, slot);
+
+				// It must be output
+				} else {
+					interpreter.editOutput(section, read, slot); }
+
+				// Save changes
+				inv.registerTemplateEdition();
+
+				break;
+			case RecipeMakerGUI.PRIMARY:
+			case RecipeMakerGUI.SECONDARY:
+
+				/*
+				 * No Button Action? That's the end, and is not necessarily
+				 * an error (the button might have done what it had to do
+				 * already when pressed, if it needed no user input).
+				 */
+				if (info.length < 2) { return; }
+				if (!(info[1] instanceof RecipeButtonAction)) { return; }
+
+				// Delegate
+
+				if (type == RecipeMakerGUI.PRIMARY)  {
+					((RecipeButtonAction) info[1]).primaryProcessInput(message, info);
+
+				} else {
+					((RecipeButtonAction) info[1]).secondaryProcessInput(message, info); }
+
+				// Save changes
+				inv.registerTemplateEdition();
+				break;
+
+			default: inv.registerTemplateEdition(); break;
+		}
 
 		/*
 		 * Handles burning recipes ie furnace, campfire, smoker and blast
 		 * furnace recipes
-		 */
-		case "item": {
-			String[] args = message.split(" ");
-			Validate.isTrue(args.length == 3, "Invalid format");
-			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[0]), "Invalid ingredient");
-			int time = Integer.parseInt(args[1]);
-			double exp = MMOUtils.parseDouble(args[2]);
+		 *
+			case "item": {
+				String[] args = message.split(" ");
+				Validate.isTrue(args.length == 3, "Invalid format");
+				Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[0]), "Invalid ingredient");
+				int time = Integer.parseInt(args[1]);
+				double exp = MMOUtils.parseDouble(args[2]);
 
-			inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
-			inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
-			inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
-			inv.registerTemplateEdition();
-			break;
-		}
+				inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
+				inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
+				inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
+				inv.registerTemplateEdition();
+				break;
+			}
 
-		/**
-		 * Handles smithing recipes
-		 */
-		case "smithing": {
-			String[] args = message.split(" ");
-			Validate.isTrue(args.length == 2, "Invalid format");
-			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[0]), "Invalid first ingredient");
-			Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[1]), "Invalid second ingredient");
-
-			inv.getEditedSection().set("crafting.smithing.1.input1", args[0]);
-			inv.getEditedSection().set("crafting.smithing.1.input2", args[1]);
-			inv.registerTemplateEdition();
-			break;
-		}
-		default:
-			throw new IllegalArgumentException("Recipe type not recognized");
-		}
+		*/
 	}
 
+	@Nullable
 	@Override
 	public RandomStatData whenInitialized(Object object) {
 		return null;

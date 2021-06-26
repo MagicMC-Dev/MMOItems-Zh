@@ -229,6 +229,9 @@ public class ConfigManager implements Reloadable {
 		revisionOptions = keepData != null ? new ReforgeOptions(keepData) : new ReforgeOptions(false, false, false, false, false, false, false, true);
 		phatLootsOptions = phatLoots != null ? new ReforgeOptions(phatLoots) : new ReforgeOptions(false, false, false, false, false, false, false, true);
 
+		List<String> exemptedPhatLoots = MMOItems.plugin.getConfig().getStringList("item-revision.disable-phat-loot");
+		for (String epl : exemptedPhatLoots) { phatLootsOptions.addToBlacklist(epl); }
+
 		try {
 			defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));
 		} catch (IllegalArgumentException exception) {

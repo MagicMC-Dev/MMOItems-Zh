@@ -6,6 +6,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class ReforgeOptions {
 	public static boolean dropRestoredGems;
 
@@ -27,6 +29,42 @@ public class ReforgeOptions {
 	@NotNull String keepCase = ChatColor.GRAY.toString();
 	public void  setKeepCase(@NotNull String kc) { keepCase = kc; }
 	@NotNull public String getKeepCase() { return keepCase; }
+
+	@NotNull ArrayList<String> blacklistedItems = new ArrayList<>();
+
+	/**
+	 * Apparently, people like to use MMOItems for quests. This
+	 * will make items NEVER update with RevID
+	 *
+	 * @param mmoitemID Item ID. Listen, including MMOItem Type as
+	 *                  well is unnecessary hassle, complicates the
+	 *                  implementation.
+	 *
+	 *                  People who name all their items "1", "2", ...
+	 *                  can learn to not use magic numbers ffs.
+	 *
+	 * @return If this item should not update with RevID (when passing
+	 * 		   these options, of course).
+	 */
+	public boolean isBlacklisted(@NotNull String mmoitemID) { return blacklistedItems.contains(mmoitemID); }
+
+	 /**
+	 * Apparently, people like to use MMOItems for quests. This
+	 * will make items NEVER update with RevID
+	 *
+	 * @param mmoitemID Item ID. Listen, including MMOItem Type as
+	 *                  well is unnecessary hassle, complicates the
+	 *                  implementation.
+	 *
+	 *                  People who name all their items "1", "2", ...
+	 *                  can learn to not use magic numbers ffs.
+	 */
+	public void addToBlacklist(@NotNull String mmoitemID) { blacklistedItems.add(mmoitemID); }
+
+	/**
+	 * No MMOItem-ID restrictions on RevID.
+	 */
+	public void clearBlacklist() { blacklistedItems.clear(); }
 
 	public ReforgeOptions(ConfigurationSection config) {
 		this.keepName = config.getBoolean("display-name");

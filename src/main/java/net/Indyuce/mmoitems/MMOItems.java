@@ -407,6 +407,19 @@ public class MMOItems extends LuminePlugin {
 	 * in player inventories whe doing inventory updates. By default, it only
 	 * checks held items + armor slots. However other plugins like MMOInv do
 	 * implement custom slots and therefore must register a custom
+	 * PlayerInventory instance that tells of additional items to look for.
+	 */
+	public void registerPlayerInventory(PlayerInventory value) {
+
+		// Registers in the Inventory Handler
+		getInventory().register(value);
+	}
+
+	/**
+	 * The PlayerInventory interface lets MMOItems knows what items to look for
+	 * in player inventories whe doing inventory updates. By default, it only
+	 * checks held items + armor slots. However other plugins like MMOInv do
+	 * implement custom slots and therefore must register a custom
 	 * PlayerInventory instance.
 	 * <p>
 	 * Default instance is DefaultPlayerInventory in comp.inventory

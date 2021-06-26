@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * That Gaussian spread distribution thing that no one understands.
+ *
+ * @author indyuce
  */
 public class NumericStatFormula implements RandomStatData, UpdatableRandomStatData {
 	private final double base, scale, spread, maxSpread;

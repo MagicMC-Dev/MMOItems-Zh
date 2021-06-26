@@ -66,13 +66,6 @@ public class PlayerStats {
 			StatInstance.ModifierPacket packet = getInstance(stat).newPacket();
 
 			/**
-			 * Some stats including Atk Damage and Speed have stat offsets, when equipping
-			 * at least one item which grants this stat the final value must be lowered
-			 * by a flat amount
-			 */
-			boolean isHoldingWeapon = false;
-
-			/**
 			 * The index of the mmoitem stat modifier being added
 			 */
 			int index = 0;
@@ -80,21 +73,25 @@ public class PlayerStats {
 			for (EquippedPlayerItem item : playerData.getInventory().getEquipped()) {
 				double value = item.getItem().getNBT().getStat(stat.getId());
 
+
 				if (value != 0) {
+
 					Type type = item.getItem().getType();
 					ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
+					/**
+					 * Apply main hand weapon stat offset ie 4 for attack speed and 1 for attack damage.
+					 */
+					if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttributeStat)
+						value -= ((AttributeStat) stat).getOffset();
+
 					packet.addModifier("MMOItem-" + index++, new StatModifier(value, ModifierType.FLAT, item.getSlot(), source));
-					if (!isHoldingWeapon && item.getSlot().isHand())
-						isHoldingWeapon = true;
 				}
 			}
 
-			if (isHoldingWeapon && stat instanceof AttributeStat)
-				packet.addModifier("MMOItemOffset", new StatModifier(-((AttributeStat) stat).getOffset()));
-
 			/**
-			 * Finally run a stat update
+			 * Finally run a stat update after all modifiers
+			 * have been gathered by MythicLib
 			 */
 			packet.runUpdate();
 		}

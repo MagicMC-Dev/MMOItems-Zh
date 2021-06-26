@@ -95,6 +95,14 @@
 
     <dependencies>
 
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.17-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>net.Indyuce.mmoitems.lib</groupId>
             <artifactId>GoogleGSON</artifactId>
@@ -179,14 +187,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Spigot API -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
+        <!-- Local dependencies -->
         <dependency>
             <groupId>com.github.Eniripsa96</groupId>
             <artifactId>SkillAPI</artifactId>

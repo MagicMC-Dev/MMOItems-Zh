@@ -88,12 +88,6 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
 
-        <!-- Local reposity used to save external libraries with no repos -->
-        <repository>
-            <id>local-repo</id>
-            <url>file:${project.basedir}/local-repo</url>
-        </repository>
-
     </repositories>
 
     <!-- Order of dependencies matters in Maven because the first wins when
@@ -171,6 +165,21 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -336,30 +345,6 @@
             <version>1.0.6</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/AureliumSkills.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>net.milkbowl</groupId>
-            <artifactId>vault</artifactId>
-            <version>1.7.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Vault.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/WorldGuard.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>7.2.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/WorldEdit.jar</systemPath>
         </dependency>
 
         <dependency>

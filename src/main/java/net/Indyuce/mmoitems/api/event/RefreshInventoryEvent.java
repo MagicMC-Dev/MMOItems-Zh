@@ -1,5 +1,6 @@
-package net.Indyuce.mmoitems.api.player;
+package net.Indyuce.mmoitems.api.event;
 
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

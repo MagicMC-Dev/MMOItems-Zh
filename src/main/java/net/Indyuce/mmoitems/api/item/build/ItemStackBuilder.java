@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
@@ -99,11 +98,11 @@ public class ItemStackBuilder {
 
 	public ItemMeta getMeta() { return meta; }
 
-
 	public void addItemTag(List<ItemTag> newTags) { tags.addAll(newTags); }
+
 	public void addItemTag(ItemTag... itemTags) { tags.addAll(Arrays.asList(itemTags)); }
 
-	public static final String histroy_keyword = "HSTRY_";
+	public static final String history_keyword = "HSTRY_";
 
 	/**
 	 * @return Returns built NBTItem with applied tags and lore
@@ -154,7 +153,7 @@ public class ItemStackBuilder {
 					if ((!s.isClear() || stat instanceof Enchants || stat instanceof DisplayName)) {
 
 						//GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
-						addItemTag(new ItemTag(histroy_keyword + stat.getId(), s.toNBTString())); }
+						addItemTag(new ItemTag(history_keyword + stat.getId(), s.toNBTString())); }
 				}
 
 				if (forDisplay && stat instanceof Previewable) {

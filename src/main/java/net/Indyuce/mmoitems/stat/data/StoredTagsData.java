@@ -2,9 +2,7 @@ package net.Indyuce.mmoitems.stat.data;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.stat.StoredTags;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
@@ -48,7 +46,7 @@ public class StoredTagsData implements StatData, Mergeable {
 		for (String tag : nbt.getTags()) {
 			// Any vanilla or MMOItem tag should be ignored as those are
 			// automatically handled. Same for the History stat ones.
-			if (ignoreList.contains(tag) || tag.startsWith("MMOITEMS_") || tag.startsWith(ItemStackBuilder.histroy_keyword))
+			if (ignoreList.contains(tag) || tag.startsWith("MMOITEMS_") || tag.startsWith(ItemStackBuilder.history_keyword))
 				continue;
 
 			// As more methods are added we can add more types here

@@ -336,7 +336,8 @@ public class MMOItem implements ItemReference {
 				regeneratedGems.put(gem.getHistoricUUID(), restored);
 				//XTC//MMOItems.log("\u00a7a   >\u00a77 Color \u00a7e" + restored.getAsGemColor());
 				//XTC//MMOItems.log("\u00a7a   >\u00a77 UUID \u00a7e" + restored.getAsGemUUID().toString());
-			} }
+			}
+		}
 		//XTC//MMOItems.log("\u00a7b   *\u00a77 Regen Size:\u00a79 " + regeneratedGems.values().size());
 
 		// Identify actual attributes

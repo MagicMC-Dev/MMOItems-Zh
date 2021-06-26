@@ -47,6 +47,7 @@ public class MMOItemBuilder {
 	public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
 		this.level = level;
 		this.tier = tier;
+
 		/*
 		 * Capacity is not final as it keeps lowering as modifiers are selected and
 		 * applied

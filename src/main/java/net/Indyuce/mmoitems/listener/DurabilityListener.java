@@ -25,7 +25,7 @@ public class DurabilityListener implements Listener {
 	private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
 			DamageCause.FIRE_TICK, DamageCause.SUFFOCATION, DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
 
-	private final EquipmentSlot[] slots = { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+	private final EquipmentSlot[] armorSlots = { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
 
 	/**
 	 * Handles custom durability for non-'vanilla durability' items
@@ -37,8 +37,8 @@ public class DurabilityListener implements Listener {
 
 		Player player = (Player) event.getEntity();
 		int damage = Math.max((int) event.getDamage() / 4, 1);
-		for(EquipmentSlot slot : slots)
-			if(hasItem(player, slot))
+		for (EquipmentSlot slot : armorSlots)
+			if (hasItem(player, slot))
 				handleVanillaDamage(player.getInventory().getItem(slot), player, slot, damage);
 	}
 

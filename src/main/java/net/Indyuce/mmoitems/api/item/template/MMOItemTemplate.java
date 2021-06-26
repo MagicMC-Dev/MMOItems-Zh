@@ -191,28 +191,4 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		 */
 		LEVEL_ITEM
 	}
-
-	/**
-	 * @return Attempts to get the crafted amount registered in the Stat.
-	 * 		   <p></p>
-	 * 		   Default is <b>1</b> obviously.
-	 *
-	 * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
-	 */
-	@Deprecated
-	public int getCraftedAmount() {
-
-		// Attempt to find	|
-		NumericStatFormula ofAmount = (NumericStatFormula) base.get(ItemStats.CRAFT_AMOUNT);
-
-		// Found?
-		if (ofAmount != null) {
-
-			// Well what does it read
-			return SilentNumbers.ceil(ofAmount.calculate(0));
-		}
-
-		// No
-		return 0;
-	}
 }

@@ -5,8 +5,6 @@ import java.util.logging.Level;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
-import net.Indyuce.mmoitems.stat.DisplayName;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +50,7 @@ public class LiveMMOItem extends ReadMMOItem {
 				if (getStatHistory(stat) == null) {
 
 					// Also load history :think ing:
-					ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.histroy_keyword + stat.getId(), getNBT(), SupportedNBTTagValues.STRING);
+					ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.history_keyword + stat.getId(), getNBT(), SupportedNBTTagValues.STRING);
 
 					if (hisTag != null) {
 						// Aye

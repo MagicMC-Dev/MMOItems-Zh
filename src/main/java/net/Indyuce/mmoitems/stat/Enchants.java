@@ -133,7 +133,7 @@ public class Enchants extends ItemStat implements Upgradable {
 		mmoitem.setData(ItemStats.ENCHANTS, enchants);
 
 		// Regardless, the stat history must be kept.
-		ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.histroy_keyword + getId(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
+		ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.history_keyword + getId(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
 		if (hisTag == null) {
 
 			if (// If either enchanting is allowed

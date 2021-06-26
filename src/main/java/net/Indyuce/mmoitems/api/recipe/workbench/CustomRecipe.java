@@ -1,49 +1,23 @@
 package net.Indyuce.mmoitems.api.recipe.workbench;
 
-import io.lumine.mythic.lib.api.crafting.ingredients.MythicRecipeIngredient;
-import io.lumine.mythic.lib.api.crafting.ingredients.ShapedIngredient;
-import io.lumine.mythic.lib.api.crafting.outputs.MRORecipe;
-import io.lumine.mythic.lib.api.crafting.outputs.MythicRecipeOutput;
-import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
-import io.lumine.mythic.lib.api.crafting.recipes.ShapedRecipe;
-import io.lumine.mythic.lib.api.crafting.recipes.ShapelessRecipe;
-import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
-import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
-import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.crafting.recipe.CustomSmithingRecipe;
-import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.AirIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
-import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class CustomRecipe implements Comparable<CustomRecipe> {
 	private final Type type;
@@ -129,8 +103,8 @@ public class CustomRecipe implements Comparable<CustomRecipe> {
 		MMOItem mmo = p == null ? MMOItems.plugin.getMMOItem(type, id)
 				: MMOItems.plugin.getMMOItem(type, id, PlayerData.get(p));
 		ItemStack stack = mmo.newBuilder().build();
-		if (mmo.hasData(ItemStats.CRAFT_AMOUNT))
-			stack.setAmount((int) ((DoubleData) mmo.getData(ItemStats.CRAFT_AMOUNT)).getValue());
+		/*if (mmo.hasData(ItemStats.CRAFT_AMOUNT))
+			stack.setAmount((int) ((DoubleData) mmo.getData(ItemStats.CRAFT_AMOUNT)).getValue());*/
 		if (mmo.hasData(ItemStats.CRAFT_PERMISSION))
 			permission = new Permission(mmo.getData(ItemStats.CRAFT_PERMISSION).toString(), PermissionDefault.FALSE);
 		return stack;

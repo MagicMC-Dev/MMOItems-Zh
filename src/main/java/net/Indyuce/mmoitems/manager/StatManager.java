@@ -1,18 +1,14 @@
 package net.Indyuce.mmoitems.manager;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.*;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.logging.Level;
 
 public class StatManager {
 	private final Map<String, ItemStat> stats = new LinkedHashMap<>();
@@ -27,6 +23,7 @@ public class StatManager {
 	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
 	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
 	private final Set<SelfConsumable> selfConsumables = new HashSet<>();
+	private final Set<DynamicLoreStat> dynamicLores = new HashSet<>();
 
 	/*
 	 * load default stats using java reflection, get all public static final
@@ -47,8 +44,15 @@ public class StatManager {
 	}
 
 	/**
+	 * @return Collection of all stats which feature dynamic lore support
+	 */
+	public Set<DynamicLoreStat> getDynamicLores() {
+		return dynamicLores;
+	}
+
+	/**
 	 * @return Collection of all stats which are based on vanilla player
-	 *         attributes like movement speed, attack damage, max health..
+	 * attributes like movement speed, attack damage, max health..
 	 */
 	public Set<AttributeStat> getAttributeStats() {
 		return attributeBased;
@@ -136,9 +140,12 @@ public class StatManager {
 		if (stat instanceof SelfConsumable)
 			selfConsumables.add((SelfConsumable) stat);
 
-		/*
-		 * cache stat for every type which may have this stat. really important
-		 * otherwise the stat will NOT be used anywhere in the plugin. this
+		if (stat instanceof DynamicLoreStat)
+			dynamicLores.add((DynamicLoreStat) stat);
+
+		/**
+		 * Cache stat for every type which may have this stat. Really important
+		 * otherwise the stat will NOT be used anywhere in the plugin. This
 		 * process is also done in the TypeManager when registering new types
 		 * but since stats can be registered after types are loaded, we must
 		 * take it into account

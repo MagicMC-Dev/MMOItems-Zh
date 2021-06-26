@@ -8,8 +8,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
-import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
@@ -273,7 +271,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 				if (mmoitem.getStatHistory(this) == null) {
 
 					// Also load history :think ing:
-					ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.histroy_keyword + getId(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
+					ItemTag hisTag = ItemTag.getTagAtPath(ItemStackBuilder.history_keyword + getId(), mmoitem.getNBT(), SupportedNBTTagValues.STRING);
 
 					if (hisTag != null) {
 

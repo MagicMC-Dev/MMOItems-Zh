@@ -17,15 +17,11 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus</id>
+            <id>lumine</id>
             <name>Lumine Releases</name>
-            <url>https://mvn.lumine.io/repository/maven-releases/</url>
+            <url>https://mvn.lumine.io/repository/maven/</url>
         </repository>
-        <snapshotRepository>
-            <id>nexus</id>
-            <name>Lumine Snapshots</name>
-            <url>https://mvn.lumine.io/repository/maven-snapshots/</url>
-        </snapshotRepository>
+
     </distributionManagement>
 
     <build>

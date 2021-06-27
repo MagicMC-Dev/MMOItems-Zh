@@ -17,7 +17,7 @@
 
     <distributionManagement>
         <repository>
-            <id>lumine</id>
+            <id>nexus</id>
             <name>Lumine Releases</name>
             <url>https://mvn.lumine.io/repository/maven/</url>
         </repository>

@@ -6,7 +6,7 @@
     <artifactId>MMOItems</artifactId>
     <version>6.6.0</version>
     <name>MMOItems</name>
-    <description>A great item solution for your RPG server!</description>
+    <description>A great item solution for your RPG server!!</description>
 
     <properties>
         <downloadSources>false</downloadSources>

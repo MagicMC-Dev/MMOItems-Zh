@@ -47,6 +47,7 @@ public class ItemParticles extends ItemStat {
 	@Override
 	public ParticleData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		if (((ConfigurationSection) object).getKeys(false).size() < 1) { throw new IllegalArgumentException(""); }
 		return new ParticleData((ConfigurationSection) object);
 	}
 

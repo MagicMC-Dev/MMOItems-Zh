@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 public class LoreBuilder {
 	private final List<String> lore = new ArrayList<>();
+	private final List<String> end = new ArrayList<>();
 	private final Map<String, String> placeholders = new HashMap<>();
 
 	public LoreBuilder(Collection<String> format) {
@@ -127,8 +129,11 @@ public class LoreBuilder {
 		for (String s : lore)
 			cleaned.addAll(Arrays.asList(s.replace("{bar}", "").replace("{sbar}", "").split("\\\\n")));
 
+		cleaned.addAll(end);
 		return cleaned;
 	}
+
+	public void end(@NotNull String str) { end.add(str); }
 
 	private boolean isBar(String str) {
 		return str.startsWith("{bar}") || str.startsWith("{sbar}");

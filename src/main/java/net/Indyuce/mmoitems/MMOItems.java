@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
@@ -129,8 +130,11 @@ public class MMOItems extends LuminePlugin {
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
 			new MMOCoreMMOLoader();
 
-		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
-			statManager.register(McMMOHook.disableMcMMORepair);
+		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null) {
+			//statManager.register(McMMOHook.MCMMO_SUPER_TOOL);
+			statManager.register(McMMOHook.disableMcMMORepair); }
+		if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
+			statManager.register(AdvancedEnchantmentsHook.ADVANCED_ENCHANTMENTS); }
 		if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
 			mythicEnchantsSupport = new MythicEnchantsSupport();
 
@@ -519,7 +523,7 @@ public class MMOItems extends LuminePlugin {
 	}
 
 	public MythicEnchantsSupport getMythicEnchantsSupport(){
-		return this.mythicEnchantsSupport;
+		return mythicEnchantsSupport;
 	}
 
 	public boolean hasEconomy() {
@@ -544,7 +548,7 @@ public class MMOItems extends LuminePlugin {
 		if (rpgPlugin != null)
 			return;
 
-		String preferred = MMOItems.plugin.getConfig().getString("preferred-rpg-provider", null);
+		String preferred = plugin.getConfig().getString("preferred-rpg-provider", null);
 		if (preferred != null) {
 
 			try {
@@ -599,9 +603,7 @@ public class MMOItems extends LuminePlugin {
 	 * template has the 'tiered' option
 	 */
 	@Nullable
-	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id, @NotNull PlayerData player) {
-		Validate.notNull(type, "Type cannot be null");
-		Validate.notNull(id, "ID cannot be null");
+	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @Nullable PlayerData player) {
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
@@ -609,7 +611,7 @@ public class MMOItems extends LuminePlugin {
 			return null;
 
 		// Build if found
-		return found.newBuilder(player.getRPG()).build();
+		return found.newBuilder(player).build();
 	}
 
 	/**
@@ -731,6 +733,89 @@ public class MMOItems extends LuminePlugin {
 		return m.newBuilder().build();
 	}
 
+	//region Reading MMOItems from ItemStacks
+
+	/**
+	 * @param stack The stack you trying to read
+	 *
+	 * @return The MMOItems type of this stack, if it has one
+	 *
+	 * @see #getType(NBTItem)
+	 */
+	@Nullable public static Type getType(@Nullable ItemStack stack) {
+
+		// Get from nbt
+		return getType(NBTItem.get(stack));
+	}
+
+	/**
+	 * @param nbt The NBTItem you trying to read
+	 *
+	 * @return The MMOItems type of this nbt, if it has one
+	 */
+	@Nullable public static Type getType(@Nullable NBTItem nbt) {
+
+		// That's it
+		return plugin.getTypes().get(getTypeName(nbt));
+	}
+	/**
+	 * @param stack The stack you trying to read
+	 *
+	 * @return The MMOItems type of this stack, if it has one
+	 *
+	 * @see #getTypeName(NBTItem)
+	 */
+	@Nullable public static String getTypeName(@Nullable ItemStack stack) {
+
+		// Get from nbt
+		return getTypeName(NBTItem.get(stack));
+	}
+
+	/**
+	 * @param nbt The NBTItem you trying to read
+	 *
+	 * @return The MMOItems type of this nbt, if it has one
+	 */
+	@Nullable public static String getTypeName(@Nullable NBTItem nbt) {
+
+		// Straight up no
+		if (nbt == null) { return null; }
+
+		// Get from nbt
+		if (!nbt.hasType()) { return null; }
+
+		// That's it
+		return nbt.getType();
+	}
+
+	/**
+	 * @param nbt The ItemStack you trying to read
+	 *
+	 * @return The MMOItems ID of this stack, if it has one
+	 *
+	 * @see #getID(NBTItem)
+	 */
+	@Nullable public static String getID(@Nullable ItemStack nbt) {
+
+		// That's it
+		return getID(NBTItem.get(nbt));
+	}
+
+	/**
+	 * @param nbt The NBTItem you trying to read
+	 *
+	 * @return The MMOItems ID of this nbt, if it has one
+	 */
+	@Nullable public static String getID(@Nullable NBTItem nbt) {
+
+		// Straight up no
+		if (nbt == null) { return null; }
+
+		// That's it
+		return nbt.getString("MMOITEMS_ITEM_ID");
+	}
+	//endregion
+
 	/**
 	 * Logs something into the console with a cool [MMOItems] prefix :)
 	 * <p></p>
@@ -754,7 +839,7 @@ public class MMOItems extends LuminePlugin {
 	 */
 	public static void print(@Nullable Level level, @Nullable String message, @Nullable String prefix, @NotNull String... replaces) {
 		if (message == null) { message = "< null >"; }
-		if (level != null) { MMOItems.plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
+		if (level != null) { plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), message, replaces));
 		} else {
 			FriendlyFeedbackMessage p = new FriendlyFeedbackMessage("", prefix);
 			FriendlyFeedbackMessage r = FriendlyFeedbackProvider.generateMessage(p, message, replaces);
@@ -767,4 +852,5 @@ public class MMOItems extends LuminePlugin {
 	 * @author Gunging
 	 */
 	@NotNull public static ConsoleCommandSender getConsole() { return plugin.getServer().getConsoleSender(); }
+	//endregion
 }

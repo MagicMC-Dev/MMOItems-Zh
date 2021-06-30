@@ -525,9 +525,13 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      */
     @NotNull public static ItemStack addLore(@NotNull ItemStack itm, @NotNull ArrayList<String> lines) {
 
+        // Not falling for that
+        if (!itm.hasItemMeta()) { return itm; }
+
         // Bruh
         ItemMeta iMeta = itm.getItemMeta();
-        //noinspection ConstantConditions
+        if (iMeta == null) { return itm; }
+
         List<String> currentLore = iMeta.getLore();
         if (currentLore == null) { currentLore = new ArrayList<>(); }
 

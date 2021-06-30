@@ -159,6 +159,7 @@ public class NumericStatFormula implements RandomStatData, UpdatableRandomStatDa
 	 * @param levelScalingFactor Level to scale the scale with
 	 * @param random Result of <code>RANDOM.nextGaussian()</code> or whatever other
 	 *               value that you actually want to pass.
+	 *
 	 * @return The calculated value
 	 */
 	public double calculate(double levelScalingFactor, double random) {

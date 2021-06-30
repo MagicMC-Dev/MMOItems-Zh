@@ -2,22 +2,14 @@ package net.Indyuce.mmoitems.comp;
 
 import com.codisimus.plugins.phatloots.events.LootEvent;
 import com.codisimus.plugins.phatloots.events.MobDropLootEvent;
-import com.codisimus.plugins.phatloots.events.PhatLootsEvent;
 import com.codisimus.plugins.phatloots.events.PlayerLootEvent;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
 
 /**
  * Its absolute <b><i><u>pain</u></i></b> that PhatLoots keeps giving outdated
@@ -44,20 +36,18 @@ public class PhatLootsHook implements Listener {
                 //UPD//MMOItems.log("\u00a71*\u00a78 Air");
                 continue; }
 
-            // NBT-Ize
-            NBTItem loot = NBTItem.get(itm);
+            // Can reforge?
+            MMOItemReforger mod = new MMOItemReforger(itm);
 
-            // Not MMOItems I sleep
-            if (!loot.hasType()) {
-                //UPD//MMOItems.log("\u00a71*\u00a78 Vanilla");
+            // Cancel that!
+            if (!mod.canReforge()) {
+                //UPD//MMOItems.log("\u00a71*\u00a78 Cant reforge this");
                 continue; }
 
-            // The MMOItem does not exist anymore (must have been deleted after being added
-            if (MMOItems.plugin.getTemplates().getTemplate(MMOUtils.getType(loot), MMOUtils.getID(loot)) == null) { continue; }
-
             // All right update the bitch
-            MMOItemReforger mod = new MMOItemReforger(loot);
-            mod.update((RPGPlayer) null, MMOItems.plugin.getLanguage().phatLootsOptions);
+            if (!mod.reforge(MMOItems.plugin.getLanguage().phatLootsOptions)) {
+                //UPD//MMOItems.log("\u00a71*\u00a78 Cancelled while reforging");
+                continue; }
 
             // Changes?
             if (mod.hasChanges()) {

@@ -274,14 +274,6 @@ disable-vanilla-recipes: []
 # Options for the Item Revision System
 item-revision:
 
-    # Whether the updated items should reroll stats
-    # according to the players current level or if
-    # they should keep the level and tier from when
-    # the item was first generated.
-    #
-    # Setting this to false will keep modifiers.
-    reroll-when-updated: false
-
     # This is the value to set the Item Level to when
     # items are updated by the revision system.
     # This can be set to -1 to use the items previous level.
@@ -329,6 +321,34 @@ item-revision:
 
         # Data that may have been put there by external plugins.
         exsh: true
+
+        # Stats handled by RNG will be rerolled
+        reroll: false
+
+        # Modifiers of items ~ Sharp, Light, Heavy, Arcane
+        modifications: true
+
+        # Third party plugin compatibility
+        advanced-enchantments: true
+
+    phat-loots:
+        display-name: false
+        enchantments: false
+        soulbound: false
+        gems: true
+        upgrades: false
+        lore: false
+        exsh: false
+        reroll: true
+        modifications: false
+        advanced-enchantments: false
+
+    # These will not update at all in PhatLoots, for
+    # compatibility with quest plugins that check for
+    # exact NBT
+    disable-phat-loot:
+        - MANGO
+        - STEEL_HELMET
 
     # Here you can disable individual events for when
     # Items should update when a higher revision ID is found

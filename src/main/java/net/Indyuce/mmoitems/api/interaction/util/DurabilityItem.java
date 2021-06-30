@@ -13,18 +13,20 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
 public class DurabilityItem {
-	private final NBTItem nbtItem;
-	private final Player player;
+	@NotNull private final NBTItem nbtItem;
+	@Nullable private final Player player;
 	private final int maxDurability, unbreakingLevel;
 	private final boolean barHidden, unbreakable;
 
 	private int durability;
 
-	private static final Random RANDOM = new Random();
+	@NotNull private static final Random RANDOM = new Random();
 
 	/**
 	 * Use to handle durability changes for MMOItems without using heavy MMOItem
@@ -33,7 +35,7 @@ public class DurabilityItem {
 	 * @param player Player holding the item
 	 * @param item   Item with durability
 	 */
-	public DurabilityItem(Player player, ItemStack item) {
+	public DurabilityItem(@Nullable Player player, @NotNull ItemStack item) {
 		this(player, NBTItem.get(item));
 	}
 
@@ -44,9 +46,9 @@ public class DurabilityItem {
 	 * @param player Player holding the item
 	 * @param item   Item with durability
 	 */
-	public DurabilityItem(Player player, NBTItem item) {
+	public DurabilityItem(@Nullable Player player, @NotNull NBTItem item) {
 		this.player = player;
-		this.nbtItem = item;
+		nbtItem = item;
 
 		unbreakable = nbtItem.getBoolean("Unbreakable");
 		durability = nbtItem.getInteger("MMOITEMS_DURABILITY");
@@ -59,7 +61,7 @@ public class DurabilityItem {
 
 	}
 
-	public Player getPlayer() {
+	@Nullable public Player getPlayer() {
 		return player;
 	}
 
@@ -96,9 +98,7 @@ public class DurabilityItem {
 		return nbtItem.getBoolean("MMOITEMS_WILL_BREAK");
 	}
 
-	public boolean isValid() {
-		return player.getGameMode() != GameMode.CREATIVE && nbtItem.hasTag("MMOITEMS_DURABILITY");
-	}
+	public boolean isValid() { return (player != null && player.getGameMode() != GameMode.CREATIVE) && nbtItem.hasTag("MMOITEMS_DURABILITY"); }
 
 	public DurabilityItem addDurability(int gain) {
 		CustomDurabilityRepair event = new CustomDurabilityRepair(this, gain);
@@ -130,7 +130,7 @@ public class DurabilityItem {
 			durability = Math.max(0, Math.min(durability - loss, maxDurability));
 
 			// When the item breaks
-			if (durability <= 0) {
+			if (durability <= 0 && player != null) {
 				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 				PlayerData.get(player).getInventory().scheduleUpdate();
 			}
@@ -160,6 +160,7 @@ public class DurabilityItem {
 			nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability));
 		}
 
+		// Build and return yes
 		return new DynamicLore(nbtItem).build();
 	}
 }

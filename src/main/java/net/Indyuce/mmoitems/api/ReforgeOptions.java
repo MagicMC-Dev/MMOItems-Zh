@@ -1,30 +1,28 @@
 package net.Indyuce.mmoitems.api;
 
-import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
 public class ReforgeOptions {
 	public static boolean dropRestoredGems;
 
-	private final boolean
-			keepName;
+	// MMOItems stuff
+	private final boolean keepName;
 	private final boolean keepLore;
 	private final boolean keepEnchantments;
 	private final boolean keepUpgrades;
 	private final boolean keepGemStones;
 	private final boolean keepSoulbind;
 	private final boolean keepExternalSH;
+	private final boolean keepModifications;
 
-	public boolean isRegenerate() {
-		return regenerate;
-	}
+	private final boolean reroll;
 
-	private final boolean regenerate;
+	// Third Party Stuff
+	private final boolean keepAdvancedEnchantments;
 
 	@NotNull String keepCase = ChatColor.GRAY.toString();
 	public void  setKeepCase(@NotNull String kc) { keepCase = kc; }
@@ -67,26 +65,45 @@ public class ReforgeOptions {
 	public void clearBlacklist() { blacklistedItems.clear(); }
 
 	public ReforgeOptions(ConfigurationSection config) {
-		this.keepName = config.getBoolean("display-name");
-		this.keepLore = config.getBoolean("lore");
-		this.keepEnchantments = config.getBoolean("enchantments");
-		this.keepUpgrades = config.getBoolean("upgrades");
-		this.keepGemStones = config.getBoolean("gemstones");
-		this.keepSoulbind = config.getBoolean("soulbound");
-		this.keepCase = config.getString("kept-lore-prefix", ChatColor.GRAY.toString());
-		this.keepExternalSH = config.getBoolean("external-sh", true);
-		this.regenerate = false;
+		keepName = config.getBoolean("display-name");
+		keepLore = config.getBoolean("lore");
+		keepEnchantments = config.getBoolean("enchantments");
+		keepUpgrades = config.getBoolean("upgrades");
+		keepGemStones = config.getBoolean("gemstones");
+		keepSoulbind = config.getBoolean("soulbound");
+		keepCase = config.getString("kept-lore-prefix", ChatColor.GRAY.toString());
+		keepExternalSH = config.getBoolean("external-sh", true);
+		keepModifications = config.getBoolean("modifications");
+		reroll = config.getBoolean("reroll");
+		keepAdvancedEnchantments = config.getBoolean("advanced-enchantments");
 	}
 
-	public ReforgeOptions(boolean keepName, boolean keepLore, boolean keepEnchantments, boolean keepUpgrades, boolean keepGemStones, boolean keepSoulbind, boolean keepExternalSH, boolean regenerate) {
-		this.keepName = keepName;
-		this.keepLore = keepLore;
-		this.keepEnchantments = keepEnchantments;
-		this.keepUpgrades = keepUpgrades;
-		this.keepGemStones = keepGemStones;
-		this.keepSoulbind = keepSoulbind;
-		this.keepExternalSH = keepExternalSH;
-		this.regenerate = regenerate;
+	public ReforgeOptions(boolean... values) {
+		keepName = arr(values, 0);
+		keepLore = arr(values, 1);
+		keepEnchantments = arr(values, 2);
+		keepUpgrades = arr(values, 3);
+		keepGemStones = arr(values, 4);
+		keepSoulbind = arr(values, 5);
+		keepExternalSH = arr(values, 6);
+		reroll = arr(values, 7);
+		keepModifications = arr(values, 8);
+
+		keepAdvancedEnchantments = arr(values, 9);
+	}
+
+	boolean arr(@NotNull boolean[] booleans, int idx) {
+
+		if (booleans.length > idx) { return booleans[idx]; }
+
+		return false;
+	}
+
+	/**
+	 * Keeps the display name of the item.
+	 */
+	public boolean shouldReroll() {
+		return reroll;
 	}
 
 	/**
@@ -94,6 +111,13 @@ public class ReforgeOptions {
 	 */
 	public boolean shouldKeepName() {
 		return keepName;
+	}
+
+	/**
+	 * Keeps the modifiers of the item.
+	 */
+	public boolean shouldKeepMods() {
+		return keepModifications;
 	}
 
 	/**
@@ -110,6 +134,15 @@ public class ReforgeOptions {
 	 */
 	public boolean shouldKeepEnchantments() {
 		return keepEnchantments;
+	}
+
+	/**
+	 * Should this keep the enchantments the player
+	 * manually cast onto this item? (Not from gem
+	 * stones nor upgrades).
+	 */
+	public boolean shouldKeepAdvancedEnchants() {
+		return keepAdvancedEnchantments;
 	}
 
 	/**

@@ -1,10 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
@@ -25,12 +30,35 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Soulbound extends InternalStat implements ItemRestriction {
+public class Soulbound extends ItemStat implements InternalStat, ItemRestriction {
 	public Soulbound() {
 		super("SOULBOUND", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbound", new String[0], new String[] { "all" });
+	}
+
+	@Nullable
+	@Override
+	public RandomStatData whenInitialized(Object object) {
+		// not supported
+		return null;
+	}
+
+	@Override
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+		// not supported
+	}
+
+	@Override
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
+		// not supported
+	}
+
+	@Override
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+		// not supported
 	}
 
 	@Override

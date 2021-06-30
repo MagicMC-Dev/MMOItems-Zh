@@ -5,9 +5,11 @@
 # The lines starting with {bar} are strips that will be
 # removed from the lore if there is nothing under it.
 # The lines starting with {sbar} will stay whatever is below them.
-
+#
+# Reload with /mmoitems reload
 lore-format:
 # - '{bar}&8&m--------&f&l &nGeneral&8 &m--------------'
+- '#advanced-enchants#'
 - '#item-type#'
 - '{bar}'
 - '#required-class#'

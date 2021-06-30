@@ -1,17 +1,40 @@
 package net.Indyuce.mmoitems.comp;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.advancedplugins.ae.api.EnchantApplyEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import n3kas.ae.api.EnchantApplyEvent;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class AdvancedEnchantmentsHook implements Listener {
+
+	public static final ItemStat ADVANCED_ENCHANTMENTS = new AdvancedEnchantsStat();
+
 	@EventHandler
 	public void a(EnchantApplyEvent event) {
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
 		if (item.getType() != null && item.getBoolean("MMOITEMS_DISABLE_ADVANCED_ENCHANTS"))
 			event.setCancelled(true);
+	}
+
+
+	@EventHandler
+	public void onReforge(MMOItemReforgeEvent event) {
+		if (!event.getOptions().shouldKeepAdvancedEnchants()) { return; }
+		//RFG// MMOItems.log("§8Reforge §4EFG§f Keeping Advanced Enchantments");
+
+		// Ez just get from old put in new
+		StatData aEnchs = event.getOldMMOItem().getData(ADVANCED_ENCHANTMENTS);
+
+		// Bruh
+		if (aEnchs == null) { return; }
+
+		// Well that should have worked
+		event.getNewMMOItem().setData(ADVANCED_ENCHANTMENTS, aEnchs);
 	}
 }

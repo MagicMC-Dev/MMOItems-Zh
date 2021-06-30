@@ -11,6 +11,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
@@ -18,6 +19,7 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -102,8 +104,11 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 
 			} catch (IllegalArgumentException exception) {
 
-				// Log
-				ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
+				if (!exception.getMessage().isEmpty()) {
+
+					// Log
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
+				}
 			}
 
 		// Print all failures
@@ -144,6 +149,19 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		return options.contains(option);
 	}
 
+
+	public MMOItemBuilder newBuilder(@Nullable Player player) {
+		if (player != null) { return newBuilder(PlayerData.get(player).getRPG()); }
+		return newBuilder((RPGPlayer) null);
+	}
+
+	public MMOItemBuilder newBuilder() { return newBuilder((RPGPlayer) null); }
+
+	public MMOItemBuilder newBuilder(@Nullable PlayerData player) {
+		if (player != null) { return newBuilder(player.getRPG()); }
+		return newBuilder((RPGPlayer) null);
+	}
+
 	/**
 	 * By default, item templates have item level 0 and no random tier. If the
 	 * template has the 'tiered' recipe option, a random tier will be picked. If
@@ -151,9 +169,15 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 *
 	 * @param  player The player for whom you are generating the item. Seems to only
 	 *                matter when rolling for the 'item level'
+	 *
 	 * @return        Item builder with random level and tier?
 	 */
-	public MMOItemBuilder newBuilder(@NotNull RPGPlayer player) {
+	public MMOItemBuilder newBuilder(@Nullable RPGPlayer player) {
+
+		// No player ~ default settings
+		if (player == null) { return newBuilder(0, null); }
+
+		// Read from player
 		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
 		ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
 		return new MMOItemBuilder(this, itemLevel, itemTier);
@@ -190,5 +214,30 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		 * level 0
 		 */
 		LEVEL_ITEM
+	}
+
+	/**
+	 * @return Attempts to get the crafted amount registered in the Stat.
+	 * 		   <p></p>
+	 * 		   Default is <b>1</b> obviously.
+	 *
+	 * @deprecated Don't use this method, the Crafted Amount Stat will be deleted in the near future.
+	 */
+	@Deprecated
+	public int getCraftedAmount() {
+
+		/* Attempt to find	|
+		NumericStatFormula ofAmount = (NumericStatFormula) base.get(ItemStats.CRAFT_AMOUNT);
+
+		// Found?
+		if (ofAmount != null) {
+
+			// Well what does it read
+			return SilentNumbers.ceil(ofAmount.calculate(0));
+		}
+		 */
+
+		// No
+		return 1;
 	}
 }

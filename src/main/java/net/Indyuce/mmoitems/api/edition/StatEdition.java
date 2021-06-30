@@ -91,14 +91,11 @@ public class StatEdition implements Edition {
 
 			// Add message to the FFP
 			if (!exception.getMessage().isEmpty()) { inv.getFFP().log(FriendlyFeedbackCategory.ERROR, exception.getMessage()); }
-			MMOItems.log("\u00a73Sending \u00a7e" + inv.getFFP().messagesTotal() + "\u00a73 to \u00a7e" + inv.getPlayer().getName());
 
 			// Log all
 			inv.getFFP().sendTo(FriendlyFeedbackCategory.ERROR, inv.getPlayer());
 			inv.getFFP().sendTo(FriendlyFeedbackCategory.FAILURE, inv.getPlayer());
 			inv.getFFP().clearFeedback();
-
-			MMOItems.log("\u00a73Cleared to \u00a7e" + inv.getFFP().messagesTotal());
 
 			// No success
 			return false;

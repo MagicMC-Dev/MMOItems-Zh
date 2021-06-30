@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
@@ -35,7 +36,7 @@ public abstract class RPGPlayer {
 	 * 
 	 * @param playerData The corresponding player
 	 */
-	public RPGPlayer(PlayerData playerData) {
+	public RPGPlayer(@NotNull PlayerData playerData) {
 		this.player = playerData.getPlayer();
 		this.playerData = playerData;
 	}

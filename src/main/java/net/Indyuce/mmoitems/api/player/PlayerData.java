@@ -40,10 +40,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class PlayerData {
 	private static final Map<UUID, PlayerData> data = new HashMap<>();
-	private final MMOPlayerData mmoData;
+	@NotNull private final MMOPlayerData mmoData;
 
 	/*
 	 * reloaded everytime the player reconnects in case of major change.
@@ -71,10 +72,10 @@ public class PlayerData {
 	// Cached so they can be properly removed again
 	private final Set<String> permissions = new HashSet<>();
 
-	private PlayerData(MMOPlayerData mmoData) {
+	private PlayerData(@NotNull MMOPlayerData mmoData) {
 		this.mmoData = mmoData;
-		this.rpgPlayer = MMOItems.plugin.getRPG().getInfo(this);
-		this.stats = new PlayerStats(this);
+		rpgPlayer = MMOItems.plugin.getRPG().getInfo(this);
+		stats = new PlayerStats(this);
 
 		load(new ConfigFile("/userdata", getUniqueId().toString()).getConfig());
 		updateInventory();
@@ -521,26 +522,55 @@ public class PlayerData {
 		return Math.max(0, (double) (itemCooldowns.get(id) - System.currentTimeMillis()) / 1000);
 	}
 
-	public static PlayerData get(OfflinePlayer player) {
+	@NotNull public static PlayerData get(@NotNull OfflinePlayer player) {
+
 		return get(player.getUniqueId());
 	}
 
-	public static PlayerData get(UUID uuid) {
-		return data.get(uuid);
+	@NotNull public static PlayerData get(@NotNull UUID uuid) {
+
+		// Already loaded? lets gooo
+		PlayerData pd = data.get(uuid);
+
+		// Attempt to load now
+		if (pd == null) { load(uuid); pd = data.get(uuid); }
+
+		// Um shit
+		if (pd == null) { MMOItems.print(Level.SEVERE, "Incomplete initialization of PlayerData. This error is only a result of another one caused EARLIER (probably during server startup).", null); }
+
+		//noinspection ConstantConditions
+		return pd;
 	}
 
 	/**
-	 * Called when the corresponding MMOPlayerData has already been initialized
+	 * Called when the corresponding MMOPlayerData has already been initialized.
 	 */
-	public static void load(Player player) {
+	public static void load(@NotNull Player player) { load(player.getUniqueId()); }
+	/**
+	 * Called when the corresponding MMOPlayerData has already been initialized.
+	 */
+	public static void load(@NotNull UUID player) {
 
 		/*
 		 * Double check they are online, for some reason even if this is fired
 		 * from the join event the player can be offline if they left in the
 		 * same tick or something.
 		 */
-		if (!data.containsKey(player.getUniqueId())) {
-			data.put(player.getUniqueId(), new PlayerData(MMOPlayerData.get(player)));
+		if (!data.containsKey(player)) {
+
+			MMOPlayerData mmo = MMOPlayerData.get(player);
+			if (mmo == null) {
+
+				NullPointerException npe = new NullPointerException("");
+
+				MMOItems.print(Level.SEVERE, "Erroneous initialization of PlayerData. This error is only a result of another one caused EARLIER (probably during server startup).", null);
+				//noinspection CallToPrintStackTrace
+				npe.printStackTrace();
+
+				return;
+			}
+
+			data.put(player, new PlayerData(mmo));
 			return;
 		}
 
@@ -548,7 +578,7 @@ public class PlayerData {
 		 * Update the cached RPGPlayer in case of any major change in the player
 		 * data of other rpg plugins
 		 */
-		PlayerData playerData = PlayerData.get(player.getUniqueId());
+		PlayerData playerData = get(player);
 		playerData.rpgPlayer = MMOItems.plugin.getRPG().getInfo(playerData);
 	}
 

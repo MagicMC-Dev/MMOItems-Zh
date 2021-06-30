@@ -80,8 +80,10 @@ public class TemplateModifier {
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				data.put(stat, stat.whenInitialized(config.get("stats." + key)));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.INFO,
-						"An error occured while trying to load item gen modifier " + id + ": " + exception.getMessage());
+
+				if (!exception.getMessage().isEmpty()) {
+					MMOItems.plugin.getLogger().log(Level.INFO,
+							"An error occured while trying to load item gen modifier " + id + ": " + exception.getMessage()); }
 			}
 	}
 

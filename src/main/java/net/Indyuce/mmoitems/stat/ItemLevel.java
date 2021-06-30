@@ -3,23 +3,51 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-public class ItemLevel extends InternalStat {
+public class ItemLevel extends ItemStat implements InternalStat {
 	public ItemLevel() {
 		super("ITEM_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Item Level", new String[] { "The item level" }, new String[] { "all" });
 	}
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
+
+	@Nullable
+	@Override
+	public RandomStatData whenInitialized(Object object) {
+		// not supported
+		return null;
+	}
+
+	@Override
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+		// not supported
+	}
+
+	@Override
+	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
+		// not supported
+	}
+
+	@Override
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+		// not supported
+	}
 
 	@NotNull
 	@Override

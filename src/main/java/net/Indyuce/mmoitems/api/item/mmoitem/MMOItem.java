@@ -1,14 +1,17 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.Enchants;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
@@ -209,11 +212,43 @@ public class MMOItem implements ItemReference {
 		mergeableStatHistory.put(stat.getNBTPath(), hist);
 	}
 
-	//region Upgrading API
+	//region Other API
+
 	/**
 	 * @return The tier of this item, if it has one.
 	 */
 	@Nullable public ItemTier getTier() { return MMOItems.plugin.getTiers().findTier(this); }
+
+	/**
+	 * A MMOItem from the template only has damage
+	 * from the DURABILITY stat
+	 *
+	 * @return The damage suffered by this item
+	 */
+	public int getDamage() {
+
+		if (!hasData(ItemStats.DURABILITY)) { return 0; }
+
+		DoubleData durData = (DoubleData) getData(ItemStats.DURABILITY);
+
+		return SilentNumbers.round(durData.getValue());
+	}
+
+	/**
+	 * A MMOItem from the template only has damage
+	 * from the DURABILITY stat
+	 *
+	 * @param damage The damage suffered by this item
+	 */
+	public void setDamage(int damage) {
+
+		if (hasData(ItemStats.UNBREAKABLE)) { return; }
+
+		setData(ItemStats.DURABILITY, new DoubleData(damage));
+	}
+	//endregion
+
+	//region Upgrading API
 
 	/**
 	 * Upgrades this MMOItem one level.

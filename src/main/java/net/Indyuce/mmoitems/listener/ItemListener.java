@@ -1,15 +1,11 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ReforgeOptions;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.listener.reforging.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,13 +17,32 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
 public class ItemListener implements Listener {
+
+	// Aye
+	public ItemListener() {
+		//RFG//MMOItems.log(" §b>§a>§e> §7Registering Listeners");
+
+		// Register Reforger Listeners
+		Bukkit.getPluginManager().registerEvents(new RFGKeepName(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepLore(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepEnchantments(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepExternalSH(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepGems(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepModifications(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepSoulbound(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepUpgrades(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFGKeepRNG(), MMOItems.plugin);
+
+		// Amount ones
+		Bukkit.getPluginManager().registerEvents(new RFGKeepDurability(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFFKeepAmount(), MMOItems.plugin);
+
+	}
+
 	@EventHandler(ignoreCancelled = true)
 	private void itemPickup(EntityPickupItemEvent e) {
 		if (!e.getEntity().getType().equals(EntityType.PLAYER)) return;
@@ -79,94 +94,38 @@ public class ItemListener implements Listener {
 		if(newItem != null) player.getEquipment().setItemInOffHand(newItem);
 	}
 
-	@Nullable private ItemStack modifyItem(@NotNull ItemStack stack, @NotNull Player player, @NotNull String type) {
+	@Nullable private ItemStack modifyItem(@Nullable ItemStack stack, @NotNull Player player, @NotNull String reason) {
+		//RFG//MMOItems.log("§8Reforge §cMOD§7 Modifying " + SilentNumbers.getItemName(stack) + " §7due to§3 " + reason);
 
-		// Get the item
-		NBTItem nbt = NBTItem.get(stack);
+		// Sleep on metaless stacks
+		if (stack == null) { return null; }
+		if (!stack.hasItemMeta()) { return null; }
 
-		// Not a MMOItem? not our problem.
-		if (!nbt.hasType()) { return null; }
+		// Create a reforger to look at it
+		MMOItemReforger mod = new MMOItemReforger(stack);
 
-		// ??
-		MMOItemReforger mod = new MMOItemReforger(nbt);
+		// Shouldn't update? I sleep
+		if (!mod.shouldReforge(reason)) { return null; }
 
-		// Should this item be updated (via the updater)
-		if (shouldUpdate(nbt, type)) {
+		// All right update then
+		mod.setPlayer(player);
+		if (!mod.reforge(MMOItems.plugin.getLanguage().revisionOptions)) {
 
-			// Reforge vs Update bro
-			if (MMOItems.plugin.getLanguage().rerollOnItemUpdate) {
-				mod.reforge(player, MMOItems.plugin.getLanguage().revisionOptions); } else {
-				mod.update(player, MMOItems.plugin.getLanguage().revisionOptions); }
-		}
+			return null; }
 
-		// Should this item be soulbound?
-		if (shouldSoulbind(nbt, type)) { mod.applySoulbound(player); }
+		// Drop all those items
+		for (ItemStack drop : player.getInventory().addItem(
+				mod.getReforgingOutput().toArray(A)).values()) {
 
-		// L
-		if (!mod.hasChanges()) { return null; }
+			// Not air right
+			if (SilentNumbers.isAir(drop)) { continue; }
 
-		// Perform all operations (including extracting lost gems)
-		ItemStack ret = mod.toStack();
+			// Drop to the world
+			player.getWorld().dropItem(player.getLocation(), drop); }
 
-		// Give the gems to the player
-		if (ReforgeOptions.dropRestoredGems) {
-			//XTC//MMOItems.log("\u00a7a *\u00a7e*\u00a77 Dropping lost gemstones (\u00a73" + mod.getDestroyedGems().size() + "\u00a78)");
-
-			// Get Items
-			ArrayList<ItemStack> items = new ArrayList<>();
-
-			// Build and drop every lost gemstone
-			for (MMOItem item : mod.getDestroyedGems()) {
-
-				// Build
-				ItemStack built = item.newBuilder().build();
-				//XTC//MMOItems.log("\u00a7e   *\u00a77 Saved " + SilentNumbers.getItemName(built));
-
-				// Include
-				items.add(built); }
-
-			// Drop those gems
-			for (ItemStack drop : player.getInventory().addItem(
-					items.toArray(new ItemStack[0])).values()) {
-
-				// Not air right
-				if (SilentNumbers.isAir(drop)) { continue; }
-
-				// Drop to the world
-				player.getWorld().dropItem(player.getLocation(), drop); } }
-
-		// Return the modified version
-		return ret;
+		// That's it
+		return mod.getResult();
 	}
 
-	/* Checks whether or not an item should be automatically soulbound */
-	private boolean shouldSoulbind(NBTItem nbt, String type) {
-		return nbt.getBoolean("MMOITEMS_AUTO_SOULBIND") && !nbt.hasTag("MMOITEMS_SOULBOUND")
-				&& !MMOItems.plugin.getConfig().getBoolean("soulbound.auto-bind.disable-on." + type);
-	}
-
-	/* Whether or not data should be kept when updating an item to latest revision. */
-	private boolean shouldUpdate(NBTItem nbt, String type) {
-		if(!MMOItems.plugin.getTemplates().hasTemplate(nbt)) return false;
-
-		return
-				// It must not be disabled for this item
-				!MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + type) &&
-
-
-				// Either the normal revision ID or the internal revision IDs are out of date.
-				(
-						// Is the template's revision ID greater than the one currently in the item?
-						(MMOItems.plugin.getTemplates().getTemplate(nbt).getRevisionId() >
-
-								// The one 'currently in the item' is the value of the stat, or 1 if missing.
-								(nbt.hasTag(ItemStats.REVISION_ID.getNBTPath()) ? nbt.getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1)) ||
-
-						// Or the MMOItems internal revision ID itself
-						(MMOItems.INTERNAL_REVISION_ID >
-
-								// Same thing: either the value of the stat or 1 if missing.
-								(nbt.hasTag(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) ? nbt.getInteger(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) : 1))
-				);
-	}
+	public static final ItemStack[] A = new ItemStack[0];
 }

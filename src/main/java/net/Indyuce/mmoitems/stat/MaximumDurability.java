@@ -27,20 +27,13 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 		super("MAX_DURABILITY", Material.SHEARS, "Maximum Durability", new String[]{"The amount of uses before your", "item becomes unusable/breaks."}, new String[]{"!block", "all"});
 	}
 
-	/*
-	 * initializes the custom durability mecanism on an item.
-	 */
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		super.whenApplied(item, data);
-	}
-
 
 	@Override
 	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
 
 	@Override
-	public @NotNull
+	@NotNull
+	public
 	ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
 
 		// Create Fresh
@@ -105,26 +98,19 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 		return true;
 	}
 
-	@NotNull
-	@Override
-	public UpgradeInfo loadUpgradeInfo(@Nullable Object obj) throws IllegalArgumentException {
-
-		// Return result of thay
-		return DoubleStat.DoubleUpgradeInfo.GetFrom(obj);
-	}
-
 	@Override
 	public String getDynamicLoreId() {
 		return "durability";
 	}
 
+	@Nullable
 	@Override
 	public String calculatePlaceholder(NBTItem item) {
 		if (!item.hasTag("MMOITEMS_DURABILITY"))
 			return null;
 
 		return (MMOItems.plugin.getLanguage().getDynLoreFormat("durability")
-				.replace("%durability%", "" + item.getInteger("MMOITEMS_DURABILITY"))
-				.replace("%max_durability%", "" + item.getInteger("MMOITEMS_MAX_DURABILITY")));
+				.replace("%durability%", String.valueOf(item.getInteger("MMOITEMS_DURABILITY")))
+				.replace("%max_durability%", String.valueOf(item.getInteger("MMOITEMS_MAX_DURABILITY"))));
 	}
 }

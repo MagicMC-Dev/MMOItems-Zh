@@ -26,8 +26,14 @@ public class DynamicLore {
 			JsonArray array = MythicLib.plugin.getJson().parse(item.getString("MMOITEMS_DYNAMIC_LORE"), JsonArray.class);
 			List<Component> lore = new ArrayList<>(array.size());
 
-			for (JsonElement line : array)
-				lore.add(LegacyComponent.parse(applyDynamicLore(line.getAsString())));
+			for (JsonElement line : array) {
+				if (line == null) { continue; }
+				String asString = line.getAsString();
+				if (asString == null) { continue; }
+				String asLore = applyDynamicLore(asString);
+				if (asLore == null) { continue; }
+				lore.add(LegacyComponent.parse(asLore));
+			}
 
 			item.setLoreComponents(lore);
 		}

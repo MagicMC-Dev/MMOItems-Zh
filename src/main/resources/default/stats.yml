@@ -70,12 +70,12 @@ item-cooldown: '&3 &7■ &f#&3 &7s Cooldown'
 arrow-potion-effects: '&3 &7■ Arrow Effect: &f#'
 
 # Consumables
-restore-health: '&3 &7■ Restores &f# &3 &7Health'
-restore-food: '&3 &7■ Restores &f# &3 &7Food'
-restore-saturation: '&3 &7■ Restores &f# &3 &7Saturation'
-restore-mana: '&3 &7■ Restores &f# &3 &7Mana'
-restore-stamina: '&3 &7■ Restores &f# &3 &7Stamina'
-effect: '&3 &7■ Grants &f#e &3 &7for &f#d&3 &7s'
+restore-health: '&3 &7■ Restores &f# &7Health'
+restore-food: '&3 &7■ Restores &f# &7Food'
+restore-saturation: '&3 &7■ Restores &f# &7Saturation'
+restore-mana: '&3 &7■ Restores &f# &7Mana'
+restore-stamina: '&3 &7■ Restores &f# &7Stamina'
+effect: '&3 &7■ Grants &f#e &3 &7for &f#d &7s'
 repair: '&3 &7■ Repair: &f#'
 can-identify: '&3 &7■ Can identify items.'
 can-deconstruct: '&3 &7■ Can deconstruct tiered items.'
@@ -90,9 +90,9 @@ when-applied: '&aWhen Applied:'
 gem-stone-lore: '&8&l[&2&l*&8&l] &aDrag onto an item &3 &7to apply!'
 
 # Soulbound
-soulbinding-chance: '&3 &7■ Has a &a#%&3 &7 chance to bind your item.'
-soulbound-break-chance: '&3 &7■ Has a &a#%&3 &7 chance to break soulbounds.'
-soulbound-level: '&3 &7■ Level &e# &3 &7Soulbound'
+soulbinding-chance: '&3 &7■ Has a &a#% &7chance to bind your item.'
+soulbound-break-chance: '&3 &7■ Has a &a#% &7chance to break soulbounds.'
+soulbound-level: '&3 &7■ Level &e# &7Soulbound'
 
 # Tool Enchants
 autosmelt: '&3 &7■ &fAutosmelt'
@@ -104,10 +104,12 @@ item-type: '&c#'
 tier: '&3 &7Tier: #'
 required-class: '&3 &7# Item'
 required-level: '&eRequires Lvl #'
+
 # Attributes
 required-dexterity: '&eRequires &c# &eDexterity'
 required-strength: '&eRequires &c# &eStrength'
 required-intelligence: '&eRequires &c# &eIntelligence'
+
 # Professions
 profession-alchemy: '&eAlchemy Level: &c#'
 profession-enchanting: '&eEnchanting Level: &c#'
@@ -117,8 +119,6 @@ profession-mining: '&eMining Level: &c#'
 profession-smelting: '&eSmelting Level: &c#'
 profession-smithing: '&eSmithing Level: &c#'
 profession-woodcutting: '&eWoodcutting Level: &c#'
-
-
 
 # Elemental Damage
 fire-damage: '&c ❖ #% Fire Damage'

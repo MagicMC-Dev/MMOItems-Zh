@@ -22,7 +22,12 @@ public class StatManager {
 	private final Set<AttributeStat> attributeBased = new HashSet<>();
 	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
 	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
-	private final Set<SelfConsumable> selfConsumables = new HashSet<>();
+	private final Set<PlayerConsumable> playerConsumables = new HashSet<>();
+
+	/**
+	 * @deprecated See {@link net.Indyuce.mmoitems.api.item.util.LoreUpdate}
+	 */
+	@Deprecated
 	private final Set<DynamicLoreStat> dynamicLores = new HashSet<>();
 
 	/*
@@ -45,6 +50,7 @@ public class StatManager {
 
 	/**
 	 * @return Collection of all stats which feature dynamic lore support
+	 * @deprecated See {@link net.Indyuce.mmoitems.api.item.util.LoreUpdate}
 	 */
 	public Set<DynamicLoreStat> getDynamicLores() {
 		return dynamicLores;
@@ -86,9 +92,11 @@ public class StatManager {
 
 	/**
 	 * @return Collection of all stats implementing self consumable like
-	 *         restore health, mana, hunger...
+	 * restore health, mana, hunger...
 	 */
-	public Set<SelfConsumable> getSelfConsumables() { return selfConsumables; }
+	public Set<PlayerConsumable> getPlayerConsumables() {
+		return playerConsumables;
+	}
 
 	public boolean has(String id) {
 		return stats.containsKey(id);
@@ -137,8 +145,8 @@ public class StatManager {
 		if (stat instanceof ConsumableItemInteraction)
 			consumableActions.add((ConsumableItemInteraction) stat);
 
-		if (stat instanceof SelfConsumable)
-			selfConsumables.add((SelfConsumable) stat);
+		if (stat instanceof PlayerConsumable)
+			playerConsumables.add((PlayerConsumable) stat);
 
 		if (stat instanceof DynamicLoreStat)
 			dynamicLores.add((DynamicLoreStat) stat);

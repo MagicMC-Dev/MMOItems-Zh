@@ -60,13 +60,13 @@ public class Tool extends UseItem {
 				}
 			}.runTaskTimer(MMOItems.plugin, 0, 1);
 			
-		if (getNBTItem().hasTag("MMOITEMS_BREAK_SIZE")) {
+		/*if (getNBTItem().hasTag("MMOITEMS_BREAK_SIZE")) {
 			int breakSize = getNBTItem().getInteger("MMOITEMS_BREAK_SIZE");
 			if(breakSize % 2 != 0) {
 				BlockFace face = player.getFacing();
 				System.out.println("Debug: Facing - " + face);
 			}
-		}
+		}*/
 		return cancel;
 	}
 }

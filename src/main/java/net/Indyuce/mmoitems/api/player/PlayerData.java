@@ -486,8 +486,20 @@ public class PlayerData {
 		extraCooldowns.put(type, (long) (System.currentTimeMillis() + 1000 * value));
 	}
 
+	/**
+	 * @deprecated Use {@link #isOnCooldown(String)} instead
+	 */
+	@Deprecated
 	public boolean canUseItem(String id) {
-		return (itemCooldowns.containsKey(id) ? itemCooldowns.get(id) : 0) < System.currentTimeMillis();
+		return isOnCooldown(id);
+	}
+
+	/**
+	 * @param itemId Item ID
+	 * @return If this item is on cooldown
+	 */
+	public boolean isOnCooldown(String itemId) {
+		return itemCooldowns.getOrDefault(itemId, 0l) < System.currentTimeMillis();
 	}
 
 	public void applyItemCooldown(String id, double value) {

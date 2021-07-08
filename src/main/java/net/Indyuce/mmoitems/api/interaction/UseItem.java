@@ -1,28 +1,23 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Crossbow;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Lute;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Musket;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Whip;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.*;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
 import net.Indyuce.mmoitems.stat.data.CommandData;
 import net.Indyuce.mmoitems.stat.data.CommandListData;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class UseItem {
 	protected final Player player;
@@ -64,18 +59,28 @@ public class UseItem {
 	/**
 	 * Apply item costs and requirements. This method should be overriden to
 	 * check for WorldGuard flags as well as the two-handed restriction.
-	 * 
+	 *
 	 * @return If the item can be used
 	 */
 	public boolean checkItemRequirements() {
 		return playerData.getRPG().canUse(mmoitem.getNBT(), true);
 	}
 
+	/**
+	 * Execute commands after checking for WG flags;
+	 * this does NOT check for the command cooldown.
+	 */
 	public void executeCommands() {
 		if (MMOItems.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_COMMANDS) && mmoitem.hasData(ItemStats.COMMANDS))
 			((CommandListData) mmoitem.getData(ItemStats.COMMANDS)).getCommands().forEach(this::scheduleCommandExecution);
 	}
 
+	/**
+	 * Instantly fires the command if it has no delay
+	 * or schedule its execution if it does have some
+	 *
+	 * @param command Command to execute
+	 */
 	private void scheduleCommandExecution(CommandData command) {
 		String parsed = MMOItems.plugin.getPlaceholderParser().parse(player, command.getCommand());
 
@@ -86,6 +91,15 @@ public class UseItem {
 					(long) command.getDelay() * 20);
 	}
 
+	/**
+	 * Dispatches a command
+	 *
+	 * @param parsed  Command with placeholders already parsed
+	 * @param console If the console should dispatch the command, when
+	 *                set to false the player dispatches it.
+	 * @param op      Very dangerous option, dispatches the command
+	 *                as a server administrator
+	 */
 	private void dispatchCommand(String parsed, boolean console, boolean op) {
 		if (console) {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsed);
@@ -97,8 +111,10 @@ public class UseItem {
 			try {
 				Bukkit.dispatchCommand(player, parsed);
 			} catch (Exception ignored) {
+				player.setOp(false);
+			} finally {
+				player.setOp(false);
 			}
-			player.setOp(false);
 		} else
 			Bukkit.dispatchCommand(player, parsed);
 	}

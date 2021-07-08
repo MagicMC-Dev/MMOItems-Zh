@@ -27,7 +27,7 @@ projectile-damage: '&3 &7■ Projectile Damage: &f<plus>#%'
 faction-damage-undead: '&3 &7■ Undead Faction Damage: &f<plus>#%'
 
 # Abilities
-ability-format: '&a>&8| &7#c &8|&e|&8| &3 &7&l#a'
+ability-format: '&a>&8| &7#c &8|&e|&8| &7&l#a'
 ability-modifier: ' &3>&8|&7 #m&8: &f#v'
 ability-splitter: '&8'
 
@@ -75,29 +75,30 @@ restore-food: '&3 &7■ Restores &f# &7Food'
 restore-saturation: '&3 &7■ Restores &f# &7Saturation'
 restore-mana: '&3 &7■ Restores &f# &7Mana'
 restore-stamina: '&3 &7■ Restores &f# &7Stamina'
-effect: '&3 &7■ Grants &f#e &3 &7for &f#d &7s'
+effect: '&3 &7■ Grants &f#e &7for &f#d &7s'
 repair: '&3 &7■ Repair: &f#'
 can-identify: '&3 &7■ Can identify items.'
 can-deconstruct: '&3 &7■ Can deconstruct tiered items.'
 can-deskin: '&3 &7■ Can de-skin skinned items.'
 success-rate: '&3 &7■ Success Rate: &a&l#%'
-max-consume: '&3 &7■ Max Consume: &f# &3 &7uses'
+max-consume: '&3 &7■ &f# &7Uses Left'
 
 # Gem Stones
 empty-gem-socket: '&a◆ Empty # Gem Socket'
 filled-gem-socket: '&a◆ #'
 when-applied: '&aWhen Applied:'
-gem-stone-lore: '&8&l[&2&l*&8&l] &aDrag onto an item &3 &7to apply!'
+gem-stone-lore: '&8&l[&2&l*&8&l] &aDrag onto an item &7to apply!'
 
 # Soulbound
 soulbinding-chance: '&3 &7■ Has a &a#% &7chance to bind your item.'
 soulbound-break-chance: '&3 &7■ Has a &a#% &7chance to break soulbounds.'
 soulbound-level: '&3 &7■ Level &e# &7Soulbound'
 
-# Tool Enchants
+# Tools
 autosmelt: '&3 &7■ &fAutosmelt'
 bouncing-crack: '&3 &7■ &fBouncing Crack'
 pickaxe-power: '&3 &7■ &fPickaxe Power: &a#'
+durability: '&7Durability: #c / #m'
 
 # General
 item-type: '&c#'

@@ -51,9 +51,8 @@ public class MMOUtils {
 	 * @return If the given item is the desired MMOItem
 	 */
 	public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String type, @NotNull String id) {
-		if (item == null) {
+		if (item == null)
 			return false;
-		}
 
 		// Make it into an NBT Item
 		NBTItem asNBT = NBTItem.get(item);
@@ -79,9 +78,8 @@ public class MMOUtils {
 	 */
 	@Nullable
 	public static Type getType(@Nullable NBTItem nbtItem) {
-		if (nbtItem == null || !nbtItem.hasType()) {
+		if (nbtItem == null || !nbtItem.hasType())
 			return null;
-		}
 
 		// Try that one instead
 		return MMOItems.plugin.getTypes().get(nbtItem.getType());
@@ -93,14 +91,13 @@ public class MMOUtils {
 	 */
 	@Nullable
 	public static String getID(@Nullable NBTItem nbtItem) {
-		if (nbtItem == null || !nbtItem.hasType()) {
+		if (nbtItem == null || !nbtItem.hasType())
 			return null;
-		}
 
 		ItemTag type = ItemTag.getTagAtPath("MMOITEMS_ITEM_ID", nbtItem, SupportedNBTTagValues.STRING);
-		if (type == null) {
+		if (type == null)
 			return null;
-		}
+
 		return (String) type.getValue();
 	}
 
@@ -136,19 +133,23 @@ public class MMOUtils {
 	 */
 	@Nullable
 	public static UUID UUIDFromString(@org.jetbrains.annotations.Nullable String anything) {
-		if (anything == null) { return null; }
+		if (anything == null)
+			return null;
 
 		// Correct Format?
-		if (anything.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+		if (anything.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"))
 
 			// Return thay
 			return UUID.fromString(anything);
-		}
 
 		// No
 		return null;
 	}
 
+	/**
+	 * @deprecated Not being used internally
+	 */
+	@Deprecated
 	public static String getProgressBar(double ratio, int n, String barChar) {
 		StringBuilder bar = new StringBuilder();
 		for (int k = 0; k < n; k++)
@@ -157,6 +158,7 @@ public class MMOUtils {
 	}
 
 	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
+
 		/*
 		 * check direct damager
 		 */
@@ -205,13 +207,22 @@ public class MMOUtils {
 
 	/**
 	 * Is the player encumbered by carrying two-handed items?
+	 *
+	 * @deprecated Use PlayerData.get(player).areHandsFull() instead
 	 */
+	@Deprecated
 	public static boolean twoHandedCase(Player player) {
 
 		// Straight from player data
 		return PlayerData.get(player).areHandsFull();
 	}
 
+	/**
+	 * Super useful to display enum names like DIAMOND_SWORD in chat
+	 *
+	 * @param s String with lower cases and spaces only
+	 * @return Same string with capital letters at the beginning of each word.
+	 */
 	public static String caseOnWords(String s) {
 		StringBuilder builder = new StringBuilder(s);
 		boolean isLastSpace = true;
@@ -294,9 +305,9 @@ public class MMOUtils {
 	}
 
 	/**
-	 * @param player Player hitting the entity which can be null
+	 * @param player Player hitting the entity
 	 * @param loc    If the given location is not null, this method checks if this
-	 *               location is inside the bounding box
+	 *               location is inside the bounding box of the entity hit
 	 * @param target The entity being hit
 	 * @return If the entity can be damaged, by a specific player, at a specific
 	 * spot
@@ -331,6 +342,10 @@ public class MMOUtils {
 	private static final String[] romanChars = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 	private static final int[] romanValues = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
 
+	/**
+	 * @param input Integer from 1 to 3999
+	 * @return Roman display of given int
+	 */
 	public static String intToRoman(int input) {
 		if (input < 1 || input > 3999) throw new IllegalArgumentException("Input must be between 1 and 3999");
 
@@ -350,30 +365,35 @@ public class MMOUtils {
 		return Math.floor(x * pow) / pow;
 	}
 
-	public static Vector rotAxisX(Vector v, double a) {
-		double y = v.getY() * Math.cos(a) - v.getZ() * Math.sin(a);
-		double z = v.getY() * Math.sin(a) + v.getZ() * Math.cos(a);
-		return v.setY(y).setZ(z);
-	}
-
-	public static Vector rotAxisY(Vector v, double b) {
-		double x = v.getX() * Math.cos(b) + v.getZ() * Math.sin(b);
-		double z = v.getX() * -Math.sin(b) + v.getZ() * Math.cos(b);
-		return v.setX(x).setZ(z);
-	}
-
-	public static Vector rotAxisZ(Vector v, double c) {
-		double x = v.getX() * Math.cos(c) - v.getY() * Math.sin(c);
-		double y = v.getX() * Math.sin(c) + v.getY() * Math.cos(c);
-		return v.setX(x).setY(y);
-	}
-
+	/**
+	 * @param v   Vector to rotate
+	 * @param loc The position is not actually being used here, only the pitch and yaw
+	 * @return Vector facing direction given by location
+	 */
 	public static Vector rotateFunc(Vector v, Location loc) {
 		double yaw = loc.getYaw() / 180 * Math.PI;
 		double pitch = loc.getPitch() / 180 * Math.PI;
 		v = rotAxisX(v, pitch);
 		v = rotAxisY(v, -yaw);
 		return v;
+	}
+
+	private static Vector rotAxisX(Vector v, double a) {
+		double y = v.getY() * Math.cos(a) - v.getZ() * Math.sin(a);
+		double z = v.getY() * Math.sin(a) + v.getZ() * Math.cos(a);
+		return v.setY(y).setZ(z);
+	}
+
+	private static Vector rotAxisY(Vector v, double b) {
+		double x = v.getX() * Math.cos(b) + v.getZ() * Math.sin(b);
+		double z = v.getX() * -Math.sin(b) + v.getZ() * Math.cos(b);
+		return v.setX(x).setZ(z);
+	}
+
+	private static Vector rotAxisZ(Vector v, double c) {
+		double x = v.getX() * Math.cos(c) - v.getY() * Math.sin(c);
+		double y = v.getX() * Math.sin(c) + v.getY() * Math.cos(c);
+		return v.setX(x).setY(y);
 	}
 
 	/**

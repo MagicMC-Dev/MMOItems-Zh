@@ -10,7 +10,6 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
-import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -19,11 +18,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UnidentifiedItem extends ConfigItem {
 	public UnidentifiedItem(Type type) {
@@ -101,7 +96,7 @@ public class UnidentifiedItem extends ConfigItem {
 			 */
 			item.getItem().setAmount(1);
 			ItemStack unidentified = MythicLib.plugin.getVersion().getWrapper().copyTexture(item)
-					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(new DynamicLore(item).build()))).toItem();
+					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.toItem()))).toItem();
 			unidentified.setAmount(amount);
 			ItemMeta meta = unidentified.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());

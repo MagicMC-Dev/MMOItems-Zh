@@ -1,4 +1,0 @@
-# This file contains all the data about dynamic lore.
-# Use this to change the formatting of different lore parts.
-format:
-  durability: "&7Durability: %durability% / %max_durability%"

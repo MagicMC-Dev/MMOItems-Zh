@@ -114,3 +114,18 @@ SILVER_AXE:
         - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
         - MATERIAL.SILVER_INGOT STICK AIR
         - AIR STICK AIR
+THE_UNBREAKABLE:
+  base:
+    material: IRON_AXE
+    name: The Unbreakable
+    unbreakable: true
+    attack-damage: 12.0
+    lore:
+      - '&7&oCannot be enchanted nor reforged'
+    attack-speed: 0.9
+    two-handed: true
+    disable-repairing: true
+    disable-enchanting: true
+    disable-smithing: true
+    tier: RARE
+    stamina-cost: 3.0

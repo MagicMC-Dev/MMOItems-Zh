@@ -17,7 +17,7 @@ public class ItemStats {
 	public static final ItemStat
 			REVISION_ID = new RevisionID(),
 			MATERIAL = new MaterialStat(),
-			DURABILITY = new ItemDamage(),
+			ITEM_DAMAGE = new ItemDamage(),
 			CUSTOM_MODEL_DATA = new CustomModelData(),
 			MAX_DURABILITY = new MaximumDurability(),
 			WILL_BREAK = new LostWhenBroken(),
@@ -132,7 +132,7 @@ public class ItemStats {
 			GEM_COLOR = new GemColor(),
 			GEM_UPGRADE_SCALING = new GemUpgradeScaling(),
 			ITEM_TYPE_RESTRICTION = new ItemTypeRestriction(),
-			MAX_CONSUME = new DoubleStat("MAX_CONSUME", Material.BLAZE_POWDER, "Max Consume", new String[]{"Max amount of usage before", "item disappears."}, new String[]{"consumable"}),
+			MAX_CONSUME = new MaxConsume(),
 			SUCCESS_RATE = new SuccessRate(),
 
 	// Crafting Stats
@@ -182,7 +182,15 @@ public class ItemStats {
 
 	// Internal Stats
 	SOULBOUND = new Soulbound(),
+			CUSTOM_DURABILITY = new CustomDurability(),
 			STORED_TAGS = new StoredTags(),
 			ITEM_LEVEL = new ItemLevel(),
 			INTERNAL_REVISION_ID = new InternalRevisionID();
+
+	/**
+	 * @deprecated Item damage is now {@link ItemDamage} and
+	 * custom durability is now {@link CustomDurability}
+	 */
+	@Deprecated
+	public static final ItemStat DURABILITY = ITEM_DAMAGE;
 }

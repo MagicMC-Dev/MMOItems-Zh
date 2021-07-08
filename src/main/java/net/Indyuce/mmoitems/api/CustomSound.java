@@ -21,9 +21,7 @@ public enum CustomSound {
 	private final String[] lore;
 	private final int slot;
 
-
-
-	CustomSound(Material material, int slot, String... lore) {
+	private CustomSound(Material material, int slot, String... lore) {
 		this.item = new ItemStack(material);
 		this.lore = lore;
 		this.slot = slot;

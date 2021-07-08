@@ -11,7 +11,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.Enchants;
@@ -183,9 +182,8 @@ public class ItemStackBuilder {
 			}
 
 		// Display gem stone lore hint thing
-		if (builtMMOItem.getType() == Type.GEM_STONE) {
+		if (builtMMOItem.getType() == Type.GEM_STONE)
 			lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
-		}
 
 		// Display item type
 		lore.insert("item-type",
@@ -194,36 +192,44 @@ public class ItemStackBuilder {
 								? builtMMOItem.getData(ItemStats.DISPLAYED_TYPE).toString()
 								: builtMMOItem.getType().getName()));
 
-		// Calculate lore with placeholders
+		// Calculate extra item lore with placeholders
 		if (builtMMOItem.hasData(ItemStats.LORE)) {
 			List<String> parsed = new ArrayList<>();
 			((StringListData) builtMMOItem.getData(ItemStats.LORE)).getList()
-					.forEach(str -> parsed.add(lore.applyLorePlaceholders(str)));
+					.forEach(str -> parsed.add(lore.applySpecialPlaceholders(str)));
 			lore.insert("lore", parsed);
 		}
 
-		List<String> list = lore.build();
+		// Calculate item lore
+		List<String> builtLore = lore.build();
+
+		// TODO generalize this to all enchants plugins, not only MythicEnchants
 		if (MMOItems.plugin.getMythicEnchantsSupport() != null && mmoitem.hasData(ItemStats.ENCHANTS)) {
 			ItemStack metaItem = item.clone();
 			ItemMeta meta = metaItem.getItemMeta();
-			meta.setLore(list);
+			meta.setLore(builtLore);
 			metaItem.setItemMeta(meta);
 
 			EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
 			for (Enchantment enchant : data.getEnchants()) {
 				int lvl = data.getLevel(enchant);
-				if (lvl != 0 && enchant instanceof MythicEnchant) {
+				if (lvl != 0 && enchant instanceof MythicEnchant)
 					MMOItems.plugin.getMythicEnchantsSupport().handleEnchant(metaItem, enchant, lvl);
-				}
 			}
-			list = metaItem.getItemMeta().getLore();
+			builtLore = metaItem.getItemMeta().getLore();
 		}
+
+		// Apply item lore
+		meta.setLore(builtLore);
+
+		/*
+		 * Save dynamic lore for later calculations. Not used anymore, but
+		 * kept in case we need to roll back the lore update change.
+		 */
 		JsonArray array = new JsonArray();
-		for (String s : list)
-			array.add(s);
+		builtLore.forEach(str -> array.add(str));
 		if (array.size() != 0)
 			tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", array.toString()));
-		meta.setLore(list);
 
 		/*
 		 * This tag is added to entirely override default vanilla item attribute
@@ -232,16 +238,12 @@ public class ItemStackBuilder {
 		 */
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
-		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
-			meta.setDisplayName(getMeta().getDisplayName());
-		}
-
 		item.setItemMeta(meta);
 		NBTItem nbtItem = NBTItem.get(item);
 
-		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
+		// Apply item display name using Components for colors
+		if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName())
 			nbtItem.setDisplayNameComponent(LegacyComponent.parse(meta.getDisplayName()));
-		}
 
 		return nbtItem.addTag(tags);
 	}
@@ -249,10 +251,13 @@ public class ItemStackBuilder {
 	/**
 	 * @return Builds the item
 	 */
-	public ItemStack build() { return new DynamicLore(buildNBT()).build(); }
+	public ItemStack build() {
+		return buildNBT().toItem();
+	}
 
 	/**
 	 * @return Builds the item
 	 */
-	public ItemStack build(boolean forDisplay) { return new DynamicLore(buildNBT(forDisplay)).build(); }
+	public ItemStack build(boolean forDisplay) {
+		return buildNBT(forDisplay).toItem(); }
 }

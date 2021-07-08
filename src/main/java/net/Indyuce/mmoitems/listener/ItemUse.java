@@ -55,24 +55,23 @@ public class ItemUse implements Listener {
 			return;
 
 		/**
-		 * Some consumables must be fully eaten through the vanilla eating animation and are not handled here
+		 * Some consumables must be fully eaten through the vanilla eating
+		 * animation and are handled there {@link #handleVanillaEatenConsumables(PlayerItemConsumeEvent)}
 		 */
 		Player player = event.getPlayer();
 		UseItem useItem = UseItem.getItem(player, item, item.getType());
 		if (useItem instanceof Consumable && ((Consumable) useItem).hasVanillaEating())
 			return;
 
-		/*
-		 * (BUG FIX) cancel the event to prevent things like shield blocking
-		 */
+		// (BUG FIX) Cancel the event to prevent things like shield blocking
 		if (!useItem.checkItemRequirements()) {
 			event.setCancelled(true);
 			return;
 		}
 
-		// commands & consummables
+		// Commands & consummables
 		if (event.getAction().name().contains("RIGHT_CLICK")) {
-			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
+			if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
 				Message.ITEM_ON_COOLDOWN
 						.format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
 						.send(player, "item-cooldown");
@@ -80,14 +79,18 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
-			useItem.executeCommands();
-
 			if (useItem instanceof Consumable) {
 				event.setCancelled(true);
-				if (((Consumable) useItem).useWithoutItem())
+				Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer();
+				if (result == Consumable.ConsumableConsumeResult.CANCEL)
+					return;
+
+				else if (result == Consumable.ConsumableConsumeResult.CONSUME)
 					event.getItem().setAmount(event.getItem().getAmount() - 1);
 			}
+
+			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+			useItem.executeCommands();
 		}
 
 		if (useItem instanceof UntargetedWeapon) {
@@ -109,7 +112,7 @@ public class ItemUse implements Listener {
 				|| !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
 			return;
 
-		// custom damage check
+		// Custom damage check
 		LivingEntity target = (LivingEntity) event.getEntity();
 		if (MythicLib.plugin.getDamage().findInfo(target) != null)
 			return;
@@ -118,7 +121,7 @@ public class ItemUse implements Listener {
 		CachedStats stats = null;
 
 		/*
-		 * must apply attack conditions before apply any effects. the event must
+		 * Must apply attack conditions before apply any effects. the event must
 		 * be cancelled before anything is applied
 		 */
 		PlayerData playerData = PlayerData.get(player);
@@ -145,9 +148,7 @@ public class ItemUse implements Listener {
 			}
 		}
 
-		/*
-		 * cast on-hit abilities and add the extra damage to the damage event
-		 */
+		// Cast on-hit abilities and add the extra damage to the damage event
 		result.applyEffects(stats == null ? playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND) : stats, item, target);
 		event.setDamage(result.getDamage());
 	}
@@ -191,11 +192,11 @@ public class ItemUse implements Listener {
 		if (!weapon.checkItemRequirements())
 			return;
 
-		// special staff attack
+		// Special staff attack
 		if (weapon instanceof Staff)
 			((Staff) weapon).specialAttack(target);
 
-		// special gauntlet attack
+		// Special gauntlet attack
 		if (weapon instanceof Gauntlet)
 			((Gauntlet) weapon).specialAttack(target);
 	}
@@ -305,11 +306,12 @@ public class ItemUse implements Listener {
 		}
 
 		/**
-		 * Consumables which can be eaten using the vanilla eating animation are handled here.
+		 * Consumables which can be eaten using the
+		 * vanilla eating animation are handled here.
 		 */
 		if (useItem instanceof Consumable) {
 
-			if (!useItem.getPlayerData().canUseItem(useItem.getMMOItem().getId())) {
+			if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
 				Message.ITEM_ON_COOLDOWN
 						.format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
 						.send(player, "item-cooldown");

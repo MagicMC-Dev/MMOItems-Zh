@@ -68,9 +68,8 @@ public class DurabilityListener implements Listener {
 		DurabilityItem item = new DurabilityItem(event.getPlayer(), event.getItem());
 
 		if (item.isValid()) {
-			/*
-			 * Calculate item durability loss
-			 */
+
+			// Calculate item durability loss
 			item.decreaseDurability(event.getDamage());
 
 			/*

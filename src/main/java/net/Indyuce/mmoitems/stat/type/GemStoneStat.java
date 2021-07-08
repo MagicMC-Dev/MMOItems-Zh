@@ -5,7 +5,7 @@ package net.Indyuce.mmoitems.stat.type;
  * stone. For instance, 'Success Rate' is a gem stone stat but it must not be
  * transferred onto the item.
  * 
- * @author cympe
+ * @author indyuce
  */
 public interface GemStoneStat {
 

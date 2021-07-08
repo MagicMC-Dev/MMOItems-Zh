@@ -197,15 +197,10 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 			item.getLore().insert(getPath(), builtRange); }
 	}
 
-
 	@NotNull public static String getColorPrefix(boolean isNegative) {
 
 		// Get the base
-		if (isNegative) {
-			return Objects.requireNonNull(MMOItems.plugin.getConfig().getString("stats-displaying.color-negative", ""));
-
-		} else {
-			return Objects.requireNonNull(MMOItems.plugin.getConfig().getString("stats-displaying.color-positive", "")); }
+		return Objects.requireNonNull(MMOItems.plugin.getConfig().getString("stats-displaying.color-" + (isNegative ? "negative" : "positive"), ""));
 	}
 
 	@NotNull String plus(double amount) { if (amount >= 0) { return "+"; } else return ""; }
@@ -219,11 +214,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	 * </p> > The amount is negative, and more hurts the player
 	 */
 	public boolean isGood(double amount) {
-		if (moreIsBetter()) {
-			return amount >= 0;
-		} else {
-			return  amount <= 0;
-		}
+		return moreIsBetter() ? amount >= 0 : amount <= 0;
 	}
 
 	@Override
@@ -313,9 +304,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 			spread = MMOUtils.truncation(.8 * maxSpread, 3);
 		}
 
-		/*
-		 * Newest system with gaussian values calculation
-		 */
+		// Newest system with gaussian values calculation
 		else {
 			String[] split = message.split(" ");
 			base = MMOUtils.parseDouble(split[0]);

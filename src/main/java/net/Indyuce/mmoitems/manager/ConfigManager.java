@@ -38,6 +38,7 @@ public class ConfigManager implements Reloadable {
 	private ConfigFile abilities, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
 
 	// cached config options
+	// TODO remove ability-player-damage and add some WG flag or something
 	public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate;
 	public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
 	public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
@@ -80,7 +81,6 @@ public class ConfigManager implements Reloadable {
 			} else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
 		}
 
-
 		for (String language : languages) {
 			File languageFolder = new File(MMOItems.plugin.getDataFolder() + "/language/" + language);
 			if (!languageFolder.exists())
@@ -98,16 +98,15 @@ public class ConfigManager implements Reloadable {
 				} else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
 		}
 
-		// load files with default configuration
+		// Load files with default configuration
 		for (DefaultFile file : DefaultFile.values())
 			if (file.isAutomatic())
 				file.checkFile();
 
 		/*
-		 * setup /item files after generating the default /item files otherwise
+		 * Setup /item files after generating the default /item files otherwise
 		 * they will be empty!
 		 */
-
 		MMOItems.plugin.getTypes().getAll().forEach(type -> type.getConfigFile().setup());
 
 		ConfigFile items = new ConfigFile("/language", "items");
@@ -180,7 +179,7 @@ public class ConfigManager implements Reloadable {
 		attackEffects.save();
 
 		/*
-		 * only load config files after they have been initialized (above) so
+		 * Only load config files after they have been initialized (above) so
 		 * they do not crash the first time they generate and so we do not have
 		 * to restart the server
 		 */
@@ -199,7 +198,7 @@ public class ConfigManager implements Reloadable {
 		dynLore = new ConfigFile("/language", "dynamic-lore");
 
 		/*
-		 * reload cached config options for quicker access - these options are
+		 * Reload cached config options for quicker access - these options are
 		 * used in runnables, it is thus better to cache them
 		 */
 		replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
@@ -292,7 +291,11 @@ public class ConfigManager implements Reloadable {
 	public String getStaffSpiritName(StaffSpirit spirit) {
 		return attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-"));
 	}
-	
+
+	/**
+	 * @deprecated See {@link net.Indyuce.mmoitems.api.item.util.LoreUpdate}
+	 */
+	@Deprecated
 	public String getDynLoreFormat(String input) {
 		return dynLore.getConfig().getString("format." + input);
 	}
@@ -300,24 +303,23 @@ public class ConfigManager implements Reloadable {
 	/**
 	 * Creates an empty directory in the MMOItems plugin folder if it does not
 	 * exist
-	 * 
-	 * @param path
-	 *            The path of your folder
+	 *
+	 * @param path The path of your folder
 	 */
 	private void mkdir(String path) {
 		File folder = new File(MMOItems.plugin.getDataFolder() + "/" + path);
 		if (!folder.exists())
-			if(!folder.mkdir())
+			if (!folder.mkdir())
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
 	}
 
 	/*
-	 * all config files that have a default configuration are stored here, they
+	 * All config files that have a default configuration are stored here, they
 	 * get copied into the plugin folder when the plugin enables
 	 */
 	public enum DefaultFile {
 
-		// default general config files -> /MMOItems
+		// Default general config files -> /MMOItems
 		ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
 		ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
 		DROPS("drops.yml", "", "drops.yml"),
@@ -326,16 +328,15 @@ public class ConfigManager implements Reloadable {
 		UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
 		EXAMPLE_MODIFIERS("modifiers/example-modifiers.yml", "modifiers", "example-modifiers.yml"),
 
-		// default language files -> /MMOItems/language
+		// Default language files -> /MMOItems/language
 		LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
 		STATS("stats.yml", "language", "stats.yml"),
-		DYN_LORE("dynamic-lore.yml", "language", "dynamic-lore.yml"),
 
-		// station layouts
+		// Station layouts
 		DEFAULT_LAYOUT("layouts/default.yml", "layouts", "default.yml"),
 		EXPANDED_LAYOUT("layouts/expanded.yml", "layouts", "expanded.yml"),
 
-		// default item config files -> /MMOItems/item
+		// Default item config files -> /MMOItems/item
 		ARMOR("item/armor.yml", "item", "armor.yml"),
 		AXE("item/axe.yml", "item", "axe.yml"),
 		BLOCK("item/block.yml", "item", "block.yml"),
@@ -360,8 +361,8 @@ public class ConfigManager implements Reloadable {
 
 		private final String folderPath, fileName, resourceName;
 
-		/*
-		 * allows to use the checkFile() method while not loading it
+		/**
+		 * Allows to use the checkFile() method while not loading it
 		 * automatically e.g item-types.yml
 		 */
 		private final boolean manual;
@@ -407,7 +408,6 @@ public class ConfigManager implements Reloadable {
 		public YamlConverter(File newConfig) {
 			this.file = newConfig;
 			this.fileName = newConfig.getName();
-
 		}
 
 		public boolean convert() throws IOException {

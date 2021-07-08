@@ -113,12 +113,10 @@ public enum Element {
 
 	LIGHTNESS(Material.GLOWSTONE_DUST, ChatColor.WHITE, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.WHITE_WOOL),
 			(stats, result, target, damage, absolute) -> {
-				// TODO Auto-generated method stub
 
 			}, 38, 42),
 
 	DARKNESS(Material.COAL, ChatColor.DARK_GRAY, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.COAL_BLOCK), (stats, result, target, damage, absolute) -> {
-		// TODO Auto-generated method stub
 
 	}, 39, 41),
 

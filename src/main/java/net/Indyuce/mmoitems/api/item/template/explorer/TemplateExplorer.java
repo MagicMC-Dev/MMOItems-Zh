@@ -22,8 +22,8 @@ public class TemplateExplorer {
 	private final Random random = new Random();
 
 	/*
-	 * Not defined at the beginning to save extra performance, if there are 100+
-	 * templates this be pretty violent. TODO make type reference necessary?
+	 * Not defined at the beginning to save extra performance,
+	 * if there are 100+ templates this be pretty violent
 	 */
 	private final Collection<MMOItemTemplate> all = MMOItems.plugin.getTemplates().collectTemplates();
 

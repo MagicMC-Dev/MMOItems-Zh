@@ -47,7 +47,9 @@ public class InventoryUpdateHandler {
 	 *         specific equipment slot. This is ran by stat updates because MI
 	 *         needs to check if the player is holding a WEAPON before apply an
 	 *         attribute base stat value offset (attack damage/speed).
+	 * @deprecated Not used anymore
 	 */
+	@Deprecated
 	public boolean hasItemWithType(EquipmentSlot checked) {
 		for (EquippedPlayerItem item : items)
 			if (item.getSlot() == checked)

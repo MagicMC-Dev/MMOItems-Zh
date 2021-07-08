@@ -1,34 +1,19 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import com.google.gson.*;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.stat.type.SelfConsumable;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.potion.PotionEffectType;
-
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
@@ -37,22 +22,32 @@ import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
+import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Effects extends ItemStat implements SelfConsumable {
+import java.text.DecimalFormat;
+import java.util.*;
+
+public class Effects extends ItemStat implements PlayerConsumable {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public Effects() {
-		super("EFFECTS", Material.POTION, "Effects", new String[] { "The potion effects your", "consumable item grants." },
-				new String[] { "consumable" });
+		super("EFFECTS", Material.POTION, "Effects", new String[]{"The potion effects your", "consumable item grants."},
+				new String[]{"consumable"});
 	}
 
 	@Override
 	public RandomStatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Must specify a config section"));
+		Validate.isTrue(object instanceof ConfigurationSection, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Must specify a config section"));
 		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
 
@@ -224,22 +219,21 @@ public class Effects extends ItemStat implements SelfConsumable {
 	}
 
 	@Override
-	public boolean onSelfConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+	public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
 
 		// Does it have effects?
-		if (!mmo.hasData(ItemStats.EFFECTS)) { return false; }
+		if (!mmo.hasData(ItemStats.EFFECTS))
+			return;
 
 		// Get Data
 		PotionEffectListData pelData = (PotionEffectListData) mmo.getData(ItemStats.EFFECTS);
 
 		// Apply
-		for (PotionEffectData ped : pelData.getEffects()) {
-			if (ped == null) { continue; }
+		for (PotionEffectData ped : pelData.getEffects())
+			if (ped != null) {
+				player.removePotionEffect(ped.getType());
+				player.addPotionEffect(ped.toEffect());
+			}
 
-			player.removePotionEffect(ped.getType());
-			player.addPotionEffect(ped.toEffect()); }
-
-		// It was applied it seems
-		return true;
 	}
 }

@@ -160,6 +160,10 @@ public class Type {
 		return parent;
 	}
 
+	/**
+	 * @return Either if the two types are the same,
+	 * or if this type is a subtype of the given type.
+	 */
 	public boolean corresponds(Type type) {
 		return equals(type) || (isSubtype() && getParent().equals(type));
 	}

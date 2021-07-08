@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -17,15 +16,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Gunging
  */
 @FunctionalInterface
-public interface SelfConsumable {
+public interface PlayerConsumable {
 
     /**
-     * @return If the operation was successful, and thus the item
-     *         must be consumed by one use.
-     *         <br>
-     *         Even a single <code>true</code> will make the item
-     *         be consumed by one use, among all its Self-Consumable
-     *         stats being triggered.
+     * Called when the item is being consumed directly by a player.
+     *
+     * @return The return value is not being used anymore.
      */
-    boolean onSelfConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player);
+    void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player);
 }

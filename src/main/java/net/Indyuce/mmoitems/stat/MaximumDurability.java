@@ -12,39 +12,41 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
-import net.Indyuce.mmoitems.stat.type.*;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import net.Indyuce.mmoitems.stat.type.Upgradable;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
-public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat, Upgradable, DynamicLoreStat {
+/**
+ * See {@link CustomDurability} for useful comments
+ *
+ * @author indyuce
+ */
+public class MaximumDurability extends DoubleStat implements ItemRestriction, GemStoneStat, Upgradable {
 	public MaximumDurability() {
 		super("MAX_DURABILITY", Material.SHEARS, "Maximum Durability", new String[]{"The amount of uses before your", "item becomes unusable/breaks."}, new String[]{"!block", "all"});
 	}
 
+	@Override
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+		whenApplied(item, currentData);
+	}
 
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
 
-	@Override
-	@NotNull
-	public
-	ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+		int max = (int) ((DoubleData) data).getValue();
+		int current = item.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY) ? (int) ((DoubleData) item.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue() : max;
 
-		// Create Fresh
-		ArrayList<ItemTag> ret = new ArrayList<>();
+		item.addItemTag(new ItemTag(getNBTPath(), max));
 
-		// Add sole tag
-		ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
-		ret.add(new ItemTag(ItemStats.DURABILITY.getNBTPath(), ((DoubleData) data).getValue()));
-
-		// Return thay
-		return ret;
+		// Display durability in lore here.
+		String format = MMOItems.plugin.getLanguage().getStatFormat("durability").replace("#m", "" + max).replace("#c", "" + current);
+		item.getLore().insert("durability", format);
 	}
 
 	@Override
@@ -68,49 +70,32 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 			}
 
 			// Yea no
-			if (base < 8) { base = 400; }
+			if (base < 8)
+				base = 400;
 
 			// Set max dura
 			item.setData(ItemStats.MAX_DURABILITY, new DoubleData(base));
-			item.setData(ItemStats.DURABILITY, new DoubleData(base));
+			/*item.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(base));*/
 		}
 	}
 
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 
-		// No max durability not MMOItems' problem
-		if (!item.hasTag(ItemStats.MAX_DURABILITY.getNBTPath())) { return true; }
+		/*
+		 * Items with no MMOITEMS_DURABILITY tag yet means that they still
+		 * have full durability
+		 */
+		if (!item.hasTag("MMOITEMS_DURABILITY"))
+			return true;
 
-		// No durability? Uuuuh that's weird but ok
-		if (!item.hasTag(ItemStats.DURABILITY.getNBTPath())) {
-
-			// Initialize to max durability and roll
-			item.addTag(new ItemTag(ItemStats.DURABILITY.getNBTPath(), item.getDouble(ItemStats.MAX_DURABILITY.getNBTPath())));
-		}
-
-		if (item.getDouble(ItemStats.DURABILITY.getNBTPath()) <= 0) {
+		if (item.getDouble(ItemStats.CUSTOM_DURABILITY.getNBTPath()) <= 0) {
 			if (message) {
 				Message.ZERO_DURABILITY.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
-				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f); }
+				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+			}
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public String getDynamicLoreId() {
-		return "durability";
-	}
-
-	@Nullable
-	@Override
-	public String calculatePlaceholder(NBTItem item) {
-		if (!item.hasTag("MMOITEMS_DURABILITY"))
-			return null;
-
-		return (MMOItems.plugin.getLanguage().getDynLoreFormat("durability")
-				.replace("%durability%", String.valueOf(item.getInteger("MMOITEMS_DURABILITY")))
-				.replace("%max_durability%", String.valueOf(item.getInteger("MMOITEMS_MAX_DURABILITY"))));
 	}
 }

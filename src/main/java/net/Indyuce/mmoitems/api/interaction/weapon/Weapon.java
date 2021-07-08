@@ -30,7 +30,7 @@ public class Weapon extends UseItem {
 
 	@Override
 	public boolean checkItemRequirements() {
-		if (MMOUtils.twoHandedCase(getPlayer())) {
+		if (playerData.areHandsFull()) {
 			Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer(), "two-handed");
 			return false;
 		}

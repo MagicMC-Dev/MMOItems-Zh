@@ -1,27 +1,15 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.stat.type.SelfConsumable;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
+import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.SoundsEdition;
 import net.Indyuce.mmoitems.stat.data.SoundData;
@@ -30,15 +18,26 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
+import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomSounds extends ItemStat implements GemStoneStat, SelfConsumable {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsumable {
 	public CustomSounds() {
-		super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[] { "The custom sounds your item will use." },
-				new String[] { "all" });
+		super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[]{"The custom sounds your item will use."},
+				new String[]{"all"});
 	}
 
 	@Override
@@ -128,11 +127,10 @@ public class CustomSounds extends ItemStat implements GemStoneStat, SelfConsumab
 		// Add
 		sounds.getCustomSounds().forEach(sound -> {
 			SoundData value = sounds.get(sound);
-			String s = sound.getName().replace(" ", "_").toUpperCase();
 
-			ret.add(new ItemTag("MMOITEMS_SOUND_" + s, value.getSound()));
-			ret.add(new ItemTag("MMOITEMS_SOUND_" + s + "_VOL", value.getVolume()));
-			ret.add(new ItemTag("MMOITEMS_SOUND_" + s + "_PIT", value.getPitch()));
+			ret.add(new ItemTag("MMOITEMS_SOUND_" + sound.name(), value.getSound()));
+			ret.add(new ItemTag("MMOITEMS_SOUND_" + sound.name() + "_VOL", value.getVolume()));
+			ret.add(new ItemTag("MMOITEMS_SOUND_" + sound.name() + "_PIT", value.getPitch()));
 		});
 
 		// Yes
@@ -224,21 +222,24 @@ public class CustomSounds extends ItemStat implements GemStoneStat, SelfConsumab
 	}
 
 	@Override
-	public boolean onSelfConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+	public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
 
 		// No sound, straight up default-yo
-		if (!mmo.hasData(ItemStats.CUSTOM_SOUNDS)) { playDefaultSound(player); return false; }
+		if (!mmo.hasData(ItemStats.CUSTOM_SOUNDS)) {
+			playDefaultSound(player);
+			return;
+		}
 
 		// Find data
 		SoundListData slData = (SoundListData) mmo.getData(ItemStats.CUSTOM_SOUNDS);
 		SoundData cs = slData.get(CustomSound.ON_CONSUME);
 
 		// Default sound :sleep:
-		if (cs == null) { playDefaultSound(player); return false; }
+		if (cs == null) playDefaultSound(player);
 
-		// Play custom sound lets go
-		player.getWorld().playSound(player.getLocation(), cs.getSound(), (float) cs.getVolume(), (float) cs.getPitch());
-		return true;
+			// Play custom sound lets go
+		else
+			player.getWorld().playSound(player.getLocation(), cs.getSound(), (float) cs.getVolume(), (float) cs.getPitch());
 	}
 
 	void playDefaultSound(@NotNull Player player) { player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1); }

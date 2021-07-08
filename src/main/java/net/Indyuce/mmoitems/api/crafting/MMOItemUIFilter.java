@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.util.DynamicLore;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -293,8 +292,7 @@ public class MMOItemUIFilter implements UIFilter {
         ItemStackBuilder builder = m.newBuilder();
 
         // Build display NBT and roll
-        NBTItem nbt = builder.buildNBT(true);
-        return new DynamicLore(nbt).build();
+        return builder.buildNBT(true).toItem();
     }
 
     @NotNull

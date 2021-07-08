@@ -1,18 +1,17 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class SoundListData implements StatData, Mergeable, RandomStatData {
 	private final Map<CustomSound, SoundData> sounds;
@@ -33,9 +32,13 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 		return sounds;
 	}
 
-	@Nullable public SoundData get(@Nullable CustomSound sound) {
-		if (sound == null) { return null; }
-		return sounds.get(sound); }
+	/**
+	 * @return Sound used, or null if none
+	 */
+	@Nullable
+	public SoundData get(CustomSound sound) {
+		return sounds.getOrDefault(sound, null);
+	}
 
 	public void set(CustomSound type, SoundData data) {
 		this.sounds.put(type, data);

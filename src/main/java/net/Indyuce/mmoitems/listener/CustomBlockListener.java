@@ -45,10 +45,19 @@ public class CustomBlockListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void b(BlockBreakEvent event) {
 		Optional<CustomBlock> opt = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
-		if (!opt.isPresent())
+		if (!opt.isPresent()) {
 			return;
+		}
 
 		CustomBlock block = opt.get();
+		
+		final int power = CustomBlockListener.getPickaxePower(event.getPlayer());
+		
+		if(block.requirePowerToBreak() && power < block.getRequiredPower()) {
+		    event.setCancelled(true);
+		    return;
+		}
+		
 		event.setDropItems(false);
 		event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0
 				: CustomBlockListener.getPickaxePower(event.getPlayer()) >= block.getRequiredPower()

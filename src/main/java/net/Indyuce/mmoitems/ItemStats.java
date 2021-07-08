@@ -29,6 +29,7 @@ public class ItemStats {
 	// Block Specific Stats
 	BLOCK_ID = new BlockID(),
 			REQUIRED_POWER = new RequiredPower(),
+			REQUIRE_POWER_TO_BREAK = new RequirePowerToBreak(),
 			MIN_XP = new MinXP(),
 			MAX_XP = new MaxXP(),
 			GEN_TEMPLATE = new GenTemplate(),
@@ -193,4 +194,5 @@ public class ItemStats {
 	 */
 	@Deprecated
 	public static final ItemStat DURABILITY = ITEM_DAMAGE;
+
 }

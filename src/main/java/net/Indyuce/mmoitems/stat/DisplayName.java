@@ -65,7 +65,9 @@ public class DisplayName extends StringStat implements GemStoneStat {
 	}
 
 	@NotNull String cropUpgrade(@NotNull String format) {
-		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
+		String suff = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix", " &8(&e+#lvl#&8)");
+		if (suff == null || suff.isEmpty()) { return format; }
+		String suffix = MythicLib.plugin.parseColors(suff);
 
 		//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
 		//MMOItems.getConsole().sendMessage("Format " + format);
@@ -74,6 +76,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
 			// Crop lvl
 			int lvlOFFSET = suffix.indexOf("#lvl#");
+			if (lvlOFFSET < 0) { return format; }
 			String sB4 = suffix.substring(0, lvlOFFSET);
 			String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
 			String sB4_alt = sB4.replace("+", "-");

@@ -38,7 +38,7 @@ public class IngredientType extends LoadedCraftingObject<Ingredient> {
      *
      * @return
      */
-    public PlayerIngredient readPlayerIngredient(NBTItem item) {
+    public PlayerIngredient  readPlayerIngredient(NBTItem item) {
         return readIngredient.apply(item);
     }
 }

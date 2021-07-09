@@ -1,16 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.VanillaPlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class VanillaIngredient extends Ingredient {
+public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
 	private final Material material;
 
 	/**
@@ -40,8 +40,19 @@ public class VanillaIngredient extends Ingredient {
 		return s.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 
+	@Override
+	public boolean matches(VanillaPlayerIngredient ing) {
+
+		// Check for material
+		if (ing.getType() != material)
+			return false;
+
+		// Check for display name
+		return ing.getDisplayName() != null ? ing.getDisplayName().equals(displayName) : displayName == null;
+	}
+
 	@NotNull
-    @Override
+	@Override
 	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 		NBTItem item = NBTItem.get(new ItemStack(material, getAmount()));
 		if (displayName != null) {

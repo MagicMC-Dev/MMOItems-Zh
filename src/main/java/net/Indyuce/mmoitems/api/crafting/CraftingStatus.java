@@ -1,19 +1,14 @@
 package net.Indyuce.mmoitems.api.crafting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.logging.Level;
-
-import org.bukkit.configuration.ConfigurationSection;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.*;
+import java.util.logging.Level;
 
 public class CraftingStatus {
 
@@ -170,103 +165,4 @@ public class CraftingStatus {
 			}
 		}
 	}
-
-	/*
-	 * instant craft: the progress bar is displayed on the subtitle and players
-	 * must stay around their initial position or the craft will be cancelled
-	 */
-	// private InstantCraftingInfo instant;
-	//
-	// public InstantCraftingInfo getInstant() {
-	// return instant;
-	// }
-	//
-	// public
-	// public class InstantCraftingInfo extends CraftingInfo {
-	// private final PlayerDataManager data;
-	// private boolean timedOut;
-	//
-	// public InstantCraftingInfo(PlayerDataManager data, Recipe recipe) {
-	// super(recipe);
-	// this.data = data;
-	// }
-	//
-	// public void start() {
-	// data.getPlayer().closeInventory();
-	//
-	// new BukkitRunnable() {
-	// int t = 0;
-	// final String format =
-	// Message.CRAFTING_SUBTITLE.formatRaw(ChatColor.GREEN);
-	// final Location loc = data.getPlayer().getLocation().clone();
-	//
-	// public void run() {
-	// t++;
-	//
-	// if (data.getPlayer() == null || !data.getPlayer().isOnline() ||
-	// data.getPlayer().isDead() ||
-	// !data.getPlayer().getWorld().equals(loc.getWorld()) ||
-	// loc.distanceSquared(data.getPlayer().getLocation()) > 15) {
-	// timedOut = true;
-	// cancel();
-	// return;
-	// }
-	//
-	// if ((double) t / 10 > recipe.getRecipe().getCraftingTime()) {
-	// timedOut = true;
-	//
-	// recipe = recipe.getRecipe().getRecipeInfo(data, new
-	// IngredientInventory(data.getPlayer()));
-	// if (!recipe.areConditionsMet()) {
-	// Message.CONDITIONS_NOT_MET.format(ChatColor.RED).send(data.getPlayer());
-	// data.getPlayer().playSound(data.getPlayer().getLocation(),
-	// Sound.ENTITY_VILLAGER_NO, 1, 1);
-	// return;
-	// }
-	//
-	// if (!recipe.allIngredientsHad()) {
-	// Message.NOT_ENOUGH_MATERIALS.format(ChatColor.RED).send(data.getPlayer());
-	// data.getPlayer().playSound(data.getPlayer().getLocation(),
-	// Sound.ENTITY_VILLAGER_NO, 1, 1);
-	// return;
-	// }
-	//
-	// craft();
-	//
-	// cancel();
-	// return;
-	// }
-	//
-	// double left = recipe.getRecipe().getCraftingTime() - (double) t / 10;
-	// double r = (double) t / 10 / recipe.getRecipe().getCraftingTime();
-	// data.getPlayer().sendTitle("", format.replace("#left#",
-	// formatDelay(left)).replace("#bar#", MMOUtils.getProgressBar(r, 10,
-	// AltChar.square)), 0, 20, 10);
-	// }
-	// }.runTaskTimer(MMOItems.plugin, 0, 2);
-	// }
-	//
-	// public void craft() {
-	// timedOut = true;
-	//
-	// for (CheckedIngredient ingredient : recipe.getIngredients())
-	// ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount(),
-	// ingredient.getIngredient());
-	//
-	// data.getPlayer().playSound(data.getPlayer().getLocation(),
-	// Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-	// for (ItemStack drop :
-	// data.getPlayer().getInventory().addItem(recipe.getRecipe().getOutput().generate()).values())
-	// data.getPlayer().getWorld().dropItem(data.getPlayer().getLocation(),
-	// drop);
-	//
-	// updateData();
-	// open();
-	// }
-	//
-	// public boolean isTimedOut() {
-	// return timedOut || (System.currentTimeMillis() - started >
-	// recipe.getRecipe().getCraftingTime());
-	// }
-	// }
 }

@@ -3,9 +3,9 @@ package net.Indyuce.mmoitems.api.crafting.recipe;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
@@ -51,7 +51,6 @@ public abstract class Recipe {
 		for (String format : config.getStringList("ingredients"))
 			try {
 				Ingredient ingredient = MMOItems.plugin.getCrafting().getIngredient(new MMOLineConfig(format));
-				Validate.notNull(ingredient, "Could not match ingredient");
 				ingredients.add(ingredient);
 			} catch (IllegalArgumentException exception) {
 				throw new IllegalArgumentException("Could not load ingredient '" + format + "': " + exception.getMessage());
@@ -63,7 +62,6 @@ public abstract class Recipe {
 		for (String format : config.getStringList("conditions"))
 			try {
 				Condition condition = MMOItems.plugin.getCrafting().getCondition(new MMOLineConfig(format));
-				Validate.notNull(condition, "Could not match condition");
 				conditions.add(condition);
 			} catch (IllegalArgumentException exception) {
 				throw new IllegalArgumentException("Could not load condition '" + format + "': " + exception.getMessage());
@@ -131,20 +129,22 @@ public abstract class Recipe {
 		options.put(option, value);
 	}
 
-	public CheckedRecipe evaluateRecipe(PlayerData data, IngredientInventory inv) {
-		return new CheckedRecipe(this, data, inv);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof Recipe && ((Recipe) obj).id.equals(id);
-	}
+	/**
+	 * THE method that checks if a player can use a recipe or not. This checks for
+	 * conditions and ingredients and saves all the info needed to display everything
+	 * in the item lore.
+	 *
+	 * @param data Player trying to use the recipe
+	 * @param inv  The ingredients of the player
+	 * @return Class that knows if the player can use the recipe
+	 */
+	public abstract CheckedRecipe evaluateRecipe(PlayerData data, IngredientInventory inv);
 
 	/**
 	 * Called when all the recipe conditions are to true and when the player
 	 * eventually starts crafting OR when the player claims the item in the
 	 * crafting queue once the delay is over.
-	 * 
+	 *
 	 * @param data    Player crafting the item
 	 * @param inv     The player's ingredients
 	 * @param recipe  The recipe used to craft the item
@@ -156,18 +156,23 @@ public abstract class Recipe {
 	 * Applies extra conditions when a player has just clicked on a recipe item
 	 * in the GUI. This method is called after checking for the recipe
 	 * conditions and ingredients.
-	 * 
-	 * @param  data    The player crafting the item
-	 * @param  inv     The player's ingredients
-	 * @param  recipe  The recipe used to craft the item
-	 * @param  station The station used to craft the item
-	 * @return         If the player can use the recipe
+	 *
+	 * @param data    The player crafting the item
+	 * @param inv     The player's ingredients
+	 * @param recipe  The recipe used to craft the item
+	 * @param station The station used to craft the item
+	 * @return If the player can use the recipe
 	 */
 	public abstract boolean canUse(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station);
 
 	public abstract ItemStack display(CheckedRecipe recipe);
 
-	public enum RecipeOption {
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Recipe && ((Recipe) obj).id.equals(id);
+	}
+
+	public static enum RecipeOption {
 
 		/**
 		 * Hide the crafting recipe when one of the condition is not met

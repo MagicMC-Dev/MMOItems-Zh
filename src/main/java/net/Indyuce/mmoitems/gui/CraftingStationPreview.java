@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;

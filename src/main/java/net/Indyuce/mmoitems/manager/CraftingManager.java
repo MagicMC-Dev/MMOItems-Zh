@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.manager;
 
-import com.google.gson.JsonParser;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -8,16 +7,22 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
+import net.Indyuce.mmoitems.api.crafting.LoadedCraftingObject;
 import net.Indyuce.mmoitems.api.crafting.condition.*;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.IngredientType;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.VanillaIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.MMOItemPlayerIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.PlayerIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.VanillaPlayerIngredient;
 import net.Indyuce.mmoitems.api.crafting.trigger.*;
-import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicItemIngredient;
 import net.Indyuce.mmoitems.comp.mythicmobs.crafting.MythicMobsSkillTrigger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.function.Function;
@@ -26,18 +31,19 @@ import java.util.logging.Level;
 
 public class CraftingManager implements Reloadable {
 
-	/*
-	 * order matters when trying to recognize an ingredient type: if none
+	/**
+	 * Order matters when trying to recognize an ingredient type: if none
 	 * ingredient matches, the item is considered as a vanilla item.
 	 */
 	private final List<IngredientType> ingredients = new ArrayList<>();
-	private final Set<LoadedObject<Condition>> conditions = new HashSet<>();
-	private final Set<LoadedObject<Trigger>> triggers = new HashSet<>();
+	private final Set<LoadedCraftingObject<Condition>> conditions = new HashSet<>();
+	private final Set<LoadedCraftingObject<Trigger>> triggers = new HashSet<>();
 
 	private final Map<String, CraftingStation> stations = new HashMap<>();
 
 	public CraftingManager() {
-		// conditions
+
+		// Conditions
 		registerCondition("level", LevelCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
 		registerCondition("permission", PermissionCondition::new, null);
 		registerCondition("placeholder", PlaceholderCondition::new, null);
@@ -46,26 +52,22 @@ public class CraftingManager implements Reloadable {
 		registerCondition("food", FoodCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
 		registerCondition("class", ClassCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Required Class: #class#", "&c" + AltChar.cross + " Required Class: #class#"));
 
-		// triggers
+		// Triggers
 		registerTrigger("command", CommandTrigger::new);
 		registerTrigger("message", MessageTrigger::new);
 		registerTrigger("sound", SoundTrigger::new);
 		registerTrigger("vanilla", VanillaTrigger::new);
 		registerTrigger("mmoitem", MMOItemTrigger::new);
 
-		// ingredients
-		registerIngredient("vanilla", VanillaIngredient::new, new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, item -> item.getItem().getType().name().toLowerCase() + "_" + (item.getItem().hasItemMeta() ? item.getItem().getItemMeta().getDisplayName() : null));
-		registerIngredient("mmoitem", MMOItemIngredient::new, new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level##item#", "&c" + AltChar.cross + " &7#amount# #level##item#"), NBTItem::hasType, item -> {
-			String upgradeString = item.getString("MMOITEMS_UPGRADE");
-			int level = !upgradeString.isEmpty() ? new JsonParser().parse(upgradeString).getAsJsonObject().get("Level").getAsInt() : 0;
-			return item.getString("MMOITEMS_ITEM_TYPE").toLowerCase() + (level != 0 ? "-" + level : "") + "_" + item.getString("MMOITEMS_ITEM_ID").toLowerCase();
-		});
+		// Ingredients
+		registerIngredient("vanilla", VanillaIngredient::new, new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"), nbt -> true, VanillaPlayerIngredient::new);
+		registerIngredient("mmoitem", MMOItemIngredient::new, new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #level##item#", "&c" + AltChar.cross + " &7#amount# #level##item#"), NBTItem::hasType, MMOItemPlayerIngredient::new);
 
-		// mm comp
+		// MythicMobs native compatibility
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			registerIngredient("mythicitem", MythicItemIngredient::new,
+			/*registerIngredient("mythicitem", MythicItemIngredient::new,
 					new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
-					nbt -> nbt.hasTag("MYTHIC_TYPE"), nbt -> nbt.getString("MYTHIC_TYPE").toLowerCase());
+					nbt -> nbt.hasTag("MYTHIC_TYPE"), MythicItemPlayerIngredient::new);*/
 			registerTrigger("mmskill", MythicMobsSkillTrigger::new);
 		}
 	}
@@ -75,7 +77,7 @@ public class CraftingManager implements Reloadable {
 
 		ConfigFile language = new ConfigFile("/language", "crafting-stations");
 
-		for (LoadedObject<Condition> condition : getConditions())
+		for (LoadedCraftingObject<Condition> condition : getConditions())
 			if (condition.hasDisplay()) {
 				String path = "condition." + condition.getId();
 				if (!language.getConfig().contains(path)) {
@@ -134,6 +136,11 @@ public class CraftingManager implements Reloadable {
 		return stations.get(id);
 	}
 
+	/**
+	 * Finds the corresponding ingredient type, and from there
+	 * load the corresponding ingredient from the line config
+	 */
+	@NotNull
 	public Ingredient getIngredient(MMOLineConfig config) {
 		String key = config.getKey();
 
@@ -141,113 +148,91 @@ public class CraftingManager implements Reloadable {
 			if (ingredient.getId().equals(key))
 				return ingredient.load(config);
 
-		return null;
+		throw new IllegalArgumentException("Could not match ingredient");
 	}
 
+	/**
+	 * Finds the corresponding condition type, and from there
+	 * load the corresponding condition from the line config
+	 */
+	@NotNull
 	public Condition getCondition(MMOLineConfig config) {
 		String key = config.getKey();
 
-		for (LoadedObject<Condition> condition : conditions)
+		for (LoadedCraftingObject<Condition> condition : conditions)
 			if (condition.getId().equalsIgnoreCase(key))
 				return condition.load(config);
 
-		return null;
+		throw new IllegalArgumentException("Could not match condition");
 	}
 
+	/**
+	 * Finds the corresponding trigger type, and from there
+	 * load the corresponding trigger from the line config
+	 */
+	@NotNull
 	public Trigger getTrigger(MMOLineConfig config) {
 		String key = config.getKey();
 
-		for (LoadedObject<Trigger> trigger : triggers)
+		for (LoadedCraftingObject<Trigger> trigger : triggers)
 			if (trigger.getId().equalsIgnoreCase(key))
 				return trigger.load(config);
 
-		return null;
+		throw new IllegalArgumentException("Could not match trigger");
 	}
 
 	public List<IngredientType> getIngredients() {
 		return ingredients;
 	}
 
-	public Set<LoadedObject<Condition>> getConditions() {
+	public Set<LoadedCraftingObject<Condition>> getConditions() {
 		return conditions;
 	}
 
-	public Set<LoadedObject<Trigger>> getTriggers() {
+	public Set<LoadedCraftingObject<Trigger>> getTriggers() {
 		return triggers;
 	}
 
-	public void registerIngredient(String id, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay display, Predicate<NBTItem> check, Function<NBTItem, String> read) {
-		ingredients.add(0, new IngredientType(id, function, display, check, read));
+	/**
+	 * Registers a type of ingredient in MMOItems crafting stations
+	 * <p>
+	 * See {@link IngredientType} for more information.
+	 *
+	 * @param id             The ingredient id
+	 * @param function       Function that loads an ingredient from a line config
+	 * @param display        How it displays in the item lore
+	 * @param check          Should return true if an item can be handled by this ingredient type
+	 * @param readIngredient After checking if this ingredient type can handle an item,
+	 *                       method called to provide the corresponding PlayerIngredient
+	 */
+	public void registerIngredient(String id, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay display, Predicate<NBTItem> check, Function<NBTItem, PlayerIngredient> readIngredient) {
+		ingredients.add(0, new IngredientType(id, function, display, check, readIngredient));
 	}
 
-	public void registerCondition(String id, Function<MMOLineConfig, Condition> function, ConditionalDisplay display) {
-		conditions.add(new LoadedObject<>(id, function, display));
+	/**
+	 * Registers a type of condition in MMOItems crafting stations
+	 *
+	 * @param id       Condition ID
+	 * @param function Function that loads a condition from a line conf
+	 * @param display  How it displays in the item lore, null if it should not
+	 */
+	public void registerCondition(String id, Function<MMOLineConfig, Condition> function, @Nullable ConditionalDisplay display) {
+		conditions.add(new LoadedCraftingObject<>(id, function, display));
 	}
 
+	/**
+	 * Registers a type of trigger in MMOItems crafting stations. Unlike
+	 * conditions or ingredients, triggers don't need to be displayed
+	 * in the item lore therefore no 'display' argument is required.
+	 *
+	 * @param id       Trigger ID
+	 * @param function Function that loads that type of trigger from a line configuration
+	 */
 	public void registerTrigger(String id, Function<MMOLineConfig, Trigger> function) {
-		triggers.add(new LoadedObject<>(id, function, null));
+		triggers.add(new LoadedCraftingObject<Trigger>(id, function, null));
 	}
 
 	public Collection<CraftingStation> getAll() {
 		return stations.values();
-	}
-
-	public static class LoadedObject<C> {
-		private final String id;
-		private final Function<MMOLineConfig, C> function;
-
-		private ConditionalDisplay display;
-
-		public LoadedObject(String id, Function<MMOLineConfig, C> function, ConditionalDisplay display) {
-			this.id = id;
-			this.function = function;
-			this.display = display;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setDisplay(ConditionalDisplay display) {
-			this.display = display;
-		}
-
-		public boolean hasDisplay() {
-			return display != null;
-		}
-
-		public ConditionalDisplay getDisplay() {
-			return display;
-		}
-
-		public C load(MMOLineConfig config) {
-			return function.apply(config);
-		}
-	}
-
-	public static class IngredientType extends LoadedObject<Ingredient> {
-		private final Predicate<NBTItem> check;
-		private final Function<NBTItem, String> read;
-
-		public IngredientType(String id, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay display, Predicate<NBTItem> check, Function<NBTItem, String> read) {
-			super(id, function, display);
-
-			this.check = check;
-			this.read = read;
-		}
-
-		/*
-		 * returns true if the checked item can be handled by this ingredient
-		 */
-		public boolean check(NBTItem item) {
-			return check.test(item);
-		}
-
-		/*
-		 * reads the ingredient read from an NBTItem
-		 */
-		public String readKey(NBTItem item) {
-			return read.apply(item);
-		}
 	}
 }

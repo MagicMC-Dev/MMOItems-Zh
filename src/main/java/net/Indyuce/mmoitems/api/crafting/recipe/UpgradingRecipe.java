@@ -1,27 +1,25 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
-import java.util.Random;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory.IngredientLookupMode;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory.PlayerIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import io.lumine.mythic.lib.MythicLib;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 
 public class UpgradingRecipe extends Recipe {
 	private final ConfigMMOItem item;
@@ -32,9 +30,7 @@ public class UpgradingRecipe extends Recipe {
 	public UpgradingRecipe(ConfigurationSection config) {
 		super(config);
 
-		/*
-		 * load item being upgraded.
-		 */
+		// load item being upgraded.
 		item = new ConfigMMOItem(config.getConfigurationSection("item"));
 		ingredient = new MMOItemIngredient(item);
 	}
@@ -44,12 +40,12 @@ public class UpgradingRecipe extends Recipe {
 	}
 
 	@Override
-	public void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe uncastRecipe, CraftingStation station) {
-		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
+	public void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe castRecipe, CraftingStation station) {
+		CheckedUpgradingRecipe recipe = (CheckedUpgradingRecipe) castRecipe;
 		recipe.getUpgradeData().upgrade(recipe.getMMOItem());
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
-		uncastRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
+		castRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 		if (!data.isOnline())
 			return;
 
@@ -60,14 +56,9 @@ public class UpgradingRecipe extends Recipe {
 	@Override
 	public boolean canUse(PlayerData data, IngredientInventory inv, CheckedRecipe uncastRecipe, CraftingStation station) {
 
-		/*
-		 * try to find the item which is meant to be updated. null check is
-		 * ugly, BUT it does halve calculations done because it does not calls
-		 * two map lookups. it is not needed to check for the amount because
-		 * only one item is upgraded.
-		 */
-		PlayerIngredient upgraded = inv.getIngredient(ingredient, IngredientLookupMode.IGNORE_ITEM_LEVEL);
-		if (upgraded == null) {
+		// Find the item which should be upgraded
+		CheckedIngredient upgraded = inv.findMatching(ingredient);
+		if (!upgraded.isHad()) {
 			if (!data.isOnline())
 				return false;
 
@@ -76,11 +67,15 @@ public class UpgradingRecipe extends Recipe {
 			return false;
 		}
 
-		UpgradingRecipeInfo recipe = (UpgradingRecipeInfo) uncastRecipe;
-		if (!(recipe.mmoitem = new LiveMMOItem(MythicLib.plugin.getVersion().getWrapper().getNBTItem(upgraded.getFirstItem())))
-				.hasData(ItemStats.UPGRADE))
+		// Finds the item that will be upgraded
+		NBTItem firstItem = NBTItem.get(upgraded.getFound().stream().findFirst().get().getItem());
+
+		// Checks if upgraded item DOES has an upgrade template
+		CheckedUpgradingRecipe recipe = (CheckedUpgradingRecipe) uncastRecipe;
+		if (!(recipe.mmoitem = new LiveMMOItem(firstItem)).hasData(ItemStats.UPGRADE))
 			return false;
 
+		// Checks for max upgrade level
 		if (!(recipe.upgradeData = (UpgradeData) recipe.getMMOItem().getData(ItemStats.UPGRADE)).canLevelUp()) {
 			if (!data.isOnline())
 				return false;
@@ -90,11 +85,16 @@ public class UpgradingRecipe extends Recipe {
 			return false;
 		}
 
+		// Checks for failure
 		if (random.nextDouble() > recipe.getUpgradeData().getSuccess()) {
+
+			// Should the item be destroyed when failing to upgrade
 			if (recipe.getUpgradeData().destroysOnFail())
 				recipe.getUpgraded().setAmount(recipe.getUpgraded().getAmount() - 1);
 
-			recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
+			// Take away ingredients
+			recipe.getIngredients().forEach(ingredient -> ingredient.takeAway());
+
 			if (!data.isOnline())
 				return false;
 
@@ -113,14 +113,18 @@ public class UpgradingRecipe extends Recipe {
 
 	@Override
 	public CheckedRecipe evaluateRecipe(PlayerData data, IngredientInventory inv) {
-		return new UpgradingRecipeInfo(this, data, inv);
+		return new CheckedUpgradingRecipe(this, data, inv);
 	}
 
-	public static class UpgradingRecipeInfo extends CheckedRecipe {
+	/**
+	 * Used to cache the LiveMMOItem instance and UpgradeData
+	 * which take a little performance to calculate.
+	 */
+	public class CheckedUpgradingRecipe extends CheckedRecipe {
 		private LiveMMOItem mmoitem;
 		private UpgradeData upgradeData;
 
-		public UpgradingRecipeInfo(Recipe recipe, PlayerData data, IngredientInventory inv) {
+		public CheckedUpgradingRecipe(Recipe recipe, PlayerData data, IngredientInventory inv) {
 			super(recipe, data, inv);
 		}
 

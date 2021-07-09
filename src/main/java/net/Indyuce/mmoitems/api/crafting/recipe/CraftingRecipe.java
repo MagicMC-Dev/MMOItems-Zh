@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.api.util.SmartGive;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -19,7 +19,7 @@ public class CraftingRecipe extends Recipe {
 	private final ConfigMMOItem output;
 
 	/*
-	 * there can't be any crafting time for upgrading recipes since there is no
+	 * There can't be any crafting time for upgrading recipes since there is no
 	 * way to save an MMOItem in the config file TODO save as ItemStack
 	 */
 	private final double craftingTime;
@@ -95,5 +95,10 @@ public class CraftingRecipe extends Recipe {
 	@Override
 	public ItemStack display(CheckedRecipe recipe) {
 		return ConfigItems.CRAFTING_RECIPE_DISPLAY.newBuilder(recipe).build();
+	}
+
+	@Override
+	public CheckedRecipe evaluateRecipe(PlayerData data, IngredientInventory inv) {
+		return new CheckedRecipe(this, data, inv);
 	}
 }

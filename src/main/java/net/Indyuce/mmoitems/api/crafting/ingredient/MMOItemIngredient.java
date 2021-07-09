@@ -1,28 +1,29 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.stat.DisplayName;
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.MMOItemPlayerIngredient;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
-import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-public class MMOItemIngredient extends Ingredient {
+public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
 	private final MMOItemTemplate template;
 
-	@NotNull private final QuickNumberRange level;
+	@NotNull
+	private final QuickNumberRange level;
 	private final String display;
 
 	public MMOItemIngredient(MMOLineConfig config) {
@@ -64,7 +65,28 @@ public class MMOItemIngredient extends Ingredient {
 		return s.replace("#item#", display).replace("#level#", (level.hasMax() || level.hasMax()) ? "lvl." + level.toString() + " " : "").replace("#amount#", String.valueOf(getAmount()));
 	}
 
-	@NotNull @Override public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+	@Override
+	public boolean matches(MMOItemPlayerIngredient playerIngredient) {
+
+		// Check for item type
+		if (!playerIngredient.getType().equals(template.getType().getId()))
+			return false;
+
+		// Check for item id
+		if (!playerIngredient.getId().equals(template.getId()))
+			return false;
+
+		// Checks for level range
+		if (SilentNumbers.floor(level.getAsDouble(0)) != 0 && !level.inRange(playerIngredient.getUpgradeLevel()))
+			return false;
+
+		// Yuss
+		return true;
+	}
+
+	@NotNull
+	@Override
+	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 
 		// Generate fresh from the template
 		MMOItem mmo = template.newBuilder(player).build();
@@ -93,17 +115,22 @@ public class MMOItemIngredient extends Ingredient {
 	}
 
 	private String findName() {
-		String name = null;
-		if (template.getBaseItemData().containsKey(ItemStats.NAME))
-			 name = template.getBaseItemData().get(ItemStats.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "").replace("<tier-color-cleaned>", "");
+		String name;
 
-		if (template.getBaseItemData().containsKey(ItemStats.MATERIAL) && name == null)
+		// By default, take item display name
+		if (template.getBaseItemData().containsKey(ItemStats.NAME))
+			name = template.getBaseItemData().get(ItemStats.NAME).toString().replace("<tier-color>", "").replace("<tier-name>", "").replace("<tier-color-cleaned>", "");
+
+			// Try and take the material name
+		else if (template.getBaseItemData().containsKey(ItemStats.MATERIAL))
 			name = MMOUtils.caseOnWords(((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 
-		if (name == null) { name = "Unrecognized Item"; }
+			// Ultra rare case to avoid a NPE
+		else name = "Unrecognized Item";
 
 		// Append upgrade level
-		if (SilentNumbers.floor(level.getAsDouble(0)) != 0) { return DisplayName.appendUpgradeLevel(name, SilentNumbers.floor(level.getAsDouble(0))); }
+		if (SilentNumbers.floor(level.getAsDouble(0)) != 0)
+			return DisplayName.appendUpgradeLevel(name, SilentNumbers.floor(level.getAsDouble(0)));
 		return name;
 	}
 }

@@ -1,17 +1,16 @@
 package net.Indyuce.mmoitems.api.crafting.recipe;
 
+import net.Indyuce.mmoitems.api.crafting.condition.CheckedCondition;
+import net.Indyuce.mmoitems.api.crafting.condition.Condition;
+import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
-import net.Indyuce.mmoitems.api.crafting.condition.Condition;
-import net.Indyuce.mmoitems.api.crafting.condition.Condition.CheckedCondition;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
-import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient.CheckedIngredient;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class CheckedRecipe {
 	private final Recipe recipe;
@@ -54,6 +53,10 @@ public class CheckedRecipe {
 		return recipe;
 	}
 
+	/**
+	 * @return True if both conditions are met and ingredients are gathered
+	 * @deprecated Not used internally anymore
+	 */
 	@Deprecated
 	public boolean isUnlocked() {
 		return ingredientsHad && conditionsMet;

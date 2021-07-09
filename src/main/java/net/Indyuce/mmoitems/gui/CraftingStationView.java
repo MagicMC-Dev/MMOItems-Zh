@@ -8,9 +8,9 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
-import net.Indyuce.mmoitems.api.crafting.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.Layout;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
@@ -34,6 +34,7 @@ import java.util.UUID;
 public class CraftingStationView extends PluginInventory {
 	private final CraftingStation station;
 	private final Layout layout;
+
 	private List<CheckedRecipe> recipes;
 	private IngredientInventory ingredients;
 
@@ -128,6 +129,7 @@ public class CraftingStationView extends PluginInventory {
 	public void whenClicked(InventoryClickEvent event) {
 		if (!playerData.isOnline())
 			return;
+
 		event.setCancelled(true);
 		if (!MMOUtils.isMetaItem(event.getCurrentItem(), false))
 			return;
@@ -159,18 +161,17 @@ public class CraftingStationView extends PluginInventory {
 
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 		String tag = item.getString("recipeId");
-		if (!tag.equals("")) {
+		if (!tag.isEmpty()) {
 			CheckedRecipe recipe = getRecipe(tag);
-			if (event.isRightClick()) {
+			if (event.isRightClick())
 				new CraftingStationPreview(this, recipe).open();
-				return;
+			else {
+				processRecipe(recipe);
+				open();
 			}
-
-			processRecipe(recipe);
-			open();
 		}
 
-		if (!(tag = item.getString("queueId")).equals("")) {
+		if (!(tag = item.getString("queueId")).isEmpty()) {
 			UUID uuid = UUID.fromString(tag);
 			CraftingInfo recipeInfo = playerData.getCrafting().getQueue(station).getCraft(uuid);
 			CraftingRecipe recipe = recipeInfo.getRecipe();
@@ -247,7 +248,7 @@ public class CraftingStationView extends PluginInventory {
 			return;
 
 		recipe.getRecipe().whenUsed(playerData, ingredients, recipe, station);
-		recipe.getIngredients().forEach(ingredient -> ingredient.getPlayerIngredient().reduceItem(ingredient.getIngredient().getAmount()));
+		recipe.getIngredients().forEach(ingredient -> ingredient.takeAway());
 		recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(playerData));
 
 		updateData();

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.crafting;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.PostLoadObject;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;

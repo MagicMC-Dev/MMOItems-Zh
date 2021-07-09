@@ -3,25 +3,19 @@ package net.Indyuce.mmoitems.api.item.template;
 import io.lumine.mythic.lib.api.util.PostLoadObject;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -148,7 +142,6 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	public boolean hasOption(TemplateOption option) {
 		return options.contains(option);
 	}
-
 
 	public MMOItemBuilder newBuilder(@Nullable Player player) {
 		if (player != null) { return newBuilder(PlayerData.get(player).getRPG()); }

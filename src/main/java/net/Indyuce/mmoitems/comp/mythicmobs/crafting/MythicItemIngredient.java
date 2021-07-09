@@ -1,19 +1,25 @@
 package net.Indyuce.mmoitems.comp.mythicmobs.crafting;
 
-import java.util.Optional;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.inventory.ItemStack;
-
+import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.items.MythicItem;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.apache.commons.lang.Validate;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class MythicItemIngredient extends Ingredient {
+import java.util.Optional;
+
+/**
+ * No way of checking if an item was generated using MythicMobs? There does
+ * not seem to be any NBTTag for that using the latest dev build
+ *
+ * @deprecated Not implemented yet
+ */
+@Deprecated
+public class MythicItemIngredient extends Ingredient<MythicItemPlayerIngredient> {
 	private final MythicItem mythicitem;
 
 	private final String display;
@@ -39,8 +45,13 @@ public class MythicItemIngredient extends Ingredient {
 		return s.replace("#item#", display).replace("#amount#", "" + getAmount());
 	}
 
+	@Override
+	public boolean matches(MythicItemPlayerIngredient playerIngredient) {
+		return false;
+	}
+
 	@NotNull
-    @Override
+	@Override
 	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 		return BukkitAdapter.adapt(mythicitem.generateItemStack(getAmount()));
 	}

@@ -22,7 +22,7 @@ locked-skins: true
 # off-hand like tomes!
 disable-abilities-in-offhand: false
 
-# enable/disable the automatic equip feature
+# Enable/disable the automatic equip feature.
 # By right clicking with a piece of armor, the plugin will
 # check if your currently equipped armor's "Equip Priority" stat
 # is lower/higher than the one you're currently right clicking with, if

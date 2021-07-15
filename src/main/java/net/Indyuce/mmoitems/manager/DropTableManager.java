@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
-import net.Indyuce.mmoitems.api.event.CustomBlockDropEvent;
+import net.Indyuce.mmoitems.api.event.ItemDropEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.listener.CustomBlockListener;
 import org.bukkit.Bukkit;
@@ -83,8 +83,15 @@ public class DropTableManager implements Listener, Reloadable {
 		if (killer != null && killer.hasMetadata("NPC"))
 			return;
 
-		if (monsters.containsKey(entity.getType()))
-			event.getDrops().addAll(monsters.get(entity.getType()).read(killer != null ? PlayerData.get(killer) : null, false));
+		if (monsters.containsKey(entity.getType())) {
+			List<ItemStack> drops = monsters.get(entity.getType()).read(killer != null ? PlayerData.get(killer) : null, false);
+			ItemDropEvent called = new ItemDropEvent(killer, drops, entity);
+			Bukkit.getPluginManager().callEvent(called);
+			if (called.isCancelled())
+				return;
+
+			event.getDrops().addAll(drops);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -95,32 +102,41 @@ public class DropTableManager implements Listener, Reloadable {
 
 		Block block = event.getBlock();
 		Optional<CustomBlock> opt = MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData());
+
+		// Custom block
 		if (opt.isPresent()) {
 			CustomBlock customBlock = opt.get();
 
 			/*
-			 * check if corresponding custom block has a drop table registered,
-			 * and only reads corresponding drop table if the tool has enough
-			 * power
+			 * Check if corresponding custom block has a drop table registered,
+			 * and only reads corresponding drop table if the tool has enough power
 			 */
-			if (customBlocks.containsKey(customBlock.getId()) && CustomBlockListener.getPickaxePower(player) >= customBlock.getRequiredPower())
-				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-					PlayerData playerData = PlayerData.get(player);
-					List<ItemStack> drops = customBlocks.get(customBlock.getId()).read(playerData, hasSilkTouchTool(player));
-					CustomBlockDropEvent called = new CustomBlockDropEvent(playerData, customBlock, drops);
-					Bukkit.getPluginManager().callEvent(called);
-					if (called.isCancelled())
-						return;
+			if (customBlocks.containsKey(customBlock.getId()) && CustomBlockListener.getPickaxePower(player) >= customBlock.getRequiredPower()) {
+				PlayerData playerData = PlayerData.get(player);
+				List<ItemStack> drops = customBlocks.get(customBlock.getId()).read(playerData, hasSilkTouchTool(player));
+				ItemDropEvent called = new ItemDropEvent(player, drops, customBlock);
+				Bukkit.getPluginManager().callEvent(called);
+				if (called.isCancelled())
+					return;
 
+				Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
 					for (ItemStack drop : drops)
 						UtilityMethods.dropItemNaturally(block.getLocation(), drop);
 				}, 2);
+			}
 		}
 
+		// Normal block
 		else if (blocks.containsKey(block.getType())) {
-			final Material type = block.getType();
+			Material type = block.getType();
+			List<ItemStack> drops = blocks.get(type).read(PlayerData.get(player), hasSilkTouchTool(player));
+			ItemDropEvent called = new ItemDropEvent(player, drops, block);
+			Bukkit.getPluginManager().callEvent(called);
+			if (called.isCancelled())
+				return;
+
 			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-				for (ItemStack drop : blocks.get(type).read(PlayerData.get(player), hasSilkTouchTool(player)))
+				for (ItemStack drop : drops)
 					UtilityMethods.dropItemNaturally(block.getLocation(), drop);
 			}, 2);
 		}

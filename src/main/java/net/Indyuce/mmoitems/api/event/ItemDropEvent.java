@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.api.event;
 
-import java.util.List;
-
+import net.Indyuce.mmoitems.api.block.CustomBlock;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -10,32 +9,68 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class ItemDropEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 
-	private boolean cancelled = false;
+	private boolean cancelled;
 	private final DropCause cause;
 	private final List<ItemStack> drops;
 	private final LivingEntity player;
 
-	// data that depends on drop cause
+	// Data that depends on drop cause
 	private final Block block;
 	private final Entity entity;
 	private final String mythicMobName;
+	private final CustomBlock customBlock;
 
-	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, DropCause cause, Block block) {
-		this(player, drops, cause, block, null, null);
+	/**
+	 * When an item drops from a custom block
+	 *
+	 * @param player      Player dropping the item
+	 * @param drops       Item drops
+	 * @param customBlock Custom block broken
+	 */
+	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, CustomBlock customBlock) {
+		this(player, drops, DropCause.CUSTOM_BLOCK, null, null, null, customBlock);
 	}
 
-	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, DropCause cause, Entity entity) {
-		this(player, drops, cause, null, entity, null);
+	/**
+	 * When an item drops from a normal block
+	 *
+	 * @param player Player dropping the item
+	 * @param drops  Item drops
+	 * @param block  Normal block broken
+	 */
+	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, Block block) {
+		this(player, drops, DropCause.NORMAL_BLOCK, block, null, null, null);
 	}
 
+	/**
+	 * When an item drops from a dying entity
+	 *
+	 * @param player Player dropping the item
+	 * @param drops  Item drops
+	 * @param entity Entity being killed
+	 */
+	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, Entity entity) {
+		this(player, drops, DropCause.NORMAL_MONSTER, null, entity, null, null);
+	}
+
+	/**
+	 * When an item drops from a MythicMobs mob
+	 *
+	 * @param player        Player dropping the item
+	 * @param drops         Item drops
+	 * @param mythicMobName Internal id of the mythic mob
+	 */
+	@Deprecated
 	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, DropCause cause, String mythicMobName) {
-		this(player, drops, cause, null, null, mythicMobName);
+		this(player, drops, DropCause.MYTHIC_MOB, null, null, mythicMobName, null);
 	}
 
-	public ItemDropEvent(LivingEntity player, List<ItemStack> drops, DropCause cause, Block block, Entity entity, String mythicMobName) {
+	private ItemDropEvent(LivingEntity player, List<ItemStack> drops, DropCause cause, Block block, Entity entity, String mythicMobName, CustomBlock customBlock) {
 		this.player = player;
 		this.cause = cause;
 		this.drops = drops;
@@ -43,6 +78,7 @@ public class ItemDropEvent extends Event implements Cancellable {
 		this.block = block;
 		this.entity = entity;
 		this.mythicMobName = mythicMobName;
+		this.customBlock = customBlock;
 	}
 
 	public boolean isCancelled() {
@@ -86,8 +122,26 @@ public class ItemDropEvent extends Event implements Cancellable {
 	}
 
 	public enum DropCause {
-		BLOCK,
-		MONSTER,
-		MYTHIC_MOB
+
+		/**
+		 * Item dropped from a non custom block
+		 */
+		NORMAL_BLOCK,
+
+		/**
+		 * Item dropped from a non MythicMobs mob
+		 */
+		NORMAL_MONSTER,
+
+		/**
+		 * Item dropped from a MythicMobs mob
+		 */
+		@Deprecated
+		MYTHIC_MOB,
+
+		/**
+		 * Item dropped from a custom block
+		 */
+		CUSTOM_BLOCK;
 	}
 }

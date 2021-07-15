@@ -1,21 +1,19 @@
 package net.Indyuce.mmoitems.api.util;
 
-import java.text.DecimalFormat;
-import java.util.Random;
-
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.text.DecimalFormat;
+import java.util.Random;
 
 /**
  * That Gaussian spread distribution thing that no one understands.
@@ -166,29 +164,25 @@ public class NumericStatFormula implements RandomStatData, UpdatableRandomStatDa
 
 		if (useRelativeSpread) {
 			//SPRD//if (spread > 0) MMOItems.log("\u00a7c༺\u00a77 Using \u00a7eRelative\u00a77 spread formula: \u00a76μ=" + (base + scale * levelScalingFactor) + "\u00a77, \u00a73σ=" + (spread * (base + scale * levelScalingFactor) + "\u00a7b=" + spread + "×" + (base + scale * levelScalingFactor)) + " \u00a7c@" + random + "\u00a7e = " + (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)));
-			return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)); }
+			return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread));
+		}
 
-		/*
-		 * The mean, the center of the distribution
-		 */
-		double actualBase = (base + (scale * levelScalingFactor));
+		// The mean, the center of the distribution
+		double actualBase = base + (scale * levelScalingFactor);
 
 		/*
 		 * This is one pick from a gaussian distribution
 		 * at mean 0, and standard deviation 1, multiplied
 		 * by the spread chosen.
 		 */
-		double gaussSpread = random * spread;
+		double flatSpread = random * spread;
 
-		/*
-		 * Does it exceed the max spread (positive or negative)? Not anymore!
-		 */
-		if (gaussSpread < (-getMaxSpread())) { gaussSpread = -getMaxSpread(); } else
-		if (gaussSpread > (getMaxSpread())) { gaussSpread = getMaxSpread(); }
+		// Does it exceed the max spread (positive or negative)? Not anymore!
+		flatSpread = Math.min(Math.max(flatSpread, -maxSpread), maxSpread);
 
 		// That's it
 		//SPRD//if (spread > 0) MMOItems.log("\u00a7c༺\u00a77 Using \u00a7aAdditive\u00a77 spread formula, \u00a76μ=" + (base + scale * levelScalingFactor) + "\u00a77, \u00a73σ=" + (spread)  + " \u00a7c@" + random + "\u00a7e = " + (actualBase + gaussSpread));
-		return actualBase + gaussSpread;
+		return actualBase + flatSpread;
 	}
 
 	@Override
@@ -295,5 +289,4 @@ public class NumericStatFormula implements RandomStatData, UpdatableRandomStatDa
 		 */
 		NONE;
 	}
-
 }

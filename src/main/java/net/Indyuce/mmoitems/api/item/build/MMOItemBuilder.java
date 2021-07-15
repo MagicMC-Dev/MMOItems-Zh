@@ -75,10 +75,8 @@ public class MMOItemBuilder {
 			capacity -= modifier.getWeight();
 			if (modifier.hasNameModifier()) { addModifier(modifier.getNameModifier(), modUUID); }
 
-			for (ItemStat stat : modifier.getItemData().keySet()) {
-
+			for (ItemStat stat : modifier.getItemData().keySet())
 				addModifierData(stat, modifier.getItemData().get(stat).randomize(this), modUUID);
-			}
 		}
 	}
 

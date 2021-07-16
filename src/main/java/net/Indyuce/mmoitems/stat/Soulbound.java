@@ -116,7 +116,7 @@ public class Soulbound extends ItemStat implements InternalStat, ItemRestriction
 		if (item.hasTag(ItemStats.SOULBOUND.getNBTPath()) && !item.getString(ItemStats.SOULBOUND.getNBTPath()).contains(player.getPlayer().getUniqueId().toString()) && !player.getPlayer().hasPermission("mmoitems.bypass.soulbound")) {
 			if (message) {
 				int level = new JsonParser().parse(item.getString(ItemStats.SOULBOUND.getNBTPath())).getAsJsonObject().get("Level").getAsInt();
-				Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(player.getPlayer());
 				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 				player.getPlayer()
 						.damage(MMOItems.plugin.getLanguage().soulboundBaseDamage + level * MMOItems.plugin.getLanguage().soulboundPerLvlDamage);

@@ -74,7 +74,7 @@ public class ItemUse implements Listener {
 			if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
 				Message.ITEM_ON_COOLDOWN
 						.format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
-						.send(player, "item-cooldown");
+						.send(player);
 				event.setCancelled(true);
 				return;
 			}
@@ -314,7 +314,7 @@ public class ItemUse implements Listener {
 			if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
 				Message.ITEM_ON_COOLDOWN
 						.format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
-						.send(player, "item-cooldown");
+						.send(player);
 				event.setCancelled(true);
 				return;
 			}

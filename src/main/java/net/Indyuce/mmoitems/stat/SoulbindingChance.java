@@ -1,13 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -21,9 +15,14 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class SoulbindingChance extends DoubleStat implements ConsumableItemInteraction {
 	private static final Random random = new Random();
@@ -43,15 +42,14 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 			return false;
 
 		if (target.getItem().getAmount() > 1) {
-			Message.CANT_BIND_STACKED.format(ChatColor.RED).send(player, "soulbound");
+			Message.CANT_BIND_STACKED.format(ChatColor.RED).send(player);
 			return false;
 		}
 
 		MMOItem targetMMO = new VolatileMMOItem(target);
 		if (targetMMO.hasData(ItemStats.SOULBOUND)) {
 			SoulboundData data = (SoulboundData) targetMMO.getData(ItemStats.SOULBOUND);
-			Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player,
-					"soulbound");
+			Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player);
 			return false;
 		}
 
@@ -67,12 +65,12 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 			target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
 			Message.SUCCESSFULLY_BIND_ITEM
 					.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#level#", MMOUtils.intToRoman(soulboundLevel))
-					.send(player, "soulbound");
+					.send(player);
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 			return true;
 		}
 
-		Message.UNSUCCESSFUL_SOULBOUND.format(ChatColor.RED).send(player, "soulbound");
+		Message.UNSUCCESSFUL_SOULBOUND.format(ChatColor.RED).send(player);
 		player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 		return true;
 	}

@@ -1,23 +1,39 @@
 package net.Indyuce.mmoitems.api.util.message;
 
+import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmocore.api.player.PlayerData;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.Indyuce.mmoitems.MMOItems;
-import io.lumine.mythic.lib.MythicLib;
-
 public class PlayerMessage {
+	private final boolean actionBar;
+
 	private String message;
 
-	/*
-	 * this class allows the plugin to block empty messages from sending to
-	 * player chat
+	/**
+	 * Used to block empty messages from spamming the chat. Also used to apply
+	 * a default color code to the message and be able to select which
+	 * messages are displayed on the action bar and which go to chat.
+	 *
+	 * @param message Unformatted message
 	 */
-	public PlayerMessage(String message) {
+	public PlayerMessage(Message message) {
+		this.message = message.getUpdated();
+		this.actionBar = MMOItems.plugin.getConfig().getBoolean("action-bar-display." + message.getActionBarConfigPath());
+	}
+
+	/**
+	 * Can be used by external plugins. This can be useful to
+	 * apply that 60 tick action bar timeout when using MMOCore
+	 *
+	 * @param message   Messages with color codes applied.
+	 * @param actionBar Should the message be displayed on the action bar
+	 */
+	public PlayerMessage(String message, boolean actionBar) {
 		this.message = message;
+		this.actionBar = actionBar;
 	}
 
 	public PlayerMessage format(ChatColor prefix, String... toReplace) {
@@ -27,17 +43,16 @@ public class PlayerMessage {
 		return this;
 	}
 
-	public void send(CommandSender player) {
-		if (!ChatColor.stripColor(message).equals(""))
-			player.sendMessage(message);
-	}
-
-	// send on action bar or chat
-	public void send(Player player, String actionBarBooleanPath) {
-		if (ChatColor.stripColor(message).equals(""))
+	/**
+	 * Either sends to action bar or to chat if it's not empty
+	 *
+	 * @param player Player to send message to
+	 */
+	public void send(Player player) {
+		if (ChatColor.stripColor(message).isEmpty())
 			return;
 
-		if (MMOItems.plugin.getConfig().getBoolean("action-bar-display." + actionBarBooleanPath)) {
+		if (actionBar) {
 			if (Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
 				PlayerData.get(player).setActionBarTimeOut(60);
 

@@ -155,7 +155,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 			for (String s : split)
 				if (!player.getPlayer().hasPermission(s)) {
 					if (message) {
-						Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+						Message.NOT_ENOUGH_PERMS.format(ChatColor.RED).send(player.getPlayer());
 						player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 					}
 					return false;

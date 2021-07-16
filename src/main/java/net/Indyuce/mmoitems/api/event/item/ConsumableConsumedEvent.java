@@ -6,7 +6,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Gunging
  */
-public class ConsumableConsumedEvent extends PlayerDataEvent implements Cancellable {
+public class ConsumableConsumedEvent extends PlayerDataEvent {
     @NotNull
     private final VolatileMMOItem mmoitem;
     @NotNull

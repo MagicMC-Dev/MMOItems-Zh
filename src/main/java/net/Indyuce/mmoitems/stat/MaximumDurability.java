@@ -91,7 +91,7 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 
 		if (item.getDouble(ItemStats.CUSTOM_DURABILITY.getNBTPath()) <= 0) {
 			if (message) {
-				Message.ZERO_DURABILITY.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				Message.ZERO_DURABILITY.format(ChatColor.RED).send(player.getPlayer());
 				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 			}
 			return false;

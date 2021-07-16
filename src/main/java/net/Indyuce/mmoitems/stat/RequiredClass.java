@@ -154,7 +154,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 		String requiredClass = item.getString(ItemStats.REQUIRED_CLASS.getNBTPath());
 		if (!requiredClass.equals("") && !hasRightClass(player, requiredClass) && !player.getPlayer().hasPermission("mmoitems.bypass.class")) {
 			if (message) {
-				Message.WRONG_CLASS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				Message.WRONG_CLASS.format(ChatColor.RED).send(player.getPlayer());
 				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 			}
 			return false;

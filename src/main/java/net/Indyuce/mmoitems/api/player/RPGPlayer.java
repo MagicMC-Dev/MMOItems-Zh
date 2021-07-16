@@ -110,7 +110,7 @@ public abstract class RPGPlayer {
 	public boolean canUse(NBTItem item, boolean message, boolean allowDynamic) {
 		if (item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
 			if (message) {
-				Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(player.getPlayer());
 				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 			}
 			return false;
@@ -146,7 +146,7 @@ public abstract class RPGPlayer {
 					for (int j = 0; j < 10; j++)
 						progressBar.append(progress >= j ? ChatColor.GREEN : ChatColor.WHITE).append(barChar);
 					Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(info.getRemaining()), "#progress#",
-							progressBar.toString(), "#s#", (info.getRemaining() >= 2 ? "s" : "")).send(player, "ability-cooldown");
+							progressBar.toString(), "#s#", (info.getRemaining() >= 2 ? "s" : "")).send(player);
 				}
 				return false;
 			}
@@ -158,12 +158,12 @@ public abstract class RPGPlayer {
 			return false;
 
 		if (data.hasModifier("mana") && getMana() < data.getModifier("mana")) {
-			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player, "not-enough-mana");
+			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player);
 			return false;
 		}
 
 		if (data.hasModifier("stamina") && getStamina() < data.getModifier("stamina")) {
-			Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player, "not-enough-stamina");
+			Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player);
 			return false;
 		}
 

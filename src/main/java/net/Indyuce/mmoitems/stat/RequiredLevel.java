@@ -134,7 +134,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 		int level = item.getInteger(ItemStats.REQUIRED_LEVEL.getNBTPath());
 		if (player.getLevel() < level && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
 			if (message) {
-				Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(player.getPlayer(), "cant-use-item");
+				Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(player.getPlayer());
 				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
 			}
 			return false;

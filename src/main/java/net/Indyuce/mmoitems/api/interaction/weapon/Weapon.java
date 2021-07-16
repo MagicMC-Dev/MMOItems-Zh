@@ -31,7 +31,7 @@ public class Weapon extends UseItem {
 	@Override
 	public boolean checkItemRequirements() {
 		if (playerData.areHandsFull()) {
-			Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer(), "two-handed");
+			Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer());
 			return false;
 		}
 
@@ -68,13 +68,13 @@ public class Weapon extends UseItem {
 
 		double manaCost = getNBTItem().getStat("MANA_COST");
 		if (manaCost > 0 && playerData.getRPG().getMana() < manaCost) {
-			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(getPlayer(), "not-enough-mana");
+			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(getPlayer());
 			return false;
 		}
 
 		double staminaCost = getNBTItem().getStat("STAMINA_COST");
 		if (staminaCost > 0 && playerData.getRPG().getStamina() < staminaCost) {
-			Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(getPlayer(), "not-enough-stamina");
+			Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(getPlayer());
 			return false;
 		}
 

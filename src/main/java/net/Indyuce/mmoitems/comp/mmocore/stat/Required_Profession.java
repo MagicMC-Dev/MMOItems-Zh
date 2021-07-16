@@ -1,17 +1,16 @@
 package net.Indyuce.mmoitems.comp.mmocore.stat;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmocore.api.experience.Profession;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.message.AddonMessage;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 
 public class Required_Profession extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final Profession profession;
@@ -26,7 +25,7 @@ public class Required_Profession extends DoubleStat implements ItemRestriction, 
         MMOCoreHook.MMOCoreRPGPlayer mmocore = (MMOCoreHook.MMOCoreRPGPlayer) player;
         if (mmocore.getData().getCollectionSkills().getLevel(this.profession) < item.getStat(getId())) {
             if (message) {
-                new AddonMessage("not-enough-profession").format(ChatColor.RED, "#profession#", profession.getName()).send(player.getPlayer(), "cant-use-item");
+                Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", profession.getName()).send(player.getPlayer());
                 player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
             }
             return false;

@@ -1,13 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
@@ -21,9 +15,14 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class SoulbindingBreakChance extends DoubleStat implements ConsumableItemInteraction {
 	private static final Random random = new Random();
@@ -45,7 +44,7 @@ public class SoulbindingBreakChance extends DoubleStat implements ConsumableItem
 
 		MMOItem targetMMO = new VolatileMMOItem(target);
 		if (!targetMMO.hasData(ItemStats.SOULBOUND)) {
-			Message.NO_SOULBOUND.format(ChatColor.RED).send(player, "soulbound");
+			Message.NO_SOULBOUND.format(ChatColor.RED).send(player);
 			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			return false;
 		}
@@ -53,7 +52,7 @@ public class SoulbindingBreakChance extends DoubleStat implements ConsumableItem
 		// check for soulbound level
 		SoulboundData soulbound = (SoulboundData) targetMMO.getData(ItemStats.SOULBOUND);
 		if (Math.max(1, consumable.getNBTItem().getStat(ItemStats.SOULBOUND_LEVEL.getId())) < soulbound.getLevel()) {
-			Message.LOW_SOULBOUND_LEVEL.format(ChatColor.RED, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player, "soulbound");
+			Message.LOW_SOULBOUND_LEVEL.format(ChatColor.RED, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player);
 			return false;
 		}
 
@@ -65,11 +64,11 @@ public class SoulbindingBreakChance extends DoubleStat implements ConsumableItem
 
 			(targetMMO = new LiveMMOItem(target)).removeData(ItemStats.SOULBOUND);
 			target.getItem().setItemMeta(targetMMO.newBuilder().build().getItemMeta());
-			Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player, "soulbound");
+			Message.SUCCESSFULLY_BREAK_BIND.format(ChatColor.YELLOW, "#level#", MMOUtils.intToRoman(soulbound.getLevel())).send(player);
 			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
 
 		} else {
-			Message.UNSUCCESSFUL_SOULBOUND_BREAK.format(ChatColor.RED).send(player, "soulbound");
+			Message.UNSUCCESSFUL_SOULBOUND_BREAK.format(ChatColor.RED).send(player);
 			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 0);
 		}
 

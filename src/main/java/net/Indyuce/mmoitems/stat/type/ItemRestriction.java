@@ -24,7 +24,7 @@ public interface ItemRestriction {
 	 *                 internally needs some similar check)
 	 * @return         False if the item cannot be used
 	 */
-	boolean canUse(RPGPlayer/**/ player, NBTItem item, boolean message);
+	boolean canUse(RPGPlayer player, NBTItem item, boolean message);
 
 	/**
 	 * Usually, item restrictions are checked <i>when equipping</i>

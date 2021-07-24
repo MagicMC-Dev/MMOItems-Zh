@@ -11,14 +11,13 @@ import org.jetbrains.annotations.Nullable;
  *  The methods required for this ItemStat to be Upgradeable. <p></p>
  *  <b>It makes sense then that the <code>StatData</code> this uses
  *  implements {@link Mergeable}</b> and it is even assumed so.
+ *
+ *  An upgradable stat can be used in an upgrade template to be upgraded
+ *
+ *  TODO add abilities so that ability damage, effect duration etc. can
+ *  increase as well when upgrading an item.
  */
 public interface Upgradable {
-
-	/*
-	 * an upgradable stat can be used in an upgrade template to be upgraded!
-	 * TODO add abilities so that ability damage, effect duration etc. can
-	 * increase when upgrading the item!
-	 */
 
 	/**
 	 * When an {@link net.Indyuce.mmoitems.api.UpgradeTemplate} is read from a YML file,

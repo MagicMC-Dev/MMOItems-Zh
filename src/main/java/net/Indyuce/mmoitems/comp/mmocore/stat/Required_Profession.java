@@ -15,8 +15,11 @@ import org.bukkit.Sound;
 public class Required_Profession extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final Profession profession;
 
+    // TODO merge with RequiredLevelStat
     public Required_Profession(Profession profession) {
-        super("PROFESSION_" + profession.getId().toUpperCase().replace("-", "_"), Material.PINK_DYE, profession.getName() + " Requirement (MMOCore)", new String[] { "Amount of " + profession.getName() + " levels the", "player needs to use the item." }, new String[] { "!block", "all" });
+        super("PROFESSION_" + profession.getId().toUpperCase().replace("-", "_"), Material.PINK_DYE, profession.getName() + " Requirement (MMOCore)",
+                new String[]{"Amount of " + profession.getName() + " levels the", "player needs to use the item."}, new String[]{"!block", "all"});
+
         this.profession = profession;
     }
 

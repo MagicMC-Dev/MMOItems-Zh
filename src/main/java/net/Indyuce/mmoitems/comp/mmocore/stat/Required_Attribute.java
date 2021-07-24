@@ -13,24 +13,25 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
 public class Required_Attribute extends DoubleStat implements ItemRestriction, GemStoneStat {
-	private final PlayerAttribute attribute;
+    private final PlayerAttribute attribute;
 
-	public Required_Attribute(PlayerAttribute attribute) {
-		super("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), VersionMaterial.GRAY_DYE.toMaterial(), attribute.getName() + " Requirement (MMOCore)", new String[] { "Amount of " + attribute.getName() + " points the", "player needs to use the item." }, new String[] { "!block", "all" });
+    // TODO merge with RequiredLevelStat
+    public Required_Attribute(PlayerAttribute attribute) {
+        super("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), VersionMaterial.GRAY_DYE.toMaterial(), attribute.getName() + " Requirement (MMOCore)", new String[]{"Amount of " + attribute.getName() + " points the", "player needs to use the item."}, new String[]{"!block", "all"});
 
-		this.attribute = attribute;
-	}
+        this.attribute = attribute;
+    }
 
-	@Override
-	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
-		MMOCoreRPGPlayer mmocore = (MMOCoreRPGPlayer) player;
-		if (mmocore.getData().getAttributes().getAttribute(attribute) < item.getStat(getId())) {
-			if (message) {
-				Message.NOT_ENOUGH_ATTRIBUTE.format(ChatColor.RED, "#attribute#", attribute.getName()).send(player.getPlayer());
-				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-			}
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+        MMOCoreRPGPlayer mmocore = (MMOCoreRPGPlayer) player;
+        if (mmocore.getData().getAttributes().getAttribute(attribute) < item.getStat(getId())) {
+            if (message) {
+                Message.NOT_ENOUGH_ATTRIBUTE.format(ChatColor.RED, "#attribute#", attribute.getName()).send(player.getPlayer());
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+            }
+            return false;
+        }
+        return true;
+    }
 }

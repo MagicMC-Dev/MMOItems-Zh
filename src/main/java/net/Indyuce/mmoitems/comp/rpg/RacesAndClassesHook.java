@@ -12,69 +12,69 @@ import org.bukkit.event.Listener;
 
 public class RacesAndClassesHook implements RPGHandler, Listener {
 
-	@Override
-	public void refreshStats(PlayerData data) {
-		RaCPlayer info = ((RacePlayer) data.getRPG()).info;
-		info.getManaManager().removeMaxManaBonus("MMOItems");
-		info.getManaManager().addMaxManaBonus("MMOItems", data.getStats().getStat(ItemStats.MAX_MANA));
-	}
+    @Override
+    public void refreshStats(PlayerData data) {
+        RaCPlayer info = ((RacePlayer) data.getRPG()).info;
+        info.getManaManager().removeMaxManaBonus("MMOItems");
+        info.getManaManager().addMaxManaBonus("MMOItems", data.getStats().getStat(ItemStats.MAX_MANA));
+    }
 
-	@Override
-	public RPGPlayer getInfo(PlayerData data) {
-		return new RacePlayer(data);
-	}
+    @Override
+    public RPGPlayer getInfo(PlayerData data) {
+        return new RacePlayer(data);
+    }
 
-	/*
-	 * update the player's inventory whenever he levels up since it could change
-	 * its current stat requirements
-	 */
-	@EventHandler
-	public void a(LevelUpEvent event) {
-		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-	}
+    /**
+     * Update the player's inventory whenever he levels up
+     * since it could change its current stat requirements
+     */
+    @EventHandler
+    public void a(LevelUpEvent event) {
+        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+    }
 
-	@EventHandler
-	public void b(LevelDownEvent event) {
-		PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-	}
+    @EventHandler
+    public void b(LevelDownEvent event) {
+        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+    }
 
-	public static class RacePlayer extends RPGPlayer {
-		private final RaCPlayer info;
+    public static class RacePlayer extends RPGPlayer {
+        private final RaCPlayer info;
 
-		public RacePlayer(PlayerData playerData) {
-			super(playerData);
+        public RacePlayer(PlayerData playerData) {
+            super(playerData);
 
-			info = RaCPlayerManager.get().getPlayer(playerData.getUniqueId());
-		}
+            info = RaCPlayerManager.get().getPlayer(playerData.getUniqueId());
+        }
 
-		@Override
-		public int getLevel() {
-			return info.getCurrentLevel();
-		}
+        @Override
+        public int getLevel() {
+            return info.getCurrentLevel();
+        }
 
-		@Override
-		public String getClassName() {
-			return info.getclass().getDisplayName();
-		}
+        @Override
+        public String getClassName() {
+            return info.getclass().getDisplayName();
+        }
 
-		@Override
-		public double getMana() {
-			return info.getCurrentMana();
-		}
+        @Override
+        public double getMana() {
+            return info.getCurrentMana();
+        }
 
-		@Override
-		public double getStamina() {
-			return info.getPlayer().getFoodLevel();
-		}
+        @Override
+        public double getStamina() {
+            return info.getPlayer().getFoodLevel();
+        }
 
-		@Override
-		public void setMana(double value) {
-			info.getManaManager().fillMana(value - info.getManaManager().getCurrentMana());
-		}
+        @Override
+        public void setMana(double value) {
+            info.getManaManager().fillMana(value - info.getManaManager().getCurrentMana());
+        }
 
-		@Override
-		public void setStamina(double value) {
-			info.getPlayer().setFoodLevel((int) value);
-		}
-	}
+        @Override
+        public void setStamina(double value) {
+            info.getPlayer().setFoodLevel((int) value);
+        }
+    }
 }

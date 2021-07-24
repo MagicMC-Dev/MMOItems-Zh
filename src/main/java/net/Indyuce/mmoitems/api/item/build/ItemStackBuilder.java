@@ -223,27 +223,8 @@ public class ItemStackBuilder {
             lore.insert("lore", parsed);
         }
 
-        // Calculate item lore
+        // Calculate and apply item lore
         List<String> builtLore = lore.build();
-
-        // TODO generalize this to all enchants plugins, not only MythicEnchants
-        if (MMOItems.plugin.getMythicEnchantsSupport() != null && mmoitem.hasData(ItemStats.ENCHANTS)) {
-            ItemStack metaItem = item.clone();
-            ItemMeta meta = metaItem.getItemMeta();
-            meta.setLore(builtLore);
-            metaItem.setItemMeta(meta);
-
-            EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
-            for (Enchantment enchant : data.getEnchants()) {
-                int lvl = data.getLevel(enchant);
-                if (lvl != 0 && enchant instanceof MythicEnchant)
-                    MMOItems.plugin.getMythicEnchantsSupport().handleEnchant(metaItem, enchant, lvl);
-            }
-            builtLore = metaItem.getItemMeta().getLore();
-        }
-
-        // Apply item lore
-        meta.setLore(builtLore);
 
         /*
          * Save dynamic lore for later calculations. Not used anymore, but

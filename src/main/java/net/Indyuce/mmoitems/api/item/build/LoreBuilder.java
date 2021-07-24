@@ -35,6 +35,16 @@ public class LoreBuilder {
     }
 
     /**
+     * Used by custom enchantment plugins to add enchant display to item lore.
+     *
+     * @param index   Index of insertion
+     * @param element String to insert
+     */
+    public void insert(int index, String element) {
+        lore.add(index, element);
+    }
+
+    /**
      * Inserts a list of strings in the item lore. The lines are added only if a
      * line #item-stat-id# can be found in the lore format.
      *

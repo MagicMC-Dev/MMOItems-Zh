@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
+import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
 import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
@@ -27,7 +28,7 @@ import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
-import net.Indyuce.mmoitems.comp.mythicenchants.MythicEnchantsSupport;
+import net.Indyuce.mmoitems.comp.enchants.MythicEnchantsSupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
 import net.Indyuce.mmoitems.comp.parse.IridescentParser;
@@ -79,6 +80,7 @@ public class MMOItems extends LuminePlugin {
 	private final ItemManager itemManager = new ItemManager();
 	private final PlayerInventoryHandler inventory = new PlayerInventoryHandler();
 	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
+	private final List<EnchantPlugin> enchantPlugins = new ArrayList<>();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -95,7 +97,6 @@ public class MMOItems extends LuminePlugin {
 	private HologramSupport hologramSupport;
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
-	private MythicEnchantsSupport mythicEnchantsSupport;
 
 	@Override
 	public void load() {
@@ -136,9 +137,9 @@ public class MMOItems extends LuminePlugin {
 		if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
 			statManager.register(AdvancedEnchantmentsHook.ADVANCED_ENCHANTMENTS); }
 		if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
-			mythicEnchantsSupport = new MythicEnchantsSupport();
-
+			enchantPlugins.add(new MythicEnchantsSupport());
 	}
+
 	@Override
 	public void enable() {
 
@@ -447,6 +448,19 @@ public class MMOItems extends LuminePlugin {
 		getInventory().register(value);
 	}
 
+    /**
+     * Plugins like MythicEnchants which utilize the Bukkit
+     * class Enchantment by extending it don't use any ItemStat
+     * to store their enchants and therefore need to be called
+     * to update the item lore when any item is built.
+     *
+     * @param enchantPlugin Enchantment plugin
+     */
+    public void registerEnchantPlugin(EnchantPlugin enchantPlugin) {
+        Validate.notNull(enchantPlugin, "Enchant plugin cannot be null");
+        enchantPlugins.add(enchantPlugin);
+    }
+
 	public StatManager getStats() {
 		return statManager;
 	}
@@ -498,6 +512,7 @@ public class MMOItems extends LuminePlugin {
 	public HologramSupport getHolograms() {
 		return hologramSupport;
 	}
+
 	public EquipListener getEquipListener(){
 		return equipListener;
 	}
@@ -522,9 +537,9 @@ public class MMOItems extends LuminePlugin {
 		return vaultSupport != null && vaultSupport.getPermissions() != null;
 	}
 
-	public MythicEnchantsSupport getMythicEnchantsSupport(){
-		return mythicEnchantsSupport;
-	}
+    public List<EnchantPlugin> getEnchantPlugins() {
+        return enchantPlugins;
+    }
 
 	public boolean hasEconomy() {
 		return vaultSupport != null && vaultSupport.getEconomy() != null;

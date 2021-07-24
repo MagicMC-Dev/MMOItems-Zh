@@ -3,27 +3,20 @@ package net.Indyuce.mmoitems.comp.enchants;
 import io.lumine.mythicenchants.MythicEnchants;
 import io.lumine.mythicenchants.enchants.MythicEnchant;
 import io.lumine.mythicenchants.util.LoreParser;
-import io.lumine.mythicenchants.util.MythicEnchantsHelper;
-import io.lumine.xikage.mythicmobs.adapters.AbstractPlayer;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import org.apache.commons.lang.Validate;
-import org.black_ixx.bossshop.misc.Enchant;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MythicEnchantsSupport implements EnchantPlugin<MythicEnchant> {
 
-    public void reparseWeapon(AbstractPlayer player) {
+    /*public void reparseWeapon(AbstractPlayer player) {
         MythicEnchantsHelper.reparseWeapon(player);
-    }
+    }*/
 
     @Override
     public boolean isCustomEnchant(Enchantment enchant) {

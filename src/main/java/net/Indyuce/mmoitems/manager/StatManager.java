@@ -24,12 +24,6 @@ public class StatManager {
 	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
 	private final Set<PlayerConsumable> playerConsumables = new HashSet<>();
 
-	/**
-	 * @deprecated See {@link net.Indyuce.mmoitems.api.item.util.LoreUpdate}
-	 */
-	@Deprecated
-	private final Set<DynamicLoreStat> dynamicLores = new HashSet<>();
-
 	/*
 	 * load default stats using java reflection, get all public static final
 	 * fields in the ItemStat and register them as stat instances
@@ -46,14 +40,6 @@ public class StatManager {
 
 	public Collection<ItemStat> getAll() {
 		return stats.values();
-	}
-
-	/**
-	 * @return Collection of all stats which feature dynamic lore support
-	 * @deprecated See {@link net.Indyuce.mmoitems.api.item.util.LoreUpdate}
-	 */
-	public Set<DynamicLoreStat> getDynamicLores() {
-		return dynamicLores;
 	}
 
 	/**
@@ -147,9 +133,6 @@ public class StatManager {
 
 		if (stat instanceof PlayerConsumable)
 			playerConsumables.add((PlayerConsumable) stat);
-
-		if (stat instanceof DynamicLoreStat)
-			dynamicLores.add((DynamicLoreStat) stat);
 
 		/**
 		 * Cache stat for every type which may have this stat. Really important

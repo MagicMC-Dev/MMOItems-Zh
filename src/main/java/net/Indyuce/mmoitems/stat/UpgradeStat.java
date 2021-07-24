@@ -178,6 +178,9 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 
 			MMOItem targetMMO = new LiveMMOItem(target);
 			UpgradeData targetSharpening = (UpgradeData) targetMMO.getData(ItemStats.UPGRADE);
+			if (targetSharpening.isWorkbench())
+				return false;
+
 			if (!targetSharpening.canLevelUp()) {
 				Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 2);

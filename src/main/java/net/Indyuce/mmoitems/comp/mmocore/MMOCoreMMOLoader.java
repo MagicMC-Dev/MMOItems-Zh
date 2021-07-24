@@ -1,5 +1,8 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmocore.api.droptable.condition.Condition;
@@ -12,21 +15,13 @@ import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
+import net.Indyuce.mmoitems.comp.mmocore.crafting.AttributeCondition;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ExperienceCraftingTrigger;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.ProfessionCondition;
 import net.Indyuce.mmoitems.comp.mmocore.crafting.StelliumCondition;
-import net.Indyuce.mmoitems.comp.mmocore.load.GetMMOItemObjective;
-import net.Indyuce.mmoitems.comp.mmocore.load.ItemTemplateDropItem;
-import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemTrigger;
-import net.Indyuce.mmoitems.comp.mmocore.load.MMOItemsBlockType;
-import net.Indyuce.mmoitems.comp.mmocore.load.MineMIBlockExperienceSource;
-import net.Indyuce.mmoitems.comp.mmocore.load.RandomItemDropItem;
-import net.Indyuce.mmoitems.comp.mmocore.load.SmeltMMOItemExperienceSource;
+import net.Indyuce.mmoitems.comp.mmocore.load.*;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.MMOLineConfig;
-import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -72,6 +67,10 @@ public class MMOCoreMMOLoader extends MMOLoader {
                 new ConditionalDisplay(
                         "&a" + AltChar.check + " Requires #stellium# Stellium",
                         "&c" + AltChar.cross + " Requires #stellium# Stellium"));
+        MMOItems.plugin.getCrafting().registerCondition("attribute", AttributeCondition::new,
+                new ConditionalDisplay(
+                        "&a" + AltChar.check + " Requires #points# #attribute#",
+                        "&c" + AltChar.cross + " Requires #points# #attribute#"));
         MMOItems.plugin.getCrafting().registerTrigger("exp", ExperienceCraftingTrigger::new);
     }
 

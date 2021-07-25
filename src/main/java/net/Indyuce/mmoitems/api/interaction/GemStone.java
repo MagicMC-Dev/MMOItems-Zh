@@ -1,26 +1,21 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
-import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,10 +66,20 @@ public class GemStone extends UseItem {
                 && !appliableTypes.contains(targetType.getItemSet().name()) && !appliableTypes.contains(targetType.getId()))
             return new ApplyResult(ResultType.NONE);
 
-        // check for success rate
+        // Check for success rate
         double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
-        if (successRate != 0 && RANDOM.nextDouble() > successRate / 100) {
 
+        // Call the Bukkit event
+        ApplyGemStoneEvent called = new ApplyGemStoneEvent(playerData, mmoitem, targetMMO,
+                RANDOM.nextDouble() > successRate / 100 ? ResultType.FAILURE : ResultType.SUCCESS);
+        Bukkit.getPluginManager().callEvent(called);
+
+        // Just return if cancelled or wrong result type
+        if (called.isCancelled() || called.getResult() == ResultType.NONE)
+            return new ApplyResult(ResultType.NONE);
+
+        // Return if gem stone application failure
+        if (called.getResult() == ResultType.FAILURE) {
             if (!silent) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
                 Message.GEM_STONE_BROKE.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", itemName).send(player);
@@ -82,11 +87,6 @@ public class GemStone extends UseItem {
 
             return new ApplyResult(ResultType.FAILURE);
         }
-
-        ApplyGemStoneEvent called = new ApplyGemStoneEvent(playerData, mmoitem, targetMMO);
-        Bukkit.getPluginManager().callEvent(called);
-        if (called.isCancelled())
-            return new ApplyResult(ResultType.NONE);
 
         /*
          * To not clear enchantments put by players
@@ -211,12 +211,11 @@ public class GemStone extends UseItem {
             Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(getItem()), "#item#", itemName).send(player);
         }
 
-        if (buildStack) {
+        if (buildStack)
             return new ApplyResult(targetMMO.newBuilder().build());
 
-        } else {
+        else
             return new ApplyResult(targetMMO, ResultType.SUCCESS);
-        }
     }
 
     public static class ApplyResult {

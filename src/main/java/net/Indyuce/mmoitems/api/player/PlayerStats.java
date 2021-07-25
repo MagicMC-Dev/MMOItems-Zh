@@ -17,134 +17,128 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerStats {
-	private final PlayerData playerData;
+    private final PlayerData playerData;
 
-	public PlayerStats(PlayerData playerData) {
-		this.playerData = playerData;
-	}
+    public PlayerStats(PlayerData playerData) {
+        this.playerData = playerData;
+    }
 
-	public PlayerData getData() {
-		return playerData;
-	}
+    public PlayerData getData() {
+        return playerData;
+    }
 
-	public StatMap getMap() {
-		return playerData.getMMOPlayerData().getStatMap();
-	}
+    public StatMap getMap() {
+        return playerData.getMMOPlayerData().getStatMap();
+    }
 
-	public double getStat(ItemStat stat) {
-		return getMap().getInstance(stat.getId()).getTotal();
-	}
+    public double getStat(ItemStat stat) {
+        return getMap().getInstance(stat.getId()).getTotal();
+    }
 
-	public StatInstance getInstance(ItemStat stat) {
-		return getMap().getInstance(stat.getId());
-	}
+    public StatInstance getInstance(ItemStat stat) {
+        return getMap().getInstance(stat.getId());
+    }
 
-	/**
-	 * Used to cache stats when a player casts a skill so that if the player
-	 * swaps items or changes any of his stat value before the end of the
-	 * spell duration, the stat value is not updated.
-	 *
-	 * @ignored Every stat modifier with that modifier source
-	 * will be ignored when calculating the total stat value
-	 */
-	public CachedStats newTemporary(EquipmentSlot castSlot) {
-		return new CachedStats(castSlot);
-	}
+    /**
+     * Used to cache stats when a player casts a skill so that if the player
+     * swaps items or changes any of his stat value before the end of the
+     * spell duration, the stat value is not updated.
+     *
+     * @param castSlot Every stat modifier with the opposite modifier
+     *                 source will NOT be taken into account for stat calculation
+     */
+    public CachedStats newTemporary(EquipmentSlot castSlot) {
+        return new CachedStats(castSlot);
+    }
 
-	public void updateStats() {
-		getMap().getInstances().forEach(ins -> ins.removeIf(name -> name.startsWith("MMOItem")));
+    public void updateStats() {
 
-		if (playerData.hasSetBonuses())
-			playerData.getSetBonuses().getStats()
-					.forEach((stat, value) -> getInstance(stat).addModifier("MMOItemSetBonus", new StatModifier(value, ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER)));
+        for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
 
-		for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
+            // Let MMOItems first add stat modifiers, and then update the stat instance
+            StatInstance.ModifierPacket packet = getInstance(stat).newPacket();
 
-			/**
-			 * Lets MMOItems first add stat modifiers and then update the stat instance
-			 */
-			StatInstance.ModifierPacket packet = getInstance(stat).newPacket();
+            // Remove previous potential modifiers
+            packet.removeIf(name -> name.startsWith("MMOItem"));
 
-			/**
-			 * The index of the mmoitem stat modifier being added
-			 */
-			int index = 0;
+            // Add set bonuses
+            if (playerData.hasSetBonuses() && playerData.getSetBonuses().hasStat(stat))
+                packet.addModifier("MMOItemSetBonus",
+                        new StatModifier(playerData.getSetBonuses().getStat(stat), ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER));
 
-			for (EquippedPlayerItem item : playerData.getInventory().getEquipped()) {
-				double value = item.getItem().getNBT().getStat(stat.getId());
+            // The index of the mmoitem stat modifier being added
+            int index = 0;
 
+            for (EquippedPlayerItem item : playerData.getInventory().getEquipped()) {
+                double value = item.getItem().getNBT().getStat(stat.getId());
 
-				if (value != 0) {
+                if (value != 0) {
 
-					Type type = item.getItem().getType();
-					ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
+                    Type type = item.getItem().getType();
+                    ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
-					/**
-					 * Apply main hand weapon stat offset ie 4 for attack speed and 1 for attack damage.
-					 */
-					if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttributeStat)
-						value -= ((AttributeStat) stat).getOffset();
+                    // Apply main hand weapon stat offset ie 4 for attack speed and 1 for attack damage.
+                    if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttributeStat)
+                        value -= ((AttributeStat) stat).getOffset();
 
-					packet.addModifier("MMOItem-" + index++, new StatModifier(value, ModifierType.FLAT, item.getSlot(), source));
-				}
-			}
+                    packet.addModifier("MMOItem-" + index++, new StatModifier(value, ModifierType.FLAT, item.getSlot(), source));
+                }
+            }
 
-			/**
-			 * Finally run a stat update after all modifiers
-			 * have been gathered by MythicLib
-			 */
-			packet.runUpdate();
-		}
-	}
+            // Finally run a stat update after all modifiers have been gathered in the packet
+            packet.runUpdate();
+        }
+    }
 
-	public class CachedStats {
-		private final Player player;
-		private final Map<String, Double> stats = new HashMap<>();
+    public class CachedStats {
+        private final Player player;
+        private final Map<String, Double> stats = new HashMap<>();
 
-		/**
-		 * Used to cache stats when a player casts a skill so that if the player
-		 * swaps items or changes any of his stat value before the end of the
-		 * spell duration, the stat value is not updated
-		 *
-		 * @castSlot The equipment slot of the item the player is casting
-		 * a skill/attacking with. Helps determine what stats modifiers needs to be
-		 * applied and what modifiers must be filtered
-		 */
-		public CachedStats(EquipmentSlot castSlot) {
-			player = playerData.getPlayer();
+        /**
+         * Used to cache stats when a player casts a skill so that if the player
+         * swaps items or changes any of his stat value before the end of the
+         * spell duration, the stat value is not updated
+         *
+         * @castSlot The equipment slot of the item the player is casting
+         * a skill/attacking with. Helps determine what stats modifiers needs to be
+         * applied and what modifiers must be filtered
+         */
+        public CachedStats(EquipmentSlot castSlot) {
+            player = playerData.getPlayer();
 
-			if (castSlot.isHand()) {
+            if (castSlot.isHand()) {
 
-				/**
-				 * When casting a skill or an attack with a certain hand, stats from the
-				 * other hand shouldn't be taken into account
-				 */
-				EquipmentSlot ignored = castSlot.getOppositeHand();
-				for (StatInstance ins : getMap().getInstances())
-					this.stats.put(ins.getStat(), ins.getFilteredTotal(mod -> mod.getSlot() != ignored));
-			} else
+                /*
+                 * When casting a skill or an attack with a certain hand, stats
+                 * from the other hand shouldn't be taken into account
+                 */
+                EquipmentSlot ignored = castSlot.getOppositeHand();
+                for (StatInstance ins : getMap().getInstances())
+                    this.stats.put(ins.getStat(), ins.getFilteredTotal(mod -> mod.getSlot() != ignored));
+            } else
 
-			/**
-			 * Not casting the attack with a specific hand so take everything into account
-			 */
-				for (StatInstance ins : getMap().getInstances())
-					this.stats.put(ins.getStat(), ins.getTotal());
-		}
+                /*
+                 * Not casting the attack with a specific
+                 * hand so take everything into account
+                 */
+                for (StatInstance ins : getMap().getInstances())
+                    this.stats.put(ins.getStat(), ins.getTotal());
+        }
 
-		public PlayerData getData() {
-			return playerData;
-		}
+        public PlayerData getData() {
+            return playerData;
+        }
 
-		public Player getPlayer() {
-			return player;
-		}
+        public Player getPlayer() {
+            return player;
+        }
 
-		public double getStat(ItemStat stat) {
-			return stats.containsKey(stat.getId()) ? stats.get(stat.getId()) : 0;
-		}
+        public double getStat(ItemStat stat) {
+            return stats.containsKey(stat.getId()) ? stats.get(stat.getId()) : 0;
+        }
 
-		public void setStat(ItemStat stat, double value) {
-			stats.put(stat.getId(), value);
-		}
-	}
+        public void setStat(ItemStat stat, double value) {
+            stats.put(stat.getId(), value);
+        }
+    }
 }

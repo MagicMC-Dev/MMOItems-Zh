@@ -7,7 +7,6 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythicenchants.MythicEnchants;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -432,6 +431,13 @@ public class Enchants extends ItemStat implements Upgradable {
         }
     }
 
+    /**
+     * This is useful for custom enchant plugins which
+     * utilize the Enchantment bukkit interface.
+     *
+     * @param key String input which can either be the enchant key or name
+     * @return Found bukkit enchantment instance
+     */
     @SuppressWarnings("deprecation")
     public static Enchantment getEnchant(String key) {
         key = key.toLowerCase().replace("-", "_");

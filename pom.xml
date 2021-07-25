@@ -373,5 +373,21 @@
             <systemPath>${basedir}/lib/GlowAPI.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>com.willfp.eco</groupId>
+            <artifactId>core</artifactId>
+            <version>6.0.6</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/eco-6.0.6-all.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>ecoenchants</artifactId>
+            <version>8.1.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/EcoEnchants v8.1.2.jar</systemPath>
+        </dependency>
+
     </dependencies>
 </project>

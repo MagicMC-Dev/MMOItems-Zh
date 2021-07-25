@@ -4,6 +4,18 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
+/**
+ * There are three types of enchant plugins.
+ * - enchants saved using the Bukkit Enchantment interface (EcoEnchants, MythicEnchants)
+ * - enchants saved in the NBT (AdvancedEnchants)
+ * - enchants saved in lore only (CrazyEnchants)
+ * <p>
+ * Interface used to support plugins which use the Bukkit Enchantment
+ * interface to register their enchantments. This makes enchant storage
+ * so much easier for MMOItems.
+ *
+ * @param <T> The plugin class implementing Enchantment
+ */
 public interface EnchantPlugin<T extends Enchantment> {
 
     /**

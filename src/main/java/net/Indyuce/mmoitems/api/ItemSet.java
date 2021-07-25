@@ -122,6 +122,14 @@ public class ItemSet {
 			particles.add(particle);
 		}
 
+		public boolean hasStat(ItemStat stat) {
+			return stats.containsKey(stat);
+		}
+
+		public double getStat(ItemStat stat) {
+			return stats.get(stat);
+		}
+
 		public Map<ItemStat, Double> getStats() {
 			return stats;
 		}

@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
 import net.Indyuce.mmoitems.comp.flags.WorldGuardFlags;
-import net.Indyuce.mmoitems.comp.holograms.*;
 import net.Indyuce.mmoitems.comp.inventory.*;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
@@ -62,7 +61,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-
 public class MMOItems extends LuminePlugin {
     public static MMOItems plugin;
 
@@ -95,7 +93,6 @@ public class MMOItems extends LuminePlugin {
 
     private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
     private FlagPlugin flagPlugin = new DefaultFlags();
-    private HologramSupport hologramSupport;
     private VaultSupport vaultSupport;
     private RPGHandler rpgPlugin;
 
@@ -267,20 +264,6 @@ public class MMOItems extends LuminePlugin {
         if (Bukkit.getPluginManager().getPlugin("Iridescent") != null) {
             stringInputParsers.add(new IridescentParser());
             getLogger().log(Level.INFO, "Hooked onto Iridescent");
-        }
-
-        if (Bukkit.getPluginManager().getPlugin("HolographicDisplays") != null) {
-            hologramSupport = new HolographicDisplaysPlugin();
-            getLogger().log(Level.INFO, "Hooked onto HolographicDisplays");
-        } else if (Bukkit.getPluginManager().getPlugin("CMI") != null) {
-            hologramSupport = new CMIPlugin();
-            getLogger().log(Level.INFO, "Hooked onto CMI Holograms");
-        } else if (Bukkit.getPluginManager().getPlugin("Holograms") != null) {
-            hologramSupport = new HologramsPlugin();
-            getLogger().log(Level.INFO, "Hooked onto Holograms");
-        } else if (Bukkit.getPluginManager().getPlugin("TrHologram") != null) {
-            hologramSupport = new TrHologramPlugin();
-            getLogger().log(Level.INFO, "Hooked onto TrHologram");
         }
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -524,10 +507,6 @@ public class MMOItems extends LuminePlugin {
 
     public PlaceholderParser getPlaceholderParser() {
         return placeholderParser;
-    }
-
-    public HologramSupport getHolograms() {
-        return hologramSupport;
     }
 
     public EquipListener getEquipListener() {

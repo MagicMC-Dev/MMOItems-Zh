@@ -210,21 +210,6 @@ action-bar-display:
     mitigation: true
     item-break: false
 
-# Displays in-game damage indicators.
-# Requires HolographicDisplays/Holograms to work.
-# Requires /reload when enabled/disabled.
-game-indicators:
-    damage:
-        enabled: true
-        decimal-format: '0.#'
-        format: '&c-#'
-        #format: '&c&l✦ #'
-    heal:
-        enabled: true
-        decimal-format: '0.#'
-        format: '&a+#'
-        #format: '&a&l❤ #'
-
 recipes:
 
     # Allows you to use stack amounts for recipe ingredients.

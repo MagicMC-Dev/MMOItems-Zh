@@ -36,12 +36,14 @@ public class LoreUpdate {
         this.item = item;
         this.old = old;
         this.replace = replace;
-
-        // Quite impossible that an MMOItem has no lore
         this.lore = item.getItemMeta().getLore();
     }
 
     public ItemStack updateLore() {
+
+        // Possible that the item has no lore
+        if (lore == null || lore.isEmpty())
+            return item;
 
         for (int i = 0; i < lore.size(); i++) {
 

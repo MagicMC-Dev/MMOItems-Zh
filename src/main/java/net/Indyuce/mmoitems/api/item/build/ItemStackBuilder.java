@@ -225,6 +225,7 @@ public class ItemStackBuilder {
 
         // Calculate and apply item lore
         List<String> builtLore = lore.build();
+        meta.setLore(builtLore);
 
         /*
          * Save dynamic lore for later calculations. Not used anymore, but

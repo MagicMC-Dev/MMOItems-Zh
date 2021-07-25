@@ -37,6 +37,10 @@ public class LoreUpdate {
         this.old = old;
         this.replace = replace;
         this.lore = item.getItemMeta().getLore();
+
+        System.out.println("Heyy ");
+        System.out.println("-> " + old);
+        System.out.println("-> " + replace);
     }
 
     public ItemStack updateLore() {
@@ -47,8 +51,17 @@ public class LoreUpdate {
 
         for (int i = 0; i < lore.size(); i++) {
 
-            // Finds the old line in the old lore
-            if (lore.get(i).equals(old)) {
+            /*
+             * Finds the old line in the old lore.
+             *
+             * There is this weird issue where when generating the item
+             * and getting its lore again via the Bukkit ItemMeta, color
+             * codes are now UPPERCASE, which make the strings not match
+             * anymore unless we use equalsIgnoreCase().
+             *
+             * In theory, equals() would have been sufficient.
+             */
+            if (lore.get(i).equalsIgnoreCase(old)) {
                 lore.set(i, replace);
 
                 ItemMeta meta = item.getItemMeta();

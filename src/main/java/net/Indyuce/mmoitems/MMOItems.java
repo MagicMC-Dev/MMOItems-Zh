@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
+import net.Indyuce.mmoitems.comp.enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
 import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
 import net.Indyuce.mmoitems.comp.enchants.MythicEnchantsSupport;
@@ -129,13 +130,13 @@ public class MMOItems extends LuminePlugin {
         if (Bukkit.getPluginManager().getPlugin("MMOCore") != null)
             new MMOCoreMMOLoader();
 
-        if (Bukkit.getPluginManager().getPlugin("mcMMO") != null) {
+        if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
             //statManager.register(McMMOHook.MCMMO_SUPER_TOOL);
             statManager.register(McMMOHook.disableMcMMORepair);
-        }
-        if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
+
+        if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null)
             statManager.register(AdvancedEnchantmentsHook.ADVANCED_ENCHANTMENTS);
-        }
+
         if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
             enchantPlugins.add(new MythicEnchantsSupport());
     }

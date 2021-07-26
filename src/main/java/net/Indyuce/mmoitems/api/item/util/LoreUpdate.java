@@ -37,10 +37,6 @@ public class LoreUpdate {
         this.old = old;
         this.replace = replace;
         this.lore = item.getItemMeta().getLore();
-
-        System.out.println("Heyy ");
-        System.out.println("-> " + old);
-        System.out.println("-> " + replace);
     }
 
     public ItemStack updateLore() {

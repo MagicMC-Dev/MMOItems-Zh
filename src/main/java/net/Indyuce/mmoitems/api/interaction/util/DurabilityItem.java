@@ -153,7 +153,7 @@ public class DurabilityItem {
 		durability = Math.max(0, Math.min(durability - loss, maxDurability));
 
 		// When the item breaks
-		if (durability <= 0 && player != null) {
+		if (durability <= 0 && player  != null) {
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 			PlayerData.get(player).getInventory().scheduleUpdate();
 		}

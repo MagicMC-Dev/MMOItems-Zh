@@ -50,7 +50,7 @@ public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
 
         // Furnaces support only input
         //noinspection ConstantConditions
-        input = ProvidedUIFilter.getFromString(RecipeMakerGUI.poofFromLegacy(recipeNameSection.getString(RecipeMakerGUI.INPUT_INGREDIENTS)), null);
+        input = ProvidedUIFilter.getFromString(RecipeMakerGUI.poofFromLegacy(recipeNameSection.getString(ITEM)), null);
         if (input == null) { input = RecipeMakerGUI.AIR.clone(); }
     }
 

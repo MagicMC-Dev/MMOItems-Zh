@@ -55,7 +55,7 @@ public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
     }
 
     @Override
-    public void editInput(@NotNull ConfigurationSection section, @NotNull ProvidedUIFilter input, int slot) {
+    public void editInput(@NotNull ProvidedUIFilter input, int slot) {
 
         if (slot != 0) { return; }
 
@@ -66,11 +66,11 @@ public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
         section.set(ITEM, input.toString());
     }
 
-    @Override public void editOutput(@NotNull ConfigurationSection section, @NotNull ProvidedUIFilter input, int slot) { }
+    @Override public void editOutput(@NotNull ProvidedUIFilter input, int slot) { }
 
-    @Override public void deleteInput(@NotNull ConfigurationSection section, int slot) { editInput(section, RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteInput(int slot) { editInput(RecipeMakerGUI.AIR.clone(), slot); }
 
-    @Override public void deleteOutput(@NotNull ConfigurationSection section, int slot) { }
+    @Override public void deleteOutput(int slot) { }
 
     @Nullable @Override public ProvidedUIFilter getInput(int slot) { if (slot == 0) { return input; } return null; }
 

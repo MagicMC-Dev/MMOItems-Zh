@@ -128,7 +128,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
     }
 
     @Override
-    public void editInput(@NotNull ConfigurationSection section, @NotNull ProvidedUIFilter input, int slot) {
+    public void editInput(@NotNull ProvidedUIFilter input, int slot) {
 
         // Just edit bro
         setInput(slot, input);
@@ -138,7 +138,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
     }
 
     @Override
-    public void editOutput(@NotNull ConfigurationSection section, @NotNull ProvidedUIFilter input, int slot) {
+    public void editOutput(@NotNull ProvidedUIFilter input, int slot) {
 
         // Just edit bro
         setOutput(slot, input);
@@ -147,9 +147,9 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
         section.set(RecipeMakerGUI.OUTPUT_INGREDIENTS, toYML(getOutputItem(), getOutputIngot()));
     }
 
-    @Override public void deleteInput(@NotNull ConfigurationSection section, int slot) { editInput(section, RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteInput(int slot) { editInput(RecipeMakerGUI.AIR.clone(), slot); }
 
-    @Override public void deleteOutput(@NotNull ConfigurationSection section, int slot) { editOutput(section, RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteOutput(int slot) { editOutput(RecipeMakerGUI.AIR.clone(), slot); }
 
     //region Updater, to update old recipes
     /**

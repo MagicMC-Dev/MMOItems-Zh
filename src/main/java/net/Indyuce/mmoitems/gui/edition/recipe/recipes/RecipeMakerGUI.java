@@ -415,12 +415,15 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 if (isShowingInput()) {
 
                     // Delete Input
-                    getInterpreter().deleteInput(getSection(getEditedSection(), "crafting"), ingredient);
+                    getInterpreter().deleteInput(ingredient);
 
                 } else {
 
                     // Delete Output
-                    getInterpreter().deleteOutput(getSection(getEditedSection(), "crafting"), getInputSlot(event.getRawSlot())); }
+                    getInterpreter().deleteOutput(getInputSlot(event.getRawSlot())); }
+
+                // Register
+                registerTemplateEdition();
 
                 // Refresh yes
                 refreshInventory();

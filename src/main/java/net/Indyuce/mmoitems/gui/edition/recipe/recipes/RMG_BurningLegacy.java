@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.gui.edition.recipe.recipes;
 
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_BurningLegacy;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_Shaped;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_CookingTime;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_Experience;

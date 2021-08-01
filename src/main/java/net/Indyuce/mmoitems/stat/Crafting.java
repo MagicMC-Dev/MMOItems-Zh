@@ -169,11 +169,11 @@ public class Crafting extends ItemStat {
 
 				// Redirect
 				if (type == RecipeMakerGUI.INPUT)  {
-					interpreter.editInput(section, read, slot);
+					interpreter.editInput(read, slot);
 
 				// It must be output
 				} else {
-					interpreter.editOutput(section, read, slot); }
+					interpreter.editOutput(read, slot); }
 
 				// Save changes
 				inv.registerTemplateEdition();

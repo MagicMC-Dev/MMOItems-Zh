@@ -17,66 +17,34 @@ public interface RMG_RecipeInterpreter {
     /**
      * Edits the configuration section's INPUT list.
      *
-     * @param section <b>The 'crafting' section -  [ID].base.crafting</b>
-     *                <br><br>
-     *                Note that this is not editing the recipe type nor name itself.
-     *                It is up to the interpreter to create the sections if missing
-     *                or edit them if they are already there.
-     *                <br><br>
-     *                Ex: [ID].base.crafting.shaped.1.input
-     *
      * @param input The user's input, item that will be required
      *
      * @param slot Slot that the item is going into
      */
-    void editInput(@NotNull ConfigurationSection section, @NotNull ProvidedUIFilter input, int slot);
+    void editInput(@NotNull ProvidedUIFilter input, int slot);
 
     /**
      * Edits the configuration section's OUTPUT list.
      *
-     * @param section <b>The 'crafting' section -  [ID].base.crafting</b>
-     *                <br><br>
-     *                Note that this is not editing the recipe type nor name itself.
-     *                It is up to the interpreter to create the sections if missing
-     *                or edit them if they are already there.
-     *                <br><br>
-     *                Ex: [ID].base.crafting.shaped.1.output
-     *
      * @param input The user's input, item that will be required
      *
      * @param slot Slot that the item is going into
      */
-    void editOutput(@NotNull ConfigurationSection section, @NotNull ProvidedUIFilter input, int slot);
+    void editOutput(@NotNull ProvidedUIFilter input, int slot);
 
     /**
      * Edits the configuration section's INPUT list.
      *
-     * @param section <b>The 'crafting' section -  [ID].base.crafting</b>
-     *                <br><br>
-     *                Note that this is not editing the recipe type nor name itself.
-     *                It is up to the interpreter to create the sections if missing
-     *                or edit them if they are already there.
-     *                <br><br>
-     *                Ex: [ID].base.crafting.shaped.1.input
-     *
      * @param slot Slot that is getting reset
      */
-    void deleteInput(@NotNull ConfigurationSection section, int slot);
+    void deleteInput(int slot);
 
     /**
      * Edits the configuration section's OUTPUT list.
      *
-     * @param section <b>The 'crafting' section -  [ID].base.crafting</b>
-     *                <br><br>
-     *                Note that this is not editing the recipe type nor name itself.
-     *                It is up to the interpreter to create the sections if missing
-     *                or edit them if they are already there.
-     *                <br><br>
-     *                Ex: [ID].base.crafting.shaped.1.output
-     *
      * @param slot Slot that is getting reset
      */
-    void deleteOutput(@NotNull ConfigurationSection section, int slot);
+    void deleteOutput(int slot);
 
     /**
      * Fetch the Provided UI Filter in the YML configuration

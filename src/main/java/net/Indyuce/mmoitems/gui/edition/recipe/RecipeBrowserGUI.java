@@ -5,10 +5,7 @@ import io.lumine.mythic.utils.items.ItemFactory;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.RMGRR_Shaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.RMGRR_Shapeless;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.RMGRR_Smithing;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
+import net.Indyuce.mmoitems.gui.edition.recipe.registry.*;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBBlast;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBCampfire;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBFurnace;
@@ -233,6 +230,7 @@ public class RecipeBrowserGUI extends EditionInventory {
         registerRecipe(new RMGRR_Smithing());
         registerRecipe(new RMGRR_Shapeless());
         registerRecipe(new RMGRR_Shaped());
+        registerRecipe(new RMGRR_SuperShaped());
 
         /*
          * These don't go through mythiclib, I, gunging, merely
@@ -241,7 +239,7 @@ public class RecipeBrowserGUI extends EditionInventory {
          *
          * After the RMGRR_LegacyBurning.sendToMythicLib method (that
          * sends the recipes back to RecipeManager.registerBurningRecipe)
-         * I have no clue what happens; didn't even read that far.
+         * I have no clue what happens; barely even read that far.
          */
         registerRecipe(new RMGRR_LBFurnace());
         registerRecipe(new RMGRR_LBBlast());

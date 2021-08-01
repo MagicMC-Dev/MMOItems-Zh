@@ -1,9 +1,8 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.interpreters;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
-import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -18,17 +17,20 @@ import java.util.List;
  *
  * YML Save Format: <br> <code>
  *
- *    - A|B|C <br>
- *    - D|E|F <br>
- *    - G|H|I
+ *    - A|B|C|D|E <br>
+ *    - F|G|H|I|J <br>
+ *    - K|L|M|N|O <br>
+ *    - P|Q|R|S|T <br>
+ *    - U|V|W|X|Y
  * </code>
  *
  * @author Gunging
  */
-public class RMGRI_Shaped implements RMG_RecipeInterpreter {
+public class RMGRI_SuperShaped implements RMG_RecipeInterpreter {
+
 
     /**
-     * Builds a valid 3x3 matrix of input/output recipe.
+     * Builds a valid 5x5 matrix of input/output recipe.
      *
      * @param config List as it is saved in the config.
      *
@@ -37,10 +39,10 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
     @NotNull ProvidedUIFilter[][] buildIngredientsFromList(@NotNull List<String> config) {
 
         // Start with a base
-        ProvidedUIFilter[][] ret = new ProvidedUIFilter[3][3];
+        ProvidedUIFilter[][] ret = new ProvidedUIFilter[5][5];
 
         // Each row ig
-        for (int r = 0; r < 3; r++) {
+        for (int r = 0; r < 5; r++) {
 
             // Get current row
             String row = config.size() > r ? config.get(r) : null;
@@ -54,7 +56,7 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
             String[] poofs = s.split("\\|");
 
             // Parse
-            for (int p = 0; p < 3; p++) {
+            for (int p = 0; p < 5; p++) {
 
                 String poof = poofs.length > p ? poofs[p] : null;
                 //READ//MMOItems.log("\u00a7b*\u00a77 Coord\u00a7b " + r + " " + p + "\u00a77 as\u00a73 " + poof);
@@ -72,31 +74,36 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
     /**
      * Turns something like <br> <code>
      *
-     *     [ A, B, C ], <br>
-     *     [ D, E, F ], <br>
-     *     [ G, H, I ]  <br>
+     *     [ A, B, C, D, E ], <br>
+     *     [ F, G, H, I, J ], <br>
+     *     [ K, L, M, N, O ], <br>
+     *     [ P, Q, R, S, T ], <br>
+     *     [ U, V, W, X, Y ]  <br>
      *
      * </code> <br>
      * into <br> <code>
      *
-     *    - A|B|C <br>
-     *    - D|E|F <br>
-     *    - G|H|I
+     *    - A|B|C|D|E <br>
+     *    - F|G|H|I|J <br>
+     *    - K|L|M|N|O <br>
+     *    - P|Q|R|S|T <br>
+     *    - U|V|W|X|Y
      * </code>
      *
      * @param ingredients Array of arrays of UIFilters
      *
      * @return A list of strings to save in a YML Config
      */
-    @NotNull ArrayList<String> toYML(@NotNull ProvidedUIFilter[][] ingredients) {
+    @NotNull
+    ArrayList<String> toYML(@NotNull ProvidedUIFilter[][] ingredients) {
 
         // Well, build it would ye?
         ArrayList<String> ret = new ArrayList<>();
 
-        for (int r = 0; r < 3; r++) {
+        for (int r = 0; r < 5; r++) {
 
             // Get row
-            ProvidedUIFilter[] poofs = ingredients.length > r ? ingredients[r] : new ProvidedUIFilter[3];
+            ProvidedUIFilter[] poofs = ingredients.length > r ? ingredients[r] : new ProvidedUIFilter[5];
 
             // Concatenate
             StringBuilder sb = new StringBuilder();
@@ -123,34 +130,34 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
     /**
      * Sets the ingredient in the rows matrix.
      *
-     * @param slot The slot, which must be between 0 and 8  (or this method will do nothing)
+     * @param slot The slot, which must be between 0 and 24  (or this method will do nothing)
      * @param poof Ingredient to register
      */
     public void setInput(int slot, @NotNull ProvidedUIFilter poof) {
-        if (slot < 0 || slot > 8) { return; }
-        inputRecipe[SilentNumbers.floor(slot / 3.0)][slot - (3 * SilentNumbers.floor(slot / 3.0))] = poof;
+        if (slot < 0 || slot > 24) { return; }
+        inputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))] = poof;
     }
     @Nullable
     @Override public ProvidedUIFilter getInput(int slot) {
-        if (slot < 0 || slot > 8) { return null; }
-        return inputRecipe[SilentNumbers.floor(slot / 3.0)][slot - (3 * SilentNumbers.floor(slot / 3.0))];
+        if (slot < 0 || slot > 24) { return null; }
+        return inputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))];
     }
 
     @NotNull final ProvidedUIFilter[][] outputRecipe;
     /**
      * Sets the ingredient in the rows matrix.
      *
-     * @param slot The slot, which must be between 0 and 8  (or this method will do nothing)
+     * @param slot The slot, which must be between 0 and 24  (or this method will do nothing)
      * @param poof Ingredient to register
      */
     public void setOutput(int slot, @NotNull ProvidedUIFilter poof) {
-        if (slot < 0 || slot > 8) { return; }
-        outputRecipe[SilentNumbers.floor(slot / 3.0)][slot - (3 * SilentNumbers.floor(slot / 3.0))] = poof;
+        if (slot < 0 || slot > 24) { return; }
+        outputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))] = poof;
     }
     @Nullable
     @Override public ProvidedUIFilter getOutput(int slot) {
-        if (slot < 0 || slot > 8) { return null; }
-        return outputRecipe[SilentNumbers.floor(slot / 3.0)][slot - (3 * SilentNumbers.floor(slot / 3.0))];
+        if (slot < 0 || slot > 24) { return null; }
+        return outputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))];
     }
 
     @NotNull final ConfigurationSection section;
@@ -170,7 +177,7 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
      *
      * @param recipeNameSection <b><code>[ID].base.crafting.shaped.[name]</code></b> section
      */
-    public RMGRI_Shaped(@NotNull ConfigurationSection recipeNameSection) {
+    public RMGRI_SuperShaped(@NotNull ConfigurationSection recipeNameSection) {
 
         // Save
         section = recipeNameSection;
@@ -224,7 +231,7 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
             String[] curSplit = curr.split("\\|");
 
             // Correct length?
-            if (curSplit.length == 3) {
+            if (curSplit.length == 5) {
 
                 // Assumed to be updated.
                 return curr;
@@ -235,7 +242,7 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
                 StringBuilder ret = new StringBuilder();
 
                 // Must append three
-                for (int r = 0; r < 3; r++) {
+                for (int r = 0; r < 5; r++) {
 
                     // Append a bar after the first
                     if (r != 0) { ret.append("|"); }
@@ -248,7 +255,7 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
                 return ret.toString();
             }
 
-        // Not bars, but spaces, might be old format
+            // Not bars, but spaces, might be old format
         } else if (curr.contains(" ")) {
 
             // Make string builder
@@ -256,7 +263,7 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
             String[] curSplit = curr.split(" ");
 
             // Must append three
-            for (int r = 0; r < 3; r++) {
+            for (int r = 0; r < 5; r++) {
 
                 // Append a bar after the first
                 if (r != 0) { ret.append("|"); }
@@ -272,9 +279,9 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
         } else {
 
             // Just that i guess
-            return RecipeMakerGUI.poofFromLegacy(curr) + "|v AIR 0|v AIR 0";
+            return RecipeMakerGUI.poofFromLegacy(curr) + "|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
         }
     }
-    public static final String emptyRow = "v AIR 0|v AIR 0|v AIR 0";
+    public static final String emptyRow = "v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
     //endregion
 }

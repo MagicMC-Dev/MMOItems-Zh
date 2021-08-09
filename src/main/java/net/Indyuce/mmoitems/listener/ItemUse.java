@@ -153,7 +153,13 @@ public class ItemUse implements Listener {
 		event.setDamage(result.getDamage());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	/*
+	 * Event priority set to LOW to fix an infinite-exp glitch with
+	 * MMOCore. MMOCore experience source listens on HIGH and must be
+	 * higher than this event otherwise the exp is given even if the
+	 * block is not broken.
+	 */
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void specialToolAbilities(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();

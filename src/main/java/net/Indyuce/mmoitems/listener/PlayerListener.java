@@ -78,9 +78,9 @@ public class PlayerListener implements Listener {
 	}
 
 	/*
-	 * prevent players from dropping items which are bound to them with a
-	 * soulbound. items are cached inside a map waiting for the player to
-	 * respawn. if he does not respawn the items are dropped on the ground, this
+	 * Prevent players from dropping items which are bound to them with a
+	 * soulbound. Items are cached inside a map waiting for the player to
+	 * respawn. If he does not respawn the items are dropped on the ground, this
 	 * way there don't get lost
 	 */
 	@EventHandler(priority = EventPriority.HIGH)

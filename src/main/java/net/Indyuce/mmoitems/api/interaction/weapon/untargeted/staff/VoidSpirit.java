@@ -1,16 +1,16 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.ability.Shulker_Missile;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ShulkerBullet;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class VoidSpirit implements StaffAttackHandler {
 
@@ -32,6 +32,6 @@ public class VoidSpirit implements StaffAttackHandler {
 				shulkerBullet.setVelocity(vec);
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
-		MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC), 0., stats, nbt);
+		MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new Shulker_Missile.ShulkerMissileEntityData(new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC), stats, nbt));
 	}
 }

@@ -1,5 +1,17 @@
 package net.Indyuce.mmoitems.ability;
 
+import io.lumine.mythic.lib.api.AttackResult;
+import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
+import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
+import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -15,17 +27,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.AbilityResult;
-import net.Indyuce.mmoitems.api.ability.VectorAbilityResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import io.lumine.mythic.lib.api.AttackResult;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import javax.annotation.Nullable;
 
 public class Shulker_Missile extends Ability implements Listener {
 	public Shulker_Missile() {
@@ -63,19 +65,18 @@ public class Shulker_Missile extends Ability implements Listener {
 				ShulkerBullet shulkerBullet = (ShulkerBullet) stats.getPlayer().getWorld().spawnEntity(stats.getPlayer().getLocation().add(0, 1, 0),
 						EntityType.SHULKER_BULLET);
 				shulkerBullet.setShooter(stats.getPlayer());
-				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet,
+				MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(
 						new AttackResult(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE),
-						ability.getModifier("effect-duration"));
+						ability.getModifier("effect-duration")));
 				new BukkitRunnable() {
 					double ti = 0;
 
 					public void run() {
-						ti++;
-						if (shulkerBullet.isDead() || ti >= duration * 20) {
+						if (shulkerBullet.isDead() || ti++ >= duration * 20) {
 							shulkerBullet.remove();
 							cancel();
-						}
-						shulkerBullet.setVelocity(vec);
+						} else
+							shulkerBullet.setVelocity(vec);
 					}
 				}.runTaskTimer(MMOItems.plugin, 0, 1);
 			}
@@ -89,31 +90,30 @@ public class Shulker_Missile extends Ability implements Listener {
 			LivingEntity entity = (LivingEntity) event.getEntity();
 			if (!MMOItems.plugin.getEntities().isCustomEntity(damager))
 				return;
+
 			if (!MMOUtils.canDamage(entity)) {
 				event.setCancelled(true);
 				return;
 			}
 
-			Object[] data = MMOItems.plugin.getEntities().getEntityData(damager);
-			AttackResult result = (AttackResult) data[0];
-			double duration = (double) data[1] * 20;
+			ShulkerMissileEntityData data = (ShulkerMissileEntityData) MMOItems.plugin.getEntities().getEntityData(damager);
 
-			// void spirit
-			if (data.length > 2)
-				((ItemAttackResult) result).applyEffects((CachedStats) data[2], (NBTItem) data[3], entity);
+			// Void spirit
+			if (data.isWeaponAttack())
+				((ItemAttackResult) data.result).applyEffects(data.stats, data.weapon, entity);
 
-			event.setDamage(result.getDamage());
+			event.setDamage(data.result.getDamage());
 
 			new BukkitRunnable() {
 				final Location loc = entity.getLocation();
 				double y = 0;
 
 				public void run() {
-					// potion effect applies after the damage...
-					// must have a "nanodelay"
+
+					// Potion effect should apply right after the damage with a 1 tick delay.
 					if (y == 0) {
 						entity.removePotionEffect(PotionEffectType.LEVITATION);
-						entity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, (int) duration, 0));
+						entity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, (int) (data.duration * 20), 0));
 					}
 
 					for (int j1 = 0; j1 < 3; j1++) {
@@ -128,6 +128,48 @@ public class Shulker_Missile extends Ability implements Listener {
 						cancel();
 				}
 			}.runTaskTimer(MMOItems.plugin, 0, 1);
+		}
+	}
+
+	public static class ShulkerMissileEntityData implements EntityData {
+		private final AttackResult result;
+		private final double duration;
+
+		@Nullable
+		private final CachedStats stats;
+		@Nullable
+		private final NBTItem weapon;
+
+		/**
+		 * Used for the Shulker missile ability
+		 *
+		 * @param result   Attack result
+		 * @param duration Duration of levitation effect in seconds
+		 */
+		public ShulkerMissileEntityData(AttackResult result, double duration) {
+			this(result, duration, null, null);
+		}
+
+		/**
+		 * Used for the void staff attack spirit (no levitation effect)
+		 *
+		 * @param result Attack result
+		 * @param stats  Stats of player attacking
+		 * @param weapon Item used for the attack
+		 */
+		public ShulkerMissileEntityData(ItemAttackResult result, CachedStats stats, NBTItem weapon) {
+			this(result, 0, stats, weapon);
+		}
+
+		private ShulkerMissileEntityData(AttackResult result, double duration, CachedStats stats, NBTItem weapon) {
+			this.result = result;
+			this.duration = duration;
+			this.stats = stats;
+			this.weapon = weapon;
+		}
+
+		public boolean isWeaponAttack() {
+			return result instanceof ItemAttackResult;
 		}
 	}
 }

@@ -71,14 +71,11 @@ public class ItemAttackResult extends AttackResult {
 	}
 
 	/**
-	 * Applies weapon specific on-hit effects like elemental damage.
-	 * 
-	 * @param stats
-	 *            Player doing the attack
-	 * @param item
-	 *            The item being used
-	 * @param target
-	 *            The entity target
+	 * Applies MMOItem specific on-hit effects like elemental damage.
+	 *
+	 * @param stats  Player doing the attack
+	 * @param item   The item being used
+	 * @param target The entity target
 	 * @return The unedited attack result
 	 */
 	@SuppressWarnings("UnusedReturnValue")

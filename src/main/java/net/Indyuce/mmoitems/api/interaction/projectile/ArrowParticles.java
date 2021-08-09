@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api;
+package net.Indyuce.mmoitems.api.interaction.projectile;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api;
+package net.Indyuce.mmoitems.api.interaction.projectile;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffectType;

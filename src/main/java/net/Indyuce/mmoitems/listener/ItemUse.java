@@ -292,6 +292,10 @@ public class ItemUse implements Listener {
 				event.getForce());
 	}
 
+	/**
+	 * Consumables which can be eaten using the
+	 * vanilla eating animation are handled here.
+	 */
 	@EventHandler
 	public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
@@ -305,10 +309,6 @@ public class ItemUse implements Listener {
 			return;
 		}
 
-		/**
-		 * Consumables which can be eaten using the
-		 * vanilla eating animation are handled here.
-		 */
 		if (useItem instanceof Consumable) {
 
 			if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
@@ -319,10 +319,17 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!((Consumable) useItem).useWithoutItem()) {
+			Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer();
+
+			// No effects are applied and not consumed
+			if (result == Consumable.ConsumableConsumeResult.CANCEL) {
 				event.setCancelled(true);
 				return;
 			}
+
+			// Item is not consumed but its effects are applied anyways
+			if (result == Consumable.ConsumableConsumeResult.NOT_CONSUME)
+				event.setCancelled(true);
 
 			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
 			useItem.executeCommands();

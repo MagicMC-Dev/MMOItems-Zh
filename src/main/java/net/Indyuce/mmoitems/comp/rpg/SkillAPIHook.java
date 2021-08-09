@@ -61,12 +61,8 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
     }
 
     public static class SkillAPIPlayer extends RPGPlayer {
-        /*private final PlayerData rpgdata;*/
-
         public SkillAPIPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
             super(playerData);
-
-            /*rpgdata = SkillAPI.getPlayerData(playerData.getPlayer());*/
         }
 
         @Override

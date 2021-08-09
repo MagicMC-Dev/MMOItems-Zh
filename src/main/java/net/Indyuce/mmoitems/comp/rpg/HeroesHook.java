@@ -47,7 +47,7 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
 
     @Override
     public void refreshStats(PlayerData data) {
-        Hero hero = ((HeroesPlayer) data.getRPG()).hero;
+        Hero hero = Heroes.getInstance().getCharacterManager().getHero(data.getPlayer());
         hero.removeMaxMana("MMOItems");
         hero.addMaxMana("MMOItems", (int) data.getStats().getStat(ItemStats.MAX_MANA));
     }
@@ -76,41 +76,43 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
     }
 
     public static class HeroesPlayer extends RPGPlayer {
-        private final Hero hero;
-
         public HeroesPlayer(PlayerData playerData) {
             super(playerData);
-
-            hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
         }
 
         @Override
         public int getLevel() {
+            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getHeroLevel();
         }
 
         @Override
         public String getClassName() {
+            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getHeroClass().getName();
         }
 
         @Override
         public double getMana() {
+            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getMana();
         }
 
         @Override
         public double getStamina() {
+            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getStamina();
         }
 
         @Override
         public void setMana(double value) {
+            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             hero.setMana((int) value);
         }
 
         @Override
         public void setStamina(double value) {
+            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             hero.setStamina((int) value);
         }
     }

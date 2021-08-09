@@ -14,11 +14,13 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.GemStone;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import org.bukkit.Material;
@@ -257,7 +259,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         if (item == null) { return null; } else {
 
             NBTItem itemNBT = NBTItem.get(item);
-            if (itemNBT.hasType()) { return new LiveMMOItem(item); } }
+            if (MMOItems.getType(itemNBT) != null) { return new LiveMMOItem(item); } }
 
         return null; }
     /**
@@ -286,11 +288,8 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         ItemStack item = original.getMainInventory().getFirst();
         ItemStack ingot = firstFromFirstSide(original);
 
-        MMOItem itemMMO = fromStack(item);
-        MMOItem ingotMMO = fromStack(ingot);
-
         // Get the display
-        MMOItem display = fromCombinationWith(itemMMO, ingotMMO, (Player) eventTrigger.getWhoClicked(), null);
+        MMOItem display = fromCombinationWith(item, ingot, (Player) eventTrigger.getWhoClicked(), null);
 
         // Result
         MythicRecipeInventory result = mythicRecipeInventory.getResultInventory().clone();
@@ -317,12 +316,9 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         ItemStack item = otherInventories.getMainInventory().getFirst();
         ItemStack ingot = firstFromFirstSide(otherInventories);
 
-        MMOItem itemMMO = fromStack(item);
-        MMOItem ingotMMO = fromStack(ingot);
-
         // Get the display
         Ref<ArrayList<ItemStack>> droppedGemstones = new Ref<>();
-        MMOItem display = fromCombinationWith(itemMMO, ingotMMO, player, droppedGemstones);
+        MMOItem display = fromCombinationWith(item, ingot, player, droppedGemstones);
 
         //RDR// MythicCraftingManager.log("\u00a78RDR \u00a748\u00a77 Custom Smithing Recipe Result\u00a7e" + times + "\u00a77 times\u00a78 ~\u00a71 " + eventTrigger.getAction().toString());
 
@@ -558,22 +554,28 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
     }
 
     /**
-     * @param item The item you are upgrading
-     * @param ingot The second item you are upgrading
+     * @param itemStack The item you are upgrading
+     * @param ingotStack The second item you are upgrading
      *
      * @return What would the output be if combined with this other MMOItem?
      */
-    @NotNull MMOItem fromCombinationWith(@Nullable MMOItem item, @Nullable MMOItem ingot, @NotNull Player p, @Nullable Ref<ArrayList<ItemStack>> rem) {
+    @NotNull MMOItem fromCombinationWith(@Nullable ItemStack itemStack, @Nullable ItemStack ingotStack, @NotNull Player p, @Nullable Ref<ArrayList<ItemStack>> rem) {
+
+        // Read MMOItems
+        MMOItem item = fromStack(itemStack);
+        MMOItem ingot = fromStack(ingotStack);
 
         // Generate
         MMOItem gen = getOutputItem().newBuilder(0, null).build();
 
         /*
-         * Two things must be merged:
+         * Things must be merged:
          *
          * 1 Gem Stones - Checks which gem stones can still fit
          *
          * 2 Upgrades - Performs an operation with the combination of them both
+         *
+         * 3 Enchantments - Operation witht he combination of them both
          */
 
         // Extract gemstones
@@ -619,20 +621,24 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
         Ref.setValue(rem, remainingStones);
 
         // Enchantments?
+        //ECH// MMOItems.log("§8Smith §8ENCH§7 Combination: \u00a73" + getEnchantmentTreatment().toString());
         if (getEnchantmentTreatment() != SmithingCombinationType.NONE) {
 
             // Get enchantment data
             EnchantListData genEnchants = (EnchantListData) gen.getData(ItemStats.ENCHANTS); if (genEnchants == null) { genEnchants = (EnchantListData) ItemStats.ENCHANTS.getClearStatData(); }
-            EnchantListData itemEnchants = item != null ? (EnchantListData) item.getData(ItemStats.ENCHANTS) : (EnchantListData) ItemStats.ENCHANTS.getClearStatData();
-            EnchantListData ingotEnchants = ingot != null ? (EnchantListData) ingot.getData(ItemStats.ENCHANTS) : (EnchantListData) ItemStats.ENCHANTS.getClearStatData();
+            EnchantListData itemEnchants = item != null ? (EnchantListData) item.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(itemStack);
+            EnchantListData ingotEnchants = ingot != null ? (EnchantListData) ingot.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(ingotStack);
 
             // For every enchant
             for (Enchantment observedEnchantment : Enchantment.values()) {
+                //ECH// MMOItems.log("§8Smith §8ENCH§7 Treating \u00a7b" + observedEnchantment.getName());
 
                 int genLevel = genEnchants.getLevel(observedEnchantment);
                 int itemLevel = itemEnchants.getLevel(observedEnchantment);
                 int ingotLevel = ingotEnchants.getLevel(observedEnchantment);
                 int finalLevel;
+
+                //ECH// MMOItems.log("§8Smith §8ENCH§7 Gen:\u00a73 " + genLevel + "\u00a77, Item:\u00a7e " + itemLevel + "\u00a77, Ingot:\u00a7b " + ingotLevel);
 
                 switch (getEnchantmentTreatment()) {
                     case ADDITIVE: finalLevel = itemLevel + ingotLevel + genLevel; break;
@@ -640,8 +646,12 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
                     case MINIMUM: if (genLevel == 0) { genLevel = itemLevel; } finalLevel = Math.max(genLevel, Math.min(itemLevel, ingotLevel)); break;
                     default:  if (genLevel == 0) { finalLevel = SilentNumbers.ceil((itemLevel + ingotLevel) / 2D); } else { finalLevel = SilentNumbers.ceil((itemLevel + ingotLevel + genLevel) / 3D); }  break; }
 
+                //ECH// MMOItems.log("§8Smith §8ENCH§7 Result: \u00a7a" + finalLevel);
                 genEnchants.addEnchant(observedEnchantment, finalLevel);
             }
+
+            // Set data :wazowksibruhmoment:
+            gen.setData(ItemStats.ENCHANTS, genEnchants);
         }
 
         // All right whats the level stuff up now

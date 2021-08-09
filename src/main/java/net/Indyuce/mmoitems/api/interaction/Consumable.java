@@ -40,7 +40,9 @@ public class Consumable extends UseItem {
 		if (event.getClickedInventory() != event.getWhoClicked().getInventory())
 			return false;
 
-		Type targetType = Type.get(target.getType());
+		// Make sure it is an MMOItem
+		Type targetType = MMOItems.getType(target);
+
 		for (ConsumableItemInteraction action : MMOItems.plugin.getStats().getConsumableActions())
 			if (action.handleConsumableEffect(event, playerData, this, target, targetType))
 				return true;

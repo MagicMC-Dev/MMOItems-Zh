@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplySoulboundEvent;
@@ -21,6 +22,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -34,8 +36,11 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 	}
 
 	@Override
-	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
+	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, @Nullable Type targetType) {
 		Player player = playerData.getPlayer();
+
+		// Only MMOItems
+		if (targetType == null) { return false; }
 
 		double soulbindingChance = consumable.getNBTItem().getStat("SOULBINDING_CHANCE");
 		if (soulbindingChance <= 0)

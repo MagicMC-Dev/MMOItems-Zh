@@ -29,9 +29,9 @@ public class EnchantListData implements StatData, Mergeable {
 	}
 
     public void addEnchant(Enchantment enchant, int level) {
-        if (level == 0)
-            enchants.remove(enchant);
-        enchants.put(enchant, level);
+
+		// Ignore lvl 0 enchants :wazowskibruhmoment:
+        if (level == 0) { enchants.remove(enchant); } else { enchants.put(enchant, level);}
     }
 
 	public void clear() { enchants.clear(); }

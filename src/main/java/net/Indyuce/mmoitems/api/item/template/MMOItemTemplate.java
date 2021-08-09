@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -28,7 +29,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	// base item data
 	private final Map<ItemStat, RandomStatData> base = new HashMap<>();
 
-	private final Map<String, TemplateModifier> modifiers = new LinkedHashMap<>();
+	@NotNull private final Map<String, TemplateModifier> modifiers = new LinkedHashMap<>();
 	private final Set<TemplateOption> options = new HashSet<>();
 
 	/**
@@ -113,7 +114,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 		return base;
 	}
 
-	public Map<String, TemplateModifier> getModifiers() {
+	@NotNull public Map<String, TemplateModifier> getModifiers() {
 		return modifiers;
 	}
 

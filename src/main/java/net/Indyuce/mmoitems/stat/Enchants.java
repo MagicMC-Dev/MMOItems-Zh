@@ -34,6 +34,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -155,6 +156,32 @@ public class Enchants extends ItemStat implements Upgradable {
                 StatHistory.from(mmoitem, ItemStats.ENCHANTS);
             }
         }
+    }
+
+    /**
+     * @param source Something that may not even have enchs.
+     *
+     * @return Enchantments of this extracted as a list of enchants data.
+     */
+    @NotNull public static EnchantListData fromVanilla(@Nullable ItemStack source) {
+
+        // List
+        EnchantListData eld = new EnchantListData();
+
+        // Null is clear
+        if (source == null) { return eld; }
+
+        // For each enchants
+        for (Enchantment e : source.getEnchantments().keySet()) {
+
+            // Get level
+            int l = source.getEnchantmentLevel(e);
+
+            // Add if significant
+            if (l != 0) { eld.addEnchant(e, l); }
+        }
+
+        return eld;
     }
 
 

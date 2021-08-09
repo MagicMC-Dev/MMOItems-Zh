@@ -193,6 +193,9 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      */
     public void putButtons(@NotNull Inventory target) {
 
+        // Ignore negative rows
+        if (getButtonsRow() < 0) { return; }
+
         // Clear
         buttonsMap.clear();
 

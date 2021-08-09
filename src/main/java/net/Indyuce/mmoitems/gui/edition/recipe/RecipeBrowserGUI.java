@@ -231,6 +231,7 @@ public class RecipeBrowserGUI extends EditionInventory {
         registerRecipe(new RMGRR_Shapeless());
         registerRecipe(new RMGRR_Shaped());
         registerRecipe(new RMGRR_SuperShaped());
+        registerRecipe(new RMGRR_MegaShaped());
 
         /*
          * These don't go through mythiclib, I, gunging, merely

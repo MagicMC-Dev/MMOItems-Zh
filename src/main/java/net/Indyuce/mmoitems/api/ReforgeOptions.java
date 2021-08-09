@@ -13,6 +13,7 @@ public class ReforgeOptions {
 	private final boolean keepName;
 	private final boolean keepLore;
 	private final boolean keepEnchantments;
+	private final boolean keepSkins;
 	private final boolean keepUpgrades;
 	private final boolean keepGemStones;
 	private final boolean keepSoulbind;
@@ -69,7 +70,8 @@ public class ReforgeOptions {
 		keepLore = config.getBoolean("lore");
 		keepEnchantments = config.getBoolean("enchantments");
 		keepUpgrades = config.getBoolean("upgrades");
-		keepGemStones = config.getBoolean("gemstones");
+		keepGemStones = config.getBoolean("gemstones", false) || config.getBoolean("gems", false);
+		keepSkins = config.getBoolean("skins", false);
 		keepSoulbind = config.getBoolean("soulbound");
 		keepCase = config.getString("kept-lore-prefix", ChatColor.GRAY.toString());
 		keepExternalSH = config.getBoolean("external-sh", true);
@@ -88,8 +90,8 @@ public class ReforgeOptions {
 		keepExternalSH = arr(values, 6);
 		reroll = arr(values, 7);
 		keepModifications = arr(values, 8);
-
 		keepAdvancedEnchantments = arr(values, 9);
+		keepSkins = arr(values, 10);
 	}
 
 	boolean arr(@NotNull boolean[] booleans, int idx) {
@@ -125,6 +127,14 @@ public class ReforgeOptions {
 	 */
 	public boolean shouldKeepLore() {
 		return keepLore;
+	}
+
+	/**
+	 *  Keeps skins
+	 */
+	public boolean shouldKeepSkins() {
+		return keepSkins;
+
 	}
 
 	/**

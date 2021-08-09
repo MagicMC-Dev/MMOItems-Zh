@@ -40,6 +40,7 @@ public class ItemListener implements Listener {
 		// Amount ones
 		Bukkit.getPluginManager().registerEvents(new RFGKeepDurability(), MMOItems.plugin);
 		Bukkit.getPluginManager().registerEvents(new RFFKeepAmount(), MMOItems.plugin);
+		Bukkit.getPluginManager().registerEvents(new RFFKeepSkins(), MMOItems.plugin);
 
 	}
 

@@ -13,10 +13,10 @@ import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_SuperShaped;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_MegaShaped;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RMG_SuperShaped;
+import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RMG_MegaShaped;
 import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -27,17 +27,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class RMGRR_SuperShaped implements RecipeRegistry {
-
+public class RMGRR_MegaShaped implements RecipeRegistry {
     @NotNull
-    @Override public String getRecipeConfigPath() { return "supershaped"; }
-    @NotNull @Override public String getRecipeTypeName() { return "Super Shaped"; }
+    @Override public String getRecipeConfigPath() { return "megashaped"; }
+    @NotNull @Override public String getRecipeTypeName() { return "Mega Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.NOTE_BLOCK), FFPMMOItems.get().getExampleFormat() + "Super Shaped Recipe");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.JUKEBOX), FFPMMOItems.get().getExampleFormat() + "Mega Shaped Recipe");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
-        new RMG_SuperShaped(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage());
+        new RMG_MegaShaped(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage());
     }
 
     @NotNull
@@ -51,11 +50,11 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
         if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace")); }
 
         // Identify the input
-        ShapedRecipe input = superShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
+        ShapedRecipe input = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
         if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shaped recipe containing only AIR, $fignored$b.")); }
 
         // Read the options and output
-        ShapedRecipe output = superShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
+        ShapedRecipe output = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
         int outputAmount = recipeSection.getInt(RBA_AmountOutput.AMOUNT_INGREDIENTS, 1);
 
         // Build Output
@@ -78,11 +77,12 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
     /**
      * Shorthand for reading list of strings that are intended to be shaped recipes: <br><br>
      * <code>
-     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0      <br>
-     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0      <br>
-     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0      <br>
-     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0      <br>
-     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0
+     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0|v AIR 0      <br>
+     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0|v AIR 0      <br>
+     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0|v AIR 0      <br>
+     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0|v AIR 0      <br>
+     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0|v AIR 0      <br>
+     *     v AIR 0|v STICK 0|v AIR 0|v STICK 0|v AIR 0|v AIR 0
      * </code>
      *
      * @param namespace Some name to give to this thing, it can be anything really.
@@ -98,7 +98,7 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
      * @throws IllegalArgumentException If any ingredient is illegal (wrong syntax or something).
      */
     @Nullable
-    public static ShapedRecipe superShapedRecipeFromList(@NotNull String namespace, @NotNull ArrayList<String> recipe, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
+    public static ShapedRecipe megaShapedRecipeFromList(@NotNull String namespace, @NotNull ArrayList<String> recipe, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
         // All right lets read them
         ArrayList<ShapedIngredient> poofs = new ArrayList<>();
@@ -111,7 +111,7 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
             //UPT//MMOItems.log("\u00a7e-\u00a77 " + row);
 
             // Update
-            String updatedRow = RMGRI_SuperShaped.updateRow(row);
+            String updatedRow = RMGRI_MegaShaped.updateRow(row);
             //UPT//MMOItems.log("\u00a7eU-\u00a77 " + updatedRow);
 
             /*
@@ -140,7 +140,7 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
             }
 
             // Size not 3? BRUH
-            if (positions.length != 5) { throw new IllegalArgumentException("Invalid super crafting table row $u" + updatedRow + "$b ($fNot exactly 5 ingredients wide$b)."); }
+            if (positions.length != 6) { throw new IllegalArgumentException("Invalid mega crafting table row $u" + updatedRow + "$b ($fNot exactly 6 ingredients wide$b)."); }
 
             // Identify
             ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);
@@ -148,11 +148,13 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
             ProvidedUIFilter center = RecipeMakerGUI.readIngredientFrom(positions[2], ffp);
             ProvidedUIFilter midRight = RecipeMakerGUI.readIngredientFrom(positions[3], ffp);
             ProvidedUIFilter right = RecipeMakerGUI.readIngredientFrom(positions[4], ffp);
+            ProvidedUIFilter extra = RecipeMakerGUI.readIngredientFrom(positions[5], ffp);
             if (!left.isAir()) { nonAirFound = true; }
             if (!midLeft.isAir()) { nonAirFound = true; }
             if (!center.isAir()) { nonAirFound = true; }
             if (!midRight.isAir()) { nonAirFound = true; }
             if (!right.isAir()) { nonAirFound = true; }
+            if (!extra.isAir()) { nonAirFound = true; }
 
             /*
              * To detect if a recipe can be crafted in the survival inventory (and remove extra AIR),
@@ -171,6 +173,7 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
             ShapedIngredient centerIngredient = new ShapedIngredient(center, 2, -rowNumber);
             ShapedIngredient midRightIngredient = new ShapedIngredient(midRight, 3, -rowNumber);
             ShapedIngredient rightIngredient = new ShapedIngredient(right, 4, -rowNumber);
+            ShapedIngredient extraIngredient = new ShapedIngredient(extra, 5, -rowNumber);
 
             // Parse and add
             poofs.add(leftIngredient);
@@ -178,6 +181,7 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
             poofs.add(centerIngredient);
             poofs.add(midRightIngredient);
             poofs.add(rightIngredient);
+            poofs.add(extraIngredient);
 
             // Prepare for next row
             rowNumber++;

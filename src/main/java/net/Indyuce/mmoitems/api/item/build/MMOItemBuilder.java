@@ -157,13 +157,23 @@ public class MMOItemBuilder {
 	 */
 	public void addModifierData(@NotNull ItemStat stat, @NotNull StatData data, @NotNull UUID uuid) {
 
-		// Apply onto Stat History
-		StatHistory hist = StatHistory.from(mmoitem, stat);
-		//MOD//MMOItems.log("\u00a7c+---------->\u00a77 Modifying Item");
-		//MOD//hist.log();
+		// Is this mergeable?
+		if (stat.getClearStatData() instanceof Mergeable) {
 
-		// Apply
-		hist.registerModifierBonus(uuid, data);
+
+			// Apply onto Stat History
+			StatHistory hist = StatHistory.from(mmoitem, stat);
+			//MOD//MMOItems.log("\u00a7c+---------->\u00a77 Modifying Item");
+			//MOD//hist.log();
+
+			// Apply
+			hist.registerModifierBonus(uuid, data);
+
+		} else {
+
+			// Set, there is no more.
+			mmoitem.setData(stat, data);
+		}
 	}
 
 	/**
@@ -214,7 +224,7 @@ public class MMOItemBuilder {
 	 * @return A sorted (or unsorted depending on the template options) list of
 	 *         modifiers that can be later rolled and applied to the builder
 	 */
-	private Collection<TemplateModifier> rollModifiers(MMOItemTemplate template) {
+	@NotNull public static Collection<TemplateModifier> rollModifiers(@NotNull MMOItemTemplate template) {
 		if (!template.hasOption(TemplateOption.ROLL_MODIFIER_CHECK_ORDER))
 			return template.getModifiers().values();
 

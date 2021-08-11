@@ -54,6 +54,11 @@
     <repositories>
 
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
             <id>lumine</id>
             <url>https://mvn.lumine.io/repository/maven/</url>
         </repository>
@@ -71,11 +76,6 @@
         <repository>
             <id>inventive-repo</id>
             <url>https://repo.inventivetalent.org/content/groups/public/</url>
-        </repository>
-
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
 
         <repository>
@@ -371,6 +371,22 @@
             <version>1.4.8-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/GlowAPI.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.denizenscript</groupId>
+            <artifactId>denizen</artifactId>
+            <version>1.2.1-b1744-REL</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Denizen-1.2.1-b1744-REL.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.denizenscript</groupId>
+            <artifactId>depenizen</artifactId>
+            <version>2.0.0-b709</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/Depenizen-2.0.0-b709.jar</systemPath>
         </dependency>
 
     </dependencies>

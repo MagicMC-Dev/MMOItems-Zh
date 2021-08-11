@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
 
+import com.denizenscript.depenizen.bukkit.Depenizen;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
@@ -16,6 +17,7 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
+import net.Indyuce.mmoitems.comp.denizen.DenizenBridge;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
@@ -139,6 +141,12 @@ public class MMOItems extends LuminePlugin {
 
         if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
             enchantPlugins.add(new MythicEnchantsSupport());
+
+        if (Bukkit.getPluginManager().getPlugin("Depenizen") != null) {
+            Depenizen depenizen = (Depenizen) Bukkit.getPluginManager().getPlugin("Depenizen");
+            depenizen.registerBridge(getName(), () -> new DenizenBridge());
+            getLogger().log(Level.INFO, "Hooked onto Denizen");
+        }
     }
 
     @Override
@@ -250,7 +258,6 @@ public class MMOItems extends LuminePlugin {
         }
         if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
             getInventory().register(new OrnamentPlayerInventory());
-
 
         if (Bukkit.getPluginManager().getPlugin("CrazyEnchantments") != null) {
             getStats().register(new CrazyEnchantsStat());

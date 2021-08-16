@@ -1,26 +1,18 @@
 package net.Indyuce.mmoitems.api.ability;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.entity.LivingEntity;
-
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
+import org.apache.commons.lang.Validate;
+import org.bukkit.entity.LivingEntity;
+
+import java.util.*;
 
 public abstract class Ability {
 	private final String name, id;
 	private final List<CastingMode> allowedModes;
 	private final Map<String, Double> modifiers = new HashMap<>();
-
-	private boolean enabled = true;
 
 	protected static final Random random = new Random();
 
@@ -59,10 +51,6 @@ public abstract class Ability {
 		return name;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-
 	public boolean isAllowedMode(CastingMode castingMode) {
 		return allowedModes.contains(castingMode);
 	}
@@ -91,9 +79,11 @@ public abstract class Ability {
 	 * Disables an ability. This method must be called before MMOItems registers
 	 * this ability since it is just a boolean check when registering abilities
 	 * through the abilityManager
+	 *
+	 * @deprecated Useless
 	 */
+	@Deprecated
 	public void disable() {
-		enabled = false;
 	}
 
 	/**

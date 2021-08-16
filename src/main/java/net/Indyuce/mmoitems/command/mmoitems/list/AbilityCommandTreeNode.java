@@ -19,7 +19,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		sender.sendMessage(ChatColor.WHITE + "Here are all the abilities you can bind to items.");
 		sender.sendMessage(ChatColor.WHITE + "The values inside brackets are " + ChatColor.UNDERLINE + "modifiers" + ChatColor.WHITE
 				+ " which allow you to change the ability values (cooldown, damage...)");
-		for (Ability a : MMOItems.plugin.getAbilities().getAllAbilities()) {
+		for (Ability a : MMOItems.plugin.getAbilities().getAll()) {
 			String modFormat = ChatColor.GRAY + String.join(ChatColor.WHITE + ", " + ChatColor.GRAY, a.getModifiers());
 			modFormat = ChatColor.WHITE + "(" + modFormat + ChatColor.WHITE + ")";
 			sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + a.getName() + " " + modFormat);

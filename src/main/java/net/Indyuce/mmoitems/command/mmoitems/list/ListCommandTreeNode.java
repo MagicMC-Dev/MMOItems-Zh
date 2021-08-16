@@ -1,20 +1,16 @@
 package net.Indyuce.mmoitems.command.mmoitems.list;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 
 public class ListCommandTreeNode extends CommandTreeNode {
 	public ListCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "list");
 
 		addChild(new AbilityCommandTreeNode(this));
-		addChild(new MIAbilityCommandTreeNode(this));
-		addChild(new MMAbilityCommandTreeNode(this));
-		addChild(new TPAbilityCommandTreeNode(this));
 		addChild(new LuteAttackCommandTreeNode(this));
 		addChild(new StaffSpiritCommandTreeNode(this));
 		addChild(new TypeCommandTreeNode(this));
@@ -28,9 +24,6 @@ public class ListCommandTreeNode extends CommandTreeNode {
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list spirit " + ChatColor.WHITE + "shows all available staff spirits");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list lute " + ChatColor.WHITE + "shows all available lute attack effects");
 		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list ability " + ChatColor.WHITE + "shows all available abilities");
-		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list miability " + ChatColor.WHITE + "shows all available MMOItems abilities");
-		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list mmability " + ChatColor.WHITE + "shows all available MythicMobs abilities");
-		sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list tpability " + ChatColor.WHITE + "shows all available Third Party abilities");
 		if (sender instanceof Player) {
 			sender.sendMessage("");
 			sender.sendMessage("Spigot Javadoc Links:");

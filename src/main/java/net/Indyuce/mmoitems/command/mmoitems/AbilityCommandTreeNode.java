@@ -19,7 +19,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		super(parent, "ability");
 
 		addParameter(new Parameter("<ability>",
-				(explorer, list) -> MMOItems.plugin.getAbilities().getAllAbilities().forEach(ability -> list.add(ability.getID()))));
+				(explorer, list) -> MMOItems.plugin.getAbilities().getAll().forEach(ability -> list.add(ability.getID()))));
 		addParameter(Parameter.PLAYER_OPTIONAL);
 
 		// three modifiers but more can be used

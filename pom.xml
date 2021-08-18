@@ -210,7 +210,7 @@
         <dependency>
             <groupId>com.github.Eniripsa96</groupId>
             <artifactId>SkillAPI</artifactId>
-            <version>master-SNAPSHOT</version>
+            <version>master</version>
             <scope>provided</scope>
         </dependency>
 
@@ -225,8 +225,7 @@
             <groupId>org.black_ixx</groupId>
             <artifactId>BossShop</artifactId>
             <version>2.0.9</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/BossShopPro.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -247,80 +246,63 @@
             <groupId>com.herocraftonline</groupId>
             <artifactId>heroes</artifactId>
             <version>1.9.3</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Heroes.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.klyser8</groupId>
-            <artifactId>Iridescent</artifactId>
-            <version>1.2.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Iridescent.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
             <version>2.1.104</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/mcMMO.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>us.eunoians</groupId>
             <artifactId>McRPG</artifactId>
             <version>1.1.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/McRPG.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.baks</groupId>
             <artifactId>rpl</artifactId>
             <version>3.9.30</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RPGPlayerLeveling.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.leothepro555</groupId>
             <artifactId>skills</artifactId>
             <version>12.3.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Skills.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.skills.main</groupId>
             <artifactId>SkillsPro</artifactId>
             <version>18.9.0.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/SkillsPro.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.robin</groupId>
             <artifactId>BattleLevels</artifactId>
             <version>6.9.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/BattleLevels.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.evill4mer</groupId>
             <artifactId>RealDualWield</artifactId>
             <version>1.1.12</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RealDualWield.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.arasple.mc</groupId>
             <artifactId>TrHologram</artifactId>
             <version>1.11</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/TrHologram.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -334,8 +316,7 @@
             <groupId>de.tobiyas</groupId>
             <artifactId>RacesAndClasses</artifactId>
             <version>1.2.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RacesAndClasses.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

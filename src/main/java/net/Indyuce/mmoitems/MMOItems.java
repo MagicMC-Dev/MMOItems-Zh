@@ -277,7 +277,7 @@ public class MMOItems extends LuminePlugin {
                 getLogger().log(Level.INFO, "Hooked onto GlowAPI (Item Glow)");
             } else
                 Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
-        }
+        } 
 
         if (Bukkit.getPluginManager().getPlugin("RealDualWield") != null) {
             Bukkit.getPluginManager().registerEvents(new RealDualWieldHook(), this);

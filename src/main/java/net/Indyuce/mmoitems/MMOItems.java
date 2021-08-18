@@ -33,7 +33,6 @@ import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
-import net.Indyuce.mmoitems.comp.parse.IridescentParser;
 import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.DefaultPlaceholderParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderAPIParser;
@@ -267,11 +266,6 @@ public class MMOItems extends LuminePlugin {
             getLogger().log(Level.INFO, "Hooked onto AdvancedEnchantments");
         }
 
-        if (Bukkit.getPluginManager().getPlugin("Iridescent") != null) {
-            stringInputParsers.add(new IridescentParser());
-            getLogger().log(Level.INFO, "Hooked onto Iridescent");
-        }
-
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
             placeholderParser = new PlaceholderAPIParser();
@@ -283,7 +277,7 @@ public class MMOItems extends LuminePlugin {
                 getLogger().log(Level.INFO, "Hooked onto GlowAPI (Item Glow)");
             } else
                 Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
-        }
+        } 
 
         if (Bukkit.getPluginManager().getPlugin("RealDualWield") != null) {
             Bukkit.getPluginManager().registerEvents(new RealDualWieldHook(), this);

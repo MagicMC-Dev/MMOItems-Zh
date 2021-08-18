@@ -88,6 +88,12 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        
+        <!-- AE -->
+        <repository>
+		    <id>egg82-ninja</id>
+		    <url>https://www.myget.org/F/egg82-java/maven/</url>
+		</repository>
 
     </repositories>
 
@@ -193,16 +199,14 @@
             <groupId>com.github.Eniripsa96</groupId>
             <artifactId>SkillAPI</artifactId>
             <version>master-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/SkillAPI.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>n3kas</groupId>
             <artifactId>ae.api</artifactId>
             <version>5.7.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/AE-API.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

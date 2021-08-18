@@ -323,8 +323,7 @@
             <groupId>ru.endlesscode</groupId>
             <artifactId>rpginventory</artifactId>
             <version>2.3.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RPGInventory.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -338,48 +337,42 @@
             <groupId>com.archyx</groupId>
             <artifactId>AureliumSkills</artifactId>
             <version>1.0.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/AureliumSkills.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.badbones69</groupId>
             <artifactId>crazyenchantments</artifactId>
             <version>1.8-db9</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/CrazyEnchantments.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens</artifactId>
-            <version>2.0.25-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Citizens.jar</systemPath>
+            <version>2.0.25</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.inventivetalent</groupId>
             <artifactId>glowapi</artifactId>
-            <version>1.4.8-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/GlowAPI.jar</systemPath>
+            <version>1.4.8</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.denizenscript</groupId>
             <artifactId>denizen</artifactId>
             <version>1.2.1-b1744-REL</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Denizen-1.2.1-b1744-REL.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.denizenscript</groupId>
             <artifactId>depenizen</artifactId>
             <version>2.0.0-b709</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Depenizen-2.0.0-b709.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

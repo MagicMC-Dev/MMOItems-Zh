@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+// TODO refactor this shit
 public class ElementListener implements Listener {
 	private static final Map<Integer, Long> WATER_WEAKNESS = new HashMap<>();
 

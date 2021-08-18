@@ -1,24 +1,22 @@
 package net.Indyuce.mmoitems.api.interaction.projectile;
 
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.potion.PotionEffectType;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import net.Indyuce.mmoitems.stat.data.PotionEffectData;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffectType;
 
 public class ProjectileData {
 	private final NBTItem sourceItem;
-	private final CachedStats playerStats;
+	private final ItemAttackMetadata attackMeta;
 	private final boolean customWeapon;
 
-	public ProjectileData(NBTItem sourceItem, CachedStats playerStats, boolean customWeapon) {
-		this.playerStats = playerStats;
+	public ProjectileData(NBTItem sourceItem, ItemAttackMetadata attackMeta, boolean customWeapon) {
+		this.attackMeta = attackMeta;
 		this.sourceItem = sourceItem;
 		this.customWeapon = customWeapon;
 	}
@@ -27,8 +25,8 @@ public class ProjectileData {
 		return sourceItem;
 	}
 
-	public CachedStats getPlayerStats() {
-		return playerStats;
+	public ItemAttackMetadata getAttackMetadata() {
+		return attackMeta;
 	}
 
 	/*

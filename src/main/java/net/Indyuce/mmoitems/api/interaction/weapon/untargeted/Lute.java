@@ -2,19 +2,19 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.SoundReader;
-import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -35,8 +35,8 @@ public class Lute extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
-		CachedStats stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
-		double attackSpeed = 1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
+		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
+		double attackSpeed = 1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
 		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))
 			return;
 
@@ -47,14 +47,17 @@ public class Lute extends UntargetedWeapon {
 		if (durItem.isValid())
 			durItem.decreaseDurability(1).update();
 
-		double attackDamage = getValue(stats.getStat(ItemStats.ATTACK_DAMAGE), 1);
+		double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 7);
 		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);
+
+		// Attack meta
+		ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE), stats);
 
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
 		SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
 		if (effect != null) {
-			effect.getAttack().handle(stats, getNBTItem(), attackDamage, range, weight, sound);
+			effect.getAttack().handle(attackMeta, getNBTItem(), attackDamage, range, weight, sound);
 			return;
 		}
 
@@ -99,8 +102,7 @@ public class Lute extends UntargetedWeapon {
 
 					for (Entity target : entities)
 						if (MMOUtils.canDamage(getPlayer(), loc, target)) {
-							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC)
-									.applyEffectsAndDamage(stats, getNBTItem(), (LivingEntity) target);
+							attackMeta.applyEffectsAndDamage(getNBTItem(), (LivingEntity) target);
 							cancel();
 							return;
 						}

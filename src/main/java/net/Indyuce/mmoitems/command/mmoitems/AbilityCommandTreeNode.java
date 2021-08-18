@@ -1,12 +1,13 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Bukkit;
@@ -74,7 +75,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		}
 
 		PlayerData data = PlayerData.get(target);
-		data.cast(data.getStats().newTemporary(EquipmentSlot.MAIN_HAND), null, new ItemAttackResult(0), ability);
+		data.cast(new ItemAttackMetadata(new DamageMetadata(), data.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND)), null, ability);
 		return CommandResult.SUCCESS;
 	}
 }

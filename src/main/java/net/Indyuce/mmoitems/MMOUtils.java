@@ -146,40 +146,20 @@ public class MMOUtils {
 		return null;
 	}
 
-	/**
-	 * @deprecated Not being used internally
-	 */
-	@Deprecated
-	public static String getProgressBar(double ratio, int n, String barChar) {
-		StringBuilder bar = new StringBuilder();
-		for (int k = 0; k < n; k++)
-			bar.append(barChar);
-		return bar.substring(0, (int) (ratio * n)) + ChatColor.WHITE + bar.substring((int) (ratio * n));
-	}
-
 	public static LivingEntity getDamager(EntityDamageByEntityEvent event) {
 
-		/*
-		 * check direct damager
-		 */
+		// Check direct damager
 		if (event.getDamager() instanceof LivingEntity) return (LivingEntity) event.getDamager();
 
 		/*
-		 * checks projectile and add damage type, which supports every vanilla
+		 * Checks projectile and add damage type, which supports every vanilla
 		 * projectile like snowballs, tridents and arrows
 		 */
 		if (event.getDamager() instanceof Projectile) {
 			Projectile proj = (Projectile) event.getDamager();
-			if (proj.getShooter() instanceof LivingEntity) return (LivingEntity) proj.getShooter();
+			if (proj.getShooter() instanceof LivingEntity)
+				return (LivingEntity) proj.getShooter();
 		}
-
-		/*
-		 * check for last damage
-		 */
-		// if (event.getEntity().getLastDamageCause() instanceof
-		// EntityDamageByEntityEvent && checkLastDamageCause)
-		// return getDamager(result, (EntityDamageByEntityEvent)
-		// event.getEntity().getLastDamageCause(), false);
 
 		return null;
 	}
@@ -203,18 +183,6 @@ public class MMOUtils {
 		return (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ?
 				item.getItemMeta().getDisplayName() :
 				caseOnWords(item.getType().name().toLowerCase().replace("_", " "));
-	}
-
-	/**
-	 * Is the player encumbered by carrying two-handed items?
-	 *
-	 * @deprecated Use PlayerData.get(player).areHandsFull() instead
-	 */
-	@Deprecated
-	public static boolean twoHandedCase(Player player) {
-
-		// Straight from player data
-		return PlayerData.get(player).areHandsFull();
 	}
 
 	/**

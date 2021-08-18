@@ -7,22 +7,26 @@ import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.skill.SkillType;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.AttackResult;
-import io.lumine.mythic.lib.api.DamageHandler;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.RegisteredAttack;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.damage.AttackHandler;
+import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HeroesHook implements RPGHandler, Listener, DamageHandler {
+public class HeroesHook implements RPGHandler, Listener, AttackHandler {
     private final Map<SkillType, DamageType> damages = new HashMap<>();
 
     public HeroesHook() {
@@ -34,15 +38,18 @@ public class HeroesHook implements RPGHandler, Listener, DamageHandler {
     }
 
     @Override
-    public boolean hasDamage(Entity entity) {
-        return Heroes.getInstance().getDamageManager().isSpellTarget(entity);
+    public boolean isAttacked(Entity entity) {
+        SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
+        return info != null && info.getCharacter().getEntity() instanceof Player;
     }
 
     @Override
-    public RegisteredAttack getDamage(Entity entity) {
+    public AttackMetadata getAttack(Entity entity) {
         SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-        return new RegisteredAttack(new AttackResult(true, 0, info.getSkill().getTypes().stream().filter(damages::containsKey)
-                .map(damages::get).collect(Collectors.toSet())), info.getCharacter().getEntity());
+        Player player = (Player) info.getCharacter().getEntity();
+        Set<DamageType> types = info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).collect(Collectors.toSet());
+        DamageMetadata damageMeta = new DamageMetadata(0, types.toArray(new DamageType[0]));
+        return new AttackMetadata(damageMeta, MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND));
     }
 
     @Override

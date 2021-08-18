@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.manager;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsAbility;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.comp.mythicmobs.skill.MythicMobsAbility;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

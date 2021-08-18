@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.ability.Ability;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MMOItemsAPI {

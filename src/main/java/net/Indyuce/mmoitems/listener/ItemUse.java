@@ -1,12 +1,14 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.*;
@@ -16,7 +18,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -118,7 +119,6 @@ public class ItemUse implements Listener {
 			return;
 
 		Player player = (Player) event.getDamager();
-		CachedStats stats = null;
 
 		/*
 		 * Must apply attack conditions before apply any effects. the event must
@@ -126,7 +126,7 @@ public class ItemUse implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(player);
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
-		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
+		ItemAttackMetadata attackMeta = null;
 
 		if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
 			Weapon weapon = new Weapon(playerData, item);
@@ -141,16 +141,19 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND), target, result);
-			if (!result.isSuccessful()) {
+			StatMap.CachedStatMap cachedStatMap = playerData.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
+			attackMeta = new ItemAttackMetadata(new DamageMetadata(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL), cachedStatMap);
+			if (!weapon.handleTargetedAttack(attackMeta, target).isSuccessful()) {
 				event.setCancelled(true);
 				return;
 			}
 		}
 
 		// Cast on-hit abilities and add the extra damage to the damage event
-		result.applyEffects(stats == null ? playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND) : stats, item, target);
-		event.setDamage(result.getDamage());
+		attackMeta.applyEffects(item, target);
+
+		// Finally update Bukkit event
+		event.setDamage(attackMeta.getDamage().getDamage());
 	}
 
 	/*

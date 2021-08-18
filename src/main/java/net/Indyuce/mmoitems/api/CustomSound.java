@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

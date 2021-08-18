@@ -2,12 +2,12 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
 import org.bukkit.Location;
@@ -22,10 +22,10 @@ import java.util.List;
 public class CircularLuteAttack implements LuteAttackHandler {
 
 	@Override
-	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range, Vector weight, SoundReader sound) {
+	public void handle(ItemAttackMetadata attack, NBTItem nbt, double attackDamage, double range, Vector weight, SoundReader sound) {
 		new BukkitRunnable() {
-			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
-			final Location loc = stats.getPlayer().getEyeLocation();
+			final Vector vec = attack.getDamager().getEyeLocation().getDirection().multiply(.4);
+			final Location loc = attack.getDamager().getEyeLocation();
 			int ti = 0;
 
 			public void run() {
@@ -51,12 +51,12 @@ public class CircularLuteAttack implements LuteAttackHandler {
 							double red = Double.parseDouble(String.valueOf(obj.get("Red")));
 							double green = Double.parseDouble(String.valueOf(obj.get("Green")));
 							double blue = Double.parseDouble(String.valueOf(obj.get("Blue")));
-							ProjectileParticlesData.shootParticle(stats.getPlayer(), particle, loc.clone().add(vec), red, green, blue);
-							ProjectileParticlesData.shootParticle(stats.getPlayer(), particle, loc.clone().add(vec.multiply(-1)), red, green, blue);
+							ProjectileParticlesData.shootParticle(attack.getDamager(), particle, loc.clone().add(vec), red, green, blue);
+							ProjectileParticlesData.shootParticle(attack.getDamager(), particle, loc.clone().add(vec.multiply(-1)), red, green, blue);
 							// If it's not colored, just shoot the particle
 						} else {
-							ProjectileParticlesData.shootParticle(stats.getPlayer(), particle, loc.clone().add(vec), 0, 0, 0);
-							ProjectileParticlesData.shootParticle(stats.getPlayer(), particle, loc.clone().add(vec.multiply(-1)), 0, 0, 0);
+							ProjectileParticlesData.shootParticle(attack.getDamager(), particle, loc.clone().add(vec), 0, 0, 0);
+							ProjectileParticlesData.shootParticle(attack.getDamager(), particle, loc.clone().add(vec.multiply(-1)), 0, 0, 0);
 						}
 						// If no particle has been provided via projectile particle attribute, default to this particle
 					} else {
@@ -67,8 +67,8 @@ public class CircularLuteAttack implements LuteAttackHandler {
 					if (j == 0) sound.play(loc, 2, (float) (.5 + (double) ti / range));
 
 					for (Entity target : entities)
-						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+						if (MMOUtils.canDamage(attack.getDamager(), loc, target)) {
+							new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE), attack.getStats()).applyEffectsAndDamage(nbt, (LivingEntity) target);
 							cancel();
 							return;
 						}

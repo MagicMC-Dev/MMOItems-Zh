@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
-import java.util.Random;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Location;
 
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.Random;
 
 public interface StaffAttackHandler {
-	void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range);
+	static final Random random = new Random();
 
-	Random random = new Random();
+	void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range);
 
 	default Location getGround(Location loc) {
 		for (int j = 0; j < 20; j++) {

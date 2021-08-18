@@ -46,10 +46,6 @@ public class ConfigManager implements Reloadable {
 	public NumericStatFormula defaultItemCapacity;
 	public ReforgeOptions revisionOptions, phatLootsOptions;
 
-	/** DE-TAREAS: Implement reward system for good users? */
-	@SuppressWarnings("unused")
-	private final String elGrifoReconocimiento  = "%%__USER__%%";
-
 	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
 	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
 
@@ -277,8 +273,6 @@ public class ConfigManager implements Reloadable {
 	public List<String> getDefaultLoreFormat() {
 		return loreFormat.getConfig().getStringList("lore-format");
 	}
-
-	public final boolean arruinarElPrograma = false;
 
 	public String getPotionEffectName(PotionEffectType type) {
 		return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));

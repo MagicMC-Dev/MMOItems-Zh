@@ -65,20 +65,20 @@ public class MythicMobsHook implements Listener {
 	}*/
 
 	private void registerSkillPlaceholders() {
-
+/*
 		Placeholder.meta((meta, arg) -> {
 
 			SkillMetadata skillMeta = (SkillMetadata) meta;
 			skillMeta.getVariables().get("MMOStats");
 
 
-
+return null;
 
 		} );
 
 		MythicMobs.inst().getPlaceholderManager().register("modifier",
 				Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData
-						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));*/
 
 	}
 

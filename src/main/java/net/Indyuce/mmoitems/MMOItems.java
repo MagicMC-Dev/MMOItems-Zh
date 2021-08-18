@@ -6,7 +6,10 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import io.lumine.mythic.utils.plugin.LuminePlugin;
-import net.Indyuce.mmoitems.api.*;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -158,10 +161,9 @@ public class MMOItems extends LuminePlugin {
 
         final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
         final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
-        if (configVersion != defConfigVersion || MMOItems.plugin.getLanguage().arruinarElPrograma) {
+        if (configVersion != defConfigVersion) {
             getLogger().warning("You may be using an outdated config.yml!");
-            getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '"
-                    + (MMOItems.plugin.getLanguage().arruinarElPrograma ? "steelballrun" : defConfigVersion) + "')");
+            getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '" + defConfigVersion + "')");
         }
 
         // registering here so the stats will load with the templates
@@ -223,12 +225,9 @@ public class MMOItems extends LuminePlugin {
 
         Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
 
-        if (MMOItems.plugin.getLanguage().arruinarElPrograma)
-            Bukkit.getScheduler().runTaskTimer(this, ClaseMuyImportante::metodoMuyImportante, 780000L, 780000L);
-
         /*
-         * this tasks updates twice a second player inventories on the server.
-         * allows now to use a glitchy itemEquipEvent. must be called after
+         * This tasks updates twice a second player inventories on the server.
+         * allows now to use a glitchy itemEquipEvent. Must be called after
          * loading the config since it checks for a config option
          */
         Bukkit.getScheduler().runTaskTimer(this, () -> {

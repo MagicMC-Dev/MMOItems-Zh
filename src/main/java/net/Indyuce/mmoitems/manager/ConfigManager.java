@@ -126,7 +126,7 @@ public class ConfigManager implements Reloadable {
 		messages.save();
 
 		ConfigFile abilities = new ConfigFile("/language", "abilities");
-		for (Ability ability : MMOItems.plugin.getAbilities().getAll()) {
+		for (Ability<?> ability : MMOItems.plugin.getAbilities().getAll()) {
 			String path = ability.getLowerCaseID();
 			if (!abilities.getConfig().getKeys(true).contains("ability." + path))
 				abilities.getConfig().set("ability." + path, ability.getName());

@@ -30,7 +30,7 @@ import java.util.List;
 public class AbilityEdition extends EditionInventory {
 	private final String configKey;
 
-	private Ability ability;
+	private Ability<?> ability;
 
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43 };

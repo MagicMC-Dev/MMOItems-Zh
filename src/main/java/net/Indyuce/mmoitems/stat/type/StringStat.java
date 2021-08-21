@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class StringStat extends ItemStat {
+public class StringStat extends ItemStat implements GemStoneStat {
 	public StringStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
 		super(id, mat, name, lore, types, materials);
 	}

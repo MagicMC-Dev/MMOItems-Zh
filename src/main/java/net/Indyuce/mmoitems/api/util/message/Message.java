@@ -13,11 +13,6 @@ public enum Message {
 	ITEM_ON_COOLDOWN("This item is on cooldown! Please wait #left#s.", "item-cooldown"),
 	NOT_ENOUGH_PERMS_COMMAND("You don't have enough permissions."),
 
-	// Damage Mitigation
-	ATTACK_BLOCKED("You just blocked #percent#% of the attack damage!", "mitigation"),
-	ATTACK_DODGED("You just dodged an attack!", "mitigation"),
-	ATTACK_PARRIED("You just parried an attack!", "mitigation"),
-
 	// Item restrictions
 	NOT_ENOUGH_LEVELS("You don't have enough levels to use this item!", "cant-use-item"),
 	SOULBOUND_RESTRICTION("This item is linked to another player, you can't use it!", "cant-use-item"),
@@ -76,10 +71,6 @@ public enum Message {
 	CRAFTING_QUEUE_FULL("The crafting queue is currently full."),
 	STATION_BIG_STACK("Amount Crafted: #size#"),
 	RECIPE_PREVIEW("Recipe Preview"),
-	// ALREADY_CRAFTING("You are already crafting something else."),
-	// ALREADY_CRAFTING_STATION("You are already crafting something else in that
-	// station."),
-	// CRAFTING_SUBTITLE("#bar# &e#left# left"),
 	UNABLE_TO_REPAIR("This item can't be repaired by this consumable!"),
 	;
 

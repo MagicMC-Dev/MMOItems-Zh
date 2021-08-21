@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.gui.edition;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -30,7 +30,7 @@ import java.util.List;
 public class AbilityEdition extends EditionInventory {
 	private final String configKey;
 
-	private Ability ability;
+	private Ability<?> ability;
 
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43 };

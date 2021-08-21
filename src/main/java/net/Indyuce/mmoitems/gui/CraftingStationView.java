@@ -181,39 +181,45 @@ public class CraftingStationView extends PluginInventory {
 			 * to the player and remove the recipe from the queue
 			 */
 			if (recipeInfo.isReady()) {
-				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe,
-						PlayerUseCraftingStationEvent.StationAction.CRAFTING_QUEUE);
+				ItemStack result = recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM) ? recipe.getOutput().generate(playerData.getRPG()) : null;
+
+				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe, result);
 				Bukkit.getPluginManager().callEvent(called);
 				if (called.isCancelled())
 					return;
 
+				// Remove from crafting queue
 				playerData.getCrafting().getQueue(station).remove(recipeInfo);
 
+				// Apply triggers
 				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(playerData));
 
-				ItemStack craftedItem = recipe.getOutput().generate(playerData.getRPG());
-
-				CustomSoundListener.stationCrafting(craftedItem, player);
-
+				// Play sounds
+				CustomSoundListener.stationCrafting(result, player);
 				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
 					player.playSound(player.getLocation(), station.getSound(), 1, 1);
 
-				if (recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM))
-					new SmartGive(player).give(craftedItem);
+				if (result != null)
+					new SmartGive(player).give(result);
 
 				/*
 				 * If the recipe is not ready, cancel the recipe and give the
 				 * ingredients back to the player
 				 */
 			} else {
-				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe,
-						PlayerUseCraftingStationEvent.StationAction.CANCEL_QUEUE);
+				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe);
 				Bukkit.getPluginManager().callEvent(called);
 				if (called.isCancelled())
 					return;
 
+				// Remove from crafting queue
 				playerData.getCrafting().getQueue(station).remove(recipeInfo);
-				player.playSound(player.getLocation(), station.getSound(), 1, 1);
+
+				// Play sounds
+				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
+					player.playSound(player.getLocation(), station.getSound(), 1, 1);
+
+				// Give ingredients back
 				for (Ingredient ingredient : recipeInfo.getRecipe().getIngredients())
 					new SmartGive(player).give(ingredient.generateItemStack(playerData.getRPG()));
 			}
@@ -241,17 +247,12 @@ public class CraftingStationView extends PluginInventory {
 			return;
 		}
 
-		PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe,
-				PlayerUseCraftingStationEvent.StationAction.INTERACT_WITH_RECIPE);
-		Bukkit.getPluginManager().callEvent(called);
-		if (called.isCancelled())
-			return;
+		if (recipe.getRecipe().whenUsed(playerData, ingredients, recipe, station)) {
+			recipe.getIngredients().forEach(ingredient -> ingredient.takeAway());
+			recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(playerData));
 
-		recipe.getRecipe().whenUsed(playerData, ingredients, recipe, station);
-		recipe.getIngredients().forEach(ingredient -> ingredient.takeAway());
-		recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(playerData));
-
-		updateData();
+			updateData();
+		}
 	}
 
 	private CheckedRecipe getRecipe(String id) {

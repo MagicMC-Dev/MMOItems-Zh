@@ -1,5 +1,10 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VersionSound;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -8,21 +13,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionSound;
-
 public class SunfireSpirit implements StaffAttackHandler {
 
 	@Override
-	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
-		stats.getPlayer().getWorld().playSound(stats.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+	public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range) {
+		attackMeta.getDamager().getWorld().playSound(attackMeta.getDamager().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
 		new BukkitRunnable() {
-			final Location target = getGround(stats.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
+			final Location target = getGround(attackMeta.getDamager().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
 			final double a = random.nextDouble() * Math.PI * 2;
 			final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
 			final Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
@@ -40,8 +37,8 @@ public class SunfireSpirit implements StaffAttackHandler {
 						loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 						loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 						for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
-							if (MMOUtils.canDamage(stats.getPlayer(), target) && target.getLocation().distanceSquared(loc) <= 9)
-								new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt, (LivingEntity) target);
+							if (MMOUtils.canDamage(attackMeta.getDamager(), target) && target.getLocation().distanceSquared(loc) <= 9)
+								attackMeta.applyEffectsAndDamage(nbt, (LivingEntity) target);
 						cancel();
 						break;
 					}

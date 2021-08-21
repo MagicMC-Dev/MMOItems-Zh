@@ -4,22 +4,22 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.damage.DamageMetadata;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
-import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.ability.AbilityMetadata;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.event.RefreshInventoryEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
@@ -53,7 +53,6 @@ public class PlayerData {
 
 	private final InventoryUpdateHandler inventory = new InventoryUpdateHandler(this);
 	private final CraftingStatus craftingStatus = new CraftingStatus();
-	private final PlayerAbilityData playerAbilityData = new PlayerAbilityData();
 	private final Map<String, CooldownInformation> abilityCooldowns = new HashMap<>();
 	private final Map<String, Long> itemCooldowns = new HashMap<>();
 	private final Map<CooldownType, Long> extraCooldowns = new HashMap<>();
@@ -344,10 +343,6 @@ public class PlayerData {
 		return craftingStatus;
 	}
 
-	public PlayerAbilityData getAbilityData() {
-		return playerAbilityData;
-	}
-
 	public int getPermanentPotionEffectAmplifier(PotionEffectType type) {
 		return permanentEffects.containsKey(type) ? permanentEffects.get(type).getAmplifier() : -1;
 	}
@@ -374,63 +369,57 @@ public class PlayerData {
 	/**
 	 * Casts all the abilities of a player under a specific casting mode onto a certain enemy
 	 * <p>
-	 * Used internally by MMOItems to avoid caching the player stats (which costs
-	 * a lot of calculations) before checking if the player can cast any ability.
-	 * <p>
-	 * Mainly due to random player clicks with no or few MMOItems being equipped
-	 * still caching a lot of player stats.
+	 * This is NOT used within MMOItems and is purely an API method. This has the effect
+	 * of generating a ItemMetadata if necessary, which caches the player stats.
 	 *
-	 * @param target   The ability target, can be null.
-	 * @param result   The current attack, cannot be null.
+	 * @param target   Ability target which can be null
 	 * @param castMode The action the player performed to cast the ability
+	 * @return Null if no ability was cast, or the attack metadata if any was cast.
 	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public ItemAttackResult castAbilities(@Nullable LivingEntity target, @NotNull ItemAttackResult result, @NotNull CastingMode castMode) {
+	@Nullable
+	public ItemAttackMetadata castAbilities(@Nullable LivingEntity target, @NotNull CastingMode castMode) {
 		if (!hasAbility(castMode))
-			return result;
+			return null;
 
-		return castAbilities(getStats().newTemporary(EquipmentSlot.OTHER), target, result, castMode);
+		ItemAttackMetadata meta = new ItemAttackMetadata(new DamageMetadata(), mmoData.getStatMap().cache(EquipmentSlot.OTHER));
+		return castAbilities(meta, target, castMode);
 	}
 
 	/**
 	 * Casts all the abilities of a player under a specific casting mode onto a certain enemy
 	 *
-	 * @param stats    The player stats
-	 * @param target   The ability target, can be null.
-	 * @param result   The current attack, cannot be null.
-	 * @param castMode The action the player performed to cast the ability
+	 * @param attack     Current attack meta
+	 * @param target   Ability target, can be null
+	 * @param castMode Action the player performed to cast the ability
 	 */
-	public ItemAttackResult castAbilities(CachedStats stats, LivingEntity target, ItemAttackResult result, CastingMode castMode) {
-		if (!mmoData.isOnline())
-			return result;
+	public ItemAttackMetadata castAbilities(ItemAttackMetadata attack, LivingEntity target, CastingMode castMode) {
 
 		/*
-		 * if ability has target, check for ability flag at location of target
-		 * and make sure player can attack target. if ability has no target,
+		 * If the ability has target, check for ability flag at location of target
+		 * and make sure player can attack target. If ability has no target,
 		 * check for WG flag at the caster location
 		 */
 		if (target == null ? !MMOItems.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MI_ABILITIES)
 				: !MMOItems.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MI_ABILITIES)
 				|| !MMOUtils.canDamage(getPlayer(), target))
-			return result.setSuccessful(false);
+			return attack.setSuccessful(false);
 
 		for (AbilityData ability : itemAbilities)
 			if (ability.getCastingMode() == castMode)
-				cast(stats, target, result, ability);
+				cast(attack, target, ability);
 
-		return result;
+		return attack;
 	}
 
 	/**
 	 * Makes the player cast an ability. Checks for cooldown and mana cost before casting it.
 	 * Also calls a Bukkit event right before casting it.
 	 *
-	 * @param stats   The player stats
-	 * @param target  The ability target, can be null.
-	 * @param attack  The current attack, cannot be null.
+	 * @param attack  Current attack
+	 * @param target  Ability target, can be null
 	 * @param ability Ability to cast
 	 */
-	public void cast(CachedStats stats, LivingEntity target, ItemAttackResult attack, AbilityData ability) {
+	public void cast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
 
 		/*
 		 * Apply simple conditions including mana and stamina cost, permission
@@ -443,8 +432,8 @@ public class PlayerData {
 		 * Apply extra conditions which depend on the ability the player is
 		 * casting
 		 */
-		AbilityResult abilityResult = ability.getAbility().whenRan(stats, target, ability, attack);
-		if (!abilityResult.isSuccessful())
+		AbilityMetadata abilityMetadata = ability.getAbility().canBeCast(attack, target, ability);
+		if (!abilityMetadata.isSuccessful())
 			return;
 
 		AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
@@ -457,11 +446,11 @@ public class PlayerData {
 		 * target, removes resources needed from the player
 		 */
 		if (ability.hasModifier("mana"))
-			rpgPlayer.giveMana(-abilityResult.getModifier("mana"));
+			rpgPlayer.giveMana(-abilityMetadata.getModifier("mana"));
 		if (ability.hasModifier("stamina"))
-			rpgPlayer.giveStamina(-abilityResult.getModifier("stamina"));
+			rpgPlayer.giveStamina(-abilityMetadata.getModifier("stamina"));
 
-		double cooldown = abilityResult.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStats.COOLDOWN_REDUCTION) / 100));
+		double cooldown = abilityMetadata.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStats.COOLDOWN_REDUCTION) / 100));
 		if (cooldown > 0)
 			applyAbilityCooldown(ability.getAbility(), cooldown);
 
@@ -470,7 +459,7 @@ public class PlayerData {
 		 * the ability is cast otherwise instantaneously damaging abilities like
 		 * Sparkle can trigger deadly crash loops
 		 */
-		ability.getAbility().whenCast(stats, abilityResult, attack);
+		ability.getAbility().whenCast(attack, abilityMetadata);
 	}
 
 	public boolean isOnCooldown(CooldownType type) {

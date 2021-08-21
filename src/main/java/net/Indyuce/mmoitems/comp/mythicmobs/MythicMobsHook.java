@@ -1,28 +1,27 @@
 package net.Indyuce.mmoitems.comp.mythicmobs;
 
-import java.util.logging.Level;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitItemStack;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicDropLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.drops.Drop;
 import io.lumine.xikage.mythicmobs.drops.DropMetadata;
 import io.lumine.xikage.mythicmobs.drops.IMultiDrop;
 import io.lumine.xikage.mythicmobs.drops.LootBag;
 import io.lumine.xikage.mythicmobs.drops.droppables.ItemDrop;
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
+import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.placeholders.Placeholder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.item.DropItem;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+import java.util.logging.Level;
 
 public class MythicMobsHook implements Listener {
 
@@ -36,9 +35,9 @@ public class MythicMobsHook implements Listener {
 	 * need to change something in MM compatibility and sent it back to MM devs
 	 */
 	public MythicMobsHook() {
-		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill",
+		/*MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill",
 				Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData
-						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));*/
 		Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
 //		MMOItems.plugin.getCrafting().registerIngredient("mythicitem", config -> new MythicItemIngredient(config),
 //				new ConditionalDisplay("&8" + AltChar.check + " &7#amount# #item#", "&c" + AltChar.cross + " &7#amount# #item#"),
@@ -58,11 +57,29 @@ public class MythicMobsHook implements Listener {
 	 * register placeholders when MM is reloaded. the skill placeholder let players
 	 * retrieve cached ability values.
 	 */
-	@EventHandler
+	/*@EventHandler
 	public void b(MythicReloadedEvent event) {
 		MythicMobs.inst().getPlaceholderManager().register("mmoitems.skill",
 				Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData
 						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));
+	}*/
+
+	private void registerSkillPlaceholders() {
+/*
+		Placeholder.meta((meta, arg) -> {
+
+			SkillMetadata skillMeta = (SkillMetadata) meta;
+			skillMeta.getVariables().get("MMOStats");
+
+
+return null;
+
+		} );
+
+		MythicMobs.inst().getPlaceholderManager().register("modifier",
+				Placeholder.meta((metadata, arg) -> String.valueOf(PlayerData
+						.get(metadata.getCaster().getEntity().getUniqueId()).getAbilityData().getCachedModifier(arg))));*/
+
 	}
 
 	public static class MMOItemsDrop extends Drop implements IMultiDrop {

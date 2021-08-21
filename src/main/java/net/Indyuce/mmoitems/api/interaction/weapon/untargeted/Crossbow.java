@@ -1,12 +1,11 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.stat.StatMap;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats;
-import net.Indyuce.mmoitems.listener.ItemUse;
-import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -27,8 +26,8 @@ public class Crossbow extends UntargetedWeapon {
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
 			return;
 
-		PlayerStats stats = getPlayerData().getStats();
-		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
+		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;
 
@@ -50,6 +49,6 @@ public class Crossbow extends UntargetedWeapon {
 				getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
 		getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
 
-		MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats.newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot)), arrow, true);
+		MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, true);
 	}
 }

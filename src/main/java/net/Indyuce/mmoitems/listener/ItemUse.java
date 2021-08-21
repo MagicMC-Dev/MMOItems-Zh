@@ -1,12 +1,14 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.interaction.*;
@@ -16,7 +18,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -118,7 +119,6 @@ public class ItemUse implements Listener {
 			return;
 
 		Player player = (Player) event.getDamager();
-		CachedStats stats = null;
 
 		/*
 		 * Must apply attack conditions before apply any effects. the event must
@@ -126,7 +126,7 @@ public class ItemUse implements Listener {
 		 */
 		PlayerData playerData = PlayerData.get(player);
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
-		ItemAttackResult result = new ItemAttackResult(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL);
+		ItemAttackMetadata attackMeta = null;
 
 		if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
 			Weapon weapon = new Weapon(playerData, item);
@@ -141,19 +141,28 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			weapon.handleTargetedAttack(stats = playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND), target, result);
-			if (!result.isSuccessful()) {
+			StatMap.CachedStatMap cachedStatMap = playerData.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
+			attackMeta = new ItemAttackMetadata(new DamageMetadata(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL), cachedStatMap);
+			if (!weapon.handleTargetedAttack(attackMeta, target).isSuccessful()) {
 				event.setCancelled(true);
 				return;
 			}
 		}
 
 		// Cast on-hit abilities and add the extra damage to the damage event
-		result.applyEffects(stats == null ? playerData.getStats().newTemporary(EquipmentSlot.MAIN_HAND) : stats, item, target);
-		event.setDamage(result.getDamage());
+		attackMeta.applyEffects(item, target);
+
+		// Finally update Bukkit event
+		event.setDamage(attackMeta.getDamage().getDamage());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	/*
+	 * Event priority set to LOW to fix an infinite-exp glitch with
+	 * MMOCore. MMOCore experience source listens on HIGH and must be
+	 * higher than this event otherwise the exp is given even if the
+	 * block is not broken.
+	 */
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void specialToolAbilities(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
@@ -292,6 +301,10 @@ public class ItemUse implements Listener {
 				event.getForce());
 	}
 
+	/**
+	 * Consumables which can be eaten using the
+	 * vanilla eating animation are handled here.
+	 */
 	@EventHandler
 	public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
@@ -305,10 +318,6 @@ public class ItemUse implements Listener {
 			return;
 		}
 
-		/**
-		 * Consumables which can be eaten using the
-		 * vanilla eating animation are handled here.
-		 */
 		if (useItem instanceof Consumable) {
 
 			if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
@@ -319,10 +328,17 @@ public class ItemUse implements Listener {
 				return;
 			}
 
-			if (!((Consumable) useItem).useWithoutItem()) {
+			Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer();
+
+			// No effects are applied and not consumed
+			if (result == Consumable.ConsumableConsumeResult.CANCEL) {
 				event.setCancelled(true);
 				return;
 			}
+
+			// Item is not consumed but its effects are applied anyways
+			if (result == Consumable.ConsumableConsumeResult.NOT_CONSUME)
+				event.setCancelled(true);
 
 			useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
 			useItem.executeCommands();

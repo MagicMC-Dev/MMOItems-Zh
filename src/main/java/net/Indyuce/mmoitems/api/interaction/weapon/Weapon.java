@@ -3,12 +3,10 @@ package net.Indyuce.mmoitems.api.interaction.weapon;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
 import net.Indyuce.mmoitems.comp.flags.FlagPlugin.CustomFlag;
@@ -90,23 +88,19 @@ public class Weapon extends UseItem {
 		return true;
 	}
 
-	public ItemAttackResult handleTargetedAttack(CachedStats stats, LivingEntity target, ItemAttackResult result) {
+	public ItemAttackMetadata handleTargetedAttack(ItemAttackMetadata attackMeta, LivingEntity target) {
 
-		/*
-		 * Handle weapon cooldown, mana and stamina costs
-		 */
+		// Handle weapon cooldown, mana and stamina costs
 		double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED.getId());
 		attackSpeed = attackSpeed == 0 ? 1.493 : 1 / attackSpeed;
 		if (!applyWeaponCosts())
-			return result.setSuccessful(false);
+			return attackMeta.setSuccessful(false);
 
-		/*
-		 * Handle item set attack effects
-		 */
+		// Handle item set attack effects
 		if (getMMOItem().getType().getItemSet().hasAttackEffect() && !getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE"))
-			getMMOItem().getType().getItemSet().applyAttackEffect(stats, target, this, result);
+			getMMOItem().getType().getItemSet().applyAttackEffect(attackMeta, target, this);
 
-		return result;
+		return attackMeta;
 	}
 
 	protected Location getGround(Location loc) {

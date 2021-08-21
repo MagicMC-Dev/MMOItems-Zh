@@ -53,6 +53,7 @@ public class Consumable extends UseItem {
 	/**
 	 * @deprecated Use {@link Consumable#useOnPlayer()}
 	 */
+	@Deprecated
 	public boolean useWithoutItem() {
 		return useOnPlayer() == ConsumableConsumeResult.CONSUME;
 	}

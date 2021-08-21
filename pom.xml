@@ -54,6 +54,11 @@
     <repositories>
 
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
             <id>lumine</id>
             <url>https://mvn.lumine.io/repository/maven/</url>
         </repository>
@@ -74,11 +79,6 @@
         </repository>
 
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-
-        <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
@@ -87,6 +87,18 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        
+        <!-- AE -->
+        <repository>
+		    <id>egg82-ninja</id>
+		    <url>https://www.myget.org/F/egg82-java/maven/</url>
+		</repository>
+		
+		<!-- holographic displays -->
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
 
     </repositories>
@@ -105,11 +117,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.Indyuce.mmoitems.lib</groupId>
-            <artifactId>GoogleGSON</artifactId>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
             <version>2.8.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/GoogleGSON.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -122,14 +132,14 @@
         <dependency>
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOCore</artifactId>
-            <version>1.7.1</version>
+            <version>1.8.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicLib</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -149,7 +159,7 @@
         <dependency>
             <groupId>com.github.RednedEpic</groupId>
             <artifactId>PhatLoots</artifactId>
-            <version>master-dev-build-79-g4ab7dd1-97</version>
+            <version>4.2.3</version>
             <scope>provided</scope>
         </dependency>
 
@@ -161,9 +171,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.lumine.xikage</groupId>
-            <artifactId>MythicMobs</artifactId>
-            <version>4.11.0-SNAPSHOT</version>
+            <groupId>io.lumine</groupId>
+            <artifactId>MythicMobs-Dist</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -192,185 +202,169 @@
         <dependency>
             <groupId>com.github.Eniripsa96</groupId>
             <artifactId>SkillAPI</artifactId>
-            <version>master-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/SkillAPI.jar</systemPath>
+            <version>master</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>n3kas</groupId>
             <artifactId>ae.api</artifactId>
             <version>5.7.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/AE-API.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.black_ixx</groupId>
             <artifactId>BossShop</artifactId>
             <version>2.0.9</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/BossShopPro.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.bekvon.bukkit</groupId>
+            <groupId>com.bekvon.bukkit.residence</groupId>
             <artifactId>Residence</artifactId>
             <version>4.8.7.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Residence.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.Zrips</groupId>
+            <groupId>com.Zrips.CMI</groupId>
             <artifactId>CMI</artifactId>
             <version>8.6.5.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/CMI.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.herocraftonline</groupId>
             <artifactId>heroes</artifactId>
             <version>1.9.3</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Heroes.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.klyser8</groupId>
-            <artifactId>Iridescent</artifactId>
-            <version>1.2.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Iridescent.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
             <version>2.1.104</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/mcMMO.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>us.eunoians</groupId>
             <artifactId>McRPG</artifactId>
             <version>1.1.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/McRPG.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.baks</groupId>
             <artifactId>rpl</artifactId>
             <version>3.9.30</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RPGPlayerLeveling.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.leothepro555</groupId>
             <artifactId>skills</artifactId>
             <version>12.3.5</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Skills.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.skills.main</groupId>
             <artifactId>SkillsPro</artifactId>
             <version>18.9.0.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/SkillsPro.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.robin</groupId>
             <artifactId>BattleLevels</artifactId>
             <version>6.9.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/BattleLevels.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.evill4mer</groupId>
             <artifactId>RealDualWield</artifactId>
             <version>1.1.12</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RealDualWield.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.arasple.mc</groupId>
             <artifactId>TrHologram</artifactId>
             <version>1.11</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/TrHologram.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.gmail.filoghost</groupId>
-            <artifactId>HolographicDisplays</artifactId>
-            <version>2.4.8</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/HolographicDisplays.jar</systemPath>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>de.tobiyas</groupId>
             <artifactId>RacesAndClasses</artifactId>
             <version>1.2.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RacesAndClasses.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>ru.endlesscode</groupId>
             <artifactId>rpginventory</artifactId>
             <version>2.3.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/RPGInventory.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.sainttx.holograms</groupId>
-            <artifactId>holograms</artifactId>
+            <artifactId>Holograms</artifactId>
             <version>2.9.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Holograms.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.archyx</groupId>
             <artifactId>AureliumSkills</artifactId>
             <version>1.0.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/AureliumSkills.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.badbones69</groupId>
             <artifactId>crazyenchantments</artifactId>
             <version>1.8-db9</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/CrazyEnchantments.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizens</artifactId>
-            <version>2.0.25-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Citizens.jar</systemPath>
+            <artifactId>Citizens</artifactId>
+            <version>2.0.25</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.inventivetalent</groupId>
             <artifactId>glowapi</artifactId>
-            <version>1.4.8-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/GlowAPI.jar</systemPath>
+            <version>1.4.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.denizenscript</groupId>
+            <artifactId>denizen</artifactId>
+            <version>1.2.1-b1744-REL</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.denizenscript</groupId>
+            <artifactId>depenizen</artifactId>
+            <version>2.0.0-b709</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

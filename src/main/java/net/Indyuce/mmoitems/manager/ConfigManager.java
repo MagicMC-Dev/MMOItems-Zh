@@ -6,8 +6,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -45,10 +45,6 @@ public class ConfigManager implements Reloadable {
 	public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
 	public NumericStatFormula defaultItemCapacity;
 	public ReforgeOptions revisionOptions, phatLootsOptions;
-
-	/** DE-TAREAS: Implement reward system for good users? */
-	@SuppressWarnings("unused")
-	private final String elGrifoReconocimiento  = "%%__USER__%%";
 
 	private static final String[] fileNames = { "abilities", "messages", "potion-effects", "stats", "items", "attack-effects" };
 	private static final String[] languages = { "french", "chinese", "spanish", "russian", "polish" };
@@ -130,7 +126,7 @@ public class ConfigManager implements Reloadable {
 		messages.save();
 
 		ConfigFile abilities = new ConfigFile("/language", "abilities");
-		for (Ability ability : MMOItems.plugin.getAbilities().getAllAbilities()) {
+		for (Ability<?> ability : MMOItems.plugin.getAbilities().getAll()) {
 			String path = ability.getLowerCaseID();
 			if (!abilities.getConfig().getKeys(true).contains("ability." + path))
 				abilities.getConfig().set("ability." + path, ability.getName());
@@ -277,8 +273,6 @@ public class ConfigManager implements Reloadable {
 	public List<String> getDefaultLoreFormat() {
 		return loreFormat.getConfig().getStringList("lore-format");
 	}
-
-	public final boolean arruinarElPrograma = false;
 
 	public String getPotionEffectName(PotionEffectType type) {
 		return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));

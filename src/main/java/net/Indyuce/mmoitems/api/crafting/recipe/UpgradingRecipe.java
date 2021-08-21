@@ -9,11 +9,13 @@ import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
+import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,17 +42,29 @@ public class UpgradingRecipe extends Recipe {
 	}
 
 	@Override
-	public void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe castRecipe, CraftingStation station) {
+	public boolean whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe castRecipe, CraftingStation station) {
+		if (!data.isOnline())
+			return false;
+
 		CheckedUpgradingRecipe recipe = (CheckedUpgradingRecipe) castRecipe;
+		PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled())
+			return false;
+
+		// Update item
 		recipe.getUpgradeData().upgrade(recipe.getMMOItem());
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
 		castRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
-		if (!data.isOnline())
-			return;
-
 		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());
-		data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+
+		// Play sound
+		if (!hasOption(RecipeOption.SILENT_CRAFT))
+			data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+
+		// Recipe used successfully
+		return true;
 	}
 
 	@Override

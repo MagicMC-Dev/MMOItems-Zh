@@ -144,13 +144,17 @@ public abstract class Recipe {
 	 * Called when all the recipe conditions are to true and when the player
 	 * eventually starts crafting OR when the player claims the item in the
 	 * crafting queue once the delay is over.
+	 * <p>
+	 * This however checks for the bukkit event which can be cancelled; if
+	 * this method returns false the ingredients shall not be consumed.
 	 *
 	 * @param data    Player crafting the item
 	 * @param inv     The player's ingredients
 	 * @param recipe  The recipe used to craft the item
 	 * @param station The station used to craft the item
+	 * @return If the crafting recipe was successfully used
 	 */
-	public abstract void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station);
+	public abstract boolean whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station);
 
 	/**
 	 * Applies extra conditions when a player has just clicked on a recipe item

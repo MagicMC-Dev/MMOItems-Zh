@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 
 public class MMOItemPlayerIngredient extends PlayerIngredient {
 
-    /*
+    /**
      * No need to save as MMOItemTemplate or Type instances. Just need the string,
      * because if they don't exist the recipe ingredients won't load anyways.
      * And it's better for performance yes

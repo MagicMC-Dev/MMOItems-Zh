@@ -46,33 +46,53 @@ public class CraftingRecipe extends Recipe {
 	}
 
 	@Override
-	public void whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station) {
+	public boolean whenUsed(PlayerData data, IngredientInventory inv, CheckedRecipe recipe, CraftingStation station) {
 		if (!data.isOnline())
-			return;
+			return false;
 
-		if (!hasOption(RecipeOption.SILENT_CRAFT))
-			data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
 
 		/*
-		 * If the recipe is instant, take the ingredients off and directly add
-		 * the output to the player's inventory
+		 * If the recipe is instant, take the ingredients off
+		 * and directly add the output to the player's inventory
 		 */
 		if (isInstant()) {
-			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe,
-					PlayerUseCraftingStationEvent.StationAction.INSTANT_RECIPE);
+
+			ItemStack result = hasOption(RecipeOption.OUTPUT_ITEM) ? getOutput().generate(data.getRPG()) : null;
+			PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(data, station, recipe, result);
 			Bukkit.getPluginManager().callEvent(event);
 			if (event.isCancelled())
-				return;
+				return false;
 
-			if (hasOption(RecipeOption.OUTPUT_ITEM))
-				new SmartGive(data.getPlayer()).give(getOutput().generate(data.getRPG()));
+			if (result != null)
+				new SmartGive(data.getPlayer()).give(result);
 			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
+
+			// Play sound
+			if (!hasOption(RecipeOption.SILENT_CRAFT))
+				data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+
+			// Recipe was successfully used
+			return true;
 
 			/*
 			 * If the recipe is not instant, add the item to the crafting queue
 			 */
-		} else
+		} else {
+
+			PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(data, station, recipe);
+			Bukkit.getPluginManager().callEvent(called);
+			if (called.isCancelled())
+				return false;
+
+			// Play sound
+			if (!hasOption(RecipeOption.SILENT_CRAFT))
+				data.getPlayer().playSound(data.getPlayer().getLocation(), station.getSound(), 1, 1);
+
 			data.getCrafting().getQueue(station).add(this);
+
+			// Recipe was successfully used
+			return true;
+		}
 	}
 
 	@Override

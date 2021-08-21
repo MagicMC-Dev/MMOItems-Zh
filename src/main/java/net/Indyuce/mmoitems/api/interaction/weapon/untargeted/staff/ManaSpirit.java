@@ -1,7 +1,9 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
-import java.util.List;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -11,20 +13,15 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import java.util.List;
 
 public class ManaSpirit implements StaffAttackHandler {
 
 	@Override
-	public void handle(CachedStats stats, NBTItem nbt, double attackDamage, double range) {
+	public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range) {
 		new BukkitRunnable() {
-			final Vector vec = stats.getPlayer().getEyeLocation().getDirection().multiply(.4);
-			final Location loc = stats.getPlayer().getEyeLocation();
+			final Vector vec = attackMeta.getDamager().getEyeLocation().getDirection().multiply(.4);
+			final Location loc = attackMeta.getDamager().getEyeLocation();
 			int ti = 0;
 			final double r = .2;
 
@@ -48,9 +45,8 @@ public class ManaSpirit implements StaffAttackHandler {
 							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), 1, new Particle.DustOptions(Color.AQUA, 1));
 					}
 					for (Entity target : targets)
-						if (MMOUtils.canDamage(stats.getPlayer(), loc, target)) {
-							new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.MAGIC).applyEffectsAndDamage(stats, nbt,
-									(LivingEntity) target);
+						if (MMOUtils.canDamage(attackMeta.getDamager(), loc, target)) {
+							attackMeta.applyEffects(nbt, (LivingEntity) target);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							cancel();
 							return;

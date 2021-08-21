@@ -1,17 +1,15 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.utils.Schedulers;
 import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -62,7 +60,7 @@ public class PlayerListener implements Listener {
 			return;
 
 		Player player = (Player) event.getEntity();
-		PlayerData.get(player).castAbilities(damager, new ItemAttackResult(event.getDamage(), DamageType.SKILL), CastingMode.WHEN_HIT);
+		PlayerData.get(player).castAbilities(damager, CastingMode.WHEN_HIT);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -72,15 +70,14 @@ public class PlayerListener implements Listener {
 
 		Player player = event.getPlayer();
 		boolean left = event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK;
-		PlayerData.get(player).castAbilities(null, new ItemAttackResult(true, DamageType.SKILL),
-				player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK)
-						: (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK));
+		CastingMode castMode = player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK);
+		PlayerData.get(player).castAbilities(null, castMode);
 	}
 
 	/*
-	 * prevent players from dropping items which are bound to them with a
-	 * soulbound. items are cached inside a map waiting for the player to
-	 * respawn. if he does not respawn the items are dropped on the ground, this
+	 * Prevent players from dropping items which are bound to them with a
+	 * soulbound. Items are cached inside a map waiting for the player to
+	 * respawn. If he does not respawn the items are dropped on the ground, this
 	 * way there don't get lost
 	 */
 	@EventHandler(priority = EventPriority.HIGH)

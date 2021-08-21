@@ -5,12 +5,15 @@ import com.sucy.skill.api.event.PlayerLevelUpEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.AttackResult;
-import io.lumine.mythic.lib.api.DamageHandler;
-import io.lumine.mythic.lib.api.DamageType;
-import io.lumine.mythic.lib.api.RegisteredAttack;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.damage.AttackHandler;
+import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,8 +22,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
-    private final Map<Integer, RegisteredAttack> damageInfo = new HashMap<>();
+public class SkillAPIHook implements RPGHandler, Listener, AttackHandler {
+    private final Map<Integer, AttackMetadata> damageInfo = new HashMap<>();
 
     public SkillAPIHook() {
         MythicLib.plugin.getDamage().registerHandler(this);
@@ -32,18 +35,23 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
     }
 
     @Override
-    public RegisteredAttack getDamage(Entity entity) {
-        return damageInfo.get(entity.getEntityId());
+    public boolean isAttacked(Entity entity) {
+        return damageInfo.containsKey(entity.getEntityId());
     }
 
     @Override
-    public boolean hasDamage(Entity entity) {
-        return damageInfo.containsKey(entity.getEntityId());
+    public AttackMetadata getAttack(Entity entity) {
+        return damageInfo.get(entity.getEntityId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void a(SkillDamageEvent event) {
-        damageInfo.put(event.getTarget().getEntityId(), new RegisteredAttack(new AttackResult(event.getDamage(), DamageType.SKILL), event.getDamager()));
+        if (!(event.getDamager() instanceof Player))
+            return;
+
+        DamageMetadata damageMeta = new DamageMetadata(event.getDamage(), DamageType.SKILL);
+        AttackMetadata attackMeta = new AttackMetadata(damageMeta, MMOPlayerData.get(event.getDamager().getUniqueId()).getStatMap().cache(EquipmentSlot.OTHER));
+        damageInfo.put(event.getTarget().getEntityId(), attackMeta);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -61,12 +69,8 @@ public class SkillAPIHook implements RPGHandler, Listener, DamageHandler {
     }
 
     public static class SkillAPIPlayer extends RPGPlayer {
-        /*private final PlayerData rpgdata;*/
-
         public SkillAPIPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
             super(playerData);
-
-            /*rpgdata = SkillAPI.getPlayerData(playerData.getPlayer());*/
         }
 
         @Override

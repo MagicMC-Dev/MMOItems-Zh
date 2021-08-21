@@ -1,17 +1,18 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -30,8 +31,8 @@ public class Staff extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
-		CachedStats stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
-		if (!applyWeaponCosts(1 / getValue(stats.getStat(ItemStats.ATTACK_SPEED), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
+		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
+		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;
 
@@ -42,12 +43,15 @@ public class Staff extends UntargetedWeapon {
 		if (durItem.isValid())
 			durItem.decreaseDurability(1).update();
 
-		double attackDamage = getValue(stats.getStat(ItemStats.ATTACK_DAMAGE), 1);
+		double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 1);
 		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+
+		// Attack meta
+		ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC), stats);
 
 		StaffSpirit spirit = StaffSpirit.get(getNBTItem());
 		if (spirit != null) {
-			spirit.getAttack().handle(stats, getNBTItem(), attackDamage, range);
+			spirit.getAttack().handle(attackMeta, getNBTItem(), attackDamage, range);
 			return;
 		}
 
@@ -57,8 +61,7 @@ public class Staff extends UntargetedWeapon {
 		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
 				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
 		if (trace.hasHit())
-			new ItemAttackResult(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC).applyEffectsAndDamage(stats, getNBTItem(),
-					trace.getHit());
+			attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,
 				(tick) -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);

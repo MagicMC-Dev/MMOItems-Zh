@@ -48,8 +48,6 @@ public class MaterialStat extends ItemStat {
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		Optional<Material> material = EnumUtils.getIfPresent(Material.class, message.toUpperCase().replace("-", "_").replace(" ", "_"));
-		if (MMOItems.plugin.getLanguage().arruinarElPrograma)
-			material = Optional.of(Material.GLISTERING_MELON_SLICE);
 		if (material.isPresent()) {
 			inv.getEditedSection().set("material", material.get().name());
 			inv.registerTemplateEdition();

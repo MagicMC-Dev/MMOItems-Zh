@@ -1,13 +1,14 @@
 package net.Indyuce.mmoitems.manager;
 
-import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.ItemStats;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ArrowParticles;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ProjectileData;
-import net.Indyuce.mmoitems.api.player.PlayerStats.CachedStats;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
+import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
+import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
@@ -26,41 +27,55 @@ import java.util.WeakHashMap;
 
 public class EntityManager implements Listener {
 
-	/*
-	 * entity data used by abilities or staff attacks that utilize entities like
-	 * evoker fangs or shulker missiles. it can correspond to the damage the
+	/**
+	 * Entity data used by abilities or staff attacks that utilize entities like
+	 * evoker fangs or shulker missiles. It can correspond to the damage the
 	 * entity is supposed to deal, etc
 	 */
-	private final Map<Integer, Object[]> entities = new HashMap<>();
+	private final Map<Integer, EntityData> entities = new HashMap<>();
 
 	private final WeakHashMap<Integer, ProjectileData> projectiles = new WeakHashMap<>();
 
-	public void registerCustomProjectile(NBTItem sourceItem, CachedStats stats, Entity entity, boolean customWeapon) {
+	public void registerCustomProjectile(NBTItem sourceItem, StatMap.CachedStatMap stats, Entity entity, boolean customWeapon) {
 		registerCustomProjectile(sourceItem, stats, entity, customWeapon, 1);
 	}
 
-	public void registerCustomProjectile(NBTItem sourceItem, CachedStats stats, Entity entity, boolean customWeapon, double damageCoefficient) {
-		/*
-		 * if damage is null, then it uses the default minecraft bow damage.
-		 * it's then multiplied by the damage coefficient which corresponds for
-		 * bows to the pull force just like vanilla. it does not work with
-		 * tridents
-		 */
-		double damage = stats.getStat(ItemStats.ATTACK_DAMAGE);
-		stats.setStat(ItemStats.ATTACK_DAMAGE, (damage == 0 ? 7 : damage) * damageCoefficient);
+	/**
+	 * Registers a custom projectile
+	 *
+	 * @param sourceItem        Item used to shoot the projectile
+	 * @param stats             Cached stats of the player shooting the projectile
+	 * @param entity            The custom entity
+	 * @param customWeapon      Is the source weapon is a custom item
+	 * @param damageCoefficient The damage coefficient. For bows, this is basically the pull force.
+	 *                          For tridents or anything else this is always set to 1
+	 */
+	public void registerCustomProjectile(NBTItem sourceItem, StatMap.CachedStatMap stats, Entity entity, boolean customWeapon, double damageCoefficient) {
 
 		/*
-		 * load arrow particles if the entity is an arrow and if the item has
-		 * arrow particles. currently projectiles are only arrows so there is no
+		 * By default damage is set to minecraft's default 7. It is then
+		 * multiplied by the coefficient proportionnal to the pull force.
+		 * 1 corresponds to a fully pulled bow just like in vanilla MC.
+		 *
+		 * For tridents or crossbows, damage coefficient is always 1
+		 */
+		double damage = stats.getStat("ATTACK_DAMAGE");
+		damage = damage == 0 ? 7 : damage * damageCoefficient;
+		ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(damage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE), stats);
+		stats.setStat("ATTACK_DAMAGE", damage);
+
+		/*
+		 * Load arrow particles if the entity is an arrow and if the item has
+		 * arrow particles. Currently projectiles are only arrows so there is no
 		 * problem with other projectiles like snowballs etc.
 		 */
 		if (entity instanceof Arrow && sourceItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
 			new ArrowParticles((Arrow) entity, sourceItem);
 
-		projectiles.put(entity.getEntityId(), new ProjectileData(sourceItem, stats, customWeapon));
+		projectiles.put(entity.getEntityId(), new ProjectileData(sourceItem, attackMeta, customWeapon));
 	}
 
-	public void registerCustomEntity(Entity entity, Object... data) {
+	public void registerCustomEntity(Entity entity, EntityData data) {
 		entities.put(entity.getEntityId(), data);
 	}
 
@@ -76,7 +91,7 @@ public class EntityManager implements Listener {
 		return projectiles.get(projectile.getEntityId());
 	}
 
-	public Object[] getEntityData(Entity entity) {
+	public EntityData getEntityData(Entity entity) {
 		return entities.get(entity.getEntityId());
 	}
 
@@ -95,6 +110,16 @@ public class EntityManager implements Listener {
 
 	/*
 	 * Projectile Damage and Effects
+	 *
+	 * TODO when throwing a trident, on hit abilities dont cast half
+	 * of the time because you don't hold the item anymore, therefore
+	 * the ability does not register.
+	 * To fix that, not only cache the player statistics using CachedStats
+	 * but also the player abilities as well as elemental stats. In fact
+	 * a lot of extra stats need to be cached when a ranged attack is delivered.
+	 *
+	 * TODO This bug could also be exploited using a bow, by holding another item
+	 * after shooting an arrow!!
 	 */
 	@EventHandler(ignoreCancelled = true)
 	public void b(EntityDamageByEntityEvent event) {
@@ -107,24 +132,22 @@ public class EntityManager implements Listener {
 
 		ProjectileData data = getProjectileData(projectile);
 		LivingEntity target = (LivingEntity) event.getEntity();
-		CachedStats stats = data.getPlayerStats();
 
-		ItemAttackResult result = new ItemAttackResult(data.isCustomWeapon() ? stats.getStat(ItemStats.ATTACK_DAMAGE) : event.getDamage(),
-				DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL).applyOnHitEffects(stats, target);
+		// Apply on hit effects
+		data.getAttackMetadata().applyOnHitEffects(target);
 
-		/*
-		 * only modify the damage when the bow used is a custom weapon.
-		 */
+		// Apply power vanilla enchant
+		if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()
+				&& data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
+			data.getAttackMetadata().getDamage().multiply(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)), DamageType.WEAPON);
+
+		// Apply MMOItems specific modifications
 		if (data.isCustomWeapon()) {
 			data.applyPotionEffects(target);
-			result.applyElementalEffects(stats, data.getSourceItem(), target);
-
-			if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()
-					&& data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
-				result.multiplyDamage(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)));
+			data.getAttackMetadata().applyElementalEffects(data.getSourceItem(), target);
 		}
 
-		event.setDamage(result.getDamage());
+		event.setDamage(data.getAttackMetadata().getDamage().getDamage());
 		unregisterCustomProjectile(projectile);
 	}
 }

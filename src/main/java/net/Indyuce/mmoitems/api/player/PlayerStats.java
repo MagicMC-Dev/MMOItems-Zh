@@ -11,10 +11,6 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.stat.type.AttributeStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PlayerStats {
     private final PlayerData playerData;
@@ -46,9 +42,10 @@ public class PlayerStats {
      *
      * @param castSlot Every stat modifier with the opposite modifier
      *                 source will NOT be taken into account for stat calculation
+     * @return
      */
-    public CachedStats newTemporary(EquipmentSlot castSlot) {
-        return new CachedStats(castSlot);
+    public StatMap.CachedStatMap newTemporary(EquipmentSlot castSlot) {
+        return playerData.getMMOPlayerData().getStatMap().cache(castSlot);
     }
 
     public void updateStats() {
@@ -87,58 +84,6 @@ public class PlayerStats {
 
             // Finally run a stat update after all modifiers have been gathered in the packet
             packet.runUpdate();
-        }
-    }
-
-    public class CachedStats {
-        private final Player player;
-        private final Map<String, Double> stats = new HashMap<>();
-
-        /**
-         * Used to cache stats when a player casts a skill so that if the player
-         * swaps items or changes any of his stat value before the end of the
-         * spell duration, the stat value is not updated
-         *
-         * @castSlot The equipment slot of the item the player is casting
-         * a skill/attacking with. Helps determine what stats modifiers needs to be
-         * applied and what modifiers must be filtered
-         */
-        public CachedStats(EquipmentSlot castSlot) {
-            player = playerData.getPlayer();
-
-            if (castSlot.isHand()) {
-
-                /*
-                 * When casting a skill or an attack with a certain hand, stats
-                 * from the other hand shouldn't be taken into account
-                 */
-                EquipmentSlot ignored = castSlot.getOppositeHand();
-                for (StatInstance ins : getMap().getInstances())
-                    this.stats.put(ins.getStat(), ins.getFilteredTotal(mod -> mod.getSlot() != ignored));
-            } else
-
-                /*
-                 * Not casting the attack with a specific
-                 * hand so take everything into account
-                 */
-                for (StatInstance ins : getMap().getInstances())
-                    this.stats.put(ins.getStat(), ins.getTotal());
-        }
-
-        public PlayerData getData() {
-            return playerData;
-        }
-
-        public Player getPlayer() {
-            return player;
-        }
-
-        public double getStat(ItemStat stat) {
-            return stats.containsKey(stat.getId()) ? stats.get(stat.getId()) : 0;
-        }
-
-        public void setStat(ItemStat stat, double value) {
-            stats.put(stat.getId(), value);
         }
     }
 }

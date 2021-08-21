@@ -14,7 +14,7 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
 
     @Override
     public void refreshStats(PlayerData data) {
-        RaCPlayer info = ((RacePlayer) data.getRPG()).info;
+        RaCPlayer info = RaCPlayerManager.get().getPlayer(data.getUniqueId());
         info.getManaManager().removeMaxManaBonus("MMOItems");
         info.getManaManager().addMaxManaBonus("MMOItems", data.getStats().getStat(ItemStats.MAX_MANA));
     }
@@ -39,41 +39,43 @@ public class RacesAndClassesHook implements RPGHandler, Listener {
     }
 
     public static class RacePlayer extends RPGPlayer {
-        private final RaCPlayer info;
-
         public RacePlayer(PlayerData playerData) {
             super(playerData);
-
-            info = RaCPlayerManager.get().getPlayer(playerData.getUniqueId());
         }
 
         @Override
         public int getLevel() {
+            RaCPlayer info = RaCPlayerManager.get().getPlayer(getPlayer().getUniqueId());
             return info.getCurrentLevel();
         }
 
         @Override
         public String getClassName() {
+            RaCPlayer info = RaCPlayerManager.get().getPlayer(getPlayer().getUniqueId());
             return info.getclass().getDisplayName();
         }
 
         @Override
         public double getMana() {
+            RaCPlayer info = RaCPlayerManager.get().getPlayer(getPlayer().getUniqueId());
             return info.getCurrentMana();
         }
 
         @Override
         public double getStamina() {
+            RaCPlayer info = RaCPlayerManager.get().getPlayer(getPlayer().getUniqueId());
             return info.getPlayer().getFoodLevel();
         }
 
         @Override
         public void setMana(double value) {
+            RaCPlayer info = RaCPlayerManager.get().getPlayer(getPlayer().getUniqueId());
             info.getManaManager().fillMana(value - info.getManaManager().getCurrentMana());
         }
 
         @Override
         public void setStamina(double value) {
+            RaCPlayer info = RaCPlayerManager.get().getPlayer(getPlayer().getUniqueId());
             info.getPlayer().setFoodLevel((int) value);
         }
     }

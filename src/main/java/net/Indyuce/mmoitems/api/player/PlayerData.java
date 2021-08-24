@@ -381,7 +381,7 @@ public class PlayerData {
 		if (!hasAbility(castMode))
 			return null;
 
-		ItemAttackMetadata meta = new ItemAttackMetadata(new DamageMetadata(), mmoData.getStatMap().cache(EquipmentSlot.OTHER));
+		ItemAttackMetadata meta = new ItemAttackMetadata(new DamageMetadata(), mmoData.getStatMap().cache(EquipmentSlot.MAIN_HAND));
 		return castAbilities(meta, target, castMode);
 	}
 

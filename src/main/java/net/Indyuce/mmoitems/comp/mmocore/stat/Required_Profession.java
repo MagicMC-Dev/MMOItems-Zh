@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.comp.mmocore.stat;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmocore.api.experience.Profession;
+import net.Indyuce.mmocore.experience.Profession;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;

@@ -76,7 +76,7 @@ public class AbilityManager {
 			JarFile file = new JarFile(MMOItems.plugin.getJarFile());
 			for (Enumeration<JarEntry> enu = file.entries(); enu.hasMoreElements(); ) {
 				String name = enu.nextElement().getName().replace("/", ".");
-				if (!name.contains("$") && name.endsWith(".class") && name.startsWith("net.Indyuce.mmoitems.ability.")) {
+				if (!name.contains("$") && name.endsWith(".class") && name.startsWith("net.Indyuce.mmoitems.ability.list.")) {
 					Ability ability = (Ability) Class.forName(name.substring(0, name.length() - 6)).newInstance();
 					registerAbility(ability);
 					if (ability instanceof Listener)

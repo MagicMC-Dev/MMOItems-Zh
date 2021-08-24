@@ -50,7 +50,7 @@ public class SkillAPIHook implements RPGHandler, Listener, AttackHandler {
             return;
 
         DamageMetadata damageMeta = new DamageMetadata(event.getDamage(), DamageType.SKILL);
-        AttackMetadata attackMeta = new AttackMetadata(damageMeta, MMOPlayerData.get(event.getDamager().getUniqueId()).getStatMap().cache(EquipmentSlot.OTHER));
+        AttackMetadata attackMeta = new AttackMetadata(damageMeta, MMOPlayerData.get(event.getDamager().getUniqueId()).getStatMap().cache(EquipmentSlot.MAIN_HAND));
         damageInfo.put(event.getTarget().getEntityId(), attackMeta);
     }
 

@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
 import io.lumine.mythic.lib.api.MMOLineConfig;
-import net.Indyuce.mmocore.api.experience.Profession;
-import net.Indyuce.mmocore.api.experience.source.type.SpecificExperienceSource;
 import net.Indyuce.mmocore.api.player.PlayerData;
-import net.Indyuce.mmocore.manager.profession.ExperienceManager;
+import net.Indyuce.mmocore.experience.provider.ExperienceDispenser;
+import net.Indyuce.mmocore.experience.source.type.SpecificExperienceSource;
+import net.Indyuce.mmocore.manager.profession.ExperienceSourceManager;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import org.bukkit.GameMode;
@@ -17,51 +17,51 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 public class MineMIBlockExperienceSource extends SpecificExperienceSource<Integer> {
-	private final int id;
-	private final boolean silkTouch;
-	private final boolean playerPlaced;
+    private final int id;
+    private final boolean silkTouch;
+    private final boolean playerPlaced;
 
-	public MineMIBlockExperienceSource(Profession profession, MMOLineConfig config) {
-		super(profession, config);
+    public MineMIBlockExperienceSource(ExperienceDispenser dispenser, MMOLineConfig config) {
+        super(dispenser, config);
 
-		config.validate("id");
-		id = config.getInt("id", 1);
-		silkTouch = config.getBoolean("silk-touch", true);
-		playerPlaced = config.getBoolean("player-placed", false);
-	}
+        config.validate("id");
+        id = config.getInt("id", 1);
+        silkTouch = config.getBoolean("silk-touch", true);
+        playerPlaced = config.getBoolean("player-placed", false);
+    }
 
-	@Override
-	public ExperienceManager<MineMIBlockExperienceSource> newManager() {
-		return new ExperienceManager<MineMIBlockExperienceSource>() {
+    @Override
+    public ExperienceSourceManager<MineMIBlockExperienceSource> newManager() {
+        return new ExperienceSourceManager<MineMIBlockExperienceSource>() {
 
-			@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-			public void a(BlockBreakEvent event) {
-				if (event.getPlayer().getGameMode() != GameMode.SURVIVAL)
-					return;
+            @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+            public void a(BlockBreakEvent event) {
+                if (event.getPlayer().getGameMode() != GameMode.SURVIVAL)
+                    return;
 
-				PlayerData data = PlayerData.get(event.getPlayer());
-				Optional<CustomBlock> customBlock = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
-				if (!customBlock.isPresent())
-					return;
+                PlayerData data = PlayerData.get(event.getPlayer());
+                Optional<CustomBlock> customBlock = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
+                if (!customBlock.isPresent())
+                    return;
 
-				for (MineMIBlockExperienceSource source : getSources()) {
-					if (source.silkTouch && hasSilkTouch(event.getPlayer().getInventory().getItemInMainHand())
-							|| (!source.playerPlaced) && event.getBlock().hasMetadata("player_placed"))
-						continue;
+                for (MineMIBlockExperienceSource source : getSources()) {
+                    if (source.silkTouch && hasSilkTouch(event.getPlayer().getInventory().getItemInMainHand())
+                            || (!source.playerPlaced) && event.getBlock().hasMetadata("player_placed"))
+                        continue;
 
-					if (source.matches(data, customBlock.get().getId()))
-						source.giveExperience(data, 1, event.getBlock().getLocation());
-				}
-			}
-		};
-	}
+                    if (source.matches(data, customBlock.get().getId()))
+                        source.giveExperience(data, 1, event.getBlock().getLocation());
+                }
+            }
+        };
+    }
 
-	private boolean hasSilkTouch(ItemStack item) {
-		return item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH);
-	}
+    private boolean hasSilkTouch(ItemStack item) {
+        return item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH);
+    }
 
-	@Override
-	public boolean matches(PlayerData player, Integer blockId) {
-		return id == blockId && hasRightClass(player);
-	}
+    @Override
+    public boolean matchesParameter(PlayerData player, Integer blockId) {
+        return id == blockId;
+    }
 }

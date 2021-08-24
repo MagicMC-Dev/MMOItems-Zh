@@ -7,11 +7,12 @@ import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.block.BlockType;
 import net.Indyuce.mmocore.api.droptable.condition.Condition;
 import net.Indyuce.mmocore.api.droptable.dropitem.DropItem;
-import net.Indyuce.mmocore.api.experience.Profession;
-import net.Indyuce.mmocore.api.experience.source.type.ExperienceSource;
 import net.Indyuce.mmocore.api.load.MMOLoader;
 import net.Indyuce.mmocore.api.quest.objective.Objective;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
+import net.Indyuce.mmocore.experience.Profession;
+import net.Indyuce.mmocore.experience.provider.ExperienceDispenser;
+import net.Indyuce.mmocore.experience.source.type.ExperienceSource;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
@@ -111,13 +112,13 @@ public class MMOCoreMMOLoader extends MMOLoader {
     }
 
     @Override
-    public ExperienceSource<?> loadExperienceSource(MMOLineConfig config, Profession profession) {
+    public ExperienceSource<?> loadExperienceSource(MMOLineConfig config, ExperienceDispenser dispenser) {
 
         if (config.getKey().equals("minemiblock"))
-            return new MineMIBlockExperienceSource(profession, config);
+            return new MineMIBlockExperienceSource(dispenser, config);
 
         if (config.getKey().equalsIgnoreCase("smeltmmoitem"))
-            return new SmeltMMOItemExperienceSource(profession, config);
+            return new SmeltMMOItemExperienceSource(dispenser, config);
 
         return null;
     }

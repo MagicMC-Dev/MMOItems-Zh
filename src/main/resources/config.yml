@@ -314,6 +314,9 @@ item-revision:
         modifications: true
 
         # Third party plugin compatibility
+        skins: true
+
+        # Third party plugin compatibility
         advanced-enchantments: true
 
     phat-loots:
@@ -324,6 +327,7 @@ item-revision:
         upgrades: false
         lore: false
         exsh: false
+        skins: false
         reroll: true
         modifications: false
         advanced-enchantments: false

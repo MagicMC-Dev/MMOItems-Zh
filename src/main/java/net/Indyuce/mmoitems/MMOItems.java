@@ -21,7 +21,7 @@ import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.denizen.DenizenHook;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
-import net.Indyuce.mmoitems.comp.enchants.AdvancedEnchantmentsHook;
+import net.Indyuce.mmoitems.comp.enchants.advanced_enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
 import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
 import net.Indyuce.mmoitems.comp.enchants.MythicEnchantsSupport;
@@ -137,8 +137,10 @@ public class MMOItems extends LuminePlugin {
             //statManager.register(McMMOHook.MCMMO_SUPER_TOOL);
             statManager.register(McMMOHook.disableMcMMORepair);
 
-        if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null)
+        if (Bukkit.getPluginManager().getPlugin("AdvancedEnchantments") != null) {
             statManager.register(AdvancedEnchantmentsHook.ADVANCED_ENCHANTMENTS);
+            statManager.register(AdvancedEnchantmentsHook.DISABLE_ADVANCED_ENCHANTMENTS);
+        }
 
         if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null)
             enchantPlugins.add(new MythicEnchantsSupport());
@@ -276,7 +278,7 @@ public class MMOItems extends LuminePlugin {
                 getLogger().log(Level.INFO, "Hooked onto GlowAPI (Item Glow)");
             } else
                 Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
-        } 
+        }
 
         if (Bukkit.getPluginManager().getPlugin("RealDualWield") != null) {
             Bukkit.getPluginManager().registerEvents(new RealDualWieldHook(), this);
@@ -432,10 +434,10 @@ public class MMOItems extends LuminePlugin {
      *
      * @param value The player inventory subclass
      * @deprecated Rather than setting this to the only inventory MMOItems will
-     * search equipment within, you must add your inventory to the
-     * handler with <code>getInventory().register()</code>. This method
-     * will clear all other PlayerInventories for now, as to keep
-     * backwards compatibility.
+     *         search equipment within, you must add your inventory to the
+     *         handler with <code>getInventory().register()</code>. This method
+     *         will clear all other PlayerInventories for now, as to keep
+     *         backwards compatibility.
      */
     @Deprecated
     public void setPlayerInventory(PlayerInventory value) {
@@ -611,9 +613,9 @@ public class MMOItems extends LuminePlugin {
 
     /**
      * @return Generates an item given an item template. The item level will
-     * scale according to the player RPG level if the template has the
-     * 'level-item' option. The item will pick a random tier if the
-     * template has the 'tiered' option
+     *         scale according to the player RPG level if the template has the
+     *         'level-item' option. The item will pick a random tier if the
+     *         template has the 'tiered' option
      */
     @Nullable
     public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @Nullable PlayerData player) {
@@ -629,9 +631,9 @@ public class MMOItems extends LuminePlugin {
 
     /**
      * @return Generates an item given an item template. The item level will
-     * scale according to the player RPG level if the template has the
-     * 'level-item' option. The item will pick a random tier if the
-     * template has the 'tiered' option
+     *         scale according to the player RPG level if the template has the
+     *         'level-item' option. The item will pick a random tier if the
+     *         template has the 'tiered' option
      */
     @Nullable
     public ItemStack getItem(@NotNull Type type, @NotNull String id, @NotNull PlayerData player) {
@@ -651,7 +653,7 @@ public class MMOItems extends LuminePlugin {
      * @param itemLevel The desired item level
      * @param itemTier  The desired item tier, can be null
      * @return Generates an item given an item template with a
-     * specific item level and item tier
+     *         specific item level and item tier
      */
     @Nullable
     public MMOItem getMMOItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
@@ -671,7 +673,7 @@ public class MMOItems extends LuminePlugin {
      * @param itemLevel The desired item level
      * @param itemTier  The desired item tier, can be null
      * @return Generates an item given an item template with a
-     * specific item level and item tier
+     *         specific item level and item tier
      */
     @Nullable
     public ItemStack getItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
@@ -689,10 +691,10 @@ public class MMOItems extends LuminePlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     * 0 and the item will have no item tier unless one is specified in
-     * the base item data.
-     * <p></p>
-     * Will return <code>null</code> if such MMOItem does not exist.
+     *         0 and the item will have no item tier unless one is specified in
+     *         the base item data.
+     *         <p></p>
+     *         Will return <code>null</code> if such MMOItem does not exist.
      */
     @Nullable
     public MMOItem getMMOItem(@NotNull Type type, @NotNull String id) {
@@ -709,10 +711,10 @@ public class MMOItems extends LuminePlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     * 0 and the item will have no item tier unless one is specified in
-     * the base item data.
-     * <p></p>
-     * Will return <code>null</code> if such MMOItem does not exist.
+     *         0 and the item will have no item tier unless one is specified in
+     *         the base item data.
+     *         <p></p>
+     *         Will return <code>null</code> if such MMOItem does not exist.
      */
 
     @Nullable
@@ -725,10 +727,10 @@ public class MMOItems extends LuminePlugin {
 
     /**
      * @return Generates an item given an item template. The item level will be
-     * 0 and the item will have no item tier unless one is specified in
-     * the base item data.
-     * <p></p>
-     * Will return <code>null</code> if such MMOItem does not exist.
+     *         0 and the item will have no item tier unless one is specified in
+     *         the base item data.
+     *         <p></p>
+     *         Will return <code>null</code> if such MMOItem does not exist.
      */
     @Nullable
     public ItemStack getItem(@Nullable Type type, @Nullable String id) {

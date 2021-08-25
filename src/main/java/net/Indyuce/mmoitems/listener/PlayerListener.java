@@ -25,10 +25,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -163,5 +160,15 @@ public class PlayerListener implements Listener {
 		}
 
 		MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), type != null);
+	}
+
+	/**
+	 * Fixes an issue where
+	 * @param event
+	 */
+	@EventHandler
+	public void registerInventoryUpdates(PlayerSwapHandItemsEvent event) {
+		PlayerData playerData = PlayerData.get(event.getPlayer());
+		playerData.updateInventory();
 	}
 }

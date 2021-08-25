@@ -87,7 +87,7 @@ public class Present_Throw extends SimpleAbility {
                     item.getEntity().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, item.getEntity().getLocation().add(0, .1, 0), 128, 0, 0, 0, .25);
                     item.getEntity().getWorld().playSound(item.getEntity().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 1.5f);
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(item.getEntity().getLocation()))
-                        if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canDamage(attack.getDamager(), entity))
+                        if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity))
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                     item.close();
                     cancel();

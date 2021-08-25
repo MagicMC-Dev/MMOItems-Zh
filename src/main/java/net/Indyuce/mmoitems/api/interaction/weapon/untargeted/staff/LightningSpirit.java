@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
@@ -17,7 +18,7 @@ public class LightningSpirit implements StaffAttackHandler {
 
 		Location loc = attackMeta.getDamager().getEyeLocation();
 		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range,
-				entity -> MMOUtils.canDamage(attackMeta.getDamager(), entity));
+				entity -> MMOUtils.canTarget(attackMeta.getDamager(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit())
 			attackMeta.applyEffects(nbt, trace.getHit());
 		trace.draw(loc, attackMeta.getDamager().getEyeLocation().getDirection(), 2,

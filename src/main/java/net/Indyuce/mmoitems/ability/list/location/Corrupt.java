@@ -48,7 +48,7 @@ public class Corrupt extends LocationAbility {
 		}
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= radius * radius) {
+			if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= radius * radius) {
 				new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 				((LivingEntity) entity).removePotionEffect(PotionEffectType.WITHER);
 				((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, (int) (duration * 20), (int) amplifier));

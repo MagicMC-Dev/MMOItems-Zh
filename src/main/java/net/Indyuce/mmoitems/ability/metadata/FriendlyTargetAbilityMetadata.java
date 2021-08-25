@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.ability.metadata;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.AbilityMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -13,7 +14,7 @@ public class FriendlyTargetAbilityMetadata extends AbilityMetadata {
     public FriendlyTargetAbilityMetadata(AbilityData ability, Player caster, LivingEntity target) {
         super(ability);
 
-        this.target = target != null ? target : MythicLib.plugin.getVersion().getWrapper().rayTrace(caster, 50, entity -> (entity instanceof Player && MMOUtils.canDamage(caster, entity))).getHit();
+        this.target = target != null ? target : MythicLib.plugin.getVersion().getWrapper().rayTrace(caster, 50, entity -> entity instanceof Player && MMOUtils.canTarget(caster, entity, InteractionType.SUPPORT_SKILL)).getHit();
     }
 
     public LivingEntity getTarget() {

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Color;
@@ -19,7 +20,7 @@ public class XRaySpirit implements StaffAttackHandler {
 		double a = Math.toRadians(attackMeta.getDamager().getEyeLocation().getYaw() + 160);
 		Location loc = attackMeta.getDamager().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range, entity -> MMOUtils.canDamage(attackMeta.getDamager(), entity));
+		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range, entity -> MMOUtils.canTarget(attackMeta.getDamager(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit())
 			attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
 		trace.draw(loc, attackMeta.getDamager().getEyeLocation().getDirection(), 2, Color.BLACK);

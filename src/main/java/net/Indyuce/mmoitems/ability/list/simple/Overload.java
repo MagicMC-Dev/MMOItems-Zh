@@ -37,7 +37,7 @@ public class Overload extends SimpleAbility {
         attack.getDamager().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 254));
 
         for (Entity entity : attack.getDamager().getNearbyEntities(radius, radius, radius))
-            if (MMOUtils.canDamage(attack.getDamager(), entity))
+            if (MMOUtils.canTarget(attack.getDamager(), entity))
                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 
         double step = 12 + (radius * 2.5);

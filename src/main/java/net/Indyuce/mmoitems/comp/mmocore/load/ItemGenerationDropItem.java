@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.comp.mmocore.load;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmocore.api.droptable.dropitem.DropItem;
+import net.Indyuce.mmocore.loot.droptable.dropitem.DropItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;

@@ -68,7 +68,7 @@ public class Snowman_Turret extends LocationAbility {
 
 				if (ti % 2 == 0)
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(snowman.getLocation()))
-                        if (!entity.equals(snowman) && MMOUtils.canDamage(attack.getDamager(), entity)
+                        if (!entity.equals(snowman) && MMOUtils.canTarget(attack.getDamager(), entity)
                                 && entity.getLocation().distanceSquared(snowman.getLocation()) < radiusSquared) {
                             snowman.getWorld().playSound(snowman.getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 1.3f);
                             Snowball snowball = snowman.launchProjectile(Snowball.class);

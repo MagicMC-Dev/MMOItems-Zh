@@ -54,7 +54,7 @@ public class Firebolt extends VectorAbility {
                     if (random.nextDouble() < .3)
                         loc.getWorld().spawnParticle(Particle.LAVA, loc, 0);
                     for (Entity target : entities)
-                        if (MMOUtils.canDamage(attack.getDamager(), loc, target)) {
+                        if (MMOUtils.canTarget(attack.getDamager(), loc, target)) {
                             loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
                             loc.getWorld().spawnParticle(Particle.LAVA, loc, 8, 0, 0, 0, 0);
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);

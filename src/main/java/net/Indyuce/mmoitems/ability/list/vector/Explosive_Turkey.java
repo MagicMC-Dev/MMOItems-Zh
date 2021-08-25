@@ -96,7 +96,7 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 					chicken.getWorld().playSound(chicken.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(chicken.getLocation()))
 						if (!entity.isDead() && entity.getLocation().distanceSquared(chicken.getLocation()) < radiusSquared
-								&& MMOUtils.canDamage(attack.getDamager(), entity)) {
+								&& MMOUtils.canTarget(attack.getDamager(), entity)) {
 							new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
 							entity.setVelocity(entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback)
 									.setY(.4 * knockback));

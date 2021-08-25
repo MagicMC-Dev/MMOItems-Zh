@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
@@ -45,7 +46,7 @@ public class ManaSpirit implements StaffAttackHandler {
 							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), 1, new Particle.DustOptions(Color.AQUA, 1));
 					}
 					for (Entity target : targets)
-						if (MMOUtils.canDamage(attackMeta.getDamager(), loc, target)) {
+						if (MMOUtils.canTarget(attackMeta.getDamager(), loc, target, InteractionType.OFFENSE_ACTION)) {
 							attackMeta.applyEffects(nbt, (LivingEntity) target);
 							loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
 							cancel();

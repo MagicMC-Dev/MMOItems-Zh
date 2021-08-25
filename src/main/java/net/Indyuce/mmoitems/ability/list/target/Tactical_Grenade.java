@@ -59,7 +59,7 @@ public class Tactical_Grenade extends TargetAbility {
                 loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
 
                 for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
+                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
 
                         /*
                          * stop the runnable as soon as the grenade finally hits

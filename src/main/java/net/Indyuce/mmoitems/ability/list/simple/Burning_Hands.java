@@ -57,7 +57,7 @@ public class Burning_Hands extends SimpleAbility {
                         if (entity.getLocation().distanceSquared(loc) < 60
                                 && attack.getDamager().getEyeLocation().getDirection()
                                 .angle(entity.getLocation().toVector().subtract(attack.getDamager().getLocation().toVector())) < Math.PI / 6
-                                && MMOUtils.canDamage(attack.getDamager(), entity))
+                                && MMOUtils.canTarget(attack.getDamager(), entity))
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 
             }

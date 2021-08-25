@@ -63,7 +63,7 @@ public class Life_Ender extends LocationAbility {
 						source.getWorld().spawnParticle(Particle.SMOKE_LARGE, source, 0, Math.cos(j), 0, Math.sin(j), .5);
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(source))
-						if (entity.getLocation().distanceSquared(source) < radius * radius && MMOUtils.canDamage(attack.getDamager(), entity)) {
+						if (entity.getLocation().distanceSquared(source) < radius * radius && MMOUtils.canTarget(attack.getDamager(), entity)) {
 							new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 							entity.setVelocity(entity.getLocation().subtract(source).toVector().setY(.75).normalize().multiply(knockback));
 						}

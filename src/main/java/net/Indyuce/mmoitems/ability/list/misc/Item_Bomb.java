@@ -51,7 +51,7 @@ public class Item_Bomb extends ItemAbility implements Listener {
                     double slowAmplifier = ability.getModifier("slow-amplifier");
 
                     for (Entity entity : item.getEntity().getNearbyEntities(radius, radius, radius))
-                        if (MMOUtils.canDamage(attack.getDamager(), entity)) {
+                        if (MMOUtils.canTarget(attack.getDamager(), entity)) {
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
                             ((LivingEntity) entity).removePotionEffect(PotionEffectType.SLOW);
                             ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));

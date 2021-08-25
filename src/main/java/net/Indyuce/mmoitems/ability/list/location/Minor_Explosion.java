@@ -38,7 +38,7 @@ public class Minor_Explosion extends LocationAbility {
 		loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canDamage(attack.getDamager(), entity)) {
+			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity)) {
 				new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 				entity.setVelocity(MMOUtils.normalize(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.2).multiply(2 * knockback));
 			}

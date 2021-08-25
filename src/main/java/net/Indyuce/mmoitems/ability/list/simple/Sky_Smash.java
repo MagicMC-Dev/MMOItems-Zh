@@ -38,7 +38,7 @@ public class Sky_Smash extends SimpleAbility {
         loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 16, 0, 0, 0, .1);
 
         for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-            if (MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < 10) {
+            if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < 10) {
                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
                 Location loc1 = attack.getDamager().getEyeLocation().clone();
                 loc1.setPitch(-70);

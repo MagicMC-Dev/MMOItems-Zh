@@ -49,7 +49,7 @@ public class Frozen_Aura extends SimpleAbility implements Listener {
 
                 if (ti % 7 == 0)
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(attack.getDamager().getLocation()))
-                        if (entity.getLocation().distanceSquared(attack.getDamager().getLocation()) < radiusSquared && MMOUtils.canDamage(attack.getDamager(), entity)) {
+                        if (entity.getLocation().distanceSquared(attack.getDamager().getLocation()) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity)) {
                             ((LivingEntity) entity).removePotionEffect(PotionEffectType.SLOW);
                             ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, (int) amplifier));
                         }

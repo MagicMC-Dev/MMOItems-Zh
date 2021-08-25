@@ -44,7 +44,7 @@ public class Freeze extends LocationAbility {
 		loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 1);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canDamage(attack.getDamager(), entity)) {
+			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity)) {
 				((LivingEntity) entity).removePotionEffect(PotionEffectType.SLOW);
 				((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
 			}

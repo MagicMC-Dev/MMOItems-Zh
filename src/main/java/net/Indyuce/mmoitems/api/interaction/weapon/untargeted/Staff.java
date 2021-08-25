@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.version.VersionSound;
@@ -59,7 +60,7 @@ public class Staff extends UntargetedWeapon {
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
 		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
-				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
+				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit())
 			attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,

@@ -62,7 +62,7 @@ public class Arcane_Rift extends Ability<VectorAbilityMetadata> {
                 loc.getWorld().spawnParticle(Particle.SPELL_WITCH, loc, 5, .5, 0, .5, 0);
 
                 for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                    if (MMOUtils.canDamage(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
+                    if (MMOUtils.canTarget(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
                         hit.add(entity.getEntityId());
                         new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
                         ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));

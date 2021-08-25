@@ -47,7 +47,7 @@ public class Light_Dash extends SimpleAbility {
                 attack.getDamager().getWorld().spawnParticle(Particle.SMOKE_LARGE, attack.getDamager().getLocation().add(0, 1, 0), 0);
                 attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 1, 2);
                 for (Entity entity : attack.getDamager().getNearbyEntities(1, 1, 1))
-                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canDamage(attack.getDamager(), entity)) {
+                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canTarget(attack.getDamager(), entity)) {
                         hit.add(entity.getEntityId());
                         new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
                     }

@@ -37,7 +37,7 @@ public class Corrosion extends LocationAbility {
 		loc.getWorld().playSound(loc, Sound.BLOCK_BREWING_STAND_BREW, 2, 0);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canDamage(attack.getDamager(), entity)) {
+			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity)) {
 				((LivingEntity) entity).removePotionEffect(PotionEffectType.POISON);
 				((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
 			}

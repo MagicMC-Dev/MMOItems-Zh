@@ -32,7 +32,7 @@ public class Lightning_Beam extends LocationAbility {
 		double radius = ability.getModifier("radius");
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= radius * radius)
+			if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= radius * radius)
 				new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 
 		attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 0);

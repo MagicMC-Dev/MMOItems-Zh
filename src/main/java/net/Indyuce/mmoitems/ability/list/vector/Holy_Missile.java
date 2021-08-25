@@ -59,7 +59,7 @@ public class Holy_Missile extends VectorAbility {
                     }
 
                     for (Entity entity : entities)
-                        if (MMOUtils.canDamage(attack.getDamager(), loc, entity)) {
+                        if (MMOUtils.canTarget(attack.getDamager(), loc, entity)) {
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
                             loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 32, 0, 0, 0, .2);
                             loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);

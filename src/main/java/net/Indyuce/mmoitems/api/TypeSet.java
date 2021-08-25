@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -38,7 +39,7 @@ public enum TypeSet {
 			if (entity.getLocation().distanceSquared(loc) < 40
 					&& attack.getDamager().getEyeLocation().getDirection()
 					.angle(entity.getLocation().subtract(attack.getDamager().getLocation()).toVector()) < Math.PI / 3
-					&& MMOUtils.canDamage(attack.getDamager(), entity) && !entity.equals(target)) {
+					&& MMOUtils.canTarget(attack.getDamager(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
 				ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
 				subAttack.getDamage().multiply(.4);
 				subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
@@ -67,7 +68,7 @@ public enum TypeSet {
 			if (entity.getLocation().distanceSquared(attack.getDamager().getLocation()) < 40
 					&& attack.getDamager().getEyeLocation().getDirection()
 					.angle(entity.getLocation().toVector().subtract(attack.getDamager().getLocation().toVector())) < Math.PI / 18
-					&& MMOUtils.canDamage(attack.getDamager(), entity) && !entity.equals(target)) {
+					&& MMOUtils.canTarget(attack.getDamager(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
 				ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
 				subAttack.getDamage().multiply(.4);
 				subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
@@ -93,7 +94,7 @@ public enum TypeSet {
 				double bluntRating = weapon.getValue(attack.getStats().getStat("BLUNT_RATING"),
 						MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
 				for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
-					if (MMOUtils.canDamage(attack.getDamager(), entity) && !entity.equals(target)) {
+					if (MMOUtils.canTarget(attack.getDamager(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
 						ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
 						subAttack.getDamage().multiply(bluntRating);
 						subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);

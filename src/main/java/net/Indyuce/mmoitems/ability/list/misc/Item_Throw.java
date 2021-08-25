@@ -62,7 +62,7 @@ public class Item_Throw extends ItemAbility implements Listener {
 
                 item.getEntity().getWorld().spawnParticle(Particle.CRIT, item.getEntity().getLocation(), 0);
                 for (Entity target : item.getEntity().getNearbyEntities(1, 1, 1))
-                    if (MMOUtils.canDamage(attack.getDamager(), target)) {
+                    if (MMOUtils.canTarget(attack.getDamager(), target)) {
                         new AttackMetadata(new DamageMetadata(ability.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) target);
                         item.close();
                         cancel();

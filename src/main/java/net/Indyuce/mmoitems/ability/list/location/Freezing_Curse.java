@@ -60,7 +60,7 @@ public class Freezing_Curse extends LocationAbility {
 					double duration = ability.getModifier("duration");
 					double damage = ability.getModifier("damage");
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-						if (entity.getLocation().distanceSquared(loc) < radius * radius && MMOUtils.canDamage(attack.getDamager(), entity)) {
+						if (entity.getLocation().distanceSquared(loc) < radius * radius && MMOUtils.canTarget(attack.getDamager(), entity)) {
 							new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 							((LivingEntity) entity).removePotionEffect(PotionEffectType.SLOW);
 							((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (duration * 20), (int) amplifier));

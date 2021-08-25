@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.ItemStats;
@@ -57,7 +58,7 @@ public class Musket extends UntargetedWeapon {
 		Vector vec = loc.getDirection();
 
 		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range,
-				entity -> MMOUtils.canDamage(stats.getPlayer(), entity));
+				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit()) {
 			ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL), stats);
 			attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());

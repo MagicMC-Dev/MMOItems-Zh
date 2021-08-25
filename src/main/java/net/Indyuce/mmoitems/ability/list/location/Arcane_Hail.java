@@ -49,7 +49,7 @@ public class Arcane_Hail extends LocationAbility {
 				Location loc1 = loc.clone().add(randomCoordMultiplier() * radius, 0, randomCoordMultiplier() * radius);
 				loc1.getWorld().playSound(loc1, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc1))
-					if (MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc1) <= 4)
+					if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc1) <= 4)
 						new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 				loc1.getWorld().spawnParticle(Particle.SPELL_WITCH, loc1, 12, 0, 0, 0, .1);
 				loc1.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc1, 6, 0, 0, 0, .1);

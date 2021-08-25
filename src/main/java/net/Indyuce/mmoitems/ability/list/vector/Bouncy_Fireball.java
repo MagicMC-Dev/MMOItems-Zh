@@ -72,7 +72,7 @@ public class Bouncy_Fireball extends VectorAbility {
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
                         if (entity.getLocation().distanceSquared(loc) < radius * radius)
-                            if (MMOUtils.canDamage(attack.getDamager(), entity)) {
+                            if (MMOUtils.canTarget(attack.getDamager(), entity)) {
                                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                                 entity.setFireTicks((int) (ignite * 20));
                             }

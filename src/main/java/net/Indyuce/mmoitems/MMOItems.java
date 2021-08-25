@@ -21,14 +21,10 @@ import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.denizen.DenizenHook;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
-import net.Indyuce.mmoitems.comp.enchants.advanced_enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
 import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
 import net.Indyuce.mmoitems.comp.enchants.MythicEnchantsSupport;
-import net.Indyuce.mmoitems.comp.flags.DefaultFlags;
-import net.Indyuce.mmoitems.comp.flags.FlagPlugin;
-import net.Indyuce.mmoitems.comp.flags.ResidenceFlags;
-import net.Indyuce.mmoitems.comp.flags.WorldGuardFlags;
+import net.Indyuce.mmoitems.comp.enchants.advanced_enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.inventory.*;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
@@ -96,21 +92,12 @@ public class MMOItems extends LuminePlugin {
     private EquipListener equipListener;
 
     private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
-    private FlagPlugin flagPlugin = new DefaultFlags();
     private VaultSupport vaultSupport;
     private RPGHandler rpgPlugin;
 
     @Override
     public void load() {
         plugin = this;
-
-        if (getServer().getPluginManager().getPlugin("WorldGuard") != null)
-            try {
-                flagPlugin = new WorldGuardFlags();
-                getLogger().log(Level.INFO, "Hooked onto WorldGuard");
-            } catch (Exception exception) {
-                getLogger().log(Level.WARNING, "Could not initialize support with WorldGuard 7: " + exception.getMessage());
-            }
 
         if (getServer().getPluginManager().getPlugin("WorldEdit") != null)
             try {
@@ -237,10 +224,6 @@ public class MMOItems extends LuminePlugin {
                 PlayerData.get(player).getInventory().updateCheck();
         }, 100, getConfig().getInt("inventory-update-delay"));
 
-        if (Bukkit.getPluginManager().getPlugin("Residence") != null) {
-            flagPlugin = new ResidenceFlags();
-            getLogger().log(Level.INFO, "Hooked onto Residence");
-        }
 
         if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
             Bukkit.getPluginManager().registerEvents(new McMMONonRPGHook(), this);
@@ -369,14 +352,6 @@ public class MMOItems extends LuminePlugin {
 
     public SetManager getSets() {
         return setManager;
-    }
-
-    public FlagPlugin getFlags() {
-        return flagPlugin;
-    }
-
-    public void setFlags(FlagPlugin value) {
-        flagPlugin = value;
     }
 
     public RPGHandler getRPG() {

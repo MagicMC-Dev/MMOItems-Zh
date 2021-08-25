@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmocore.api.loot.LootBuilder;
+import net.Indyuce.mmocore.loot.LootBuilder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;

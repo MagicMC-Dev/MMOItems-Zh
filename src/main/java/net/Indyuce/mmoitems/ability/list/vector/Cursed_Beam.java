@@ -59,13 +59,13 @@ public class Cursed_Beam extends VectorAbility {
                     }
 
                     for (Entity target : entities)
-                        if (MMOUtils.canDamage(attack.getDamager(), loc, target)) {
+                        if (MMOUtils.canTarget(attack.getDamager(), loc, target)) {
                             effect(target);
                             double damage = ability.getModifier("damage");
                             loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, .7f);
 
                             for (Entity entity : entities)
-                                if (MMOUtils.canDamage(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation().add(0, 1, 0)) < 9) {
+                                if (MMOUtils.canTarget(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation().add(0, 1, 0)) < 9) {
                                     new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                                     ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (duration * 20), 0));
                                 }

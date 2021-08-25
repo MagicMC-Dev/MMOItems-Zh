@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -194,7 +195,7 @@ public class ItemUse implements Listener {
 			return;
 
 		LivingEntity target = (LivingEntity) event.getRightClicked();
-		if (!MMOUtils.canDamage(player, target))
+		if (!MMOUtils.canTarget(player, target, InteractionType.OFFENSE_ACTION))
 			return;
 
 		UseItem weapon = UseItem.getItem(player, item, item.getType());

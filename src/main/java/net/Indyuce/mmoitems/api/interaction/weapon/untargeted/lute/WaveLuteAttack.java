@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -65,7 +66,7 @@ public class WaveLuteAttack implements LuteAttackHandler {
 					if (j == 0) sound.play(loc, 2, (float) (.5 + (double) ti / range));
 
 					for (Entity target : entities)
-						if (MMOUtils.canDamage(attack.getDamager(), loc, target)) {
+						if (MMOUtils.canTarget(attack.getDamager(), loc, target, InteractionType.OFFENSE_ACTION)) {
 							new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE), attack.getStats()).applyEffectsAndDamage(nbt, (LivingEntity) target);
 							cancel();
 							return;

@@ -61,7 +61,7 @@ public class Earthquake extends Ability<VectorAbilityMetadata> {
                 loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 2, 1);
 
                 for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                    if (MMOUtils.canDamage(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
+                    if (MMOUtils.canTarget(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
                         hit.add(entity.getEntityId());
                         new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
                         ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));

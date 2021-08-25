@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.ability.list.vector;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -37,7 +38,7 @@ public class Shulker_Missile extends VectorAbility implements Listener {
         addModifier("duration", 5);
         addModifier("mana", 0);
         addModifier("stamina", 0);
-	}
+    }
 
     @Override
     public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
@@ -70,26 +71,25 @@ public class Shulker_Missile extends VectorAbility implements Listener {
                             cancel();
                         } else
                             shulkerBullet.setVelocity(vec);
-					}
-				}.runTaskTimer(MMOItems.plugin, 0, 1);
-			}
-		}.runTaskTimer(MMOItems.plugin, 0, 3);
-	}
+                    }
+                }.runTaskTimer(MMOItems.plugin, 0, 1);
+            }
+        }.runTaskTimer(MMOItems.plugin, 0, 3);
+    }
 
-	@EventHandler
-	public void a(EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof ShulkerBullet && event.getEntity() instanceof LivingEntity) {
-			ShulkerBullet damager = (ShulkerBullet) event.getDamager();
-			LivingEntity entity = (LivingEntity) event.getEntity();
-			if (!MMOItems.plugin.getEntities().isCustomEntity(damager))
-				return;
+    @EventHandler
+    public void a(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof ShulkerBullet && event.getEntity() instanceof LivingEntity) {
+            ShulkerBullet damager = (ShulkerBullet) event.getDamager();
+            LivingEntity entity = (LivingEntity) event.getEntity();
+            if (!MMOItems.plugin.getEntities().isCustomEntity(damager))
+                return;
 
-			if (!MMOUtils.canDamage(entity)) {
+            ShulkerMissileEntityData data = (ShulkerMissileEntityData) MMOItems.plugin.getEntities().getEntityData(damager);
+            if (!MMOUtils.canTarget(data.attackMeta.getDamager(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
                 event.setCancelled(true);
                 return;
             }
-
-            ShulkerMissileEntityData data = (ShulkerMissileEntityData) MMOItems.plugin.getEntities().getEntityData(damager);
 
             // Void spirit
             if (data.isWeaponAttack())
@@ -106,23 +106,23 @@ public class Shulker_Missile extends VectorAbility implements Listener {
                     // Potion effect should apply right after the damage with a 1 tick delay.
                     if (y == 0) {
                         entity.removePotionEffect(PotionEffectType.LEVITATION);
-						entity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, (int) (data.duration * 20), 0));
-					}
+                        entity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, (int) (data.duration * 20), 0));
+                    }
 
-					for (int j1 = 0; j1 < 3; j1++) {
-						y += .04;
-						for (int j = 0; j < 2; j++) {
-							double xz = y * Math.PI * 1.3 + (j * Math.PI);
-							loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)), 1,
-									new Particle.DustOptions(Color.MAROON, 1));
-						}
-					}
-					if (y >= 2)
-						cancel();
-				}
-			}.runTaskTimer(MMOItems.plugin, 0, 1);
-		}
-	}
+                    for (int j1 = 0; j1 < 3; j1++) {
+                        y += .04;
+                        for (int j = 0; j < 2; j++) {
+                            double xz = y * Math.PI * 1.3 + (j * Math.PI);
+                            loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(Math.cos(xz), y, Math.sin(xz)), 1,
+                                    new Particle.DustOptions(Color.MAROON, 1));
+                        }
+                    }
+                    if (y >= 2)
+                        cancel();
+                }
+            }.runTaskTimer(MMOItems.plugin, 0, 1);
+        }
+    }
 
     public static class ShulkerMissileEntityData implements EntityData {
         private final ItemAttackMetadata attackMeta;
@@ -159,6 +159,6 @@ public class Shulker_Missile extends VectorAbility implements Listener {
 
         public boolean isWeaponAttack() {
             return attackMeta.getDamage().hasType(DamageType.WEAPON);
-		}
-	}
+        }
+    }
 }

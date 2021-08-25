@@ -56,7 +56,7 @@ public class TNT_Throw extends VectorAbility implements Listener {
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 		public void a(EntityDamageByEntityEvent event) {
-			if (event.getDamager().equals(tnt) && !MMOUtils.canDamage(player, event.getEntity()))
+			if (event.getDamager().equals(tnt) && !MMOUtils.canTarget(player, event.getEntity()))
 				event.setCancelled(true);
 		}
 	}

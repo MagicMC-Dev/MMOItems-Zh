@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.version.VersionSound;
@@ -101,7 +102,7 @@ public class Lute extends UntargetedWeapon {
 					}
 
 					for (Entity target : entities)
-						if (MMOUtils.canDamage(getPlayer(), loc, target)) {
+						if (MMOUtils.canTarget(getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
 							attackMeta.applyEffectsAndDamage(getNBTItem(), (LivingEntity) target);
 							cancel();
 							return;

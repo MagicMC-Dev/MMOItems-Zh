@@ -51,7 +51,7 @@ public class Firefly extends SimpleAbility {
 				}
 
 				for (Entity entity : attack.getDamager().getNearbyEntities(1, 1, 1))
-					if (MMOUtils.canDamage(attack.getDamager(), entity)) {
+					if (MMOUtils.canTarget(attack.getDamager(), entity)) {
 						double damage = ability.getModifier("damage");
 						double knockback = ability.getModifier("knockback");
 

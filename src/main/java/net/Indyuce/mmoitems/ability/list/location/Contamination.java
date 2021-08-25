@@ -57,7 +57,7 @@ public class Contamination extends LocationAbility {
 				if (j % 10 == 0) {
 					loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 2, 1);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-						if (MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= 25)
+						if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= 25)
 							new AttackMetadata(new DamageMetadata(dps, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity, false);
 				}
 			}

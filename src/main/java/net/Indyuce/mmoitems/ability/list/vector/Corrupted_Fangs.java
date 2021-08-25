@@ -73,7 +73,7 @@ public class Corrupted_Fangs extends VectorAbility implements Listener {
             if (event.getDamager() instanceof EvokerFangs && entities.contains(event.getDamager().getEntityId())) {
                 event.setCancelled(true);
 
-                if (MMOUtils.canDamage(attackMeta.getDamager(), event.getEntity()))
+                if (MMOUtils.canTarget(attackMeta.getDamager(), event.getEntity()))
                     attackMeta.damage((LivingEntity) event.getEntity());
             }
         }

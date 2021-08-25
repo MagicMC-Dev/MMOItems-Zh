@@ -56,7 +56,7 @@ public class Fire_Meteor extends VectorAbility {
                     double knockback = ability.getModifier("knockback");
                     double radius = ability.getModifier("radius");
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                        if (MMOUtils.canDamage(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
+                        if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                             entity.setVelocity(entity.getLocation().toVector().subtract(loc.toVector()).multiply(.1 * knockback).setY(.4 * knockback));
                         }

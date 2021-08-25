@@ -38,7 +38,7 @@ public class Thrust extends VectorAbility {
         for (double j = 0; j < 7; j += .5) {
             loc.add(vec);
             for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                if (MMOUtils.canDamage(attack.getDamager(), loc, entity))
+                if (MMOUtils.canTarget(attack.getDamager(), loc, entity))
                     new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
             loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 0);
         }

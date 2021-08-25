@@ -37,7 +37,7 @@ public class Circular_Slash extends SimpleAbility {
         attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, .5f);
         attack.getDamager().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 254));
         for (Entity entity : attack.getDamager().getNearbyEntities(radius, radius, radius)) {
-            if (MMOUtils.canDamage(attack.getDamager(), entity)) {
+            if (MMOUtils.canTarget(attack.getDamager(), entity)) {
                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
                 Vector v1 = entity.getLocation().toVector();
                 Vector v2 = attack.getDamager().getLocation().toVector();

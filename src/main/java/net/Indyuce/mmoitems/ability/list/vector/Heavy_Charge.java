@@ -44,7 +44,7 @@ public class Heavy_Charge extends VectorAbility {
                 }
 
                 for (Entity target : attack.getDamager().getNearbyEntities(1, 1, 1))
-                    if (MMOUtils.canDamage(attack.getDamager(), target)) {
+                    if (MMOUtils.canTarget(attack.getDamager(), target)) {
                         attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, 1);
                         attack.getDamager().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
                         target.setVelocity(attack.getDamager().getVelocity().setY(0.3).multiply(1.7 * knockback));

@@ -52,7 +52,7 @@ public class Black_Hole extends LocationAbility {
 				}
 
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-					if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && MMOUtils.canDamage(attack.getDamager(), entity))
+					if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && MMOUtils.canTarget(attack.getDamager(), entity))
 						entity.setVelocity(MMOUtils.normalize(loc.clone().subtract(entity.getLocation()).toVector()).multiply(.5));
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);

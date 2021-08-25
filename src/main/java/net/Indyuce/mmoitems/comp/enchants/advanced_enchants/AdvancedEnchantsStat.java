@@ -166,6 +166,6 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
         }
 
         // Thats it
-        return enchants;
+        return enchants.enchants.size() == 0 ? null : enchants;
     }
 }

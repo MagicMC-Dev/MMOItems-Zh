@@ -10,10 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/*
- * this loads mmoitems comp for mythic mobs
- * since MythicMobsHook is purely for documentation
- */
 public class MythicMobsLoader {
 
     public MythicMobsLoader() {

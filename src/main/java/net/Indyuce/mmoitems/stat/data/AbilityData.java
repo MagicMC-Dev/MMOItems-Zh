@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.lumine.mythic.lib.comp.mythicmobs.MythicSkillInfo;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -13,7 +14,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 
-public class AbilityData {
+public class AbilityData implements MythicSkillInfo {
 	private final Ability ability;
 	private final CastingMode castMode;
 	private final Map<String, Double> modifiers = new HashMap<>();
@@ -90,8 +91,9 @@ public class AbilityData {
 		return modifiers.containsKey(path);
 	}
 
+	@Override
 	public double getModifier(String path) {
-		return modifiers.containsKey(path) ? modifiers.get(path) : ability.getDefaultValue(path);
+		return modifiers.getOrDefault(path, ability.getDefaultValue(path));
 	}
 
 	public JsonObject toJson() {

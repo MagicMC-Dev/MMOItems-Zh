@@ -20,57 +20,58 @@ import java.util.HashSet;
 import java.util.Optional;
 
 public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
-	private final Skill skill;
+    private final Skill skill;
 
-	public MythicMobsAbility(String id, FileConfiguration config) {
-		super(id, config.getString("name"), CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+    public MythicMobsAbility(String id, FileConfiguration config) {
+        super(id, config.getString("name"), CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
 
-		String skillName = config.getString("mythicmobs-skill-id");
-		Validate.notNull(skillName, "Could not find MM skill name");
+        String skillName = config.getString("mythicmobs-skill-id");
+        Validate.notNull(skillName, "Could not find MM skill name");
 
-		Optional<io.lumine.xikage.mythicmobs.skills.Skill> opt = MythicMobs.inst().getSkillManager().getSkill(skillName);
-		Validate.isTrue(opt.isPresent(), "Could not find MM skill " + skillName);
-		skill = opt.get();
+        Optional<io.lumine.xikage.mythicmobs.skills.Skill> opt = MythicMobs.inst().getSkillManager().getSkill(skillName);
+        Validate.isTrue(opt.isPresent(), "Could not find MM skill " + skillName);
+        skill = opt.get();
 
-		addModifier("cooldown", 10);
-		addModifier("mana", 0);
-		addModifier("stamina", 0);
+        addModifier("cooldown", 10);
+        addModifier("mana", 0);
+        addModifier("stamina", 0);
 
-		for (String mod : config.getKeys(false))
-			if (!mod.equals("name") && !mod.equals("mythicmobs-skill-id") && !mod.equals("self-only"))
-				addModifier(mod.toLowerCase().replace("_", "-").replace(" ", "-"), config.getInt(mod));
-	}
+        for (String mod : config.getKeys(false))
+            if (!mod.equals("name") && !mod.equals("mythicmobs-skill-id") && !mod.equals("self-only"))
+                addModifier(mod.toLowerCase().replace("_", "-").replace(" ", "-"), config.getInt(mod));
+    }
 
-	public String getInternalName() {
-		return skill.getInternalName();
-	}
+    public String getInternalName() {
+        return skill.getInternalName();
+    }
 
-	@Override
-	public void whenCast(ItemAttackMetadata attackMeta, MythicMobsAbilityMetadata ability) {
-		LivingEntity target = ability.getTarget();
+    @Override
+    public void whenCast(ItemAttackMetadata attackMeta, MythicMobsAbilityMetadata ability) {
+        LivingEntity target = ability.getTarget();
 
-		// TODO what's the difference between trigger and caster.
-		AbstractEntity trigger = BukkitAdapter.adapt(attackMeta.getDamager());
-		SkillCaster caster = new GenericCaster(trigger);
+        // TODO what's the difference between trigger and caster.
+        AbstractEntity trigger = BukkitAdapter.adapt(attackMeta.getDamager());
+        SkillCaster caster = new GenericCaster(trigger);
 
-		HashSet<AbstractEntity> targetEntities = new HashSet<>();
-		HashSet<AbstractLocation> targetLocations = new HashSet<>();
+        HashSet<AbstractEntity> targetEntities = new HashSet<>();
+        HashSet<AbstractLocation> targetLocations = new HashSet<>();
 
-		targetEntities.add(BukkitAdapter.adapt(target));
+        targetEntities.add(BukkitAdapter.adapt(target));
 
-		SkillMetadata data = new SkillMetadata(SkillTrigger.API, caster, trigger, BukkitAdapter.adapt(attackMeta.getDamager().getEyeLocation()), targetEntities, targetLocations, 1);
+        SkillMetadata data = new SkillMetadata(SkillTrigger.CAST, caster, trigger, BukkitAdapter.adapt(attackMeta.getDamager().getEyeLocation()), targetEntities, targetLocations, 1);
 
-		// Stats are cached inside a variable.
-		/*data.getVariables().putObject();*/
+        // Stats are cached inside a variable
+        data.getVariables().putObject("MMOStatMap", attackMeta.getStats());
+        data.getVariables().putObject("MMOSkill", ability.getAbility());
 
-		if (skill.usable(data, SkillTrigger.API))
-			skill.execute(data);
-		else
-			attackMeta.setSuccessful(false);
-	}
+        if (skill.usable(data, SkillTrigger.CAST))
+            skill.execute(data);
+        else
+            attackMeta.setSuccessful(false);
+    }
 
-	@Override
-	public MythicMobsAbilityMetadata canBeCast(ItemAttackMetadata attackMeta, LivingEntity target, AbilityData data) {
-		return new MythicMobsAbilityMetadata(data, target);
-	}
+    @Override
+    public MythicMobsAbilityMetadata canBeCast(ItemAttackMetadata attackMeta, LivingEntity target, AbilityData data) {
+        return new MythicMobsAbilityMetadata(data, target);
+    }
 }

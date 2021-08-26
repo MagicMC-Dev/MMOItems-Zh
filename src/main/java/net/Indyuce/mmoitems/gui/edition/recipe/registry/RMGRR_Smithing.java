@@ -9,6 +9,7 @@ import io.lumine.mythic.lib.api.crafting.recipes.ShapelessRecipe;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CustomSmithingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -86,8 +87,8 @@ public class RMGRR_Smithing implements RecipeRegistry {
         // Read the options and output
         int outputAmount = recipeSection.getInt(RBA_AmountOutput.AMOUNT_INGREDIENTS, 1);
         boolean dropGems = recipeSection.getBoolean(RBA_DropGems.SMITH_GEMS, false);
-        SmithingCombinationType upgradeEffect = readSCT(recipeSection.getString(RBA_SmithingEnchantments.SMITH_ENCHANTS));
-        SmithingCombinationType enchantEffect = readSCT(recipeSection.getString(RBA_SmithingUpgrades.SMITH_UPGRADES));
+        SmithingCombinationType enchantEffect = readSCT(recipeSection.getString(RBA_SmithingEnchantments.SMITH_ENCHANTS));
+        SmithingCombinationType upgradeEffect = readSCT(recipeSection.getString(RBA_SmithingUpgrades.SMITH_UPGRADES));
 
         // Build Output
         CustomSmithingRecipe outputRecipe = new CustomSmithingRecipe(template, dropGems, enchantEffect, upgradeEffect, outputAmount);

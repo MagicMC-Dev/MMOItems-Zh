@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.ability;
 
+import io.lumine.mythic.lib.player.CooldownObject;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class Ability<T extends AbilityMetadata> {
+public abstract class Ability<T extends AbilityMetadata> implements CooldownObject {
 	private final String name, id;
 	private final List<CastingMode> allowedModes;
 	private final Map<String, Double> modifiers = new HashMap<>();
@@ -76,6 +77,11 @@ public abstract class Ability<T extends AbilityMetadata> {
 	 */
 	@Deprecated
 	public void disable() {
+	}
+
+	@Override
+	public String getCooldownPath() {
+		return "mmoitems_skill_" + id.toLowerCase();
 	}
 
 	/**

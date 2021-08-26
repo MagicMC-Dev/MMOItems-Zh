@@ -8,7 +8,6 @@ import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.ability.AbilityMetadata;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -19,6 +18,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.event.RefreshInventoryEvent;
+import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
@@ -53,9 +53,6 @@ public class PlayerData {
 
     private final InventoryUpdateHandler inventory = new InventoryUpdateHandler(this);
     private final CraftingStatus craftingStatus = new CraftingStatus();
-    private final Map<String, CooldownInformation> abilityCooldowns = new HashMap<>();
-    private final Map<String, Long> itemCooldowns = new HashMap<>();
-    private final Map<CooldownType, Long> extraCooldowns = new HashMap<>();
 
     /*
      * specific stat calculation TODO compress it in Map<ItemStat, DynamicStatData>
@@ -451,7 +448,7 @@ public class PlayerData {
 
         double cooldown = abilityMetadata.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStats.COOLDOWN_REDUCTION) / 100));
         if (cooldown > 0)
-            applyAbilityCooldown(ability.getAbility(), cooldown);
+            mmoData.getCooldownMap().applyCooldown(ability.getAbility(), cooldown);
 
         /*
          * Finally cast the ability; BUG FIX: cooldown MUST be applied BEFORE
@@ -462,69 +459,27 @@ public class PlayerData {
     }
 
     public boolean isOnCooldown(CooldownType type) {
-        return extraCooldowns.containsKey(type) && extraCooldowns.get(type) > System.currentTimeMillis();
+        return mmoData.getCooldownMap().isOnCooldown(type.name());
     }
 
-    /*
-     * 'value' is either the cooldown value if the cooldown type is a regular
-     * attack cooldown, or the cooldown reduction stat value, if the cooldown
-     * type is mitigation
-     */
     public void applyCooldown(CooldownType type, double value) {
-        extraCooldowns.put(type, (long) (System.currentTimeMillis() + 1000 * value));
+        mmoData.getCooldownMap().applyCooldown(type.name(), value);
     }
 
-    /**
-     * @deprecated Use {@link #isOnCooldown(String)} instead
-     */
-    @Deprecated
-    public boolean canUseItem(String id) {
-        return isOnCooldown(id);
+    public boolean isOnCooldown(ItemReference ref) {
+        return mmoData.getCooldownMap().isOnCooldown(ref);
     }
 
-    /**
-     * @param itemId Item ID
-     * @return If this item is on cooldown
-     */
-    public boolean isOnCooldown(String itemId) {
-        return itemCooldowns.getOrDefault(itemId, 0l) < System.currentTimeMillis();
+    public void applyItemCooldown(ItemReference ref, double value) {
+        mmoData.getCooldownMap().applyCooldown(ref, value);
     }
 
-    public void applyItemCooldown(String id, double value) {
-        itemCooldowns.put(id, (long) (System.currentTimeMillis() + value * 1000));
-    }
-
-    public void applyAbilityCooldown(Ability ability, double value) {
-        applyAbilityCooldown(ability.getID(), value);
-    }
-
-    public void applyAbilityCooldown(String id, double value) {
-        abilityCooldowns.put(id, new CooldownInformation(value));
-    }
-
-    public boolean hasCooldownInfo(Ability ability) {
-        return hasCooldownInfo(ability.getID());
-    }
-
-    public boolean hasCooldownInfo(String id) {
-        return abilityCooldowns.containsKey(id);
-    }
-
-    public CooldownInformation getCooldownInfo(Ability ability) {
-        return getCooldownInfo(ability.getID());
-    }
-
-    public CooldownInformation getCooldownInfo(String id) {
-        return abilityCooldowns.get(id);
-    }
-
-    public double getItemCooldown(String id) {
-        return Math.max(0, (double) (itemCooldowns.get(id) - System.currentTimeMillis()) / 1000);
+    public double getItemCooldown(ItemReference ref) {
+        return mmoData.getCooldownMap().getInfo(ref).getRemaining() / 1000d;
     }
 
     @NotNull
     public static PlayerData get(@NotNull OfflinePlayer player) {
-
         return get(player.getUniqueId());
     }
 

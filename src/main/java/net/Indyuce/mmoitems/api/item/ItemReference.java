@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.item;
 
+import io.lumine.mythic.lib.player.CooldownObject;
 import net.Indyuce.mmoitems.api.Type;
 
 /**
@@ -9,23 +10,28 @@ import net.Indyuce.mmoitems.api.Type;
  *
  * @author indyuce
  */
-public interface ItemReference {
+public interface ItemReference extends CooldownObject {
 
-	/**
-	 * MMOItem templates have to identifiers: <b>TYPE</b> and ID
-	 * <p>
-	 * This method returns their TYPE.
-	 * <p>
-	 * Example: <b>GREATSWORD</b> STEEL_CLAYMORE
-	 */
-	Type getType();
+    /**
+     * MMOItem templates have to identifiers: <b>TYPE</b> and ID
+     * <p>
+     * This method returns their TYPE.
+     * <p>
+     * Example: <b>GREATSWORD</b> STEEL_CLAYMORE
+     */
+    Type getType();
 
-	/**
-	 * MMOItem templates have to identifiers: TYPE and <b>ID</b>
-	 * <p>
-	 * This method returns their TYPE.
-	 * <p>
-	 * Example: GREATSWORD <b>STEEL_CLAYMORE</b>
-	 */
-	 String getId();
+    /**
+     * MMOItem templates have to identifiers: TYPE and <b>ID</b>
+     * <p>
+     * This method returns their TYPE.
+     * <p>
+     * Example: GREATSWORD <b>STEEL_CLAYMORE</b>
+     */
+    String getId();
+
+    @Override
+    default String getCooldownPath() {
+        return "mmoitem_" + getId().toLowerCase();
+    }
 }

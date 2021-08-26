@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.math.EvaluatedFormula;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.player.CooldownInfo;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -86,9 +87,9 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		}
 
 		if (identifier.startsWith("ability_cd_")) {
-			PlayerData data = PlayerData.get(player);
-			return data.hasCooldownInfo(identifier.substring(11)) ? oneDigit.format(data.getCooldownInfo(identifier.substring(11)).getRemaining())
-					: "0";
+			MMOPlayerData data = MMOPlayerData.get(player);
+			CooldownInfo info = data.getCooldownMap().getInfo("mmoitems_skill_" + identifier.substring(11));
+			return info == null ? "0" : oneDigit.format(info.getRemaining() / 1000d);
 		}
 
 		if(identifier.startsWith("type_")) {

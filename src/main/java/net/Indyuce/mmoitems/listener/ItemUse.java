@@ -73,9 +73,9 @@ public class ItemUse implements Listener {
 
         // Commands & consummables
         if (event.getAction().name().contains("RIGHT_CLICK")) {
-            if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
+            if (useItem.getPlayerData().isOnCooldown(useItem.getMMOItem())) {
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
+                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem())))
                         .send(player);
                 event.setCancelled(true);
                 return;
@@ -91,7 +91,7 @@ public class ItemUse implements Listener {
                     event.getItem().setAmount(event.getItem().getAmount() - 1);
             }
 
-            useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+            useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
             useItem.executeCommands();
         }
 
@@ -323,9 +323,9 @@ public class ItemUse implements Listener {
 
         if (useItem instanceof Consumable) {
 
-            if (!useItem.getPlayerData().isOnCooldown(useItem.getMMOItem().getId())) {
+            if (useItem.getPlayerData().isOnCooldown(useItem.getMMOItem())) {
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem().getId())))
+                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem())))
                         .send(player);
                 event.setCancelled(true);
                 return;
@@ -343,7 +343,7 @@ public class ItemUse implements Listener {
             if (result == Consumable.ConsumableConsumeResult.NOT_CONSUME)
                 event.setCancelled(true);
 
-            useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem().getId(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+            useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
             useItem.executeCommands();
         }
     }

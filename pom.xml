@@ -7,7 +7,7 @@
     <version>6.6.1</version>
     <name>MMOItems</name>
     <description>A great item solution for your RPG server!!</description>
- 
+
     <properties>
         <downloadSources>false</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
@@ -17,15 +17,15 @@
 
     <distributionManagement>
         <repository>
-			<id>nexus</id>
-			<name>Lumine Releases</name>
-			<url>https://mvn.lumine.io/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus</id>
-			<name>Lumine Snapshots</name>
-			<url>https://mvn.lumine.io/repository/maven-snapshots/</url>
-		</snapshotRepository>
+            <id>nexus</id>
+            <name>Lumine Releases</name>
+            <url>https://mvn.lumine.io/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus</id>
+            <name>Lumine Snapshots</name>
+            <url>https://mvn.lumine.io/repository/maven-snapshots/</url>
+        </snapshotRepository>
 
     </distributionManagement>
 
@@ -88,14 +88,14 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        
+
         <!-- AE -->
         <repository>
-		    <id>egg82-ninja</id>
-		    <url>https://www.myget.org/F/egg82-java/maven/</url>
-		</repository>
-		
-		<!-- holographic displays -->
+            <id>egg82-ninja</id>
+            <url>https://www.myget.org/F/egg82-java/maven/</url>
+        </repository>
+
+        <!-- holographic displays -->
         <repository>
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
@@ -224,13 +224,6 @@
             <groupId>com.bekvon.bukkit.residence</groupId>
             <artifactId>Residence</artifactId>
             <version>4.8.7.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.Zrips.CMI</groupId>
-            <artifactId>CMI</artifactId>
-            <version>8.6.5.0</version>
             <scope>provided</scope>
         </dependency>
 

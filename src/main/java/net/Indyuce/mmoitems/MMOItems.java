@@ -304,10 +304,10 @@ public class MMOItems extends LuminePlugin {
 			}).runTaskLater(this, 1L);
 		}
 
-		if (Bukkit.getPluginManager().getPlugin("Denizen") != null) {
+		/*if (Bukkit.getPluginManager().getPlugin("Denizen") != null) {
 			new DenizenHook();
 			getLogger().log(Level.INFO, "Hooked onto Denizen");
-		}
+		}*/
 
 		// compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));

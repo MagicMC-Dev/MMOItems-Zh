@@ -164,16 +164,10 @@ public class MMOItems extends LuminePlugin {
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null) enchantPlugins.add(new MythicEnchantsSupport());
-
-		if (Bukkit.getPluginManager().getPlugin("Denizen") != null) {
-			new DenizenHook();
-			getLogger().log(Level.INFO, "Hooked onto Denizen");
-		}
 	}
 
 	@Override
 	public void enable() {
-
 		new SpigotPlugin(39267, this).checkForUpdate();
 		new MMOItemsMetrics();
 
@@ -308,6 +302,11 @@ public class MMOItems extends LuminePlugin {
 					}
 				}
 			}).runTaskLater(this, 1L);
+		}
+
+		if (Bukkit.getPluginManager().getPlugin("Denizen") != null) {
+			new DenizenHook();
+			getLogger().log(Level.INFO, "Hooked onto Denizen");
 		}
 
 		// compatibility with /reload

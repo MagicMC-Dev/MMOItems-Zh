@@ -139,7 +139,12 @@ public abstract class Ability<T extends AbilityMetadata> implements CooldownObje
 		/**
 		 * Performing a right click while sneaking
 		 */
-		SHIFT_RIGHT_CLICK;
+		SHIFT_RIGHT_CLICK,
+
+		/**
+		 * When player Sneaks
+		 */
+		SNEAK;
 
 		private final boolean message;
 

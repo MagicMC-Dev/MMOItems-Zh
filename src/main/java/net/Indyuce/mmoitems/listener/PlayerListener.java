@@ -60,6 +60,12 @@ public class PlayerListener implements Listener {
         PlayerData.get(player).castAbilities(damager, CastingMode.WHEN_HIT);
     }
 
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void castWhenSneakAbilities(PlayerToggleSneakEvent event) {
+        Player player = event.getPlayer();
+        PlayerData.get(player).castAbilities(null, CastingMode.SNEAK);
+    }
+
     @EventHandler(priority = EventPriority.LOW)
     public void castClickAbilities(PlayerInteractEvent event) {
         if (event.getAction() == Action.PHYSICAL)

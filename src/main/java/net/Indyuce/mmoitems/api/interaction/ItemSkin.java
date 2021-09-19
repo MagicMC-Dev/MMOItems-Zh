@@ -34,7 +34,7 @@ public class ItemSkin extends UseItem {
 			return new ApplyResult(ResultType.NONE);
 
 		if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && target.getBoolean("MMOITEMS_HAS_SKIN")) {
-			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
 			Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
 					.send(player);
 			return new ApplyResult(ResultType.NONE);

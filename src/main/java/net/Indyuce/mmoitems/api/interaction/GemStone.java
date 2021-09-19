@@ -69,6 +69,9 @@ public class GemStone extends UseItem {
         // Check for success rate
         double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
 
+        if (successRate == 0.0)
+            successRate = 100;
+
         // Call the Bukkit event
         ApplyGemStoneEvent called = new ApplyGemStoneEvent(playerData, mmoitem, targetMMO,
                 RANDOM.nextDouble() > successRate / 100 ? ResultType.FAILURE : ResultType.SUCCESS);

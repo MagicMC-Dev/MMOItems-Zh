@@ -79,6 +79,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
 						+ (MMOItems.plugin.getRecipes().getLoadedLegacyRecipes().size()
 						+ MMOItems.plugin.getRecipes().getLegacyCustomRecipes().size()
+						+ MMOItems.plugin.getRecipes().getBooklessRecipes().size()
 						+ MMOItems.plugin.getRecipes().getCustomRecipes().size())
 						+ ChatColor.GRAY + " Recipes");
 	}

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
@@ -46,7 +47,7 @@ public class Type {
     public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.ANY);
 
     // extra
-    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR);
+    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR, true);
     public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, EquipmentSlot.MAIN_HAND);
     public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, EquipmentSlot.MAIN_HAND);
     public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, EquipmentSlot.MAIN_HAND);
@@ -58,6 +59,12 @@ public class Type {
     private final String id;
     private String name;
     private final TypeSet set;
+
+    public boolean isFourGUIMode() {
+        return fourGUIMode;
+    }
+
+    private final boolean fourGUIMode;
 
     /**
      * Used for item type restrictions for gem stones to easily check if the
@@ -89,10 +96,13 @@ public class Type {
     private final List<ItemStat> available = new ArrayList<>();
 
     public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType) {
+        this(set, id, weapon, equipType, false);
+    }
+    public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType, boolean fourGUI) {
         this.set = set;
         this.id = id.toUpperCase().replace("-", "_").replace(" ", "_");
         this.equipType = equipType;
-
+        this.fourGUIMode = fourGUI;
         this.weapon = weapon;
     }
 
@@ -103,6 +113,7 @@ public class Type {
         set = parent.set;
         weapon = parent.weapon;
         equipType = parent.equipType;
+        this.fourGUIMode = config.getBoolean("AlternateGUIMode", parent.fourGUIMode);
     }
 
     public void load(ConfigurationSection config) {

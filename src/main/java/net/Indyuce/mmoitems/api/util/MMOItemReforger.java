@@ -369,7 +369,7 @@ public class MMOItemReforger {
 	 *
 	 * @param options Additional options to pass onto the modules.
 	 *
-	 * @return If reforged successfully ~ <code>true</code> unless cancelled.
+	 * @return If reforged successfully. Basically <code>true</code>, unless cancelled.
 	 */
 	public boolean reforge(@NotNull ReforgeOptions options) {
 		//RFG//MMOItems.log("§8Reforge §4RFG§7 Reforging " + SilentNumbers.getItemName(getStack()));

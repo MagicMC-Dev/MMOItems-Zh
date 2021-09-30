@@ -154,6 +154,9 @@ public class PlayerListener implements Listener {
             return;
 
         NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
+        if (!nbtItem.hasType())
+            return;
+
         Type type = Type.get(nbtItem.getType());
         PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
 

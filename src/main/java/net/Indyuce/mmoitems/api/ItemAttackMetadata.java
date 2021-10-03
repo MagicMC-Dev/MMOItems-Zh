@@ -41,7 +41,7 @@ public class ItemAttackMetadata extends AttackMetadata {
     }
 
     /**
-     * Applies all necessary on-hit effects for any type of damage.
+     * Applies all necessary weapon on-hit effects for any type of damage.
      * Makes things much easier for untargeted weapons like staffs
      *
      * @param item   The item being used

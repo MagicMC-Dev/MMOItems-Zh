@@ -20,7 +20,7 @@ public class LightningSpirit implements StaffAttackHandler {
 		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range,
 				entity -> MMOUtils.canTarget(attackMeta.getDamager(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit())
-			attackMeta.applyEffects(nbt, trace.getHit());
+			attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
 		trace.draw(loc, attackMeta.getDamager().getEyeLocation().getDirection(), 2,
 				loc1 -> loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 0));
 	}

@@ -63,6 +63,11 @@ public class RMGRR_Shapeless implements RecipeRegistry {
 
             // Add
             ProvidedUIFilter p = RecipeMakerGUI.readIngredientFrom(str, ffp);
+
+            // Not air right
+            if (p.isAir()) { continue; }
+
+            // Ok snooze
             nonAirFound = true;
             poofs.add(new MythicRecipeIngredient(p));
         }

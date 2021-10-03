@@ -214,6 +214,7 @@ public class RecipeManager implements Reloadable {
 		return legacyCraftingRecipes;
 	}
 	public HashMap<NamespacedKey, MythicRecipeBlueprint> getCustomRecipes() { return customRecipes; }
+	public ArrayList<MythicRecipeBlueprint> getBooklessRecipes() { return booklessRecipes; }
 
 	@Nullable
 	ArrayList<NamespacedKey> generatedNKs;

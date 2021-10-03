@@ -27,16 +27,16 @@ public class PlaceholderCondition extends Condition {
 		switch (comparator) {
 			case "<":
 				return Double.valueOf(placeholders) < Double.valueOf(compareTo);
-			case "<=":
+			case "<+":
 				return Double.valueOf(placeholders) <= Double.valueOf(compareTo);
 			case ">":
 				return Double.valueOf(placeholders) > Double.valueOf(compareTo);
-			case ">=":
+			case ">+":
 				return Double.valueOf(placeholders) >= Double.valueOf(compareTo);
-			case "==":
-			case "=":
+			case "++":
+			case "+":
 				return Double.valueOf(placeholders) == Double.valueOf(compareTo);
-			case "!=":
+			case "!+":
 				return Double.valueOf(placeholders) != Double.valueOf(compareTo);
 			case "equals":
 				return placeholders.equals(compareTo);

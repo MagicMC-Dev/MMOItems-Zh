@@ -24,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,8 @@ public class ItemBrowser extends PluginInventory {
 	private boolean deleteMode;
 
 	private static final int[] slots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
+	//private static final int[] slotsAlt = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43 };
+	private static final int[] slotsAlt = { 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
 
 	public ItemBrowser(Player player) {
 		this(player, null);
@@ -48,11 +51,14 @@ public class ItemBrowser extends PluginInventory {
 
 		this.type = type;
 	}
+	
+	int[] getUsedSlots(@Nullable Type forType) { return forType == null ? slots : forType.isFourGUIMode() ? slotsAlt : slots; }
 
 	@Override
 	public Inventory getInventory() {
-		int min = (page - 1) * slots.length;
-		int max = page * slots.length;
+		int[] usedSlots = getUsedSlots(type);
+		int min = (page - 1) * usedSlots.length;
+		int max = page * usedSlots.length;
 		int n = 0;
 
 		/*
@@ -125,7 +131,7 @@ public class ItemBrowser extends PluginInventory {
 			ItemStack item = template.newBuilder(playerData.getRPG()).build().newBuilder().build();
 			if (item == null || item.getType() == Material.AIR) {
 				cached.put(template.getId(), error);
-				inv.setItem(slots[n++], error);
+				inv.setItem(usedSlots[n++], error);
 				continue;
 			}
 			NBTItem nbtItem = NBTItem.get(item);
@@ -148,7 +154,7 @@ public class ItemBrowser extends PluginInventory {
 
 			cached.put(template.getId(), nbtItem.toItem());
 
-			inv.setItem(slots[n++], cached.get(template.getId()));
+			inv.setItem(usedSlots[n++], cached.get(template.getId()));
 		}
 
 		ItemStack noItem = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
@@ -192,8 +198,8 @@ public class ItemBrowser extends PluginInventory {
 			inv.setItem(45, downloadPack);
 		}
 
-		while (n < slots.length)
-			inv.setItem(slots[n++], noItem);
+		while (n < usedSlots.length)
+			inv.setItem(usedSlots[n++], noItem);
 		if (!deleteMode)
 			inv.setItem(51, create);
 		inv.setItem(47, delete);

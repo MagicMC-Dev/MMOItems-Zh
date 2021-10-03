@@ -277,7 +277,10 @@ public class ItemUse implements Listener {
             return;
 
         NBTItem item = NBTItem.get(event.getBow());
+        if (!item.hasType())
+            return;
         Type type = Type.get(item.getType());
+
 
         PlayerData playerData = PlayerData.get((Player) event.getEntity());
         if (type != null) {

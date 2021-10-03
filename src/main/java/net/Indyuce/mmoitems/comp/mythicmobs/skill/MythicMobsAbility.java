@@ -23,7 +23,7 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
     private final Skill skill;
 
     public MythicMobsAbility(String id, FileConfiguration config) {
-        super(id, config.getString("name"), CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super(id, config.getString("name"), CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK, CastingMode.SNEAK);
 
         String skillName = config.getString("mythicmobs-skill-id");
         Validate.notNull(skillName, "Could not find MM skill name");

@@ -144,6 +144,14 @@ public class PlayerListener implements Listener {
             event.setCancelled(true);
     }
 
+    /**
+     * This handler listens to ALL trident shootings, including both
+     * custom tridents from MMOItems AND vanilla tridents, since MMOItems
+     * needs to apply on-hit effects like crits, elemental damage... even
+     * if the player is using a vanilla trident.
+     * <p>
+     * Fixing commit 6cf6f741
+     */
     @EventHandler(ignoreCancelled = true)
     public void registerTridents(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof Trident) || !(event.getEntity().getShooter() instanceof Player))
@@ -154,9 +162,6 @@ public class PlayerListener implements Listener {
             return;
 
         NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
-        if (!nbtItem.hasType())
-            return;
-
         Type type = Type.get(nbtItem.getType());
         PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
 

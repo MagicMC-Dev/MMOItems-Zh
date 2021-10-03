@@ -271,16 +271,21 @@ public class ItemUse implements Listener {
             }
     }
 
+    /**
+     * This handler listens to ALL bow shootings, including both
+     * custom bows from MMOItems AND vanilla bows, since MMOItems needs to
+     * apply on-hit effects like crits, elemental damage... even if the
+     * player is using a vanilla bow.
+     * <p>
+     * Fixing commit 4aec1433
+     */
     @EventHandler
     public void handleCustomBows(EntityShootBowEvent event) {
         if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
             return;
 
         NBTItem item = NBTItem.get(event.getBow());
-        if (!item.hasType())
-            return;
         Type type = Type.get(item.getType());
-
 
         PlayerData playerData = PlayerData.get((Player) event.getEntity());
         if (type != null) {

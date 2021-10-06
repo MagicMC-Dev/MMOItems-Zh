@@ -2,9 +2,17 @@ package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * There are three types of lore placeholders.
@@ -143,6 +151,29 @@ public class LoreBuilder {
 
             else
                 j++;
+        }
+
+        /*
+         *
+         *   Allows math to be done within the stats.yml file
+         *
+         * */
+        int index = 0;
+        for (String string : lore) {
+            if (string.contains("MATH(")) {
+                ScriptEngineManager manager = new ScriptEngineManager();
+                ScriptEngine engine = manager.getEngineByName("js");
+                String result = "MATH ERROR";
+                try {
+                    result = String.valueOf(engine.eval(StringUtils.substringBetween(string, "(", ")")));
+                } catch (ScriptException e) {
+                    MMOItems.plugin.getLogger().log(Level.WARNING, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),
+                            "An Item Stat which uses MATH is incorrectly setup. Check your stats.yml file and verify any MATH(X) usage is a valid equation!"));
+                }
+                lore.set(index, string.replaceAll("MATH\\([^)]*\\)", result));
+            }
+            index++;
+
         }
 
         /*

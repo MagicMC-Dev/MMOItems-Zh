@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,8 @@ public class NBTTags extends StringListStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last tag.");
 	}
 
+	static String extraneousTag = "EXTMI_";
+
 	/**
 	 * Unlike other StringLists, this adds every content of the array as a different tag rather than as a JsonArray compound.
 	 */
@@ -101,13 +104,96 @@ public class NBTTags extends StringListStat {
 		// Make the result list
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
+		HashMap<String, String> extraneousAdd = new HashMap<>();
+		HashMap<String, ItemTag> tagsAdd = new HashMap<>();
+
 		// For every list entry
 		for (String str : ((StringListData) data).getList()) {
+
+			// Are we looking at an extraneous?
+			if (str.startsWith(extraneousTag)) {
+
+				// No more considering
+				continue;
+			}
 
 			// Add to the array as-is
 			array.add(str);
 
-			ret.add(new ItemTag(str.substring(0, str.indexOf(' ')), calculateObjectType(str.substring(str.indexOf(' ') + 1))));
+			// Add as a tag form, splitting before the first space as the name, and right after as the value.
+			String tagName = str.substring(0, str.indexOf(' '));
+			String tagValue = str.substring(str.indexOf(' ') + 1);
+
+			extraneousAdd.put(tagName, extraneousTag + str);
+			tagsAdd.put(tagName, new ItemTag(tagName, calculateObjectType(tagValue)));
+		}
+
+		// For every list entry
+		for (String extrstr : ((StringListData) data).getList()) {
+
+			// Identify tag
+			if (!extrstr.startsWith(extraneousTag)) {
+
+				// Already considered
+				continue;
+			}
+
+			// Clip the extraneous tag
+			String str = extrstr.substring(extraneousTag.length());
+
+			// Add as a tag form, splitting before the first space as the name, and right after as the value.
+			String tagName = str.substring(0, str.indexOf(' '));
+			String tagValue = str.substring(str.indexOf(' ') + 1);
+
+			// Is it in the extraneous observe map?
+			if (extraneousAdd.containsKey(tagName)) {
+
+				/*
+				 * There is data of it being in the map, and in the list.
+				 * Any value change has been overridden by the current, and
+				 * that that is the desired behaviour.
+				 *
+				 * However, I am afraid that is no longer the original value
+				 * that should be restored when the tag is deleted? If it was
+				 * ever registered in this map as EXTMI, that is the original
+				 * most value and it must be kept that way.
+				 */
+				extraneousAdd.put(tagName, extrstr);
+
+			// This extraneous tag was not observed among non extraneous
+			} else {
+
+				/*
+			     * That can only mean that this tag was removed from the
+			     * non extraneous, and as such, the desirable behaviour is
+			     * to remove it from the item entirely or revert to original
+			     * most value (which might be just null);
+				 */
+				if (tagValue.isEmpty()) {
+
+					// Remove altogether
+					tagsAdd.remove(tagName);
+
+				// Default tag value actually existed... I guess
+				} else {
+
+					// Edit value to defaultmost stored
+					tagsAdd.put(tagName, new ItemTag(tagName, calculateObjectType(tagValue)));
+				}
+
+				// Not necessary to remember EXTMI tag anymore, now that it is the default
+				extraneousAdd.remove(tagName);
+			}
+		}
+
+		// For every tag added by this stat
+		for (String tagName : tagsAdd.keySet()) {
+
+			// Solidify as included tag
+			ret.add(tagsAdd.get(tagName));
+
+			// Include in JSON array the chad EXTMI value
+			array.add(extraneousAdd.get(tagName));
 		}
 
 		// Add the Json Array

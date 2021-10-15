@@ -9,6 +9,7 @@ import io.lumine.mythicenchants.enchants.MythicEnchant;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.ItemBuildEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
@@ -20,6 +21,7 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Previewable;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -257,7 +259,11 @@ public class ItemStackBuilder {
      * @return Builds the item
      */
     public ItemStack build() {
-        return buildNBT().toItem();
+        ItemBuildEvent itemBuildEvent = new ItemBuildEvent(buildNBT().toItem());
+        Bukkit.getServer().getPluginManager().callEvent(itemBuildEvent);
+        if (itemBuildEvent.isCancelled())
+            return null;
+        return itemBuildEvent.getItemStack();
     }
 
     /**

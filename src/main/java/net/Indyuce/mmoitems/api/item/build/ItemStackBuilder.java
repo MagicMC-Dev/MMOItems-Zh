@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -258,11 +259,11 @@ public class ItemStackBuilder {
     /**
      * @return Builds the item
      */
+    @Nullable
     public ItemStack build() {
         ItemBuildEvent itemBuildEvent = new ItemBuildEvent(buildNBT().toItem());
-        Bukkit.getServer().getPluginManager().callEvent(itemBuildEvent);
-        if (itemBuildEvent.isCancelled())
-            return null;
+        //Bukkit.getServer().getPluginManager().callEvent(itemBuildEvent);
+        if (itemBuildEvent.isCancelled()) { return null; }
         return itemBuildEvent.getItemStack();
     }
 

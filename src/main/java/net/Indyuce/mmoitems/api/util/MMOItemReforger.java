@@ -270,6 +270,9 @@ public class MMOItemReforger {
 		// Fist of all, can it update?
 		if (!canReforge()) { return shouldUpdate = false; }
 
+		// Its not GooP Converter's VANILLA is it?
+		if ("VANILLA".equals(nbtItem.getString("MMOITEMS_ITEM_ID"))) { return false; }
+
 		// Disabled in config?
 		if (reason != null && MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + reason)) { return shouldUpdate = false; }
 

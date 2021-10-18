@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -110,7 +111,7 @@ public abstract class EditionInventory extends PluginInventory {
 		 */
 		template = MMOItems.plugin.getTemplates().getTemplate(template.getType(), template.getId());
 		editedModifier = editedModifier != null ? template.getModifier(editedModifier.getId()) : null;
-		updateCachedItem();
+		Bukkit.getScheduler().runTask(MMOItems.plugin, () -> updateCachedItem());
 
 		open();
 	}

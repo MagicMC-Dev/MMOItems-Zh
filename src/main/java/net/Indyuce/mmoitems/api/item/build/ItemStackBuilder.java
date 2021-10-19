@@ -267,6 +267,11 @@ public class ItemStackBuilder {
         return itemBuildEvent.getItemStack();
     }
 
+    public ItemStack displayBuild() {
+        return buildNBT().toItem();
+    }
+
+
     /**
      * @return Builds the item
      */

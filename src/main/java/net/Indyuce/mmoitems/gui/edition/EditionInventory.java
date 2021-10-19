@@ -121,7 +121,7 @@ public abstract class EditionInventory extends PluginInventory {
 	 * can reroll the stats.
 	 */
 	public void updateCachedItem() {
-		cachedItem = template.newBuilder(PlayerData.get(getPlayer()).getRPG()).build().newBuilder().build();
+		cachedItem = template.newBuilder(PlayerData.get(getPlayer()).getRPG()).build().newBuilder().displayBuild();
 	}
 
 	public ItemStack getCachedItem() {

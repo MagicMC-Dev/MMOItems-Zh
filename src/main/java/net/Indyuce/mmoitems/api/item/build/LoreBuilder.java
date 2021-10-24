@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -131,6 +132,8 @@ public class LoreBuilder {
      * have been inserted in the lore. It cleans all unused static placeholders
      * as well as lore bars. The dynamic placeholders still remain however.
      */
+    DecimalFormat df = new DecimalFormat("#.####");
+
     public List<String> build() {
 
         /*
@@ -161,7 +164,7 @@ public class LoreBuilder {
         int index = 0;
         for (String string : lore) {
             if (string.contains("MATH%")) {
-                String result = String.valueOf(eval(StringUtils.substringBetween(string, "%", "%")));
+                String result = String.valueOf(df.format(eval(StringUtils.substringBetween(string, "%", "%"))));
                 lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));
             }
             index++;

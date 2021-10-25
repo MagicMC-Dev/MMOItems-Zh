@@ -262,8 +262,10 @@ public class ItemStackBuilder {
     @Nullable
     public ItemStack build() {
         ItemBuildEvent itemBuildEvent = new ItemBuildEvent(buildNBT().toItem());
-        //Bukkit.getServer().getPluginManager().callEvent(itemBuildEvent);
-        if (itemBuildEvent.isCancelled()) { return null; }
+        Bukkit.getServer().getPluginManager().callEvent(itemBuildEvent);
+        if (itemBuildEvent.isCancelled()) {
+            return null;
+        }
         return itemBuildEvent.getItemStack();
     }
 

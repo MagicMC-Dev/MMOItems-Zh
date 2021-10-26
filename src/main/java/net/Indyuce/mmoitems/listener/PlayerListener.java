@@ -36,7 +36,7 @@ import java.util.Map;
 public class PlayerListener implements Listener {
     private final Map<Player, ArrayList<ItemStack>> deathItems = new HashMap<>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void loadPlayerData(PlayerJoinEvent event) {
         MMOItems.plugin.getRecipes().refreshRecipeBook(event.getPlayer());
         PlayerData.load(event.getPlayer());

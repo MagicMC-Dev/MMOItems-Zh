@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -56,7 +57,7 @@ public class UpdaterManager implements Listener {
 	/**
 	 * Updates a player inventory when joining
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void updateOnJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 

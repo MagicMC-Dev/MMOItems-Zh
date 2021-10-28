@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mmocore;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
+import net.Indyuce.mmocore.api.event.PlayerResourceUpdateEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmocore.experience.Profession;
@@ -104,12 +105,12 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
         @Override
         public void giveMana(double value) {
-            data.giveMana(value);
+            data.giveMana(value, PlayerResourceUpdateEvent.UpdateReason.REGENERATION);
         }
 
         @Override
         public void giveStamina(double value) {
-            data.giveStamina(value);
+            data.giveStamina(value, PlayerResourceUpdateEvent.UpdateReason.REGENERATION);
         }
     }
 }

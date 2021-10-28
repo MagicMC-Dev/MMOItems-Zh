@@ -3,8 +3,8 @@ package net.Indyuce.mmoitems.api.interaction.weapon;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.flags.CustomFlag;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -81,19 +81,24 @@ public class Weapon extends UseItem {
         return true;
     }
 
-    public ItemAttackMetadata handleTargetedAttack(ItemAttackMetadata attackMeta, LivingEntity target) {
+    /**
+     * @param attackMeta The attack being performed
+     * @param target     The attack target
+     * @return If the attack is successful, or if it was canceled otherwise
+     */
+    public boolean handleTargetedAttack(AttackMetadata attackMeta, LivingEntity target) {
 
         // Handle weapon cooldown, mana and stamina costs
         double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED.getId());
         attackSpeed = attackSpeed == 0 ? 1.493 : 1 / attackSpeed;
         if (!applyWeaponCosts())
-            return attackMeta.setSuccessful(false);
+            return false;
 
         // Handle item set attack effects
         if (getMMOItem().getType().getItemSet().hasAttackEffect() && !getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE"))
-            getMMOItem().getType().getItemSet().applyAttackEffect(attackMeta, target, this);
+            getMMOItem().getType().getItemSet().applyAttackEffect(attackMeta, playerData, target, this);
 
-        return attackMeta;
+        return true;
     }
 
     protected Location getGround(Location loc) {

@@ -56,7 +56,7 @@ public class RealDualWieldHook implements Listener {
                 return;
             }
 
-            if (!weapon.handleTargetedAttack(attackMeta = getAttack(playerData, event), target).isSuccessful()) {
+            if (!weapon.handleTargetedAttack(attackMeta = getAttack(playerData, event), target)) {
                 event.setCancelled(true);
                 return;
             }

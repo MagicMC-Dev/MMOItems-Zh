@@ -180,9 +180,28 @@ public class PlayerListener implements Listener {
      * Fixes an issue where quickly swapping items in hand just
      * does not update the player's inventory which can make the
      * player cast abilities or attacks with not the correct stats
+     *
+     * @deprecated This does cost some performance and that update
+     *         method NEEDS some improvement in the future
      */
+    @Deprecated
     @EventHandler
-    public void registerInventoryUpdates(PlayerSwapHandItemsEvent event) {
-        PlayerData.get(event.getPlayer()).updateInventory();
+    public void registerInventoryUpdates1(PlayerSwapHandItemsEvent event) {
+        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+    }
+
+    /**
+     * Fixes an issue where quickly swapping items in hand just
+     * does not update the player's inventory which can make the
+     * player cast abilities or attacks with not the correct stats
+     *
+     * @deprecated This does cost some performance and that update
+     *         method NEEDS some improvement in the future
+     */
+    @Deprecated
+    @EventHandler
+    public void registerInventoryUpdates2(PlayerItemHeldEvent event) {
+        PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+
     }
 }

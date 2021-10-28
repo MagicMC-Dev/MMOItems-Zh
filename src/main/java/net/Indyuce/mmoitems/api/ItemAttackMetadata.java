@@ -20,14 +20,12 @@ public class ItemAttackMetadata extends AttackMetadata {
         super(damage, damager);
     }
 
-    public PlayerData getPlayerData() {
-        return PlayerData.get(getDamager().getUniqueId());
+    public ItemAttackMetadata(AttackMetadata attackMeta) {
+        super(attackMeta.getDamage(), attackMeta.getStats());
     }
 
-    @Override
-    public ItemAttackMetadata setSuccessful(boolean successful) {
-        super.setSuccessful(successful);
-        return this;
+    public PlayerData getPlayerData() {
+        return PlayerData.get(getDamager().getUniqueId());
     }
 
     /**

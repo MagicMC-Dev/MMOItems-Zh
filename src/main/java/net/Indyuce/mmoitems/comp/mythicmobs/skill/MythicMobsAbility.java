@@ -47,7 +47,11 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
 
     @Override
     public void whenCast(ItemAttackMetadata attackMeta, MythicMobsAbilityMetadata ability) {
-        LivingEntity target = ability.getTarget();
+        skill.execute(ability.getSkillMetadata());
+    }
+
+    @Override
+    public MythicMobsAbilityMetadata canBeCast(ItemAttackMetadata attackMeta, LivingEntity target, AbilityData data) {
 
         // TODO what's the difference between trigger and caster.
         AbstractEntity trigger = BukkitAdapter.adapt(attackMeta.getDamager());
@@ -58,20 +62,12 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
 
         targetEntities.add(BukkitAdapter.adapt(target));
 
-        SkillMetadata data = new SkillMetadata(SkillTrigger.CAST, caster, trigger, BukkitAdapter.adapt(attackMeta.getDamager().getEyeLocation()), targetEntities, targetLocations, 1);
+        SkillMetadata skillMeta = new SkillMetadata(SkillTrigger.CAST, caster, trigger, BukkitAdapter.adapt(attackMeta.getDamager().getEyeLocation()), targetEntities, targetLocations, 1);
 
         // Stats are cached inside a variable
-        data.getVariables().putObject("MMOStatMap", attackMeta.getStats());
-        data.getVariables().putObject("MMOSkill", ability.getAbility());
+        skillMeta.getVariables().putObject("MMOStatMap", attackMeta.getStats());
+        skillMeta.getVariables().putObject("MMOSkill", data.getAbility());
 
-        if (skill.usable(data, SkillTrigger.CAST))
-            skill.execute(data);
-        else
-            attackMeta.setSuccessful(false);
-    }
-
-    @Override
-    public MythicMobsAbilityMetadata canBeCast(ItemAttackMetadata attackMeta, LivingEntity target, AbilityData data) {
-        return new MythicMobsAbilityMetadata(data, target);
+        return new MythicMobsAbilityMetadata(data, skill, skillMeta);
     }
 }

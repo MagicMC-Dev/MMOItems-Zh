@@ -398,7 +398,7 @@ public class PlayerData {
          */
         if (target == null ? !MythicLib.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MMO_ABILITIES)
                 : !MythicLib.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MMO_ABILITIES))
-            return attack.setSuccessful(false);
+            return attack;
 
         for (AbilityData ability : itemAbilities)
             if (ability.getCastingMode() == castMode)

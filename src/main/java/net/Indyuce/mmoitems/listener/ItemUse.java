@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.stat.StatMap;
@@ -104,29 +105,19 @@ public class ItemUse implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void meleeAttacks(EntityDamageByEntityEvent event) {
+    public void meleeAttacks(PlayerAttackEvent event) {
 
-        /*
-         * Citizens and Sentinels NPC support; damage = 0 check to ignore safety
-         * checks; check for entity attack
-         */
-        if (event.getDamage() == 0 || event.getCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
-                || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
-            return;
-
-        // Custom damage check
-        LivingEntity target = (LivingEntity) event.getEntity();
-        if (MythicLib.plugin.getDamage().findInfo(target) != null)
+        // Checks if the target is a damageable entity and if it's a melee attack
+        if (event.getBukkitCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity))
             return;
 
         /*
          * Must apply attack conditions before apply any effects. the event must
          * be cancelled before anything is applied
          */
-        Player player = (Player) event.getDamager();
+        Player player = event.getPlayer();
         PlayerData playerData = PlayerData.get(player);
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
-        ItemAttackMetadata attackMeta = null;
 
         if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
             Weapon weapon = new Weapon(playerData, item);
@@ -141,17 +132,14 @@ public class ItemUse implements Listener {
                 return;
             }
 
-            if (!weapon.handleTargetedAttack(attackMeta = getAttack(playerData, event), target).isSuccessful()) {
+            if (!weapon.handleTargetedAttack(event.getAttack(), event.getEntity())) {
                 event.setCancelled(true);
                 return;
             }
         }
 
         // Cast on-hit abilities and add the extra damage to the damage event
-        (attackMeta == null ? attackMeta = getAttack(playerData, event) : attackMeta).applyEffects(item, target);
-
-        // Finally update Bukkit event
-        event.setDamage(attackMeta.getDamage().getDamage());
+        new ItemAttackMetadata(event.getAttack()).applyEffects(item, event.getEntity());
     }
 
     private ItemAttackMetadata getAttack(PlayerData playerData, EntityDamageByEntityEvent event) {

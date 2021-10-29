@@ -64,7 +64,7 @@ public class EntityManager implements Listener {
          * and 1 for bows, and it's always 1 for tridents or crossbows.
          */
         double damage = stats.getStat("ATTACK_DAMAGE");
-        damage = (customWeapon ? damage : 6 + damage) * damageMultiplicator;
+        damage = (customWeapon ? damage : 5 + damage) * damageMultiplicator;
 
         ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(damage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE), stats);
         stats.setStat("ATTACK_DAMAGE", damage);

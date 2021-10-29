@@ -18,7 +18,7 @@ import java.util.List;
 public class NetherSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range) {
+    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
         new BukkitRunnable() {
             final Vector vec = attackMeta.getDamager().getEyeLocation().getDirection().multiply(.3);
             final Location loc = attackMeta.getDamager().getEyeLocation();

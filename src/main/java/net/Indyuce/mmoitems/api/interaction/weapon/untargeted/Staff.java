@@ -52,7 +52,7 @@ public class Staff extends UntargetedWeapon {
 
 		StaffSpirit spirit = StaffSpirit.get(getNBTItem());
 		if (spirit != null) {
-			spirit.getAttack().handle(attackMeta, getNBTItem(), attackDamage, range);
+			spirit.getAttack().handle(attackMeta, getNBTItem(), range);
 			return;
 		}
 

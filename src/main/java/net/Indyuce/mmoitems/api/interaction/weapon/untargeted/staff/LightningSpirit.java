@@ -12,16 +12,17 @@ import org.bukkit.Particle;
 
 public class LightningSpirit implements StaffAttackHandler {
 
-	@Override
-	public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range) {
-		attackMeta.getDamager().getWorld().playSound(attackMeta.getDamager().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
+    @Override
+    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
+        attackMeta.getDamager().getWorld().playSound(attackMeta.getDamager().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 
-		Location loc = attackMeta.getDamager().getEyeLocation();
-		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range,
-				entity -> MMOUtils.canTarget(attackMeta.getDamager(), entity, InteractionType.OFFENSE_ACTION));
-		if (trace.hasHit())
-			attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
-		trace.draw(loc, attackMeta.getDamager().getEyeLocation().getDirection(), 2,
-				loc1 -> loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 0));
-	}
+        Location loc = attackMeta.getDamager().getEyeLocation();
+        MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range,
+                entity -> MMOUtils.canTarget(attackMeta.getDamager(), entity, InteractionType.OFFENSE_ACTION));
+
+        if (trace.hasHit())
+            attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
+        trace.draw(loc, attackMeta.getDamager().getEyeLocation().getDirection(), 2,
+                loc1 -> loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 0));
+    }
 }

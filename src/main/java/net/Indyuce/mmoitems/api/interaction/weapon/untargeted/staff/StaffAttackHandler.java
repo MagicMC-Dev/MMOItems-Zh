@@ -9,7 +9,7 @@ import java.util.Random;
 public interface StaffAttackHandler {
 	static final Random random = new Random();
 
-	void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range);
+	void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range);
 
 	default Location getGround(Location loc) {
 		for (int j = 0; j < 20; j++) {

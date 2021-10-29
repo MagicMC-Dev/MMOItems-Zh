@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
@@ -33,7 +34,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -107,8 +107,8 @@ public class ItemUse implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void meleeAttacks(PlayerAttackEvent event) {
 
-        // Checks if the target is a damageable entity and if it's a melee attack
-        if (event.getBukkitCause() != DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity))
+        // Checks if it's a melee attack
+        if (!(event.getAttack() instanceof MeleeAttackMetadata))
             return;
 
         /*

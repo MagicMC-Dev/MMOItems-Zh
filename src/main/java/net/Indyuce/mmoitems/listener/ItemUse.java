@@ -104,7 +104,7 @@ public class ItemUse implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true)
     public void meleeAttacks(PlayerAttackEvent event) {
 
         // Checks if it's a melee attack

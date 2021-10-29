@@ -22,7 +22,7 @@ public interface EnchantPlugin<T extends Enchantment> {
      * @param enchant Enchant being checked
      * @return If this enchant plugin handles a given enchant
      */
-    public boolean isCustomEnchant(Enchantment enchant);
+    boolean isCustomEnchant(Enchantment enchant);
 
     /**
      * Called when an item is built. This should be used to add the enchantment
@@ -32,7 +32,7 @@ public interface EnchantPlugin<T extends Enchantment> {
      * @param enchant Enchantment being applied
      * @param level   Enchant level
      */
-    public void handleEnchant(ItemStackBuilder builder, T enchant, int level);
+    void handleEnchant(ItemStackBuilder builder, T enchant, int level);
 
-    public NamespacedKey getNamespacedKey(String key);
+    NamespacedKey getNamespacedKey(String key);
 }

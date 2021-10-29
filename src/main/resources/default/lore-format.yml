@@ -9,7 +9,6 @@
 # Reload with /mmoitems reload
 lore-format:
 # - '{bar}&8&m--------&f&l &nGeneral&8 &m--------------'
-- '#advanced-enchants#'
 - '#item-type#'
 - '{bar}'
 - '#required-class#'

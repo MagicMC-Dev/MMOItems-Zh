@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
     public AdvancedEnchantsStat() {
-        super("ADVANCED_ENCHANTS", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Advanced Enchants", new String[]{"The AEnchants of this. Format:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
+        super("ADVANCED_ENCHANTS", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Advanced Enchants", new String[]{"The AEnchants of this item. Format:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
     }
 
     @Override
@@ -40,7 +40,6 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
 
         // Do that
         Map<String, Integer> aes = ((AdvancedEnchantMap) data).enchants;
-        ArrayList<String> loreInserts = new ArrayList<>();
 
         // Enchant the item
         for (String ench : aes.keySet()) {
@@ -57,11 +56,9 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
                 return;
 
             // Add lore and tag
-            loreInserts.add(instance.getDisplay(lvl));
+            item.getLore().insert(0, instance.getDisplay(lvl));
             item.addItemTag(getEnchantTag(ench, lvl));
         }
-
-        item.getLore().insert(getPath(), loreInserts);
     }
 
     @NotNull
@@ -97,6 +94,8 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
         return new AdvancedEnchantMap();
     }
 
+    private static final String AE_TAG = "ae_enchantment";
+
     /**
      * @param name  Name of the AEnch ~ arrow_deflect
      * @param level Level of the AEnch ~ 4
@@ -105,9 +104,6 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
     private ItemTag getEnchantTag(@NotNull String name, int level) {
         return new ItemTag(AE_TAG + ";" + name, level);
     }
-
-    @NotNull
-    public static final String AE_TAG = "ae_enchantment";
 
     @Override
     public void whenLoaded(@NotNull ReadMMOItem mmoitem) {

@@ -3,24 +3,27 @@ package net.Indyuce.mmoitems.stat;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SkullTextureStat extends StringStat {
@@ -44,6 +47,14 @@ public class SkullTextureStat extends StringStat {
 		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
 		return skullTexture;
+	}
+
+	@Override
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+		lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN + "Texture value provided" : ChatColor.RED + "None"));
+		lore.add("");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
 	}
 
 	@Override

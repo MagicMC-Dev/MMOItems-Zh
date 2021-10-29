@@ -40,7 +40,7 @@ public class ConfigManager implements Reloadable {
     // cached config options
     // TODO remove ability-player-damage and add some WG flag or something
     public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate;
-    public String healIndicatorFormat, damageIndicatorFormat, abilitySplitter;
+    public String abilitySplitter;
     public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
     public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
     public NumericStatFormula defaultItemCapacity;
@@ -192,8 +192,6 @@ public class ConfigManager implements Reloadable {
         replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
         worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
         abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
-        healIndicatorFormat = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.heal.format"));
-        damageIndicatorFormat = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("game-indicators.damage.format"));
 
         String healDecimal = MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format");
         String harmDecimal = MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format");

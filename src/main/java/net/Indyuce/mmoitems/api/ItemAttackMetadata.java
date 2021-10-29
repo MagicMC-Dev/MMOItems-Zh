@@ -47,10 +47,9 @@ public class ItemAttackMetadata extends AttackMetadata {
      * @return The unedited attack result
      */
     public ItemAttackMetadata applyEffects(NBTItem item, LivingEntity target) {
-        if (getDamage().hasType(DamageType.WEAPON)) {
+        applyOnHitEffects(target);
+        if (getDamage().hasType(DamageType.WEAPON))
             applyElementalEffects(item, target);
-            applyOnHitEffects(target);
-        }
         return this;
     }
 

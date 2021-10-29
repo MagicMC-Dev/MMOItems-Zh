@@ -13,7 +13,6 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -136,11 +135,12 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onArmorEquip(ArmorEquipEvent event) {
-        Player p = event.getPlayer();
-        RPGPlayer rpgPlayer = PlayerData.get(p.getUniqueId()).getRPG();
-        NBTItem item = NBTItem.get(event.getNewArmorPiece());
+        Player player = event.getPlayer();
+        if (!PlayerData.has(player))
+            return;
 
-        if (!rpgPlayer.canUse(item, true))
+        NBTItem item = NBTItem.get(event.getNewArmorPiece());
+        if (!PlayerData.get(player).getRPG().canUse(item, true))
             event.setCancelled(true);
     }
 

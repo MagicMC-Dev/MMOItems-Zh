@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythicenchants.enchants.MythicEnchant;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -15,7 +14,6 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.DisplayName;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -26,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -99,10 +96,10 @@ public class ItemStackBuilder {
 
     /**
      * @return Does NOT return the built item stack. It returns only returns the
-     * default item stack with material applied. Built item stack is given
-     * by build(). This method should only be used to check if the item is
-     * of a specific material (like the Shield Pattern stat which checks if
-     * the item is a shield)
+     *         default item stack with material applied. Built item stack is given
+     *         by build(). This method should only be used to check if the item is
+     *         of a specific material (like the Shield Pattern stat which checks if
+     *         the item is a shield)
      */
     public ItemStack getItemStack() {
         return item;
@@ -261,18 +258,17 @@ public class ItemStackBuilder {
      */
     @Nullable
     public ItemStack build() {
-        ItemBuildEvent itemBuildEvent = new ItemBuildEvent(buildNBT().toItem());
-        Bukkit.getServer().getPluginManager().callEvent(itemBuildEvent);
-        if (itemBuildEvent.isCancelled()) {
-            return null;
-        }
-        return itemBuildEvent.getItemStack();
+        ItemBuildEvent event = new ItemBuildEvent(buildNBT().toItem());
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        return event.getItemStack();
     }
 
-    public ItemStack displayBuild() {
+    /**
+     * Builds the item without calling a build event
+     */
+    public ItemStack buildSilently() {
         return buildNBT().toItem();
     }
-
 
     /**
      * @return Builds the item

@@ -483,25 +483,30 @@ public class PlayerData {
         return get(player.getUniqueId());
     }
 
+    /**
+     * See {@link #has(UUID)}
+     *
+     * @return If player data is loaded for a player
+     */
+    public static boolean has(Player player) {
+        return has(player.getUniqueId());
+    }
+
+    /**
+     * Used to check if the UUID is associated to a real player
+     * or a Citizens/Sentinel NPC. Citizens NPCs do not have
+     * a player data associated to them so it's an easy O(1) way
+     * to check instead of checking for an entity metadta.
+     *
+     * @return If player data is loaded for a player UUID
+     */
+    public static boolean has(UUID uuid) {
+        return data.containsKey(uuid);
+    }
+
     @NotNull
     public static PlayerData get(@NotNull UUID uuid) {
-
-        // Already loaded? lets gooo
-        PlayerData pd = data.get(uuid);
-
-        // Attempt to load now
-        if (pd == null) {
-            load(uuid);
-            pd = data.get(uuid);
-        }
-
-        // Um shit
-        if (pd == null) {
-            MMOItems.print(Level.SEVERE, "Incomplete initialization of PlayerData. This error is only a result of another one caused EARLIER (probably during server startup).", null);
-        }
-
-        //noinspection ConstantConditions
-        return pd;
+        return Objects.requireNonNull(data.get(uuid), "Player data not loaded");
     }
 
     /**

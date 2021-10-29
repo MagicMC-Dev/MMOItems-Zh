@@ -1,44 +1,50 @@
 package net.Indyuce.mmoitems.api.event;
 
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemBuildEvent extends Event implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+public class ItemBuildEvent extends Event {
+    private static final HandlerList handlers = new HandlerList();
 
-	private ItemStack itemStack;
-	private boolean cancelled;
+    private ItemStack itemStack;
 
-	public ItemBuildEvent(ItemStack itemStack) {
-		this.itemStack = itemStack;
-	}
+    public ItemBuildEvent(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 
-	public ItemStack getItemStack() {
-		return itemStack;
-	}
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
 
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    public ItemBuildEvent setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+        return this;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    /**
+     * @deprecated See {@link #setCancelled(boolean)}
+     */
+    @Deprecated
+    public boolean isCancelled() {
+        return itemStack == null;
+    }
 
-	public ItemBuildEvent setItemStack(ItemStack itemStack) {
-		this.itemStack = itemStack;
-		return this;
-	}
+    /**
+     * @deprecated Set the generated item stack to null instead. Cancelling
+     *         the build event does not cancel the process that generated the item
+     */
+    @Deprecated
+    public void setCancelled(boolean cancel) {
+        if (cancel)
+            itemStack = null;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

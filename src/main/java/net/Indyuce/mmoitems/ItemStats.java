@@ -126,7 +126,7 @@ public class ItemStats {
             SOULBINDING_CHANCE = new SoulbindingChance(),
             SOULBOUND_BREAK_CHANCE = new SoulbindingBreakChance(),
             SOULBOUND_LEVEL = new SoulboundLevel(),
-            AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
+          //  AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
             ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "Item Cooldown", new String[]{"This cooldown applies for consumables", "as well as for item commands."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
             VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(),
             GEM_COLOR = new GemColor(),

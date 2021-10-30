@@ -94,4 +94,6 @@ public class ConsumableConsumedEvent extends PlayerDataEvent {
     public HandlerList getHandlers() {
         return handlers;
     }
+
+    public static HandlerList getHandlerList() { return handlers; }
 }

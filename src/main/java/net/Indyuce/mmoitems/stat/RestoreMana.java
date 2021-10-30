@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * When a consumable is eaten, restores health.
+ * When a consumable is eaten, restores mana.
  *
  * @author Gunging
  */
@@ -30,7 +30,7 @@ public class RestoreMana extends DoubleStat implements PlayerConsumable {
         // Get value
         DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_MANA);
 
-        // Any health being provided?
+        // Any mana being provided?
         if (d.getValue() != 0)
             PlayerData.get(player).getRPG().giveMana(d.getValue());
     }

@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
@@ -12,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * When a consumable is eaten, restores health.
+ * When a consumable is eaten, restores saturation.
  *
  * @author Gunging
  */
@@ -29,14 +28,10 @@ public class RestoreSaturation extends DoubleStat implements PlayerConsumable {
          * For some reason, it was in the earlier code that the default value
          * of restored saturation is 6... I am all for backwards compatibility
          * such that this must be respected.
+         *
+         * 6 is the saturation for a cooked beef
          */
-        int saturation = 6;
-        if (mmo.hasData(ItemStats.RESTORE_SATURATION)) {
-
-            // Get value
-            DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_SATURATION);
-            saturation = SilentNumbers.ceil(d.getValue());
-        }
+        double saturation = mmo.hasData(ItemStats.RESTORE_SATURATION) ? ((DoubleData) mmo.getData(ItemStats.RESTORE_SATURATION)).getValue() : 6;
 
         // Any saturation being provided?
         if (saturation != 0)

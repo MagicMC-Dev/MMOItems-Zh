@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * When a consumable is eaten, restores health.
+ * When a consumable is eaten, restores food.
  *
  * @author Gunging
  */
@@ -31,7 +31,7 @@ public class RestoreFood extends DoubleStat implements PlayerConsumable {
         // Get value
         DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_FOOD);
 
-        // Any health being provided?
+        // Any food being provided?
         if (d.getValue() != 0)
             MMOUtils.feed(player, SilentNumbers.ceil(d.getValue()));
     }

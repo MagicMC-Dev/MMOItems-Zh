@@ -234,13 +234,13 @@ public class MMOUtils {
     /**
      * @param player         Player to heal
      * @param saturation     Saturation amount
-     * @param allowNegatives If passing a negative saturation value will desaturatie the entity x)
+     * @param allowNegatives If passing a negative saturation value will desaturate the entity x)
      *                       <br>
      *                       If <code>false</code>, negative values are just ignored
      */
     public static void saturate(@NotNull Player player, double saturation, boolean allowNegatives) {
         if (saturation > 0 || allowNegatives)
-            player.setSaturation(Math.min(0, Math.min(20, player.getSaturation() + (float) saturation)));
+            player.setSaturation(Math.max(0, Math.min(20, player.getSaturation() + (float) saturation)));
     }
 
     /**

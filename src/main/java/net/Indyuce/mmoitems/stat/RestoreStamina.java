@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * When a consumable is eaten, restores health.
+ * When a consumable is eaten, restores stamina.
  *
  * @author Gunging
  */
@@ -29,7 +29,7 @@ public class RestoreStamina extends DoubleStat implements PlayerConsumable {
         // Get value
         DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_STAMINA);
 
-        // Any health being provided?
+        // Any stamina being provided?
         if (d.getValue() != 0)
             PlayerData.get(player).getRPG().giveStamina(d.getValue());
     }

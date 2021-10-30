@@ -24,17 +24,17 @@ public class RFGKeepSoulbound implements Listener {
         if (soul == null) {
 
             // Auto soulbind active?
-            if (MMOItems.plugin.getConfig().getBoolean("soulbound.auto-bind.disable-on." + event.getTypeName())) { return; }
+          //  if (MMOItems.plugin.getConfig().getBoolean("soulbound.auto-bind.disable-on." + event.getTypeName())) { return; }
 
             // Need a player to exist for auto soulbind
-            if (event.getPlayer() == null) { return; }
+          //  if (event.getPlayer() == null) { return; }
 
             // Auto?
-            if (event.getNewMMOItem().hasData(ItemStats.AUTO_SOULBIND) && !event.getNewMMOItem().hasData(ItemStats.SOULBOUND)) {
+          //  if (event.getNewMMOItem().hasData(ItemStats.AUTO_SOULBIND) && !event.getNewMMOItem().hasData(ItemStats.SOULBOUND)) {
 
                 // Auto soulbound config brr
-                event.getNewMMOItem().setData(ItemStats.SOULBOUND, new SoulboundData(event.getPlayer().getUniqueId(), event.getPlayer().getName(), MMOItemReforger.autoSoulbindLevel));
-            }
+          //      event.getNewMMOItem().setData(ItemStats.SOULBOUND, new SoulboundData(event.getPlayer().getUniqueId(), event.getPlayer().getName(), MMOItemReforger.autoSoulbindLevel));
+          //  }
 
         } else if (event.getOptions().shouldKeepSoulbind()) {
             //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Soulbound");

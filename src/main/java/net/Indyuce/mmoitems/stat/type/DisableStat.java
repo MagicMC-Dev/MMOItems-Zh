@@ -20,10 +20,4 @@ public class DisableStat extends BooleanStat {
 	public DisableStat(String id, Material material, String name, String[] types, String... lore) {
 		super("DISABLE_" + id, material, name, lore, types);
 	}
-
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		if (((BooleanData) data).isEnabled())
-			item.addItemTag(new ItemTag("MMOITEMS_" + getId(), true));
-	}
 }

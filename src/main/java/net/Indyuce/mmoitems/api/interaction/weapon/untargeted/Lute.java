@@ -59,7 +59,7 @@ public class Lute extends UntargetedWeapon {
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
 		SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
 		if (effect != null) {
-			effect.getAttack().handle(attackMeta, getNBTItem(), attackDamage, range, weight, sound);
+			effect.getAttack().handle(attackMeta, getNBTItem(), range, weight, sound);
 			return;
 		}
 

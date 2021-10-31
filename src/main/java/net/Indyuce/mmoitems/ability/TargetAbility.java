@@ -1,22 +1,20 @@
 package net.Indyuce.mmoitems.ability;
 
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.entity.LivingEntity;
 
 public abstract class TargetAbility extends Ability<TargetAbilityMetadata> {
-    public TargetAbility(CastingMode... allowedModes) {
-        super(allowedModes);
+    public TargetAbility() {
+        super();
     }
 
-    public TargetAbility(String id, String name, CastingMode... allowedModes) {
-        super(id, name, allowedModes);
+    public TargetAbility(String id, String name) {
+        super(id, name);
     }
 
-    public TargetAbilityMetadata canBeCast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
-        return new TargetAbilityMetadata(ability, attack.getDamager(), target);
+    public TargetAbilityMetadata canBeCast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
+        return new TargetAbilityMetadata(ability, attack.getPlayer(), target);
     }
-
-    public abstract void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability);
 }

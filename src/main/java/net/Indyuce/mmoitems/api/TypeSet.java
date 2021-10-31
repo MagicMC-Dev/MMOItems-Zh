@@ -30,7 +30,7 @@ public enum TypeSet {
             return;
 
         damager.applyCooldown(CooldownType.SET_TYPE_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.slashing.cooldown"));
-        Location loc = attack.getDamager().getLocation().clone().add(0, 1.3, 0);
+        Location loc = attack.getPlayer().getLocation().clone().add(0, 1.3, 0);
 
         final double a1 = (loc.getYaw() + 90) / 180 * Math.PI, p = -loc.getPitch() / 180 * Math.PI;
         for (double r = 1; r < 5; r += .3)
@@ -39,9 +39,9 @@ public enum TypeSet {
 
         for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
             if (entity.getLocation().distanceSquared(loc) < 40
-                    && attack.getDamager().getEyeLocation().getDirection()
-                    .angle(entity.getLocation().subtract(attack.getDamager().getLocation()).toVector()) < Math.PI / 3
-                    && MMOUtils.canTarget(attack.getDamager(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
+                    && attack.getPlayer().getEyeLocation().getDirection()
+                    .angle(entity.getLocation().subtract(attack.getPlayer().getLocation()).toVector()) < Math.PI / 3
+                    && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
                 ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
                 subAttack.getDamage().multiply(.4);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
@@ -59,7 +59,7 @@ public enum TypeSet {
             return;
 
         damager.applyCooldown(CooldownType.SET_TYPE_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.piercing.cooldown"));
-        Location loc = attack.getDamager().getLocation().clone().add(0, 1.3, 0);
+        Location loc = attack.getPlayer().getLocation().clone().add(0, 1.3, 0);
 
         final double a1 = (loc.getYaw() + 90) / 180 * Math.PI, p = -loc.getPitch() / 180 * Math.PI;
         for (double r = 1; r < 5; r += .3)
@@ -67,10 +67,10 @@ public enum TypeSet {
                 loc.getWorld().spawnParticle(Particle.CRIT, loc.clone().add(Math.cos(a + a1) * r, Math.sin(p) * r, Math.sin(a + a1) * r), 0);
 
         for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-            if (entity.getLocation().distanceSquared(attack.getDamager().getLocation()) < 40
-                    && attack.getDamager().getEyeLocation().getDirection()
-                    .angle(entity.getLocation().toVector().subtract(attack.getDamager().getLocation().toVector())) < Math.PI / 18
-                    && MMOUtils.canTarget(attack.getDamager(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
+            if (entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40
+                    && attack.getPlayer().getEyeLocation().getDirection()
+                    .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 18
+                    && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
                 ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
                 subAttack.getDamage().multiply(.4);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
@@ -96,7 +96,7 @@ public enum TypeSet {
                 double bluntRating = weapon.getValue(attack.getStats().getStat("BLUNT_RATING"),
                         MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
                 for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
-                    if (MMOUtils.canTarget(attack.getDamager(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
+                    if (MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
                         ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
                         subAttack.getDamage().multiply(bluntRating);
                         subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);

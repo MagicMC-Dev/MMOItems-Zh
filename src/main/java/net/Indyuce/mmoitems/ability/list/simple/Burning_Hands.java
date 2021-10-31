@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -18,8 +18,7 @@ import org.bukkit.util.Vector;
 
 public class Burning_Hands extends SimpleAbility {
     public Burning_Hands() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 3);
         addModifier("damage", 2);
@@ -29,7 +28,7 @@ public class Burning_Hands extends SimpleAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double duration = ability.getModifier("duration") * 10;
         double damage = ability.getModifier("damage") / 2;
 
@@ -40,11 +39,11 @@ public class Burning_Hands extends SimpleAbility {
                 if (j++ > duration)
                     cancel();
 
-                Location loc = attack.getDamager().getLocation().add(0, 1.2, 0);
+                Location loc = attack.getPlayer().getLocation().add(0, 1.2, 0);
                 loc.getWorld().playSound(loc, Sound.BLOCK_FIRE_AMBIENT, 1, 1);
 
                 for (double m = -45; m < 45; m += 5) {
-                    double a = (m + attack.getDamager().getEyeLocation().getYaw() + 90) * Math.PI / 180;
+                    double a = (m + attack.getPlayer().getEyeLocation().getYaw() + 90) * Math.PI / 180;
                     Vector vec = new Vector(Math.cos(a), (random.nextDouble() - .5) * .2, Math.sin(a));
                     Location source = loc.clone().add(vec.clone().setY(0));
                     source.getWorld().spawnParticle(Particle.FLAME, source, 0, vec.getX(), vec.getY(), vec.getZ(), .5);
@@ -55,9 +54,9 @@ public class Burning_Hands extends SimpleAbility {
                 if (j % 5 == 0)
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
                         if (entity.getLocation().distanceSquared(loc) < 60
-                                && attack.getDamager().getEyeLocation().getDirection()
-                                .angle(entity.getLocation().toVector().subtract(attack.getDamager().getLocation().toVector())) < Math.PI / 6
-                                && MMOUtils.canTarget(attack.getDamager(), entity))
+                                && attack.getPlayer().getEyeLocation().getDirection()
+                                .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 6
+                                && MMOUtils.canTarget(attack.getPlayer(), entity))
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 
             }

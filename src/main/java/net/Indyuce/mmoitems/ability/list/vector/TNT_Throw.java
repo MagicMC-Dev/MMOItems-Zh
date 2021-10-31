@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.ability.list.vector;
 
+import io.lumine.mythic.lib.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.util.TemporaryListener;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -18,8 +18,7 @@ import org.bukkit.util.Vector;
 
 public class TNT_Throw extends VectorAbility implements Listener {
     public TNT_Throw() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 10);
         addModifier("force", 1);
@@ -28,14 +27,14 @@ public class TNT_Throw extends VectorAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
         Vector vec = ability.getTarget().multiply(2 * ability.getModifier("force"));
-        TNTPrimed tnt = (TNTPrimed) attack.getDamager().getWorld().spawnEntity(attack.getDamager().getLocation().add(0, 1, 0), EntityType.PRIMED_TNT);
+        TNTPrimed tnt = (TNTPrimed) attack.getPlayer().getWorld().spawnEntity(attack.getPlayer().getLocation().add(0, 1, 0), EntityType.PRIMED_TNT);
         tnt.setFuseTicks(80);
         tnt.setVelocity(vec);
-        new CancelTeamDamage(attack.getDamager(), tnt);
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
-        attack.getDamager().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, attack.getDamager().getLocation().add(0, 1, 0), 12, 0, 0, 0, .1);
+        new CancelTeamDamage(attack.getPlayer(), tnt);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
+        attack.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, attack.getPlayer().getLocation().add(0, 1, 0), 12, 0, 0, 0, .1);
     }
 
 	/*

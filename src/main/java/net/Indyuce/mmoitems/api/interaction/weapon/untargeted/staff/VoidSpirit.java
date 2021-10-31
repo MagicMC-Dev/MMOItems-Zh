@@ -14,10 +14,10 @@ public class VoidSpirit implements StaffAttackHandler {
 
     @Override
     public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
-        Vector vec = attackMeta.getDamager().getEyeLocation().getDirection();
-        attackMeta.getDamager().getWorld().playSound(attackMeta.getDamager().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
-        ShulkerBullet shulkerBullet = (ShulkerBullet) attackMeta.getDamager().getWorld().spawnEntity(attackMeta.getDamager().getLocation().add(0, 1, 0), EntityType.valueOf("SHULKER_BULLET"));
-        shulkerBullet.setShooter(attackMeta.getDamager());
+        Vector vec = attackMeta.getPlayer().getEyeLocation().getDirection();
+        attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+        ShulkerBullet shulkerBullet = (ShulkerBullet) attackMeta.getPlayer().getWorld().spawnEntity(attackMeta.getPlayer().getLocation().add(0, 1, 0), EntityType.valueOf("SHULKER_BULLET"));
+        shulkerBullet.setShooter(attackMeta.getPlayer());
         new BukkitRunnable() {
             double ti = 0;
 

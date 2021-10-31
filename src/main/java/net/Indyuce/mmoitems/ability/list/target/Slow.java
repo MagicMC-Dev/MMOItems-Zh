@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.ability.list.target;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -15,8 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Slow extends TargetAbility {
     public Slow() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 5);
         addModifier("duration", 3);
@@ -26,7 +25,7 @@ public class Slow extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         new BukkitRunnable() {

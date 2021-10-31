@@ -7,7 +7,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
 
 public class Magma_Fissure extends TargetAbility {
     public Magma_Fissure() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 10);
         addModifier("mana", 0);
@@ -27,11 +27,11 @@ public class Magma_Fissure extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         new BukkitRunnable() {
-            final Location loc = attack.getDamager().getLocation().add(0, .2, 0);
+            final Location loc = attack.getPlayer().getLocation().add(0, .2, 0);
             int j = 0;
 
             public void run() {

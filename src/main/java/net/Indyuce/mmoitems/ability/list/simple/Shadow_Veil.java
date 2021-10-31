@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -19,8 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Shadow_Veil extends SimpleAbility implements Listener {
     public Shadow_Veil() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 35);
         addModifier("duration", 5);
@@ -30,21 +29,21 @@ public class Shadow_Veil extends SimpleAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double duration = ability.getModifier("duration");
 
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
         for (Player online : Bukkit.getOnlinePlayers())
-            online.hidePlayer(MMOItems.plugin, attack.getDamager());
+            online.hidePlayer(MMOItems.plugin, attack.getPlayer());
 
         /*
          * clears the target of any entity around the player
          */
-        for (Mob serverEntities : attack.getDamager().getWorld().getEntitiesByClass(Mob.class))
-            if (serverEntities.getTarget() != null && serverEntities.getTarget().equals(attack.getDamager()))
+        for (Mob serverEntities : attack.getPlayer().getWorld().getEntitiesByClass(Mob.class))
+            if (serverEntities.getTarget() != null && serverEntities.getTarget().equals(attack.getPlayer()))
                 serverEntities.setTarget(null);
 
-        ShadowVeilHandler svh = new ShadowVeilHandler(attack.getDamager(), duration);
+        ShadowVeilHandler svh = new ShadowVeilHandler(attack.getPlayer(), duration);
         svh.setDeceptions(SilentNumbers.floor(ability.getModifier("deception")));
     }
 

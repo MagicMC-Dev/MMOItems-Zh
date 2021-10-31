@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.event.Listener;
@@ -12,7 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Frog_Mode extends SimpleAbility implements Listener {
     public Frog_Mode() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 20);
         addModifier("jump-force", 1);
@@ -23,7 +23,7 @@ public class Frog_Mode extends SimpleAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double duration = ability.getModifier("duration") * 20;
         double y = ability.getModifier("jump-force");
         double xz = ability.getModifier("speed");
@@ -36,11 +36,11 @@ public class Frog_Mode extends SimpleAbility implements Listener {
                 if (j > duration)
                     cancel();
 
-                if (attack.getDamager().getLocation().getBlock().getType() == Material.WATER) {
-                    attack.getDamager().setVelocity(attack.getDamager().getEyeLocation().getDirection().setY(0).normalize().multiply(.8 * xz).setY(0.5 / xz * y));
-                    attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 2, 1);
+                if (attack.getPlayer().getLocation().getBlock().getType() == Material.WATER) {
+                    attack.getPlayer().setVelocity(attack.getPlayer().getEyeLocation().getDirection().setY(0).normalize().multiply(.8 * xz).setY(0.5 / xz * y));
+                    attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 2, 1);
                     for (double a = 0; a < Math.PI * 2; a += Math.PI / 12)
-                        attack.getDamager().getWorld().spawnParticle(Particle.CLOUD, attack.getDamager().getLocation(), 0, Math.cos(a), 0, Math.sin(a), .2);
+                        attack.getPlayer().getWorld().spawnParticle(Particle.CLOUD, attack.getPlayer().getLocation(), 0, Math.cos(a), 0, Math.sin(a), .2);
                 }
             }
         }.runTaskTimer(MMOItems.plugin, 0, 1);

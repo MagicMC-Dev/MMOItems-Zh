@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.ability.list.location;
 
+import io.lumine.mythic.lib.api.util.TemporaryListener;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.util.TemporaryListener;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -27,8 +27,7 @@ import java.util.UUID;
 
 public class Snowman_Turret extends LocationAbility {
     public Snowman_Turret() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 6);
         addModifier("cooldown", 35);
@@ -39,7 +38,7 @@ public class Snowman_Turret extends LocationAbility {
 	}
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
         Location loc = ability.getTarget();
         double duration = Math.min(ability.getModifier("duration") * 20, 300);
         double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
@@ -54,7 +53,7 @@ public class Snowman_Turret extends LocationAbility {
 			final TurretHandler turret = new TurretHandler(ability.getModifier("damage"));
 
 			public void run() {
-                if (ti++ > duration || attack.getDamager().isDead() || snowman == null || snowman.isDead()) {
+                if (ti++ > duration || attack.getPlayer().isDead() || snowman == null || snowman.isDead()) {
                     turret.close(3 * 20);
                     snowman.remove();
                     cancel();
@@ -68,7 +67,7 @@ public class Snowman_Turret extends LocationAbility {
 
 				if (ti % 2 == 0)
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(snowman.getLocation()))
-                        if (!entity.equals(snowman) && MMOUtils.canTarget(attack.getDamager(), entity)
+                        if (!entity.equals(snowman) && MMOUtils.canTarget(attack.getPlayer(), entity)
                                 && entity.getLocation().distanceSquared(snowman.getLocation()) < radiusSquared) {
                             snowman.getWorld().playSound(snowman.getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 1.3f);
                             Snowball snowball = snowman.launchProjectile(Snowball.class);

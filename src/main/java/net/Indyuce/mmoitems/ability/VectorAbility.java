@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.ability;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.ability.list.vector.Firebolt;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.entity.LivingEntity;
 
@@ -11,17 +11,15 @@ import org.bukkit.entity.LivingEntity;
  * instance, a projectile like {@link Firebolt}
  */
 public abstract class VectorAbility extends Ability<VectorAbilityMetadata> {
-    public VectorAbility(CastingMode... allowedModes) {
-        super(allowedModes);
+    public VectorAbility() {
+        super();
     }
 
-    public VectorAbility(String id, String name, CastingMode... allowedModes) {
-        super(id, name, allowedModes);
+    public VectorAbility(String id, String name) {
+        super(id, name);
     }
 
-    public VectorAbilityMetadata canBeCast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
-        return new VectorAbilityMetadata(ability, attack.getDamager(), target);
+    public VectorAbilityMetadata canBeCast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
+        return new VectorAbilityMetadata(ability, attack.getPlayer(), target);
     }
-
-    public abstract void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability);
 }

@@ -8,7 +8,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -18,7 +17,7 @@ import org.bukkit.util.Vector;
 
 public class Arcane_Hail extends LocationAbility {
 	public Arcane_Hail() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super();
 
 		addModifier("damage", 3);
 		addModifier("duration", 4);
@@ -29,7 +28,7 @@ public class Arcane_Hail extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 
 		double damage = ability.getModifier("damage");
@@ -49,7 +48,7 @@ public class Arcane_Hail extends LocationAbility {
 				Location loc1 = loc.clone().add(randomCoordMultiplier() * radius, 0, randomCoordMultiplier() * radius);
 				loc1.getWorld().playSound(loc1, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 0);
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc1))
-					if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc1) <= 4)
+					if (MMOUtils.canTarget(attack.getPlayer(), entity) && entity.getLocation().distanceSquared(loc1) <= 4)
 						new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 				loc1.getWorld().spawnParticle(Particle.SPELL_WITCH, loc1, 12, 0, 0, 0, .1);
 				loc1.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc1, 6, 0, 0, 0, .1);

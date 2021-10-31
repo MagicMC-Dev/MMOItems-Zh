@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.util.NoClipItem;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -30,7 +30,7 @@ public class Present_Throw extends SimpleAbility {
     private final ItemStack present = VersionMaterial.PLAYER_HEAD.toItem();
 
     public Present_Throw() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 6);
         addModifier("radius", 4);
@@ -56,12 +56,12 @@ public class Present_Throw extends SimpleAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double damage = ability.getModifier("damage");
         double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
 
-        final NoClipItem item = new NoClipItem(attack.getDamager().getLocation().add(0, 1.2, 0), present);
-        item.getEntity().setVelocity(attack.getDamager().getEyeLocation().getDirection().multiply(1.5 * ability.getModifier("force")));
+        final NoClipItem item = new NoClipItem(attack.getPlayer().getLocation().add(0, 1.2, 0), present);
+        item.getEntity().setVelocity(attack.getPlayer().getEyeLocation().getDirection().multiply(1.5 * ability.getModifier("force")));
 
         /*
          * when items are moving through the air, they loose a percent of their
@@ -71,7 +71,7 @@ public class Present_Throw extends SimpleAbility {
          * trajectory change
          */
         final double trajRatio = item.getEntity().getVelocity().getX() / item.getEntity().getVelocity().getZ();
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
         new BukkitRunnable() {
             double ti = 0;
 
@@ -87,7 +87,7 @@ public class Present_Throw extends SimpleAbility {
                     item.getEntity().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, item.getEntity().getLocation().add(0, .1, 0), 128, 0, 0, 0, .25);
                     item.getEntity().getWorld().playSound(item.getEntity().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 1.5f);
                     for (Entity entity : MMOUtils.getNearbyChunkEntities(item.getEntity().getLocation()))
-                        if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity))
+                        if (entity.getLocation().distanceSquared(item.getEntity().getLocation()) < radiusSquared && MMOUtils.canTarget(attack.getPlayer(), entity))
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                     item.close();
                     cancel();

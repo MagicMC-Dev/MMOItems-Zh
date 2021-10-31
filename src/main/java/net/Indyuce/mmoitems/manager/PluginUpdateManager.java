@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.manager;
 
+import jdk.tools.jlink.plugin.Plugin;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
@@ -120,6 +121,28 @@ public class PluginUpdateManager {
 			sender.sendMessage(ChatColor.RED + "This command is no longer available.");
 			sender.sendMessage(ChatColor.RED + "Please refer to the Revision System on the wiki.");
 		}));
+
+		register(new PluginUpdate(5, new String[] {"Transition to trigger types in 6.6.3", "Only scans through item configs"}, sender -> {
+
+            for (Type type : MMOItems.plugin.getTypes().getAll()) {
+                ConfigFile config = type.getConfigFile();
+                for (String id : config.getConfig().getKeys(false)) {
+                    ConfigurationSection itemConfig = config.getConfig().getConfigurationSection(id);
+                    if (!itemConfig.contains("base.ability"))
+                        continue;
+
+                    for (String key : config.getConfig().getConfigurationSection(id + ".base.ability").getKeys(false)) {
+                        String mode = config.getConfig().getString(id + ".base.ability." + key + ".mode");
+                        if (mode == null)
+                            return;
+
+                        String newest = mode.equalsIgnoreCase("ON_HIT") ? "ATTACK" : mode.equalsIgnoreCase("WHEN_HIT") ? "DAMAGED" : mode;
+                        config.getConfig().set(id + ".base.ability." + key + ".mode", newest);
+                    }
+                }
+                config.save();
+            }
+        }));
 
 		register(new PluginUpdate(4, new String[]{"Transforms all your current MMOItems into item templates and fixes some stat formats which have been changed.", "&cIt is REALLY important to save a backup before using this config update!"}, sender -> {
 

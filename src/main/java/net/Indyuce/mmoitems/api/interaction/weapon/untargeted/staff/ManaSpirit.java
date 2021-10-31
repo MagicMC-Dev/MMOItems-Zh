@@ -21,8 +21,8 @@ public class ManaSpirit implements StaffAttackHandler {
     @Override
     public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
         new BukkitRunnable() {
-            final Vector vec = attackMeta.getDamager().getEyeLocation().getDirection().multiply(.4);
-            final Location loc = attackMeta.getDamager().getEyeLocation();
+            final Vector vec = attackMeta.getPlayer().getEyeLocation().getDirection().multiply(.4);
+            final Location loc = attackMeta.getPlayer().getEyeLocation();
             int ti = 0;
             final double r = .2;
 
@@ -46,7 +46,7 @@ public class ManaSpirit implements StaffAttackHandler {
                             loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), 1, new Particle.DustOptions(Color.AQUA, 1));
                     }
                     for (Entity target : targets)
-                        if (MMOUtils.canTarget(attackMeta.getDamager(), loc, target, InteractionType.OFFENSE_ACTION)) {
+                        if (MMOUtils.canTarget(attackMeta.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
                             attackMeta.applyEffectsAndDamage(nbt, (LivingEntity) target);
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
                             cancel();

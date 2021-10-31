@@ -18,9 +18,9 @@ public class SunfireSpirit implements StaffAttackHandler {
 
     @Override
     public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
-        attackMeta.getDamager().getWorld().playSound(attackMeta.getDamager().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+        attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
         new BukkitRunnable() {
-            final Location target = getGround(attackMeta.getDamager().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
+            final Location target = getGround(attackMeta.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
             final double a = random.nextDouble() * Math.PI * 2;
             final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
             final Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
@@ -38,7 +38,7 @@ public class SunfireSpirit implements StaffAttackHandler {
                         loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
                         loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
                         for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
-                            if (MMOUtils.canTarget(attackMeta.getDamager(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
+                            if (MMOUtils.canTarget(attackMeta.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
                                 attackMeta.applyEffectsAndDamage(nbt, (LivingEntity) target);
                         cancel();
                         break;

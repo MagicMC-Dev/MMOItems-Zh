@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -15,8 +15,7 @@ import org.bukkit.util.Vector;
 
 public class Blind extends TargetAbility {
     public Blind() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 5);
         addModifier("cooldown", 9);
@@ -25,7 +24,7 @@ public class Blind extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 1, 2);
@@ -33,7 +32,7 @@ public class Blind extends TargetAbility {
             for (double j = 0; j < 2; j++) {
                 Location loc = target.getLocation();
                 Vector vec = MMOUtils.rotateFunc(new Vector(Math.cos(i), 1 + Math.cos(i + (Math.PI * j)) * .5, Math.sin(i)),
-                        attack.getDamager().getLocation());
+                        attack.getPlayer().getLocation());
                 loc.getWorld().spawnParticle(Particle.REDSTONE, loc.add(vec), 1, new Particle.DustOptions(Color.BLACK, 1));
             }
         target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (ability.getModifier("duration") * 20), 0));

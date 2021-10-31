@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui.edition;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import io.lumine.mythic.lib.MythicLib;
@@ -44,7 +44,7 @@ public class AbilityListEdition extends EditionInventory {
 								? MMOItems.plugin.getAbilities().getAbility(abilityFormat)
 								: null;
 
-				CastingMode castMode = CastingMode.safeValueOf(getEditedSection().getString("ability." + key + ".mode"));
+				TriggerType castMode = TriggerType.safeValueOf(getEditedSection().getString("ability." + key + ".mode"));
 
 				ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 				ItemMeta abilityItemMeta = abilityItem.getItemMeta();

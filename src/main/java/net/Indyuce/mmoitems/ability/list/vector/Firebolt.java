@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Firebolt extends VectorAbility {
     public Firebolt() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 6);
         addModifier("ignite", 3);
@@ -31,11 +31,11 @@ public class Firebolt extends VectorAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
         new BukkitRunnable() {
             final Vector vec = ability.getTarget().multiply(.8);
-            final Location loc = attack.getDamager().getEyeLocation();
+            final Location loc = attack.getPlayer().getEyeLocation();
             int ti = 0;
 
             public void run() {
@@ -54,7 +54,7 @@ public class Firebolt extends VectorAbility {
                     if (random.nextDouble() < .3)
                         loc.getWorld().spawnParticle(Particle.LAVA, loc, 0);
                     for (Entity target : entities)
-                        if (MMOUtils.canTarget(attack.getDamager(), loc, target)) {
+                        if (MMOUtils.canTarget(attack.getPlayer(), loc, target)) {
                             loc.getWorld().spawnParticle(Particle.FLAME, loc, 32, 0, 0, 0, .1);
                             loc.getWorld().spawnParticle(Particle.LAVA, loc, 8, 0, 0, 0, 0);
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);

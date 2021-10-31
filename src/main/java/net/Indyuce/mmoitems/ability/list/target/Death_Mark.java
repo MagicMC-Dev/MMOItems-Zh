@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Death_Mark extends TargetAbility {
     public Death_Mark() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 7);
         addModifier("damage", 5);
@@ -27,7 +27,7 @@ public class Death_Mark extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         double duration = ability.getModifier("duration") * 20;

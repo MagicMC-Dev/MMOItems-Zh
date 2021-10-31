@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Earthquake extends Ability<VectorAbilityMetadata> {
     public Earthquake() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 3);
         addModifier("duration", 2);
@@ -35,19 +35,19 @@ public class Earthquake extends Ability<VectorAbilityMetadata> {
     }
 
     @Override
-    public VectorAbilityMetadata canBeCast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
-        return attack.getDamager().isOnGround() ? new VectorAbilityMetadata(ability, attack.getDamager(), target) : null;
+    public VectorAbilityMetadata canBeCast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
+        return attack.getPlayer().isOnGround() ? new VectorAbilityMetadata(ability, attack.getPlayer(), target) : null;
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
         double damage = ability.getModifier("damage");
         double slowDuration = ability.getModifier("duration");
         double slowAmplifier = ability.getModifier("amplifier");
 
         new BukkitRunnable() {
             final Vector vec = ability.getTarget().setY(0);
-            final Location loc = attack.getDamager().getLocation();
+            final Location loc = attack.getPlayer().getLocation();
             final List<Integer> hit = new ArrayList<>();
             int ti = 0;
 
@@ -61,7 +61,7 @@ public class Earthquake extends Ability<VectorAbilityMetadata> {
                 loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 2, 1);
 
                 for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                    if (MMOUtils.canTarget(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
+                    if (MMOUtils.canTarget(attack.getPlayer(), entity) && loc.distanceSquared(entity.getLocation()) < 2 && !hit.contains(entity.getEntityId())) {
                         hit.add(entity.getEntityId());
                         new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
                         ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));

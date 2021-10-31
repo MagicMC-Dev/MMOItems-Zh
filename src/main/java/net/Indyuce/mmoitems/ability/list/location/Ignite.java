@@ -4,14 +4,14 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 
 public class Ignite extends LocationAbility {
 	public Ignite() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT);
+		super();
 
 		addModifier("duration", 80);
 		addModifier("max-ignite", 200);
@@ -22,7 +22,7 @@ public class Ignite extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 
 		int maxIgnite = (int) (ability.getModifier("max-ignite") * 20);
@@ -35,7 +35,7 @@ public class Ignite extends LocationAbility {
 		loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 1);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity))
+			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getPlayer(), entity))
 				entity.setFireTicks(Math.min(entity.getFireTicks() + ignite, maxIgnite));
 	}
 }

@@ -25,7 +25,7 @@ public class ItemAttackMetadata extends AttackMetadata {
     }
 
     public PlayerData getPlayerData() {
-        return PlayerData.get(getDamager().getUniqueId());
+        return PlayerData.get(getPlayer().getUniqueId());
     }
 
     /**
@@ -47,7 +47,6 @@ public class ItemAttackMetadata extends AttackMetadata {
      * @return The unedited attack result
      */
     public ItemAttackMetadata applyEffects(NBTItem item, LivingEntity target) {
-        applyOnHitEffects(target);
         if (getDamage().hasType(DamageType.WEAPON))
             applyElementalEffects(item, target);
         return this;
@@ -63,19 +62,6 @@ public class ItemAttackMetadata extends AttackMetadata {
     @SuppressWarnings("UnusedReturnValue")
     public ItemAttackMetadata applyElementalEffects(NBTItem item, LivingEntity target) {
         new ElementalAttack(item, this, target).apply();
-        return this;
-    }
-
-    /**
-     * This method is called when a player uses ANY weapon, vanilla or custom.
-     * It does not take into input any weapon as it just applies non weapon
-     * specific on-hit effects
-     *
-     * @param target The entity target
-     * @return The unedited attack result
-     */
-    public ItemAttackMetadata applyOnHitEffects(LivingEntity target) {
-        getPlayerData().castAbilities(this, target, Ability.CastingMode.ON_HIT);
         return this;
     }
 }

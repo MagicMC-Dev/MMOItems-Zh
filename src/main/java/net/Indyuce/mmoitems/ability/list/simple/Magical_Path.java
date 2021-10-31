@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Magical_Path extends SimpleAbility {
     public Magical_Path() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 3);
         addModifier("cooldown", 15);
@@ -28,13 +28,13 @@ public class Magical_Path extends SimpleAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
-        attack.getDamager().setAllowFlight(true);
-        attack.getDamager().setFlying(true);
-        attack.getDamager().setVelocity(attack.getDamager().getVelocity().setY(.5));
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1, 1);
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
+        attack.getPlayer().setAllowFlight(true);
+        attack.getPlayer().setFlying(true);
+        attack.getPlayer().setVelocity(attack.getPlayer().getVelocity().setY(.5));
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 1, 1);
 
-        new MagicalPathHandler(attack.getDamager(), ability.getModifier("duration"));
+        new MagicalPathHandler(attack.getPlayer(), ability.getModifier("duration"));
     }
 
 	public static class MagicalPathHandler extends BukkitRunnable implements Listener {

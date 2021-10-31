@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.ArmorStand;
@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
 
 public class Sparkle extends TargetAbility {
     public Sparkle() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 10);
         addModifier("damage", 4);
@@ -27,7 +27,7 @@ public class Sparkle extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
         double damage = ability.getModifier("damage");
         double radius = ability.getModifier("radius");
@@ -39,7 +39,7 @@ public class Sparkle extends TargetAbility {
 
         int count = 0;
         for (Entity entity : target.getNearbyEntities(radius, radius, radius))
-            if (count < limit && entity instanceof LivingEntity && entity != attack.getDamager() && !(entity instanceof ArmorStand)) {
+            if (count < limit && entity instanceof LivingEntity && entity != attack.getPlayer() && !(entity instanceof ArmorStand)) {
                 count++;
                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
                 entity.getWorld().playSound(entity.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);

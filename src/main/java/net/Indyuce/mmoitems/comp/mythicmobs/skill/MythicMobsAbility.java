@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,7 +23,7 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
     private final Skill skill;
 
     public MythicMobsAbility(String id, FileConfiguration config) {
-        super(id, config.getString("name"), CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK, CastingMode.SNEAK);
+        super(id, config.getString("name"));
 
         String skillName = config.getString("mythicmobs-skill-id");
         Validate.notNull(skillName, "Could not find MM skill name");
@@ -46,15 +46,15 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attackMeta, MythicMobsAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attackMeta, MythicMobsAbilityMetadata ability) {
         skill.execute(ability.getSkillMetadata());
     }
 
     @Override
-    public MythicMobsAbilityMetadata canBeCast(ItemAttackMetadata attackMeta, LivingEntity target, AbilityData data) {
+    public MythicMobsAbilityMetadata canBeCast(AttackMetadata attackMeta, LivingEntity target, AbilityData data) {
 
         // TODO what's the difference between trigger and caster.
-        AbstractEntity trigger = BukkitAdapter.adapt(attackMeta.getDamager());
+        AbstractEntity trigger = BukkitAdapter.adapt(attackMeta.getPlayer());
         SkillCaster caster = new GenericCaster(trigger);
 
         HashSet<AbstractEntity> targetEntities = new HashSet<>();
@@ -62,7 +62,7 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
 
         targetEntities.add(BukkitAdapter.adapt(target));
 
-        SkillMetadata skillMeta = new SkillMetadata(SkillTrigger.CAST, caster, trigger, BukkitAdapter.adapt(attackMeta.getDamager().getEyeLocation()), targetEntities, targetLocations, 1);
+        SkillMetadata skillMeta = new SkillMetadata(SkillTrigger.CAST, caster, trigger, BukkitAdapter.adapt(attackMeta.getPlayer().getEyeLocation()), targetEntities, targetLocations, 1);
 
         // Stats are cached inside a variable
         skillMeta.getVariables().putObject("MMOStatMap", attackMeta.getStats());

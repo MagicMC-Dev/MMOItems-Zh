@@ -1,12 +1,13 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.player.EquipmentSlot;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
 import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -61,7 +62,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		}
 
 		// modifiers
-		AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key), CastingMode.RIGHT_CLICK);
+		AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key), TriggerType.RIGHT_CLICK);
 		for (int j = 3; j < args.length - 1; j += 2) {
 			String name = args[j];
 			String value = args[j + 1];

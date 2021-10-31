@@ -1,22 +1,23 @@
 package net.Indyuce.mmoitems.ability;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.ability.metadata.FriendlyTargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.entity.LivingEntity;
 
 public abstract class FriendlyTargetAbility extends Ability<FriendlyTargetAbilityMetadata> {
-    public FriendlyTargetAbility(CastingMode... allowedModes) {
-        super(allowedModes);
+    public FriendlyTargetAbility() {
+        super();
     }
 
-    public FriendlyTargetAbility(String id, String name, CastingMode... allowedModes) {
-        super(id, name, allowedModes);
+    public FriendlyTargetAbility(String id, String name) {
+        super(id, name);
     }
 
-    public FriendlyTargetAbilityMetadata canBeCast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
-        return new FriendlyTargetAbilityMetadata(ability, attack.getDamager(), target);
+    public FriendlyTargetAbilityMetadata canBeCast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
+        return new FriendlyTargetAbilityMetadata(ability, attack.getPlayer(), target);
     }
 
-    public abstract void whenCast(ItemAttackMetadata attack, FriendlyTargetAbilityMetadata ability);
+    public abstract void whenCast(AttackMetadata attack, FriendlyTargetAbilityMetadata ability);
 }

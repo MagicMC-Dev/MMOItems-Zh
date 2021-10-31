@@ -2,16 +2,14 @@ package net.Indyuce.mmoitems.api.player;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.comp.flags.CustomFlag;
-import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.player.EquipmentSlot;
+import io.lumine.mythic.lib.player.MMOPlayerData;
+import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.skill.trigger.PassiveSkill;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.ability.AbilityMetadata;
 import net.Indyuce.mmoitems.api.ConfigFile;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
@@ -36,7 +34,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -60,7 +57,6 @@ public class PlayerData {
     private final Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
     private final Set<ParticleRunnable> itemParticles = new HashSet<>();
     private ParticleRunnable overridingItemParticles = null;
-    private final Set<AbilityData> itemAbilities = new HashSet<>();
     private boolean fullHands = false;
     private SetBonuses setBonuses = null;
     private final PlayerStats stats;
@@ -170,8 +166,8 @@ public class PlayerData {
          */
         inventory.getEquipped().clear();
         permanentEffects.clear();
-        itemAbilities.clear();
         cancelRunnables();
+        mmoData.unregisterSkillTriggers("MMOItemsItem");
         itemParticles.clear();
         overridingItemParticles = null;
         if (MMOItems.plugin.hasPermissions()) {
@@ -241,7 +237,8 @@ public class PlayerData {
              */
             if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering", false) || !fullHands))
                 if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
-                    itemAbilities.addAll(((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities());
+                    for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities())
+                        mmoData.registerSkillTrigger(new PassiveSkill("MMOItemsItem", abilityData.getTriggerType(), abilityData));
 
             /*
              * Apply permissions if vault exists
@@ -280,7 +277,8 @@ public class PlayerData {
         setBonuses = set == null ? null : set.getBonuses(max);
 
         if (hasSetBonuses()) {
-            itemAbilities.addAll(setBonuses.getAbilities());
+            for (AbilityData ability : setBonuses.getAbilities())
+                mmoData.registerSkillTrigger(new PassiveSkill("MMOItemItem", ability.getTriggerType(), ability));
             for (ParticleData particle : setBonuses.getParticles())
                 itemParticles.add(particle.start(this));
             for (PotionEffect effect : setBonuses.getPotionEffects())
@@ -352,61 +350,6 @@ public class PlayerData {
         return stats;
     }
 
-    public Set<AbilityData> getItemAbilities() {
-        return itemAbilities;
-    }
-
-    private boolean hasAbility(CastingMode castMode) {
-        for (AbilityData ability : itemAbilities)
-            if (ability.getCastingMode() == castMode)
-                return true;
-        return false;
-    }
-
-    /**
-     * Casts all the abilities of a player under a specific casting mode onto a certain enemy
-     * <p>
-     * This is NOT used within MMOItems and is purely an API method. This has the effect
-     * of generating a ItemMetadata if necessary, which caches the player stats.
-     *
-     * @param target   Ability target which can be null
-     * @param castMode The action the player performed to cast the ability
-     * @return Null if no ability was cast, or the attack metadata if any was cast.
-     */
-    @Nullable
-    public ItemAttackMetadata castAbilities(@Nullable LivingEntity target, @NotNull CastingMode castMode) {
-        if (!hasAbility(castMode))
-            return null;
-
-        ItemAttackMetadata meta = new ItemAttackMetadata(new DamageMetadata(), mmoData.getStatMap().cache(EquipmentSlot.MAIN_HAND));
-        return castAbilities(meta, target, castMode);
-    }
-
-    /**
-     * Casts all the abilities of a player under a specific casting mode onto a certain enemy
-     *
-     * @param attack   Current attack meta
-     * @param target   Ability target, can be null
-     * @param castMode Action the player performed to cast the ability
-     */
-    public ItemAttackMetadata castAbilities(ItemAttackMetadata attack, LivingEntity target, CastingMode castMode) {
-
-        /*
-         * If the ability has target, check for ability flag at location of target
-         * and make sure player can attack target. If ability has no target,
-         * check for WG flag at the caster location
-         */
-        if (target == null ? !MythicLib.plugin.getFlags().isFlagAllowed(getPlayer(), CustomFlag.MMO_ABILITIES)
-                : !MythicLib.plugin.getFlags().isFlagAllowed(target.getLocation(), CustomFlag.MMO_ABILITIES))
-            return attack;
-
-        for (AbilityData ability : itemAbilities)
-            if (ability.getCastingMode() == castMode)
-                cast(attack, target, ability);
-
-        return attack;
-    }
-
     /**
      * Makes the player cast an ability. Checks for cooldown and mana cost before casting it.
      * Also calls a Bukkit event right before casting it.
@@ -415,7 +358,7 @@ public class PlayerData {
      * @param target  Ability target, can be null
      * @param ability Ability to cast
      */
-    public void cast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
+    public void cast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
 
         /*
          * Apply simple conditions including mana and stamina cost, permission

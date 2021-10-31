@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Holy_Missile extends VectorAbility {
     public Holy_Missile() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 6);
         addModifier("cooldown", 10);
@@ -31,14 +31,14 @@ public class Holy_Missile extends VectorAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
         double duration = ability.getModifier("duration") * 10;
         double damage = ability.getModifier("damage");
 
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 1);
         new BukkitRunnable() {
             final Vector vec = ability.getTarget().multiply(.45);
-            final Location loc = attack.getDamager().getLocation().clone().add(0, 1.3, 0);
+            final Location loc = attack.getPlayer().getLocation().clone().add(0, 1.3, 0);
             double ti = 0;
 
             public void run() {
@@ -59,7 +59,7 @@ public class Holy_Missile extends VectorAbility {
                     }
 
                     for (Entity entity : entities)
-                        if (MMOUtils.canTarget(attack.getDamager(), loc, entity)) {
+                        if (MMOUtils.canTarget(attack.getPlayer(), loc, entity)) {
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
                             loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 32, 0, 0, 0, .2);
                             loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);

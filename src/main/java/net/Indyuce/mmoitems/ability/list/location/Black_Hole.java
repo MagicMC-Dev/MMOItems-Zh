@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.ability.list.location;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
 
 public class Black_Hole extends LocationAbility {
 	public Black_Hole() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super();
 
 		addModifier("radius", 2);
 		addModifier("duration", 2);
@@ -24,7 +24,7 @@ public class Black_Hole extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 
 		double duration = ability.getModifier("duration") * 20;
@@ -52,7 +52,7 @@ public class Black_Hole extends LocationAbility {
 				}
 
 				for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-					if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && MMOUtils.canTarget(attack.getDamager(), entity))
+					if (entity.getLocation().distanceSquared(loc) < Math.pow(radius, 2) && MMOUtils.canTarget(attack.getPlayer(), entity))
 						entity.setVelocity(MMOUtils.normalize(loc.clone().subtract(entity.getLocation()).toVector()).multiply(.5));
 			}
 		}.runTaskTimer(MMOItems.plugin, 0, 1);

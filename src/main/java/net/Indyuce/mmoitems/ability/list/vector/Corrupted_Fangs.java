@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.ability.list.vector;
 
+import io.lumine.mythic.lib.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.util.TemporaryListener;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -22,8 +22,7 @@ import java.util.Set;
 
 public class Corrupted_Fangs extends VectorAbility implements Listener {
     public Corrupted_Fangs() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 5);
         addModifier("cooldown", 12);
@@ -33,11 +32,11 @@ public class Corrupted_Fangs extends VectorAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
         new BukkitRunnable() {
             final Vector vec = ability.getTarget().setY(0).multiply(2);
-            final Location loc = attack.getDamager().getLocation();
+            final Location loc = attack.getPlayer().getLocation();
             final FangsHandler handler = new FangsHandler(attack, ability.getModifier("damage"));
             final double fangAmount = ability.getModifier("fangs");
             double ti = 0;
@@ -50,7 +49,7 @@ public class Corrupted_Fangs extends VectorAbility implements Listener {
                 }
 
                 loc.add(vec);
-                EvokerFangs evokerFangs = (EvokerFangs) attack.getDamager().getWorld().spawnEntity(loc, EntityType.EVOKER_FANGS);
+                EvokerFangs evokerFangs = (EvokerFangs) attack.getPlayer().getWorld().spawnEntity(loc, EntityType.EVOKER_FANGS);
                 handler.entities.add(evokerFangs.getEntityId());
             }
         }.runTaskTimer(MMOItems.plugin, 0, 1);
@@ -58,10 +57,10 @@ public class Corrupted_Fangs extends VectorAbility implements Listener {
 
     public class FangsHandler extends TemporaryListener {
         private final Set<Integer> entities = new HashSet<>();
-        private final ItemAttackMetadata attackMeta;
+        private final AttackMetadata attackMeta;
         private final double damage;
 
-        public FangsHandler(ItemAttackMetadata attackMeta, double damage) {
+        public FangsHandler(AttackMetadata attackMeta, double damage) {
             super(EntityDamageByEntityEvent.getHandlerList());
 
             this.attackMeta = attackMeta;
@@ -73,7 +72,7 @@ public class Corrupted_Fangs extends VectorAbility implements Listener {
             if (event.getDamager() instanceof EvokerFangs && entities.contains(event.getDamager().getEntityId())) {
                 event.setCancelled(true);
 
-                if (MMOUtils.canTarget(attackMeta.getDamager(), event.getEntity()))
+                if (MMOUtils.canTarget(attackMeta.getPlayer(), event.getEntity()))
                     attackMeta.damage((LivingEntity) event.getEntity());
             }
         }

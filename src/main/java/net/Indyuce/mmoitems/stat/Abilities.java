@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -65,7 +65,7 @@ public class Abilities extends ItemStat {
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
 
 		((AbilityListData) data).getAbilities().forEach(ability -> {
-			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getCastingMode())).replace("#a",
+			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTriggerType())).replace("#a",
 					MMOItems.plugin.getLanguage().getAbilityName(ability.getAbility())));
 
 			for (String modifier : ability.getModifiers()) {
@@ -129,14 +129,10 @@ public class Abilities extends ItemStat {
 		}
 
 		if (edited.equals("mode")) {
-			CastingMode castMode = CastingMode.valueOf(format);
-			Ability ability = MMOItems.plugin.getAbilities().getAbility(inv.getEditedSection().getString("ability." + configKey + ".type")
-					.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", ""));
-			Validate.isTrue(ability.isAllowedMode(castMode), "This ability does not support this casting mode.");
-
+			TriggerType castMode = TriggerType.valueOf(format);
 			inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the casting mode to " + ChatColor.GOLD + castMode.getName()
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the trigger to " + ChatColor.GOLD + castMode.getName()
 					+ ChatColor.GRAY + ".");
 			return;
 		}

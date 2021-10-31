@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
 
@@ -24,7 +25,8 @@ public class AbilityListData implements StatData, Mergeable {
 	}
 	public void add(@NotNull Set<AbilityData> abilit) { abilities.addAll(abilit); }
 
-	@NotNull public Set<AbilityData> getAbilities() {
+	@NotNull
+	public Set<AbilityData> getAbilities() {
 		return abilities;
 	}
 
@@ -60,5 +62,4 @@ public class AbilityListData implements StatData, Mergeable {
 
 	@Override
 	public boolean isClear() { return getAbilities().size() == 0; }
-
 }

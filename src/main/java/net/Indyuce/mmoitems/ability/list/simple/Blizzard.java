@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.ability.list.simple;
 
+import io.lumine.mythic.lib.api.util.TemporaryListener;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.util.TemporaryListener;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Snowball;
@@ -19,8 +19,7 @@ import java.util.UUID;
 
 public class Blizzard extends SimpleAbility {
     public Blizzard() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 2.5);
         addModifier("damage", 2);
@@ -32,7 +31,7 @@ public class Blizzard extends SimpleAbility {
 	}
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double duration = ability.getModifier("duration") * 10;
         double force = ability.getModifier("force");
         double inaccuracy = ability.getModifier("inaccuracy");
@@ -48,12 +47,12 @@ public class Blizzard extends SimpleAbility {
                     return;
                 }
 
-                Location loc = attack.getDamager().getEyeLocation();
+                Location loc = attack.getPlayer().getEyeLocation();
                 loc.setPitch((float) (loc.getPitch() + (random.nextDouble() - .5) * inaccuracy));
                 loc.setYaw((float) (loc.getYaw() + (random.nextDouble() - .5) * inaccuracy));
 
                 loc.getWorld().playSound(loc, Sound.ENTITY_SNOWBALL_THROW, 1, 1);
-                Snowball snowball = attack.getDamager().launchProjectile(Snowball.class);
+                Snowball snowball = attack.getPlayer().launchProjectile(Snowball.class);
                 snowball.setVelocity(loc.getDirection().multiply(1.3 * force));
                 handler.entities.add(snowball.getUniqueId());
             }

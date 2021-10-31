@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Cursed_Beam extends VectorAbility {
     public Cursed_Beam() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 8);
         addModifier("cooldown", 10);
@@ -33,13 +33,13 @@ public class Cursed_Beam extends VectorAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
         double duration = ability.getModifier("duration");
 
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
         new BukkitRunnable() {
             final Vector dir = ability.getTarget().multiply(.3);
-            final Location loc = attack.getDamager().getEyeLocation().clone();
+            final Location loc = attack.getPlayer().getEyeLocation().clone();
             final double r = 0.4;
             int ti = 0;
 
@@ -59,13 +59,13 @@ public class Cursed_Beam extends VectorAbility {
                     }
 
                     for (Entity target : entities)
-                        if (MMOUtils.canTarget(attack.getDamager(), loc, target)) {
+                        if (MMOUtils.canTarget(attack.getPlayer(), loc, target)) {
                             effect(target);
                             double damage = ability.getModifier("damage");
                             loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, .7f);
 
                             for (Entity entity : entities)
-                                if (MMOUtils.canTarget(attack.getDamager(), entity) && loc.distanceSquared(entity.getLocation().add(0, 1, 0)) < 9) {
+                                if (MMOUtils.canTarget(attack.getPlayer(), entity) && loc.distanceSquared(entity.getLocation().add(0, 1, 0)) < 9) {
                                     new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                                     ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) (duration * 20), 0));
                                 }

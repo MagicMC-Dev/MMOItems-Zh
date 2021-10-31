@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.ItemAbility;
 import net.Indyuce.mmoitems.ability.metadata.ItemAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.util.NoClipItem;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Item_Throw extends ItemAbility implements Listener {
     public Item_Throw() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 6);
         addModifier("force", 1);
@@ -29,7 +29,7 @@ public class Item_Throw extends ItemAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, ItemAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, ItemAbilityMetadata ability) {
         ItemStack itemStack = ability.getItem();
         /*boolean hasAbility = false;
 
@@ -47,9 +47,9 @@ public class Item_Throw extends ItemAbility implements Listener {
         if (!hasAbility)
             return;*/
 
-        final NoClipItem item = new NoClipItem(attack.getDamager().getLocation().add(0, 1.2, 0), itemStack);
+        final NoClipItem item = new NoClipItem(attack.getPlayer().getLocation().add(0, 1.2, 0), itemStack);
         item.getEntity().setVelocity(ability.getTarget().multiply(1.5 * ability.getModifier("force")));
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 1, 0);
         new BukkitRunnable() {
             double ti = 0;
 
@@ -62,7 +62,7 @@ public class Item_Throw extends ItemAbility implements Listener {
 
                 item.getEntity().getWorld().spawnParticle(Particle.CRIT, item.getEntity().getLocation(), 0);
                 for (Entity target : item.getEntity().getNearbyEntities(1, 1, 1))
-                    if (MMOUtils.canTarget(attack.getDamager(), target)) {
+                    if (MMOUtils.canTarget(attack.getPlayer(), target)) {
                         new AttackMetadata(new DamageMetadata(ability.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) target);
                         item.close();
                         cancel();

@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.ItemAbility;
 import net.Indyuce.mmoitems.ability.metadata.ItemAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.util.NoClipItem;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Item_Bomb extends ItemAbility implements Listener {
     public Item_Bomb() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 7);
         addModifier("radius", 6);
@@ -34,11 +34,11 @@ public class Item_Bomb extends ItemAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, ItemAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, ItemAbilityMetadata ability) {
         ItemStack itemStack = ability.getItem();
-        final NoClipItem item = new NoClipItem(attack.getDamager().getLocation().add(0, 1.2, 0), itemStack);
+        final NoClipItem item = new NoClipItem(attack.getPlayer().getLocation().add(0, 1.2, 0), itemStack);
         item.getEntity().setVelocity(ability.getTarget().multiply(1.3));
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
 
         new BukkitRunnable() {
             int j = 0;
@@ -51,7 +51,7 @@ public class Item_Bomb extends ItemAbility implements Listener {
                     double slowAmplifier = ability.getModifier("slow-amplifier");
 
                     for (Entity entity : item.getEntity().getNearbyEntities(radius, radius, radius))
-                        if (MMOUtils.canTarget(attack.getDamager(), entity)) {
+                        if (MMOUtils.canTarget(attack.getPlayer(), entity)) {
                             new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
                             ((LivingEntity) entity).removePotionEffect(PotionEffectType.SLOW);
                             ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (slowDuration * 20), (int) slowAmplifier));

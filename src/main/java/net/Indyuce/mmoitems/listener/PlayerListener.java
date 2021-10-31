@@ -2,26 +2,21 @@ package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.player.EquipmentSlot;
 import io.lumine.mythic.utils.Schedulers;
 import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
@@ -44,36 +39,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void savePlayerData(PlayerQuitEvent event) {
         PlayerData.get(event.getPlayer()).save();
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void castWhenHitAbilities(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player) || event.getEntity().hasMetadata("NPC"))
-            return;
-
-        LivingEntity damager = MMOUtils.getDamager(event);
-        if (damager == null)
-            return;
-
-        Player player = (Player) event.getEntity();
-        PlayerData.get(player).castAbilities(damager, CastingMode.WHEN_HIT);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void castWhenSneakAbilities(PlayerToggleSneakEvent event) {
-        Player player = event.getPlayer();
-        PlayerData.get(player).castAbilities(null, CastingMode.SNEAK);
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void castClickAbilities(PlayerInteractEvent event) {
-        if (event.getAction() == Action.PHYSICAL)
-            return;
-
-        Player player = event.getPlayer();
-        boolean left = event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK;
-        CastingMode castMode = player.isSneaking() ? (left ? CastingMode.SHIFT_LEFT_CLICK : CastingMode.SHIFT_RIGHT_CLICK) : (left ? CastingMode.LEFT_CLICK : CastingMode.RIGHT_CLICK);
-        PlayerData.get(player).castAbilities(null, castMode);
     }
 
     /*

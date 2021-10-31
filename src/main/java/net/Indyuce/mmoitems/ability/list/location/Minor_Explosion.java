@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -15,7 +15,7 @@ import org.bukkit.entity.LivingEntity;
 
 public class Minor_Explosion extends LocationAbility {
 	public Minor_Explosion() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT);
+		super();
 
 		addModifier("damage", 6);
 		addModifier("knockback", 1);
@@ -26,7 +26,7 @@ public class Minor_Explosion extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 
 		double damage = ability.getModifier("damage");
@@ -38,7 +38,7 @@ public class Minor_Explosion extends LocationAbility {
 		loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity)) {
+			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getPlayer(), entity)) {
 				new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 				entity.setVelocity(MMOUtils.normalize(entity.getLocation().subtract(loc).toVector().setY(0)).setY(.2).multiply(2 * knockback));
 			}

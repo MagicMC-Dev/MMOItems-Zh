@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Light_Dash extends SimpleAbility {
     public Light_Dash() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 3);
         addModifier("cooldown", 10);
@@ -30,12 +30,12 @@ public class Light_Dash extends SimpleAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double damage = ability.getModifier("damage");
         double length = ability.getModifier("length");
 
         new BukkitRunnable() {
-            final Vector vec = attack.getDamager().getEyeLocation().getDirection();
+            final Vector vec = attack.getPlayer().getEyeLocation().getDirection();
             final List<Integer> hit = new ArrayList<>();
             int j = 0;
 
@@ -43,11 +43,11 @@ public class Light_Dash extends SimpleAbility {
                 if (j++ > 10 * Math.min(10, length))
                     cancel();
 
-                attack.getDamager().setVelocity(vec);
-                attack.getDamager().getWorld().spawnParticle(Particle.SMOKE_LARGE, attack.getDamager().getLocation().add(0, 1, 0), 0);
-                attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 1, 2);
-                for (Entity entity : attack.getDamager().getNearbyEntities(1, 1, 1))
-                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canTarget(attack.getDamager(), entity)) {
+                attack.getPlayer().setVelocity(vec);
+                attack.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, attack.getPlayer().getLocation().add(0, 1, 0), 0);
+                attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 1, 2);
+                for (Entity entity : attack.getPlayer().getNearbyEntities(1, 1, 1))
+                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canTarget(attack.getPlayer(), entity)) {
                         hit.add(entity.getEntityId());
                         new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
                     }

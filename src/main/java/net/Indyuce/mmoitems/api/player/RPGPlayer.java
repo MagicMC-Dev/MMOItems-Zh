@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.player;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.player.CooldownInfo;
+import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -141,7 +141,7 @@ public abstract class RPGPlayer {
 
         if (playerData.getMMOPlayerData().getCooldownMap().isOnCooldown(data.getAbility())) {
             CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(data.getAbility());
-            if (data.getCastingMode().displaysMessage()) {
+            if (!data.getTriggerType().isSilent()) {
                 StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
                 double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown();
 

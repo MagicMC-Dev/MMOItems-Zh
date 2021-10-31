@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 
 public class Bouncy_Fireball extends VectorAbility {
     public Bouncy_Fireball() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 20);
         addModifier("damage", 5);
@@ -30,11 +30,11 @@ public class Bouncy_Fireball extends VectorAbility {
 	}
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_SNOWBALL_THROW, 2, 0);
         new BukkitRunnable() {
             final Vector vec = ability.getTarget().setY(0).normalize().multiply(.5 * ability.getModifier("speed"));
-            final Location loc = attack.getDamager().getLocation().clone().add(0, 1.2, 0);
+            final Location loc = attack.getPlayer().getLocation().clone().add(0, 1.2, 0);
             int j = 0;
             int bounces = 0;
 
@@ -72,7 +72,7 @@ public class Bouncy_Fireball extends VectorAbility {
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
                         if (entity.getLocation().distanceSquared(loc) < radius * radius)
-                            if (MMOUtils.canTarget(attack.getDamager(), entity)) {
+                            if (MMOUtils.canTarget(attack.getPlayer(), entity)) {
                                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
                                 entity.setFireTicks((int) (ignite * 20));
                             }

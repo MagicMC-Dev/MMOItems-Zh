@@ -14,15 +14,15 @@ public class LightningSpirit implements StaffAttackHandler {
 
     @Override
     public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
-        attackMeta.getDamager().getWorld().playSound(attackMeta.getDamager().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
+        attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
 
-        Location loc = attackMeta.getDamager().getEyeLocation();
-        MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getDamager(), range,
-                entity -> MMOUtils.canTarget(attackMeta.getDamager(), entity, InteractionType.OFFENSE_ACTION));
+        Location loc = attackMeta.getPlayer().getEyeLocation();
+        MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getPlayer(), range,
+                entity -> MMOUtils.canTarget(attackMeta.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
 
         if (trace.hasHit())
             attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
-        trace.draw(loc, attackMeta.getDamager().getEyeLocation().getDirection(), 2,
+        trace.draw(loc, attackMeta.getPlayer().getEyeLocation().getDirection(), 2,
                 loc1 -> loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 0));
     }
 }

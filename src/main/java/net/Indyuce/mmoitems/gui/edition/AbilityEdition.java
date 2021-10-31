@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -68,17 +68,17 @@ public class AbilityEdition extends EditionInventory {
 			String castModeConfigString = getEditedSection().getString("ability." + configKey + ".mode");
 			String castModeFormat = castModeConfigString == null ? ""
 					: castModeConfigString.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
-			CastingMode castMode = CastingMode.safeValueOf(castModeFormat);
+			TriggerType castMode = TriggerType.safeValueOf(castModeFormat);
 
 			ItemStack castModeItem = new ItemStack(Material.ARMOR_STAND);
 			ItemMeta castModeItemMeta = castModeItem.getItemMeta();
-			castModeItemMeta.setDisplayName(ChatColor.GREEN + "Casting Mode");
+			castModeItemMeta.setDisplayName(ChatColor.GREEN + "Trigger");
 			List<String> castModeItemLore = new ArrayList<>();
 			castModeItemLore.add(ChatColor.GRAY + "Choose what action the player needs to");
 			castModeItemLore.add(ChatColor.GRAY + "perform in order to cast your ability.");
 			castModeItemLore.add("");
 			castModeItemLore.add(ChatColor.GRAY + "Current Value: "
-					+ (castMode == null ? ChatColor.RED + "No mode selected." : ChatColor.GOLD + castMode.getName()));
+					+ (castMode == null ? ChatColor.RED + "No trigger selected." : ChatColor.GOLD + castMode.getName()));
 			castModeItemLore.add("");
 			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to select.");
 			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
@@ -173,20 +173,20 @@ public class AbilityEdition extends EditionInventory {
 			return;
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Casting Mode")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Trigger")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL) {
 				new StatEdition(this, ItemStats.ABILITIES, configKey, "mode").enable();
 
 				player.sendMessage("");
-				player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Available Casting Modes");
-				for (CastingMode castMode : ability.getSupportedCastingModes())
+				player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Available Triggers");
+				for (TriggerType castMode : TriggerType.values())
 					player.sendMessage("* " + ChatColor.GREEN + castMode.name());
 			}
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("ability." + configKey + ".mode")) {
 				getEditedSection().set("ability." + configKey + ".mode", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the casting mode.");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the ability trigger.");
 			}
 			return;
 		}

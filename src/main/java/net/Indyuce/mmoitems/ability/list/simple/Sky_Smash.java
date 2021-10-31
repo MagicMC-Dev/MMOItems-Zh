@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Sky_Smash extends SimpleAbility {
     public Sky_Smash() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 10);
         addModifier("damage", 3);
@@ -27,20 +27,20 @@ public class Sky_Smash extends SimpleAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double damage = ability.getModifier("damage");
         double knockUp = ability.getModifier("knock-up");
 
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, .5f);
-        attack.getDamager().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 254));
-        Location loc = attack.getDamager().getEyeLocation().add(attack.getDamager().getEyeLocation().getDirection().multiply(3));
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, .5f);
+        attack.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 254));
+        Location loc = attack.getPlayer().getEyeLocation().add(attack.getPlayer().getEyeLocation().getDirection().multiply(3));
         loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
         loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 16, 0, 0, 0, .1);
 
         for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-            if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < 10) {
+            if (MMOUtils.canTarget(attack.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) < 10) {
                 new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) entity);
-                Location loc1 = attack.getDamager().getEyeLocation().clone();
+                Location loc1 = attack.getPlayer().getEyeLocation().clone();
                 loc1.setPitch(-70);
                 entity.setVelocity(loc1.getDirection().multiply(1.2 * knockUp));
             }

@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
 
 public class Heavy_Charge extends VectorAbility {
     public Heavy_Charge() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("damage", 6);
         addModifier("knockback", 1);
@@ -27,7 +27,7 @@ public class Heavy_Charge extends VectorAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
         double knockback = ability.getModifier("knockback");
 
         new BukkitRunnable() {
@@ -39,16 +39,16 @@ public class Heavy_Charge extends VectorAbility {
                     cancel();
 
                 if (ti < 9) {
-                    attack.getDamager().setVelocity(vec);
-                    attack.getDamager().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, attack.getDamager().getLocation().add(0, 1, 0), 3, .13, .13, .13, 0);
+                    attack.getPlayer().setVelocity(vec);
+                    attack.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, attack.getPlayer().getLocation().add(0, 1, 0), 3, .13, .13, .13, 0);
                 }
 
-                for (Entity target : attack.getDamager().getNearbyEntities(1, 1, 1))
-                    if (MMOUtils.canTarget(attack.getDamager(), target)) {
-                        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, 1);
-                        attack.getDamager().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
-                        target.setVelocity(attack.getDamager().getVelocity().setY(0.3).multiply(1.7 * knockback));
-                        attack.getDamager().setVelocity(attack.getDamager().getVelocity().setX(0).setY(0).setZ(0));
+                for (Entity target : attack.getPlayer().getNearbyEntities(1, 1, 1))
+                    if (MMOUtils.canTarget(attack.getPlayer(), target)) {
+                        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1, 1);
+                        attack.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
+                        target.setVelocity(attack.getPlayer().getVelocity().setY(0.3).multiply(1.7 * knockback));
+                        attack.getPlayer().setVelocity(attack.getPlayer().getVelocity().setX(0).setY(0).setZ(0));
                         new AttackMetadata(new DamageMetadata(ability.getModifier("damage"), DamageType.SKILL, DamageType.PHYSICAL), attack.getStats()).damage((LivingEntity) target);
                         cancel();
                         break;

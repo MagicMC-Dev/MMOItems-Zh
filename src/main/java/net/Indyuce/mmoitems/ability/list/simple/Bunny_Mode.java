@@ -1,11 +1,11 @@
 package net.Indyuce.mmoitems.ability.list.simple;
 
+import io.lumine.mythic.lib.api.util.TemporaryListener;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.util.TemporaryListener;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -17,8 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Bunny_Mode extends SimpleAbility {
     public Bunny_Mode() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 20);
         addModifier("jump-force", 1);
@@ -29,13 +28,13 @@ public class Bunny_Mode extends SimpleAbility {
 	}
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double duration = ability.getModifier("duration") * 20;
         double y = ability.getModifier("jump-force");
         double xz = ability.getModifier("speed");
 
         new BukkitRunnable() {
-            final BunnyHandler handler = new BunnyHandler(attack.getDamager(), duration);
+            final BunnyHandler handler = new BunnyHandler(attack.getPlayer(), duration);
             int j = 0;
 
             public void run() {
@@ -45,12 +44,12 @@ public class Bunny_Mode extends SimpleAbility {
                     return;
                 }
 
-                if (attack.getDamager().getLocation().add(0, -.5, 0).getBlock().getType().isSolid()) {
-                    attack.getDamager()
-                            .setVelocity(attack.getDamager().getEyeLocation().getDirection().setY(0).normalize().multiply(.8 * xz).setY(0.5 * y / xz));
-                    attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 2, 1);
+                if (attack.getPlayer().getLocation().add(0, -.5, 0).getBlock().getType().isSolid()) {
+                    attack.getPlayer()
+                            .setVelocity(attack.getPlayer().getEyeLocation().getDirection().setY(0).normalize().multiply(.8 * xz).setY(0.5 * y / xz));
+                    attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDER_DRAGON_FLAP.toSound(), 2, 1);
                     for (double a = 0; a < Math.PI * 2; a += Math.PI / 12)
-                        attack.getDamager().getWorld().spawnParticle(Particle.CLOUD, attack.getDamager().getLocation(), 0, Math.cos(a), 0, Math.sin(a),
+                        attack.getPlayer().getWorld().spawnParticle(Particle.CLOUD, attack.getPlayer().getLocation(), 0, Math.cos(a), 0, Math.sin(a),
                                 .2);
                 }
             }
@@ -66,7 +65,7 @@ public class Bunny_Mode extends SimpleAbility {
 
 			this.player = player;
 
-			Bukkit.getScheduler().runTaskLater(MMOItems.plugin, (Runnable) this::close, (long) (duration * 20));
+			close((long) (duration *20));
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

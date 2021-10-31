@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
@@ -139,9 +140,6 @@ public class EntityManager implements Listener {
 
         ProjectileData data = getProjectileData(projectile);
         LivingEntity target = (LivingEntity) event.getEntity();
-
-        // Apply on hit effects
-        data.getAttackMetadata().applyOnHitEffects(target);
 
         // Apply power vanilla enchant
         if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()

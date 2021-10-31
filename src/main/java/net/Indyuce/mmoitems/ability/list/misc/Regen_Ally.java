@@ -1,17 +1,18 @@
 package net.Indyuce.mmoitems.ability.list.misc;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.FriendlyTargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.FriendlyTargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Regen_Ally extends FriendlyTargetAbility {
 	public Regen_Ally() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super();
 
 		addModifier("heal", 7);
 		addModifier("duration", 3);
@@ -21,7 +22,7 @@ public class Regen_Ally extends FriendlyTargetAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, FriendlyTargetAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, FriendlyTargetAbilityMetadata ability) {
 		LivingEntity target = ability.getTarget();
 
 		new BukkitRunnable() {

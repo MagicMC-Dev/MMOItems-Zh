@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.ability.list.vector;
 
+import io.lumine.mythic.lib.api.util.TemporaryListener;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
@@ -7,8 +8,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.util.TemporaryListener;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -24,8 +23,7 @@ import org.bukkit.util.Vector;
 
 public class Explosive_Turkey extends VectorAbility implements Listener {
 	public Explosive_Turkey() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-				CastingMode.SHIFT_RIGHT_CLICK);
+		super();
 
 		addModifier("damage", 6);
 		addModifier("radius", 4);
@@ -37,7 +35,7 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
 		double duration = ability.getModifier("duration") * 10;
 		double damage = ability.getModifier("damage");
 		double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
@@ -45,7 +43,7 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 
 		Vector vec = ability.getTarget().normalize().multiply(.6);
 
-		Chicken chicken = (Chicken) attack.getDamager().getWorld().spawnEntity(attack.getDamager().getLocation().add(0, 1.3, 0).add(vec),
+		Chicken chicken = (Chicken) attack.getPlayer().getWorld().spawnEntity(attack.getPlayer().getLocation().add(0, 1.3, 0).add(vec),
 				EntityType.CHICKEN);
 		ChickenHandler chickenHandler = new ChickenHandler(chicken);
 		chicken.setInvulnerable(true);
@@ -60,10 +58,10 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 		chicken.setHealth(2048);
 
 		/*
-		 * when items are moving through the air, they loose a percent of their
-		 * velocity proportionally to their coordinates in each axis. this means
+		 * When items are moving through the air, they loose a percent of their
+		 * velocity proportionally to their coordinates in each axis. This means
 		 * that if the trajectory is not affected, the ratio of x/y will always
-		 * be the same. check for any change of that ratio to check for a
+		 * be the same. Check for any change of that ratio to check for a
 		 * trajectory change
 		 */
 		chicken.setVelocity(vec);
@@ -96,7 +94,7 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 					chicken.getWorld().playSound(chicken.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, 1.5f);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(chicken.getLocation()))
 						if (!entity.isDead() && entity.getLocation().distanceSquared(chicken.getLocation()) < radiusSquared
-								&& MMOUtils.canTarget(attack.getDamager(), entity)) {
+								&& MMOUtils.canTarget(attack.getPlayer(), entity)) {
 							new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats()).damage((LivingEntity) entity);
 							entity.setVelocity(entity.getLocation().toVector().subtract(chicken.getLocation().toVector()).multiply(.1 * knockback)
 									.setY(.4 * knockback));
@@ -106,8 +104,8 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 	}
 
-	/*
-	 * this fixes an issue where chickens sometimes drop
+	/**
+	 * This fixes an issue where chickens sometimes drop
 	 */
 	public static class ChickenHandler extends TemporaryListener {
 		private final Chicken chicken;
@@ -119,13 +117,15 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 		}
 
 		/*
-		 * make sure the chicken is ALWAYS killed, this class really uses
+		 * Make sure the chicken is ALWAYS killed, this class really uses
 		 * overkill methods but there are plently issues with chickens remaining
 		 */
 		@Override
-		public void close() {
-			chicken.remove();
-			super.close();
+		public boolean close() {
+		    boolean b = super.close();
+		    if (b)
+		        chicken.remove();
+		    return b;
 		}
 
 		@EventHandler

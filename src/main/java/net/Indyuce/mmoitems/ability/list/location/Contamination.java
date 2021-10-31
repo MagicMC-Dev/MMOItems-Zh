@@ -8,7 +8,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -18,8 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Contamination extends LocationAbility {
 	public Contamination() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-				CastingMode.SHIFT_RIGHT_CLICK);
+		super();
 
 		addModifier("damage", 2);
 		addModifier("duration", 8);
@@ -29,7 +27,7 @@ public class Contamination extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 
 		double duration = Math.min(30, ability.getModifier("duration")) * 20;
@@ -57,7 +55,7 @@ public class Contamination extends LocationAbility {
 				if (j % 10 == 0) {
 					loc.getWorld().playSound(loc, VersionSound.ENTITY_ENDERMAN_HURT.toSound(), 2, 1);
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-						if (MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) <= 25)
+						if (MMOUtils.canTarget(attack.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) <= 25)
 							new AttackMetadata(new DamageMetadata(dps, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity, false);
 				}
 			}

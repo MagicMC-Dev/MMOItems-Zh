@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.api.item;
 
-import io.lumine.mythic.lib.player.CooldownObject;
+import io.lumine.mythic.lib.player.cooldown.CooldownObject;
 import net.Indyuce.mmoitems.api.Type;
 
 /**

@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 
 public class Life_Ender extends LocationAbility {
 	public Life_Ender() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+		super();
 
 		addModifier("damage", 5);
 		addModifier("knockback", 1);
@@ -30,13 +30,13 @@ public class Life_Ender extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 		double damage = ability.getModifier("damage");
 		double knockback = ability.getModifier("knockback");
 		double radius = ability.getModifier("radius");
 
-		attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, 1);
+		attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 2, 1);
 		new BukkitRunnable() {
 			final Location source = loc.clone().add(5 * Math.cos(random.nextDouble() * 2 * Math.PI), 20, 5 * Math.sin(random.nextDouble() * 2 * Math.PI));
 			final Vector vec = loc.subtract(source).toVector().multiply((double) 1 / 30);
@@ -63,7 +63,7 @@ public class Life_Ender extends LocationAbility {
 						source.getWorld().spawnParticle(Particle.SMOKE_LARGE, source, 0, Math.cos(j), 0, Math.sin(j), .5);
 
 					for (Entity entity : MMOUtils.getNearbyChunkEntities(source))
-						if (entity.getLocation().distanceSquared(source) < radius * radius && MMOUtils.canTarget(attack.getDamager(), entity)) {
+						if (entity.getLocation().distanceSquared(source) < radius * radius && MMOUtils.canTarget(attack.getPlayer(), entity)) {
 							new AttackMetadata(new DamageMetadata(damage, DamageType.SKILL, DamageType.MAGIC), attack.getStats()).damage((LivingEntity) entity);
 							entity.setVelocity(entity.getLocation().subtract(source).toVector().setY(.75).normalize().multiply(knockback));
 						}

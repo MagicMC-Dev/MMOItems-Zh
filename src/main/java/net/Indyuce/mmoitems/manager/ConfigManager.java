@@ -2,12 +2,13 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
+import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -135,7 +136,7 @@ public class ConfigManager implements Reloadable {
                 if (!abilities.getConfig().getKeys(true).contains("modifier." + modifier))
                     abilities.getConfig().set("modifier." + modifier, MMOUtils.caseOnWords(modifier.replace("-", " ")));
         }
-        for (CastingMode mode : CastingMode.values())
+        for (TriggerType mode : TriggerType.values())
             if (!abilities.getConfig().contains("cast-mode." + mode.getLowerCaseId()))
                 abilities.getConfig().set("cast-mode." + mode.getLowerCaseId(), mode.getName());
         abilities.save();
@@ -252,7 +253,7 @@ public class ConfigManager implements Reloadable {
         return configName != null ? configName : ability.getName();
     }
 
-    public String getCastingModeName(CastingMode mode) {
+    public String getCastingModeName(TriggerType mode) {
         return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId());
     }
 

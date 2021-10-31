@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -20,8 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Magical_Shield extends SimpleAbility {
     public Magical_Shield() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("power", 40);
         addModifier("radius", 5);
@@ -32,18 +31,18 @@ public class Magical_Shield extends SimpleAbility {
 	}
 
     @Override
-    public SimpleAbilityMetadata canBeCast(ItemAttackMetadata attack, LivingEntity target, AbilityData ability) {
-        return attack.getDamager().isOnGround() ? new SimpleAbilityMetadata(ability) : null;
+    public SimpleAbilityMetadata canBeCast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
+        return attack.getPlayer().isOnGround() ? new SimpleAbilityMetadata(ability) : null;
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, SimpleAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, SimpleAbilityMetadata ability) {
         double duration = ability.getModifier("duration");
         double radiusSquared = Math.pow(ability.getModifier("radius"), 2);
         double power = ability.getModifier("power") / 100;
 
-        attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
-        new MagicalShield(attack.getDamager().getLocation().clone(), duration, radiusSquared, power);
+        attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), VersionSound.ENTITY_ENDERMAN_TELEPORT.toSound(), 3, 0);
+        new MagicalShield(attack.getPlayer().getLocation().clone(), duration, radiusSquared, power);
     }
 
 	public static class MagicalShield extends BukkitRunnable implements Listener {

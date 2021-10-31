@@ -1,22 +1,25 @@
 package net.Indyuce.mmoitems.stat.data;
 
+import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.comp.mythicmobs.MythicSkillInfo;
+import io.lumine.mythic.lib.skill.metadata.TriggerMetadata;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.skill.trigger.TriggeredSkill;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import io.lumine.mythic.lib.comp.mythicmobs.MythicSkillInfo;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
-import com.google.gson.JsonObject;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Ability;
-import net.Indyuce.mmoitems.ability.Ability.CastingMode;
-
-public class AbilityData implements MythicSkillInfo {
+public class AbilityData implements MythicSkillInfo, TriggeredSkill {
 	private final Ability ability;
-	private final CastingMode castMode;
+	private final TriggerType triggerType;
 	private final Map<String, Double> modifiers = new HashMap<>();
 
 	@Override
@@ -24,7 +27,7 @@ public class AbilityData implements MythicSkillInfo {
 		if (!(obj instanceof AbilityData)) { return false; }
 
 		// Compare casitng mode
-		if (((AbilityData) obj).getCastingMode() != getCastingMode()) { return false; }
+		if (((AbilityData) obj).getTriggerType() != getTriggerType()) { return false; }
 
 		// Not same ability
 		if (!((AbilityData) obj).getAbility().equals(getAbility())) { return false; }
@@ -41,9 +44,15 @@ public class AbilityData implements MythicSkillInfo {
 		return true;
 	}
 
+	@Override
+	public void execute(@Nullable TriggerMetadata triggerMetadata) {
+		PlayerData playerData = PlayerData.get(triggerMetadata.getAttack().getPlayer().getUniqueId());
+		playerData.cast(triggerMetadata.getAttack(), triggerMetadata.getTarget() instanceof LivingEntity ? (LivingEntity) triggerMetadata.getTarget() : null, this);
+	}
+
 	public AbilityData(JsonObject object) {
 		ability = MMOItems.plugin.getAbilities().getAbility(object.get("Id").getAsString());
-		castMode = CastingMode.valueOf(object.get("CastMode").getAsString());
+		triggerType = TriggerType.valueOf(object.get("CastMode").getAsString());
 
 		JsonObject modifiers = object.getAsJsonObject("Modifiers");
 		modifiers.entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
@@ -57,26 +66,24 @@ public class AbilityData implements MythicSkillInfo {
 		ability = MMOItems.plugin.getAbilities().getAbility(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
-		castMode = CastingMode.valueOf(modeFormat);
-
-		Validate.isTrue(ability.isAllowedMode(castMode), "Ability " + ability.getID() + " does not support cast mode " + castMode.name());
+		triggerType = TriggerType.valueOf(modeFormat);
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
 				modifiers.put(key, config.getDouble(key));
 	}
 
-	public AbilityData(Ability ability, CastingMode castMode) {
+	public AbilityData(Ability ability, TriggerType triggerType) {
 		this.ability = ability;
-		this.castMode = castMode;
+		this.triggerType = triggerType;
 	}
 
 	public Ability getAbility() {
 		return ability;
 	}
 
-	public CastingMode getCastingMode() {
-		return castMode;
+	public TriggerType getTriggerType() {
+		return triggerType;
 	}
 
 	public Set<String> getModifiers() {
@@ -99,7 +106,7 @@ public class AbilityData implements MythicSkillInfo {
 	public JsonObject toJson() {
 		JsonObject object = new JsonObject();
 		object.addProperty("Id", ability.getID());
-		object.addProperty("CastMode", castMode.name());
+		object.addProperty("CastMode", triggerType.name());
 
 		JsonObject modifiers = new JsonObject();
 		this.modifiers.keySet().forEach(modifier -> modifiers.addProperty(modifier, getModifier(modifier)));

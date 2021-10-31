@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.VectorAbility;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import org.bukkit.Color;
@@ -29,8 +30,7 @@ import javax.annotation.Nullable;
 
 public class Shulker_Missile extends VectorAbility implements Listener {
     public Shulker_Missile() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK,
-                CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 12);
         addModifier("damage", 5);
@@ -41,7 +41,7 @@ public class Shulker_Missile extends VectorAbility implements Listener {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, VectorAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
         double duration = ability.getModifier("duration");
 
         new BukkitRunnable() {
@@ -54,10 +54,10 @@ public class Shulker_Missile extends VectorAbility implements Listener {
                 }
 
                 Vector vec = ability.getTarget();
-                attack.getDamager().getWorld().playSound(attack.getDamager().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
-                ShulkerBullet shulkerBullet = (ShulkerBullet) attack.getDamager().getWorld().spawnEntity(attack.getDamager().getLocation().add(0, 1, 0),
+                attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+                ShulkerBullet shulkerBullet = (ShulkerBullet) attack.getPlayer().getWorld().spawnEntity(attack.getPlayer().getLocation().add(0, 1, 0),
                         EntityType.SHULKER_BULLET);
-                shulkerBullet.setShooter(attack.getDamager());
+                shulkerBullet.setShooter(attack.getPlayer());
 
                 ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats());
                 MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(attackMeta, ability.getModifier("effect-duration")));
@@ -86,7 +86,7 @@ public class Shulker_Missile extends VectorAbility implements Listener {
                 return;
 
             ShulkerMissileEntityData data = (ShulkerMissileEntityData) MMOItems.plugin.getEntities().getEntityData(damager);
-            if (!MMOUtils.canTarget(data.attackMeta.getDamager(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
+            if (!MMOUtils.canTarget(data.attackMeta.getPlayer(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
                 event.setCancelled(true);
                 return;
             }

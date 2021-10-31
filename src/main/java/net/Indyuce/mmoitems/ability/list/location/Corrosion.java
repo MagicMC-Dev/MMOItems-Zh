@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.ability.list.location;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.LocationAbility;
 import net.Indyuce.mmoitems.ability.metadata.LocationAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Corrosion extends LocationAbility {
 	public Corrosion() {
-		super(CastingMode.ON_HIT, CastingMode.WHEN_HIT);
+		super();
 
 		addModifier("duration", 4);
 		addModifier("amplifier", 1);
@@ -25,7 +25,7 @@ public class Corrosion extends LocationAbility {
 	}
 
 	@Override
-	public void whenCast(ItemAttackMetadata attack, LocationAbilityMetadata ability) {
+	public void whenCast(AttackMetadata attack, LocationAbilityMetadata ability) {
 		Location loc = ability.getTarget();
 
 		int duration = (int) (ability.getModifier("duration") * 20);
@@ -37,7 +37,7 @@ public class Corrosion extends LocationAbility {
 		loc.getWorld().playSound(loc, Sound.BLOCK_BREWING_STAND_BREW, 2, 0);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getDamager(), entity)) {
+			if (entity.getLocation().distanceSquared(loc) < radiusSquared && MMOUtils.canTarget(attack.getPlayer(), entity)) {
 				((LivingEntity) entity).removePotionEffect(PotionEffectType.POISON);
 				((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
 			}

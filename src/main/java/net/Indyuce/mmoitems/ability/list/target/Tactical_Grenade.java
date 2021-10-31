@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Tactical_Grenade extends TargetAbility {
     public Tactical_Grenade() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("cooldown", 10);
         addModifier("mana", 0);
@@ -32,11 +32,11 @@ public class Tactical_Grenade extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         new BukkitRunnable() {
-            final Location loc = attack.getDamager().getLocation().add(0, .1, 0);
+            final Location loc = attack.getPlayer().getLocation().add(0, .1, 0);
             final double radius = ability.getModifier("radius");
             final double knockup = .7 * ability.getModifier("knock-up");
             final List<Integer> hit = new ArrayList<>();
@@ -59,7 +59,7 @@ public class Tactical_Grenade extends TargetAbility {
                 loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
 
                 for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canTarget(attack.getDamager(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
+                    if (!hit.contains(entity.getEntityId()) && MMOUtils.canTarget(attack.getPlayer(), entity) && entity.getLocation().distanceSquared(loc) < radius * radius) {
 
                         /*
                          * stop the runnable as soon as the grenade finally hits

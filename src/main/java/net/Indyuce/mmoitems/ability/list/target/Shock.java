@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Shock extends TargetAbility {
     public Shock() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT, CastingMode.LEFT_CLICK, CastingMode.RIGHT_CLICK, CastingMode.SHIFT_LEFT_CLICK, CastingMode.SHIFT_RIGHT_CLICK);
+        super();
 
         addModifier("duration", 2);
         addModifier("cooldown", 8);
@@ -22,7 +22,7 @@ public class Shock extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         double duration = ability.getModifier("duration");
@@ -30,7 +30,7 @@ public class Shock extends TargetAbility {
         target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_ZOMBIE_PIGMAN_ANGRY.toSound(), 1, 2);
         new BukkitRunnable() {
             final Location loc = target.getLocation();
-            final double rads = Math.toRadians(attack.getDamager().getEyeLocation().getYaw() - 90);
+            final double rads = Math.toRadians(attack.getPlayer().getEyeLocation().getYaw() - 90);
             double ti = rads;
 
             public void run() {

@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,7 +28,7 @@ public class Weaken_Target extends TargetAbility implements Listener {
     public final Map<UUID, WeakenedInfo> marked = new HashMap<>();
 
     public Weaken_Target() {
-        super(CastingMode.ON_HIT, CastingMode.WHEN_HIT);
+        super();
 
         addModifier("duration", 4);
         addModifier("extra-damage", 40);
@@ -38,7 +38,7 @@ public class Weaken_Target extends TargetAbility implements Listener {
 	}
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         marked.put(target.getUniqueId(), new WeakenedInfo(ability.getModifier("extra-damage")));

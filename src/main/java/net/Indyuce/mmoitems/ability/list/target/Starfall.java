@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.TargetAbility;
 import net.Indyuce.mmoitems.ability.metadata.TargetAbilityMetadata;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 
 public class Starfall extends TargetAbility {
     public Starfall() {
-        super(CastingMode.ON_HIT);
+        super();
 
         addModifier("cooldown", 8);
         addModifier("damage", 3.5);
@@ -24,7 +24,7 @@ public class Starfall extends TargetAbility {
     }
 
     @Override
-    public void whenCast(ItemAttackMetadata attack, TargetAbilityMetadata ability) {
+    public void whenCast(AttackMetadata attack, TargetAbilityMetadata ability) {
         LivingEntity target = ability.getTarget();
 
         new BukkitRunnable() {

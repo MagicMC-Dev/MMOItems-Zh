@@ -28,6 +28,10 @@ public class ItemAttackMetadata extends AttackMetadata {
         return PlayerData.get(getPlayer().getUniqueId());
     }
 
+    public ItemAttackMetadata clone() {
+        return new ItemAttackMetadata(getDamage().clone(), getStats());
+    }
+
     /**
      * Applies on-hit effects and deals damage to the target
      *

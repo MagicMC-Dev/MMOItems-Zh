@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
 import java.util.Random;
 
 public interface LuteAttackHandler {
-	void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double attackDamage, double range, Vector weight, SoundReader sound);
+	void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range, Vector weight, SoundReader sound);
 
 	Random random = new Random();
 }

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -39,7 +40,7 @@ public class SunfireSpirit implements StaffAttackHandler {
                         loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
                         for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
                             if (MMOUtils.canTarget(attackMeta.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
-                                attackMeta.applyEffectsAndDamage(nbt, (LivingEntity) target);
+                                attackMeta.clone().applyEffectsAndDamage(nbt, (LivingEntity) target );
                         cancel();
                         break;
                     }

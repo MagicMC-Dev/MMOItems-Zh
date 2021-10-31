@@ -4,11 +4,8 @@ import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.DamageMetadata;
-import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
@@ -22,7 +19,7 @@ import org.bukkit.util.Vector;
 public class SlashLuteAttack implements LuteAttackHandler {
 
 	@Override
-	public void handle(ItemAttackMetadata attack, NBTItem nbt, double attackDamage, double range, Vector weight, SoundReader sound) {
+	public void handle(ItemAttackMetadata attack, NBTItem nbt, double range, Vector weight, SoundReader sound) {
 		new BukkitRunnable() {
 			final Vector vec = attack.getPlayer().getEyeLocation().getDirection();
 			final Location loc = attack.getPlayer().getLocation().add(0, 1.3, 0);
@@ -61,6 +58,6 @@ public class SlashLuteAttack implements LuteAttackHandler {
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(attack.getPlayer().getLocation()))
 			if (entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40 && attack.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
-				new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE), attack.getStats()).applyEffectsAndDamage(nbt, (LivingEntity) entity);
+				attack.clone().applyEffectsAndDamage(nbt, (LivingEntity) entity);
 	}
 }

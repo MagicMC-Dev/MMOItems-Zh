@@ -116,16 +116,9 @@ public class Explosive_Turkey extends VectorAbility implements Listener {
 			this.chicken = chicken;
 		}
 
-		/*
-		 * Make sure the chicken is ALWAYS killed, this class really uses
-		 * overkill methods but there are plently issues with chickens remaining
-		 */
 		@Override
-		public boolean close() {
-		    boolean b = super.close();
-		    if (b)
-		        chicken.remove();
-		    return b;
+		public void whenClosed() {
+			chicken.remove();
 		}
 
 		@EventHandler

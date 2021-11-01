@@ -73,5 +73,10 @@ public class Bunny_Mode extends SimpleAbility {
 			if (event.getEntity().equals(player) && event.getCause() == DamageCause.FALL)
 				event.setCancelled(true);
 		}
-	}
+
+        @Override
+        public void whenClosed() {
+            // Nothing
+        }
+    }
 }

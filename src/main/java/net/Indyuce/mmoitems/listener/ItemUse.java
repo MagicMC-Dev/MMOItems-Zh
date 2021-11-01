@@ -143,11 +143,6 @@ public class ItemUse implements Listener {
         new ItemAttackMetadata(event.getAttack()).applyEffects(item, event.getEntity());
     }
 
-    private ItemAttackMetadata getAttack(PlayerData playerData, EntityDamageByEntityEvent event) {
-        StatMap.CachedStatMap cachedStatMap = playerData.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
-        return new ItemAttackMetadata(new DamageMetadata(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL), cachedStatMap);
-    }
-
     /**
      * Event priority set to LOW to fix an infinite-exp glitch with
      * MMOCore. MMOCore experience source listens on HIGH and must be

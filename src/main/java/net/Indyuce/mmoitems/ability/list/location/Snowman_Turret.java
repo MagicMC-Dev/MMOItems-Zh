@@ -95,5 +95,10 @@ public class Snowman_Turret extends LocationAbility {
 			if (entities.contains(event.getDamager().getUniqueId()))
 				event.setDamage(damage);
 		}
-	}
+
+        @Override
+        public void whenClosed() {
+            // Nothing
+        }
+    }
 }

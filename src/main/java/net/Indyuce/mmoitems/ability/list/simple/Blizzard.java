@@ -74,5 +74,10 @@ public class Blizzard extends SimpleAbility {
 			if (entities.contains(event.getDamager().getUniqueId()))
 				event.setDamage(damage);
 		}
-	}
+
+        @Override
+        public void whenClosed() {
+            // Nothing
+        }
+    }
 }

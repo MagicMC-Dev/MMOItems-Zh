@@ -76,5 +76,10 @@ public class Corrupted_Fangs extends VectorAbility implements Listener {
                     attackMeta.damage((LivingEntity) event.getEntity());
             }
         }
+
+        @Override
+        public void whenClosed() {
+            // Nothing
+        }
     }
 }

@@ -72,9 +72,8 @@ public class Chicken_Wraith extends SimpleAbility {
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 		public void a(PlayerEggThrowEvent event) {
-			if (entities.contains(event.getEgg().getEntityId())) {
+			if (entities.contains(event.getEgg().getEntityId()))
 				event.setHatching(false);
-			}
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -82,5 +81,10 @@ public class Chicken_Wraith extends SimpleAbility {
 			if (entities.contains(event.getDamager().getEntityId()))
 				event.setDamage(damage);
 		}
-	}
+
+        @Override
+        public void whenClosed() {
+            // Nothing
+        }
+    }
 }

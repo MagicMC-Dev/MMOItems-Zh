@@ -37,8 +37,8 @@ public class TNT_Throw extends VectorAbility implements Listener {
         attack.getPlayer().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, attack.getPlayer().getLocation().add(0, 1, 0), 12, 0, 0, 0, .1);
     }
 
-	/*
-	 * used to cancel team damage and other things
+	/**
+	 * Used to cancel team damage and other things
 	 */
 	public static class CancelTeamDamage extends TemporaryListener {
 		private final Player player;
@@ -57,6 +57,11 @@ public class TNT_Throw extends VectorAbility implements Listener {
 		public void a(EntityDamageByEntityEvent event) {
 			if (event.getDamager().equals(tnt) && !MMOUtils.canTarget(player, event.getEntity()))
 				event.setCancelled(true);
+		}
+
+		@Override
+		public void whenClosed() {
+			// Nothing
 		}
 	}
 }

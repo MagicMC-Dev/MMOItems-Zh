@@ -293,7 +293,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		 */
 		if (message.contains("->")) {
 			String[] split = message.replace(" ", "").split(Pattern.quote("->"));
-			Validate.isTrue(split.length > 1, "You must specif two (both min and max) values");
+			Validate.isTrue(split.length > 1, "You must specify two (both min and max) values");
 
 			double min = Double.parseDouble(split[0]), max = Double.parseDouble(split[1]);
 			Validate.isTrue(max > min, "Max value must be greater than min value");

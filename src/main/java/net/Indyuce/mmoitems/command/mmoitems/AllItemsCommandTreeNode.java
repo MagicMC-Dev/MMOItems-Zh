@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 
 public class AllItemsCommandTreeNode extends CommandTreeNode {
 	public AllItemsCommandTreeNode(CommandTreeNode parent) {

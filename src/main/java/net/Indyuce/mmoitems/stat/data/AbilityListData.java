@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;

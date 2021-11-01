@@ -4,7 +4,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

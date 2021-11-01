@@ -9,8 +9,8 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
-import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
 
 public class CopyCommandTreeNode extends CommandTreeNode {
 	public CopyCommandTreeNode(CommandTreeNode parent) {

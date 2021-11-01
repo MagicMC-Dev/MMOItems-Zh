@@ -13,8 +13,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
-import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
 
 public class DropCommandTreeNode extends CommandTreeNode {
 	public DropCommandTreeNode(CommandTreeNode parent) {

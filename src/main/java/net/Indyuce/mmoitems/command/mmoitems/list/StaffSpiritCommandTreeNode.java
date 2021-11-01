@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 
 public class StaffSpiritCommandTreeNode extends CommandTreeNode {
 	public StaffSpiritCommandTreeNode(CommandTreeNode parent) {

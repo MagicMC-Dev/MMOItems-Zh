@@ -14,8 +14,8 @@ import net.Indyuce.mmoitems.api.droptable.item.MMOItemDropItem;
 import net.Indyuce.mmoitems.api.util.RandomAmount;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import io.lumine.mythic.lib.api.util.SmartGive;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
-import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
 
 public class GiveAllCommandTreeNode extends CommandTreeNode {
 	public GiveAllCommandTreeNode(CommandTreeNode parent) {

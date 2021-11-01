@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.command;
 
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeRoot;
-import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeRoot;
+import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.item.ItemCommandTreeNode;

@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.command.item;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.IdentifiedItem;
 import org.bukkit.ChatColor;

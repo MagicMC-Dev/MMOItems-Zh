@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.command.mmoitems.debug;
 
-import io.lumine.mythic.lib.mmolibcommands.api.CommandTreeNode;
-import io.lumine.mythic.lib.mmolibcommands.api.Parameter;
+import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.bukkit.Bukkit;

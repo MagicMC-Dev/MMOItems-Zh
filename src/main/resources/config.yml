@@ -247,6 +247,23 @@ permissions:
     abilities: false
     items: true
 
+#
+# When item stats has a numeric range of possibilities.
+# attack-damage:
+#    base: 10
+#    spread: 1
+#
+# Using the spread, a level, and a random number, we
+# obtain a random number (very related to the spread): 1.7
+#
+# If additive-spread-formula is true, this is added to the base:
+#    RESULT: 10 + 1.7  =  11.7 attack damage
+#
+# If additive-spread-formula is false, this is multiplied to the base:
+#    RESULT: 10 * 1.7  =  17 attack damage
+#
+additive-spread-formula: false
+
 # Disables non MMOItems from being crafted in the vanilla workbench.
 # Add [] if the list is empty.
 disable-vanilla-recipes: []

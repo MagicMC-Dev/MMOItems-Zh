@@ -32,8 +32,9 @@ public interface UpdatableRandomStatData {
      *
      * @param determinedItemLevel The level of the item
      *
-     * @return The rerolled StatData if the original is unreasonable, but if it must be kept,
-     *         it should be a clone of the original, probably using {@link Mergeable#cloneData()}
+     * @return The rerolled StatData if the original is unreasonable.
+     *         <br><br>
+     *         If the original is reasonable, a clone of it, probably using {@link Mergeable#cloneData()}
      */
     @NotNull <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel);
 }

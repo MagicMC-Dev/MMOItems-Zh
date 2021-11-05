@@ -92,6 +92,9 @@ public class ItemSkin extends UseItem {
 		return new ApplyResult(item);
 	}
 
+	public static final String tagHasSkin = "MMOITEMS_HAS_SKIN";
+	public static final String tagSkinID = "MMOITEMS_SKIN_ID";
+
 	/**
 	 * Applies the skin information from a skin consumable onto any item.
 	 *
@@ -104,16 +107,15 @@ public class ItemSkin extends UseItem {
 	 */
 	@NotNull public static ItemStack applySkin(@NotNull NBTItem target, @NotNull NBTItem skinItemNBT, @NotNull MMOItem skinItemMMO) {
 
-		target.addTag(new ItemTag("MMOITEMS_HAS_SKIN", true));
-		target.addTag(new ItemTag("MMOITEMS_SKIN_ID", skinItemNBT.getString("MMOITEMS_ITEM_ID")));
+		target.addTag(new ItemTag(tagHasSkin, true));
+		target.addTag(new ItemTag(tagSkinID, skinItemNBT.getString(tagSkinID)));
 		if (skinItemNBT.getInteger("CustomModelData") != 0) {
 			target.addTag(new ItemTag("CustomModelData", skinItemNBT.getInteger("CustomModelData"))); }
 		if (!skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
 			target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES"))); }
 
 		ItemStack item = target.toItem();
-		if (item.getType() != skinItemNBT.getItem().getType())
-			item.setType(skinItemNBT.getItem().getType());
+		if (item.getType() != skinItemNBT.getItem().getType()) { item.setType(skinItemNBT.getItem().getType()); }
 
 		ItemMeta meta = item.getItemMeta();
 		ItemMeta skinMeta = skinItemNBT.getItem().getItemMeta();

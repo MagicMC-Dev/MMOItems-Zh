@@ -24,7 +24,7 @@ public class RFFKeepSkins implements Listener {
         //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Skins");
 
         // Got skin?
-        if (!event.getReforger().getNBTItem().getBoolean("MMOITEMS_HAS_SKIN")) { return; }
+        if (!event.getReforger().getNBTItem().getBoolean(ItemSkin.tagHasSkin)) { return; }
         //RFG// MMOItems.log("§8Reforge §4EFG§7 Item has skin");
 
         // Apply skin to result

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat.data;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.interaction.ItemSkin;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -44,9 +45,22 @@ public class StoredTagsData implements StatData, Mergeable {
 
 	public StoredTagsData(NBTItem nbt) {
 		for (String tag : nbt.getTags()) {
+
+			// Usually ignore mmoitems
+			if (tag.startsWith("MMOITEMS_")) {
+
+				// Do not delete the skin tags (save them here)
+				if (!ItemSkin.tagHasSkin.equals(tag) && !ItemSkin.tagSkinID.equals(tag)) {
+
+					// Not either of the skin tags, skip this.
+					// Must be handled by its respective stat.
+					continue;
+				}
+			}
+
 			// Any vanilla or MMOItem tag should be ignored as those are
 			// automatically handled. Same for the History stat ones.
-			if (ignoreList.contains(tag) || tag.startsWith("MMOITEMS_") || tag.startsWith(ItemStackBuilder.history_keyword))
+			if (ignoreList.contains(tag) || tag.startsWith(ItemStackBuilder.history_keyword))
 				continue;
 
 			// As more methods are added we can add more types here

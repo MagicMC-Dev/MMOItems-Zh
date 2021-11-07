@@ -70,7 +70,6 @@ public class PlayerData {
         stats = new PlayerStats(this);
 
         load(new ConfigFile("/userdata", getUniqueId().toString()).getConfig());
-        updateInventory();
     }
 
     private void load(FileConfiguration config) {
@@ -492,7 +491,9 @@ public class PlayerData {
                 return;
             }
 
-            data.put(player, new PlayerData(mmo));
+            PlayerData playerData = new PlayerData(mmo);
+            data.put(player, playerData);
+            playerData.updateInventory();
             return;
         }
 

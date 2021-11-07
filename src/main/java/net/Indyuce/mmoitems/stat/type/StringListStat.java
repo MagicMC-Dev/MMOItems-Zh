@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -42,6 +43,95 @@ public class StringListStat extends ItemStat {
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+        // Empty stuff
+        if (!(data instanceof StringListData)) { return; }
+        if (((StringListData) data).getList().size() == 0) { return; }
+
+        // Chop
+        String joined = String.join(", ", ((StringListData) data).getList());
+        String format = MMOItems.plugin.getLanguage().getStatFormat(getPath());
+        String finalStr = format.replace("#", joined);
+
+        // Identify colour
+        StringBuilder col = new StringBuilder(""); int pnd = format.indexOf('#');
+        if (pnd > 0) {
+
+            // Everything before thay pound
+            String input = format.substring(0, pnd);
+            int length = input.length();
+
+            for(int index = length - 1; index > -1; --index) {
+
+                // Observe char
+                char section = input.charAt(index);
+
+                boolean isSection = (section == '\u00a7' || section == '&');
+                boolean isAngle = (section == '<');
+
+                // Is there at least one char, as for it to be a color code
+                if (isSection && index < (length - 1)) {
+
+                    // Observe next character
+                    char c = input.charAt(index + 1);
+                    ChatColor color = ChatColor.getByChar(c);
+
+                    // Was it a color code?
+                    if (color != null) {
+
+                        // That's our color
+                        col.insert(0, color.toString());
+
+                        // If its a reset or a color character, that's the end
+                        if (color.isColor() || color == ChatColor.RESET) {
+                            break;
+                        }
+                    }
+
+                // If there is at least 10 chars, as for it to complete HEX######>
+                } else if(isAngle && index < (length - 10)) {
+
+                    // Observe tenth characters
+                    char aC = input.charAt(index + 10);
+
+                    // Closing bracket
+                    if (aC == '>') {
+
+                        // Observe hex
+                        char lH = input.charAt(index + 1);
+                        char lE = input.charAt(index + 2);
+                        char lX = input.charAt(index + 3);
+                        if (lH == 'H' && lE == 'E' && lX == 'X') {
+
+                            // Get hex
+                            char c1 = input.charAt(index + 4);
+                            char c2 = input.charAt(index + 5);
+                            char c3 = input.charAt(index + 6);
+                            char c4 = input.charAt(index + 7);
+                            char c5 = input.charAt(index + 8);
+                            char c6 = input.charAt(index + 9);
+
+                            col.insert(0, '>')
+                                .insert(0, c6)
+                                .insert(0, c5)
+                                .insert(0, c4)
+                                .insert(0, c3)
+                                .insert(0, c2)
+                                .insert(0, c1)
+                                .insert(0, "<HEX");
+
+                            // Um yes that qualifies as a color code
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Display in lore
+        item.getLore().insert(getPath(), SilentNumbers.chop(finalStr, 50, col.toString()));
+
+        // Apply yes
         item.addItemTag(getAppliedNBT(data));
     }
 

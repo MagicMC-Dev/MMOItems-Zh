@@ -61,7 +61,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 
 				String last = supportedClasses.get(supportedClasses.size() - 1);
 				supportedClasses.remove(last);
-				inv.getEditedSection().set("required-class", supportedClasses.size() == 0 ? null : supportedClasses);
+				inv.getEditedSection().set(getPath(), supportedClasses.size() == 0 ? null : supportedClasses);
 				inv.registerTemplateEdition();
 				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
 			}
@@ -73,7 +73,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 		List<String> lore = (inv.getEditedSection().getKeys(false).contains("required-class") ? inv.getEditedSection().getStringList("required-class")
 				: new ArrayList<>());
 		lore.add(message);
-		inv.getEditedSection().set("required-class", lore);
+		inv.getEditedSection().set(getPath(), lore);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
 	}
@@ -125,14 +125,6 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a class.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last class.");
-	}
-
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		String joined = String.join(", ", ((StringListData) data).getList());
-		item.getLore().insert("required-class", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", joined));
-
-		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@NotNull

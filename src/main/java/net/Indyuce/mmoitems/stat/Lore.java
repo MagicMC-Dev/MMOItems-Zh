@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
@@ -40,6 +41,13 @@ public class Lore extends StringListStat implements GemStoneStat {
 	public StringListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
+	}
+
+	@Override
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+
+		// Apply yes
+		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@Override

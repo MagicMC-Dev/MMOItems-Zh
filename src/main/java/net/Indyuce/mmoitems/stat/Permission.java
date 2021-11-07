@@ -90,13 +90,6 @@ public class Permission extends StringListStat implements ItemRestriction {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last permission.");
 	}
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-
-		// Just add NBT tags
-		item.addItemTag(getAppliedNBT(data));
-	}
-
 	@NotNull
 	@Override
 	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {

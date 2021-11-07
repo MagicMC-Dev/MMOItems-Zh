@@ -449,7 +449,16 @@ public class PlayerData {
 
     @NotNull
     public static PlayerData get(@NotNull UUID uuid) {
-        return Objects.requireNonNull(data.get(uuid), "Player data not loaded");
+
+        // Might not be null, after all
+        PlayerData observedData = data.get(uuid);
+        if (observedData != null) { return observedData; }
+
+        // Attempt to load
+        load(uuid);
+
+        // Yes
+        return Objects.requireNonNull(data.get(uuid), "Could not obtain PlayerData. Please make sure the plugin initialized correctly.");
     }
 
     /**

@@ -500,7 +500,7 @@ public class PlayerData {
          * Update the cached RPGPlayer in case of any major change in the player
          * data of other rpg plugins
          */
-        PlayerData playerData = get(player);
+        PlayerData playerData = data.get(player);
         playerData.rpgPlayer = MMOItems.plugin.getRPG().getInfo(playerData);
     }
 

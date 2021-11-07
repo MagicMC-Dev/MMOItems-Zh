@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.utils.Schedulers;
 import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
 import net.Indyuce.mmoitems.MMOItems;

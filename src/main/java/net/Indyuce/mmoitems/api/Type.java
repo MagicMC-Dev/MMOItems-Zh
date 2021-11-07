@@ -2,8 +2,7 @@ package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.player.EquipmentSlot;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;

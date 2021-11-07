@@ -3,15 +3,11 @@ package net.Indyuce.mmoitems.listener;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.player.EquipmentSlot;
-import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.DamageMetadata;
-import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
@@ -34,7 +30,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -58,7 +53,7 @@ public class ItemUse implements Listener {
         if (!item.hasType())
             return;
 
-        /**
+        /*
          * Some consumables must be fully eaten through the vanilla eating
          * animation and are handled there {@link #handleVanillaEatenConsumables(PlayerItemConsumeEvent)}
          */

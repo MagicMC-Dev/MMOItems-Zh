@@ -26,7 +26,7 @@ public class Crossbow extends UntargetedWeapon {
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
 			return;
 
-		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.player.EquipmentSlot.fromBukkit(slot));
+		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
 		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;

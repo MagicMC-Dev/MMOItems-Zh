@@ -14,9 +14,10 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class StringListData implements StatData, RandomStatData, Mergeable {
-	@NotNull private final List<String> list;
+	@NotNull private List<String> list;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -76,4 +77,34 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 
 		return b.toString();
 	}
+
+	/**
+	 * @param str Entry to remove
+	 *
+	 * @return If the value was actually removed. If it wasn't there
+	 * 		   in the first place, this will return false.
+	 */
+	public boolean remove(@Nullable String str) {
+
+		if (!list.contains(str)) { return false; }
+
+		if (removeGuarantee) {
+
+			// Remove that sh
+			return list.remove(str);
+		} else {
+
+			// OK
+			try {
+				return list.remove(str);
+
+			} catch (UnsupportedOperationException ignored) {
+
+				list = new ArrayList<>(list);
+				removeGuarantee = true;
+				return list.remove(str);
+			}
+		}
+	}
+	boolean removeGuarantee = false;
 }

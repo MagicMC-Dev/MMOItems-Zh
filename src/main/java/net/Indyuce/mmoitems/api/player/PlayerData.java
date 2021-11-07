@@ -2,8 +2,8 @@ package net.Indyuce.mmoitems.api.player;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.player.EquipmentSlot;
-import io.lumine.mythic.lib.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.skill.trigger.PassiveSkill;
 import net.Indyuce.mmoitems.ItemStats;

@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.comp.parse.placeholders;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.math.EvaluatedFormula;
-import io.lumine.mythic.lib.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import io.lumine.mythic.lib.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Ability;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.AbilityData;

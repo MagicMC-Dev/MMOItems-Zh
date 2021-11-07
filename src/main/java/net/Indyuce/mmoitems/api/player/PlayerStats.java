@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.api.player;
 
-import io.lumine.mythic.lib.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.stat.StatInstance;
 import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;

@@ -37,7 +37,7 @@ public class Lute extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
-		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.player.EquipmentSlot.fromBukkit(slot));
+		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
 		double attackSpeed = 1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
 		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))
 			return;

@@ -129,7 +129,7 @@ public class ItemBrowser extends PluginInventory {
             }
 
             ItemMeta meta = item.getItemMeta();
-            List<String> lore = meta.getLore();
+            List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
             lore.add("");
 
             if (deleteMode) {

@@ -9,11 +9,21 @@ import io.lumine.mythic.lib.api.MMOLineConfig;
 public class PermissionCondition extends Condition {
 	private final List<String> permissions;
 
+	/**
+	 * Permissions are super ugly to display so MI uses a string instead.
+	 * This way 'Only for Mages' is used instead of 'class.mage'
+	 *
+	 * One string can also replace multiple permissions.
+	 * 'Magic Classes Only' instead of 'class.mage' and 'class.apprentice'
+	 */
+	private final String display;
+
 	public PermissionCondition(MMOLineConfig config) {
 		super("permission");
 
 		config.validate("list");
 		permissions = Arrays.asList(config.getString("list").split(","));
+		display = config.contains("display") ? config.getString("display") : "?";
 	}
 
 	@Override
@@ -27,7 +37,7 @@ public class PermissionCondition extends Condition {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#perms#", String.join(", ", permissions));
+		return string.replace("#perms#", String.join(", ", permissions)).replace("#display#", display);
 	}
 
 	@Override

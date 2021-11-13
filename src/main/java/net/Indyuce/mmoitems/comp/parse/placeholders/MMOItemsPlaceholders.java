@@ -21,9 +21,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
+
+	public MMOItemsPlaceholders() {
+		oneDigit.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance());
+		twoDigits.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance());
+	}
 
 	@Override
 	public String getAuthor() {

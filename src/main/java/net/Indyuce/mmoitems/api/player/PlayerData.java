@@ -277,7 +277,7 @@ public class PlayerData {
 
         if (hasSetBonuses()) {
             for (AbilityData ability : setBonuses.getAbilities())
-                mmoData.registerSkillTrigger(new PassiveSkill("MMOItemItem", ability.getTriggerType(), ability));
+                mmoData.registerSkillTrigger(new PassiveSkill("MMOItemsItem", ability.getTriggerType(), ability));
             for (ParticleData particle : setBonuses.getParticles())
                 itemParticles.add(particle.start(this));
             for (PotionEffect effect : setBonuses.getPotionEffects())

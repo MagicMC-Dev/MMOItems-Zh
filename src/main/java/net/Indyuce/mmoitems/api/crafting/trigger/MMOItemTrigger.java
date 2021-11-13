@@ -25,7 +25,7 @@ public class MMOItemTrigger extends Trigger {
 		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
 
 		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
-		amount = config.args().length > 0 ? Math.max(1, Integer.parseInt(config.args()[0])) : 1;
+		amount = config.contains("amount") ? Math.max(1, config.getInt("amount")) : 1;
 	}
 
 	@Override

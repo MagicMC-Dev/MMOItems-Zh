@@ -7,10 +7,12 @@ import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.skill.trigger.TriggeredSkill;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -52,7 +54,7 @@ public class AbilityData implements MythicSkillInfo, TriggeredSkill {
 
 	public AbilityData(JsonObject object) {
 		ability = MMOItems.plugin.getAbilities().getAbility(object.get("Id").getAsString());
-		triggerType = TriggerType.valueOf(object.get("CastMode").getAsString());
+		triggerType = backwardsCompatibleTriggerType(object.get("CastMode").getAsString());
 
 		JsonObject modifiers = object.getAsJsonObject("Modifiers");
 		modifiers.entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
@@ -66,11 +68,26 @@ public class AbilityData implements MythicSkillInfo, TriggeredSkill {
 		ability = MMOItems.plugin.getAbilities().getAbility(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
-		triggerType = TriggerType.valueOf(modeFormat);
+		triggerType = backwardsCompatibleTriggerType(modeFormat);
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
 				modifiers.put(key, config.getDouble(key));
+	}
+
+	/**
+	 * @param name The trigger name that may be in old format
+	 * @return The trigger type this represents
+	 * @throws IllegalArgumentException If this does not match any trigger type
+	 */
+	@NotNull TriggerType backwardsCompatibleTriggerType(@Nullable String name) throws IllegalArgumentException {
+		if (name == null) { throw new IllegalArgumentException("Trigger cannot be null"); }
+
+		switch (name) {
+			case "ON_HIT": return TriggerType.ATTACK;
+			case "WHEN_HIT": return TriggerType.DAMAGED_BY_ENTITY;
+			default: return TriggerType.valueOf(name);
+		}
 	}
 
 	public AbilityData(Ability ability, TriggerType triggerType) {

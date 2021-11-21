@@ -60,7 +60,18 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+		if (!(data instanceof UpgradeData)) { return; }
+
+		// Show in lore
+		item.addItemTag(getAppliedNBT(data));
+
+		// Show in lore
+		if (((UpgradeData) data).getMaxUpgrades() > 0) {
+			item.getLore().insert(getPath(),
+					MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", String.valueOf(((UpgradeData) data).getMaxUpgrades())));
+		}
+	}
 
 	@NotNull
 	@Override

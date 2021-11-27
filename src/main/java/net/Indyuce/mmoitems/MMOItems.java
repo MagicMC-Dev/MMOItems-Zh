@@ -617,6 +617,7 @@ public class MMOItems extends LuminePlugin {
 	 */
 	@Nullable
 	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, @Nullable PlayerData player) {
+		if (type == null || id == null) { return null; }
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
@@ -633,9 +634,7 @@ public class MMOItems extends LuminePlugin {
 	 * template has the 'tiered' option
 	 */
 	@Nullable
-	public ItemStack getItem(@NotNull Type type, @NotNull String id, @NotNull PlayerData player) {
-		Validate.notNull(type, "Type cannot be null");
-		Validate.notNull(id, "ID cannot be null");
+	public ItemStack getItem(@Nullable Type type, @Nullable String id, @NotNull PlayerData player) {
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id, player);
@@ -652,9 +651,8 @@ public class MMOItems extends LuminePlugin {
 	 * specific item level and item tier
 	 */
 	@Nullable
-	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
-		Validate.notNull(type, "Type cannot be null");
-		Validate.notNull(id, "ID cannot be null");
+	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
+		if (type == null || id == null) { return null; }
 
 		// Valid template?
 		MMOItemTemplate found = getTemplates().getTemplate(type, id);
@@ -667,13 +665,12 @@ public class MMOItems extends LuminePlugin {
 	/**
 	 * @param itemLevel The desired item level
 	 * @param itemTier  The desired item tier, can be null
+	 *
 	 * @return Generates an item given an item template with a
 	 * specific item level and item tier
 	 */
 	@Nullable
-	public ItemStack getItem(@NotNull Type type, @NotNull String id, int itemLevel, @Nullable ItemTier itemTier) {
-		Validate.notNull(type, "Type cannot be null");
-		Validate.notNull(id, "ID cannot be null");
+	public ItemStack getItem(@Nullable Type type, @Nullable String id, int itemLevel, @Nullable ItemTier itemTier) {
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id, itemLevel, itemTier);
@@ -691,17 +688,7 @@ public class MMOItems extends LuminePlugin {
 	 * Will return <code>null</code> if such MMOItem does not exist.
 	 */
 	@Nullable
-	public MMOItem getMMOItem(@NotNull Type type, @NotNull String id) {
-		Validate.notNull(type, "Type cannot be null");
-		Validate.notNull(id, "ID cannot be null");
-
-		// Valid template?
-		MMOItemTemplate found = getTemplates().getTemplate(type, id);
-		if (found == null) return null;
-
-		// Build if found
-		return found.newBuilder(0, null).build();
-	}
+	public MMOItem getMMOItem(@Nullable Type type, @Nullable String id) { return getMMOItem(type, id, 0, null); }
 
 	/**
 	 * @return Generates an item given an item template. The item level will be
@@ -713,9 +700,7 @@ public class MMOItems extends LuminePlugin {
 
 	@Nullable
 	public ItemStack getItem(@Nullable String type, @Nullable String id) {
-		if (type == null || id == null) {
-			return null;
-		}
+		if (type == null || id == null) { return null; }
 		return getItem(getTypes().get(type), id);
 	}
 
@@ -728,15 +713,11 @@ public class MMOItems extends LuminePlugin {
 	 */
 	@Nullable
 	public ItemStack getItem(@Nullable Type type, @Nullable String id) {
-		if (type == null || id == null) {
-			return null;
-		}
+		if (type == null || id == null) { return null; }
 
 		// Valid MMOItem?
 		MMOItem m = getMMOItem(type, id);
-		if (m == null) {
-			return null;
-		}
+		if (m == null) { return null; }
 
 		// Build if found
 		return m.newBuilder().build();

@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -249,6 +251,12 @@ public class ItemStackBuilder {
         // Apply item display name using Components for colors
         if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName())
             nbtItem.setDisplayNameComponent(LegacyComponent.parse(meta.getDisplayName()));
+
+        if (meta.hasLore()) {
+            List<Component> componentLore = new LinkedList<>();
+            meta.getLore().forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+            nbtItem.setLoreComponents(componentLore);
+        }
 
         return nbtItem.addTag(tags);
     }

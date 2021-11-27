@@ -381,7 +381,7 @@ public class Enchants extends ItemStat implements Upgradable {
             return;
         }
         boolean additiveMerge = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-enchantments", false);
-        //SENCH//MMOItems.Log(" \u00a79>\u00a73>\u00a77 Separating Enchantments");
+        //SENCH//MMOItems.log(" \u00a79>\u00a73>\u00a77 Separating Enchantments");
 
         // Does it have enchantment data?
         if (mmoitem.hasData(ItemStats.ENCHANTS)) {
@@ -390,14 +390,17 @@ public class Enchants extends ItemStat implements Upgradable {
             EnchantListData data = (EnchantListData) mmoitem.getData(ItemStats.ENCHANTS);
             StatHistory hist = StatHistory.from(mmoitem, ItemStats.ENCHANTS);
 
-            //SENCH//MMOItems.Log(" \u00a7b:\u00a73:\u00a79: \u00a77Early Analysis: \u00a73o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
-            //SENCH//MMOItems.Log("  \u00a73> \u00a77History:");
-            //SENCH//MMOItems.Log("  \u00a73=\u00a7b> \u00a77Original:");
-            //SENCH//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.Log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
-            //SENCH//MMOItems.Log("  \u00a73=\u00a7b> \u00a77Stones:");
-            //SENCH//for (UUID date : hist.getAllGemstones()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77" + date.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(date)).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(date)).getLevel(e)); } }
-            //SENCH//MMOItems.Log("  \u00a73=\u00a7b> \u00a77Externals:");
-            //SENCH//for (StatData date : hist.getExternalData()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) date).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) date).getLevel(e)); } }
+            //SENCH//MMOItems.log(" \u00a7b:\u00a73:\u00a79: \u00a77Early Analysis: \u00a73o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Active:");
+            //SENCH//for (Enchantment e : data.getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + data.getLevel(e)); }
+
+            //SENCH//MMOItems.log("  \u00a73> \u00a77History:");
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
+            //SENCH//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
+            //SENCH//for (UUID date : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + date.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(date)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(date)).getLevel(e)); } }
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
+            //SENCH//for (StatData date : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) date).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) date).getLevel(e)); } }
 
             // All right, whats the expected enchantment levels?
             //HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77Enchantment Separation Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
@@ -420,7 +423,7 @@ public class Enchants extends ItemStat implements Upgradable {
                     int offset = actual - ideal;
                     if (offset != 0) {
                         discrepancies.put(e, offset);
-                        //SENCH//MMOItems.Log("\u00a77 Act \u00a7f" + actual + "\u00a77 Ide \u00a73" + ideal + "\u00a77 Off \u00a79" + offset + " \u00a77 -- of \u00a7b" + e.getName() );
+                        //SENCH//MMOItems.log("\u00a77 Act \u00a7f" + actual + "\u00a77 Ide \u00a73" + ideal + "\u00a77 Off \u00a79" + offset + " \u00a77 -- of \u00a7b" + e.getName() );
                     }
 
                     // Weird maximum enchantment
@@ -429,7 +432,7 @@ public class Enchants extends ItemStat implements Upgradable {
                     // We can only know that, if the actual is greater than the ideal, there is a greater external.
                     if (actual > ideal) {
                         discrepancies.put(e, actual);
-                        //SENCH//MMOItems.Log("\u00a77 Act \u00a7f" + actual + "\u00a77 Ide \u00a73" + ideal + " \u00a77 -- of \u00a7b" + e.getName() );
+                        //SENCH//MMOItems.log("\u00a77 Act \u00a7f" + actual + "\u00a77 Ide \u00a73" + ideal + " \u00a77 -- of \u00a7b" + e.getName() );
                     }
                 }
             }
@@ -439,6 +442,8 @@ public class Enchants extends ItemStat implements Upgradable {
                 // Generate enchantment list with offsets
                 EnchantListData extraneous = new EnchantListData();
                 for (Enchantment e : discrepancies.keySet()) {
+                    //SENCH//MMOItems.log("\u00a77 Discrepancy of \u00a7f" + discrepancies.get(e) + " \u00a77 -- in \u00a7b" + e.getName() );
+
                     extraneous.addEnchant(e, discrepancies.get(e));
                 }
 
@@ -446,14 +451,14 @@ public class Enchants extends ItemStat implements Upgradable {
                 hist.registerExternalData(extraneous);
             }
 
-            //SENCH//MMOItems.Log(" \u00a7b:\u00a73:\u00a79: \u00a77Results \u00a79o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
-            //SENCH//MMOItems.Log("  \u00a73> \u00a77History:");
-            //SENCH//MMOItems.Log("  \u00a73=\u00a7b> \u00a77Original:");
-            //SENCH//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.Log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
-            //SENCH//MMOItems.Log("  \u00a73=\u00a7b> \u00a77Stones:");
-            //SENCH//for (UUID date : hist.getAllGemstones()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77" + date.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(date)).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(date)).getLevel(e)); } }
-            //SENCH//MMOItems.Log("  \u00a73=\u00a7b> \u00a77Externals:");
-            //SENCH//for (StatData date : hist.getExternalData()) { MMOItems.Log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) date).getEnchants()) { MMOItems.Log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) date).getLevel(e)); } }
+            //SENCH//MMOItems.log(" \u00a7b:\u00a73:\u00a79: \u00a77Results \u00a79o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
+            //SENCH//MMOItems.log("  \u00a73> \u00a77History:");
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Original:");
+            //SENCH//for (Enchantment e : ((EnchantListData) hist.getOriginalData()).getEnchants()) { MMOItems.log("  \u00a7b * \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getOriginalData()).getLevel(e)); }
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Stones:");
+            //SENCH//for (UUID date : hist.getAllGemstones()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77" + date.toString()); for (Enchantment e : ((EnchantListData) hist.getGemstoneData(date)).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) hist.getGemstoneData(date)).getLevel(e)); } }
+            //SENCH//MMOItems.log("  \u00a73=\u00a7b> \u00a77Externals:");
+            //SENCH//for (StatData date : hist.getExternalData()) { MMOItems.log("  \u00a7b==\u00a73> \u00a77 --------- "); for (Enchantment e : ((EnchantListData) date).getEnchants()) { MMOItems.log("  \u00a7b    *\u00a73* \u00a77" + e.getName() + " \u00a7f" + ((EnchantListData) date).getLevel(e)); } }
 
         }
     }

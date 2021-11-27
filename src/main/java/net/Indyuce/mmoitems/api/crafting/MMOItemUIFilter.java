@@ -87,12 +87,11 @@ public class MMOItemUIFilter implements UIFilter {
             VolatileMMOItem vmmo = new VolatileMMOItem(asNBT);
 
             // Get
-            QuickNumberRange upgradeReq = SilentNumbers.rangeFromBracketsTab(dataments, "level");
+            QuickNumberRange upgradeReq = SilentNumbers.rangeFromBracketsTab(dataments, "LEVEL");
             if (upgradeReq != null) {
 
                 // Upgrade data?
-                int identifiedLvl = 0;
-                if (vmmo.hasData(ItemStats.UPGRADE)) { identifiedLvl = vmmo.getUpgradeLevel(); }
+                int identifiedLvl = vmmo.getUpgradeLevel();
 
                 // Not matched?
                 if (!upgradeReq.inRange(identifiedLvl)) {

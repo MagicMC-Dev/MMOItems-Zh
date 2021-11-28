@@ -53,6 +53,8 @@ fire-damage-reduction: '&3 &7■ Fire Damage Reduction: &f<plus>#%'
 magic-damage-reduction: '&3 &7■ Magic Damage Reduction: &f<plus>#%'
 projectile-damage-reduction: '&3 &7■ Projectile Damage Reduction: &f<plus>#%'
 physical-damage-reduction: '&3 &7■ Physical Damage Reduction: &f<plus>#%'
+pve-damage-reduction: '&3 &7■ PvE Damage Reduction: &f<plus>#%'
+pvp-damage-reduction: '&3 &7■ PvP Damage Reduction: &f<plus>#%'
 
 # RPG stats
 health-regeneration: '&3 &7■ Health Regeneration: &f<plus>#'

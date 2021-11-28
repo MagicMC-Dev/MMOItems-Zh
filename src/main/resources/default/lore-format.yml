@@ -58,6 +58,8 @@ lore-format:
 - '#magic-damage-reduction#'
 - '#projectile-damage-reduction#'
 - '#physical-damage-reduction#'
+- '#pve-damage-reduction#'
+- '#pvp-damage-reduction#'
 - '#undead-damage#'
 - '#faction-damage-undead#'
 - '#block-power#'

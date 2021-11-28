@@ -34,7 +34,7 @@ DOUBLE_OR_NOTHING:
     ability:
       on-hit:
         type: SLOW
-        mode: ON_HIT
+        mode: ATTACK
         cooldown: 30.0
         duration: 4.0
         amplifier: 2.0

@@ -59,7 +59,7 @@ FALCON_BLADE:
     ability:
       on-hit:
         type: LIFE_ENDER
-        mode: ON_HIT
+        mode: ATTACK
         damage:
           base: 10.0
           scale: 1
@@ -118,7 +118,7 @@ SOULSTEALER:
     ability:
       ability1:
         type: VAMPIRISM
-        mode: ON_HIT
+        mode: ATTACK
         cooldown: 7.0
     crafting:
       shaped:

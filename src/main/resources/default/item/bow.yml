@@ -78,7 +78,7 @@ MARKING_BOW:
     ability:
       ability1:
         type: WEAKEN_TARGET
-        mode: ON_HIT
+        mode: ATTACK
         extra-damage: 60.0
     dodge-rating: 10.0
     damage-reduction: -5.0

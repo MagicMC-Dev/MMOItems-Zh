@@ -18,7 +18,7 @@ SANTAMMER:
     ability:
       on-hit:
         type: STUN
-        mode: ON_HIT
+        mode: ATTACK
         cooldown: 15.0
     lore:
     - '&eEarned during X-Mas 2018!'

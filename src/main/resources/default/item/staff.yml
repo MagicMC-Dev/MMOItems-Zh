@@ -39,7 +39,7 @@ EARTH_STAFF:
         duration: 2.0
       on-hit:
         type: SLOW
-        mode: ON_HIT
+        mode: ATTACK
         cooldown: 39.0
         amplifier: 4.0
         duration: 2.0
@@ -72,7 +72,7 @@ LIGHTNING_STAFF:
     ability:
       on-hit:
         type: STARFALL
-        mode: ON_HIT
+        mode: ATTACK
         damage: 5.0
         cooldown: 30.0
 BONE_STAFF:

@@ -59,7 +59,7 @@ HATRED:
             ability-1:
                 type: LIFE_ENDER
                 cooldown: 30
-                mode: ON_HIT
+                mode: ATTACK
     lore-tag:
     - '&7Hatred Set Bonus:'
     - '&8[2] -6% Damage Taken'

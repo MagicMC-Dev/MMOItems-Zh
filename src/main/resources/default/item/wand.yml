@@ -48,7 +48,7 @@ BLAZE_WAND:
     ability:
       on-hit:
         type: BURN
-        mode: ON_HIT
+        mode: ATTACK
         cooldown: 40.0
         duration: 5.0
       right-click:

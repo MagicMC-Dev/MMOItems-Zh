@@ -56,7 +56,7 @@ DRACULA_DAGGER:
     ability:
       on-hit:
         type: VAMPIRISM
-        mode: ON_HIT
+        mode: ATTACK
         drain: 3.0
         cooldown: 4.0
     lore:

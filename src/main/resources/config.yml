@@ -110,21 +110,6 @@ soulbound:
     # Whether or not soulbound item can be
     # dropped by the player
     can-drop: true
-    
-    auto-bind:
-    
-        # The default Soulbind level to apply
-        # when automatically soulbinding
-        level: 1
-        
-        # Here you can disable individual events for when
-        # Items should automatically soulbind to the player
-        # (Requires the 'Auto-Bind' stat to be true)
-        disable-on:
-            pickup: false
-            craft: false
-            click: false
-            join: true # 'true' recommended
 
 # Enable, disable, and customize the weapon effects here.
 # Weapon effects depend on the item type & type set.

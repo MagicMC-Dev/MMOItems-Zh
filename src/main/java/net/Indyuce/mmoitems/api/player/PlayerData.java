@@ -478,20 +478,7 @@ public class PlayerData {
          * same tick or something.
          */
         if (!data.containsKey(player)) {
-
-            MMOPlayerData mmo = MMOPlayerData.get(player);
-            if (mmo == null) {
-
-                NullPointerException npe = new NullPointerException("");
-
-                MMOItems.print(Level.SEVERE, "Erroneous initialization of PlayerData. This error is only a result of another one caused EARLIER (probably during server startup).", null);
-                //noinspection CallToPrintStackTrace
-                npe.printStackTrace();
-
-                return;
-            }
-
-            PlayerData playerData = new PlayerData(mmo);
+            PlayerData playerData = new PlayerData(MMOPlayerData.get(player));
             data.put(player, playerData);
             playerData.updateInventory();
             return;

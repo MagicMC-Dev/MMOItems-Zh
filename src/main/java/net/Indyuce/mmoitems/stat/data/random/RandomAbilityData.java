@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmoitems.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -27,7 +28,7 @@ public class RandomAbilityData {
 		ability = MMOItems.plugin.getAbilities().getAbility(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
-		triggerType = TriggerType.valueOf(modeFormat);
+		triggerType = MMOUtils.backwardsCompatibleTriggerType(modeFormat);
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))

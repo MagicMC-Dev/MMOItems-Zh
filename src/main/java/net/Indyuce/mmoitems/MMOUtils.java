@@ -7,6 +7,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.api.Type;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Location;
@@ -43,6 +44,22 @@ public class MMOUtils {
             return new String(Base64.decodeBase64(property.getValue())).replace("{textures:{SKIN:{url:\"", "").replace("\"}}}", "");
         } catch (Exception e) {
             return "";
+        }
+    }
+
+    /**
+     * @param name The trigger name that may be in old format
+     * @return The trigger type this represents
+     * @throws IllegalArgumentException If this does not match any trigger type
+     */
+    @NotNull
+  public static  TriggerType backwardsCompatibleTriggerType(@Nullable String name) throws IllegalArgumentException {
+        if (name == null) { throw new IllegalArgumentException("Trigger cannot be null"); }
+
+        switch (name) {
+            case "ON_HIT": return TriggerType.ATTACK;
+            case "WHEN_HIT": return TriggerType.DAMAGED;
+            default: return TriggerType.valueOf(name);
         }
     }
 

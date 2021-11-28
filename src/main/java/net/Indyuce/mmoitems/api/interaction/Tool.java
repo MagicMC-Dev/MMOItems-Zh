@@ -26,6 +26,10 @@ public class Tool extends UseItem {
         return MythicLib.plugin.getFlags().isFlagAllowed(player, CustomFlag.MI_TOOLS) && playerData.getRPG().canUse(getNBTItem(), true);
     }
 
+    /**
+     * @param block Block being broken
+     * @return If the mining event should be canceled
+     */
     public boolean miningEffects(Block block) {
         boolean cancel = false;
 
@@ -46,8 +50,7 @@ public class Tool extends UseItem {
                 int j = 0;
 
                 public void run() {
-                    j++;
-                    if (j > 10)
+                    if (j++ > 10)
                         cancel();
 
                     loc.add(v);

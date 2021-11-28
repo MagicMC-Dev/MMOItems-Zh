@@ -6,15 +6,17 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.entity.LivingEntity;
 
 /**
- * The attack metadata used here in MMOItems. It
- * extends the default attack metadata from MythicLib
- * to benefit from all its methods
+ * The attack metadata used here in MMOItems. It extends the default
+ * attack metadata from MythicLib to benefit from all its methods
+ *
+ * @deprecated Elemental damage calculation will be moved to MythicLib and this
+ *         class will therefore be 100% useless
  */
+@Deprecated
 public class ItemAttackMetadata extends AttackMetadata {
     public ItemAttackMetadata(DamageMetadata damage, StatMap.CachedStatMap damager) {
         super(damage, damager);

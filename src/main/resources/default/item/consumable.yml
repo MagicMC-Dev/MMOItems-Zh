@@ -164,7 +164,7 @@ LARGE_HEALTH_POTION:
     name: '&fLarge Health Potion'
     item-cooldown: 10.0
     sounds:
-      on-consume: ENTITY_GENERIC_DRINK
+      on-consume: entity.generic.drink
     restore-health: 10.0
 LARGE_MANA_POTION:
   base:
@@ -179,7 +179,7 @@ LARGE_MANA_POTION:
       max-spread: 0.13
     item-cooldown: 15.0
     sounds:
-      on-consume: ENTITY_GENERIC_DRINK
+      on-consume: entity.generic.drink
 TACO:
   base:
     material: PLAYER_HEAD
@@ -295,7 +295,7 @@ SANTA_COOKIE:
     lore:
     - '&7&oWhere are the darn cookies!'
     sounds:
-      on-consume: ENTITY_PLAYER_BURP
+      on-consume: entity.player.burp
     item-cooldown: 2.0
     effects:
       SPEED:
@@ -314,7 +314,7 @@ ENDER_NOTE:
     name: '&5Ender Tome'
     item-cooldown: 180
     sounds:
-      on-consume: ENTITY_ENDERMAN_TELEPORT
+      on-consume: entity.enderman.teleport
     lore:
     - '&7Teleports you &5miles&7 away.'
     effects:

@@ -238,8 +238,10 @@ public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsum
 		if (cs == null) playDefaultSound(player);
 
 			// Play custom sound lets go
-		else
-			player.getWorld().playSound(player.getLocation(), cs.getSound(), (float) cs.getVolume(), (float) cs.getPitch());
+		else {
+			String fixedSoundName = cs.getSound().toLowerCase().replace("_", ".");
+			player.getWorld().playSound(player.getLocation(), fixedSoundName, (float) cs.getVolume(), (float) cs.getPitch());
+		}
 	}
 
 	void playDefaultSound(@NotNull Player player) { player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1); }

@@ -74,34 +74,34 @@ public class ProjectileParticlesData implements StatData, RandomStatData {
         case REDSTONE:
           // REDSTONE particles take dustOptions with RGB values. Normal REDSTONE particles are size 1 but can realistically be anything.
           Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB((int) offsetX, (int) offsetY, (int) offsetZ), 1);
-          player.spawnParticle(Particle.REDSTONE, loc, 25, dustOptions);
+          player.getWorld().spawnParticle(Particle.REDSTONE, loc, 25, dustOptions);
           break;
         case NOTE:
           // NOTE particles only have 24 colors. offsetX must be a number between 0 and 1 in intervals of 1/24. offsetY and offsetZ must be 0. Count should be 0 and "extra" should be 1.
           double note = offsetX / 24D;
-          player.spawnParticle(Particle.NOTE, loc, 0, note, 0, 0, 1);
+          player.getWorld().spawnParticle(Particle.NOTE, loc, 0, note, 0, 0, 1);
           break;
         default:
           // SPELL_MOB and SPELL_MOB_AMBIENT must be a value between 0 and 1 in intervals in 1/255. "Extra" must be 1 or the color will not be correct. 0 will be black and anything else will be random.
           double red = offsetX / 255D;
           double green = offsetY / 255D;
           double blue = offsetZ / 255D;
-          player.spawnParticle(particle, loc, 0, red, green, blue, 1);
+          player.getWorld().spawnParticle(particle, loc, 0, red, green, blue, 1);
       }
     } else {
       // Some particles require a material. I don't really want to handle this right now so just make it stone.
       if (particle == Particle.ITEM_CRACK || particle == Particle.BLOCK_CRACK || particle == Particle.BLOCK_DUST || particle == Particle.FALLING_DUST) {
         if (particle == Particle.ITEM_CRACK) {
           ItemStack materialData = new ItemStack(Material.STONE);
-          player.spawnParticle(particle, loc, 0, materialData);
+          player.getWorld().spawnParticle(particle, loc, 0, materialData);
         } else {
           BlockData fallingDustData = Material.STONE.createBlockData();
-          player.spawnParticle(particle, loc, 0, fallingDustData);
+          player.getWorld().spawnParticle(particle, loc, 0, fallingDustData);
         }
       } else {
         // All non-material and non-colorable particles just get shot normally.
         // Changing the count to anything other than 0 will cause certain particles to shoot off in random directions as they take directional parameters via offsets.
-        player.spawnParticle(particle, loc, 0);
+        player.getWorld().spawnParticle(particle, loc, 0);
       }
     }
   }

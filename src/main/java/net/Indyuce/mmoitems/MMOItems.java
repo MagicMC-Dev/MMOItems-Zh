@@ -24,7 +24,6 @@ import net.Indyuce.mmoitems.comp.McMMONonRPGHook;
 import net.Indyuce.mmoitems.comp.PhatLootsHook;
 import net.Indyuce.mmoitems.comp.RealDualWieldHook;
 import net.Indyuce.mmoitems.comp.WorldEditSupport;
-import net.Indyuce.mmoitems.comp.denizen.DenizenHook;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
 import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
@@ -40,7 +39,7 @@ import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
-import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsLoader;
+import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsCompatibility;
 import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.DefaultPlaceholderParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderAPIParser;
@@ -184,7 +183,7 @@ public class MMOItems extends LuminePlugin {
 
 		// registering here so the stats will load with the templates
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			new MythicMobsLoader();
+			new MythicMobsCompatibility();
 			if (getConfig().getBoolean("lootsplosion.enabled")) Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
 			getLogger().log(Level.INFO, "Hooked onto MythicMobs");
 		}

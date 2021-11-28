@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.comp.mythicmobs.skill;
 
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
@@ -10,7 +11,6 @@ import io.lumine.xikage.mythicmobs.skills.SkillCaster;
 import io.lumine.xikage.mythicmobs.skills.SkillMetadata;
 import io.lumine.xikage.mythicmobs.skills.SkillTrigger;
 import net.Indyuce.mmoitems.ability.Ability;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
-    private final Skill skill;
+    private Skill skill;
 
     public MythicMobsAbility(String id, FileConfiguration config) {
         super(id, config.getString("name"));
@@ -29,7 +29,7 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
         Validate.notNull(skillName, "Could not find MM skill name");
 
         Optional<io.lumine.xikage.mythicmobs.skills.Skill> opt = MythicMobs.inst().getSkillManager().getSkill(skillName);
-        Validate.isTrue(opt.isPresent(), "Could not find MM skill " + skillName);
+        Validate.isTrue(opt.isPresent(), "Could not find MM skill with name '" + skillName + "'");
         skill = opt.get();
 
         addModifier("cooldown", 10);
@@ -43,6 +43,10 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
 
     public String getInternalName() {
         return skill.getInternalName();
+    }
+
+    public void setSkill(Skill skill) {
+        this.skill = skill;
     }
 
     @Override

@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
@@ -79,7 +80,11 @@ public class ItemUse implements Listener {
             }
 
             if (useItem instanceof Consumable) {
+
+                // Since the interact event is cancelled, no skills is cast by MythicLib. They must be force-cast
                 event.setCancelled(true);
+                useItem.getPlayerData().getMMOPlayerData().triggerSkills(player.isSneaking() ? TriggerType.SHIFT_RIGHT_CLICK : TriggerType.RIGHT_CLICK, null);
+
                 Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer();
                 if (result == Consumable.ConsumableConsumeResult.CANCEL)
                     return;

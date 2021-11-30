@@ -1,5 +1,5 @@
 package net.Indyuce.mmoitems;
-
+ 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;

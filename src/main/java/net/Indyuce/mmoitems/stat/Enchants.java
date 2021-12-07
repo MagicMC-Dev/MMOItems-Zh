@@ -36,6 +36,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,11 +122,32 @@ public class Enchants extends ItemStat implements Upgradable {
         // Create enchant data from this items' enchantments
         EnchantListData enchants = new EnchantListData();
 
-        // For each enchantment
-        for (Enchantment enchant : mmoitem.getNBT().getItem().getItemMeta().getEnchants().keySet()) {
+        // Get the Item Meta
+        ItemStack item = mmoitem.getNBT().getItem();
+        if (item.hasItemMeta()) {
 
-            // Add Level
-            enchants.addEnchant(enchant, mmoitem.getNBT().getItem().getItemMeta().getEnchantLevel(enchant));
+            // Finally, item meta
+            ItemMeta itemMeta = item.getItemMeta();
+            if (itemMeta != null) {
+
+                // For each enchantment, in the usual way
+                for (Enchantment enchant : itemMeta.getEnchants().keySet()) {
+
+                    // Add Level
+                    enchants.addEnchant(enchant, itemMeta.getEnchantLevel(enchant));
+                }
+
+                // For each enchantment 'stored' in the item
+                if (itemMeta instanceof EnchantmentStorageMeta) {
+
+                    // For each enchantment
+                    for (Enchantment enchant : ((EnchantmentStorageMeta) itemMeta).getStoredEnchants().keySet()) {
+
+                        // Add Level
+                        enchants.addEnchant(enchant, ((EnchantmentStorageMeta) itemMeta).getStoredEnchantLevel(enchant));
+                    }
+                }
+            }
         }
 
         // Recognize the Stat Data
@@ -249,10 +271,13 @@ public class Enchants extends ItemStat implements Upgradable {
             int lvl = enchants.getLevel(enchant);
 
             // If it's an enchanted item, has to be registered as a stored enchant instead
-            if (item.getItemStack().getType() == Material.ENCHANTED_BOOK)
+            if (item.getItemStack().getType() == Material.ENCHANTED_BOOK) {
+
+                // Vanilla enchanted books expect this behaviour from enchants I guess
                 ((EnchantmentStorageMeta) item.getMeta()).addStoredEnchant(enchant, lvl, true);
-            else
-                item.getMeta().addEnchant(enchant, lvl, true);
+
+            // Add normally
+            } else { item.getMeta().addEnchant(enchant, lvl, true); }
 
             // Handle custom enchant
             for (EnchantPlugin enchantPlugin : MMOItems.plugin.getEnchantPlugins())

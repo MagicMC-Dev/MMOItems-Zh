@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -76,14 +77,19 @@ public class WorldGenTemplate {
 		return maxDepth;
 	}
 
+	public boolean canGenerateInWorld(World w) {
+	    // check world list
+        String world = w.getName().toLowerCase().replace("_", "-");
+        if (!worldWhitelist.isEmpty() && !worldWhitelist.contains(world)) {
+            return false;
+        }
+        if (!worldBlacklist.isEmpty() && worldBlacklist.contains(world)) {
+            return false;
+        }
+        return true;
+	}
+	
 	public boolean canGenerate(Location pos) {
-
-		// check world list
-		String world = pos.getWorld().getName().toLowerCase().replace("_", "-");
-		if (!worldWhitelist.isEmpty() && !worldWhitelist.contains(world))
-			return false;
-		if (!worldBlacklist.isEmpty() && worldBlacklist.contains(world))
-			return false;
 
 		// check biome list
 		Biome biome = pos.getWorld().getBiome(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());

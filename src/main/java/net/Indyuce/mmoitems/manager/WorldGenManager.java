@@ -65,6 +65,9 @@ public class WorldGenManager implements Listener, Reloadable {
 	public void a(ChunkLoadEvent event) {
 		if(event.isNewChunk()) {
 		    Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> assigned.forEach((block, template) -> {
+		        if(!template.canGenerateInWorld(event.getWorld())) {
+		            return;
+		        }
 				if(random.nextDouble() < template.getChunkChance())
 					for(int i = 0; i < template.getVeinCount(); i++) {
 						int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();

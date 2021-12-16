@@ -70,7 +70,7 @@ public class MythicMobsAbility extends Ability<MythicMobsAbilityMetadata> {
 
         // Stats are cached inside a variable
         skillMeta.getVariables().putObject("MMOStatMap", attackMeta.getStats());
-        skillMeta.getVariables().putObject("MMOSkill", data.getAbility());
+        skillMeta.getVariables().putObject("MMOSkill", data);
 
         return new MythicMobsAbilityMetadata(data, skill, skillMeta);
     }

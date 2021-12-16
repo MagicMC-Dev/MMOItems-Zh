@@ -95,6 +95,10 @@ public class DurabilityListener implements Listener {
 		}
 	}
 
+    /**
+     * This method is for all the items which have 0 max durability
+     * i.E which are not breakable hence the {@link Material#getMaxDurability()} call
+     */
 	private void handleVanillaDamage(ItemStack stack, Player player, EquipmentSlot slot, int damage) {
 		DurabilityItem item = new DurabilityItem(player, stack);
 

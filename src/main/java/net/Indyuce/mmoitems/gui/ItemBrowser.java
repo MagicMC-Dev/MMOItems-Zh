@@ -248,21 +248,12 @@ public class ItemBrowser extends PluginInventory {
 
         } else {
             if (event.getAction() == InventoryAction.PICKUP_ALL) {
-                // this refreshes the item if it's unstackable
-                ItemStack generatedItem = (NBTItem.get(item).getBoolean("UNSTACKABLE")) ? MMOItems.plugin.getItem(type, id, playerData)
-                        : removeLastLoreLines(NBTItem.get(item));
-                getPlayer().getInventory().addItem(generatedItem);
+                getPlayer().getInventory().addItem(MMOItems.plugin.getItem(type, id, playerData));
                 getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
             }
 
             if (event.getAction() == InventoryAction.PICKUP_HALF)
                 new ItemEdition(getPlayer(), MMOItems.plugin.getTemplates().getTemplate(type, id)).open();
         }
-    }
-
-    private ItemStack removeLastLoreLines(NBTItem item) {
-        List<Component> lore = item.getLoreComponents();
-        item.setLoreComponents(lore.subList(0, lore.size() - 3));
-        return item.toItem();
     }
 }

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * <b>Strongly encouraged to override the <code>equals</code> method
  * to something fitting here as Mergeable stats should support comparisons.</b>
  */
-public interface Mergeable {
+public interface Mergeable extends StatData {
 
 	/**
 	 * Merging two stat data is used when either applying a gem stone to an item

@@ -3,15 +3,10 @@ package net.Indyuce.mmoitems.stat.data;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,247 +14,309 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class GemstoneData {
-	@NotNull private final Set<AbilityData> abilities = new HashSet<>();
-	@NotNull private final List<PotionEffectData> effects = new ArrayList<>();
-	@NotNull private final Map<ItemStat, Double> stats = new HashMap<>();
-	@NotNull private final String name;
-	@Nullable Integer levelPut;
-	@NotNull final UUID historicUUID;
-	@Nullable final String mmoitemType;
-	@Nullable final String mmoitemID;
-	@Nullable String socketColor;
+    private final Set<AbilityData> abilities = new HashSet<>();
+    private final List<PotionEffectData> effects = new ArrayList<>();
+    private final Map<ItemStat, Double> stats = new HashMap<>();
+    private final String name;
+    @NotNull
+    private final UUID historicUUID;
+    @Nullable
+    private final String mmoitemType;
+    @Nullable
+    private final String mmoitemID;
 
-	public GemstoneData cloneGem() {
+    @Nullable
+    private String socketColor;
+    @Nullable
+    private Integer levelPut;
 
-		GemstoneData ret = new GemstoneData(getName(), getMMOItemType(), getMMOItemID(), getSocketColor(), getHistoricUUID());
-		for (AbilityData d : abilities) { ret.addAbility(d); }
-		for (PotionEffectData d : effects) { ret.addPermanentEffect(d); }
-		for (ItemStat d : stats.keySet()) { ret.setStat(d, stats.get(d)); }
-		ret.setLevel(getLevel());
+    public GemstoneData cloneGem() {
 
-		return ret;
-	}
+        GemstoneData ret = new GemstoneData(getName(), getMMOItemType(), getMMOItemID(), getSocketColor(), getHistoricUUID());
+        for (AbilityData d : abilities)
+            ret.addAbility(d);
+        for (PotionEffectData d : effects)
+            ret.addPermanentEffect(d);
+        for (ItemStat d : stats.keySet())
+            ret.setStat(d, stats.get(d));
+        ret.setLevel(getLevel());
 
-	/**
-	 * Gemstone equals method is for practical purposes and only checks that
-	 * this other thing is both a GemstoneData and has the same UUID.
-	 *
-	 * @param obj Object to compare with
-	 * @return <code>true</code> if they have the same {@link #getHistoricUUID()}
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof GemstoneData)) { return false; }
+        return ret;
+    }
 
-		return ((GemstoneData) obj).getHistoricUUID().equals(getHistoricUUID());
-	}
+    /**
+     * Gemstone equals method is for practical purposes and only checks that
+     * this other thing is both a GemstoneData and has the same UUID.
+     *
+     * @param obj Object to compare with
+     * @return <code>true</code> if they have the same {@link #getHistoricUUID()}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GemstoneData)) {
+            return false;
+        }
 
-	@Nullable
-	public String getMMOItemType() {
-		return mmoitemType;
-	}
+        return ((GemstoneData) obj).getHistoricUUID().equals(getHistoricUUID());
+    }
 
-	@Nullable
-	public String getMMOItemID() {
-		return mmoitemID;
-	}
+    @Nullable
+    public String getMMOItemType() {
+        return mmoitemType;
+    }
 
-	/**
-	 *  If known, the socket colour this gem was put into
-	 */
-	@Nullable
-	public String getSocketColor() {
-		return socketColor;
-	}
+    @Nullable
+    public String getMMOItemID() {
+        return mmoitemID;
+    }
 
-	/**
-	 * This constructor is not really performance friendly. It should only be
-	 * used when applying gem stones to keep max performance.
-	 */
-	public GemstoneData(@NotNull JsonObject object) {
+    /**
+     * If known, the socket colour this gem was put into
+     */
+    @Nullable
+    public String getSocketColor() {
+        return socketColor;
+    }
 
-		// GEt Name
-		name = object.get("Name").getAsString();
+    /**
+     * This constructor is not really performance friendly. It should only be
+     * used when applying gem stones to keep max performance.
+     */
+    public GemstoneData(@NotNull JsonObject object) {
 
-		// Get Stats
-		//object.getAsJsonObject("Stats").entrySet() .forEach(entry -> this.stats.put(MMOItems.plugin.getStats().get(entry.getKey()), entry.getValue().getAsDouble()));
+        // GEt Name
+        name = object.get("Name").getAsString();
 
-		// Get Abilities
-		//object.getAsJsonArray("Abilities").forEach(element -> this.abilities.add(new AbilityData(element.getAsJsonObject())));
+        // Get Stats
+        //object.getAsJsonObject("Stats").entrySet() .forEach(entry -> this.stats.put(MMOItems.plugin.getStats().get(entry.getKey()), entry.getValue().getAsDouble()));
 
-		// Get Permanent Potion Effects
-		//object.getAsJsonObject("Effects").entrySet().forEach(entry -> this.effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
+        // Get Abilities
+        //object.getAsJsonArray("Abilities").forEach(element -> this.abilities.add(new AbilityData(element.getAsJsonObject())));
 
-		// Get assigned HUUID, Assign new if its an olden item without it :>
-		JsonElement uuid = object.get("History");
-		if (uuid != null) {
+        // Get Permanent Potion Effects
+        //object.getAsJsonObject("Effects").entrySet().forEach(entry -> this.effects.add(new PotionEffectData(PotionEffectType.getByName(entry.getKey()), entry.getValue().getAsInt())));
 
-			// Its of this gen of gemstones...
-			String hUUID = uuid.getAsString();
-			UUID hisUUID = MMOUtils.UUIDFromString(hUUID);
-			if (hisUUID != null) { historicUUID = hisUUID; }
-			else { historicUUID = UUID.randomUUID(); }
+        // Get assigned HUUID, Assign new if its an olden item without it :>
+        JsonElement uuid = object.get("History");
+        if (uuid != null) {
 
-			// Get Type and IDs
-			JsonElement gType = object.get("Type");
-			JsonElement gID = object.get("Id");
-			if (gType != null) { mmoitemType = gType.getAsString(); } else { mmoitemType = null; }
-			if (gID != null) { mmoitemID = gID.getAsString(); } else { mmoitemID = null; }
+            // Its of this gen of gemstones...
+            String hUUID = uuid.getAsString();
+            UUID hisUUID = MMOUtils.UUIDFromString(hUUID);
+            if (hisUUID != null) {
+                historicUUID = hisUUID;
+            } else {
+                historicUUID = UUID.randomUUID();
+            }
 
-			JsonElement level = object.get("Level");
-			if (level != null && level.isJsonPrimitive()) { levelPut = level.getAsJsonPrimitive().getAsInt(); } else { levelPut = null; }
-			//LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Read Level: \u00a7b" + levelPut);
+            // Get Type and IDs
+            JsonElement gType = object.get("Type");
+            JsonElement gID = object.get("Id");
+            if (gType != null) {
+                mmoitemType = gType.getAsString();
+            } else {
+                mmoitemType = null;
+            }
+            if (gID != null) {
+                mmoitemID = gID.getAsString();
+            } else {
+                mmoitemID = null;
+            }
 
-			JsonElement color = object.get("Color");
-			if (color != null && color.isJsonPrimitive()) { socketColor = color.getAsJsonPrimitive().getAsString(); } else { socketColor = null; }
+            JsonElement level = object.get("Level");
+            if (level != null && level.isJsonPrimitive()) {
+                levelPut = level.getAsJsonPrimitive().getAsInt();
+            } else {
+                levelPut = null;
+            }
+            //LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Read Level: \u00a7b" + levelPut);
 
-		} else { historicUUID = UUID.randomUUID(); mmoitemID = null; mmoitemType = null; socketColor = null; }
-	}
+            JsonElement color = object.get("Color");
+            if (color != null && color.isJsonPrimitive()) {
+                socketColor = color.getAsJsonPrimitive().getAsString();
+            } else {
+                socketColor = null;
+            }
 
-	/**
-	 * Create a GemStoneData from a GemStone MMOItem.
-	 * <p></p>
-	 * Basically extracts all the useable stats from the MMOItem, to have them ready to apply onto another MMOItem.
-	 * @param color Color of the slot this gem was inserted onto.
-	 */
-	public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color) {
+        } else {
+            historicUUID = UUID.randomUUID();
+            mmoitemID = null;
+            mmoitemType = null;
+            socketColor = null;
+        }
+    }
 
-		// Get Name to Display
-		name = MMOUtils.getDisplayName(gemStoneMMOItem.getNBT().getItem());
+    /**
+     * Create a GemStoneData from a GemStone MMOItem.
+     * <p></p>
+     * Basically extracts all the useable stats from the MMOItem, to have them ready to apply onto another MMOItem.
+     *
+     * @param color Color of the slot this gem was inserted onto.
+     */
+    public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color) {
 
-		// Extract abilities from the Gem Stone MMOItem into a more accessible form
-		if (gemStoneMMOItem.hasData(ItemStats.ABILITIES)) { abilities.addAll(((AbilityListData) gemStoneMMOItem.getData(ItemStats.ABILITIES)).getAbilities()); }
+        // Get Name to Display
+        name = MMOUtils.getDisplayName(gemStoneMMOItem.getNBT().getItem());
 
-		// Extract permenent effects from the Gem Stone MMOItem into a more accessible form
-		if (gemStoneMMOItem.hasData(ItemStats.PERM_EFFECTS)) { effects.addAll(((PotionEffectListData) gemStoneMMOItem.getData(ItemStats.PERM_EFFECTS)).getEffects()); }
+        // Extract abilities from the Gem Stone MMOItem into a more accessible form
+        if (gemStoneMMOItem.hasData(ItemStats.ABILITIES)) {
+            abilities.addAll(((AbilityListData) gemStoneMMOItem.getData(ItemStats.ABILITIES)).getAbilities());
+        }
+
+        // Extract permenent effects from the Gem Stone MMOItem into a more accessible form
+        if (gemStoneMMOItem.hasData(ItemStats.PERM_EFFECTS)) {
+            effects.addAll(((PotionEffectListData) gemStoneMMOItem.getData(ItemStats.PERM_EFFECTS)).getEffects());
+        }
 
 
-		// Generate own historic UUID
-		historicUUID = UUID.randomUUID();
-		mmoitemID = gemStoneMMOItem.getId();
-		mmoitemType = gemStoneMMOItem.getType().getId();
-		socketColor = color;
-	}
+        // Generate own historic UUID
+        historicUUID = UUID.randomUUID();
+        mmoitemID = gemStoneMMOItem.getId();
+        mmoitemType = gemStoneMMOItem.getType().getId();
+        socketColor = color;
+    }
 
-	/**
-	 * This is a completely empty builder.
-	 * <p></p>
-	 * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
-	 * <p></p>
-	 * @deprecated This gem stone will not have a type/id and will cause problems when trying to remove it from items with a consumable.
-	 * @param name Name to display in the lore of the item when you put the gemstone into it.
-	 */
-	public GemstoneData(@NotNull String name) {
-		this.name = name;
-		mmoitemID = null;
-		mmoitemType = null;
-		socketColor = null;
-		historicUUID = UUID.randomUUID();
-	}
+    /**
+     * This is a completely empty builder.
+     * <p></p>
+     * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
+     * <p></p>
+     *
+     * @param name Name to display in the lore of the item when you put the gemstone into it.
+     * @deprecated This gem stone will not have a type/id and will cause problems when trying to remove it from items with a consumable.
+     */
+    public GemstoneData(@NotNull String name) {
+        this.name = name;
+        mmoitemID = null;
+        mmoitemType = null;
+        socketColor = null;
+        historicUUID = UUID.randomUUID();
+    }
 
-	/**
-	 * This is at which level (of the item) the gemstone was placed onto the item.
-	 * <p>A null level means this gem does not scale.</p>
-	 * <p></p>
-	 * For scaling purposes of stat {@link GemUpgradeScaling}
-	 */
-	public void setLevel(@Nullable Integer l) {
-		//LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Set Level: \u00a7b" + l);
-		levelPut = l; }
-	/**
-	 * This is at which level (of the item) the gemstone was placed onto the item.
-	 * <p>A null level means this gem does not scale.</p>
-	 * <p></p>
-	 * For scaling purposes of stat {@link GemUpgradeScaling}
-	 */
-	@Nullable public Integer getLevel() { return levelPut; }
+    /**
+     * This is at which level (of the item) the gemstone was placed onto the item.
+     * <p>A null level means this gem does not scale.</p>
+     * <p></p>
+     * For scaling purposes of stat {@link GemUpgradeScaling}
+     */
+    public void setLevel(@Nullable Integer l) {
+        //LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Set Level: \u00a7b" + l);
+        levelPut = l;
+    }
 
-	/**
-	 * Does this gem scale with item upgrades?
-	 */
-	public boolean isScaling() { return levelPut != null; }
+    /**
+     * This is at which level (of the item) the gemstone was placed onto the item.
+     * <p>A null level means this gem does not scale.</p>
+     * <p></p>
+     * For scaling purposes of stat {@link GemUpgradeScaling}
+     */
+    @Nullable
+    public Integer getLevel() {
+        return levelPut;
+    }
 
-	/**
-	 * This is a completely empty builder.
-	 * <p></p>
-	 * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
-	 * @param name Name to display in the lore of the item when you put the gemstone into it.
-	 * @param color Color of the socket this gem is inserted onto
-	 */
-	public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color) {
-		this.name = name;
-		mmoitemID = id;
-		mmoitemType = type;
-		socketColor = color;
-		historicUUID = UUID.randomUUID(); }
+    /**
+     * Does this gem scale with item upgrades?
+     */
+    public boolean isScaling() {
+        return levelPut != null;
+    }
 
-	/**
-	 * This is a completely empty builder.
-	 * <p></p>
-	 * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
-	 * @param name Name to display in the lore of the item when you put the gemstone into it.
-	 * @param color Color of the socket this gem is inserted onto
-	 */
-	public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color, @NotNull UUID uiid) {
-		this.name = name;
-		mmoitemID = id;
-		mmoitemType = type;
-		socketColor = color;
-		historicUUID = uiid; }
+    /**
+     * This is a completely empty builder.
+     * <p></p>
+     * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
+     *
+     * @param name  Name to display in the lore of the item when you put the gemstone into it.
+     * @param color Color of the socket this gem is inserted onto
+     */
+    public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color) {
+        this.name = name;
+        mmoitemID = id;
+        mmoitemType = type;
+        socketColor = color;
+        historicUUID = UUID.randomUUID();
+    }
 
-	/**
-	 * Add an ability to this Gem Stone
-	 */
-	public void addAbility(@NotNull AbilityData ability) {
-		abilities.add(ability);
-	}
+    /**
+     * This is a completely empty builder.
+     * <p></p>
+     * You may add whatever you want with <code>addAbility()</code>,<code>addPermamentEffect</code>, or most widely usedly, <code>setStat()</code>.
+     *
+     * @param name  Name to display in the lore of the item when you put the gemstone into it.
+     * @param color Color of the socket this gem is inserted onto
+     */
+    public GemstoneData(@NotNull String name, @Nullable String type, @Nullable String id, @Nullable String color, @NotNull UUID uiid) {
+        this.name = name;
+        mmoitemID = id;
+        mmoitemType = type;
+        socketColor = color;
+        historicUUID = uiid;
+    }
 
-	/**
-	 * Add a permanent potion effect to this Gem Stone
-	 */
-	public void addPermanentEffect(@NotNull PotionEffectData effect) {
-		effects.add(effect);
-	}
+    /**
+     * Add an ability to this Gem Stone
+     */
+    public void addAbility(@NotNull AbilityData ability) {
+        abilities.add(ability);
+    }
 
-	/**
-	 * Add an ItemStat to this gemstone
-	 */
-	public void setStat(@NotNull ItemStat stat, double value) {
-		stats.put(stat, value);
-	}
+    /**
+     * Add a permanent potion effect to this Gem Stone
+     */
+    public void addPermanentEffect(@NotNull PotionEffectData effect) {
+        effects.add(effect);
+    }
 
-	/**
-	 * Get the display text for when this is put into lore.
-	 */
-	@NotNull public String getName() {
-		return name;
-	}
+    /**
+     * Add an ItemStat to this gemstone
+     */
+    public void setStat(@NotNull ItemStat stat, double value) {
+        stats.put(stat, value);
+    }
 
-	/**
-	 *  If known, the socket colour this gem was put into
-	 */
-	 public void setColour(@Nullable String color) { socketColor = color; }
+    /**
+     * Get the display text for when this is put into lore.
+     */
+    @NotNull
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Want to know which stats were given to the item by this gemstone (after applying upgrade scaling and such)? Use this!
-	 */
-	@NotNull public UUID getHistoricUUID() {
-		return historicUUID;
-	}
+    /**
+     * If known, the socket colour this gem was put into
+     */
+    public void setColour(@Nullable String color) {
+        socketColor = color;
+    }
 
-	/**
-	 * To store onto the NBT of the item.
-	 */
-	@NotNull public JsonObject toJson() {
-		JsonObject object = new JsonObject();
-		object.addProperty("Name", name);
-		object.addProperty("History", historicUUID.toString());
-		if (mmoitemID != null) { object.addProperty("Id", mmoitemID); }
-		if (mmoitemType != null) { object.addProperty("Type", mmoitemType); }
-		if (levelPut != null) {
-			//LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Saving Level: \u00a7b" + levelPut);
-			object.addProperty("Level", levelPut); }
-		object.addProperty("Color", socketColor);
+    /**
+     * Want to know which stats were given to the item by this gemstone (after applying upgrade scaling and such)? Use this!
+     */
+    @NotNull
+    public UUID getHistoricUUID() {
+        return historicUUID;
+    }
+
+    /**
+     * To store onto the NBT of the item.
+     */
+    @NotNull
+    public JsonObject toJson() {
+        JsonObject object = new JsonObject();
+        object.addProperty("Name", name);
+        object.addProperty("History", historicUUID.toString());
+        if (mmoitemID != null) {
+            object.addProperty("Id", mmoitemID);
+        }
+        if (mmoitemType != null) {
+            object.addProperty("Type", mmoitemType);
+        }
+        if (levelPut != null) {
+            //LVL//MMOItems.log("\u00a73 -\u00a7b-\u00a73-\u00a77 Saving Level: \u00a7b" + levelPut);
+            object.addProperty("Level", levelPut);
+        }
+        object.addProperty("Color", socketColor);
 
 		/*
 		 * These seem obsolete. Abilities, effects, and stats, are merged into the
@@ -281,6 +338,6 @@ public class GemstoneData {
 		object.add("Effects", effects);
 		*/
 
-		return object;
-	}
+        return object;
+    }
 }

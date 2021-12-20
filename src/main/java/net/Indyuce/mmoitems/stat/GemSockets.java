@@ -127,9 +127,9 @@ public class GemSockets extends ItemStat {
 		if (gTag != null) {
 
 			try {
-				// INterpret as Json Object
+				// Interpret as Json Object
 				JsonObject object = new JsonParser().parse((String) gTag.getValue()).getAsJsonObject();
-				GemSocketsData sockets = new GemSocketsData(toList(object.getAsJsonArray("EmptySlots")));
+				GemSocketsData sockets = new GemSocketsData(object.getAsJsonArray("EmptySlots"));
 
 				JsonArray array = object.getAsJsonArray("Gemstones");
 				array.forEach(element -> sockets.add(new GemstoneData(element.getAsJsonObject())));
@@ -146,12 +146,6 @@ public class GemSockets extends ItemStat {
 
 		// Nope
 		return null;
-	}
-
-	private List<String> toList(JsonArray array) {
-		List<String> list = new ArrayList<>();
-		array.forEach(str -> list.add(str.getAsString()));
-		return list;
 	}
 
 	@Override

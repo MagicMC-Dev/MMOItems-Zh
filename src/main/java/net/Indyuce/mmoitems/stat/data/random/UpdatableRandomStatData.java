@@ -4,13 +4,15 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * When updating items with the RevID system, an interesting case is when
  * looking into Random Stat Data, because one wouldn't want to reroll a good
  * roll in a player's item... unless this roll was unobtainable now, perhaps
  * the reason the item is getting updated is to fix that roll being too good...
+ *
+ * Example of unobtainable data: the current numeric stat value is now out
+ * of the numeric formula bounds (defined by max-spread).
  *
  * This interface will tell the {@link net.Indyuce.mmoitems.api.util.MMOItemReforger}
  * if the current roll may be kept, or it is too extreme (under the updated metrics)

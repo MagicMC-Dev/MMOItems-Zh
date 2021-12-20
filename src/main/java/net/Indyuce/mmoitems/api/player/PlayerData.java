@@ -2,8 +2,9 @@ package net.Indyuce.mmoitems.api.player;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.skill.trigger.PassiveSkill;
 import net.Indyuce.mmoitems.ItemStats;
@@ -36,7 +37,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class PlayerData {
     private static final Map<UUID, PlayerData> data = new HashMap<>();
@@ -234,10 +234,12 @@ public class PlayerData {
             /*
              * Apply abilities
              */
-            if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering", false) || !fullHands))
+            if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering") || !fullHands))
                 if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
-                    for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities())
-                        mmoData.registerSkillTrigger(new PassiveSkill("MMOItemsItem", abilityData.getTriggerType(), abilityData));
+                    for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
+                        ModifierSource modSource = equipped.getItem().getType() == null ? ModifierSource.OTHER : equipped.getItem().getType().getItemSet().getModifierSource();
+                        mmoData.registerSkillTrigger(new PassiveSkill("MMOItemsItem", abilityData.getTriggerType(), abilityData, equipped.getSlot(), modSource));
+                    }
 
             /*
              * Apply permissions if vault exists
@@ -314,7 +316,7 @@ public class PlayerData {
             return;
 
         // perm effects
-        permanentEffects.keySet().forEach(effect -> getPlayer().addPotionEffect(permanentEffects.get(effect)));
+        permanentEffects.values().forEach(effect -> getPlayer().addPotionEffect(effect));
 
         // two handed
         if (fullHands)
@@ -451,7 +453,9 @@ public class PlayerData {
 
         // Might not be null, after all
         PlayerData observedData = data.get(uuid);
-        if (observedData != null) { return observedData; }
+        if (observedData != null) {
+            return observedData;
+        }
 
         // Attempt to load
         load(uuid);

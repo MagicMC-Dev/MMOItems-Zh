@@ -486,7 +486,8 @@ public class MMOItem implements ItemReference {
 	public void removeGemStone(@NotNull UUID gemUUID, @Nullable String color) {
 
 		// Get gemstone data
-		if (!hasData(ItemStats.GEM_SOCKETS)) { return; }
+		if (!hasData(ItemStats.GEM_SOCKETS))
+			return;
 
 		//GEM//MMOItems.log("\u00a7b-\u00a78-\u00a79-\u00a77 Extracting \u00a7e" + gemUUID.toString());
 		StatHistory gemStory = StatHistory.from(this, ItemStats.GEM_SOCKETS);
@@ -497,16 +498,23 @@ public class MMOItem implements ItemReference {
 		 * will purge themselves from extraneous gems (that are
 		 * no longer registered onto the GEM_SOCKETS history).
 		 */
-		if (GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getOriginalData()), gemUUID, color)) { return; }
+		if (((GemSocketsData) gemStory.getOriginalData()).removeGem(gemUUID, color))
+			return;
 
 		// Attempt gems
-		for (UUID gemDataUUID : gemStory.getAllGemstones()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getGemstoneData(gemDataUUID)), gemUUID, color)) { return; } }
+		for (UUID gemDataUUID : gemStory.getAllGemstones())
+			if (((GemSocketsData) gemStory.getGemstoneData(gemDataUUID)).removeGem(gemUUID, color))
+				return;
 
 		// Attempt externals
-		for (StatData externalData : gemStory.getExternalData()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) externalData), gemUUID, color)) { return; } }
+		for (StatData externalData : gemStory.getExternalData())
+			if (((GemSocketsData) externalData).removeGem(gemUUID, color))
+				return;
 
 		// Attempt gems
-		for (UUID gemDataUUID : gemStory.getAllModifiers()) { if (GemSocketsData.removeGemFrom(((GemSocketsData) gemStory.getModifiersBonus(gemDataUUID)), gemUUID, color)) { return; } }
+		for (UUID gemDataUUID : gemStory.getAllModifiers())
+			if (((GemSocketsData) gemStory.getModifiersBonus(gemDataUUID)).removeGem(gemUUID, color))
+				return;
 	}
 	//endregion
 }

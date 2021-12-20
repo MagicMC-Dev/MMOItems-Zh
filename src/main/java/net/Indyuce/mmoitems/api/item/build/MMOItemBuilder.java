@@ -45,10 +45,10 @@ public class MMOItemBuilder {
         this.level = level;
         this.tier = tier;
 
-        /*
-         * Capacity is not final as it keeps lowering as modifiers are selected and
-         * applied
-         */
+        // Either use provided tier or look into the template base data
+        tier = tier != null ? tier : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().getOrThrow(template.getBaseItemData().get(ItemStats.TIER).toString()) : null;
+
+        // Capacity is not final as it keeps lowering as modifiers are selected
         double capacity = (tier != null && tier.hasCapacity() ? tier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);
         mmoitem = new MMOItem(template.getType(), template.getId());
 

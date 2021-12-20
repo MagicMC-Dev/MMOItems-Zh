@@ -179,8 +179,8 @@ public class LoreBuilder {
          */
         for (int j = 0; j < lore.size(); ) {
 
-            // Apply color codes and replace bar prefixes
-            String str = MythicLib.plugin.parseColors(lore.get(j).replace("{bar}", "").replace("{sbar}", ""));
+            // Replace bar prefixes
+            String str = lore.get(j).replace("{bar}", "").replace("{sbar}", "");
 
             // Need to break down the line into multiple
             if (str.contains("\\n")) {

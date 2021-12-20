@@ -85,7 +85,7 @@ public class ItemUse implements Listener {
                 event.setCancelled(true);
                 useItem.getPlayerData().getMMOPlayerData().triggerSkills(player.isSneaking() ? TriggerType.SHIFT_RIGHT_CLICK : TriggerType.RIGHT_CLICK, null);
 
-                Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer();
+                Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getHand());
                 if (result == Consumable.ConsumableConsumeResult.CANCEL)
                     return;
 
@@ -323,7 +323,7 @@ public class ItemUse implements Listener {
                 return;
             }
 
-            Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer();
+            Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getItem().equals(player.getInventory().getItemInMainHand()) ? org.bukkit.inventory.EquipmentSlot.HAND : org.bukkit.inventory.EquipmentSlot.OFF_HAND);
 
             // No effects are applied and not consumed
             if (result == Consumable.ConsumableConsumeResult.CANCEL) {

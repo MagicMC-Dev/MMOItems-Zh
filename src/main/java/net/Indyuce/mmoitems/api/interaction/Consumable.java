@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,17 +52,9 @@ public class Consumable extends UseItem {
     }
 
     /**
-     * @deprecated Use {@link Consumable#useOnPlayer()}
-     */
-    @Deprecated
-    public boolean useWithoutItem() {
-        return useOnPlayer() == ConsumableConsumeResult.CONSUME;
-    }
-
-    /**
      * @return If the item should be consumed
      */
-    public ConsumableConsumeResult useOnPlayer() {
+    public ConsumableConsumeResult useOnPlayer(EquipmentSlot handUsed) {
         NBTItem nbtItem = getNBTItem();
 
         // Inedible stat cancels this operation from the beginning
@@ -104,24 +97,15 @@ public class Consumable extends UseItem {
             ItemStack oldItem = nbtItem.getItem();
             if (oldItem.getAmount() > 1) {
                 newItem.setAmount(1);
-
-                if (player.getInventory().getItemInMainHand().equals(oldItem))
-                    player.getInventory().setItemInMainHand(newItem);
-                else if (player.getInventory().getItemInOffHand().equals(oldItem))
-                    player.getInventory().setItemInOffHand(newItem);
-
+                player.getInventory().setItem(handUsed, newItem);
                 oldItem.setAmount(oldItem.getAmount() - 1);
                 new SmartGive(player).give(oldItem);
 
                 /**
                  * Player just holding one item
                  */
-            } else {
-                if (player.getInventory().getItemInMainHand().equals(oldItem))
-                    player.getInventory().setItemInMainHand(newItem);
-                else if (player.getInventory().getItemInOffHand().equals(oldItem))
-                    player.getInventory().setItemInOffHand(newItem);
-            }
+            } else
+                player.getInventory().setItem(handUsed, newItem);
 
             return ConsumableConsumeResult.NOT_CONSUME;
         }

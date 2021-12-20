@@ -254,7 +254,7 @@ public class ItemStackBuilder {
 
         if (meta.hasLore()) {
             List<Component> componentLore = new LinkedList<>();
-            meta.getLore().forEach(line -> componentLore.add(LegacyComponent.parse(line)));
+            meta.getLore().forEach(line -> componentLore.add(LegacyComponent.simpleParse(line)));
             nbtItem.setLoreComponents(componentLore);
         }
 

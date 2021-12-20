@@ -140,8 +140,8 @@
 
         <dependency>
             <groupId>io.lumine</groupId>
-            <artifactId>MythicLib</artifactId>
-            <version>1.1.6</version>
+            <artifactId>MythicLib-dist</artifactId>
+            <version>1.2</version>
             <scope>provided</scope>
         </dependency>
 

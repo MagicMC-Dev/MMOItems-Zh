@@ -81,9 +81,10 @@ blazing:
     stats:
         element:
             fire:
-                base: 20
-                spread: .2
-                max-spread: .5
+                damage:
+                    base: 20
+                    spread: .2
+                    max-spread: .5
 
 # Love u terraria!
 impending-doom:

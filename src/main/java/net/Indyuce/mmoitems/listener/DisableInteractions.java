@@ -1,15 +1,17 @@
 package net.Indyuce.mmoitems.listener;
 
-import net.Indyuce.mmoitems.MMOItems;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.Keyed;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -28,9 +30,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class DisableInteractions implements Listener {
 
-    // anvils
     @EventHandler
-    public void a(InventoryClickEvent event) {
+    public void anvilInteractions(InventoryClickEvent event) {
         Inventory inv = event.getClickedInventory();
         if (inv == null || inv.getType() != InventoryType.ANVIL || event.getSlotType() != SlotType.RESULT)
             return;
@@ -41,9 +42,8 @@ public class DisableInteractions implements Listener {
             event.setCancelled(true);
     }
 
-    // grindstone
     @EventHandler
-    public void b(InventoryClickEvent event) {
+    public void grindstoneInteractions(InventoryClickEvent event) {
         if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 13))
             return;
 
@@ -55,9 +55,8 @@ public class DisableInteractions implements Listener {
             event.setCancelled(true);
     }
 
-    // smithing table
     @EventHandler
-    public void c(InventoryClickEvent event) {
+    public void smithingTableInteractions(InventoryClickEvent event) {
         if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 15))
             return;
 
@@ -69,34 +68,46 @@ public class DisableInteractions implements Listener {
             event.setCancelled(true);
     }
 
-    // enchanting tables
     @EventHandler
-    public void d(EnchantItemEvent event) {
+    public void enchantTablesInteractions(EnchantItemEvent event) {
         if (isDisabled(NBTItem.get(event.getItem()), "enchant"))
             event.setCancelled(true);
     }
 
-    // smelting
     @EventHandler
-    public void e(FurnaceSmeltEvent event) {
+    public void furnaceInteractions(FurnaceSmeltEvent event) {
         if (isDisabled(NBTItem.get(event.getSource()), "smelt"))
             event.setCancelled(true);
     }
 
-    // interaction
-    @EventHandler
-    public void f(PlayerInteractEvent event) {
+    /**
+     * Disables both click interactions if the corresponding
+     * option was found on the item
+     * <p>
+     * Also prevents interactions with UNIDENTIFIED items
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void clickInteractions(PlayerInteractEvent event) {
         if (!event.hasItem())
             return;
 
         NBTItem item = NBTItem.get(event.getItem());
-        if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
+        if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION") || item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
             event.setCancelled(true);
     }
 
-    // interaction (entity)
+    /**
+     * Prevents unidentified tools from breaking blocks
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    public void miningInteractions(BlockBreakEvent event) {
+        NBTItem item = NBTItem.get(event.getPlayer().getInventory().getItemInMainHand());
+        if (item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
+            event.setCancelled(true);
+    }
+
     @EventHandler
-    public void g(PlayerInteractEntityEvent event) {
+    public void entityInteractions(PlayerInteractEntityEvent event) {
         if (event.getRightClicked() instanceof ArmorStand)
             return;
 
@@ -106,17 +117,15 @@ public class DisableInteractions implements Listener {
             event.setCancelled(true);
     }
 
-    // interaction (consume)
     @EventHandler
-    public void h(PlayerItemConsumeEvent event) {
+    public void consumeInteractions(PlayerItemConsumeEvent event) {
         NBTItem item = NBTItem.get(event.getItem());
         if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION"))
             event.setCancelled(true);
     }
 
-    // workbench
     @EventHandler
-    public void i(CraftItemEvent event) {
+    public void workbenchInteractions(CraftItemEvent event) {
         if (event.getRecipe() instanceof Keyed)
             if (((Keyed) event.getRecipe()).getKey().getNamespace().equals("mmoitems")) {
                 String craftingPerm = NBTItem.get(event.getCurrentItem()).getString("MMOITEMS_CRAFT_PERMISSION");
@@ -136,14 +145,14 @@ public class DisableInteractions implements Listener {
             event.setCancelled(true);
     }
 
-    // preventing the player from shooting the arrow
     @EventHandler
-    public void j(EntityShootBowEvent event) {
+    public void shootBowInteractions(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player))
             return;
 
         DurabilityItem durItem = new DurabilityItem(((Player) event.getEntity()).getPlayer(), event.getBow());
 
+        // Cannot shoot a broken bow
         if (durItem.isBroken())
             event.setCancelled(true);
 
@@ -156,9 +165,29 @@ public class DisableInteractions implements Listener {
         if (stack == null)
             return;
 
+        // Cannot shoot arrow?
         NBTItem arrow = NBTItem.get(stack);
-        if (arrow.hasType() && MMOItems.plugin.getConfig().getBoolean("disable-interactions.arrow-shooting")
-                || arrow.getBoolean("MMOITEMS_DISABLE_ARROW_SHOOTING"))
+        if (arrow.hasType() && (MMOItems.plugin.getConfig().getBoolean("disable-interactions.arrow-shooting")
+                || arrow.getBoolean("MMOITEMS_DISABLE_ARROW_SHOOTING")))
+            event.setCancelled(true);
+    }
+
+    @EventHandler(priority =  EventPriority.LOW)
+    public void attackInteractions(EntityDamageByEntityEvent event) {
+        if (event.getDamage() == 0 || event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
+                || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
+            return;
+        Player player = (Player) event.getDamager();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        DurabilityItem durItem = new DurabilityItem(player, item);
+
+        // If weapon is broken don't do damage
+        if (durItem.isBroken())
+            event.setCancelled(true);
+
+        // Prevent unidentified weapons from being used
+        if (durItem.getNBTItem().hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
             event.setCancelled(true);
     }
 
@@ -181,20 +210,5 @@ public class DisableInteractions implements Listener {
     private boolean isDisabled(NBTItem nbt, String type) {
         return nbt.hasType() && MMOItems.plugin.getConfig().getBoolean("disable-interactions." + type)
                 || nbt.getBoolean("MMOITEMS_DISABLE_" + type.toUpperCase().replace("-", "_") + "ING");
-    }
-
-    // If weapon is broken don't do damage
-    @EventHandler
-    public void playerAttack(EntityDamageByEntityEvent event) {
-        if (event.getDamage() == 0 || event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK || !(event.getEntity() instanceof LivingEntity)
-                || !(event.getDamager() instanceof Player) || event.getEntity().hasMetadata("NPC") || event.getDamager().hasMetadata("NPC"))
-            return;
-        Player player = (Player) event.getDamager();
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        DurabilityItem durItem = new DurabilityItem(player, item);
-
-        if (durItem.isBroken())
-            event.setCancelled(true);
     }
 }

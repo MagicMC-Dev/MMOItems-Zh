@@ -167,6 +167,5 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void registerInventoryUpdates2(PlayerItemHeldEvent event) {
         PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-
     }
 }

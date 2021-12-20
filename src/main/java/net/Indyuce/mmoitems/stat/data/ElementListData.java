@@ -1,110 +1,111 @@
 package net.Indyuce.mmoitems.stat.data;
 
+import net.Indyuce.mmoitems.api.Element;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
+public class ElementListData implements Mergeable {
+    @NotNull
+    private final Map<Element, Double> damage = new HashMap<>(), defense = new HashMap<>();
 
-import net.Indyuce.mmoitems.api.Element;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.jetbrains.annotations.NotNull;
+    public double getDefense(Element element) {
+        return defense.getOrDefault(element, 0d);
+    }
 
-public class ElementListData implements StatData, Mergeable {
-	@NotNull private final Map<Element, Double> damage = new HashMap<>(), defense = new HashMap<>();
+    public double getDamage(Element element) {
+        return damage.getOrDefault(element, 0d);
+    }
 
-	public double getDefense(Element element) {
-		return defense.getOrDefault(element, 0d);
-	}
+    public Set<Element> getDefenseElements() {
+        return defense.keySet();
+    }
 
-	public double getDamage(Element element) {
-		return damage.getOrDefault(element, 0d);
-	}
+    public Set<Element> getDamageElements() {
+        return damage.keySet();
+    }
 
-	public Set<Element> getDefenseElements() {
-		return defense.keySet();
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ElementListData)) {
+            return false;
+        }
+        if (((ElementListData) obj).damage.size() != damage.size() || ((ElementListData) obj).defense.size() != defense.size()) {
+            return false;
+        }
 
-	public Set<Element> getDamageElements() {
-		return damage.keySet();
-	}
+        for (Element e : Element.values()) {
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof ElementListData)) { return false; }
-		if (((ElementListData) obj).damage.size() != damage.size() || ((ElementListData) obj).defense.size() != defense.size()) { return false; }
+            double expectedDA = getDamage(e);
+            double expectedDE = getDefense(e);
+            double realDA = ((ElementListData) obj).getDamage(e);
+            double realDE = ((ElementListData) obj).getDefense(e);
 
-		for (Element e : Element.values()) {
+            // Any differene?
+            if (expectedDA != realDA || expectedDE != realDE) {
+                return false;
+            }
+        }
 
-			double expectedDA = getDamage(e);
-			double expectedDE = getDefense(e);
-			double realDA = ((ElementListData) obj).getDamage(e);
-			double realDE = ((ElementListData) obj).getDefense(e);
+        return true;
+    }
 
-			// Any differene?
-			if (expectedDA != realDA || expectedDE != realDE) { return false; }  }
+    /**
+     * No way to add the elements directly from the constructor.
+     * <p></p>
+     * Use the set methods for that.
+     */
+    public ElementListData() {
+    }
 
-		return true;
-	}
+    public void setDamage(Element element, double value) {
+        if (value == 0)
+            damage.remove(element);
+        else
+            damage.put(element, value);
+    }
 
-	/**
-	 * No way to add the elements directly from the constructor.
-	 * <p></p>
-	 * Use the set methids for that.
-	 */
-	public ElementListData() { }
+    public void setDefense(Element element, double value) {
+        if (value == 0)
+            defense.remove(element);
+        else
+            defense.put(element, value);
+    }
 
-	public void setDamage(Element element, double value) {
-		if (value == 0)
-			damage.remove(element);
-		else
-			damage.put(element, value);
-	}
+    /**
+     * @return Total amount of stats (damage or defense) registered in that stat data.
+     */
+    public int total() {
+        return damage.size() + defense.size();
+    }
 
-	public void setDefense(Element element, double value) {
-		if (value == 0)
-			defense.remove(element);
-		else
-			defense.put(element, value);
-	}
+    @Override
+    public void merge(StatData data) {
+        Validate.isTrue(data instanceof ElementListData, "Cannot merge two different stat data types");
+        ElementListData extra = (ElementListData) data;
 
-	public int total() {
-		return damage.size() + defense.size();
-	}
+        for (Element element : extra.damage.keySet())
+            damage.put(element, extra.damage.get(element) + damage.getOrDefault(element, 0d));
+        for (Element element : extra.defense.keySet())
+            defense.put(element, extra.defense.get(element) + defense.getOrDefault(element, 0d));
+    }
 
-	@Override
-	public void merge(StatData data) {
-		Validate.isTrue(data instanceof ElementListData, "Cannot merge two different stat data types");
-		ElementListData extra = (ElementListData) data;
+    @NotNull
+    @Override
+    public StatData cloneData() {
+        ElementListData ret = new ElementListData();
+        damage.forEach((el, val) -> ret.damage.put(el, val));
+        defense.forEach((el, val) -> ret.defense.put(el, val));
+        return ret;
+    }
 
-		for (Element element : extra.damage.keySet())
-			damage.put(element, extra.damage.get(element) + damage.getOrDefault(element, 0d));
-		for (Element element : extra.defense.keySet())
-			defense.put(element, extra.defense.get(element) + defense.getOrDefault(element, 0d));
-	}
-
-	@Override
-	public @NotNull StatData cloneData() {
-
-		// Start fresh
-		ElementListData ret = new ElementListData();
-
-		// Add Damages
-		for (Element element : damage.keySet()) { ret.setDamage(element, damage.getOrDefault(element, 0d)); }
-
-
-		// Add Defensese
-		for (Element element : defense.keySet()) { ret.setDefense(element, defense.getOrDefault(element, 0d));}
-
-		// Return cloned
-		return ret;
-	}
-
-	@Override
-	public boolean isClear() {
-		return getDamageElements().size() == 0 && getDefenseElements().size() == 0;
-	}
-
-
+    @Override
+    public boolean isClear() {
+        return getDamageElements().size() == 0 && getDefenseElements().size() == 0;
+    }
 }

@@ -79,12 +79,8 @@ public class ItemStackBuilder {
         tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
 
         // And a last technical tag for updating items
-        if (MMOItems.INTERNAL_REVISION_ID > 1) {
+        if (MMOItems.INTERNAL_REVISION_ID > 1)
             tags.add(new ItemTag("MMOITEMS_INTERNAL_REVISION_ID", MMOItems.INTERNAL_REVISION_ID));
-        }
-		/*if (MMOItems.plugin.getUpdater().hasData(mmoitem))
-			tags.add(new ItemTag("MMOITEMS_ITEM_UUID",
-					MMOItems.plugin.getUpdater().getData(mmoitem.getType(), mmoitem.getId()).getUniqueId().toString()));*/
     }
 
     public LoreBuilder getLore() {

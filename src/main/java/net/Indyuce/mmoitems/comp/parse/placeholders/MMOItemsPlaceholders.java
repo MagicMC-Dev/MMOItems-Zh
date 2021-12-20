@@ -27,8 +27,8 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
 
 	public MMOItemsPlaceholders() {
-		oneDigit.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance());
-		twoDigits.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance());
+		oneDigit.setDecimalFormatSymbols(MythicLib.plugin.getMMOConfig().formatSymbols);
+		twoDigits.setDecimalFormatSymbols(MythicLib.plugin.getMMOConfig().formatSymbols);
 	}
 
 	@Override

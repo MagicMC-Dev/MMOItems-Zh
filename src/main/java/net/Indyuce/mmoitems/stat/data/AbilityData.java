@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat.data;
 
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.comp.mythicmobs.MythicSkillInfo;
-import io.lumine.mythic.lib.skill.metadata.TriggerMetadata;
+import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.skill.trigger.TriggeredSkill;
 import net.Indyuce.mmoitems.MMOItems;

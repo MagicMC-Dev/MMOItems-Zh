@@ -10,10 +10,7 @@ import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -93,21 +90,21 @@ public class AbilityManager {
 			MMOItems.plugin.getLogger().warning("Failed DIR generation!");
 
 		// Load MythicMobs addon skills
-		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			int count = 0;
-			for (File file : mythicMobs.listFiles())
-				try {
-					registerAbility(new MythicMobsAbility(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file)));
-					count++;
-				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load ability from " + file.getName() + ": " + exception.getMessage());
-				}
-
-			if (count > 0)
-				MMOItems.plugin.getLogger().log(Level.INFO, "Loaded " + count + " extra MythicMobs abilities");
-		}
+		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null)
+			loadMythicMobsAbilities(mythicMobs);
 
 		// Finally disable ability registration
 		registration = false;
+	}
+
+	private void loadMythicMobsAbilities(File file) {
+		if (file.isDirectory())
+			Arrays.asList(file.listFiles()).forEach(subfile -> loadMythicMobsAbilities(subfile));
+		else
+			try {
+				registerAbility(new MythicMobsAbility(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file)));
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load ability from '" + file.getName() + "': " + exception.getMessage());
+			}
 	}
 }

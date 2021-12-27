@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
  
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
@@ -130,9 +131,21 @@ public class MMOItems extends LuminePlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
+	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 1;
+
+	public MMOItems() {
+		plugin = this;
+	}
+
 	@Override
 	public void load() {
-		plugin = this;
+
+		// Check if the ML build matches
+		if (MYTHICLIB_COMPATIBILITY_INDEX != MythicLib.MMOITEMS_COMPATIBILITY_INDEX) {
+			getLogger().log(Level.WARNING, "Your versions of MythicLib and MMOItems do not match. Make sure you are using the latest builds of both plugins");
+			disable();
+			return;
+		}
 
 		if (getServer().getPluginManager().getPlugin("WorldEdit") != null) try {
 			new WorldEditSupport();

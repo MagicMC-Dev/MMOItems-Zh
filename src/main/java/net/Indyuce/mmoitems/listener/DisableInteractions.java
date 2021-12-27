@@ -8,6 +8,7 @@ import org.bukkit.Keyed;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -93,7 +94,7 @@ public class DisableInteractions implements Listener {
 
         NBTItem item = NBTItem.get(event.getItem());
         if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION") || item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
-            event.setCancelled(true);
+            event.setUseItemInHand(Event.Result.DENY);
     }
 
     /**

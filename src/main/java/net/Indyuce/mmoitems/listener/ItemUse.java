@@ -27,6 +27,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -65,7 +66,7 @@ public class ItemUse implements Listener {
 
         // (BUG FIX) Cancel the event to prevent things like shield blocking
         if (!useItem.checkItemRequirements()) {
-            event.setCancelled(true);
+            event.setUseItemInHand(Event.Result.DENY);
             return;
         }
 
@@ -75,14 +76,14 @@ public class ItemUse implements Listener {
                 Message.ITEM_ON_COOLDOWN
                         .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem())))
                         .send(player);
-                event.setCancelled(true);
+                event.setUseItemInHand(Event.Result.DENY);
                 return;
             }
 
             if (useItem instanceof Consumable) {
 
                 // Since the interact event is cancelled, no skills is cast by MythicLib. They must be force-cast
-                event.setCancelled(true);
+                event.setUseItemInHand(Event.Result.DENY);
                 useItem.getPlayerData().getMMOPlayerData().triggerSkills(player.isSneaking() ? TriggerType.SHIFT_RIGHT_CLICK : TriggerType.RIGHT_CLICK, null);
 
                 Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getHand());

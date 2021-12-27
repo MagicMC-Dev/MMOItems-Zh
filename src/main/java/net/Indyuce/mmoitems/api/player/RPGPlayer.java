@@ -143,8 +143,7 @@ public abstract class RPGPlayer {
             CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(data.getAbility());
             if (!data.getTriggerType().isSilent()) {
                 StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
-                double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown();
-
+                double progress = (double) (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
                 String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
                 for (int j = 0; j < 10; j++)
                     progressBar.append(progress >= j ? ChatColor.GREEN : ChatColor.WHITE).append(barChar);

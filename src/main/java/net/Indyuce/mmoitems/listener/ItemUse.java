@@ -81,11 +81,7 @@ public class ItemUse implements Listener {
             }
 
             if (useItem instanceof Consumable) {
-
-                // Since the interact event is cancelled, no skills is cast by MythicLib. They must be force-cast
                 event.setUseItemInHand(Event.Result.DENY);
-                useItem.getPlayerData().getMMOPlayerData().triggerSkills(player.isSneaking() ? TriggerType.SHIFT_RIGHT_CLICK : TriggerType.RIGHT_CLICK, null);
-
                 Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getHand());
                 if (result == Consumable.ConsumableConsumeResult.CANCEL)
                     return;

@@ -9,12 +9,11 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Frozen_Aura extends SimpleAbility implements Listener {
+public class Frozen_Aura extends SimpleAbility {
     public Frozen_Aura() {
         super();
 

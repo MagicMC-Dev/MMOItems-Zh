@@ -7,16 +7,14 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.SimpleAbility;
 import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.util.NoClipItem;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Throw_Up extends SimpleAbility implements Listener {
+public class Throw_Up extends SimpleAbility {
     public Throw_Up() {
         super();
 

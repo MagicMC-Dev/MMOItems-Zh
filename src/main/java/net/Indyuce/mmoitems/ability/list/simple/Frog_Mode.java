@@ -7,10 +7,9 @@ import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Frog_Mode extends SimpleAbility implements Listener {
+public class Frog_Mode extends SimpleAbility {
     public Frog_Mode() {
         super();
 

@@ -358,8 +358,13 @@ public class PlayerData {
      * @param attack  Current attack
      * @param target  Ability target, can be null
      * @param ability Ability to cast
+     * @deprecated
      */
+    @Deprecated
     public void cast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
+
+
+
 
         /*
          * Apply simple conditions including mana and stamina cost, permission
@@ -385,14 +390,7 @@ public class PlayerData {
          * The player can cast the ability, and it was successfully cast on its
          * target, removes resources needed from the player
          */
-        if (ability.hasModifier("mana"))
-            rpgPlayer.giveMana(-abilityMetadata.getModifier("mana"));
-        if (ability.hasModifier("stamina"))
-            rpgPlayer.giveStamina(-abilityMetadata.getModifier("stamina"));
 
-        double cooldown = abilityMetadata.getModifier("cooldown") * (1 - Math.min(.8, stats.getStat(ItemStats.COOLDOWN_REDUCTION) / 100));
-        if (cooldown > 0)
-            mmoData.getCooldownMap().applyCooldown(ability.getAbility(), cooldown);
 
         /*
          * Finally cast the ability; BUG FIX: cooldown MUST be applied BEFORE

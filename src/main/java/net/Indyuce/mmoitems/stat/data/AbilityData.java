@@ -1,55 +1,37 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import com.google.gson.JsonObject;
-import io.lumine.mythic.lib.comp.mythicmobs.MythicSkillInfo;
+import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
+import io.lumine.mythic.lib.skill.Skill;
+import io.lumine.mythic.lib.skill.SkillMetadata;
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import io.lumine.mythic.lib.skill.trigger.TriggeredSkill;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.message.Message;
 import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
-public class AbilityData implements MythicSkillInfo, TriggeredSkill {
+public class AbilityData extends Skill {
 	private final Ability ability;
 	private final TriggerType triggerType;
 	private final Map<String, Double> modifiers = new HashMap<>();
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof AbilityData)) { return false; }
-
-		// Compare casitng mode
-		if (((AbilityData) obj).getTriggerType() != getTriggerType()) { return false; }
-
-		// Not same ability
-		if (!((AbilityData) obj).getAbility().equals(getAbility())) { return false; }
-
-		// Check modifiers
-		for (String mod : ((AbilityData) obj).getModifiers()) {
-
-			// Any difference?
-			double objMod = ((AbilityData) obj).getModifier(mod);
-			double thisMod = getModifier(mod);
-			if (objMod != thisMod) { return false; } }
-
-		// Success
-		return true;
-	}
-
-	@Override
-	public void execute(@Nullable TriggerMetadata triggerMetadata) {
-		PlayerData playerData = PlayerData.get(triggerMetadata.getAttack().getPlayer().getUniqueId());
-		playerData.cast(triggerMetadata.getAttack(), triggerMetadata.getTarget() instanceof LivingEntity ? (LivingEntity) triggerMetadata.getTarget() : null, this);
-	}
 
 	public AbilityData(JsonObject object) {
 		ability = MMOItems.plugin.getAbilities().getAbility(object.get("Id").getAsString());
@@ -92,11 +74,81 @@ public class AbilityData implements MythicSkillInfo, TriggeredSkill {
 	}
 
 	public void setModifier(String path, double value) {
+		// Validate.isTrue(getHandler().getModifiers().contains(path), "Could not find modifier called '" + path + "'");
 		modifiers.put(path, value);
 	}
 
 	public boolean hasModifier(String path) {
 		return modifiers.containsKey(path);
+	}
+
+	@NotNull
+	@Override
+	public boolean getResult(SkillMetadata meta) {
+
+		PlayerData playerData = PlayerData.get(meta.getCaster().getUniqueId());
+		RPGPlayer rpgPlayer = playerData.getRPG();
+		Player player = meta.getCaster().getPlayer();
+
+		// Check for cooldown
+		if (meta.getCaster().getCooldownMap().isOnCooldown(this)) {
+			CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(this);
+			if (!triggerType.isSilent()) {
+				StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
+				double progress = (double) (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
+				String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
+				for (int j = 0; j < 10; j++)
+					progressBar.append(progress >= j ? ChatColor.GREEN : ChatColor.WHITE).append(barChar);
+				Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(info.getRemaining() / 1000d), "#progress#",
+						progressBar.toString(), "#s#", (info.getRemaining() > 1999 ? "s" : "")).send(player);
+			}
+			return false;
+		}
+
+		// Check for permission
+		if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities")
+				&& !player.hasPermission("mmoitems.ability." + getHandler().getId().toLowerCase().replace("_", "-"))
+				&& !player.hasPermission("mmoitems.bypass.ability"))
+			return false;
+
+		// Check for mana cost
+		if (hasModifier("mana") && rpgPlayer.getMana() < getModifier("mana")) {
+			Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player);
+			return false;
+		}
+
+		// Check for stamina cost
+		if (hasModifier("stamina") && rpgPlayer.getStamina() < getModifier("stamina")) {
+			Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player);
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public void whenCast(SkillMetadata meta) {
+		PlayerData playerData = PlayerData.get(meta.getCaster().getUniqueId());
+		RPGPlayer rpgPlayer = playerData.getRPG();
+
+		// Apply mana cost
+		if (hasModifier("mana"))
+			rpgPlayer.giveMana(-meta.getModifier("mana"));
+
+		// Apply stamina cost
+		if (hasModifier("stamina"))
+			rpgPlayer.giveStamina(-meta.getModifier("stamina"));
+
+		// Apply cooldown
+		double cooldown = meta.getModifier("cooldown") * (1 - Math.min(.8, meta.getStats().getStat("COOLDOWN_REDUCTION") / 100));
+		if (cooldown > 0)
+			meta.getCaster().getCooldownMap().applyCooldown(this, cooldown);
+	}
+
+	@Override
+	public SkillHandler getHandler() {
+		// TODO
+		return null;
 	}
 
 	@Override
@@ -114,5 +166,18 @@ public class AbilityData implements MythicSkillInfo, TriggeredSkill {
 		object.add("Modifiers", modifiers);
 
 		return object;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AbilityData that = (AbilityData) o;
+		return ability.equals(that.ability) && triggerType == that.triggerType && modifiers.equals(that.modifiers);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(ability, triggerType, modifiers);
 	}
 }

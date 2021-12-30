@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.player;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
+import io.lumine.mythic.lib.skill.SkillMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -136,7 +137,9 @@ public abstract class RPGPlayer {
      *
      * @param data Ability being cast
      * @return If the player can cast the ability
+     * @deprecated Replaced by {@link AbilityData#getResult(SkillMetadata)}
      */
+    @Deprecated
     public boolean canCast(AbilityData data) {
 
         if (playerData.getMMOPlayerData().getCooldownMap().isOnCooldown(data.getAbility())) {

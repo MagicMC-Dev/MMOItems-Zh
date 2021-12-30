@@ -12,7 +12,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.EvokerFangs;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -20,7 +19,7 @@ import org.bukkit.util.Vector;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Corrupted_Fangs extends VectorAbility implements Listener {
+public class Corrupted_Fangs extends VectorAbility {
     public Corrupted_Fangs() {
         super();
 

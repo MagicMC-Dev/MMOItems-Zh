@@ -65,7 +65,7 @@ public class Chicken_Wraith extends SimpleAbility {
 		private final double damage;
 
 		public EggHandler(double damage) {
-			super(EntityDamageByEntityEvent.getHandlerList());
+			super(EntityDamageByEntityEvent.getHandlerList(), PlayerEggThrowEvent.getHandlerList());
 
 			this.damage = damage;
 		}

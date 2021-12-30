@@ -8,19 +8,17 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.ItemAbility;
 import net.Indyuce.mmoitems.ability.metadata.ItemAbilityMetadata;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.util.NoClipItem;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Item_Bomb extends ItemAbility implements Listener {
+public class Item_Bomb extends ItemAbility {
     public Item_Bomb() {
         super();
 

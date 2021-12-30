@@ -13,11 +13,10 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Item_Throw extends ItemAbility implements Listener {
+public class Item_Throw extends ItemAbility {
     public Item_Throw() {
         super();
 

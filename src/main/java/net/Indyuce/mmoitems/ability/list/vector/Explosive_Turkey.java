@@ -16,12 +16,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-public class Explosive_Turkey extends VectorAbility implements Listener {
+public class Explosive_Turkey extends VectorAbility {
 	public Explosive_Turkey() {
 		super();
 

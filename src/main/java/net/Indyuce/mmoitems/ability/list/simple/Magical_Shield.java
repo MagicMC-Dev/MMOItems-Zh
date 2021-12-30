@@ -75,8 +75,7 @@ public class Magical_Shield extends SimpleAbility {
 
 		@Override
 		public void run() {
-			ti++;
-			if (ti > duration * 20. / 3.)
+			if (ti++ > duration * 20. / 3.)
 				close();
 
 			for (double j = 0; j < Math.PI / 2; j += Math.PI / (28 + random.nextInt(5)))

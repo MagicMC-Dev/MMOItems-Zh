@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Shadow_Veil extends SimpleAbility implements Listener {
+public class Shadow_Veil extends SimpleAbility {
     public Shadow_Veil() {
         super();
 

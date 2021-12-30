@@ -1,26 +1,23 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import io.lumine.mythic.lib.skill.Skill;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
-import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -29,12 +26,12 @@ import java.util.Objects;
 import java.util.Set;
 
 public class AbilityData extends Skill {
-	private final Ability ability;
+	private final RegisteredSkill ability;
 	private final TriggerType triggerType;
 	private final Map<String, Double> modifiers = new HashMap<>();
 
 	public AbilityData(JsonObject object) {
-		ability = MMOItems.plugin.getAbilities().getAbility(object.get("Id").getAsString());
+		ability = MMOItems.plugin.getSkills().getSkill(object.get("Id").getAsString());
 		triggerType = MMOUtils.backwardsCompatibleTriggerType(object.get("CastMode").getAsString());
 
 		JsonObject modifiers = object.getAsJsonObject("Modifiers");
@@ -45,23 +42,23 @@ public class AbilityData extends Skill {
 		Validate.isTrue(config.contains("type") && config.contains("mode"), "Ability is missing type or mode");
 
 		String abilityFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
-		ability = MMOItems.plugin.getAbilities().getAbility(abilityFormat);
+		Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
+		ability = MMOItems.plugin.getSkills().getSkill(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
 		triggerType = MMOUtils.backwardsCompatibleTriggerType(modeFormat);
 
 		for (String key : config.getKeys(false))
-			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
+			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getHandler().getModifiers().contains(key))
 				modifiers.put(key, config.getDouble(key));
 	}
 
-	public AbilityData(Ability ability, TriggerType triggerType) {
+	public AbilityData(RegisteredSkill ability, TriggerType triggerType) {
 		this.ability = ability;
 		this.triggerType = triggerType;
 	}
 
-	public Ability getAbility() {
+	public RegisteredSkill getAbility() {
 		return ability;
 	}
 
@@ -107,7 +104,7 @@ public class AbilityData extends Skill {
 
 		// Check for permission
 		if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities")
-				&& !player.hasPermission("mmoitems.ability." + getHandler().getId().toLowerCase().replace("_", "-"))
+				&& !player.hasPermission("mmoitems.ability." + getHandler().getLowerCaseId())
 				&& !player.hasPermission("mmoitems.bypass.ability"))
 			return false;
 
@@ -147,18 +144,17 @@ public class AbilityData extends Skill {
 
 	@Override
 	public SkillHandler getHandler() {
-		// TODO
-		return null;
+		return ability.getHandler();
 	}
 
 	@Override
 	public double getModifier(String path) {
-		return modifiers.getOrDefault(path, ability.getDefaultValue(path));
+		return modifiers.getOrDefault(path, ability.getDefaultModifier(path));
 	}
 
 	public JsonObject toJson() {
 		JsonObject object = new JsonObject();
-		object.addProperty("Id", ability.getID());
+		object.addProperty("Id", ability.getHandler().getId());
 		object.addProperty("CastMode", triggerType.name());
 
 		JsonObject modifiers = new JsonObject();

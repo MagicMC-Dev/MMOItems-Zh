@@ -1,0 +1,17 @@
+name: Black Hole
+modifier:
+  duration:
+    name: Duration
+    default-value: 2.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 35.0
+  radius:
+    name: Radius
+    default-value: 2.0

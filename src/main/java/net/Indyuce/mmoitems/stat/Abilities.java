@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.google.gson.*;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -65,13 +65,12 @@ public class Abilities extends ItemStat {
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
 
 		((AbilityListData) data).getAbilities().forEach(ability -> {
-			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTriggerType())).replace("#a",
-					MMOItems.plugin.getLanguage().getAbilityName(ability.getAbility())));
+			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTriggerType())).replace("#a", ability.getAbility().getName()));
 
 			for (String modifier : ability.getModifiers()) {
-				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getID().toLowerCase() + "_" + modifier,
+				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
 						this.modifierFormat.format(ability.getModifier(modifier)));
-				abilityLore.add(modifierFormat.replace("#m", MMOItems.plugin.getLanguage().getModifierName(modifier)).replace("#v",
+				abilityLore.add(modifierFormat.replace("#m", ability.getAbility().getModifierName(modifier)).replace("#v",
 						this.modifierFormat.format(ability.getModifier(modifier))));
 			}
 
@@ -116,9 +115,9 @@ public class Abilities extends ItemStat {
 
 		String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
 		if (edited.equals("ability")) {
-			Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(format),
+			Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(format),
 					"format is not a valid ability! You may check the ability list using /mi list ability.");
-			Ability ability = MMOItems.plugin.getAbilities().getAbility(format);
+			RegisteredSkill ability = MMOItems.plugin.getSkills().getSkill(format);
 
 			inv.getEditedSection().set("ability." + configKey, null);
 			inv.getEditedSection().set("ability." + configKey + ".type", format);

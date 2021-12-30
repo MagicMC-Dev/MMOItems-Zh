@@ -1,0 +1,17 @@
+name: Weaken Target
+modifier:
+  duration:
+    name: Duration
+    default-value: 4.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 10.0
+  extra-damage:
+    name: Extra Damage
+    default-value: 40.0

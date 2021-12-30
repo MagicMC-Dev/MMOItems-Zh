@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -13,6 +14,7 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
@@ -50,7 +52,6 @@ public class ConfigManager implements Reloadable {
     private static final String[] fileNames = {"abilities", "messages", "potion-effects", "stats", "items", "attack-effects"};
     private static final String[] languages = {"french", "chinese", "spanish", "russian", "polish"};
 
-    // try to setup non existing languages
     public ConfigManager() {
 
         mkdir("layouts");
@@ -78,6 +79,7 @@ public class ConfigManager implements Reloadable {
             } else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
         }
 
+        // Setup non existing language files
         for (String language : languages) {
             File languageFolder = new File(MMOItems.plugin.getDataFolder() + "/language/" + language);
             if (!languageFolder.exists())
@@ -127,12 +129,12 @@ public class ConfigManager implements Reloadable {
         messages.save();
 
         ConfigFile abilities = new ConfigFile("/language", "abilities");
-        for (Ability<?> ability : MMOItems.plugin.getAbilities().getAll()) {
-            String path = ability.getLowerCaseID();
+        for (RegisteredSkill ability : MMOItems.plugin.getSkills().getAll()) {
+            String path = ability.getHandler().getLowerCaseId();
             if (!abilities.getConfig().getKeys(true).contains("ability." + path))
                 abilities.getConfig().set("ability." + path, ability.getName());
 
-            for (String modifier : ability.getModifiers())
+            for (String modifier : ((SkillHandler<?>) ability.getHandler()).getModifiers())
                 if (!abilities.getConfig().getKeys(true).contains("modifier." + modifier))
                     abilities.getConfig().set("modifier." + modifier, MMOUtils.caseOnWords(modifier.replace("-", " ")));
         }
@@ -248,6 +250,7 @@ public class ConfigManager implements Reloadable {
         return MythicLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
     }
 
+    @Deprecated
     public String getAbilityName(Ability ability) {
         String configName = abilities.getConfig().getString("ability." + ability.getLowerCaseID());
         return configName != null ? configName : ability.getName();
@@ -257,6 +260,7 @@ public class ConfigManager implements Reloadable {
         return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId());
     }
 
+    @Deprecated
     public String getModifierName(String path) {
         return abilities.getConfig().getString("modifier." + path);
     }

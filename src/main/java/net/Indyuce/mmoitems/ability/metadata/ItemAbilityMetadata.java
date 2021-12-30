@@ -9,7 +9,11 @@ import org.bukkit.inventory.ItemStack;
  * Item that requires to throw the item in hand.
  * This takes as input the player's main hand item and
  * also takes the direction where he's looking
+ *
+ * @deprecated Abilities were moved over to MythicLib.
+ *         AbilityMetadata from MMOItems are now {@link io.lumine.mythic.lib.skill.result.SkillResult}
  */
+@Deprecated
 public class ItemAbilityMetadata extends VectorAbilityMetadata {
     private final ItemStack item;
 

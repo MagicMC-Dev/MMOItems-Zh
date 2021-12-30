@@ -6,6 +6,7 @@ import org.bukkit.event.HandlerList;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
+@Deprecated
 public class AbilityUseEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 

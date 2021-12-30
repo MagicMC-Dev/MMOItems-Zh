@@ -7,15 +7,14 @@ import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.skill.trigger.PassiveSkill;
+import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.AbilityMetadata;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
-import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.event.RefreshInventoryEvent;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
@@ -362,42 +361,7 @@ public class PlayerData {
      */
     @Deprecated
     public void cast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
-
-
-
-
-        /*
-         * Apply simple conditions including mana and stamina cost, permission
-         * and cooldown checks
-         */
-        if (!rpgPlayer.canCast(ability))
-            return;
-
-        /*
-         * Apply extra conditions which depend on the ability the player is
-         * casting
-         */
-        AbilityMetadata abilityMetadata = ability.getAbility().canBeCast(attack, target, ability);
-        if (!abilityMetadata.isSuccessful())
-            return;
-
-        AbilityUseEvent event = new AbilityUseEvent(this, ability, target);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled())
-            return;
-
-        /*
-         * The player can cast the ability, and it was successfully cast on its
-         * target, removes resources needed from the player
-         */
-
-
-        /*
-         * Finally cast the ability; BUG FIX: cooldown MUST be applied BEFORE
-         * the ability is cast otherwise instantaneously damaging abilities like
-         * Sparkle can trigger deadly crash loops
-         */
-        ability.getAbility().whenCast(attack, abilityMetadata);
+        ability.cast(new TriggerMetadata(attack, target));
     }
 
     public boolean isOnCooldown(CooldownType type) {

@@ -1,0 +1,17 @@
+name: Shockwave
+modifier:
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 7.5
+  length:
+    name: Length
+    default-value: 5.0
+  knock-up:
+    name: Knock Up
+    default-value: 1.0

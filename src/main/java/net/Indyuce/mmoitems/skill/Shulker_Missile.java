@@ -1,14 +1,14 @@
-package net.Indyuce.mmoitems.ability.list.vector;
+package net.Indyuce.mmoitems.skill;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.skill.SkillMetadata;
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
+import io.lumine.mythic.lib.skill.result.def.VectorSkillResult;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.ability.VectorAbility;
-import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import org.bukkit.Color;
@@ -17,6 +17,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.ShulkerBullet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,21 +29,23 @@ import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 
-public class Shulker_Missile extends VectorAbility implements Listener {
+public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements Listener {
     public Shulker_Missile() {
         super();
 
-        addModifier("cooldown", 12);
-        addModifier("damage", 5);
-        addModifier("effect-duration", 5);
-        addModifier("duration", 5);
-        addModifier("mana", 0);
-        addModifier("stamina", 0);
+        registerModifiers("damage", "effect-duration", "duration");
     }
 
     @Override
-    public void whenCast(AttackMetadata attack, VectorAbilityMetadata ability) {
-        double duration = ability.getModifier("duration");
+    public VectorSkillResult getResult(SkillMetadata meta) {
+        return new VectorSkillResult(meta);
+    }
+
+    @Override
+    public void whenCast(VectorSkillResult result, SkillMetadata skillMeta) {
+        double duration = skillMeta.getModifier("duration");
+
+        Player caster = skillMeta.getCaster().getPlayer();
 
         new BukkitRunnable() {
             double n = 0;
@@ -53,14 +56,14 @@ public class Shulker_Missile extends VectorAbility implements Listener {
                     return;
                 }
 
-                Vector vec = ability.getTarget();
-                attack.getPlayer().getWorld().playSound(attack.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
-                ShulkerBullet shulkerBullet = (ShulkerBullet) attack.getPlayer().getWorld().spawnEntity(attack.getPlayer().getLocation().add(0, 1, 0),
+                Vector vec = result.getTarget();
+                caster.getWorld().playSound(caster.getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+                ShulkerBullet shulkerBullet = (ShulkerBullet) caster.getWorld().spawnEntity(caster.getLocation().add(0, 1, 0),
                         EntityType.SHULKER_BULLET);
-                shulkerBullet.setShooter(attack.getPlayer());
+                shulkerBullet.setShooter(caster);
 
-                ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(ability.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), attack.getStats());
-                MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(attackMeta, ability.getModifier("effect-duration")));
+                ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getStats());
+                MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(attackMeta, skillMeta.getModifier("effect-duration")));
 
                 new BukkitRunnable() {
                     double ti = 0;

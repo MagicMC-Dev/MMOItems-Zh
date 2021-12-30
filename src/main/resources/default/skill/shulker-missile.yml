@@ -1,0 +1,20 @@
+name: Shulker Missile
+modifier:
+  duration:
+    name: Duration
+    default-value: 5.0
+  damage:
+    name: Damage
+    default-value: 5.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 12.0
+  effect-duration:
+    name: Effect Duration
+    default-value: 5.0

@@ -1,0 +1,17 @@
+name: Swiftness
+modifier:
+  duration:
+    name: Duration
+    default-value: 4.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 15.0
+  amplifier:
+    name: Amplifier
+    default-value: 1.0

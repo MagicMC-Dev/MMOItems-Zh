@@ -142,8 +142,8 @@ public abstract class RPGPlayer {
     @Deprecated
     public boolean canCast(AbilityData data) {
 
-        if (playerData.getMMOPlayerData().getCooldownMap().isOnCooldown(data.getAbility())) {
-            CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(data.getAbility());
+        if (playerData.getMMOPlayerData().getCooldownMap().isOnCooldown(data)) {
+            CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(data);
             if (!data.getTriggerType().isSilent()) {
                 StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
                 double progress = (double) (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
@@ -157,7 +157,7 @@ public abstract class RPGPlayer {
         }
 
         if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities")
-                && !player.hasPermission("mmoitems.ability." + data.getAbility().getLowerCaseID())
+                && !player.hasPermission("mmoitems.ability." + data.getAbility().getHandler().getLowerCaseId())
                 && !player.hasPermission("mmoitems.bypass.ability"))
             return false;
 

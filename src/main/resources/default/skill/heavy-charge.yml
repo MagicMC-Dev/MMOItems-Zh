@@ -1,0 +1,17 @@
+name: Heavy Charge
+modifier:
+  damage:
+    name: Damage
+    default-value: 6.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 10.0
+  knockback:
+    name: Knockback
+    default-value: 1.0

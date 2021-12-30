@@ -8,8 +8,8 @@ import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,15 +21,14 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		super(parent, "ability");
 
 		addParameter(new Parameter("<ability>",
-				(explorer, list) -> MMOItems.plugin.getAbilities().getAll().forEach(ability -> list.add(ability.getID()))));
+				(explorer, list) -> MMOItems.plugin.getSkills().getAll().forEach(ability -> list.add(ability.getHandler().getId()))));
 		addParameter(Parameter.PLAYER_OPTIONAL);
 
-		// three modifiers but more can be used
-		for (int j = 0; j < 3; j++) {
+		for (int j = 0; j < 10; j++) {
 			addParameter(new Parameter("<modifier>", (explorer, list) -> {
 				try {
-					Ability ability = MMOItems.plugin.getAbilities().getAbility(explorer.getArguments()[1].toUpperCase().replace("-", "_"));
-					list.addAll(ability.getModifiers());
+					RegisteredSkill ability = MMOItems.plugin.getSkills().getSkillOrThrow(explorer.getArguments()[1].toUpperCase().replace("-", "_"));
+					list.addAll(ability.getHandler().getModifiers());
 				} catch (Exception ignored) {
 				}
 			}));
@@ -56,13 +55,13 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 
 		// ability
 		String key = args[1].toUpperCase().replace("-", "_");
-		if (!MMOItems.plugin.getAbilities().hasAbility(key)) {
+		if (!MMOItems.plugin.getSkills().hasSkill(key)) {
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find ability " + key + ".");
 			return CommandResult.FAILURE;
 		}
 
 		// modifiers
-		AbilityData ability = new AbilityData(MMOItems.plugin.getAbilities().getAbility(key), TriggerType.RIGHT_CLICK);
+		AbilityData ability = new AbilityData(MMOItems.plugin.getSkills().getSkill(key), TriggerType.RIGHT_CLICK);
 		for (int j = 3; j < args.length - 1; j += 2) {
 			String name = args[j];
 			String value = args[j + 1];

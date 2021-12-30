@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.list.vector.Shulker_Missile;
+import net.Indyuce.mmoitems.skill.Shulker_Missile;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;

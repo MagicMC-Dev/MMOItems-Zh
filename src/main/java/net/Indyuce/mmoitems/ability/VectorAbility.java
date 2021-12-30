@@ -9,7 +9,11 @@ import org.bukkit.entity.LivingEntity;
 /**
  * Ability that requires a direction to be cast. For
  * instance, a projectile like {@link Firebolt}
+ *
+ * @deprecated Abilities were moved over to MythicLib.
+ *         Abilities are being replaced by {@link io.lumine.mythic.lib.skill.handler.SkillHandler}
  */
+@Deprecated
 public abstract class VectorAbility extends Ability<VectorAbilityMetadata> {
     public VectorAbility() {
         super();

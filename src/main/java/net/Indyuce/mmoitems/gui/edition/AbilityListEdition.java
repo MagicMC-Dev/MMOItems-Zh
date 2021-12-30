@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,9 +40,9 @@ public class AbilityListEdition extends EditionInventory {
 		if (getEditedSection().contains("ability"))
 			for (String key : getEditedSection().getConfigurationSection("ability").getKeys(false)) {
 				String abilityFormat = getEditedSection().getString("ability." + key + ".type");
-				Ability ability = abilityFormat != null
-						&& MMOItems.plugin.getAbilities().hasAbility(abilityFormat = abilityFormat.toUpperCase().replace(" ", "_").replace("-", "_"))
-								? MMOItems.plugin.getAbilities().getAbility(abilityFormat)
+				RegisteredSkill ability = abilityFormat != null
+						&& MMOItems.plugin.getSkills().hasSkill(abilityFormat = abilityFormat.toUpperCase().replace(" ", "_").replace("-", "_"))
+								? MMOItems.plugin.getSkills().getSkill(abilityFormat)
 								: null;
 
 				TriggerType castMode = TriggerType.safeValueOf(getEditedSection().getString("ability." + key + ".mode"));
@@ -58,7 +59,7 @@ public class AbilityListEdition extends EditionInventory {
 				boolean check = false;
 				if (ability != null)
 					for (String modifier : getEditedSection().getConfigurationSection("ability." + key).getKeys(false))
-						if (!modifier.equals("type") && !modifier.equals("mode") && ability.getModifiers().contains(modifier))
+						if (!modifier.equals("type") && !modifier.equals("mode") && ability.getHandler().getModifiers().contains(modifier))
 							try {
 								abilityItemLore.add(
 										ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD

@@ -1,0 +1,23 @@
+name: Item Bomb
+modifier:
+  damage:
+    name: Damage
+    default-value: 7.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  slow-duration:
+    name: Slow Duration
+    default-value: 4.0
+  slow-amplifier:
+    name: Slow Amplifier
+    default-value: 1.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 15.0
+  radius:
+    name: Radius
+    default-value: 6.0

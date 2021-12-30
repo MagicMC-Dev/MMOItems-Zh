@@ -8,6 +8,11 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+/**
+ * @deprecated Abilities were moved over to MythicLib.
+ *         AbilityMetadata from MMOItems are now {@link io.lumine.mythic.lib.skill.result.SkillResult}
+ */
+@Deprecated
 public class TargetAbilityMetadata extends AbilityMetadata {
     private final LivingEntity target;
 

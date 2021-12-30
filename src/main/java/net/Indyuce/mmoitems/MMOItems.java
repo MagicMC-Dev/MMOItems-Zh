@@ -61,24 +61,8 @@ import net.Indyuce.mmoitems.listener.EquipListener;
 import net.Indyuce.mmoitems.listener.ItemListener;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import net.Indyuce.mmoitems.listener.PlayerListener;
-import net.Indyuce.mmoitems.manager.AbilityManager;
-import net.Indyuce.mmoitems.manager.BlockManager;
-import net.Indyuce.mmoitems.manager.ConfigManager;
-import net.Indyuce.mmoitems.manager.CraftingManager;
-import net.Indyuce.mmoitems.manager.DropTableManager;
-import net.Indyuce.mmoitems.manager.EntityManager;
-import net.Indyuce.mmoitems.manager.ItemManager;
-import net.Indyuce.mmoitems.manager.LayoutManager;
-import net.Indyuce.mmoitems.manager.LoreFormatManager;
-import net.Indyuce.mmoitems.manager.PluginUpdateManager;
-import net.Indyuce.mmoitems.manager.RecipeManager;
-import net.Indyuce.mmoitems.manager.SetManager;
-import net.Indyuce.mmoitems.manager.StatManager;
-import net.Indyuce.mmoitems.manager.TemplateManager;
-import net.Indyuce.mmoitems.manager.TierManager;
-import net.Indyuce.mmoitems.manager.TypeManager;
-import net.Indyuce.mmoitems.manager.UpgradeManager;
-import net.Indyuce.mmoitems.manager.WorldGenManager;
+import net.Indyuce.mmoitems.manager.*;
+import net.Indyuce.mmoitems.skill.Shulker_Missile;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -108,6 +92,7 @@ public class MMOItems extends LuminePlugin {
 	private final LoreFormatManager formatManager = new LoreFormatManager();
 	private final TemplateManager templateManager = new TemplateManager();
 	private final AbilityManager abilityManager = new AbilityManager();
+	private final SkillManager skillManager = new SkillManager();
 	private final EntityManager entityManager = new EntityManager();
 	private final RecipeManager recipeManager = new RecipeManager();
 	private final LayoutManager layoutManager = new LayoutManager();
@@ -164,6 +149,9 @@ public class MMOItems extends LuminePlugin {
 		typeManager.reload();
 		templateManager.preloadTemplates();
 
+		// Register MMOItems-specific skills
+		MythicLib.plugin.getSkills().registerSkillHandler(new Shulker_Missile());
+
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null) new MMOCoreMMOLoader();
 
 		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)
@@ -184,7 +172,7 @@ public class MMOItems extends LuminePlugin {
 		new MMOItemsMetrics();
 
 		RecipeBrowserGUI.registerNativeRecipes();
-		abilityManager.loadPluginAbilities();
+		skillManager.reload();
 		configManager = new ConfigManager();
 
 		final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
@@ -489,8 +477,13 @@ public class MMOItems extends LuminePlugin {
 		return dropTableManager;
 	}
 
+	@Deprecated
 	public AbilityManager getAbilities() {
 		return abilityManager;
+	}
+
+	public SkillManager getSkills() {
+		return skillManager;
 	}
 
 	public BlockManager getCustomBlocks() {

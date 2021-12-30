@@ -6,6 +6,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+/**
+ * @deprecated Abilities were moved over to MythicLib.
+ *         AbilityMetadata from MMOItems are now {@link io.lumine.mythic.lib.skill.result.SkillResult}
+ */
+@Deprecated
 public class VectorAbilityMetadata extends AbilityMetadata {
     private final Vector target;
 

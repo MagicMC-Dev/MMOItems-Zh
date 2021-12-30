@@ -5,6 +5,11 @@ import net.Indyuce.mmoitems.ability.metadata.SimpleAbilityMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.entity.LivingEntity;
 
+/**
+ * @deprecated Abilities were moved over to MythicLib.
+ *         Abilities are being replaced by {@link io.lumine.mythic.lib.skill.handler.SkillHandler}
+ */
+@Deprecated
 public abstract class SimpleAbility extends Ability<SimpleAbilityMetadata> {
     public SimpleAbility() {
         super();

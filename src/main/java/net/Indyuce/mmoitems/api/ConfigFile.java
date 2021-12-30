@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.api.item.ItemReference;
 public class ConfigFile {
 	private final Plugin plugin;
 	private final String path, name;
+	private final boolean exists;
 
 	private final FileConfiguration config;
 
@@ -34,11 +35,17 @@ public class ConfigFile {
 		this.path = path;
 		this.name = name;
 
-		config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + path, name + ".yml"));
+		File file = new File(plugin.getDataFolder() + path, name + ".yml");
+		exists = file.exists();
+		config = YamlConfiguration.loadConfiguration(file);
 	}
 
 	public FileConfiguration getConfig() {
 		return config;
+	}
+
+	public boolean exists() {
+		return exists;
 	}
 
 	public void save() {

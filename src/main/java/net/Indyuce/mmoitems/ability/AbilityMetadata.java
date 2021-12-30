@@ -1,8 +1,15 @@
 package net.Indyuce.mmoitems.ability;
 
+import io.lumine.mythic.lib.skill.SkillMetadata;
+import io.lumine.mythic.lib.skill.result.SkillResult;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
-public abstract class AbilityMetadata {
+/**
+ * @deprecated Abilities were moved over to MythicLib.
+ *         AbilityMetadata from MMOItems are now {@link io.lumine.mythic.lib.skill.result.SkillResult}
+ */
+@Deprecated
+public abstract class AbilityMetadata implements SkillResult {
     private final AbilityData ability;
 
     public AbilityMetadata(AbilityData ability) {
@@ -28,4 +35,9 @@ public abstract class AbilityMetadata {
 	 *         at an entity..)
 	 */
 	public abstract boolean isSuccessful();
+
+	@Override
+	public boolean isSuccessful(SkillMetadata skillMetadata) {
+		return isSuccessful();
+	}
 }

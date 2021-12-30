@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -12,6 +13,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,7 +32,7 @@ import java.util.List;
 public class AbilityEdition extends EditionInventory {
 	private final String configKey;
 
-	private Ability<?> ability;
+	private RegisteredSkill ability;
 
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
 	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43 };
@@ -48,7 +50,7 @@ public class AbilityEdition extends EditionInventory {
 
 		String configString = getEditedSection().getString("ability." + configKey + ".type");
 		String format = configString == null ? "" : configString.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
-		ability = MMOItems.plugin.getAbilities().hasAbility(format) ? MMOItems.plugin.getAbilities().getAbility(format) : null;
+		ability = MMOItems.plugin.getSkills().hasSkill(format) ? MMOItems.plugin.getSkills().getSkill(format) : null;
 
 		ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 		ItemMeta abilityItemMeta = abilityItem.getItemMeta();
@@ -90,7 +92,7 @@ public class AbilityEdition extends EditionInventory {
 
 		if (ability != null) {
 			ConfigurationSection section = getEditedSection().getConfigurationSection("ability." + configKey);
-			for (String modifier : ability.getModifiers()) {
+			for (String modifier : ((SkillHandler<?>) ability.getHandler()).getModifiers()) {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
@@ -102,12 +104,12 @@ public class AbilityEdition extends EditionInventory {
 				try {
 					modifierItemLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD
 							+ (section.contains(modifier) ? new NumericStatFormula(section.get(modifier)).toString()
-									: modifierFormat.format(ability.getDefaultValue(modifier))));
+									: modifierFormat.format(ability.getDefaultModifier(modifier))));
 				} catch (IllegalArgumentException exception) {
 					modifierItemLore.add(ChatColor.GRAY + "Could not read value. Using default");
 				}
 
-				modifierItemLore.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + modifierFormat.format(ability.getDefaultValue(modifier)));
+				modifierItemLore.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + modifierFormat.format(ability.getDefaultModifier(modifier)));
 				modifierItemLore.add("");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");

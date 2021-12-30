@@ -1,0 +1,20 @@
+name: Magical Shield
+modifier:
+  duration:
+    name: Duration
+    default-value: 5.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 35.0
+  power:
+    name: Power
+    default-value: 40.0
+  radius:
+    name: Radius
+    default-value: 5.0

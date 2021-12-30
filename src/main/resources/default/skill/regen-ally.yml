@@ -1,0 +1,17 @@
+name: Regen Ally
+modifier:
+  duration:
+    name: Duration
+    default-value: 3.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  heal:
+    name: Heal
+    default-value: 7.0
+  cooldown:
+    name: Cooldown
+    default-value: 10.0

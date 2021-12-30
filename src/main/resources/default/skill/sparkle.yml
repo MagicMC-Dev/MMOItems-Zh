@@ -1,0 +1,20 @@
+name: Sparkle
+modifier:
+  damage:
+    name: Damage
+    default-value: 4.0
+  mana:
+    name: Mana
+    default-value: 0.0
+  stamina:
+    name: Stamina
+    default-value: 0.0
+  cooldown:
+    name: Cooldown
+    default-value: 10.0
+  limit:
+    name: Limit
+    default-value: 5.0
+  radius:
+    name: Radius
+    default-value: 6.0

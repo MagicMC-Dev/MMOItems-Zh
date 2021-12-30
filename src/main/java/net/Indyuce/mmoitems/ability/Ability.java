@@ -2,14 +2,27 @@ package net.Indyuce.mmoitems.ability;
 
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.player.cooldown.CooldownObject;
+import io.lumine.mythic.lib.skill.SkillMetadata;
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-public abstract class Ability<T extends AbilityMetadata> implements CooldownObject {
+/**
+ * @deprecated Abilities were moved over to MythicLib.
+ *         Abilities are being replaced by {@link io.lumine.mythic.lib.skill.handler.SkillHandler}
+ */
+@Deprecated
+public abstract class Ability<T extends AbilityMetadata> extends SkillHandler<T> implements CooldownObject {
 	private final String name, id;
 	private final Map<String, Double> modifiers = new HashMap<>();
 
@@ -46,6 +59,26 @@ public abstract class Ability<T extends AbilityMetadata> implements CooldownObje
 
 	public Set<String> getModifiers() {
 		return modifiers.keySet();
+	}
+
+	@NotNull
+	@Override
+	public T getResult(SkillMetadata meta) {
+
+		// Corresponding registered skill
+		RegisteredSkill registeredSkill = new RegisteredSkill(this);
+
+		// Corresponding ability data
+		AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.API);
+		for (String mod : modifiers.keySet())
+			abilityData.setModifier(mod, meta.getModifier(mod));
+
+		return canBeCast(meta.getAttack(), meta.hasTargetEntity() && meta.getTargetEntityOrNull() instanceof LivingEntity ? (LivingEntity) meta.getTargetEntityOrNull() : null, abilityData);
+	}
+
+	@Override
+	public void whenCast(T t, SkillMetadata skillMetadata) {
+		whenCast(skillMetadata.getAttack(), t);
 	}
 
 	public void addModifier(String modifier, double defaultValue) {

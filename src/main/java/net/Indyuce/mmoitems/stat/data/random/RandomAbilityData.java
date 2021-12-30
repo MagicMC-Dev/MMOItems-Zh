@@ -6,17 +6,17 @@ import java.util.Set;
 
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 
 public class RandomAbilityData {
-	private final Ability ability;
+	private final RegisteredSkill ability;
 	private final TriggerType triggerType;
 	private final Map<String, NumericStatFormula> modifiers = new HashMap<>();
 
@@ -24,23 +24,23 @@ public class RandomAbilityData {
 		Validate.isTrue(config.contains("type") && config.contains("mode"), "Ability is missing type or mode");
 
 		String abilityFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getAbilities().hasAbility(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
-		ability = MMOItems.plugin.getAbilities().getAbility(abilityFormat);
+		Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
+		ability = MMOItems.plugin.getSkills().getSkill(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
 		triggerType = MMOUtils.backwardsCompatibleTriggerType(modeFormat);
 
 		for (String key : config.getKeys(false))
-			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getModifiers().contains(key))
+			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getHandler().getModifiers().contains(key))
 				modifiers.put(key, new NumericStatFormula(config.get(key)));
 	}
 
-	public RandomAbilityData(Ability ability, TriggerType triggerType) {
+	public RandomAbilityData(RegisteredSkill ability, TriggerType triggerType) {
 		this.ability = ability;
 		this.triggerType = triggerType;
 	}
 
-	public Ability getAbility() {
+	public RegisteredSkill getAbility() {
 		return ability;
 	}
 

@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.comp.mythicmobs.stat.FactionDamage;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.*;
@@ -28,19 +29,15 @@ public class MythicMobsCompatibility implements Listener {
         Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
     }
 
-    @EventHandler
+    /**
+     * MythicLib skill handlers are reloaded on priority {@link EventPriority#NORMAL}
+     * MMOCore and MMOItems use HIGH or HIGHEST
+     */
+    @EventHandler(priority = EventPriority.HIGH)
     public void a(MythicReloadedEvent event) {
 
         // Update skills
-        MMOItems.plugin.getAbilities().getAll().stream().filter(ability -> ability instanceof MythicMobsAbility).map(ability -> (MythicMobsAbility) ability).forEach(ability -> {
-            try {
-                Optional<io.lumine.xikage.mythicmobs.skills.Skill> opt = MythicMobs.inst().getSkillManager().getSkill(ability.getInternalName());
-                Validate.isTrue(opt.isPresent(), "Could not find MM skill with name '" + ability.getInternalName() + "'");
-                ability.setSkill(opt.get());
-            } catch (IllegalArgumentException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not reload custom MM ability '" + ability.getID() + "': " + exception.getMessage());
-            }
-        });
+        MMOItems.plugin.getSkills().reload();
     }
 
     private Set<String> getFactions() {

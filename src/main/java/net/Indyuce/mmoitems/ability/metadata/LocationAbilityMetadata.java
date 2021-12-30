@@ -11,7 +11,11 @@ import org.bukkit.entity.Player;
 /**
  * Ability that requires a target location, for
  * instance {@link Minor_Explosion}
+ *
+ * @deprecated Abilities were moved over to MythicLib.
+ *         AbilityMetadata from MMOItems are now {@link io.lumine.mythic.lib.skill.result.SkillResult}
  */
+@Deprecated
 public class LocationAbilityMetadata extends AbilityMetadata {
     private final Location target;
 

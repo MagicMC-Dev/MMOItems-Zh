@@ -1,9 +1,12 @@
 package net.Indyuce.mmoitems.manager;
 
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +30,8 @@ public class LoreFormatManager implements Reloadable {
 			}
 	}
 
-	public boolean hasFormat(String id) {
+	public boolean hasFormat(@Nullable String id) {
+		if (id == null) { return false; }
 		return formats.containsKey(id);
 	}
 
@@ -35,8 +39,24 @@ public class LoreFormatManager implements Reloadable {
 		return formats.values();
 	}
 
-	public List<String> getFormat(String id) {
-		if(!hasFormat(id)) return MMOItems.plugin.getLanguage().getDefaultLoreFormat();
-		return formats.get(id);
+	/**
+	 * Find a lore format file by specifying its name
+	 *
+	 * @param prioritizedFormatNames The names of the formats to search.
+	 *
+	 * @return The lore format first found from the ones specified, or the default one.
+	 */
+	@NotNull public List<String> getFormat(@NotNull String... prioritizedFormatNames) {
+
+		/*
+		 * Check each specified lore format in order, the first one
+		 * to succeed will be the winner.
+		 */
+		for (String format : prioritizedFormatNames) {
+			if (hasFormat(format)) { return formats.get(format); }
+		}
+
+		// No lore format found / specified. Go with default.
+		return MMOItems.plugin.getLanguage().getDefaultLoreFormat();
 	}
 }

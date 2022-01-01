@@ -67,8 +67,8 @@ public class ItemStackBuilder {
 
         // Gets a lore builder, which will be used to apply the chosen lore format (Choose with the lore format stat, or the default one if unspecified)
         lore = new LoreBuilder(mmoitem.hasData(ItemStats.LORE_FORMAT)
-                ? MMOItems.plugin.getFormats().getFormat(mmoitem.getData(ItemStats.LORE_FORMAT).toString())
-                : MMOItems.plugin.getLanguage().getDefaultLoreFormat());
+                ? MMOItems.plugin.getFormats().getFormat(mmoitem.getData(ItemStats.LORE_FORMAT).toString(), mmoitem.getType().getLoreFormat())
+                : MMOItems.plugin.getFormats().getFormat(mmoitem.getType().getLoreFormat()));
 
         // Gets the meta, and hides attributes
         meta = item.getItemMeta();

@@ -11,6 +11,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -55,15 +56,22 @@ public class Type {
     public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, EquipmentSlot.ACCESSORY);
     public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, EquipmentSlot.OTHER);
 
-    private final String id;
+    @NotNull private final String id;
     private String name;
-    private final TypeSet set;
+    @NotNull private final TypeSet set;
 
-    public boolean isFourGUIMode() {
-        return fourGUIMode;
-    }
 
-    private final boolean fourGUIMode;
+    /**
+     * @return Does it display as four rows in /mmoitems browse?
+     */
+    public boolean isFourGUIMode() { return fourGUIMode; }
+    private boolean fourGUIMode;
+
+    /**
+     * @return Default lore format used by this Type
+     */
+    @Nullable public String getLoreFormat() { return loreFormat; }
+    @Nullable private String loreFormat;
 
     /**
      * Used for item type restrictions for gem stones to easily check if the
@@ -71,7 +79,7 @@ public class Type {
      */
     private final boolean weapon;
 
-    private final EquipmentSlot equipType;
+    @NotNull private final EquipmentSlot equipType;
 
     /**
      * Used to display the item in the item explorer and in the item recipes
@@ -97,34 +105,66 @@ public class Type {
     public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType) {
         this(set, id, weapon, equipType, false);
     }
-    public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType, boolean fourGUI) {
+    public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType, boolean fourGUI) {
         this.set = set;
         this.id = id.toUpperCase().replace("-", "_").replace(" ", "_");
         this.equipType = equipType;
         this.fourGUIMode = fourGUI;
         this.weapon = weapon;
+        this.loreFormat = null;
+
+        //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 Registering\u00a7f " + id);
+        //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 > 4GUI\u00a7b " + fourGUIMode);
+        //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 > Lore\u00a7b " + loreFormat);
     }
 
-    public Type(TypeManager manager, ConfigurationSection config) {
+    public Type(@NotNull TypeManager manager,@NotNull ConfigurationSection config) {
         id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
 
-        parent = manager.get(config.getString("parent").toUpperCase().replace("-", "_").replace(" ", "_"));
-        set = parent.set;
-        weapon = parent.weapon;
-        equipType = parent.equipType;
-        this.fourGUIMode = config.getBoolean("AlternateGUIMode", parent.fourGUIMode);
+        parent = manager.get(config.getString("parent", "").toUpperCase().replace("-", "_").replace(" ", "_"));
+
+        // Parent existed?
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 Reading config overrides for\u00a7f " + id + "\u00a78 (parent\u00a77 " + parent + "\u00a78)");
+
+        set = (parent != null ? parent.set : TypeSet.EXTRA);
+        weapon = (parent != null && parent.weapon);
+        equipType = (parent != null ? parent.equipType : EquipmentSlot.OTHER);
+        this.fourGUIMode = config.getBoolean("AlternateGUIMode", (parent != null && parent.fourGUIMode));
+        this.loreFormat = config.getString("LoreFormat", (parent != null ? parent.loreFormat : null));
+
+        // Parent existed?
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 > Type\u00a7f " + equipType.toString());
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 > 4GUI\u00a7b " + fourGUIMode);
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Config \u00a79 " + config.getBoolean("AlternateGUIMode"));
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.fourGUIMode));
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 > Lore\u00a7b " + loreFormat);
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Config \u00a79 " + config.getString("LoreFormat"));
+        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.loreFormat));
     }
 
     public void load(ConfigurationSection config) {
         Validate.notNull(config, "Could not find config for " + getId());
 
-        name = config.getString("name");
-        Validate.notNull(name, "Could not read name");
+        // Parent existed?
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 Loading config overrides for\u00a7f " + id + "\u00a78 (parent\u00a77 " + parent + "\u00a78)");
 
-        item = read(config.getString("display"));
-        Validate.notNull(item, "Could not read item");
+        name = config.getString("name", name);
+        item = read(config.getString("display", item == null ? Material.STONE.toString() : item.getType().toString()));
 
         (unidentifiedTemplate = new UnidentifiedItem(this)).update(config.getConfigurationSection("unident-item"));
+
+        // Getting overridden?
+        fourGUIMode = config.getBoolean("AlternateGUIMode", (parent != null && parent.fourGUIMode) || fourGUIMode);
+        loreFormat = config.getString("LoreFormat", (parent != null ? parent.loreFormat : loreFormat));
+
+        // Parent existed?
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 > Type\u00a7f " + equipType.toString());
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 > 4GUI\u00a7b " + fourGUIMode);
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Config \u00a79 " + config.getBoolean("AlternateGUIMode"));
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.fourGUIMode));
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 > Lore\u00a7b " + loreFormat);
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Config \u00a79 " + config.getString("LoreFormat"));
+        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.loreFormat));
     }
 
     /**

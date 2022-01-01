@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.api.stat.modifier.ModifierType;
 import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
@@ -44,7 +45,7 @@ public class PlayerStats {
      *                 source will NOT be taken into account for stat calculation
      * @return
      */
-    public StatMap.CachedStatMap newTemporary(EquipmentSlot castSlot) {
+    public PlayerMetadata newTemporary(EquipmentSlot castSlot) {
         return playerData.getMMOPlayerData().getStatMap().cache(castSlot);
     }
 

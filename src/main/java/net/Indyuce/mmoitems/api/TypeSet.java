@@ -42,7 +42,7 @@ public enum TypeSet {
                     && attack.getPlayer().getEyeLocation().getDirection()
                     .angle(entity.getLocation().subtract(attack.getPlayer().getLocation()).toVector()) < Math.PI / 3
                     && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
+                ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
                 subAttack.getDamage().multiply(.4);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
             }
@@ -71,7 +71,7 @@ public enum TypeSet {
                     && attack.getPlayer().getEyeLocation().getDirection()
                     .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 18
                     && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
+                ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
                 subAttack.getDamage().multiply(.4);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
             }
@@ -91,13 +91,13 @@ public enum TypeSet {
             damager.applyCooldown(CooldownType.SPECIAL_ATTACK, MMOItems.plugin.getConfig().getDouble("item-ability.blunt.aoe.cooldown"));
             target.getWorld().playSound(target.getLocation(), Sound.BLOCK_ANVIL_LAND, 0.6f, pitchRange);
             target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
-            double bluntPower = attack.getStats().getStat("BLUNT_POWER");
+            double bluntPower = attack.getStat("BLUNT_POWER");
             if (bluntPower > 0) {
-                double bluntRating = weapon.getValue(attack.getStats().getStat("BLUNT_RATING"),
+                double bluntRating = weapon.getValue(attack.getStat("BLUNT_RATING"),
                         MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
                 for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
                     if (MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                        ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack.getStats());
+                        ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
                         subAttack.getDamage().multiply(bluntRating);
                         subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
                     }

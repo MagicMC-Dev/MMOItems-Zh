@@ -50,7 +50,6 @@ public class AbilityManager {
      * @param ability Ability to register
      */
     public void registerAbility(Ability ability) {
-        MythicLib.plugin.getSkills().registerSkillHandler(ability);
         MMOItems.plugin.getSkills().registerSkill(new RegisteredSkill(ability));
     }
 }

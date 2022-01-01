@@ -1,7 +1,8 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
@@ -11,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class Crossbow extends UntargetedWeapon {
@@ -26,7 +26,7 @@ public class Crossbow extends UntargetedWeapon {
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
 			return;
 
-		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
+		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
 		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;

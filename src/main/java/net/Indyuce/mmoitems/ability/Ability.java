@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.ability;
 
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.player.cooldown.CooldownObject;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
@@ -73,7 +74,9 @@ public abstract class Ability<T extends AbilityMetadata> extends SkillHandler<T>
 		for (String mod : modifiers.keySet())
 			abilityData.setModifier(mod, meta.getModifier(mod));
 
-		return canBeCast(meta.getAttack(), meta.hasTargetEntity() && meta.getTargetEntityOrNull() instanceof LivingEntity ? (LivingEntity) meta.getTargetEntityOrNull() : null, abilityData);
+		// Make sure provided attack meta is not null
+		AttackMetadata attack = meta.hasAttackBound() ? meta.getAttack() : new AttackMetadata(new DamageMetadata(), meta.getCaster());
+		return canBeCast(attack, meta.hasTargetEntity() && meta.getTargetEntityOrNull() instanceof LivingEntity ? (LivingEntity) meta.getTargetEntityOrNull() : null, abilityData);
 	}
 
 	@Override

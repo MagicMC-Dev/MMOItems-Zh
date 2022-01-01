@@ -62,7 +62,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
                         EntityType.SHULKER_BULLET);
                 shulkerBullet.setShooter(caster);
 
-                ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getStats());
+                ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getCaster());
                 MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(attackMeta, skillMeta.getModifier("effect-duration")));
 
                 new BukkitRunnable() {

@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.skill.trigger.PassiveSkill;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import net.Indyuce.mmoitems.ItemStats;
@@ -34,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -360,8 +362,9 @@ public class PlayerData {
      * @deprecated
      */
     @Deprecated
-    public void cast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
-        ability.cast(new TriggerMetadata(attack, target));
+    public void cast(@Nullable AttackMetadata attack, @Nullable LivingEntity target, @NotNull AbilityData ability) {
+        PlayerMetadata caster = getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
+        ability.cast(new TriggerMetadata(caster, attack, target));
     }
 
     public boolean isOnCooldown(CooldownType type) {

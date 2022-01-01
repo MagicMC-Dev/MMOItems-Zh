@@ -172,7 +172,7 @@ public class MMOItems extends LuminePlugin {
 		new MMOItemsMetrics();
 
 		RecipeBrowserGUI.registerNativeRecipes();
-		skillManager.reload();
+		skillManager.initialize(false);
 		configManager = new ConfigManager();
 
 		final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;

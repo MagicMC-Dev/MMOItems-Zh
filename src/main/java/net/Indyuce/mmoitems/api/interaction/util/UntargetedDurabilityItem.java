@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction.util;
 
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 

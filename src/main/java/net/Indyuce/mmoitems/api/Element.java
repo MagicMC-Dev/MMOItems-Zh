@@ -80,7 +80,7 @@ public enum Element {
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
 		for (Entity entity : target.getNearbyEntities(3, 2, 3))
 			if (MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
-				MythicLib.plugin.getDamage().damage(new ItemAttackMetadata(new DamageMetadata(attack.getDamage().getDamage() * damage / 100, DamageType.WEAPON), attack.getStats()), (LivingEntity) entity);
+				MythicLib.plugin.getDamage().damage(new ItemAttackMetadata(new DamageMetadata(attack.getDamage().getDamage() * damage / 100, DamageType.WEAPON), attack), (LivingEntity) entity);
 
 		attack.getDamage().add(absolute);
 		for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)

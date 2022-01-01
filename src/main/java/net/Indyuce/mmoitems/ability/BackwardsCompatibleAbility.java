@@ -25,7 +25,7 @@ public class BackwardsCompatibleAbility extends Ability<BackwardsCompatibleAbili
     @Nullable
     @Override
     public BackwardsCompatibleAbilityMetadata canBeCast(AttackMetadata attack, LivingEntity target, AbilityData ability) {
-        SkillMetadata skillMeta = new SkillMetadata(ability, attack.getStats(), new VariableList(VariableScope.SKILL), attack, attack.getPlayer().getLocation(), null, target);
+        SkillMetadata skillMeta = new SkillMetadata(ability, attack, new VariableList(VariableScope.SKILL), attack, attack.getPlayer().getLocation(), null, target);
         return new BackwardsCompatibleAbilityMetadata(skillMeta, registeredSkill.getHandler().getResult(skillMeta), ability);
     }
 

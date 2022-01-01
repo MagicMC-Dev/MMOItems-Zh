@@ -51,6 +51,7 @@ public class Weapon extends UseItem {
      * @param attackSpeed The weapon attack speed
      * @param cooldown    The weapon cooldown type. When set to null, no
      *                    cooldown will be applied. This is made to handle
+     *                    custom weapons
      * @return If requirements were met ie the attack was cast successfully
      */
     public boolean applyWeaponCosts(double attackSpeed, @Nullable CooldownType cooldown) {

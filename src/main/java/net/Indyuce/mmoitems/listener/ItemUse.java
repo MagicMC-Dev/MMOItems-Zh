@@ -98,7 +98,7 @@ public class ItemUse implements Listener {
             UntargetedWeapon weapon = (UntargetedWeapon) useItem;
             if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK)
                     || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK))
-                weapon.untargetedAttack(event.getHand());
+                weapon.untargetedAttack(EquipmentSlot.fromBukkit(event.getHand()));
         }
     }
 

@@ -83,12 +83,12 @@ public class AbilityData extends Skill {
 	@Override
 	public boolean getResult(SkillMetadata meta) {
 
-		PlayerData playerData = PlayerData.get(meta.getCaster().getUniqueId());
+		PlayerData playerData = PlayerData.get(meta.getCaster().getData().getUniqueId());
 		RPGPlayer rpgPlayer = playerData.getRPG();
 		Player player = meta.getCaster().getPlayer();
 
 		// Check for cooldown
-		if (meta.getCaster().getCooldownMap().isOnCooldown(this)) {
+		if (meta.getCaster().getData().getCooldownMap().isOnCooldown(this)) {
 			CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(this);
 			if (!triggerType.isSilent()) {
 				StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
@@ -125,7 +125,7 @@ public class AbilityData extends Skill {
 
 	@Override
 	public void whenCast(SkillMetadata meta) {
-		PlayerData playerData = PlayerData.get(meta.getCaster().getUniqueId());
+		PlayerData playerData = PlayerData.get(meta.getCaster().getData().getUniqueId());
 		RPGPlayer rpgPlayer = playerData.getRPG();
 
 		// Apply mana cost
@@ -137,9 +137,9 @@ public class AbilityData extends Skill {
 			rpgPlayer.giveStamina(-meta.getModifier("stamina"));
 
 		// Apply cooldown
-		double cooldown = meta.getModifier("cooldown") * (1 - Math.min(.8, meta.getStats().getStat("COOLDOWN_REDUCTION") / 100));
+		double cooldown = meta.getModifier("cooldown") * (1 - Math.min(.8, meta.getCaster().getStat("COOLDOWN_REDUCTION") / 100));
 		if (cooldown > 0)
-			meta.getCaster().getCooldownMap().applyCooldown(this, cooldown);
+			meta.getCaster().getData().getCooldownMap().applyCooldown(this, cooldown);
 	}
 
 	@Override

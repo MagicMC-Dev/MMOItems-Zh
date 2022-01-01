@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.inventory.EquipmentSlot;
 
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import io.lumine.mythic.lib.api.item.NBTItem;

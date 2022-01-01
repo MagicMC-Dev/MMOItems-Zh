@@ -4,16 +4,13 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.comp.mythicmobs.skill.MythicMobsAbility;
 import net.Indyuce.mmoitems.comp.mythicmobs.stat.FactionDamage;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class MythicMobsCompatibility implements Listener {
 
@@ -37,7 +34,7 @@ public class MythicMobsCompatibility implements Listener {
     public void a(MythicReloadedEvent event) {
 
         // Update skills
-        MMOItems.plugin.getSkills().reload();
+        MMOItems.plugin.getSkills().initialize(true);
     }
 
     private Set<String> getFactions() {

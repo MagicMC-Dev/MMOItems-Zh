@@ -1,14 +1,13 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
-import io.lumine.mythic.lib.damage.AttackMetadata;
-import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Bukkit;
@@ -61,7 +60,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		}
 
 		// modifiers
-		AbilityData ability = new AbilityData(MMOItems.plugin.getSkills().getSkill(key), TriggerType.RIGHT_CLICK);
+		AbilityData ability = new AbilityData(MMOItems.plugin.getSkills().getSkill(key), TriggerType.API);
 		for (int j = 3; j < args.length - 1; j += 2) {
 			String name = args[j];
 			String value = args[j + 1];
@@ -74,9 +73,8 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 			}
 		}
 
-		PlayerData data = PlayerData.get(target);
-		AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(), data.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND));
-		ability.cast(new TriggerMetadata(attackMeta, null));
+		PlayerMetadata caster = MMOPlayerData.get(target).getStatMap().cache(EquipmentSlot.MAIN_HAND);
+		ability.cast(new TriggerMetadata(caster, null, null));
 		return CommandResult.SUCCESS;
 	}
 }

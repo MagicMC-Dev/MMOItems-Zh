@@ -1,11 +1,10 @@
 package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
@@ -37,8 +36,8 @@ public class EntityManager implements Listener {
 
     private final WeakHashMap<Integer, ProjectileData> projectiles = new WeakHashMap<>();
 
-    public void registerCustomProjectile(NBTItem sourceItem, StatMap.CachedStatMap stats, Entity entity, boolean customWeapon) {
-        registerCustomProjectile(sourceItem, stats, entity, customWeapon, 1);
+    public void registerCustomProjectile(NBTItem sourceItem, PlayerMetadata attacker, Entity entity, boolean customWeapon) {
+        registerCustomProjectile(sourceItem, attacker, entity, customWeapon, 1);
     }
 
     /**
@@ -47,13 +46,13 @@ public class EntityManager implements Listener {
      * Default bow/trident damage is set to 7 just like vanilla Minecraft.
      *
      * @param sourceItem          Item used to shoot the projectile
-     * @param stats               Cached stats of the player shooting the projectile
+     * @param attacker            Cached stats of the player shooting the projectile
      * @param entity              The custom entity
      * @param customWeapon        Is the source weapon is a custom item
      * @param damageMultiplicator The damage coefficient. For bows, this is basically the pull force.
      *                            For tridents or anything else this is always set to 1
      */
-    public void registerCustomProjectile(NBTItem sourceItem, StatMap.CachedStatMap stats, Entity entity, boolean customWeapon, double damageMultiplicator) {
+    public void registerCustomProjectile(NBTItem sourceItem, PlayerMetadata attacker, Entity entity, boolean customWeapon, double damageMultiplicator) {
 
         /*
          * For bows, MC default value is 7. When using custom bows, the attack
@@ -64,11 +63,11 @@ public class EntityManager implements Listener {
          * Damage coefficient is how much you pull the bow. It's something between 0
          * and 1 for bows, and it's always 1 for tridents or crossbows.
          */
-        double damage = stats.getStat("ATTACK_DAMAGE");
+        double damage = attacker.getStat("ATTACK_DAMAGE");
         damage = (customWeapon ? damage : 5 + damage) * damageMultiplicator;
 
-        ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(damage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE), stats);
-        stats.setStat("ATTACK_DAMAGE", damage);
+        ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(damage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE), attacker);
+        attacker.setStat("ATTACK_DAMAGE", damage);
 
         /*
          * Load arrow particles if the entity is an arrow and if the item has

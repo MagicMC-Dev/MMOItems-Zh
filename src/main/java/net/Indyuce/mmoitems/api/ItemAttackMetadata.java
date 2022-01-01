@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.entity.LivingEntity;
 
@@ -18,12 +19,12 @@ import org.bukkit.entity.LivingEntity;
  */
 @Deprecated
 public class ItemAttackMetadata extends AttackMetadata {
-    public ItemAttackMetadata(DamageMetadata damage, StatMap.CachedStatMap damager) {
+    public ItemAttackMetadata(DamageMetadata damage, PlayerMetadata damager) {
         super(damage, damager);
     }
 
     public ItemAttackMetadata(AttackMetadata attackMeta) {
-        super(attackMeta.getDamage(), attackMeta.getStats());
+        super(attackMeta.getDamage(), attackMeta);
     }
 
     public PlayerData getPlayerData() {
@@ -31,7 +32,7 @@ public class ItemAttackMetadata extends AttackMetadata {
     }
 
     public ItemAttackMetadata clone() {
-        return new ItemAttackMetadata(getDamage().clone(), getStats());
+        return new ItemAttackMetadata(getDamage().clone(), this);
     }
 
     /**

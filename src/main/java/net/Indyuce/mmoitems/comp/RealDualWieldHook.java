@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
@@ -71,7 +72,7 @@ public class RealDualWieldHook implements Listener {
     }
 
     private ItemAttackMetadata getAttack(PlayerData playerData, PlayerDamageEntityWithOffhandEvent event) {
-        StatMap.CachedStatMap cachedStatMap = playerData.getMMOPlayerData().getStatMap().cache(EquipmentSlot.OFF_HAND);
+        PlayerMetadata cachedStatMap = playerData.getMMOPlayerData().getStatMap().cache(EquipmentSlot.OFF_HAND);
         return new ItemAttackMetadata(new DamageMetadata(event.getDamage(), DamageType.WEAPON, DamageType.PHYSICAL), cachedStatMap);
     }
 }

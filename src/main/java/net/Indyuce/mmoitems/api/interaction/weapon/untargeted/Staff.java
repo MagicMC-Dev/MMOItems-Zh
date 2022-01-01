@@ -3,15 +3,15 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -22,7 +22,6 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
 public class Staff extends UntargetedWeapon {
@@ -33,7 +32,7 @@ public class Staff extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
-		StatMap.CachedStatMap stats = getPlayerData().getStats().newTemporary(io.lumine.mythic.lib.api.player.EquipmentSlot.fromBukkit(slot));
+		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
 		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;

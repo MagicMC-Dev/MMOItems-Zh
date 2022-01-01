@@ -48,7 +48,10 @@ public class SkillManager {
         return skills.values();
     }
 
-    public void reload() {
+    public void initialize(boolean clearBefore) {
+
+        if (clearBefore)
+            skills.clear();
 
         // Check for default files
         File skillFolder = new File(MMOItems.plugin.getDataFolder() + "/skill");

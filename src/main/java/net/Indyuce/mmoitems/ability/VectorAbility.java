@@ -1,14 +1,12 @@
 package net.Indyuce.mmoitems.ability;
 
 import io.lumine.mythic.lib.damage.AttackMetadata;
-import net.Indyuce.mmoitems.ability.list.vector.Firebolt;
 import net.Indyuce.mmoitems.ability.metadata.VectorAbilityMetadata;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.entity.LivingEntity;
 
 /**
- * Ability that requires a direction to be cast. For
- * instance, a projectile like {@link Firebolt}
+ * Ability that requires a direction to be cast
  *
  * @deprecated Abilities were moved over to MythicLib.
  *         Abilities are being replaced by {@link io.lumine.mythic.lib.skill.handler.SkillHandler}

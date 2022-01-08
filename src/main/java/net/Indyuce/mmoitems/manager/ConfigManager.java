@@ -56,7 +56,6 @@ public class ConfigManager implements Reloadable {
 
         mkdir("layouts");
         mkdir("item");
-        mkdir("dynamic");
         mkdir("language");
         mkdir("language/lore-formats");
         mkdir("modifiers");

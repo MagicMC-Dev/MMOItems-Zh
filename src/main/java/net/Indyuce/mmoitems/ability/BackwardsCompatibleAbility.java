@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.custom.variable.VariableList;
 import io.lumine.mythic.lib.skill.custom.variable.VariableScope;
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import net.Indyuce.mmoitems.ability.metadata.BackwardsCompatibleAbilityMetadata;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -18,8 +19,6 @@ public class BackwardsCompatibleAbility extends Ability<BackwardsCompatibleAbili
         super(registeredSkill.getHandler().getId(), registeredSkill.getName());
 
         this.registeredSkill = registeredSkill;
-
-
     }
 
     @Nullable
@@ -31,6 +30,6 @@ public class BackwardsCompatibleAbility extends Ability<BackwardsCompatibleAbili
 
     @Override
     public void whenCast(AttackMetadata attack, BackwardsCompatibleAbilityMetadata ability) {
-        registeredSkill.getHandler().whenCast(ability.getResult(), ability.getMetadata());
+        ((SkillHandler) registeredSkill.getHandler()).whenCast(ability.getResult(), ability.getMetadata());
     }
 }

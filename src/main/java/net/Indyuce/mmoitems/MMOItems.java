@@ -6,7 +6,6 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import io.lumine.mythic.utils.plugin.LuminePlugin;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
@@ -292,7 +291,7 @@ public class MMOItems extends LuminePlugin {
 			getLogger().log(Level.INFO, "Hooked onto Denizen");
 		}*/
 
-		// compatibility with /reload
+		// Compatibility with /reload
 		Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));
 
 		boolean book = getConfig().getBoolean("recipes.use-recipe-book");
@@ -309,18 +308,14 @@ public class MMOItems extends LuminePlugin {
 		recipeManager.load(book, amounts);
 		if (amounts) Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
 
-		// amount and bukkit recipes
+		// Amount and bukkit recipes
 		getLogger().log(Level.INFO, "Loading recipes, please wait...");
 		recipeManager.loadRecipes();
 
-		// main command
+		// Main command
 		MMOItemsCommandTreeRoot mmoitemsCommand = new MMOItemsCommandTreeRoot();
 		getCommand("mmoitems").setExecutor(mmoitemsCommand);
 		getCommand("mmoitems").setTabCompleter(mmoitemsCommand);
-
-		// update item command DISABLED
-		//getCommand("updateitem").setExecutor(new UpdateItemCommand());
-		//getCommand("updateitem").setTabCompleter(new UpdateItemCompletion());
 	}
 
 	@Override
@@ -330,18 +325,13 @@ public class MMOItems extends LuminePlugin {
 		if (!isEnabled())
 			return;
 
-		// save player data
+		// Save player data
 		PlayerData.getLoaded().forEach(PlayerData::save);
 
-		// save item updater data
-		ConfigFile updater = new ConfigFile("/dynamic", "updater");
-		updater.getConfig().getKeys(false).forEach(key -> updater.getConfig().set(key, null));
-		updater.save();
-
-		// drop abandonned soulbound items
+		// Drop abandonned soulbound items
 		SoulboundInfo.getAbandonnedInfo().forEach(SoulboundInfo::dropItems);
 
-		// close inventories
+		// Close inventories
 		for (Player player : Bukkit.getOnlinePlayers())
 			if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
 				player.closeInventory();

@@ -81,8 +81,11 @@ public class SkillManager {
                 config.save();
             }
 
-            RegisteredSkill skill = new RegisteredSkill(handler, config.getConfig());
-            this.skills.put(handler.getId(), skill);
+            try {
+                this.skills.put(handler.getId(), new RegisteredSkill(handler, config.getConfig()));
+            } catch (RuntimeException exception) {
+                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load skill '" + handler.getId() + "': " + exception.getMessage());
+            }
         }
     }
 }

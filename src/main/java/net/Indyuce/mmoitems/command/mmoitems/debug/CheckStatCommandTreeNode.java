@@ -26,7 +26,7 @@ public class CheckStatCommandTreeNode extends CommandTreeNode {
 
 		ItemStat stat = MMOItems.plugin.getStats().get(args[2].toUpperCase().replace("-", "_"));
 		if (stat == null) {
-			sender.sendMessage(ChatColor.RED + "Couldn't find the stat called " + args[1].toUpperCase().replace("-", "_") + ".");
+			sender.sendMessage(ChatColor.RED + "Couldn't find the stat called " + args[2].toUpperCase().replace("-", "_") + ".");
 			return CommandResult.FAILURE;
 		}
 

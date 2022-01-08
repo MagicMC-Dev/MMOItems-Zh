@@ -1,12 +1,10 @@
 package net.Indyuce.mmoitems.comp.rpg;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
 
 public interface RPGHandler {
 
@@ -52,14 +50,8 @@ public interface RPGHandler {
             this.name = name;
         }
 
-        public RPGHandler load() {
-            try {
-                return pluginClass.getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING,
-                        "Could not initialize RPG plugin compatibility with " + name + ": " + exception.getMessage());
-                return new DefaultHook();
-            }
+        public RPGHandler load() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+            return pluginClass.getDeclaredConstructor().newInstance();
         }
 
         public String getName() {

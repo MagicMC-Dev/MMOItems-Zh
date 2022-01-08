@@ -1,8 +1,7 @@
 package net.Indyuce.mmoitems;
- 
+
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
@@ -19,22 +18,13 @@ import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
-import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
-import net.Indyuce.mmoitems.comp.McMMONonRPGHook;
-import net.Indyuce.mmoitems.comp.PhatLootsHook;
-import net.Indyuce.mmoitems.comp.RealDualWieldHook;
-import net.Indyuce.mmoitems.comp.WorldEditSupport;
+import net.Indyuce.mmoitems.comp.*;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
 import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
 import net.Indyuce.mmoitems.comp.enchants.MythicEnchantsSupport;
 import net.Indyuce.mmoitems.comp.enchants.advanced_enchants.AdvancedEnchantmentsHook;
-import net.Indyuce.mmoitems.comp.inventory.DefaultPlayerInventory;
-import net.Indyuce.mmoitems.comp.inventory.OrnamentPlayerInventory;
-import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
-import net.Indyuce.mmoitems.comp.inventory.PlayerInventoryHandler;
-import net.Indyuce.mmoitems.comp.inventory.RPGInventoryHook;
+import net.Indyuce.mmoitems.comp.inventory.*;
 import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
 import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
@@ -51,16 +41,7 @@ import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
-import net.Indyuce.mmoitems.listener.CraftingListener;
-import net.Indyuce.mmoitems.listener.CustomBlockListener;
-import net.Indyuce.mmoitems.listener.CustomSoundListener;
-import net.Indyuce.mmoitems.listener.DisableInteractions;
-import net.Indyuce.mmoitems.listener.DurabilityListener;
-import net.Indyuce.mmoitems.listener.ElementListener;
-import net.Indyuce.mmoitems.listener.EquipListener;
-import net.Indyuce.mmoitems.listener.ItemListener;
-import net.Indyuce.mmoitems.listener.ItemUse;
-import net.Indyuce.mmoitems.listener.PlayerListener;
+import net.Indyuce.mmoitems.listener.*;
 import net.Indyuce.mmoitems.manager.*;
 import net.Indyuce.mmoitems.skill.Shulker_Missile;
 import org.apache.commons.lang.Validate;
@@ -77,6 +58,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -116,7 +98,7 @@ public class MMOItems extends LuminePlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
-	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 1;
+	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 2;
 
 	public MMOItems() {
 		plugin = this;
@@ -128,7 +110,7 @@ public class MMOItems extends LuminePlugin {
 		// Check if the ML build matches
 		if (MYTHICLIB_COMPATIBILITY_INDEX != MythicLib.MMOITEMS_COMPATIBILITY_INDEX) {
 			getLogger().log(Level.WARNING, "Your versions of MythicLib and MMOItems do not match. Make sure you are using the latest builds of both plugins");
-			disable();
+			setEnabled(false);
 			return;
 		}
 
@@ -141,8 +123,8 @@ public class MMOItems extends LuminePlugin {
 
 		saveDefaultConfig();
 
-		/*
-		 * stat manager must be initialized before MMOCore compatibility
+		/**
+		 * Stat manager must be initialized before MMOCore compatibility
 		 * initializes so that MMOCore can register its stats
 		 */
 		statManager = new StatManager();
@@ -343,6 +325,10 @@ public class MMOItems extends LuminePlugin {
 	@Override
 	public void disable() {
 
+		// Support for early plugin disabling
+		if (!isEnabled())
+			return;
+
 		// save player data
 		PlayerData.getLoaded().forEach(PlayerData::save);
 
@@ -399,6 +385,30 @@ public class MMOItems extends LuminePlugin {
 
 		rpgPlugin = handler;
 		if (handler instanceof Listener && isEnabled()) Bukkit.getPluginManager().registerEvents((Listener) handler, this);
+	}
+
+	/**
+	 * @param potentialPlugin Some plugin that the user wants compatibility with
+	 * @return If it worked
+	 */
+	public boolean setRPG(RPGHandler.PluginEnum potentialPlugin) {
+
+		// Check if the plugin is installed
+		if (Bukkit.getPluginManager().getPlugin(potentialPlugin.getName()) == null) {
+			MMOItems.plugin.getLogger().log(Level.WARNING, "Could not initialize RPG plugin compatibility with " + potentialPlugin.getName() + ": plugin is not installed");
+			return false;
+		}
+
+		try {
+			setRPG(potentialPlugin.load());
+			return true;
+
+			// Some loading issue
+		} catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException exception) {
+			MMOItems.plugin.getLogger().log(Level.WARNING, "Could not initialize RPG plugin compatibility with " + potentialPlugin.getName() + ":");
+			exception.printStackTrace();
+			return false;
+		}
 	}
 
 	public PluginUpdateManager getUpdates() {
@@ -558,57 +568,32 @@ public class MMOItems extends LuminePlugin {
 
 	/**
 	 * Decide by which system will the RPG Requirements of the player will be checked.
-	 * <p></p>
+	 * <p>
 	 * For example, required level, is that vanilla XP levels, MMOCore levels, McMMO Leves or what?
+	 *
+	 * This method is called on server startup and will try to read the preferred RPG
+	 * provider in the main plugin config. If it can't be found, it will look for RPG
+	 * plugins in the installed plugin list.
 	 */
 	public void findRpgPlugin() {
 		if (rpgPlugin != null) return;
 
 		String preferred = plugin.getConfig().getString("preferred-rpg-provider", null);
-		if (preferred != null) {
-
+		if (preferred != null)
 			try {
-				RPGHandler.PluginEnum preferredRPG = RPGHandler.PluginEnum.valueOf(preferred.toUpperCase());
-				// Found the plugin?
-				if (Bukkit.getPluginManager().getPlugin(preferredRPG.getName()) != null) {
-
-					// Load that one
-					setRPG(preferredRPG.load());
-
-					// Mention it
-					print(null, "Using $s{0}$b as RPGPlayer provider", "RPG Provider", preferredRPG.getName());
+				if (setRPG(RPGHandler.PluginEnum.valueOf(preferred.toUpperCase())))
 					return;
-				} else
-
-					print(null, "Preferred RPGPlayer provider $r{0}$b is not installed!", "RPG Provider", preferred);
-
-			} catch (IllegalArgumentException ignored) {
-
-				// Log error
-				FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-				ffp.activatePrefix(true, "RPG Provider");
-				ffp.log(FriendlyFeedbackCategory.ERROR, "Invalid RPG Provider '$u{0}$b' --- These are the supported ones:", preferred);
-				for (RPGHandler.PluginEnum pgrep : RPGHandler.PluginEnum.values()) {
-					ffp.log(FriendlyFeedbackCategory.ERROR, " $r+ $b{0}", pgrep.getName());
-				}
-				ffp.sendTo(FriendlyFeedbackCategory.ERROR, getConsole());
+			} catch (IllegalArgumentException exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "'" + preferred.toUpperCase() + "' is not a valid RPG plugin:");
+				for (RPGHandler.PluginEnum pgrep : RPGHandler.PluginEnum.values())
+					MMOItems.plugin.getLogger().log(Level.WARNING, "- " + pgrep.getName());
 			}
-		}
 
-		// For each supported plugin
-		for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values()) {
-
-			// Found the plugin?
-			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null) {
-
-				// Load that one
-				setRPG(pluginEnum.load());
-
-				// Mention it
-				print(null, "Using $s{0}$b as RPGPlayer provider", "RPG Provider", pluginEnum.getName());
-				return;
-			}
-		}
+		// Look through installed plugins
+		for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values())
+			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null)
+				if (setRPG(pluginEnum))
+					return;
 
 		// Just use the default
 		setRPG(new DefaultHook());
@@ -814,22 +799,6 @@ public class MMOItems extends LuminePlugin {
 		return nbt.getString("MMOITEMS_ITEM_ID");
 	}
 	//endregion
-
-	/**
-	 * Logs something into the console with a cool [MMOItems] prefix :)
-	 * <p></p>
-	 * Parses color codes. <b>Mostly for DEV testing</b>. these may removed any release.
-	 *
-	 * @author Gunging
-	 */
-	public static void log(@Nullable String message) {
-		if (message == null) {
-			message = "< null >";
-		}
-		//String prefix = "\u00a78[" + ChatColor.YELLOW + "MMOItems\u00a78] \u00a77";
-		String prefix = "";
-		plugin.getServer().getConsoleSender().sendMessage(prefix + message);
-	}
 
 	/**
 	 * Easily log something using the FriendlyFeedbackProvider, nice!

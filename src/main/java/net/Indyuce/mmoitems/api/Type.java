@@ -20,18 +20,18 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Type {
 
-    // slashing
+    // Slashing
     public static final Type SWORD = new Type(TypeSet.SLASHING, "SWORD", true, EquipmentSlot.MAIN_HAND);
 
-    // piercing
+    // Piercing
     public static final Type DAGGER = new Type(TypeSet.PIERCING, "DAGGER", true, EquipmentSlot.MAIN_HAND);
     public static final Type SPEAR = new Type(TypeSet.PIERCING, "SPEAR", true, EquipmentSlot.MAIN_HAND);
 
-    // blunt
+    // Blunt
     public static final Type HAMMER = new Type(TypeSet.BLUNT, "HAMMER", true, EquipmentSlot.MAIN_HAND);
     public static final Type GAUNTLET = new Type(TypeSet.BLUNT, "GAUNTLET", true, EquipmentSlot.MAIN_HAND);
 
-    // range
+    // Range
     public static final Type WHIP = new Type(TypeSet.RANGE, "WHIP", true, EquipmentSlot.MAIN_HAND);
     public static final Type STAFF = new Type(TypeSet.RANGE, "STAFF", true, EquipmentSlot.MAIN_HAND);
     public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, EquipmentSlot.BOTH_HANDS);
@@ -39,14 +39,14 @@ public class Type {
     public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, EquipmentSlot.MAIN_HAND);
     public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, EquipmentSlot.MAIN_HAND);
 
-    // offhand
+    // Offhand
     public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, EquipmentSlot.BOTH_HANDS);
     public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OFF_HAND);
 
-    // any
+    // Any
     public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.ANY);
 
-    // extra
+    // Extra
     public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR, true);
     public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, EquipmentSlot.MAIN_HAND);
     public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, EquipmentSlot.MAIN_HAND);
@@ -96,8 +96,8 @@ public class Type {
 
     private UnidentifiedItem unidentifiedTemplate;
 
-    /*
-     * list of stats which can be applied onto an item which has this type. This
+    /**
+     * List of stats which can be applied onto an item which has this type. This
      * improves performance when generating an item by a significant amount.
      */
     private final List<ItemStat> available = new ArrayList<>();
@@ -118,7 +118,7 @@ public class Type {
         //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 > Lore\u00a7b " + loreFormat);
     }
 
-    public Type(@NotNull TypeManager manager,@NotNull ConfigurationSection config) {
+    public Type(@NotNull TypeManager manager, @NotNull ConfigurationSection config) {
         id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
 
         parent = manager.get(config.getString("parent", "").toUpperCase().replace("-", "_").replace(" ", "_"));

@@ -19,12 +19,11 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
     /**
      * Called when MMOItems enables
+     * <p>
+     * These stats are only updated on a server reload because that
+     * class has to be instanciated again for the registered stats to update
      */
     public MMOCoreHook() {
-        /*
-         * only works when the server is reloaded. needs /reload when changing
-         * attributes or professions to refresh MMOItems stats
-         */
         for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
             MMOItems.plugin.getStats().register(new Required_Attribute(attribute));
         for (Profession profession : MMOCore.plugin.professionManager.getAll())
@@ -105,12 +104,12 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
         @Override
         public void giveMana(double value) {
-            data.giveMana(value, PlayerResourceUpdateEvent.UpdateReason.REGENERATION);
+            data.giveMana(value, PlayerResourceUpdateEvent.UpdateReason.OTHER);
         }
 
         @Override
         public void giveStamina(double value) {
-            data.giveStamina(value, PlayerResourceUpdateEvent.UpdateReason.REGENERATION);
+            data.giveStamina(value, PlayerResourceUpdateEvent.UpdateReason.OTHER);
         }
     }
 }

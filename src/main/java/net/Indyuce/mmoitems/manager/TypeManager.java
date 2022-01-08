@@ -25,7 +25,7 @@ public class TypeManager implements Reloadable {
 				Type.STAFF, Type.SWORD, Type.TOOL, Type.WHIP);
 
 		/*
-		 * register all other types. important: check if the map already
+		 * Register all other types. Important: check if the map already
 		 * contains the id, this way the DEFAULT types are not registered twice,
 		 * and only custom types are registered with a parent.
 		 */

@@ -24,8 +24,8 @@ public class StatManager {
 	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
 	private final Set<PlayerConsumable> playerConsumables = new HashSet<>();
 
-	/*
-	 * load default stats using java reflection, get all public static final
+	/**
+	 * Load default stats using java reflection, get all public static final
 	 * fields in the ItemStat and register them as stat instances
 	 */
 	public StatManager() {

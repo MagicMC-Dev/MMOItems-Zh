@@ -2,18 +2,11 @@ package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import io.lumine.mythic.lib.api.math.EvaluatedFormula;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.text.DecimalFormat;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * There are three types of lore placeholders.
@@ -132,8 +125,6 @@ public class LoreBuilder {
      * have been inserted in the lore. It cleans all unused static placeholders
      * as well as lore bars. The dynamic placeholders still remain however.
      */
-    DecimalFormat df = new DecimalFormat("#.####");
-
     public List<String> build() {
 
         /*
@@ -157,18 +148,17 @@ public class LoreBuilder {
         }
 
         /*
-         *
-         *   Allows math to be done within the stats.yml file
-         *
-         * */
-        int index = 0;
+         * Allows math to be done within the stats.yml file
+         */
+        int index = -1;
         for (String string : lore) {
-            if (string.contains("MATH%")) {
-                String result = String.valueOf(df.format(eval(StringUtils.substringBetween(string, "%", "%"))));
-                lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));
-            }
             index++;
+            String match = StringUtils.substringBetween(string, "%", "%");
+            if (match == null)
+                continue;
 
+            String result = MythicLib.plugin.getMMOConfig().decimals.format(new EvaluatedFormula(match).evaluate());
+            lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));
         }
 
         /*
@@ -207,91 +197,4 @@ public class LoreBuilder {
     private boolean isBar(String str) {
         return str.startsWith("{bar}") || str.startsWith("{sbar}");
     }
-
-    /*
-     *
-     * Math methods
-     *
-     * */
-
-    public static double eval(final String str) {
-        return new Object() {
-            int pos = -1, ch;
-
-            void nextChar() {
-                ch = (++pos < str.length()) ? str.charAt(pos) : -1;
-            }
-
-            boolean eat(int charToEat) {
-                while (ch == ' ') nextChar();
-                if (ch == charToEat) {
-                    nextChar();
-                    return true;
-                }
-                return false;
-            }
-
-            double parse() {
-                nextChar();
-                double x = parseExpression();
-                if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char) ch);
-                return x;
-            }
-
-            // Grammar:
-            // expression = term | expression `+` term | expression `-` term
-            // term = factor | term `*` factor | term `/` factor
-            // factor = `+` factor | `-` factor | `(` expression `)`
-            //        | number | functionName factor | factor `^` factor
-
-            double parseExpression() {
-                double x = parseTerm();
-                for (; ; ) {
-                    if (eat('+')) x += parseTerm(); // addition
-                    else if (eat('-')) x -= parseTerm(); // subtraction
-                    else return x;
-                }
-            }
-
-            double parseTerm() {
-                double x = parseFactor();
-                for (; ; ) {
-                    if (eat('*')) x *= parseFactor(); // multiplication
-                    else if (eat('/')) x /= parseFactor(); // division
-                    else return x;
-                }
-            }
-
-            double parseFactor() {
-                if (eat('+')) return parseFactor(); // unary plus
-                if (eat('-')) return -parseFactor(); // unary minus
-
-                double x;
-                int startPos = this.pos;
-                if (eat('(')) { // parentheses
-                    x = parseExpression();
-                    eat(')');
-                } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
-                    while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
-                    x = Double.parseDouble(str.substring(startPos, this.pos));
-                } else if (ch >= 'a' && ch <= 'z') { // functions
-                    while (ch >= 'a' && ch <= 'z') nextChar();
-                    String func = str.substring(startPos, this.pos);
-                    x = parseFactor();
-                    if (func.equals("sqrt")) x = Math.sqrt(x);
-                    else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
-                    else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
-                    else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
-                    else throw new RuntimeException("Unknown function: " + func);
-                } else {
-                    throw new RuntimeException("Unexpected: " + (char) ch);
-                }
-
-                if (eat('^')) x = Math.pow(x, parseFactor()); // exponentiation
-
-                return x;
-            }
-        }.parse();
-    }
-
 }

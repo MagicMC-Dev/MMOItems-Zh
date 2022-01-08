@@ -94,7 +94,7 @@ public class DisableInteractions implements Listener {
 
         NBTItem item = NBTItem.get(event.getItem());
         if (item.getBoolean("MMOITEMS_DISABLE_INTERACTION") || item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM"))
-            event.setUseItemInHand(Event.Result.DENY);
+            event.setCancelled(true);
     }
 
     /**

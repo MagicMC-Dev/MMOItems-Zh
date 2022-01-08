@@ -121,7 +121,9 @@ public class MMOItems extends LuminePlugin {
 			getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: " + exception.getMessage());
 		}
 
+		// Initialize default config files
 		saveDefaultConfig();
+		configManager = new ConfigManager();
 
 		/**
 		 * Stat manager must be initialized before MMOCore compatibility
@@ -155,7 +157,6 @@ public class MMOItems extends LuminePlugin {
 
 		RecipeBrowserGUI.registerNativeRecipes();
 		skillManager.initialize(false);
-		configManager = new ConfigManager();
 
 		final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;
 		final int defConfigVersion = getConfig().getDefaults().getInt("config-version");

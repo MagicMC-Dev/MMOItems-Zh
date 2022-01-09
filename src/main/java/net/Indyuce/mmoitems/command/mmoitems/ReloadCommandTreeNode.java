@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
@@ -15,10 +16,12 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 
 		addChild(new SubReloadCommandTreeNode("recipes", this, this::reloadRecipes));
 		addChild(new SubReloadCommandTreeNode("stations", this, this::reloadStations));
+		addChild(new SubReloadCommandTreeNode("skills", this, this::reloadSkills));
 		addChild(new SubReloadCommandTreeNode("all", this, (sender) -> {
 			reloadMain(sender);
 			reloadRecipes(sender);
 			reloadStations(sender);
+			reloadSkills(sender);
 		}));
 	}
 
@@ -28,9 +31,9 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 		return CommandResult.SUCCESS;
 	}
 
-	public static class SubReloadCommandTreeNode extends CommandTreeNode {
+	public class SubReloadCommandTreeNode extends CommandTreeNode {
 		private final Consumer<CommandSender> action;
-		
+
 		public SubReloadCommandTreeNode(String sub, CommandTreeNode parent, Consumer<CommandSender> action) {
 			super(parent, sub);
 			this.action = action;
@@ -41,6 +44,12 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 			action.accept(sender);
 			return CommandResult.SUCCESS;
 		}
+	}
+
+	public void reloadSkills(CommandSender sender) {
+		MythicLib.plugin.getSkills().initialize(true);
+		MMOItems.plugin.getSkills().initialize(true);
+		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded " + MMOItems.plugin.getSkills().getAll().size() + " skills.");
 	}
 
 	public void reloadMain(CommandSender sender) {

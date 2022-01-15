@@ -4,10 +4,10 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.player.PlayerMetadata;
-import io.lumine.mythic.lib.skill.trigger.PassiveSkill;
+import io.lumine.mythic.lib.player.modifier.ModifierSource;
+import io.lumine.mythic.lib.player.skill.PassiveSkill;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -167,7 +167,7 @@ public class PlayerData {
         inventory.getEquipped().clear();
         permanentEffects.clear();
         cancelRunnables();
-        mmoData.unregisterSkillTriggers("MMOItemsItem");
+        mmoData.getPassiveSkillMap().removeModifiers("MMOItemsItem");
         itemParticles.clear();
         overridingItemParticles = null;
         if (MMOItems.plugin.hasPermissions()) {
@@ -239,7 +239,7 @@ public class PlayerData {
                 if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
                     for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
                         ModifierSource modSource = equipped.getItem().getType() == null ? ModifierSource.OTHER : equipped.getItem().getType().getItemSet().getModifierSource();
-                        mmoData.registerSkillTrigger(new PassiveSkill("MMOItemsItem", abilityData.getTriggerType(), abilityData, equipped.getSlot(), modSource));
+                        mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData.getTriggerType(), abilityData, equipped.getSlot(), modSource));
                     }
 
             /*
@@ -280,7 +280,7 @@ public class PlayerData {
 
         if (hasSetBonuses()) {
             for (AbilityData ability : setBonuses.getAbilities())
-                mmoData.registerSkillTrigger(new PassiveSkill("MMOItemsItem", ability.getTriggerType(), ability));
+                mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability.getTriggerType(), ability));
             for (ParticleData particle : setBonuses.getParticles())
                 itemParticles.add(particle.start(this));
             for (PotionEffect effect : setBonuses.getPotionEffects())

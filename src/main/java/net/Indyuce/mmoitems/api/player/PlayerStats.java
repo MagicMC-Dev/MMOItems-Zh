@@ -3,10 +3,10 @@ package net.Indyuce.mmoitems.api.player;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.stat.StatInstance;
 import io.lumine.mythic.lib.api.stat.StatMap;
-import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
-import io.lumine.mythic.lib.api.stat.modifier.ModifierType;
 import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
 import io.lumine.mythic.lib.player.PlayerMetadata;
+import io.lumine.mythic.lib.player.modifier.ModifierSource;
+import io.lumine.mythic.lib.player.modifier.ModifierType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
@@ -61,8 +61,7 @@ public class PlayerStats {
 
             // Add set bonuses
             if (playerData.hasSetBonuses() && playerData.getSetBonuses().hasStat(stat))
-                packet.addModifier("MMOItemSetBonus",
-                        new StatModifier(playerData.getSetBonuses().getStat(stat), ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER));
+                packet.addModifier(new StatModifier("MMOItemSetBonus", stat.getId(), playerData.getSetBonuses().getStat(stat), ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER));
 
             // The index of the mmoitem stat modifier being added
             int index = 0;
@@ -79,7 +78,7 @@ public class PlayerStats {
                     if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttributeStat)
                         value -= ((AttributeStat) stat).getOffset();
 
-                    packet.addModifier("MMOItem-" + index++, new StatModifier(value, ModifierType.FLAT, item.getSlot(), source));
+                    packet.addModifier(new StatModifier("MMOItem-" + index++, stat.getId(), value, ModifierType.FLAT, item.getSlot(), source));
                 }
             }
 

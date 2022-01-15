@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.api;
 
-import io.lumine.mythic.lib.api.stat.modifier.ModifierSource;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;

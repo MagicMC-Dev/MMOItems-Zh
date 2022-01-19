@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -57,8 +57,8 @@ public class PickaxePower extends DoubleStat {
 		if (techMinimum != 0 || techMaximum != 0) {
 
 			String builtRange;
-			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = new StatFormat("##").format(techMinimum); }
-			else { builtRange = new StatFormat("##").format(techMinimum) + "-" + new StatFormat("##").format(techMaximum); }
+			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = MythicLib.plugin.getMMOConfig().decimals.format(techMinimum); }
+			else { builtRange = MythicLib.plugin.getMMOConfig().decimals.format(techMinimum) + "-" + MythicLib.plugin.getMMOConfig().decimals.format(techMaximum); }
 
 			// Just display normally
 			item.getLore().insert("pickaxe-power", formatNumericStat(techMinimum, "#", builtRange));

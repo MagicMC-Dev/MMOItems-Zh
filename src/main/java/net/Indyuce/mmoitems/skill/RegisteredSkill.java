@@ -45,7 +45,7 @@ public class RegisteredSkill {
         this.name = name;
     }
 
-    public SkillHandler getHandler() {
+    public SkillHandler<?> getHandler() {
         return handler;
     }
 

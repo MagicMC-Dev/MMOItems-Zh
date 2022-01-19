@@ -4,6 +4,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,12 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class PluginUpdateManager {
@@ -227,6 +223,28 @@ public class PluginUpdateManager {
 						config.save();
 					}
 				}));
+
+
+		register(new PluginUpdate(6, new String[]{"MMOItems 6.7 introduced individual config files for skills. This update reads your previous language folder and applies it to the new individual config files.", "This can also be used to apply an old plugin translation"}, sender -> {
+			FileConfiguration abilities = new ConfigFile("/language", "abilities").getConfig();
+
+			for (RegisteredSkill skill : MMOItems.plugin.getSkills().getAll()) {
+				ConfigFile configFile = new ConfigFile("/skill", skill.getHandler().getLowerCaseId());
+				FileConfiguration config = configFile.getConfig();
+
+				// Apply old name
+				config.set("name", Objects.requireNonNullElse(abilities.getString("ability." + skill.getHandler().getLowerCaseId()), skill.getName()));
+
+				// Apply old modifier name
+				for (String mod : skill.getHandler().getModifiers())
+					config.set("modifier." + mod + ".name", Objects.requireNonNullElse(abilities.getString("modifier." + mod), skill.getModifierName(mod)));
+
+				configFile.save();
+			}
+
+			sender.sendMessage("Config updates successfully applied, reloading skills..");
+			MMOItems.plugin.getSkills().initialize(true);
+		}));
 	}
 
 	public void register(PluginUpdate update) {

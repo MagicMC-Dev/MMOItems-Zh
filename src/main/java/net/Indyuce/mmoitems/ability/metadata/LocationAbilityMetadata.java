@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.ability.metadata;
 
 import net.Indyuce.mmoitems.ability.AbilityMetadata;
-import net.Indyuce.mmoitems.ability.list.location.Minor_Explosion;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,8 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
- * Ability that requires a target location, for
- * instance {@link Minor_Explosion}
+ * Ability that requires a target location
  *
  * @deprecated Abilities were moved over to MythicLib.
  *         AbilityMetadata from MMOItems are now {@link io.lumine.mythic.lib.skill.result.SkillResult}

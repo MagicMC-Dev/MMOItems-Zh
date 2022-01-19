@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.api.util.StatFormat;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
@@ -108,26 +107,13 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 				// Calculate Difference
 				upgradeShift = value - uData.getValue(); } }
 
-		// Display if not ZERO
+		// Display in lore
 		if (value != 0 || upgradeShift != 0) {
-
-			// Get path and modify
-			String pathFormat = MMOItems.plugin.getLanguage().getStatFormat(getPath());
-
-			// Displaying upgrades?
-			if (upgradeShift != 0) {
-
-				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value * multiplyWhenDisplaying())
-
-						// Add upgrade format
-						+ MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (new StatFormat("##").format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying()))));
-
-			} else {
-
-				// Just display normally
-				item.getLore().insert(getPath(), formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value * multiplyWhenDisplaying()));
-
-			} }
+			String loreInsert = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value * multiplyWhenDisplaying());
+			if (upgradeShift != 0)
+				loreInsert += MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (MythicLib.plugin.getMMOConfig().decimals.format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying())));
+			item.getLore().insert(getPath(), loreInsert);
+		}
 
 		/*
 		 * Add NBT Data if it is not equal to ZERO, in which case it will just get removed.
@@ -144,10 +130,10 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		return format
 
 				// Replace conditional pluses with +value
-				.replace("<plus>#",getColorPrefix(value < 0 && moreIsBetter) + (value > 0 ? "+" : "") + new StatFormat("##").format(value))
+				.replace("<plus>#",getColorPrefix(value < 0 && moreIsBetter) + (value > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(value))
 
 				// Replace loose pounds with the value
-				.replace("#",getColorPrefix(value < 0 && moreIsBetter) + new StatFormat("##").format(value))
+				.replace("#",getColorPrefix(value < 0 && moreIsBetter) + MythicLib.plugin.getMMOConfig().decimals.format(value))
 
 				// Replace loose <plus>es
 				.replace("<plus>", (value > 0 ? "+" : ""));
@@ -163,9 +149,9 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 
 				// Replace loose pounds with the value
 				.replace("#", getColorPrefix(min < 0 && moreIsBetter) +
-						(min > 0 ? "+" : "") + new StatFormat("##").format(min)
+						(min > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(min)
 							+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + getColorPrefix(max < 0 && moreIsBetter) +
-						(min < 0 && max > 0 ? "+" : "") + new StatFormat("##").format(max)); }
+						(min < 0 && max > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(max)); }
 
 	@Override
 	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {

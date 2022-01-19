@@ -75,9 +75,9 @@ public class PlayerStats {
                     Type type = item.getItem().getType();
                     ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
-                    // Apply main hand weapon stat offset ie 4 for attack speed and 1 for attack damage.
+                    // Apply main hand weapon stat offset
                     if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttributeStat)
-                        value -= ((AttributeStat) stat).getOffset();
+                        value -= ((AttributeStat) stat).getOffset(playerData);
 
                     packet.addModifier("MMOItem-" + index++, new StatModifier(value, ModifierType.FLAT, item.getSlot(), source));
                 }

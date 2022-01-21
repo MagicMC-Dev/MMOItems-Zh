@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.util.message;
 
 import io.lumine.mythic.lib.MythicLib;
+import net.Indyuce.mmocore.api.player.PlayerActivity;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
@@ -54,7 +55,7 @@ public class PlayerMessage {
 
 		if (actionBar) {
 			if (Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
-				PlayerData.get(player).setActionBarTimeOut(60);
+				PlayerData.get(player).setLastActivity(PlayerActivity.ACTION_BAR_MESSAGE);
 
 			MythicLib.plugin.getVersion().getWrapper().sendActionBar(player, message);
 		} else

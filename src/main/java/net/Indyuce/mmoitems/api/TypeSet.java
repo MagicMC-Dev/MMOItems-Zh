@@ -43,7 +43,7 @@ public enum TypeSet {
                     .angle(entity.getLocation().subtract(attack.getPlayer().getLocation()).toVector()) < Math.PI / 3
                     && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
                 ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
-                subAttack.getDamage().multiply(.4);
+                subAttack.getDamage().multiplicativeModifier(.4);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
             }
     }),
@@ -72,7 +72,7 @@ public enum TypeSet {
                     .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 18
                     && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
                 ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
-                subAttack.getDamage().multiply(.4);
+                subAttack.getDamage().multiplicativeModifier(.4);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
             }
     }),
@@ -98,7 +98,7 @@ public enum TypeSet {
                 for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
                     if (MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
                         ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
-                        subAttack.getDamage().multiply(bluntRating);
+                        subAttack.getDamage().multiplicativeModifier(bluntRating);
                         subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
                     }
             }

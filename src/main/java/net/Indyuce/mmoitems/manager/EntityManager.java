@@ -113,21 +113,7 @@ public class EntityManager implements Listener {
         Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
     }
 
-    /*
-     * Projectile Damage and Effects
-     *
-     * TODO
-     * When throwing a trident, on hit abilities dont cast half
-     * of the time because you don't hold the item anymore, therefore
-     * the ability does not register.
-     * To fix that, not only cache the player statistics using CachedStats
-     * but also the player abilities as well as elemental stats. In fact
-     * a lot of extra stats need to be cached when a ranged attack is delivered.
-     *
-     * TODO
-     * This bug could also be exploited using a bow, by holding another item
-     * after shooting an arrow!!
-     */
+    // Projectile damage and effects
     @EventHandler(ignoreCancelled = true)
     public void b(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
@@ -143,7 +129,7 @@ public class EntityManager implements Listener {
         // Apply power vanilla enchant
         if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()
                 && data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
-            data.getAttackMetadata().getDamage().multiply(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)), DamageType.WEAPON);
+            data.getAttackMetadata().getDamage().multiplicativeModifier(1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE)), DamageType.WEAPON);
 
         // Apply MMOItems specific modifications
         if (data.isCustomWeapon()) {

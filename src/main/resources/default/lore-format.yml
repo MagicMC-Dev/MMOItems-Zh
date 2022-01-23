@@ -95,6 +95,7 @@ lore-format:
 - '#soulbound-break-chance#'
 - '#soulbound-level#'
 - '#repair#'
+- '#repair-percent#'
 - '#item-cooldown#'
 - '#additional-experience#'
 - '#cooldown-reduction#'

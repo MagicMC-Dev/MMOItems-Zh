@@ -1,0 +1,26 @@
+name: Void Zapper
+modifier:
+  damage:
+    name: Damage
+    default-value: 5
+  mana:
+    name: Mana
+    default-value: 0
+  stamina:
+    name: Stamina
+    default-value: 0
+  cooldown:
+    name: Cooldown
+    default-value: 10
+  length:
+    name: Length
+    default-value: 30
+  knockback:
+    name: Knockback
+    default-value: 1
+  extra:
+    name: Extra Damage
+    default-value: 30
+  max:
+    name: Max Bounces
+    default-value: 6

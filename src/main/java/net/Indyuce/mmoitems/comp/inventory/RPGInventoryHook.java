@@ -37,7 +37,7 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 
 		for (ItemStack passive : InventoryAPI.getPassiveItems(player))
 			if (passive != null)
-				list.add(new EquippedItem(passive, EquipmentSlot.ANY));
+				list.add(new EquippedItem(passive, EquipmentSlot.ACCESSORY));
 
 		return list;
 	}

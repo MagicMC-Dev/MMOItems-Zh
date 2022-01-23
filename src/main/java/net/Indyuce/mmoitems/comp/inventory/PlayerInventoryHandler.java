@@ -7,7 +7,9 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Previously, only one Player Inventory was allowed.
@@ -38,8 +40,22 @@ public class PlayerInventoryHandler {
         registeredInventories.add(pInventory);
     }
 
+    public void unregisterIf(Predicate<PlayerInventory> filter) {
+        Iterator<PlayerInventory> iterator = registeredInventories.iterator();
+        while (iterator.hasNext()) {
+            PlayerInventory next = iterator.next();
+            if (filter.test(next)) {
+                if (next instanceof Listener)
+                    HandlerList.unregisterAll((Listener) next);
+                iterator.remove();
+            }
+        }
+    }
+
     /**
-     * Can be used by external plugins to clear current inventory handlers if you want offhand and mainhand items removed from the player inventory
+     * Can be used by external plugins to clear current inventory
+     * handlers if you want offhand and mainhand items removed
+     * from the player inventory
      */
     public void unregisterAll() {
 
@@ -61,7 +77,8 @@ public class PlayerInventoryHandler {
     /**
      * @return Gets the totality of items from all the PlayerInventories ie all the items that will add their stats to the player.
      */
-    @NotNull public List<EquippedItem> getInventory(@NotNull Player player) {
+    @NotNull
+    public List<EquippedItem> getInventory(@NotNull Player player) {
 
         // Get and add lists from every registered inventories
         ArrayList<EquippedItem> cummulative = new ArrayList<>();

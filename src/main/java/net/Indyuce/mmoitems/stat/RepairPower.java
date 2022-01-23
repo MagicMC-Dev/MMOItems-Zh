@@ -56,7 +56,7 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 			if (durItem.getDurability() < durItem.getMaxDurability()) {
 				target.getItem().setItemMeta(durItem.addDurability(called.getRepaired()).toItem().getItemMeta());
 				Message.REPAIRED_ITEM
-						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
+						.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", String.valueOf(called.getRepaired()))
 						.send(player);
 				CustomSoundListener.playConsumableSound(consumable.getItem(), player);
 			}

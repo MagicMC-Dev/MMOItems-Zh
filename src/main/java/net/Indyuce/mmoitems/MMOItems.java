@@ -99,9 +99,7 @@ public class MMOItems extends LuminePlugin {
 
 	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 4;
 
-	public MMOItems() {
-		plugin = this;
-	}
+	public MMOItems() { plugin = this; }
 
 	@Override
 	public void load() {

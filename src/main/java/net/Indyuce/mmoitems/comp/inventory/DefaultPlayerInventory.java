@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,19 +15,25 @@ import java.util.List;
  * Armor slots, mainhand and offhand.
  */
 public class DefaultPlayerInventory implements PlayerInventory {
+
 	@Override
+	@NotNull
 	public List<EquippedItem> getInventory(Player player) {
 		List<EquippedItem> list = new ArrayList<>();
 
+		if (player.getEquipment() == null) { return list; }
+
 		// Mainhand
-		list.add(new EquippedItem(player.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
+		list.add(new EIDefaultInventory(player, -7, player.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
 
 		// Offhand
-		list.add(new EquippedItem(player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
+		list.add(new EIDefaultInventory(player, -106, player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
 
-		// Armour
-		for (ItemStack armor : player.getInventory().getArmorContents())
-			list.add(new EquippedItem(armor, EquipmentSlot.ARMOR));
+		// Armor
+		list.add(new EIDefaultInventory(player, 103, player.getEquipment().getHelmet(), EquipmentSlot.ARMOR));
+		list.add(new EIDefaultInventory(player, 102, player.getEquipment().getChestplate(), EquipmentSlot.ARMOR));
+		list.add(new EIDefaultInventory(player, 101, player.getEquipment().getLeggings(), EquipmentSlot.ARMOR));
+		list.add(new EIDefaultInventory(player, 100, player.getEquipment().getBoots(), EquipmentSlot.ARMOR));
 
 		return list;
 	}

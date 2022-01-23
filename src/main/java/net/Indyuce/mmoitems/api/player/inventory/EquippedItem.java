@@ -18,7 +18,7 @@ public class EquippedItem {
 	 * @param slot The corresponding MMOItems slot type
 	 */
 	public EquippedItem(ItemStack item, EquipmentSlot slot) {
-		this(MythicLib.plugin.getVersion().getWrapper().getNBTItem(item), slot);
+		this(NBTItem.get(item), slot);
 	}
 
 	/**

@@ -13,10 +13,4 @@ public class LostWhenBroken extends BooleanStat {
 	public LostWhenBroken() {
 		super("WILL_BREAK", Material.SHEARS, "Lost when Broken?", new String[] { "If set to true, the item will be lost", "once it reaches 0 durability." }, new String[] { "!block", "all" });
 	}
-
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		if (((BooleanData) data).isEnabled())
-			item.addItemTag(new ItemTag("MMOITEMS_WILL_BREAK", true));
-	}
 }

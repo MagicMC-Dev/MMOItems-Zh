@@ -213,6 +213,19 @@ public class Type {
     }
 
     /**
+     * @return The parentmost parent of this type, or itself, if it has no parent.
+     */
+    public Type getSupertype() {
+        Type parentMost = this;
+
+        while (parentMost.isSubtype()) {
+            parentMost = parentMost.getParent();
+        }
+
+        return parentMost;
+    }
+
+    /**
      * @return Either if the two types are the same,
      *         or if this type is a subtype of the given type.
      */

@@ -122,7 +122,7 @@ public class UpgradeTemplate {
 		UpgradeData dat;
 		if (mmoitem.hasData(ItemStats.UPGRADE)) {
 			dat = (UpgradeData) mmoitem.getData(ItemStats.UPGRADE);
-		} else { dat = new UpgradeData(null, null, false, false, 0, 100); }
+		} else { dat = new UpgradeData(null, null, false, false, 0, 0, 100); }
 		dat.setLevel(level);
 		mmoitem.setData(ItemStats.UPGRADE, dat);
 		//UPGR//MMOItems.log("\u00a76>\u00a73>\u00a7a> \u00a77Upgrading to level \u00a7e" + dat.getLevel());

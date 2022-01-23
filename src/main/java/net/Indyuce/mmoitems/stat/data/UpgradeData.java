@@ -42,22 +42,51 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 	/**
 	 * @return Max amount of upgrades this can hold
 	 */
-	public int getMax() {
-		return max;
-	}
+	public int getMax() { return max; }
+	/**
+	 * @return Minimum level this item can be downgraded to
+	 */
+	public int getMin() { return min; }
 
 	@Nullable private final String reference, template;
 	private final boolean workbench, destroy;
 	private final double success;
 	private final int max;
+	private final int min;
 	private int level;
 
+	/**
+	 * Create a new UpgradeData
+	 *
+	 * @param reference			Upgrade Reference to use
+	 * @param template			Upgrade Template to follow
+	 * @param workbench			If it is upgraded in workbench (I don't know for sure)?
+	 * @param destroy			If it will destroy the item if the upgrade fails
+	 * @param max				Max Level attainable
+	 * @param success			Success Chance
+	 */
 	public UpgradeData(@Nullable String reference, @Nullable String template, boolean workbench, boolean destroy, int max, double success) {
+		this(reference, template, workbench, destroy, max, 0, success);
+	}
+
+	/**
+	 * Create a new UpgradeData
+	 *
+	 * @param reference			Upgrade Reference to use
+	 * @param template			Upgrade Template to follow
+	 * @param workbench			If it is upgraded in workbench (I don't know for sure)?
+	 * @param destroy			If it will destroy the item if the upgrade fails
+	 * @param max				Max Level attainable
+	 * @param min				Min Level attainable through downgrading
+	 * @param success			Success Chance
+	 */
+	public UpgradeData(@Nullable String reference, @Nullable String template, boolean workbench, boolean destroy, int max, int min, double success) {
 		this.reference = reference;
 		this.template = template;
 		this.workbench = workbench;
 		this.destroy = destroy;
 		this.max = max;
+		this.min = min;
 		this.success = success;
 	}
 
@@ -67,6 +96,7 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 		workbench = section.getBoolean("workbench");
 		destroy = section.getBoolean("destroy");
 		max = section.getInt("max");
+		min = section.getInt("min", 0);
 		success = section.getDouble("success") / 100;
 	}
 
@@ -77,6 +107,7 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 		reference = object.has("Reference") ? object.get("Reference").getAsString() : null;
 		level = object.get("Level").getAsInt();
 		max = object.get("Max").getAsInt();
+		min = object.has("Min") ? object.get("Min").getAsInt() : 0;
 		success = object.get("Success").getAsDouble();
 	}
 
@@ -100,9 +131,7 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 	 */
 	public void setLevel(int l) { level = l; }
 
-	public int getMaxUpgrades() {
-		return max;
-	}
+	public int getMaxUpgrades() { return max; }
 
 	public boolean canLevelUp() {
 		return max == 0 || level < max;
@@ -150,6 +179,7 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 		json.addProperty("Destroy", destroy);
 		json.addProperty("Level", level);
 		json.addProperty("Max", max);
+		json.addProperty("Min", min);
 		json.addProperty("Success", success);
 
 		return json;
@@ -169,5 +199,5 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 	public UpgradeData clone() {
 		try { super.clone(); } catch (CloneNotSupportedException ignored) { }
 
-		return new UpgradeData(reference, template, workbench, destroy, max, success); }
+		return new UpgradeData(reference, template, workbench, destroy, max, min, success); }
 }

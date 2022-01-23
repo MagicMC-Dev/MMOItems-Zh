@@ -4,14 +4,15 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
+import net.Indyuce.mmoitems.stat.BrowserDisplayIDX;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -47,105 +49,99 @@ public class ItemBrowser extends PluginInventory {
     }
 
 
-    @Override
-    public Inventory getInventory() {
-        int[] usedSlots = type != null && type.isFourGUIMode() ? slotsAlt : slots;
-        int min = (page - 1) * usedSlots.length;
-        int max = page * usedSlots.length;
-        int n = 0;
+    @NotNull @Override public Inventory getInventory() {
 
         /*
-         * Displays all possible item types if no
-         * type was previously selected by the player
+         * ------------------------------
+         *          TYPE BROWSER
+         *
+         *          Displays all possible item types if no type was previously selected by the player.
+         *  ------------------------------
          */
         if (type == null) {
+
+            int[] usedSlots = slots;
+            int min = (page - 1) * usedSlots.length;
+            int max = page * usedSlots.length;
+            int n = 0;
+
+            // Create inventory
             Inventory inv = Bukkit.createInventory(this, 54, "Item Explorer");
+
+            // Fetch the list of types
             List<Type> types = new ArrayList<>(MMOItems.plugin.getTypes().getAll());
             for (int j = min; j < Math.min(max, types.size()); j++) {
-                Type type = types.get(j);
-                int items = MMOItems.plugin.getTemplates().getTemplates(type).size();
 
-                ItemStack item = type.getItem();
+                // Current type to display into the GUI
+                Type currentType = types.get(j);
+
+                // Get number of items
+                int items = MMOItems.plugin.getTemplates().getTemplates(currentType).size();
+
+                // Display how many items are in the type
+                ItemStack item = currentType.getItem();
                 item.setAmount(Math.max(1, Math.min(64, items)));
                 ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(ChatColor.GREEN + type.getName() + ChatColor.DARK_GRAY + " (Click to browse)");
+                meta.setDisplayName(ChatColor.GREEN + currentType.getName() + ChatColor.DARK_GRAY + " (Click to browse)");
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                lore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "There " + (items != 1 ? "are" : "is") + " "
-                        + (items < 1 ? "" + ChatColor.RED + ChatColor.ITALIC + "no" : "" + ChatColor.GOLD + ChatColor.ITALIC + items) + ChatColor.GRAY
-                        + ChatColor.ITALIC + " item" + (items != 1 ? "s" : "") + " in that type.");
+                lore.add(String.valueOf(ChatColor.GRAY) + ChatColor.ITALIC + "There " + (items == 1 ? "is" : "are") + " "
+                        + (items < 1 ? String.valueOf(ChatColor.RED) + ChatColor.ITALIC + "no" : String.valueOf(ChatColor.GOLD) + ChatColor.ITALIC + items) + ChatColor.GRAY
+                        + ChatColor.ITALIC + " item" + (items == 1 ? "" : "s") + " in that currentType.");
                 meta.setLore(lore);
                 item.setItemMeta(meta);
 
-                inv.setItem(slots[n++], NBTItem.get(item).addTag(new ItemTag("typeId", type.getId())).toItem());
+                // Set item
+                inv.setItem(slots[n++], NBTItem.get(item).addTag(new ItemTag("typeId", currentType.getId())).toItem());
             }
 
+            // Fill remainder slots with 'No Type' notice
             ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
             ItemMeta glassMeta = glass.getItemMeta();
             glassMeta.setDisplayName(ChatColor.RED + "- No type -");
             glass.setItemMeta(glassMeta);
 
+            // Next Page
             ItemStack next = new ItemStack(Material.ARROW);
             ItemMeta nextMeta = next.getItemMeta();
             nextMeta.setDisplayName(ChatColor.GREEN + "Next Page");
             next.setItemMeta(nextMeta);
 
+            // Previous Page
             ItemStack previous = new ItemStack(Material.ARROW);
             ItemMeta previousMeta = previous.getItemMeta();
             previousMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
             previous.setItemMeta(previousMeta);
 
-            while (n < slots.length)
-                inv.setItem(slots[n++], glass);
+            // Fill
+            while (n < slots.length) { inv.setItem(slots[n++], glass); }
             inv.setItem(18, page > 1 ? previous : null);
             inv.setItem(26, max >= MMOItems.plugin.getTypes().getAll().size() ? null : next);
 
+            // Done
             return inv;
         }
 
+        /*
+         * ------------------------------
+         *          ITEM BROWSER
+         *
+         *          Displays all the items of the chosen Type
+         *  ------------------------------
+         */
+        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
+
+        /*
+         * Build cool Item Stacks for buttons and sh
+         */
         ItemStack error = VersionMaterial.RED_STAINED_GLASS_PANE.toItem();
         ItemMeta errorMeta = error.getItemMeta();
         errorMeta.setDisplayName(ChatColor.RED + "- Error -");
         List<String> errorLore = new ArrayList<>();
-        errorLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "An error occurred while");
-        errorLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "trying to generate that item.");
+        errorLore.add("\u00a7\u00a7oAn error occurred while");
+        errorLore.add("\u00a7\u00a7otrying to generate that item.");
         errorMeta.setLore(errorLore);
         error.setItemMeta(errorMeta);
-
-        List<MMOItemTemplate> templates = new ArrayList<>(MMOItems.plugin.getTemplates().getTemplates(type));
-
-        /*
-         * Displays every item in a specific type. Items are cached inside the
-         * map at the top to reduce performance impact and are directly rendered
-         */
-        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
-        for (int j = min; j < Math.min(max, templates.size()); j++) {
-            MMOItemTemplate template = templates.get(j);
-            ItemStack item = template.newBuilder(playerData.getRPG()).build().newBuilder().build();
-            if (item == null || item.getType() == Material.AIR) {
-                cached.put(template.getId(), error);
-                inv.setItem(usedSlots[n++], error);
-                continue;
-            }
-
-            ItemMeta meta = item.getItemMeta();
-            List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
-            lore.add("");
-
-            if (deleteMode) {
-                lore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
-                meta.setDisplayName(ChatColor.RED + "DELETE: " + (meta.hasDisplayName() ? meta.getDisplayName() : MMOUtils.getDisplayName(item)));
-            } else {
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
-            }
-
-            meta.setLore(lore);
-            item.setItemMeta(meta);
-            cached.put(template.getId(), item);
-
-            inv.setItem(usedSlots[n++], cached.get(template.getId()));
-        }
 
         ItemStack noItem = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
         ItemMeta noItemMeta = noItem.getItemMeta();
@@ -185,17 +181,121 @@ public class ItemBrowser extends PluginInventory {
                     ChatColor.RED + "By downloading the default resourcepack you can", ChatColor.RED + "edit the blocks however you want.",
                     ChatColor.RED + "You will still have to add it to your server!"));
             downloadPack.setItemMeta(downloadMeta);
-            inv.setItem(45, downloadPack);
+            inv.setItem(45, downloadPack); }
+
+        // Get templates of this type
+        HashMap<Double, ArrayList<MMOItemTemplate>> templates = BrowserDisplayIDX.select(MMOItems.plugin.getTemplates().getTemplates(type));
+
+        /*
+         *  -----------
+         *    CALCULATE GUI BOUNDS AND PAGE SIZES
+         *
+         *      Each display index claims the entire column of items, such that there will be
+         *      empty spaces added to fill the inventories.
+         *
+         *      In Four GUI mode, columns are four slots tall, else they are three slots tall.
+         *  -----------
+         */
+        int[] usedSlots = type.isFourGUIMode() ? slotsAlt : slots;
+        int min = (page - 1) * usedSlots.length;
+        int max = page * usedSlots.length;
+        int n = 0;
+
+        int sc = type.isFourGUIMode() ? 4 : 3;
+        int totalSpaceCount = 0;
+
+        for (Map.Entry<Double, ArrayList<MMOItemTemplate>> indexTemplates : templates.entrySet()) {
+
+            // Claim columns
+            int totalSpaceAdd = indexTemplates.getValue().size();
+            while (totalSpaceAdd > 0) { totalSpaceCount += sc; totalSpaceAdd -= sc; } }
+
+        /*
+         * Over the page-range currently in use...
+         */
+        for (int j = min; j < Math.min(max, totalSpaceCount); j++) {
+            MMOItemTemplate template = BrowserDisplayIDX.getAt(j, templates);
+
+            // No template here?
+            if (template == null) {
+
+                // Set Item
+                inv.setItem(usedSlots[n], noItem);
+
+                /*
+                 *      Calculate next n from the slots.
+                 *
+                 *      #1 Adding 7 will give you the slot immediately under
+                 *
+                 *      #2 If it overflows, subtract 7sc (column space * 7)
+                 *         and add one
+                 */
+                n += 7;
+                if (n >= usedSlots.length) { n -= 7 * sc; n++; }
+                continue;
+            }
+
+            // Build item -> any errors?
+            ItemStack item = template.newBuilder(playerData.getRPG()).build().newBuilder().build();
+            if (item == null || item.getType().isAir() || !item.getType().isItem() || item.getItemMeta() == null) {
+
+                // Set Item
+                cached.put(template.getId(), error);
+                inv.setItem(usedSlots[n], error);
+
+                /*
+                 *      Calculate next n from the slots.
+                 *
+                 *      #1 Adding 7 will give you the slot immediately under
+                 *
+                 *      #2 If it overflows, subtract 7sc (column space * 7)
+                 *         and add one
+                 */
+                n += 7;
+                if (n >= usedSlots.length) { n -= 7 * sc; n++; }
+                continue; }
+
+            ItemMeta meta = item.getItemMeta();
+            List<String> lore = meta.getLore();
+            if (lore == null) { lore = new ArrayList<>(); }
+            lore.add("");
+
+            // Deleting lore?
+            if (deleteMode) {
+                lore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
+                meta.setDisplayName(ChatColor.RED + "DELETE: " + (meta.hasDisplayName() ? meta.getDisplayName() : MMOUtils.getDisplayName(item)));
+
+            // Editing lore?
+            } else {
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."); }
+
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+
+            // Set item
+            cached.put(template.getId(), item);
+            inv.setItem(usedSlots[n], cached.get(template.getId()));
+
+            /*
+             *      Calculate next n from the slots.
+             *
+             *      #1 Adding 7 will give you the slot immediately under
+             *
+             *      #2 If it overflows, subtract 7sc (column space * 7)
+             *         and add one
+             */
+            n += 7;
+            if (n >= usedSlots.length) { n -= 7 * sc; n++; }
         }
 
-        while (n < usedSlots.length)
-            inv.setItem(usedSlots[n++], noItem);
-        if (!deleteMode)
-            inv.setItem(51, create);
+        // Put the buttons
+        if (!deleteMode) { inv.setItem(51, create); }
         inv.setItem(47, delete);
         inv.setItem(49, back);
         inv.setItem(18, page > 1 ? previous : null);
-        inv.setItem(26, max >= templates.size() ? null : next);
+        inv.setItem(26, max >= totalSpaceCount ? null : next);
+        for (int i : usedSlots) { if (SilentNumbers.isAir(inv.getItem(i))) { inv.setItem(i, noItem); } }
         return inv;
     }
 

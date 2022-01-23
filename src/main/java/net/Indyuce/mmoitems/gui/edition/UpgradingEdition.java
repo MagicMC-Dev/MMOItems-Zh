@@ -84,6 +84,22 @@ public class UpgradingEdition extends EditionInventory {
 			maxItemMeta.setLore(maxItemLore);
 			maxItem.setItemMeta(maxItemMeta);
 			inv.setItem(40, maxItem);
+
+			int min = getEditedSection().getInt("upgrade.min", 0);
+			ItemStack minItem = new ItemStack(Material.BARRIER);
+			ItemMeta minItemMeta = minItem.getItemMeta();
+			minItemMeta.setDisplayName(ChatColor.GREEN + "Min Upgrades");
+			List<String> minItemLore = new ArrayList<>();
+			minItemLore.add(ChatColor.GRAY + "The minimum level your item can be");
+			minItemLore.add(ChatColor.GRAY + "downgraded to (by dying or breaking).");
+			minItemLore.add("");
+			minItemLore.add(ChatColor.GRAY + "Current Value: " + (min == 0 ? ChatColor.RED + "0" : ChatColor.GOLD + String.valueOf(min)));
+			minItemLore.add("");
+			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to chance this value.");
+			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
+			minItemMeta.setLore(minItemLore);
+			minItem.setItemMeta(minItemMeta);
+			inv.setItem(41, minItem);
 		} else {
 			inv.setItem(20, notAvailable);
 			inv.setItem(22, notAvailable);
@@ -179,6 +195,17 @@ public class UpgradingEdition extends EditionInventory {
 				getEditedSection().set("upgrade.max", null);
 				registerTemplateEdition();
 				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the number of max upgrades.");
+			}
+		}
+
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Min Upgrades")) {
+			if (event.getAction() == InventoryAction.PICKUP_ALL)
+				new StatEdition(this, ItemStats.UPGRADE, "min").enable("Write in the chat the number you want.");
+
+			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.min")) {
+				getEditedSection().set("upgrade.min", null);
+				registerTemplateEdition();
+				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the number of min level.");
 			}
 		}
 

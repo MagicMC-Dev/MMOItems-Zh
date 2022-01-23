@@ -30,9 +30,7 @@ public class InventoryUpdateHandler {
 	/**
 	 * Used to handle player inventory updates.
 	 */
-	public InventoryUpdateHandler(PlayerData player) {
-		this.player = player;
-	}
+	public InventoryUpdateHandler(PlayerData player) { this.player = player; }
 
 	/**
 	 * @return All equipped MMOItems in the player's inventory. Also includes
@@ -43,8 +41,7 @@ public class InventoryUpdateHandler {
 	}
 
 	public void updateCheck() {
-		if (!player.isOnline())
-			return;
+		if (!player.isOnline()) { return; }
 
 		PlayerInventory inv = player.getPlayer().getInventory();
 		if (isNotSame(helmet, inv.getHelmet()) || isNotSame(chestplate, inv.getChestplate()) || isNotSame(leggings, inv.getLeggings())

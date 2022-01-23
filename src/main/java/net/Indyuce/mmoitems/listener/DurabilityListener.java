@@ -76,9 +76,32 @@ public class DurabilityListener implements Listener {
 			 * If the item is broken and if it is meant to be lost when broken,
 			 * do NOT cancel the event and make sure the item is destroyed
 			 */
-			if (item.isBroken() && item.isLostWhenBroken()) {
-				event.setDamage(999);
-				return;
+			if (item.isBroken()) {
+
+				// Attempt to counter by downgrading
+				if (item.isDowngradedWhenBroken()) {
+
+					ItemStack counterUpgraded = item.shouldBreakWhenDowngraded();
+					if (counterUpgraded != null) {
+
+						// Counter Event
+						event.setCancelled(true);
+						event.getItem().setItemMeta(counterUpgraded.getItemMeta());
+
+						// No more
+						return;
+					}
+				}
+
+				// Still here? Remove if lost when broken
+				if (item.isLostWhenBroken()) {
+
+					// Delete item
+					event.setDamage(999);
+
+					// Allow event to proceed
+					return;
+				}
 			}
 
 			event.setCancelled(true);
@@ -105,10 +128,32 @@ public class DurabilityListener implements Listener {
 		if (item.isValid() && stack.getType().getMaxDurability() == 0) {
 			item.decreaseDurability(damage);
 
-			if (item.isBroken() && item.isLostWhenBroken()) {
-				player.getInventory().setItem(slot, null);
-				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-				return;
+			if (item.isBroken()) {
+
+				// Attempt to counter by downgrading
+				if (item.isDowngradedWhenBroken()) {
+
+					ItemStack counterUpgraded = item.shouldBreakWhenDowngraded();
+					if (counterUpgraded != null) {
+
+						// Edit item
+						player.getInventory().getItem(slot).setItemMeta(counterUpgraded.getItemMeta());
+
+						// No more
+						return;
+					}
+				}
+
+				// Still here? Remove if lost when broken
+				if (item.isLostWhenBroken()) {
+
+					// Delete item
+					player.getInventory().setItem(slot, null);
+					player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+
+					// No more
+					return;
+				}
 			}
 
 			player.getInventory().getItem(slot).setItemMeta(item.toItem().getItemMeta());

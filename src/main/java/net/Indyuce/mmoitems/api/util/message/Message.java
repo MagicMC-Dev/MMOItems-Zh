@@ -63,6 +63,7 @@ public enum Message {
 	UPGRADE_SUCCESS("You successfully upgraded your &6#item#&e!"),
 	NOT_HAVE_ITEM_UPGRADE("You don't have the item to upgrade!"),
 	UPGRADE_REQUIREMENT_SAFE_CHECK("You would not meet the upgraded item requirements."),
+	DEATH_DOWNGRADING("&cYour &6#item#&c got severely damaged that fight..."),
 
 	// Crafting stations
 	NOT_ENOUGH_MATERIALS("You do not have enough materials to craft this item."),

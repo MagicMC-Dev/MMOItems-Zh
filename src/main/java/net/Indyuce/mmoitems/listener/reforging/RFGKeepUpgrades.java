@@ -27,7 +27,7 @@ public class RFGKeepUpgrades implements Listener {
         //UPGRD//MMOItems.log("  \u00a7e* \u00a77Existing Upgrade Detected");
 
         // Get current ig
-        UpgradeData processed = new UpgradeData(newOne.getReference(), newOne.getTemplateName(), newOne.isWorkbench(), newOne.isDestroy(), newOne.getMax(), newOne.getSuccess());
+        UpgradeData processed = new UpgradeData(newOne.getReference(), newOne.getTemplateName(), newOne.isWorkbench(), newOne.isDestroy(), newOne.getMax(), newOne.getMin(), newOne.getSuccess());
 
         // Edit level
         processed.setLevel(Math.min(upgrade.getLevel(), newOne.getMaxUpgrades()));

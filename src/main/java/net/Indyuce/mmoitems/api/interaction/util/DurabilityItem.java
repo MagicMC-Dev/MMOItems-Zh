@@ -1,13 +1,20 @@
 package net.Indyuce.mmoitems.api.interaction.util;
 
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.item.CustomDurabilityDamage;
 import net.Indyuce.mmoitems.api.event.item.CustomDurabilityRepair;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.util.LoreUpdate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -73,7 +80,7 @@ public class DurabilityItem {
 				0;
 	}
 
-	public Player getPlayer() {
+	@Nullable public Player getPlayer() {
 		return player;
 	}
 
@@ -113,6 +120,53 @@ public class DurabilityItem {
 	public boolean isLostWhenBroken() {
 		return nbtItem.getBoolean("MMOITEMS_WILL_BREAK");
 	}
+	public boolean isDowngradedWhenBroken() {
+		return nbtItem.getBoolean("MMOITEMS_BREAK_DOWNGRADE");
+	}
+
+	/**
+	 * <b>Assuming you already called {@link #isDowngradedWhenBroken()}</b>, when the item is
+	 * being broken. This method will downgrade the item for one level and apply changes to
+	 * the stored {@link #getNBTItem()}.
+	 *
+	 * If the item cannot be downgraded (due to not having upgrade data / reaching minimum
+	 * upgrades), this method will return <code>null</code>, no change will be made to the
+	 * NBTItem, and you should break the item.
+	 *
+	 * @return If the item could not be downgraded, and thus should break, will be <code>null</code>.
+	 * 		   If the item was successfully downgraded, this will uuuh, will return the NBTItem of
+	 * 		   the downgraded version.
+	 */
+	@Nullable public ItemStack shouldBreakWhenDowngraded() {
+		ItemTag uTag = ItemTag.getTagAtPath(ItemStats.UPGRADE.getNBTPath(), getNBTItem(), SupportedNBTTagValues.STRING);
+		if (uTag == null) { return null; }
+
+		try {
+
+			// Read data
+			UpgradeData data = new UpgradeData(new JsonParser().parse((String) uTag.getValue()).getAsJsonObject());
+
+			// If it cannot be downgraded (reached min), DEATH
+			if (data.getLevel() <= data.getMin()) { return null; }
+
+			// Downgrading operation
+			LiveMMOItem mmo = new LiveMMOItem(getNBTItem());
+
+			// Remove one level
+			mmo.getUpgradeTemplate().upgradeTo(mmo, data.getLevel() - 1);
+
+			// Build NBT
+			NBTItem preRet = mmo.newBuilder().buildNBT();
+
+			// Set durability to zero (full repair)
+			DurabilityItem dur = new DurabilityItem(getPlayer(), preRet);
+			dur.addDurability(dur.getMaxDurability());
+
+			// Yes
+			return dur.toItem();
+
+		} catch (JsonSyntaxException |IllegalStateException exception) { return null; }
+	}
 
 	/**
 	 * Since
@@ -120,7 +174,7 @@ public class DurabilityItem {
 	 * @return If the item actually supports custom durability.
 	 */
 	public boolean isValid() {
-		return maxDurability > 0 && player.getGameMode() != GameMode.CREATIVE;
+		return maxDurability > 0 && player != null && player.getGameMode() != GameMode.CREATIVE;
 	}
 
 	public DurabilityItem addDurability(int gain) {
@@ -180,8 +234,7 @@ public class DurabilityItem {
 		if (!barHidden) {
 			int damage = (durability == maxDurability) ? 0
 					: Math.max(1, (int) ((1. - ((double) durability / maxDurability)) * nbtItem.getItem().getType().getMaxDurability()));
-			nbtItem.addTag(new ItemTag("Damage", damage));
-		}
+			nbtItem.addTag(new ItemTag("Damage", damage)); }
 
 		nbtItem.addTag(new ItemTag("MMOITEMS_DURABILITY", durability));
 
@@ -189,9 +242,9 @@ public class DurabilityItem {
 		ItemStack item = nbtItem.toItem();
 
 		// Item lore update
-		String format = MythicLib.inst().parseColors(MMOItems.plugin.getLanguage().getStatFormat("durability").replace("#m", "" + maxDurability));
-		String old = format.replace("#c", "" + initialDurability);
-		String replaced = format.replace("#c", "" + durability);
+		String format = MythicLib.inst().parseColors(MMOItems.plugin.getLanguage().getStatFormat("durability").replace("#m", String.valueOf(maxDurability)));
+		String old = format.replace("#c", String.valueOf(initialDurability));
+		String replaced = format.replace("#c", String.valueOf(durability));
 		return new LoreUpdate(item, old, replaced).updateLore();
 	}
 }

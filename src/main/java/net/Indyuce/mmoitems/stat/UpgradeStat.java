@@ -113,6 +113,15 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 			return;
 		}
 
+		if (info[0].equals("min")) {
+			int i = Integer.parseInt(message);
+			inv.getEditedSection().set("upgrade.min", i);
+			inv.registerTemplateEdition();
+			inv.getPlayer()
+					.sendMessage(MMOItems.plugin.getPrefix() + "Min level successfully set to " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
+			return;
+		}
+
 		if (info[0].equals("rate")) {
 			double d = MMOUtils.parseDouble(message);
 			inv.getEditedSection().set("upgrade.success", d);
@@ -173,7 +182,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new UpgradeData(null, null, false, false, 0, 0D); }
+	public StatData getClearStatData() { return new UpgradeData(null, null, false, false, 0, 0, 0D); }
 
 	@Override
 	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {

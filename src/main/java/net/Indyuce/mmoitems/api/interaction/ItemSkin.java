@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class ItemSkin extends UseItem {
 	public ItemSkin(Player player, NBTItem item) {
@@ -41,15 +42,25 @@ public class ItemSkin extends UseItem {
 		}
 
 		boolean compatible = false;
+
+		//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Applying onto " + MMOUtils.getDisplayName(target.getItem()));
+
 		if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
-			for (String type : ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList()) {
+			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that TYPE is compatible: ");
+
+			List<String> acceptedTypes = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList();
+
+			for (String type : acceptedTypes) {
+				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7e >\u00a7f " + type);
+
 				if (type.equalsIgnoreCase(targetType.getId())) {
-					compatible = true;
-					break;
-				}
+					//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7a Matched");
+					compatible = true; break; }
 			}
 
-			if (!compatible) {
+			if (!compatible && acceptedTypes.size() > 0) {
+				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
+
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
 						.send(player);
@@ -58,14 +69,21 @@ public class ItemSkin extends UseItem {
 		}
 
 		if (getMMOItem().hasData(ItemStats.COMPATIBLE_IDS)) {
-			for (String id : ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList()) {
+			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that ID is compatible: ");
+
+			List<String> acceptedIDs = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList();
+
+			for (String id : acceptedIDs) {
+				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a76 >\u00a7f " + id);
+
 				if (id.equalsIgnoreCase(target.getString("MMOITEMS_ITEM_ID"))) {
-					compatible = true;
-					break;
-				}
+					//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7a Matched");
+					compatible = true;break; }
 			}
 
-			if (!compatible) {
+			if (!compatible && acceptedIDs.size() > 0) {
+				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
+
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
 						.send(player);

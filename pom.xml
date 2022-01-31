@@ -323,7 +323,7 @@
         <dependency>
             <groupId>com.archyx</groupId>
             <artifactId>AureliumSkills</artifactId>
-            <version>1.0.6</version>
+            <version>1.2.8</version>
             <scope>provided</scope>
         </dependency>
 

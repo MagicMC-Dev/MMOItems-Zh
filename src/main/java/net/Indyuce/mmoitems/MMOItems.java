@@ -57,7 +57,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -369,11 +368,15 @@ public class MMOItems extends LuminePlugin {
 	public void setRPG(RPGHandler handler) {
 		Validate.notNull(handler, "RPGHandler cannot be null");
 
-		// unregister events from current rpgPlugin instance
-		if (rpgPlugin != null && rpgPlugin instanceof Listener && isEnabled()) HandlerList.unregisterAll((Listener) rpgPlugin);
+		// Unregister events from current RPGPlugin instance
+		if (rpgPlugin != null && rpgPlugin instanceof Listener && isEnabled())
+			HandlerList.unregisterAll((Listener) rpgPlugin);
 
 		rpgPlugin = handler;
-		if (handler instanceof Listener && isEnabled()) Bukkit.getPluginManager().registerEvents((Listener) handler, this);
+
+		// Register new events
+		if (handler instanceof Listener && isEnabled())
+			Bukkit.getPluginManager().registerEvents((Listener) handler, this);
 	}
 
 	/**
@@ -382,18 +385,13 @@ public class MMOItems extends LuminePlugin {
 	 */
 	public boolean setRPG(RPGHandler.PluginEnum potentialPlugin) {
 
-		// Check if the plugin is installed
-		if (Bukkit.getPluginManager().getPlugin(potentialPlugin.getName()) == null) {
-			MMOItems.plugin.getLogger().log(Level.WARNING, "Could not initialize RPG plugin compatibility with " + potentialPlugin.getName() + ": plugin is not installed");
-			return false;
-		}
-
 		try {
+			Validate.notNull(Bukkit.getPluginManager().getPlugin(potentialPlugin.getName()), "Plugin is not installed");
 			setRPG(potentialPlugin.load());
 			return true;
 
 			// Some loading issue
-		} catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException exception) {
+		} catch (Exception exception) {
 			MMOItems.plugin.getLogger().log(Level.WARNING, "Could not initialize RPG plugin compatibility with " + potentialPlugin.getName() + ":");
 			exception.printStackTrace();
 			return false;
@@ -567,22 +565,15 @@ public class MMOItems extends LuminePlugin {
 	public void findRpgPlugin() {
 		if (rpgPlugin != null) return;
 
+		// Preferred rpg provider
 		String preferred = plugin.getConfig().getString("preferred-rpg-provider", null);
-		if (preferred != null)
-			try {
-				if (setRPG(RPGHandler.PluginEnum.valueOf(preferred.toUpperCase())))
-					return;
-			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "'" + preferred.toUpperCase() + "' is not a valid RPG plugin:");
-				for (RPGHandler.PluginEnum pgrep : RPGHandler.PluginEnum.values())
-					MMOItems.plugin.getLogger().log(Level.WARNING, "- " + pgrep.getName());
-			}
+		if (preferred != null && setRPG(RPGHandler.PluginEnum.valueOf(preferred.toUpperCase())))
+			return;
 
 		// Look through installed plugins
 		for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values())
-			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null)
-				if (setRPG(pluginEnum))
-					return;
+			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null && setRPG(pluginEnum))
+				return;
 
 		// Just use the default
 		setRPG(new DefaultHook());

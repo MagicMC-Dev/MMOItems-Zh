@@ -157,7 +157,13 @@ public class LoreBuilder {
             if (match == null)
                 continue;
 
-            String result = MythicLib.plugin.getMMOConfig().decimals.format(new EvaluatedFormula(match).evaluate());
+            String result;
+            try {
+                result = MythicLib.plugin.getMMOConfig().decimals.format(new EvaluatedFormula(match).evaluate());
+
+            } catch (RuntimeException ignored) {
+                result = "FORMULA_INVALID";
+            }
             lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));
         }
 

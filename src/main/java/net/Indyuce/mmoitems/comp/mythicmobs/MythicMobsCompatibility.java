@@ -4,8 +4,11 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.mythicmobs.stat.FactionDamage;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,6 +38,11 @@ public class MythicMobsCompatibility implements Listener {
 
         // Update skills
         MMOItems.plugin.getSkills().initialize(true);
+
+        // Reload the abilities of online players...
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            PlayerData data = PlayerData.get(p);
+            data.updateInventory(); }
     }
 
     private Set<String> getFactions() {

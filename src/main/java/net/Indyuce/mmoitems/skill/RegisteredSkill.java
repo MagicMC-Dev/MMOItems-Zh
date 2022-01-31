@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.ability.Ability;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -12,12 +13,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public class RegisteredSkill {
-    private final SkillHandler<?> handler;
-    private final String name;
-    private final Map<String, String> modifierNames = new HashMap<>();
-    private final Map<String, Double> modifierDefaultValues = new HashMap<>();
+    @NotNull private final SkillHandler<?> handler;
+    @NotNull private final String name;
+    @NotNull private final Map<String, String> modifierNames = new HashMap<>();
+    @NotNull private final Map<String, Double> modifierDefaultValues = new HashMap<>();
 
-    public RegisteredSkill(SkillHandler<?> handler, ConfigurationSection config) {
+    public RegisteredSkill(@NotNull SkillHandler<?> handler, @NotNull ConfigurationSection config) {
         this.handler = handler;
 
         this.name = Objects.requireNonNull(config.getString("name"), "Could not fill skill name");
@@ -29,7 +30,7 @@ public class RegisteredSkill {
     }
 
     @Deprecated
-    public RegisteredSkill(Ability ability) {
+    public RegisteredSkill(@NotNull Ability ability) {
         this.handler = ability;
         this.name = MMOItems.plugin.getLanguage().getAbilityName(ability);
 
@@ -40,16 +41,16 @@ public class RegisteredSkill {
     }
 
     @Deprecated
-    public RegisteredSkill(SkillHandler handler, String name) {
+    public RegisteredSkill(@NotNull SkillHandler handler, @NotNull String name) {
         this.handler = handler;
         this.name = name;
     }
 
-    public SkillHandler<?> getHandler() {
+    @NotNull public SkillHandler<?> getHandler() {
         return handler;
     }
 
-    public String getName() {
+    @NotNull public String getName() {
         return name;
     }
 

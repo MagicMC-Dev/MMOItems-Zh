@@ -97,7 +97,7 @@ public class MMOItems extends LuminePlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
-	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 4;
+	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 5;
 
 	public MMOItems() { plugin = this; }
 
@@ -122,7 +122,7 @@ public class MMOItems extends LuminePlugin {
 		saveDefaultConfig();
 		configManager = new ConfigManager();
 
-		/**
+		/*
 		 * Stat manager must be initialized before MMOCore compatibility
 		 * initializes so that MMOCore can register its stats
 		 */

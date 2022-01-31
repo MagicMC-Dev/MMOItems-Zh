@@ -7,6 +7,9 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,59 +21,94 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 
-@SuppressWarnings("unused")
+/**
+ * A HUB for skills for them to be readily available within the plugin
+ */
 public class SkillManager {
-    private final Map<String, RegisteredSkill> skills = new HashMap<>();
 
-    public RegisteredSkill getSkill(String id) {
-        return skills.get(id);
-    }
+    /**
+     * The list of skills currently loaded.
+     */
+    @NotNull private final HashMap<String, RegisteredSkill> skills = new HashMap<>();
 
-    public RegisteredSkill getSkillOrThrow(String id) {
+    /**
+     * @param id Internal name of the skill you want to fetch.
+     *
+     * @return If a skill is loaded with this name, that skill.
+     */
+    @Nullable public RegisteredSkill getSkill(@Nullable String id) { return skills.get(id); }
+
+    /**
+     * @param id The internal name of the skill you want to fetch.
+     *
+     * @return The skill that is loaded with this name; NullPointerException if not loaded.
+     */
+    @Contract("null -> fail")
+    @NotNull public RegisteredSkill getSkillOrThrow(@Nullable String id) {
         return Objects.requireNonNull(skills.get(id), "Could not find skill with ID '" + id + "'");
     }
 
-    public void registerSkill(RegisteredSkill skill) {
-        Validate.notNull(skill);
+    /**
+     * @param skill Skill to load
+     */
+    public void registerSkill(@Nullable RegisteredSkill skill) {
+        if (skill == null) { return; }
 
-        this.skills.put(skill.getHandler().getId(), skill);
+        // Include skill
+        skills.put(skill.getHandler().getId(), skill);
     }
 
-    public boolean hasSkill(String id) {
-        return skills.containsKey(id);
-    }
+    /**
+     * @param id Internal name of the skill you want to fetch.
+     *
+     * @return If a skill of this name is loaded by the plugin.
+     */
+    public boolean hasSkill(@Nullable String id) { return skills.get(id) != null; }
 
     /**
      * @return Collection of all registered skills. It has the same number
      *         of elements as MythicLib's skill handler registry.
      */
-    public Collection<RegisteredSkill> getAll() {
-        return skills.values();
-    }
+    @NotNull public Collection<RegisteredSkill> getAll() { return skills.values(); }
 
+    /**
+     * Will load skills from MythicLib as well as generate their configuration
+     * files in plugins/MMOItems/skills ~ for default values and translation.
+     *
+     * @param clearBefore If the previously-loaded skills should get cleared.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void initialize(boolean clearBefore) {
 
-        if (clearBefore)
-            skills.clear();
+        // Clear loaded skills
+        if (clearBefore) { skills.clear(); }
 
         // Check for default files
         File skillFolder = new File(MMOItems.plugin.getDataFolder() + "/skill");
-        if (!skillFolder.exists())
+
+        // Create folder and files
+        if (!skillFolder.exists()) {
+
             try {
+
+                // Create folder
                 skillFolder.mkdir();
 
+                // Copy example skills
                 for (SkillHandler handler : MythicLib.plugin.getSkills().getHandlers()) {
                     InputStream res = MMOItems.plugin.getResource("default/skill/" + handler.getLowerCaseId() + ".yml");
-                    if (res != null)
-                        Files.copy(res, new File(MMOItems.plugin.getDataFolder() + "/skill/" + handler.getLowerCaseId() + ".yml").getAbsoluteFile().toPath());
-                }
-            } catch (IOException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not save default ability configs: " + exception.getMessage());
-            }
+                    if (res != null) { Files.copy(res, new File(MMOItems.plugin.getDataFolder() + "/skill/" + handler.getLowerCaseId() + ".yml").getAbsoluteFile().toPath()); } }
 
+            // Should not happen
+            } catch (IOException exception) { MMOItems.plugin.getLogger().log(Level.WARNING, "Could not save default ability configs: " + exception.getMessage()); }
+        }
+
+        // Copy mythiclib skills
         for (SkillHandler handler : MythicLib.plugin.getSkills().getHandlers()) {
 
-            // Check if config file exists
+            /*
+             * Generate skill configuration files
+             */
             ConfigFile config = new ConfigFile("/skill", handler.getLowerCaseId());
             if (!config.exists()) {
                 config.getConfig().set("name", MMOUtils.caseOnWords(handler.getId().replace("_", " ").replace("-", " ").toLowerCase()));
@@ -81,11 +119,16 @@ public class SkillManager {
                 config.save();
             }
 
+            /*
+             * Load skill to the plugin
+             */
             try {
-                this.skills.put(handler.getId(), new RegisteredSkill(handler, config.getConfig()));
-            } catch (RuntimeException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load skill '" + handler.getId() + "': " + exception.getMessage());
-            }
+
+                // Attempt to register
+                skills.put(handler.getId(), new RegisteredSkill(handler, config.getConfig()));
+
+            // Fail
+            } catch (RuntimeException exception) { MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load skill '" + handler.getId() + "': " + exception.getMessage()); }
         }
     }
 }

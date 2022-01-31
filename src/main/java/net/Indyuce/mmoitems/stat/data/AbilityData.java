@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -142,8 +143,10 @@ public class AbilityData extends Skill {
 			meta.getCaster().getData().getCooldownMap().applyCooldown(this, cooldown);
 	}
 
+	@Nullable
 	@Override
 	public SkillHandler getHandler() {
+		if (ability == null) { return null; }
 		return ability.getHandler();
 	}
 

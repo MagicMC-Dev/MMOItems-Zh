@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import net.Indyuce.mmoitems.api.event.MMOItemsProjectileFireEvent;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
@@ -20,6 +21,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,10 +40,8 @@ public class EntityManager implements Listener {
 
     private final WeakHashMap<Integer, ProjectileData> projectiles = new WeakHashMap<>();
 
-    public void registerCustomProjectile(NBTItem sourceItem, PlayerMetadata attacker, Entity entity, boolean customWeapon) {
-        registerCustomProjectile(sourceItem, attacker, entity, customWeapon, 1);
-    }
-
+    @Deprecated public void registerCustomProjectile(NBTItem sourceItem, PlayerMetadata attacker, Entity entity, boolean customWeapon) { registerCustomProjectile(sourceItem, attacker, entity, customWeapon, 1); }
+    @Deprecated public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, boolean customWeapon, double damageMultiplicator) { registerCustomProjectile(sourceItem, attacker, entity, null, customWeapon, damageMultiplicator); }
     /**
      * Registers a custom projectile. This is used for bows, crossbows and tridents.
      * <p>
@@ -47,12 +49,13 @@ public class EntityManager implements Listener {
      *
      * @param sourceItem          Item used to shoot the projectile
      * @param attacker            Cached stats of the player shooting the projectile
+     * @param shootEvent          Event that caused this projectile registration.
      * @param entity              The custom entity
      * @param customWeapon        Is the source weapon is a custom item
      * @param damageMultiplicator The damage coefficient. For bows, this is basically the pull force.
      *                            For tridents or anything else this is always set to 1
      */
-    public void registerCustomProjectile(NBTItem sourceItem, PlayerMetadata attacker, Entity entity, boolean customWeapon, double damageMultiplicator) {
+    public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, @Nullable EntityShootBowEvent shootEvent, boolean customWeapon, double damageMultiplicator) {
 
         /*
          * For bows, MC default value is 7. When using custom bows, the attack
@@ -64,10 +67,16 @@ public class EntityManager implements Listener {
          * and 1 for bows, and it's always 1 for tridents or crossbows.
          */
         double damage = attacker.getStat("ATTACK_DAMAGE");
-        damage = (customWeapon ? damage : 5 + damage) * damageMultiplicator;
 
-        ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(damage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE), attacker);
-        attacker.setStat("ATTACK_DAMAGE", damage);
+        // Sweet event
+        MMOItemsProjectileFireEvent event = new MMOItemsProjectileFireEvent(attacker, entity, sourceItem, shootEvent, (customWeapon ? damage : 5 + damage), damageMultiplicator);
+        Bukkit.getPluginManager().callEvent(event);
+
+        // Update based one vent
+        double finalDamage = event.getFinalDamage();
+
+        ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(finalDamage, event.getDamageTypes()), attacker);
+        attacker.setStat("ATTACK_DAMAGE", finalDamage);
 
         /*
          * Load arrow particles if the entity is an arrow and if the item has

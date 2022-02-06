@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,8 +256,8 @@ public class ConfigManager implements Reloadable {
         return configName != null ? configName : ability.getName();
     }
 
-    public String getCastingModeName(TriggerType mode) {
-        return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId());
+    @NotNull public String getCastingModeName(@NotNull TriggerType mode) {
+        return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId(), mode.name());
     }
 
     @Deprecated

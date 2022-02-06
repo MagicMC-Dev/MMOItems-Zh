@@ -113,7 +113,8 @@ public class Abilities extends ItemStat {
 		String configKey = (String) info[0];
 		String edited = (String) info[1];
 
-		String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z_]", "");
+		String format = message.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z0-9_]", "");
+
 		if (edited.equals("ability")) {
 			Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(format),
 					"format is not a valid ability! You may check the ability list using /mi list ability.");
@@ -128,7 +129,9 @@ public class Abilities extends ItemStat {
 		}
 
 		if (edited.equals("mode")) {
+
 			TriggerType castMode = TriggerType.valueOf(format);
+
 			inv.getEditedSection().set("ability." + configKey + ".mode", castMode.name());
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the trigger to " + ChatColor.GOLD + castMode.getName()

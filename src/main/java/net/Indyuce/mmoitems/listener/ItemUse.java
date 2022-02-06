@@ -12,6 +12,8 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
+import net.Indyuce.mmoitems.api.event.MMOItemsProjectileFireEvent;
+import net.Indyuce.mmoitems.api.event.MMOItemsSpecialWeaponAttack;
 import net.Indyuce.mmoitems.api.interaction.*;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
@@ -20,6 +22,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -95,10 +98,21 @@ public class ItemUse implements Listener {
         }
 
         if (useItem instanceof UntargetedWeapon) {
+
             UntargetedWeapon weapon = (UntargetedWeapon) useItem;
             if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK)
-                    || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK))
+                    || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK)) {
+                MMOItems.log("Running from \u00a7cUNTARGETTED");
+
+                // Run attack event
+                MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, useItem, weapon.untargetedTargetTrace(EquipmentSlot.fromBukkit(event.getHand())));
+                Bukkit.getPluginManager().callEvent(attackEvent);
+
+                // Cancelled?
+                if (attackEvent.isCancelled()) { return; }
+
                 weapon.untargetedAttack(EquipmentSlot.fromBukkit(event.getHand()));
+            }
         }
     }
 
@@ -186,12 +200,33 @@ public class ItemUse implements Listener {
             return;
 
         // Special staff attack
-        if (weapon instanceof Staff)
+        if (weapon instanceof Staff) {
+            MMOItems.log("Running from \u00a7aSTAFF");
+            // Run attack event
+            MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, weapon, target);
+            Bukkit.getPluginManager().callEvent(attackEvent);
+
+            // Cancelled?
+            if (attackEvent.isCancelled()) { return; }
+
+            // Run attack
             ((Staff) weapon).specialAttack(target);
+        }
 
         // Special gauntlet attack
-        if (weapon instanceof Gauntlet)
+        if (weapon instanceof Gauntlet) {
+            MMOItems.log("Running from \u00a7bGAUNTLET");
+
+            // Run attack event
+            MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, weapon, target);
+            Bukkit.getPluginManager().callEvent(attackEvent);
+
+            // Cancelled?
+            if (attackEvent.isCancelled()) { return; }
+
+            // Run attack
             ((Gauntlet) weapon).specialAttack(target);
+        }
     }
 
     // TODO: Rewrite this with a custom 'ApplyMMOItemEvent'?
@@ -289,8 +324,7 @@ public class ItemUse implements Listener {
         Arrow arrow = (Arrow) event.getProjectile();
         if (item.getStat("ARROW_VELOCITY") > 0)
             arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
-        MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), type != null,
-                event.getForce());
+        MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event, type != null, event.getForce());
     }
 
     /**

@@ -1,11 +1,13 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class UntargetedWeapon extends Weapon {
 	protected final WeaponType weaponType;
@@ -23,6 +25,14 @@ public abstract class UntargetedWeapon extends Weapon {
 	 * @param slot Slot being interacted with
 	 */
 	public abstract void untargetedAttack(EquipmentSlot slot);
+
+	/**
+	 * Predicts which target will be get hit when using {@link #untargetedAttack(EquipmentSlot)}
+	 * with the same exact information, this way the target is available beforehand.
+	 *
+	 * @param slot Slot being interacted with
+	 */
+	@Nullable public LivingEntity untargetedTargetTrace(EquipmentSlot slot) { return null; }
 
 	public WeaponType getWeaponType() {
 		return weaponType;

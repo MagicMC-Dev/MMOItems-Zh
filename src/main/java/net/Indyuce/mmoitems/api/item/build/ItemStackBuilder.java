@@ -178,9 +178,7 @@ public class ItemStackBuilder {
 
                     // Get Template
                     MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(builtMMOItem.getType(), builtMMOItem.getId());
-                    if (template == null) {
-                        throw new IllegalArgumentException("MMOItem $r" + builtMMOItem.getType().getId() + " " + builtMMOItem.getId() + "$b doesn't exist.");
-                    }
+                    if (template == null) { throw new IllegalArgumentException("MMOItem $r" + builtMMOItem.getType().getId() + " " + builtMMOItem.getId() + "$b doesn't exist."); }
 
                     // Make necessary lore changes
                     ((Previewable) stat).whenPreviewed(this, builtMMOItem.getData(stat), template.getBaseItemData().get(stat));
@@ -195,11 +193,8 @@ public class ItemStackBuilder {
             } catch (IllegalArgumentException | NullPointerException exception) {
 
                 // That
-                MMOItems.plugin.getLogger().log(Level.WARNING, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),
-                        "An error occurred while trying to generate item '$f{0}$b' with stat '$f{1}$b': {2}",
-                        builtMMOItem.getId(),
-                        stat.getId(),
-                        exception.getMessage()));
+                MMOItems.print(Level.WARNING, "An error occurred while trying to generate item '$f{0}$b' with stat '$f{1}$b': {2}",
+                        "ItemStackBuilder", builtMMOItem.getId(), stat.getId(), exception.getMessage());
             }
 
         // Display gem stone lore hint thing

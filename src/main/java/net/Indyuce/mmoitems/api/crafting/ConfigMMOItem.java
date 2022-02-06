@@ -10,6 +10,9 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Consider using {@link MMOItemUIFilter}, stores the same information but works more abstractly from MythicLib.
+ */
 public class ConfigMMOItem {
 	private final MMOItemTemplate template;
 	private final int amount;
@@ -58,7 +61,5 @@ public class ConfigMMOItem {
 		return preview == null ? (preview = template.newBuilder(0, null).build().newBuilder().build(true)).clone() : preview.clone();
 	}
 
-	public int getAmount() {
-		return amount;
-	}
+	public int getAmount() { return amount; }
 }

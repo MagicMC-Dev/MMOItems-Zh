@@ -1,19 +1,24 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.event.PlayerResourceUpdateEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
+import net.Indyuce.mmocore.api.player.stats.StatType;
 import net.Indyuce.mmocore.experience.Profession;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import java.util.Locale;
 
 public class MMOCoreHook implements RPGHandler, Listener {
 
@@ -21,13 +26,21 @@ public class MMOCoreHook implements RPGHandler, Listener {
      * Called when MMOItems enables
      * <p>
      * These stats are only updated on a server reload because that
-     * class has to be instanciated again for the registered stats to update
+     * class has to be instantiated again for the registered stats to update
      */
     public MMOCoreHook() {
         for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
             MMOItems.plugin.getStats().register(new Required_Attribute(attribute));
-        for (Profession profession : MMOCore.plugin.professionManager.getAll())
+        for (Profession profession : MMOCore.plugin.professionManager.getAll()) {
+
+            // Adds profession specific Additional Experience stats.
+            MMOItems.plugin.getStats().register(new DoubleStat((StatType.ADDITIONAL_EXPERIENCE.name() + '_' + profession.getId())
+                .replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
+                VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "Additional Experience (MMOCore)"
+                , new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."}, new String[]{"!block", "all"}));
+
             MMOItems.plugin.getStats().register(new Required_Profession(profession));
+        }
     }
 
     @Override

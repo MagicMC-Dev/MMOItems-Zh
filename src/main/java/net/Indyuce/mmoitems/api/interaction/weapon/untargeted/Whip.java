@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -53,5 +54,27 @@ public class Whip extends UntargetedWeapon {
 		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,
 				(tick) -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 2);
+	}
+
+	@Override
+	public LivingEntity untargetedTargetTrace(EquipmentSlot slot) {
+
+		// Temporary Stats
+		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
+
+		// Range
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
+		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
+
+		// Ray Trace
+		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
+				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
+
+		// Find entity
+		if (trace.hasHit()) { return trace.getHit(); }
+
+		// No
+		return null;
 	}
 }

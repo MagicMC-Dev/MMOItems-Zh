@@ -96,7 +96,7 @@ public class MMOItems extends LuminePlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
-	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 5;
+	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 6;
 
 	public MMOItems() { plugin = this; }
 
@@ -799,6 +799,17 @@ public class MMOItems extends LuminePlugin {
 			getConsole().sendMessage(r.forConsole(FFPMMOItems.get()));
 		}
 	}
+
+	/**
+	 * JULES DO NOT DELETE THIS AGAIN I KNOW ITS UNUSED PRECISELY BECAUSE I ALWAYS COMMENT
+	 * ALL ITS USAGES BEFORE PUSHING ANY UPDATES, I USE IT FOR SPAMMY DEVELOPER MESSAGES
+	 *
+	 * Note that {@link #print(Level, String, String, String...)} is used for actual warnings
+	 * or such that the users may see, so dont delete that one either.
+	 *
+	 * @author Gunging
+	 */
+	public static void log(@Nullable String message, @NotNull String... replaces) { print(null, message, null, replaces); }
 
 	/**
 	 * @return The server's console sender.

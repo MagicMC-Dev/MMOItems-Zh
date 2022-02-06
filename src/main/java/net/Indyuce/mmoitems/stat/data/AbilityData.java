@@ -28,8 +28,8 @@ import java.util.Set;
 
 public class AbilityData extends Skill {
 	private final RegisteredSkill ability;
-	private final TriggerType triggerType;
-	private final Map<String, Double> modifiers = new HashMap<>();
+	@NotNull private final TriggerType triggerType;
+	@NotNull private final Map<String, Double> modifiers = new HashMap<>();
 
 	public AbilityData(JsonObject object) {
 		ability = MMOItems.plugin.getSkills().getSkill(object.get("Id").getAsString());
@@ -63,9 +63,7 @@ public class AbilityData extends Skill {
 		return ability;
 	}
 
-	public TriggerType getTriggerType() {
-		return triggerType;
-	}
+	@NotNull public TriggerType getTriggerType() { return triggerType; }
 
 	public Set<String> getModifiers() {
 		return modifiers.keySet();
@@ -80,7 +78,6 @@ public class AbilityData extends Skill {
 		return modifiers.containsKey(path);
 	}
 
-	@NotNull
 	@Override
 	public boolean getResult(SkillMetadata meta) {
 

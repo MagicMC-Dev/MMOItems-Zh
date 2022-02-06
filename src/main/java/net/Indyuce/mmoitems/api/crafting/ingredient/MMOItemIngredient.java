@@ -22,8 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
 	private final MMOItemTemplate template;
 
-	@NotNull
-	private final QuickNumberRange level;
+	@NotNull private final QuickNumberRange level;
 	private final String display;
 
 	public MMOItemIngredient(MMOLineConfig config) {

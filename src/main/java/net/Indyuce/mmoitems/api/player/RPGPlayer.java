@@ -144,7 +144,7 @@ public abstract class RPGPlayer {
 
         if (playerData.getMMOPlayerData().getCooldownMap().isOnCooldown(data)) {
             CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(data);
-            if (!data.getTriggerType().isSilent()) {
+            if (!data.getTrigger().isSilent()) {
                 StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
                 double progress = (double) (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
                 String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");

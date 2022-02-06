@@ -65,7 +65,7 @@ public class Abilities extends ItemStat {
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
 
 		((AbilityListData) data).getAbilities().forEach(ability -> {
-			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTriggerType())).replace("#a", ability.getAbility().getName()));
+			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger())).replace("#a", ability.getAbility().getName()));
 
 			for (String modifier : ability.getModifiers()) {
 				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,

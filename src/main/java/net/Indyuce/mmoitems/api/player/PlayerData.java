@@ -239,7 +239,7 @@ public class PlayerData {
                 if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
                     for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
                         ModifierSource modSource = equipped.getItem().getType() == null ? ModifierSource.OTHER : equipped.getItem().getType().getItemSet().getModifierSource();
-                        mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData.getTriggerType(), abilityData, equipped.getSlot(), modSource));
+                        mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
                     }
 
             /*
@@ -280,7 +280,7 @@ public class PlayerData {
 
         if (hasSetBonuses()) {
             for (AbilityData ability : setBonuses.getAbilities())
-                mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability.getTriggerType(), ability));
+                mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
             for (ParticleData particle : setBonuses.getParticles())
                 itemParticles.add(particle.start(this));
             for (PotionEffect effect : setBonuses.getPotionEffects())

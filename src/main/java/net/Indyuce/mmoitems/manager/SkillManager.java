@@ -63,7 +63,7 @@ public class SkillManager {
      *
      * @return If a skill of this name is loaded by the plugin.
      */
-    public boolean hasSkill(@Nullable String id) { return skills.get(id) != null; }
+    public boolean hasSkill(@Nullable String id) { return skills.containsKey(id); }
 
     /**
      * @return Collection of all registered skills. It has the same number

@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import com.google.gson.JsonObject;
-import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import io.lumine.mythic.lib.skill.Skill;
 import io.lumine.mythic.lib.skill.SkillMetadata;
@@ -28,26 +28,25 @@ import java.util.Set;
 
 public class AbilityData extends Skill {
 	private final RegisteredSkill ability;
-	@NotNull private final TriggerType triggerType;
 	@NotNull private final Map<String, Double> modifiers = new HashMap<>();
 
-	public AbilityData(JsonObject object) {
+	public AbilityData(@NotNull JsonObject object) {
+		super(MMOUtils.backwardsCompatibleTriggerType(object.get("CastMode").getAsString()));
+
 		ability = MMOItems.plugin.getSkills().getSkill(object.get("Id").getAsString());
-		triggerType = MMOUtils.backwardsCompatibleTriggerType(object.get("CastMode").getAsString());
 
 		JsonObject modifiers = object.getAsJsonObject("Modifiers");
 		modifiers.entrySet().forEach(entry -> setModifier(entry.getKey(), entry.getValue().getAsDouble()));
 	}
 
-	public AbilityData(ConfigurationSection config) {
-		Validate.isTrue(config.contains("type") && config.contains("mode"), "Ability is missing type or mode");
+	public AbilityData(@NotNull ConfigurationSection config) {
+        super(MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(config.getString("mode"), "Ability is missing mode"))));
 
-		String abilityFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
+		Validate.isTrue(config.contains("type"), "Ability is missing type");
+
+		String abilityFormat = UtilityMethods.enumName(config.getString("type"));
 		Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
 		ability = MMOItems.plugin.getSkills().getSkill(abilityFormat);
-
-		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
-		triggerType = MMOUtils.backwardsCompatibleTriggerType(modeFormat);
 
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && ability.getHandler().getModifiers().contains(key))
@@ -55,15 +54,14 @@ public class AbilityData extends Skill {
 	}
 
 	public AbilityData(RegisteredSkill ability, TriggerType triggerType) {
+		super(triggerType);
+
 		this.ability = ability;
-		this.triggerType = triggerType;
 	}
 
 	public RegisteredSkill getAbility() {
 		return ability;
 	}
-
-	@NotNull public TriggerType getTriggerType() { return triggerType; }
 
 	public Set<String> getModifiers() {
 		return modifiers.keySet();
@@ -88,7 +86,7 @@ public class AbilityData extends Skill {
 		// Check for cooldown
 		if (meta.getCaster().getData().getCooldownMap().isOnCooldown(this)) {
 			CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(this);
-			if (!triggerType.isSilent()) {
+			if (!getTrigger().isSilent()) {
 				StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
 				double progress = (double) (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
 				String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
@@ -155,7 +153,7 @@ public class AbilityData extends Skill {
 	public JsonObject toJson() {
 		JsonObject object = new JsonObject();
 		object.addProperty("Id", ability.getHandler().getId());
-		object.addProperty("CastMode", triggerType.name());
+		object.addProperty("CastMode", getTrigger().name());
 
 		JsonObject modifiers = new JsonObject();
 		this.modifiers.keySet().forEach(modifier -> modifiers.addProperty(modifier, getModifier(modifier)));
@@ -169,11 +167,11 @@ public class AbilityData extends Skill {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		AbilityData that = (AbilityData) o;
-		return ability.equals(that.ability) && triggerType == that.triggerType && modifiers.equals(that.modifiers);
+		return ability.equals(that.ability) && getTrigger().equals(that.getTrigger()) && modifiers.equals(that.modifiers);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(ability, triggerType, modifiers);
+		return Objects.hash(ability, modifiers);
 	}
 }

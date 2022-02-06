@@ -96,7 +96,7 @@ public class MMOItems extends LuminePlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
-	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 6;
+	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 7;
 
 	public MMOItems() { plugin = this; }
 

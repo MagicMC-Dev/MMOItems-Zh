@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.gui.edition;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.bukkit.Bukkit;
@@ -45,7 +46,12 @@ public class AbilityListEdition extends EditionInventory {
 								? MMOItems.plugin.getSkills().getSkill(abilityFormat)
 								: null;
 
-				TriggerType castMode = TriggerType.safeValueOf(getEditedSection().getString("ability." + key + ".mode"));
+                TriggerType castMode;
+                try {
+                    castMode = TriggerType.valueOf(UtilityMethods.enumName(getEditedSection().getString("ability." + key + ".mode")));
+                } catch (RuntimeException exception) {
+                    castMode = null;
+                }
 
 				ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 				ItemMeta abilityItemMeta = abilityItem.getItemMeta();

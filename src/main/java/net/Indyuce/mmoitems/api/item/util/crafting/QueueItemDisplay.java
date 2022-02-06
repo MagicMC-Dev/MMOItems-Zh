@@ -75,7 +75,7 @@ public class QueueItemDisplay extends ConfigItem {
 			for (String key : replace.keySet())
 				lore.set(lore.indexOf(key), replace.get(key).replace("#left#", formatDelay(crafting.getLeft())));
 
-			ItemStack item = crafting.getRecipe().getOutput().getPreview();
+			ItemStack item = crafting.getRecipe().getPreviewItemStack();
 			item.setAmount(position);
 			ItemMeta meta = item.getItemMeta();
 			meta.addItemFlags(ItemFlag.values());

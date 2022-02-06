@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class CraftingStationPreview extends PluginInventory {
 		this.recipe = recipe;
 	}
 
+	@NotNull
 	@Override
 	public Inventory getInventory() {
 
@@ -105,8 +107,8 @@ public class CraftingStationPreview extends PluginInventory {
 			inv.setItem(slot, ConfigItems.FILL.getItem());
 
 		if (recipe.getRecipe() instanceof CraftingRecipe) {
-			ItemStack item = ((CraftingRecipe) recipe.getRecipe()).getOutput().getPreview();
-			item.setAmount(((CraftingRecipe) recipe.getRecipe()).getOutput().getAmount());
+			ItemStack item = ((CraftingRecipe) recipe.getRecipe()).getPreviewItemStack();
+			item.setAmount(((CraftingRecipe) recipe.getRecipe()).getOutputAmount());
 			inv.setItem(16, item);
 		}
 		if (recipe.getRecipe() instanceof UpgradingRecipe) {

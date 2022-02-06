@@ -69,6 +69,26 @@ public class Staff extends UntargetedWeapon {
 
 	}
 
+	@Override
+	public LivingEntity untargetedTargetTrace(EquipmentSlot slot) {
+
+		// Temporary Stats
+		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
+
+		// Range
+		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+
+		// Raytrace
+		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
+				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
+
+		// Find Entity
+		if (trace.hasHit()) { return trace.getHit(); }
+
+		// Nothing Found
+		return null;
+	}
+
 	public void specialAttack(LivingEntity target) {
 		if (!MMOItems.plugin.getConfig().getBoolean("item-ability.staff.enabled"))
 			return;

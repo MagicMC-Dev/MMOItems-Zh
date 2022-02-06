@@ -1,11 +1,14 @@
 package net.Indyuce.mmoitems.comp.mythicmobs;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.comp.mythicmobs.mechanics.MMOItemsArrowVolleyMechanic;
+import net.Indyuce.mmoitems.comp.mythicmobs.mechanics.MMOItemsOnShootAura;
 import net.Indyuce.mmoitems.comp.mythicmobs.stat.FactionDamage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,6 +30,22 @@ public class MythicMobsCompatibility implements Listener {
         }
 
         Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void b(MythicMechanicLoadEvent event) {
+
+        // Switch Mechanic ig
+        switch (event.getMechanicName().toLowerCase()) {
+            case "mmoitemsvolley":
+                event.register(new MMOItemsArrowVolleyMechanic(event.getContainer().getConfigLine(), event.getConfig()));
+                break;
+            case "onmmoitemuse":
+                event.register(new MMOItemsOnShootAura(event.getContainer().getConfigLine(), event.getConfig()));
+                break;
+            default: break;
+        }
     }
 
     /**

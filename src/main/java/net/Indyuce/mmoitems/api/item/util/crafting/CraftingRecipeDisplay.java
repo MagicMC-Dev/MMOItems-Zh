@@ -109,11 +109,11 @@ public class CraftingRecipeDisplay extends ConfigItem {
 						lore.add(conditionsIndex++, condition.format());
 				}
 
-			ItemStack item = craftingRecipe.getOutput().getPreview();
-			int amount = craftingRecipe.getOutput().getAmount();
+			ItemStack item = craftingRecipe.getPreviewItemStack();
+			int amount = craftingRecipe.getOutputAmount();
 
 			if (amount > 64)
-				lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", "" + amount).toString());
+				lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", String.valueOf(amount)).toString());
 			else
 				item.setAmount(amount);
 

@@ -151,7 +151,7 @@ public class CraftingStation extends PostLoadObject {
 	 * parameter because old files would be out of date, instead just looks for
 	 * a parameter of the crafting recipe which is 'output'
 	 */
-	private Recipe loadRecipe(ConfigurationSection config) {
+	private Recipe loadRecipe(ConfigurationSection config) throws IllegalArgumentException {
 		return config.contains("output") ? new CraftingRecipe(config) : new UpgradingRecipe(config);
 	}
 }

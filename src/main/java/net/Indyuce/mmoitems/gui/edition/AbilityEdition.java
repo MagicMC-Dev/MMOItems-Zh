@@ -69,7 +69,7 @@ public class AbilityEdition extends EditionInventory {
 		if (ability != null) {
 			String castModeConfigString = getEditedSection().getString("ability." + configKey + ".mode");
 			String castModeFormat = castModeConfigString == null ? ""
-					: castModeConfigString.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
+					: castModeConfigString.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z0-9_]", "");
 			TriggerType castMode = TriggerType.safeValueOf(castModeFormat);
 
 			ItemStack castModeItem = new ItemStack(Material.ARMOR_STAND);

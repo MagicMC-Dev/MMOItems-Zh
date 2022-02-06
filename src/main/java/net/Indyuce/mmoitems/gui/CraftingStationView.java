@@ -181,7 +181,7 @@ public class CraftingStationView extends PluginInventory {
 			 * to the player and remove the recipe from the queue
 			 */
 			if (recipeInfo.isReady()) {
-				ItemStack result = recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM) ? recipe.getOutput().generate(playerData.getRPG()) : null;
+				ItemStack result = recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM) ? recipe.getOutputItemStack(playerData.getRPG()) : null;
 
 				PlayerUseCraftingStationEvent called = new PlayerUseCraftingStationEvent(playerData, station, recipe, result);
 				Bukkit.getPluginManager().callEvent(called);

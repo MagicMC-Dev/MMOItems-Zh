@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class Ingredient<C extends PlayerIngredient> {
 	private final String id;
-	private final int amount;
+	private int amount;
 
 	public Ingredient(String id, MMOLineConfig config) {
 		this(id, config.getInt("amount", 1));
@@ -35,6 +35,7 @@ public abstract class Ingredient<C extends PlayerIngredient> {
 		return id;
 	}
 
+	public void setAmount(int amount) { this.amount = amount; }
 	public int getAmount() {
 		return amount;
 	}

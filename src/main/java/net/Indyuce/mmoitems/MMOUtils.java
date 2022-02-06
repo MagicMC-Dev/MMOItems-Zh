@@ -59,7 +59,10 @@ public class MMOUtils {
         switch (name) {
             case "ON_HIT": return TriggerType.ATTACK;
             case "WHEN_HIT": return TriggerType.DAMAGED;
-            default: return TriggerType.valueOf(name);
+            default:
+
+                TriggerType trigger = TriggerType.valueOf(name);
+                return trigger;
         }
     }
 

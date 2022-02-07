@@ -123,9 +123,10 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		if (!player.isOnline())
 			return null;
 
-		if (identifier.equals("durability"))
-			return "" + (int) MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())
-					.getDouble("MMOITEMS_DURABILITY");
+		if (identifier.equals("durability")) {
+			NBTItem nbt = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand());
+			return String.valueOf(nbt.hasTag("MMOITEMS_DURABILITY") ? nbt.getInteger("MMOITEMS_DURABILITY") : nbt.getInteger("MMOITEMS_MAX_DURABILITY"));
+		}
 
 		if (identifier.equals("durability_max"))
 			return "" + (int) MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand())

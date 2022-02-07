@@ -104,7 +104,7 @@ public class SkillManager {
         }
 
         // Copy mythiclib skills
-        for (SkillHandler handler : MythicLib.plugin.getSkills().getHandlers()) {
+        for (SkillHandler<?> handler : MythicLib.plugin.getSkills().getHandlers()) {
 
             /*
              * Generate skill configuration files
@@ -112,8 +112,8 @@ public class SkillManager {
             ConfigFile config = new ConfigFile("/skill", handler.getLowerCaseId());
             if (!config.exists()) {
                 config.getConfig().set("name", MMOUtils.caseOnWords(handler.getId().replace("_", " ").replace("-", " ").toLowerCase()));
-                for (Object mod : handler.getModifiers()) {
-                    config.getConfig().set("modifier." + mod + ".name", MMOUtils.caseOnWords(mod.toString().replace("-", " ").toLowerCase()));
+                for (String mod : handler.getModifiers()) {
+                    config.getConfig().set("modifier." + mod + ".name", MMOUtils.caseOnWords(mod.replace("-", " ").toLowerCase()));
                     config.getConfig().set("modifier." + mod + ".default-value", 0);
                 }
                 config.save();

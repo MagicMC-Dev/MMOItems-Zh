@@ -58,11 +58,6 @@ public class PlayerListener implements Listener {
     public void savePlayerData(PlayerQuitEvent event) { PlayerData.get(event.getPlayer()).save(); }
 
 
-    public static boolean ChanceSuccess(int percentChance) {
-        Random rand = new Random();
-        return rand.nextInt(100) <= percentChance;
-    }
-
     /**
      * If the player dies, its time to roll the death-downgrade stat!
      */

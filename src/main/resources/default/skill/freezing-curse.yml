@@ -21,3 +21,6 @@ modifier:
   radius:
     name: Radius
     default-value: 3.0
+  timer:
+    name: Timer
+    default-value: 0.0

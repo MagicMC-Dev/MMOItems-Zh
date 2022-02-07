@@ -15,3 +15,6 @@ modifier:
   amplifier:
     name: Amplifier
     default-value: 1.0
+  timer:
+    name: Timer
+    default-value: 0.0

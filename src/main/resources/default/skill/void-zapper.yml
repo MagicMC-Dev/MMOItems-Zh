@@ -24,3 +24,6 @@ modifier:
   max:
     name: Max Bounces
     default-value: 6
+  timer:
+    name: Timer
+    default-value: 0.0

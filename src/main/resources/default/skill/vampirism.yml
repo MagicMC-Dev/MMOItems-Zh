@@ -12,3 +12,6 @@ modifier:
   drain:
     name: Drain
     default-value: 10.0
+  timer:
+    name: Timer
+    default-value: 0.0

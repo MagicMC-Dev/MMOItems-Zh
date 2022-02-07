@@ -103,6 +103,7 @@ public class MMOItems extends LuminePlugin {
 	@Override
 	public void load() {
 
+
 		// Check if the ML build matches
 		if (MYTHICLIB_COMPATIBILITY_INDEX != MythicLib.MMOITEMS_COMPATIBILITY_INDEX) {
 			getLogger().log(Level.WARNING, "Your versions of MythicLib and MMOItems do not match. Make sure you are using the latest builds of both plugins");

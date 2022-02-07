@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.PluginUpdate;
@@ -246,6 +248,21 @@ public class PluginUpdateManager {
 			sender.sendMessage("Config updates successfully applied, reloading skills..");
 			MMOItems.plugin.getSkills().initialize(true);
 		}));
+
+        register(new PluginUpdate(7, new String[]{"MI 6.7 introduced a 'timer' skill modifier for all skills.",
+                "This update registers that modifier in every of your skills.",
+                "Has to be ran after &6/mi update apply 6&7."}, sender -> {
+
+            for (SkillHandler<?> handler : MythicLib.plugin.getSkills().getHandlers()) {
+                ConfigFile config = new ConfigFile("/skill", handler.getLowerCaseId());
+                config.getConfig().set("modifier.timer.name", "Timer");
+                config.getConfig().set("modifier.timer.default-value", 0d);
+                config.save();
+            }
+
+            sender.sendMessage("Config updates successfully applied, reloading skills..");
+            MMOItems.plugin.getSkills().initialize(true);
+        }));
 	}
 
 	public void register(PluginUpdate update) {

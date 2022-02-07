@@ -326,18 +326,15 @@ public class PlayerListener implements Listener {
 
         // Create registered skill
         RegisteredSkill registeredSkill = new RegisteredSkill(event.getCast().getHandler(), event.getCast().getHandler().getId());
-        for (Object obj : event.getCast().getHandler().getModifiers()) {
-            String mod = obj.toString();
+        for (String mod : event.getCast().getHandler().getModifiers()) {
             registeredSkill.setDefaultValue(mod, event.getMetadata().getModifier(mod));
             registeredSkill.setName(mod, MMOUtils.caseOnWords(mod.toLowerCase().replace("-", " ").replace("_", " ")));
         }
 
         // Create ability data
         AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.API);
-        for (Object obj : event.getCast().getHandler().getModifiers()) {
-            String mod = obj.toString();
+        for (String mod : event.getCast().getHandler().getModifiers())
             abilityData.setModifier(mod, event.getMetadata().getModifier(mod));
-        }
 
         // Find ability target
         LivingEntity target = event.getMetadata().hasTargetEntity() && event.getMetadata().getTargetEntityOrNull() instanceof LivingEntity ?

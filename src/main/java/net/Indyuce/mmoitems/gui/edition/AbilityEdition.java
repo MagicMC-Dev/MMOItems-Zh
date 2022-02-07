@@ -98,7 +98,7 @@ public class AbilityEdition extends EditionInventory {
 
 		if (ability != null) {
 			ConfigurationSection section = getEditedSection().getConfigurationSection("ability." + configKey);
-			for (String modifier : ((SkillHandler<?>) ability.getHandler()).getModifiers()) {
+			for (String modifier : ability.getHandler().getModifiers()) {
 				ItemStack modifierItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));

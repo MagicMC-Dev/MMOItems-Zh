@@ -134,7 +134,7 @@ public class ConfigManager implements Reloadable {
             if (!abilities.getConfig().getKeys(true).contains("ability." + path))
                 abilities.getConfig().set("ability." + path, ability.getName());
 
-            for (String modifier : ((SkillHandler<?>) ability.getHandler()).getModifiers())
+            for (String modifier : ability.getHandler().getModifiers())
                 if (!abilities.getConfig().getKeys(true).contains("modifier." + modifier))
                     abilities.getConfig().set("modifier." + modifier, MMOUtils.caseOnWords(modifier.replace("-", " ")));
         }

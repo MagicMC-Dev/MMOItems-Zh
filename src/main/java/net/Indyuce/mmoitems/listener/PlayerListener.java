@@ -332,7 +332,7 @@ public class PlayerListener implements Listener {
         }
 
         // Create ability data
-        AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.API);
+        AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.CAST);
         for (String mod : event.getCast().getHandler().getModifiers())
             abilityData.setModifier(mod, event.getMetadata().getModifier(mod));
 

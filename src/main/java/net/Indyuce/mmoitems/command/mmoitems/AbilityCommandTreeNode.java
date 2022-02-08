@@ -60,7 +60,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 		}
 
 		// modifiers
-		AbilityData ability = new AbilityData(MMOItems.plugin.getSkills().getSkill(key), TriggerType.API);
+		AbilityData ability = new AbilityData(MMOItems.plugin.getSkills().getSkill(key), TriggerType.CAST);
 		for (int j = 3; j < args.length - 1; j += 2) {
 			String name = args[j];
 			String value = args[j + 1];

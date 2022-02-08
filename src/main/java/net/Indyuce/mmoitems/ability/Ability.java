@@ -70,7 +70,7 @@ public abstract class Ability<T extends AbilityMetadata> extends SkillHandler<T>
 		RegisteredSkill registeredSkill = new RegisteredSkill(this);
 
 		// Corresponding ability data
-		AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.API);
+		AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.CAST);
 		for (String mod : modifiers.keySet())
 			abilityData.setModifier(mod, meta.getModifier(mod));
 

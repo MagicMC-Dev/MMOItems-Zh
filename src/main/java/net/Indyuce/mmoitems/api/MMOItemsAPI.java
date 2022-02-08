@@ -117,7 +117,7 @@ public class MMOItemsAPI {
     public AttackMetadata castAbility(Player player, String skillName, Map<String, Double> modifiers, @Nullable LivingEntity target, @Nullable AttackMetadata attackMeta) {
 
         // Setup ability
-        AbilityData abilityData = new AbilityData(getSkillById(skillName), TriggerType.API);
+        AbilityData abilityData = new AbilityData(getSkillById(skillName), TriggerType.CAST);
         modifiers.forEach((key, value) -> abilityData.setModifier(key, value));
 
         // Cast ability
@@ -158,7 +158,7 @@ public class MMOItemsAPI {
      *                   based on entity attacks; in that case no attack metadata is provided.
      */
     public void castSkill(Player player, RegisteredSkill skill, @NotNull Map<String, Double> modifiers, @Nullable LivingEntity target, @Nullable AttackMetadata attackMeta) {
-        AbilityData castable = new AbilityData(skill, TriggerType.API);
+        AbilityData castable = new AbilityData(skill, TriggerType.CAST);
         modifiers.forEach((mod, value) -> castable.setModifier(mod, value));
 
         PlayerMetadata caster = MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND);

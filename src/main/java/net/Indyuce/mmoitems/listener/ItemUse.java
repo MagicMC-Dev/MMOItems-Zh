@@ -6,13 +6,11 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
-import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.event.MMOItemsProjectileFireEvent;
 import net.Indyuce.mmoitems.api.event.MMOItemsSpecialWeaponAttack;
 import net.Indyuce.mmoitems.api.interaction.*;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
@@ -319,12 +317,12 @@ public class ItemUse implements Listener {
 
         // Have to get hand manually because 1.15 and below does not have event.getHand()
         ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
-        EquipmentSlot bowSlot = (itemInMainHand.isSimilar(event.getBow())) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
+        EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
 
         Arrow arrow = (Arrow) event.getProjectile();
         if (item.getStat("ARROW_VELOCITY") > 0)
             arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
-        MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event, type != null, event.getForce());
+        MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), type != null, event.getForce());
     }
 
     /**

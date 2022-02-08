@@ -68,7 +68,8 @@ public class ItemAttackMetadata extends AttackMetadata {
      */
     @SuppressWarnings("UnusedReturnValue")
     public ItemAttackMetadata applyElementalEffects(NBTItem item, LivingEntity target) {
-        new ElementalAttack(item, this, target).apply();
+        double damageModifier = new ElementalAttack(this, item, getDamage().getDamage(), target).getDamageModifier();
+        getDamage().add(damageModifier);
         return this;
     }
 }

@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -41,12 +42,12 @@ public class MMOItemBuilder {
      *                 have. If no tier is given, item uses the default capacity
      *                 formula given in the main config file
      */
-    public MMOItemBuilder(MMOItemTemplate template, int level, ItemTier tier) {
+    public MMOItemBuilder(MMOItemTemplate template, int level, @Nullable ItemTier tier) {
         this.level = level;
         this.tier = tier;
 
         // Either use provided tier or look into the template base data
-        tier = tier != null ? tier : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().getOrThrow(template.getBaseItemData().get(ItemStats.TIER).toString()) : null;
+        tier = tier != null ? tier : template.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(template.getBaseItemData().get(ItemStats.TIER).toString()) : null;
 
         // Capacity is not final as it keeps lowering as modifiers are selected
         double capacity = (tier != null && tier.hasCapacity() ? tier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity).calculate(level);

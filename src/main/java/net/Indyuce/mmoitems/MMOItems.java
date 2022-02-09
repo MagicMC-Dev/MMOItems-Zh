@@ -151,6 +151,7 @@ public class MMOItems extends LuminePlugin {
 	public void enable() {
 		new SpigotPlugin(39267, this).checkForUpdate();
 		new MMOItemsMetrics();
+		MMOItemUIFilter.register();
 
 		RecipeBrowserGUI.registerNativeRecipes();
 		skillManager.initialize(false);
@@ -215,7 +216,6 @@ public class MMOItems extends LuminePlugin {
 		if (Bukkit.getPluginManager().getPlugin("PhatLoots") != null) {
 			Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), this);
 		}
-		MMOItemUIFilter.register();
 
 		Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(player -> PlayerData.get(player).updateStats()), 100, 20);
 

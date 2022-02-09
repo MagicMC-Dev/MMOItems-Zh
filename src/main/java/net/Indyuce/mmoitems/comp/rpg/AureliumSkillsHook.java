@@ -5,6 +5,7 @@ import com.archyx.aureliumskills.api.AureliumAPI;
 import com.archyx.aureliumskills.api.event.SkillLevelUpEvent;
 import com.archyx.aureliumskills.data.PlayerDataLoadEvent;
 import com.archyx.aureliumskills.skills.Skill;
+import com.archyx.aureliumskills.skills.Skills;
 import com.archyx.aureliumskills.stats.Stats;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
@@ -20,7 +21,6 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import us.eunoians.mcrpg.types.Skills;
 
 import java.util.Locale;
 
@@ -122,8 +122,8 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
         private final Skill skill;
 
         public RequiredProfessionStat(Skills skill) {
-            super(skill.name(), VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), skill.getName(),
-                    new String[]{"Amount of " + skill.getName() + " levels the", "player needs to use the item."});
+            super(skill.name(), VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), skill.getDisplayName(Locale.getDefault()),
+                    new String[]{"Amount of " + skill.getDisplayName(Locale.getDefault()) + " levels the", "player needs to use the item."});
 
             this.skill = aSkills.getSkillRegistry().getSkill(skill.name());
         }

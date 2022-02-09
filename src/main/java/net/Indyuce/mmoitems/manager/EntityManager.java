@@ -12,10 +12,7 @@ import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -147,6 +144,11 @@ public class EntityManager implements Listener {
         }
 
         event.setDamage(data.getAttackMetadata().getDamage().getDamage());
+
+        // Remove projectile if it has no piercing anymore
+        if (projectile instanceof AbstractArrow) {
+
+            if (((AbstractArrow) projectile).getPierceLevel() > 1) { return; } }
         unregisterCustomProjectile(projectile);
     }
 }

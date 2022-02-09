@@ -2,6 +2,10 @@ package net.Indyuce.mmoitems.comp.mythicmobs.mechanics;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
+import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.SkillAdapter;
@@ -12,6 +16,7 @@ import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderDouble
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderFloat;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,7 +45,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
     @NotNull PlaceholderFloat velocity, scale;
     @NotNull PlaceholderDouble xOffset, yOffset, zOffset, fOffset, sOffset;
 
-    @Nullable ItemStack arrowItem;
+    @Nullable ItemStack arrowItem = null;
     boolean fullEvent;
     boolean scalePerArrow;
     boolean fromOrigin;
@@ -62,8 +67,11 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
 
         //region Get Arrow Item
         String itemFilter = mlc.getString(new String[] {"arrowitem", "item", "ai"}, null);
+        //DBG//MMOItems.log("Found In Config " + itemFilter);
         if (itemFilter != null) {
-            ProvidedUIFilter uiFilter = UIFilterManager.getUIFilter(itemFilter, null);
+            //DBG//FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
+            ProvidedUIFilter uiFilter = UIFilterManager.getUIFilter(itemFilter.replace("<&sp>", " ").replace("\"", ""), null);
+            //DBG//MMOItems.log("Errors Result: " + SilentNumbers.collapseList(SilentNumbers.transcribeList(ffp.getFeedbackOf(FriendlyFeedbackCategory.ERROR), message -> { if (message instanceof FriendlyFeedbackMessage) { return ((FriendlyFeedbackMessage) message).forConsole(FFPMMOItems.get()); } return ""; }), ""));
             if (uiFilter != null) {
                 if (uiFilter.isValid(null) && uiFilter.getParent().fullyDefinesItem()) {
                     uiFilter.setAmount(1);
@@ -71,8 +79,11 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
                     // Generate Item
                     arrowItem = uiFilter.getItemStack(null);
                 }
+                //DBG// else{ MMOItems.log("Invalid\u00a73 " + uiFilter.toString()); }
             }
         }
+
+        //DBG//MMOItems.log("Generated Item " + SilentNumbers.getItemName(arrowItem));
         //endregion
 
         // Offsets
@@ -121,6 +132,9 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
 
     public void executeMIVolley(@NotNull SkillCaster caster, @NotNull SkillMetadata data, @NotNull AbstractLocation t, int amount, float velocity, float spread, int fireTicks, int removeDelay, @NotNull PlaceholderFloat statsMultiplier)  {
 
+        // Cancel infinite loops
+        if (syncEventBlock) { return; }
+
         // Skill caster MUST be a  player
         if (!(caster.getEntity().getBukkitEntity() instanceof Player)) { return; }
         Player player = (Player) caster.getEntity().getBukkitEntity();
@@ -147,6 +161,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         // Player bow item is held??
         ItemStack bowItem = player.getInventory().getItemInMainHand().clone();
         ItemStack localArrowItem = (arrowItem != null ? arrowItem.clone() : new ItemStack(Material.ARROW));
+        //DBG//MMOItems.log("Deployed Item " + SilentNumbers.getItemName(arrowItem));
         ItemUse use = new ItemUse();
 
         // Parse
@@ -164,8 +179,10 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             a.setShooter(player);
 
             // Run Event
+            syncEventBlock = true;
             EntityShootBowEvent shootBowEvent = new EntityShootBowEvent(player, bowItem, localArrowItem, a, EquipmentSlot.HAND, arrowForce, false);
             if (fullEvent) { Bukkit.getPluginManager().callEvent(shootBowEvent); } else { use.handleCustomBows(shootBowEvent); }
+            syncEventBlock = false;
 
             // Cancelled???
             if (shootBowEvent.isCancelled()) { a.remove(); continue; }
@@ -184,4 +201,6 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> {
             for (Arrow a : arrowList) { a.remove(); }arrowList.clear(); }, removeDelay);
     }
+
+    static boolean syncEventBlock = false;
 }

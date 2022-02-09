@@ -45,7 +45,9 @@ public class ItemSetStat extends StringStat {
 
 		// Display in lore
 		ItemSet set = MMOItems.plugin.getSets().get(data.toString());
-		item.getLore().insert("set", set.getLoreTag());
+
+		// Apply lore
+		if (set != null) { item.getLore().insert("set", set.getLoreTag()); }
 
 		// Add NBT
 		item.addItemTag(getAppliedNBT(data));

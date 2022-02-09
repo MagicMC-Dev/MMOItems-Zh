@@ -100,7 +100,6 @@ public class ItemUse implements Listener {
             UntargetedWeapon weapon = (UntargetedWeapon) useItem;
             if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK)
                     || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK)) {
-                MMOItems.log("Running from \u00a7cUNTARGETTED");
 
                 // Run attack event
                 MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, useItem, weapon.untargetedTargetTrace(EquipmentSlot.fromBukkit(event.getHand())));
@@ -199,7 +198,7 @@ public class ItemUse implements Listener {
 
         // Special staff attack
         if (weapon instanceof Staff) {
-            MMOItems.log("Running from \u00a7aSTAFF");
+
             // Run attack event
             MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, weapon, target);
             Bukkit.getPluginManager().callEvent(attackEvent);
@@ -213,7 +212,6 @@ public class ItemUse implements Listener {
 
         // Special gauntlet attack
         if (weapon instanceof Gauntlet) {
-            MMOItems.log("Running from \u00a7bGAUNTLET");
 
             // Run attack event
             MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, weapon, target);

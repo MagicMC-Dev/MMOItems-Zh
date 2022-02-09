@@ -7,6 +7,7 @@ import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ElementalAttack;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import net.Indyuce.mmoitems.api.event.MMOItemsProjectileFireEvent;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
@@ -22,10 +23,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -145,6 +144,12 @@ public class EntityManager implements Listener {
         }
 
         event.setDamage(damage);
+
+        // Remove projectile if it has no piercing anymore
+        if (projectile instanceof AbstractArrow) {
+
+            if (((AbstractArrow) projectile).getPierceLevel() > 1) { return; } }
+        unregisterCustomProjectile(projectile);
     }
 
     // Unregister custom projectiles from the map

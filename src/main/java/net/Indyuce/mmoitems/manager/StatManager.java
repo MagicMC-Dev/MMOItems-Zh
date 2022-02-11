@@ -19,7 +19,6 @@ public class StatManager {
 	 * individually to understand better
 	 */
 	private final Set<DoubleStat> numeric = new HashSet<>();
-	private final Set<AttributeStat> attributeBased = new HashSet<>();
 	private final Set<ItemRestriction> itemRestriction = new HashSet<>();
 	private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
 	private final Set<PlayerConsumable> playerConsumables = new HashSet<>();
@@ -40,14 +39,6 @@ public class StatManager {
 
 	public Collection<ItemStat> getAll() {
 		return stats.values();
-	}
-
-	/**
-	 * @return Collection of all stats which are based on vanilla player
-	 * attributes like movement speed, attack damage, max health..
-	 */
-	public Set<AttributeStat> getAttributeStats() {
-		return attributeBased;
 	}
 
 	/**
@@ -121,9 +112,6 @@ public class StatManager {
 
 		if (stat instanceof DoubleStat && !(stat instanceof GemStoneStat) && stat.isCompatible(Type.GEM_STONE))
 			numeric.add((DoubleStat) stat);
-
-		if (stat instanceof AttributeStat)
-			attributeBased.add((AttributeStat) stat);
 
 		if (stat instanceof ItemRestriction)
 			itemRestriction.add((ItemRestriction) stat);

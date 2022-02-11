@@ -10,7 +10,7 @@ import io.lumine.mythic.lib.player.modifier.ModifierType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
-import net.Indyuce.mmoitems.stat.type.AttributeStat;
+import net.Indyuce.mmoitems.stat.type.AttackWeaponStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
 public class PlayerStats {
@@ -75,8 +75,8 @@ public class PlayerStats {
                     ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
                     // Apply main hand weapon stat offset
-                    if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttributeStat)
-                        value -= ((AttributeStat) stat).getOffset(playerData);
+                    if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttackWeaponStat)
+                        value -= ((AttackWeaponStat) stat).getOffset(playerData);
 
                     packet.addModifier(new StatModifier("MMOItem-" + index++, stat.getId(), value, ModifierType.FLAT, item.getSlot(), source));
                 }

@@ -5,16 +5,15 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 
 /**
- * Attribute stats are also collected when registered in the StatManager because
- * their corresponding player vanilla attributes must be updated when the player
- * stat value changes.
+ * Since MMOItems 6.7 attribute stats are now fully handled by MythicLib.
  *
- * @author cympe
+ * @author jules
+ * @see {@link #getOffset(PlayerData)} for class use case
  */
-public abstract class AttributeStat extends DoubleStat {
+public abstract class AttackWeaponStat extends DoubleStat {
     private final Attribute attribute;
 
-    public AttributeStat(String id, Material mat, String name, String[] lore, Attribute attribute) {
+    public AttackWeaponStat(String id, Material mat, String name, String[] lore, Attribute attribute) {
         super(id, mat, name, lore, new String[]{"!consumable", "!block", "!miscellaneous", "all"});
 
         this.attribute = attribute;
@@ -40,7 +39,7 @@ public abstract class AttributeStat extends DoubleStat {
      * This generated issues when MMOCore changed the player's base attribute
      * value to non default values.
      *
-     * @return Offset that need
+     * @return Offset that needs to be substract from the apparent stat value
      */
     public double getOffset(PlayerData playerData) {
         return playerData.getPlayer().getAttribute(attribute).getBaseValue();

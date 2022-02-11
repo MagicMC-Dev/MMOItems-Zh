@@ -1,14 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 
-import net.Indyuce.mmoitems.stat.type.AttributeStat;
-
-public class MovementSpeed extends AttributeStat {
+public class MovementSpeed extends DoubleStat {
 	public MovementSpeed() {
-		super("MOVEMENT_SPEED", Material.LEATHER_BOOTS, "Movement Speed",
-				new String[] { "Movement Speed increase walk speed.", "Default MC walk speed: 0.1" }, Attribute.GENERIC_MOVEMENT_SPEED);
+		super("MOVEMENT_SPEED", Material.LEATHER_BOOTS, "Movement Speed", new String[] { "Movement Speed increase walk speed.", "Default MC walk speed: 0.1" });
 	}
 
 	@Override

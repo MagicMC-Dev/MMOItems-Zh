@@ -4,10 +4,8 @@ import com.evill4mer.RealDualWield.Api.PlayerDamageEntityWithOffhandEvent;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
@@ -19,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 public class RealDualWieldHook implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -33,7 +33,8 @@ public class RealDualWieldHook implements Listener {
 
         // Custom damage check
         LivingEntity target = (LivingEntity) event.getEntity();
-        if (MythicLib.plugin.getDamage().findInfo(target) != null)
+        EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(event.getPlayer(), event.getEntity(), EntityDamageEvent.DamageCause.ENTITY_ATTACK, event.getDamage());
+        if (MythicLib.plugin.getDamage().findInfo(damageEvent) != null)
             return;
 
         /*

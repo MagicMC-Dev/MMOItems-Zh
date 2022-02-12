@@ -141,7 +141,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicLib-dist</artifactId>
-            <version>1.3-R28-SNAPSHOT</version>
+            <version>1.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

@@ -31,6 +31,7 @@
 
     <build>
         <finalName>${project.name}-${project.version}</finalName>
+        <defaultGoal>clean package install</defaultGoal>
         <resources>
             <resource>
                 <filtering>true</filtering>
@@ -48,6 +49,19 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>auto-clean</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -62,8 +76,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
-
 
         <repository>
             <id>mojang</id>

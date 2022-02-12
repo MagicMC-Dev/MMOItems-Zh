@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.command.item;
+package net.Indyuce.mmoitems.command.mmoitems.item;
 
 import java.util.List;
 

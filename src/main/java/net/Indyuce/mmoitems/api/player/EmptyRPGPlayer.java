@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.player;
 
 /**
- * Temporarily used by MMOItems when plugins like AureliumSkills don't laod player
+ * Temporarily used by MMOItems when plugins like AureliumSkills don't load player
  * data right on player startup, which means the player data instance can't
  * directly be cached by MMOItems.
  *

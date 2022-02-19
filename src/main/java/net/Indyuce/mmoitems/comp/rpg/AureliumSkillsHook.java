@@ -9,6 +9,7 @@ import com.archyx.aureliumskills.skills.Skills;
 import com.archyx.aureliumskills.stats.Stats;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.utils.metadata.Empty;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.EmptyRPGPlayer;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -130,6 +131,9 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
         @Override
         public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+            if (!(player instanceof AureliumSkillsPlayer))
+                return false;
+
             int skillLevel = ((AureliumSkillsPlayer) player).info.getSkillLevel(skill);
             int required = item.getInteger("MMOITEMS_REQUIRED_" + skill.name());
 

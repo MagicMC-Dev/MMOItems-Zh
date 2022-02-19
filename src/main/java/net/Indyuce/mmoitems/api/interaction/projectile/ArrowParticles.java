@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.projectile;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.lumine.mythic.lib.player.particle.ParticleInformation;
 import net.Indyuce.mmoitems.MMOItems;
 import io.lumine.mythic.lib.api.item.NBTItem;
 
@@ -10,6 +11,10 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * @deprecated Merge with {@link ParticleInformation}
+ */
+@Deprecated
 public class ArrowParticles extends BukkitRunnable {
 	private final Arrow arrow;
 

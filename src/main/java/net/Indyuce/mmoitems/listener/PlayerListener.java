@@ -286,7 +286,7 @@ public class PlayerListener implements Listener {
             }
         }
 
-        MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), type != null);
+        MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), type != null, 1);
     }
 
     /**

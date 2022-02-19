@@ -32,12 +32,7 @@ public class EntityManager implements Listener {
      */
     private final Map<Integer, EntityData> entities = new HashMap<>();
 
-    private final WeakHashMap<Integer, ProjectileData> projectiles = new WeakHashMap<>();
-
-    @Deprecated
-    public void registerCustomProjectile(NBTItem sourceItem, PlayerMetadata attacker, Entity entity, boolean customWeapon) {
-        registerCustomProjectile(sourceItem, attacker, entity, customWeapon, 1);
-    }
+    private final Map<Integer, ProjectileData> projectiles = new WeakHashMap<>();
 
     /**
      * Registers a custom projectile. This is used for bows, crossbows and tridents.
@@ -53,18 +48,19 @@ public class EntityManager implements Listener {
      */
     public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, boolean customWeapon, double damageMultiplicator) {
 
+        // Initialize projectile data
+        ProjectileData projectileData = new ProjectileData(attacker, sourceItem, customWeapon);
+
         /*
          * For bows, MC default value is 7. When using custom bows, the attack
          * damage stats returns the correct amount of damage. When using a vanilla
          * bow, attack damage is set to 2 because it's the default fist damage value.
          * Therefore MMOItems adds 5 to match the vanilla bow damage which is 7.
          *
-         * Damage coefficient is how much you pull the bow. It's something between 0
-         * and 1 for bows, and it's always 1 for tridents or crossbows.
+         * Damage coefficient is how much you pull the bow. It's a float between
+         * 0 and 1 for bows, and it is always 1 for tridents or crossbows.
          */
-        double damage = attacker.getStat("ATTACK_DAMAGE");
-        damage = (customWeapon ? damage : 5 + damage) * damageMultiplicator;
-        attacker.setStat("ATTACK_DAMAGE", damage);
+        projectileData.setDamage((attacker.getStat("ATTACK_DAMAGE") + (customWeapon ? 0 : 5)) * damageMultiplicator);
 
         /*
          * Load arrow particles if the entity is an arrow and if the item has
@@ -74,7 +70,7 @@ public class EntityManager implements Listener {
         if (entity instanceof Arrow && sourceItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
             new ArrowParticles((Arrow) entity, sourceItem);
 
-        projectiles.put(entity.getEntityId(), new ProjectileData(attacker, sourceItem, customWeapon));
+        projectiles.put(entity.getEntityId(), projectileData);
     }
 
     public void registerCustomEntity(Entity entity, EntityData data) {
@@ -106,13 +102,13 @@ public class EntityManager implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void a(EntityDeathEvent event) {
+    public void unregisterEntityData(EntityDeathEvent event) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
     }
 
     // Projectile damage and effects
     @EventHandler(ignoreCancelled = true)
-    public void b(EntityDamageByEntityEvent event) {
+    public void applyOnHitEffects(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
             return;
 
@@ -145,17 +141,13 @@ public class EntityManager implements Listener {
     // Unregister custom projectiles from the map
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void c(EntityDamageByEntityEvent event) {
-        projectiles.remove(event.getEntity().getEntityId());
+    public void unregisterOnBlockHit(ProjectileHitEvent event) {
+        if (event.getHitBlock() != null)
+            projectiles.remove(event.getEntity().getEntityId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void d(ProjectileHitEvent event) {
-        projectiles.remove(event.getEntity().getEntityId());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void e(EntityDeathEvent event) {
+    public void unregisterOnEntityHit(EntityDeathEvent event) {
         projectiles.remove(event.getEntity().getEntityId());
     }
 }

@@ -49,6 +49,6 @@ public class Crossbow extends UntargetedWeapon {
 				getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
 		getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
 
-		MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, true);
+		MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, true, 1);
 	}
 }

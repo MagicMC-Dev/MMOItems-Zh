@@ -22,16 +22,6 @@ locked-skins: true
 # off-hand like tomes!
 disable-abilities-in-offhand: false
 
-# Enable/disable the automatic equip feature.
-# By right clicking with a piece of armor, the plugin will
-# check if your currently equipped armor's "Equip Priority" stat
-# is lower/higher than the one you're currently right clicking with, if
-# the one in your hand is higher it will auto equip that and put the
-# old piece back into your hand. Used to hot swap armor.
-#
-# Warning: Could be resource intensive if abused?
-auto-equip-feature: true
-
 # By default, all player inventories will be updated every
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10

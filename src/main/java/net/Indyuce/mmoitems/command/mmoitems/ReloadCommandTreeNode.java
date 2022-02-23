@@ -53,7 +53,6 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 	}
 
 	public void reloadMain(CommandSender sender) {
-		MMOItems.plugin.getEquipListener().reload();
 		MMOItems.plugin.getLanguage().reload();
 		MMOItems.plugin.getDropTables().reload();
 		MMOItems.plugin.getTypes().reload();

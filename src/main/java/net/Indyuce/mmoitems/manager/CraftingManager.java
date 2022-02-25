@@ -36,8 +36,8 @@ public class CraftingManager implements Reloadable {
 	 * ingredient matches, the item is considered as a vanilla item.
 	 */
 	private final List<IngredientType> ingredients = new ArrayList<>();
-	private final Set<LoadedCraftingObject<Condition>> conditions = new HashSet<>();
-	private final Set<LoadedCraftingObject<Trigger>> triggers = new HashSet<>();
+	private final Map<String, LoadedCraftingObject<Condition>> conditions = new HashMap<>();
+	private final Map<String, LoadedCraftingObject<Trigger>> triggers = new HashMap<>();
 
 	private final Map<String, CraftingStation> stations = new HashMap<>();
 
@@ -107,7 +107,7 @@ public class CraftingManager implements Reloadable {
 			} catch (IllegalArgumentException|NullPointerException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load station '" + file.getName() + "': " + exception.getMessage());
 			}
-		
+
 		for (CraftingStation station : stations.values())
 			try {
 				station.postLoad();
@@ -151,46 +151,48 @@ public class CraftingManager implements Reloadable {
 		throw new IllegalArgumentException("Could not match ingredient");
 	}
 
-	/**
-	 * Finds the corresponding condition type, and from there
-	 * load the corresponding condition from the line config
-	 */
-	@NotNull
-	public Condition getCondition(MMOLineConfig config) {
-		String key = config.getKey();
+    /**
+     * Finds the corresponding condition type, and from there
+     * load the corresponding condition from the line config
+     *
+     * @throws NullPointerException If not found
+     */
+    @NotNull
+    public Condition getCondition(MMOLineConfig config) {
+        return getConditionInfo(config.getKey()).load(config);
+    }
 
-		for (LoadedCraftingObject<Condition> condition : conditions)
-			if (condition.getId().equalsIgnoreCase(key))
-				return condition.load(config);
+    @NotNull
+    public LoadedCraftingObject<Condition> getConditionInfo(String key) {
+        return Objects.requireNonNull(conditions.get(key), "Could not match condition");
+    }
 
-		throw new IllegalArgumentException("Could not match condition");
-	}
+    /**
+     * Finds the corresponding trigger type, and from there
+     * load the corresponding trigger from the line config
+     *
+     * @throws NullPointerException If not found
+     */
+    @NotNull
+    public Trigger getTrigger(MMOLineConfig config) {
+        return getTriggerInfo(config.getKey()).load(config);
+    }
 
-	/**
-	 * Finds the corresponding trigger type, and from there
-	 * load the corresponding trigger from the line config
-	 */
-	@NotNull
-	public Trigger getTrigger(MMOLineConfig config) {
-		String key = config.getKey();
-
-		for (LoadedCraftingObject<Trigger> trigger : triggers)
-			if (trigger.getId().equalsIgnoreCase(key))
-				return trigger.load(config);
-
-		throw new IllegalArgumentException("Could not match trigger");
-	}
+    @NotNull
+    public LoadedCraftingObject<Trigger> getTriggerInfo(String key) {
+        return Objects.requireNonNull(triggers.get(key), "Could not match trigger");
+    }
 
 	public List<IngredientType> getIngredients() {
 		return ingredients;
 	}
 
-	public Set<LoadedCraftingObject<Condition>> getConditions() {
-		return conditions;
+	public Collection<LoadedCraftingObject<Condition>> getConditions() {
+		return conditions.values();
 	}
 
-	public Set<LoadedCraftingObject<Trigger>> getTriggers() {
-		return triggers;
+	public Collection<LoadedCraftingObject<Trigger>> getTriggers() {
+		return triggers.values();
 	}
 
 	/**
@@ -217,7 +219,8 @@ public class CraftingManager implements Reloadable {
 	 * @param display  How it displays in the item lore, null if it should not
 	 */
 	public void registerCondition(String id, Function<MMOLineConfig, Condition> function, @Nullable ConditionalDisplay display) {
-		conditions.add(new LoadedCraftingObject<>(id, function, display));
+		LoadedCraftingObject<Condition> obj = new LoadedCraftingObject<>(id, function, display);
+		conditions.put(obj.getId(), obj);
 	}
 
 	/**
@@ -229,7 +232,8 @@ public class CraftingManager implements Reloadable {
 	 * @param function Function that loads that type of trigger from a line configuration
 	 */
 	public void registerTrigger(String id, Function<MMOLineConfig, Trigger> function) {
-		triggers.add(new LoadedCraftingObject<Trigger>(id, function, null));
+		LoadedCraftingObject<Trigger> obj = new LoadedCraftingObject<>(id, function, null);
+		triggers.put(obj.getId(), obj);
 	}
 
 	public Collection<CraftingStation> getAll() {

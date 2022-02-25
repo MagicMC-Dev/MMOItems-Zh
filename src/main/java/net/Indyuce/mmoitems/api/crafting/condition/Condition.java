@@ -8,8 +8,8 @@ public abstract class Condition {
 	private final String id;
 
 	/**
-	 * Instanciated for every condition in a crafting recipe when loading a
-	 * crafting station from the config file.
+	 * Instanciated for every condition in a crafting recipe
+	 * when loading a crafting station from the config file.
 	 * 
 	 * @param id The condition id
 	 */
@@ -21,12 +21,8 @@ public abstract class Condition {
 		return id;
 	}
 
-	/*
-	 * Shortcut to RecipeManager map lookup, may throw a stream lookup error if
-	 * the condition has not been registered.
-	 */
 	public ConditionalDisplay getDisplay() {
-		return MMOItems.plugin.getCrafting().getConditions().stream().filter(type -> type.getId().equals(id)).findAny().orElse(null).getDisplay();
+		return MMOItems.plugin.getCrafting().getConditionInfo(id).getDisplay();
 	}
 
 	/**

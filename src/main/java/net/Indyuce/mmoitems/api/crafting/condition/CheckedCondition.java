@@ -26,6 +26,6 @@ public class CheckedCondition {
     }
 
     public String format() {
-        return condition.formatDisplay(isMet() ? condition.getDisplay().getPositive() : condition.getDisplay().getNegative());
+        return condition.formatDisplay(condition.getDisplay().format(met));
     }
 }

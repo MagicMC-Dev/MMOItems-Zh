@@ -10,19 +10,15 @@ public class ConditionalDisplay {
 		this.negative = negative;
 	}
 
-	/*
-	 * used when loading translations
+	/**
+	 * Used when loading translations
 	 */
 	public ConditionalDisplay(ConfigurationSection config) {
 		this(config.getString("positive"), config.getString("negative"));
 	}
 
-	public String getPositive() {
-		return positive;
-	}
-
-	public String getNegative() {
-		return negative;
+	public String format(boolean positive) {
+		return positive ? this.positive : negative;
 	}
 
 	public void setup(ConfigurationSection config) {

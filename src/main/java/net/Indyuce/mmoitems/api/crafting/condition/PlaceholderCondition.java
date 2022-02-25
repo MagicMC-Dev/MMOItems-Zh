@@ -5,10 +5,16 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 
 public class PlaceholderCondition extends Condition {
-	private final String value;
-	private final String placeholder;
-	private final String comparator;
-	private final String compareTo;
+	private final String value, placeholder, comparator, compareTo;
+
+	/**
+	 * Permissions are super ugly to display so MI uses a string instead.
+	 * This way 'Only for Mages' is used instead of 'class.mage'
+	 *
+	 * One string can also replace multiple permissions.
+	 * 'Magic Classes Only' instead of 'class.mage' and 'class.apprentice'
+	 */
+	private final String display;
 
 	public PlaceholderCondition(MMOLineConfig config) {
 		super("placeholder");
@@ -19,6 +25,7 @@ public class PlaceholderCondition extends Condition {
 		placeholder = array[0];
 		comparator = array[1];
 		compareTo = array[2];
+		display = config.getString("display", "");
 	}
 
 	@Override
@@ -46,7 +53,7 @@ public class PlaceholderCondition extends Condition {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#placeholder#", "" + placeholder);
+		return string.replace("#placeholder#", "" + placeholder).replace("#display#", display);
 	}
 
 	@Override

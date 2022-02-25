@@ -46,7 +46,7 @@ public class CraftingManager implements Reloadable {
 		// Conditions
 		registerCondition("level", LevelCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
 		registerCondition("permission", PermissionCondition::new, new ConditionalDisplay("&a" + AltChar.check + " #display#", "&c" + AltChar.cross + " #display#"));
-		registerCondition("placeholder", PlaceholderCondition::new, null);
+		registerCondition("placeholder", PlaceholderCondition::new, new ConditionalDisplay("&a" + AltChar.check + " #display#", "&c" + AltChar.cross + " #display#"));
 		registerCondition("mana", ManaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
 		registerCondition("stamina", StaminaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
 		registerCondition("food", FoodCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
@@ -77,16 +77,15 @@ public class CraftingManager implements Reloadable {
 
 		ConfigFile language = new ConfigFile("/language", "crafting-stations");
 
-		for (LoadedCraftingObject<Condition> condition : getConditions())
-			if (condition.hasDisplay()) {
-				String path = "condition." + condition.getId();
-				if (!language.getConfig().contains(path)) {
-					language.getConfig().createSection(path);
-					condition.getDisplay().setup(language.getConfig().getConfigurationSection(path));
-				}
-
-				condition.setDisplay(new ConditionalDisplay(language.getConfig().getConfigurationSection(path)));
+		for (LoadedCraftingObject<Condition> condition : getConditions()) {
+			String path = "condition." + condition.getId();
+			if (!language.getConfig().contains(path)) {
+				language.getConfig().createSection(path);
+				condition.getDisplay().setup(language.getConfig().getConfigurationSection(path));
 			}
+
+			condition.setDisplay(new ConditionalDisplay(language.getConfig().getConfigurationSection(path)));
+		}
 
 		for (IngredientType ingredient : getIngredients()) {
 			String path = "ingredient." + ingredient.getId();
@@ -217,9 +216,10 @@ public class CraftingManager implements Reloadable {
 	 * @param id       Condition ID
 	 * @param function Function that loads a condition from a line conf
 	 * @param display  How it displays in the item lore, null if it should not
+	 * @since 6.7 A conditional display is required for all conditions
 	 */
-	public void registerCondition(String id, Function<MMOLineConfig, Condition> function, @Nullable ConditionalDisplay display) {
-		LoadedCraftingObject<Condition> obj = new LoadedCraftingObject<>(id, function, display);
+	public void registerCondition(String id, Function<MMOLineConfig, Condition> function, @NotNull ConditionalDisplay display) {
+		LoadedCraftingObject<Condition> obj = new LoadedCraftingObject<>(id, function, Objects.requireNonNull(display, "Conditional display cannot be null"));
 		conditions.put(obj.getId(), obj);
 	}
 

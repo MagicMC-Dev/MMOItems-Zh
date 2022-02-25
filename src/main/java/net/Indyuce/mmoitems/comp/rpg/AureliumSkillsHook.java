@@ -142,7 +142,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
                 return false;
             }
 
-            return false;
+            return true;
         }
     }
 }

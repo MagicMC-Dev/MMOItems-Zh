@@ -10,12 +10,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -116,7 +119,7 @@ public class ItemListener implements Listener {
 
 		// Drop all those items
 		for (ItemStack drop : player.getInventory().addItem(
-				mod.getReforgingOutput().toArray(A)).values()) {
+				mod.getReforgingOutput().toArray(new ItemStack[0])).values()) {
 
 			// Not air right
 			if (SilentNumbers.isAir(drop)) { continue; }
@@ -128,5 +131,57 @@ public class ItemListener implements Listener {
 		return mod.getResult();
 	}
 
-	public static final ItemStack[] A = new ItemStack[0];
+    @EventHandler
+    public void autoEquip(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+
+        if (event.getItem() == null)
+            return;
+
+        ArmorSlot slot = ArmorSlot.getArmorSlot(event.getItem());
+        if (slot == null)
+            return;
+
+        Player player = event.getPlayer();
+        NBTItem equipping = NBTItem.get(event.getItem()),
+                equipped = NBTItem.get(slot.getEquipped(player));
+        int equippingPriority = equipping.getInteger("MMOITEMS_EQUIP_PRIORITY"),
+                equippedPriority = equipped.getInteger("MMOITEMS_EQUIP_PRIORITY");
+
+        if (equippingPriority >= equippedPriority) {
+            player.getInventory().setItem(slot.equipmentSlot, event.getItem());
+            player.getInventory().setItem(event.getHand(), equipped.getItem());
+        }
+    }
+
+    private enum ArmorSlot {
+        HELMET(EquipmentSlot.HEAD),
+        CHESTPLATE(EquipmentSlot.CHEST),
+        LEGGINGS(EquipmentSlot.LEGS),
+        BOOTS(EquipmentSlot.FEET);
+
+        final EquipmentSlot equipmentSlot;
+
+        ArmorSlot(EquipmentSlot equipmentSlot) {
+            this.equipmentSlot = equipmentSlot;
+        }
+
+        ItemStack getEquipped(Player player) {
+            return player.getInventory().getItem(equipmentSlot);
+        }
+
+        boolean isItem(@Nullable ItemStack item) {
+            return item != null && item.getType().name().contains(name());
+        }
+
+        @Nullable
+        public static ArmorSlot getArmorSlot(ItemStack item) {
+            for (ArmorSlot slot : ArmorSlot.values())
+                if (slot.isItem(item))
+                    return slot;
+
+            return null;
+        }
+    }
 }

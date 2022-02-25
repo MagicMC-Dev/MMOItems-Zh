@@ -90,7 +90,6 @@ public class MMOItems extends LuminePlugin {
 	private TierManager tierManager;
 	private StatManager statManager;
 	private SetManager setManager;
-	private EquipListener equipListener;
 
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
 	private VaultSupport vaultSupport;
@@ -190,7 +189,6 @@ public class MMOItems extends LuminePlugin {
 		dropTableManager = new DropTableManager();
 		worldGenManager = new WorldGenManager();
 		blockManager = new BlockManager();
-		equipListener = new EquipListener();
 
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null) vaultSupport = new VaultSupport();
 
@@ -510,10 +508,6 @@ public class MMOItems extends LuminePlugin {
 
 	public PlaceholderParser getPlaceholderParser() {
 		return placeholderParser;
-	}
-
-	public EquipListener getEquipListener() {
-		return equipListener;
 	}
 
 	public TemplateManager getTemplates() {

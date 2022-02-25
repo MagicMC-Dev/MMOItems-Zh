@@ -63,9 +63,7 @@ public class MMOCoreMMOLoader extends MMOLoader {
         MMOItems.plugin.getStats().register(MAX_STELLIUM);
         MMOItems.plugin.getStats().register(ADDITIONAL_EXPERIENCE);
 
-        /*
-         * register extra conditions for MMOItems crafting.
-         */
+        // Register extra conditions for MMOItems crafting.
         MMOItems.plugin.getCrafting().registerCondition("profession", ProfessionCondition::new,
                 new ConditionalDisplay(
                         "&a" + AltChar.check + " Requires #level# in #profession#",

@@ -17,6 +17,7 @@ public class LoadedCraftingObject<C> {
     private final String id;
     private final Function<MMOLineConfig, C> function;
 
+    // Configurable parameters
     private ConditionalDisplay display;
 
     public LoadedCraftingObject(String id, Function<MMOLineConfig, C> function, ConditionalDisplay display) {

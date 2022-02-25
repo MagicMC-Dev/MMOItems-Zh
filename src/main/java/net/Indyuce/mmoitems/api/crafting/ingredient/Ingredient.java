@@ -40,12 +40,12 @@ public abstract class Ingredient<C extends PlayerIngredient> {
 		return amount;
 	}
 
-	/*
-	 * shortcut to RecipeManager map lookup, may throw a stream lookup error if
-	 * the condition has not been registered.
+	/**
+	 * Shortcut to RecipeManager map lookup, may throw a stream
+	 * lookup error if the ingredient has not been registered.
 	 */
 	public ConditionalDisplay getDisplay() {
-		return MMOItems.plugin.getCrafting().getIngredients().stream().filter(type -> type.getId().equals(id)).findAny().orElse(null).getDisplay();
+		return MMOItems.plugin.getCrafting().getIngredients().stream().filter(type -> type.getId().equals(id)).findAny().orElseThrow().getDisplay();
 	}
 
 	/**

@@ -90,6 +90,6 @@ public class CheckedIngredient {
 
     @NotNull
     public String format() {
-        return ingredient.formatDisplay(isHad() ? ingredient.getDisplay().getPositive() : ingredient.getDisplay().getNegative());
+        return ingredient.formatDisplay(ingredient.getDisplay().format(isHad));
     }
 }

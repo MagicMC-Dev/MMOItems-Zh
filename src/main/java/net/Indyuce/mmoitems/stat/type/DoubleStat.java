@@ -39,15 +39,23 @@ import java.util.regex.Pattern;
 
 
 public class DoubleStat extends ItemStat implements Upgradable, Previewable {
-	private static final DecimalFormat digit = new DecimalFormat("0.####");
+	private final boolean moreIsBetter;
 
-	public DoubleStat(String id, Material mat, String name, String[] lore) {
-		super(id, mat, name, lore, new String[] { "!miscellaneous", "!block", "all" });
-	}
+    private static final DecimalFormat digit = new DecimalFormat("0.####");
 
-	public DoubleStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
-		super(id, mat, name, lore, types, materials);
-	}
+    public DoubleStat(String id, Material mat, String name, String[] lore) {
+        this(id, mat, name, lore, new String[]{"!miscellaneous", "!block", "all"}, true);
+    }
+
+    public DoubleStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
+        this(id, mat, name, lore, types, true, materials);
+    }
+
+    public DoubleStat(String id, Material mat, String name, String[] lore, String[] types, boolean moreIsBetter, Material... materials) {
+        super(id, mat, name, lore, types, materials);
+
+        this.moreIsBetter = moreIsBetter;
+    }
 
 	/**
 	 * @return If this stat supports negatives stat values
@@ -67,7 +75,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	 * Usually, a greater magnitude of stat benefits the player (more health, more attack damage).
 	 * <p>However, its not impossible for a stat to be evil instead, who knows?
 	 */
-	public boolean moreIsBetter() { return true; }
+	public boolean moreIsBetter() { return moreIsBetter; }
 
 	@Override
 	public RandomStatData whenInitialized(Object object) {
@@ -109,7 +117,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 
 		// Display in lore
 		if (value != 0 || upgradeShift != 0) {
-			String loreInsert = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), value * multiplyWhenDisplaying());
+			String loreInsert = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter, value * multiplyWhenDisplaying());
 			if (upgradeShift != 0)
 				loreInsert += MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (MythicLib.plugin.getMMOConfig().decimals.format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying())));
 			item.getLore().insert(getPath(), loreInsert);

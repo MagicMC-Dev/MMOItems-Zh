@@ -46,7 +46,7 @@ public class CraftingStationPreview extends PluginInventory {
 	public Inventory getInventory() {
 
 		// Create inventory of a nice size (5x6)
-		Inventory inv = Bukkit.createInventory(this, 45, Message.RECIPE_PREVIEW.formatRaw(ChatColor.RESET));
+		Inventory inv = Bukkit.createInventory(this, 45, MythicLib.plugin.getPlaceholderParser().parse(getPlayer(), Message.RECIPE_PREVIEW.formatRaw(ChatColor.RESET)));
 		ingredients.clear();
 
 		// Include each ingredient

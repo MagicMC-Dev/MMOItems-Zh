@@ -62,7 +62,7 @@ public class CraftingStationView extends PluginInventory {
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, layout.getSize(),
-				station.getName().replace("#page#", "" + page).replace("#max#", "" + station.getMaxPage()));
+				MythicLib.plugin.getPlaceholderParser().parse(getPlayer(), station.getName().replace("#page#", "" + page).replace("#max#", "" + station.getMaxPage())));
 		int min = (page - 1) * layout.getRecipeSlots().size(), max = page * layout.getRecipeSlots().size();
 		for (int j = min; j < max; j++) {
 			if (j >= recipes.size()) {

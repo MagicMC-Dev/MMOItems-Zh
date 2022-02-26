@@ -100,8 +100,12 @@ public class DurabilityItem {
         return nbtItem;
     }
 
+    /**
+     * @return If both this is a VALID custom durability item and if the item is broken.
+     *         This will return <code>false</code> if it is not a valid item
+     */
     public boolean isBroken() {
-        return durability <= 0;
+        return maxDurability > 0 && durability <= 0;
     }
 
     public boolean isLostWhenBroken() {

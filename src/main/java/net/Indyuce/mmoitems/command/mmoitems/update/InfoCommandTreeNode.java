@@ -5,8 +5,8 @@ import org.bukkit.command.CommandSender;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.PluginUpdate;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
-import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.Parameter;
 
 public class InfoCommandTreeNode extends CommandTreeNode {
 	public InfoCommandTreeNode(CommandTreeNode parent) {

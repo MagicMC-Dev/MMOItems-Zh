@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.command.mmoitems.debug;
 
 import org.bukkit.command.CommandSender;
 
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class DebugCommandTreeNode extends CommandTreeNode {
 	public DebugCommandTreeNode(CommandTreeNode parent) {

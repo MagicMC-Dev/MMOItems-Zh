@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.command.mmoitems.update;
 
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
-import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.Parameter;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.PluginUpdate;
 import org.bukkit.ChatColor;

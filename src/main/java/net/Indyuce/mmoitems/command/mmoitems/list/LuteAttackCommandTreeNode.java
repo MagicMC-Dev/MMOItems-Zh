@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class LuteAttackCommandTreeNode extends CommandTreeNode {
 	public LuteAttackCommandTreeNode(CommandTreeNode parent) {

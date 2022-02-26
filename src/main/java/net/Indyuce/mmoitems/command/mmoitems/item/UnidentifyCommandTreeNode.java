@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import net.Indyuce.mmoitems.MMOItems;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class UnidentifyCommandTreeNode extends CommandTreeNode {
 	public UnidentifyCommandTreeNode(CommandTreeNode parent) {

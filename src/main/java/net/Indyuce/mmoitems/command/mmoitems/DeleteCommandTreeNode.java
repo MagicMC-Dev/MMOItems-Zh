@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class DeleteCommandTreeNode extends CommandTreeNode {
 	public DeleteCommandTreeNode(CommandTreeNode parent) {

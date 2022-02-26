@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import net.Indyuce.mmoitems.MMOItems;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class AbilityCommandTreeNode extends CommandTreeNode {
 	public AbilityCommandTreeNode(CommandTreeNode parent) {

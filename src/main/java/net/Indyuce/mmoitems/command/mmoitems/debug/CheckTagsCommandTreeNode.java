@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class CheckTagsCommandTreeNode extends CommandTreeNode {
 	public CheckTagsCommandTreeNode(CommandTreeNode parent) {

@@ -12,7 +12,7 @@ import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class DeconstructCommandTreeNode extends CommandTreeNode {
 	public DeconstructCommandTreeNode(CommandTreeNode parent) {

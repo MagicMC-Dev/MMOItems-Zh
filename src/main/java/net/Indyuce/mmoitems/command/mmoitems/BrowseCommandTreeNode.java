@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
 
 public class BrowseCommandTreeNode extends CommandTreeNode {
 	public BrowseCommandTreeNode(CommandTreeNode parent) {

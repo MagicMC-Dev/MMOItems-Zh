@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.gui.CraftingStationView;
-import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
-import io.lumine.mythic.lib.commands.mmolib.api.Parameter;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.Parameter;
 
 public class OpenCommandTreeNode extends CommandTreeNode {
 	public OpenCommandTreeNode(CommandTreeNode parent) {

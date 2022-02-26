@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
+import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,6 +13,8 @@ import io.lumine.mythic.lib.commands.mmolib.api.CommandTreeNode;
 public class BrowseCommandTreeNode extends CommandTreeNode {
 	public BrowseCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "browse");
+
+		addParameter(MMOItemsCommandTreeRoot.TYPE);
 	}
 
 	@Override

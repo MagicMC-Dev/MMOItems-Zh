@@ -46,7 +46,7 @@ public class Whip extends UntargetedWeapon {
         RayTrace trace = new RayTrace(getPlayer(), slot, range, entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
             new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL), stats).applyEffectsAndDamage(getNBTItem(), trace.getHit());
-        trace.draw(2, tick -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
+        trace.draw(.5, tick -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
         getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 2);
     }
 

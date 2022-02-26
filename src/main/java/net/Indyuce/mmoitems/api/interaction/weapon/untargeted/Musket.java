@@ -63,7 +63,7 @@ public class Musket extends UntargetedWeapon {
             attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());
         }
 
-        trace.draw(2, Color.BLACK);
+        trace.draw(.5, Color.BLACK);
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, 2);
     }
 

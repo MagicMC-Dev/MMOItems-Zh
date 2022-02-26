@@ -20,7 +20,7 @@ public class XRaySpirit implements StaffAttackHandler {
         RayTrace trace = new RayTrace(attackMeta.getPlayer(), slot, range, entity -> MMOUtils.canTarget(attackMeta.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
             attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
-        trace.draw(2, Color.BLACK);
+        trace.draw(.5, Color.BLACK);
         attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 0.40f, 2);
     }
 }

@@ -19,6 +19,6 @@ public class LightningSpirit implements StaffAttackHandler {
 
         if (trace.hasHit())
             attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
-        trace.draw(2, loc1 -> loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 0));
+        trace.draw(.5, loc1 -> loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 0));
     }
 }

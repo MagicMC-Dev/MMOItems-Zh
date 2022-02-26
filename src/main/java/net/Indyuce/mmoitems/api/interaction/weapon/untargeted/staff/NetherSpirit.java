@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -18,7 +19,7 @@ import java.util.List;
 public class NetherSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
+    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
         new BukkitRunnable() {
             final Vector vec = attackMeta.getPlayer().getEyeLocation().getDirection().multiply(.3);
             final Location loc = attackMeta.getPlayer().getEyeLocation();

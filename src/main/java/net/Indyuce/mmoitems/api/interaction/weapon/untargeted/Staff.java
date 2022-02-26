@@ -16,7 +16,6 @@ import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import org.bukkit.EntityEffect;
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -51,15 +50,11 @@ public class Staff extends UntargetedWeapon {
 
         StaffSpirit spirit = StaffSpirit.get(getNBTItem());
         if (spirit != null) {
-            spirit.getAttack().handle(attackMeta, getNBTItem(), range);
+            spirit.getAttack().handle(attackMeta, getNBTItem(), slot, range);
             return;
         }
 
-        double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
-        Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
-
-        RayTrace trace = new RayTrace(stats.getPlayer(), range,
-                entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
+        RayTrace trace = new RayTrace(stats.getPlayer(), slot, range, entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
             attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());
         trace.draw(2, tick -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));

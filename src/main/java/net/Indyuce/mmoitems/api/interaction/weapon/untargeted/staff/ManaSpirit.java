@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -19,7 +20,7 @@ import java.util.List;
 public class ManaSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, double range) {
+    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
         new BukkitRunnable() {
             final Vector vec = attackMeta.getPlayer().getEyeLocation().getDirection().multiply(.4);
             final Location loc = attackMeta.getPlayer().getEyeLocation();
@@ -42,7 +43,7 @@ public class ManaSpirit implements StaffAttackHandler {
 
                     for (double item = 0; item < Math.PI * 2; item += Math.PI / 3.5) {
                         Vector vec = MMOUtils.rotateFunc(new Vector(r * Math.cos(item), r * Math.sin(item), 0), loc);
-                        if (random.nextDouble() <= .6)
+                        if (RANDOM.nextDouble() <= .6)
                             loc.getWorld().spawnParticle(Particle.REDSTONE, loc.clone().add(vec), 1, new Particle.DustOptions(Color.AQUA, 1));
                     }
                     for (Entity target : targets)

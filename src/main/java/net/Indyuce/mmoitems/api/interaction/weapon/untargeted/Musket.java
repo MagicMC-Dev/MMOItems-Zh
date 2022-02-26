@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
+import io.lumine.mythic.lib.util.RayTrace;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -58,14 +57,14 @@ public class Musket extends UntargetedWeapon {
 		loc.setYaw((float) (loc.getYaw() + (RANDOM.nextDouble() - .5) * 2 * recoil));
 		Vector vec = loc.getDirection();
 
-		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range,
+		RayTrace trace = new RayTrace(loc, vec, range,
 				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit()) {
 			ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL), stats);
 			attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());
 		}
 
-		trace.draw(loc, vec, 2, Color.BLACK);
+		trace.draw(2, Color.BLACK);
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, 2);
 	}
 
@@ -82,13 +81,7 @@ public class Musket extends UntargetedWeapon {
 		Vector vec = loc.getDirection();
 
 		// Raytrace
-		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), vec, range,
-				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
-
-		// Find entity
-		if (trace.hasHit()) { return trace.getHit(); }
-
-		// No
-		return null;
+		return new RayTrace(loc, vec, range,
+				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION)).getHit();
 	}
 }

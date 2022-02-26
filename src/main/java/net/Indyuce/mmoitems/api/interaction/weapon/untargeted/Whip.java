@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
+import io.lumine.mythic.lib.util.RayTrace;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -47,12 +46,11 @@ public class Whip extends UntargetedWeapon {
 		double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
+		RayTrace trace = new RayTrace(loc, getPlayer().getEyeLocation().getDirection(), range,
 				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
 		if (trace.hasHit())
 			new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL), stats).applyEffectsAndDamage(getNBTItem(), trace.getHit());
-		trace.draw(loc, getPlayer().getEyeLocation().getDirection(), 2,
-				(tick) -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
+		trace.draw(2, tick -> tick.getWorld().spawnParticle(Particle.CRIT, tick, 0, .1, .1, .1, 0));
 		getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 1, 2);
 	}
 
@@ -68,13 +66,7 @@ public class Whip extends UntargetedWeapon {
 		Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
 		// Ray Trace
-		MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(stats.getPlayer(), range,
-				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
-
-		// Find entity
-		if (trace.hasHit()) { return trace.getHit(); }
-
-		// No
-		return null;
+		return new RayTrace(stats.getPlayer(), range,
+				entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION)).getHit();
 	}
 }

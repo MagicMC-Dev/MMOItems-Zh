@@ -1,9 +1,8 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.MMORayTraceResult;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.util.RayTrace;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Color;
@@ -20,10 +19,10 @@ public class XRaySpirit implements StaffAttackHandler {
         double a = Math.toRadians(attackMeta.getPlayer().getEyeLocation().getYaw() + 160);
         Location loc = attackMeta.getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
 
-        MMORayTraceResult trace = MythicLib.plugin.getVersion().getWrapper().rayTrace(attackMeta.getPlayer(), range, entity -> MMOUtils.canTarget(attackMeta.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
+        RayTrace trace = new RayTrace(loc, attackMeta.getPlayer().getEyeLocation().getDirection(), range, entity -> MMOUtils.canTarget(attackMeta.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
             attackMeta.applyEffectsAndDamage(nbt, trace.getHit());
-        trace.draw(loc, attackMeta.getPlayer().getEyeLocation().getDirection(), 2, Color.BLACK);
+        trace.draw(2, Color.BLACK);
         attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 0.40f, 2);
     }
 }

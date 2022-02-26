@@ -26,17 +26,17 @@ public class Crossbow extends UntargetedWeapon {
 		if (getPlayer().getGameMode() != GameMode.CREATIVE && !getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1))
 			return;
 
+		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
+		if (durItem.isBroken())
+			return;
+
 		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
 		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;
 
-		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
-		if (durItem.isBroken())
-			return;
-
 		if (durItem.isValid())
-			durItem.decreaseDurability(1).update();
+			durItem.decreaseDurability(1).inventoryUpdate();
 
 		// consume arrow
 		// has to be after the CD check

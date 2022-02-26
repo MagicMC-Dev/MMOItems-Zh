@@ -32,17 +32,17 @@ public class Staff extends UntargetedWeapon {
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
 
+		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
+		if (durItem.isBroken())
+			return;
+
 		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
 		if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
 				CooldownType.ATTACK))
 			return;
 
-		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
-		if (durItem.isBroken())
-			return;
-
 		if (durItem.isValid())
-			durItem.decreaseDurability(1).update();
+			durItem.decreaseDurability(1).inventoryUpdate();
 
 		double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 1);
 		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));

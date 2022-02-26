@@ -1,9 +1,8 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.Type;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,7 +14,7 @@ public abstract class ReadMMOItem extends MMOItem {
 	/**
 	 * This class is used when reading an MMOItem from an ItemStack (the
 	 * opposite of ItemStackBuilder, like an ItemStackReader)
-	 * 
+	 *
 	 * @param item
 	 *            The NBTItem being read to generate an MMOItem
 	 */
@@ -29,19 +28,11 @@ public abstract class ReadMMOItem extends MMOItem {
 	public int getDamage() {
 
 		// Does it use custom durability?
-		if (hasData(ItemStats.MAX_DURABILITY)) {
+		if (hasData(ItemStats.MAX_DURABILITY))
+			return getNBT().hasTag("MMOITEMS_DURABILITY") ? getNBT().getInteger("MMOITEMS_MAX_DURABILITY") - getNBT().getInteger("MMOITEMS_DURABILITY") : 0;
 
-			// Use the correct class
-			DurabilityItem dItem = new DurabilityItem(null, getNBT());
-
-			int max = dItem.getMaxDurability();
-			int current = dItem.getDurability();
-
-			// Difference
-			return max - current;
-
-		// Its using vanilla durability-yo
-		} else {
+			// Its using vanilla durability-yo
+		else {
 
 			// Uh use the item stack I guess
 			ItemStack asStack = getNBT().getItem();

@@ -35,17 +35,18 @@ public class Lute extends UntargetedWeapon {
 
 	@Override
 	public void untargetedAttack(EquipmentSlot slot) {
-		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
-		double attackSpeed = 1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
-		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))
-			return;
 
 		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
 		if (durItem.isBroken())
 			return;
 
+		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
+		double attackSpeed = 1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
+		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))
+			return;
+
 		if (durItem.isValid())
-			durItem.decreaseDurability(1).update();
+			durItem.decreaseDurability(1).inventoryUpdate();
 
 		double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 7);
 		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));

@@ -118,7 +118,6 @@ public class AbilityListEdition extends EditionInventory {
 			if (!getEditedSection().contains("ability")) {
 				getEditedSection().createSection("ability.ability1");
 				registerTemplateEdition();
-				new AbilityEdition(player, template, "ability1").open(getPreviousPage());
 				return;
 			}
 
@@ -131,7 +130,6 @@ public class AbilityListEdition extends EditionInventory {
 				if (!getEditedSection().getConfigurationSection("ability").contains("ability" + j)) {
 					getEditedSection().createSection("ability.ability" + j);
 					registerTemplateEdition();
-					new AbilityEdition(player, template, "ability" + j).open(getPreviousPage());
 					break;
 				}
 		}

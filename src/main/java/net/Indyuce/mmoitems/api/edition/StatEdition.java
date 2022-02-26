@@ -87,7 +87,7 @@ public class StatEdition implements Edition {
 			// Success
 			return true;
 
-		} catch (IllegalArgumentException exception) {
+		} catch (RuntimeException exception) {
 
 			// Add message to the FFP
 			if (!exception.getMessage().isEmpty()) { inv.getFFP().log(FriendlyFeedbackCategory.ERROR, exception.getMessage()); }

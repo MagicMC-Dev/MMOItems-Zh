@@ -83,7 +83,7 @@ public class ItemUse implements Listener {
 
             if (useItem instanceof Consumable) {
                 event.setUseItemInHand(Event.Result.DENY);
-                Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getHand());
+                Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getHand(), false);
                 if (result == Consumable.ConsumableConsumeResult.CANCEL)
                     return;
 
@@ -327,7 +327,7 @@ public class ItemUse implements Listener {
      * Consumables which can be eaten using the
      * vanilla eating animation are handled here.
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
         if (!item.hasType())
@@ -350,7 +350,7 @@ public class ItemUse implements Listener {
                 return;
             }
 
-            Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getItem().equals(player.getInventory().getItemInMainHand()) ? org.bukkit.inventory.EquipmentSlot.HAND : org.bukkit.inventory.EquipmentSlot.OFF_HAND);
+            Consumable.ConsumableConsumeResult result = ((Consumable) useItem).useOnPlayer(event.getItem().equals(player.getInventory().getItemInMainHand()) ? org.bukkit.inventory.EquipmentSlot.HAND : org.bukkit.inventory.EquipmentSlot.OFF_HAND, true);
 
             // No effects are applied and not consumed
             if (result == Consumable.ConsumableConsumeResult.CANCEL) {

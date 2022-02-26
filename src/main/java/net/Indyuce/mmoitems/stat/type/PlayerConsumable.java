@@ -15,13 +15,15 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Gunging
  */
-@FunctionalInterface
 public interface PlayerConsumable {
 
     /**
      * Called when the item is being consumed directly by a player.
      *
-     * @return The return value is not being used anymore.
+     * @since 6.7 You need to specify if the item is being eaten the vanilla
+     *         way or not. This is used to fix an issue where when eating through the
+     *         vanilla eating animation, the default food and saturation modifier is
+     *         applied so MMOItems needs to apply some offset to food/saturation.
      */
-    void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player);
+    void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating);
 }

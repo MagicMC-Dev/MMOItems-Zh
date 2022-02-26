@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.util.LoreUpdate;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
@@ -52,9 +53,10 @@ public class Consumable extends UseItem {
     }
 
     /**
+     * @param vanillaEeating See {@link PlayerConsumable#onConsume(VolatileMMOItem, Player, boolean)}
      * @return If the item should be consumed
      */
-    public ConsumableConsumeResult useOnPlayer(EquipmentSlot handUsed) {
+    public ConsumableConsumeResult useOnPlayer(EquipmentSlot handUsed, boolean vanillaEeating) {
         NBTItem nbtItem = getNBTItem();
 
         // Inedible stat cancels this operation from the beginning
@@ -69,7 +71,7 @@ public class Consumable extends UseItem {
 
         // Run through all
         for (PlayerConsumable sc : MMOItems.plugin.getStats().getPlayerConsumables())
-            sc.onConsume(mmoitem, player);
+            sc.onConsume(mmoitem, player, vanillaEeating);
 
         /**
          * If the item does not have a maximum amount of uses, this will always

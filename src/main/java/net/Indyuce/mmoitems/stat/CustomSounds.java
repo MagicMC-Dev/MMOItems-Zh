@@ -222,7 +222,7 @@ public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsum
 	}
 
 	@Override
-	public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+	public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
 
 		// No sound, straight up default-yo
 		if (!mmo.hasData(ItemStats.CUSTOM_SOUNDS)) {

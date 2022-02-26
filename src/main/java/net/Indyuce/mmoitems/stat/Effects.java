@@ -219,7 +219,7 @@ public class Effects extends ItemStat implements PlayerConsumable {
 	}
 
 	@Override
-	public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+	public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
 
 		// Does it have effects?
 		if (!mmo.hasData(ItemStats.EFFECTS))

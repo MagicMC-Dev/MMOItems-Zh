@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
@@ -9,6 +10,7 @@ import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,7 +24,7 @@ public class RestoreFood extends DoubleStat implements PlayerConsumable {
     }
 
     @Override
-    public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player) {
+    public void onConsume(@NotNull VolatileMMOItem mmo, @NotNull Player player, boolean vanillaEating) {
 
         // No data no service
         if (!mmo.hasData(ItemStats.RESTORE_FOOD))
@@ -30,9 +32,20 @@ public class RestoreFood extends DoubleStat implements PlayerConsumable {
 
         // Get value
         DoubleData d = (DoubleData) mmo.getData(ItemStats.RESTORE_FOOD);
+        int actualValue = SilentNumbers.ceil(d.getValue() - (vanillaEating ? getFoodRestored(mmo.getNBT().getItem()) : 0));
 
         // Any food being provided?
-        if (d.getValue() != 0)
-            MMOUtils.feed(player, SilentNumbers.ceil(d.getValue()));
+        if (actualValue != 0)
+            MMOUtils.feed(player, actualValue);
+    }
+
+    private int getFoodRestored(ItemStack item) {
+        try {
+            return MythicLib.plugin.getVersion().getWrapper().getFoodRestored(item);
+        } catch (Exception ignored) {
+
+            // If it is not a food item
+            return 0;
+        }
     }
 }

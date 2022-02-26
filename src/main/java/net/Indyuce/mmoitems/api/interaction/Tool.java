@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.Map;
+
 public class Tool extends UseItem {
     public Tool(Player player, NBTItem item) {
         super(player, item);
@@ -33,15 +35,16 @@ public class Tool extends UseItem {
     public boolean miningEffects(Block block) {
         boolean cancel = false;
 
-        if (getNBTItem().getBoolean("MMOITEMS_AUTOSMELT"))
-            if (block.getType() == Material.IRON_ORE || block.getType() == Material.GOLD_ORE) {
-                ItemStack item = new ItemStack(Material.valueOf(block.getType().name().replace("_ORE", "_INGOT")));
-
-                UtilityMethods.dropItemNaturally(block.getLocation(), item);
+        if (getNBTItem().getBoolean("MMOITEMS_AUTOSMELT")) {
+            Map<Material, Material> oreDrops = MythicLib.plugin.getVersion().getWrapper().getOreDrops();
+            Material drop = oreDrops.get(block.getType());
+            if (drop != null) {
+                UtilityMethods.dropItemNaturally(block.getLocation(), new ItemStack(drop));
                 block.getWorld().spawnParticle(Particle.CLOUD, block.getLocation().add(.5, .5, .5), 0);
                 block.setType(Material.AIR);
                 cancel = true;
             }
+        }
 
         if (getNBTItem().getBoolean("MMOITEMS_BOUNCING_CRACK"))
             new BukkitRunnable() {

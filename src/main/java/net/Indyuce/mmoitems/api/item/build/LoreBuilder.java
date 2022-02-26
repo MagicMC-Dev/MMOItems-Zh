@@ -153,16 +153,15 @@ public class LoreBuilder {
         int index = -1;
         for (String string : lore) {
             index++;
-            String match = StringUtils.substringBetween(string, "%", "%");
+            String match = StringUtils.substringBetween(string, "MATH%", "%");
             if (match == null)
                 continue;
 
             String result;
             try {
                 result = MythicLib.plugin.getMMOConfig().decimals.format(new EvaluatedFormula(match).evaluate());
-
             } catch (RuntimeException ignored) {
-                result = "FORMULA_INVALID";
+                result = "<InvalidFormula>";
             }
             lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));
         }

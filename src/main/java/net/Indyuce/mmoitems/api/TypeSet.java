@@ -67,12 +67,12 @@ public enum TypeSet {
                 loc.getWorld().spawnParticle(Particle.CRIT, loc.clone().add(Math.cos(a + a1) * r, Math.sin(p) * r, Math.sin(a + a1) * r), 0);
 
         for (Entity entity : MMOUtils.getNearbyChunkEntities(loc))
-            if (entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40
+            if (!entity.equals(target) && entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40
                     && attack.getPlayer().getEyeLocation().getDirection()
-                    .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 18
-                    && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
+                    .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 12
+                    && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION)) {
                 ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
-                subAttack.getDamage().multiplicativeModifier(.4);
+                subAttack.getDamage().multiplicativeModifier(.6);
                 subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
             }
     }),

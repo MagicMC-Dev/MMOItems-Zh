@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.Indyuce</groupId>
     <artifactId>MMOItems</artifactId>
-    <version>6.7</version>
+    <version>6.7.1</version>
     <name>MMOItems</name>
     <description>A great item solution for your RPG server!!</description>
 
@@ -128,7 +128,6 @@
             <artifactId>maven-clean-plugin</artifactId>
             <version>3.1.0</version>
         </dependency>
-
 
         <!-- Spigot API -->
         <dependency>

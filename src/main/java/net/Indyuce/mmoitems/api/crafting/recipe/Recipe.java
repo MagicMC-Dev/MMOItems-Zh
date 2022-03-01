@@ -12,10 +12,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public abstract class Recipe {
@@ -24,30 +21,35 @@ public abstract class Recipe {
 
 	private final Set<Ingredient> ingredients = new LinkedHashSet<>();
 	private final Set<Condition> conditions = new LinkedHashSet<>();
-	private final Set<Trigger> triggers = new LinkedHashSet<>();
+
+    /**
+     * - <code>onUse</code> are called when USING the recipe (not claiming the item from the queue)
+     * - <code>onClaim</code> are called when claiming the item in the crafting queue
+     * - <code>onCancel</> are called when canceling the craft in the crafting queue
+     *
+     * For backwards compatibility, <code>onClaim</code> corresponds to the trigger list
+     * stored with the 'triggers' config key
+     */
+    private final Set<Trigger> onUse = new LinkedHashSet<>(), onClaim = new LinkedHashSet<>(), onCancel = new LinkedHashSet<>();
 
 	/**
 	 * Stores the information about a specific recipe setup in a crafting
 	 * station. When a player opens a crafting station GUI, a CheckedRecipe
 	 * instance is created to evaluate the conditions which are not met/the
 	 * ingredients he is missing.
-	 * 
+	 *
 	 * @param config Config section to load data from
 	 */
 	public Recipe(ConfigurationSection config) {
 		this(config.getName());
 
-		/*
-		 * load recipe options
-		 */
+        // Load recipe options
 		if (config.contains("options"))
 			for (RecipeOption option : RecipeOption.values())
 				if (config.getConfigurationSection("options").contains(option.getConfigPath()))
 					options.put(option, config.getBoolean("options." + option.getConfigPath()));
 
-		/*
-		 * load ingredients
-		 */
+        // Load ingredients
 		for (String format : config.getStringList("ingredients"))
 			try {
 				Ingredient ingredient = MMOItems.plugin.getCrafting().getIngredient(new MMOLineConfig(format));
@@ -56,9 +58,7 @@ public abstract class Recipe {
 				throw new IllegalArgumentException("Could not load ingredient '" + format + "': " + exception.getMessage());
 			}
 
-		/*
-		 * load conditions
-		 */
+        // Load conditions
 		for (String format : config.getStringList("conditions"))
 			try {
 				Condition condition = MMOItems.plugin.getCrafting().getCondition(new MMOLineConfig(format));
@@ -71,18 +71,22 @@ public abstract class Recipe {
 			throw new IllegalArgumentException("No conditions or ingredients set.");
 		}
 
-		/*
-		 * load triggers
-		 */
-		for (String format : config.getStringList("triggers"))
-			try {
-				Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(format));
-				Validate.notNull(trigger, "Could not match trigger");
-				triggers.add(trigger);
-			} catch (IllegalArgumentException exception) {
-				throw new IllegalArgumentException("Could not load trigger '" + format + "': " + exception.getMessage());
-			}
+        // Load triggers
+        loadTriggerList(config.getStringList("on-use"), "on-use", onUse);
+        loadTriggerList(config.getStringList("triggers"), "on-claim", onClaim);
+        loadTriggerList(config.getStringList("on-cancel"), "on-cancel", onCancel);
 	}
+
+    private void loadTriggerList(List<String> stringList, String triggerType, Set<Trigger> collection) {
+        for (String format : stringList)
+            try {
+                Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(format));
+                Validate.notNull(trigger, "Could not match trigger");
+                onUse.add(trigger);
+            } catch (IllegalArgumentException exception) {
+                throw new IllegalArgumentException("Could not load " + triggerType + " trigger '" + format + "': " + exception.getMessage());
+            }
+    }
 
 	private Recipe(String id) {
 		Validate.notNull(id, "Recipe ID must not be null");
@@ -102,9 +106,17 @@ public abstract class Recipe {
 		return conditions;
 	}
 
-	public Set<Trigger> getTriggers() {
-		return triggers;
-	}
+    public Set<Trigger> whenUsed() {
+        return onUse;
+    }
+
+    public Set<Trigger> whenClaimed() {
+        return onClaim;
+    }
+
+    public Set<Trigger> whenCanceled() {
+        return onCancel;
+    }
 
 	public Condition getCondition(String format) {
 		for (Condition condition : conditions)

@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.interaction.util;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class UntargetedDurabilityItem extends DurabilityItem {
     private final EquipmentSlot slot;
@@ -25,7 +26,8 @@ public class UntargetedDurabilityItem extends DurabilityItem {
 
     public void inventoryUpdate() {
 
-        if (isBroken() && isLostWhenBroken()) {
+        ItemStack newVersion = toItem();
+        if (newVersion == null) {
             if (slot == EquipmentSlot.OFF_HAND)
                 getPlayer().getInventory().setItemInOffHand(null);
             else

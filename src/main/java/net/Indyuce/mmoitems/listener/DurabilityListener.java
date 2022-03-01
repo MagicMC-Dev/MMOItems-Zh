@@ -75,21 +75,14 @@ public class DurabilityListener implements Listener {
              * If the item is broken and if it is meant to be lost when broken,
              * do NOT cancel the event and make sure the item is destroyed
              */
-            if (item.isBroken()) {
-
-                // Still here? Remove if lost when broken
-                if (item.isLostWhenBroken()) {
-
-                    // Delete item
-                    event.setDamage(999);
-
-                    // Allow event to proceed
-                    return;
-                }
+            ItemStack newVersion = item.toItem();
+            if (newVersion == null) {
+                event.setDamage(999);
+                return;
             }
 
             event.setCancelled(true);
-            event.getItem().setItemMeta(item.toItem().getItemMeta());
+            event.getItem().setItemMeta(newVersion.getItemMeta());
         }
     }
 
@@ -112,21 +105,14 @@ public class DurabilityListener implements Listener {
         if (item.isValid() && stack.getType().getMaxDurability() == 0) {
             item.decreaseDurability(damage);
 
-            if (item.isBroken()) {
-
-                // Still here? Remove if lost when broken
-                if (item.isLostWhenBroken()) {
-
-                    // Delete item
-                    player.getInventory().setItem(slot, null);
-                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-
-                    // No more
-                    return;
-                }
+            ItemStack newVersion = item.toItem();
+            if (newVersion == null) {
+                player.getInventory().setItem(slot, null);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                return;
             }
 
-            player.getInventory().getItem(slot).setItemMeta(item.toItem().getItemMeta());
+            player.getInventory().getItem(slot).setItemMeta(newVersion.getItemMeta());
         }
     }
 

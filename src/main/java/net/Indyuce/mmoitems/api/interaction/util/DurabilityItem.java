@@ -13,6 +13,7 @@ import net.Indyuce.mmoitems.api.event.item.CustomDurabilityRepair;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.util.LoreUpdate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Random;
@@ -102,7 +104,7 @@ public class DurabilityItem {
 
     /**
      * @return If both this is a VALID custom durability item and if the item is broken.
-     *         This will return <code>false</code> if it is not a valid item
+     * This will return <code>false</code> if it is not a valid item
      */
     public boolean isBroken() {
         return maxDurability > 0 && durability <= 0;
@@ -118,7 +120,7 @@ public class DurabilityItem {
 
     /**
      * @return If the item actually supports custom durability. It is completely
-     *         disabled when the player is in creative mode just like vanilla durability.
+     * disabled when the player is in creative mode just like vanilla durability.
      */
     public boolean isValid() {
         return maxDurability > 0 && player.getGameMode() != GameMode.CREATIVE;
@@ -170,34 +172,45 @@ public class DurabilityItem {
      * 2) item breaking
      * 3) item downgrade
      *
-     * @return Newest version of the damaged item
+     * @return Newest version of the damaged item.
+     * <code>null</code> if the item breaks. That method CANNOT
+     * return a null value if the item has no decreased its durability.
      */
+    @Nullable
     public ItemStack toItem() {
+
+        if (isBroken()) {
+
+            // Lost when broken
+            if (isLostWhenBroken())
+                return null;
+
+            // Checks for possible downgrade
+            if (isDowngradedWhenBroken()) {
+                ItemTag uTag = ItemTag.getTagAtPath(ItemStats.UPGRADE.getNBTPath(), getNBTItem(), SupportedNBTTagValues.STRING);
+                if (uTag != null)
+                    try {
+                        UpgradeData data = new UpgradeData(new JsonParser().parse((String) uTag.getValue()).getAsJsonObject());
+
+                        // If it cannot be downgraded (reached min), DEATH
+                        if (data.getLevel() > data.getMin())
+                            return null;
+
+                        // Remove one level and FULLY repair item
+                        LiveMMOItem mmo = new LiveMMOItem(getNBTItem());
+                        mmo.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(maxDurability));
+                        mmo.getUpgradeTemplate().upgradeTo(mmo, data.getLevel() - 1);
+                        return mmo.newBuilder().buildNBT().toItem();
+
+                    } catch (JsonSyntaxException | IllegalStateException ignored) {
+                        // Nothing
+                    }
+            }
+        }
 
         // No modification needs to be done
         if (durability == initialDurability)
             return nbtItem.getItem();
-
-        // Checks for possible downgrade
-        ItemTag uTag = ItemTag.getTagAtPath(ItemStats.UPGRADE.getNBTPath(), getNBTItem(), SupportedNBTTagValues.STRING);
-        if (uTag != null)
-            try {
-                UpgradeData data = new UpgradeData(new JsonParser().parse((String) uTag.getValue()).getAsJsonObject());
-
-                // If it cannot be downgraded (reached min), DEATH
-                if (data.getLevel() <= data.getMin())
-                    return null;
-
-                // Remove one level and FULLY repair item
-                LiveMMOItem mmo = new LiveMMOItem(getNBTItem());
-                mmo.getUpgradeTemplate().upgradeTo(mmo, data.getLevel() - 1);
-                NBTItem preRet = mmo.newBuilder().buildNBT();
-                preRet.addTag(new ItemTag("MMOITEMS_DURABILITY", maxDurability));
-                return preRet.toItem();
-
-            } catch (JsonSyntaxException | IllegalStateException ignored) {
-                // Nothing
-            }
 
         /*
          * Cross multiplication to display the current item durability on the

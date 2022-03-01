@@ -17,6 +17,7 @@ import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.RefreshInventoryEvent;
+import net.Indyuce.mmoitems.api.interaction.Tool;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
@@ -28,6 +29,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -470,6 +472,16 @@ public class PlayerData {
          * Special attacks like staffs or gauntlets right clicks
          */
         SPECIAL_ATTACK,
+
+        /**
+         * Bouncing Crack calls block breaking events which can
+         * trigger Bouncing Crack again and crash the game. A
+         * cooldown is therefore required. Bouncing Crack max
+         * duration is 10 ticks so a 1s cooldown is perfect
+         *
+         * @see {@link Tool#miningEffects(Block)}
+         */
+        BOUNCING_CRACK,
 
         /**
          * Special item set attack effects including slashing, piercing and

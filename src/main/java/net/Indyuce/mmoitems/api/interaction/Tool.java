@@ -5,6 +5,8 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.event.BouncingCrackBlockBreakEvent;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -43,7 +45,8 @@ public class Tool extends UseItem {
             }
         }
 
-        if (getNBTItem().getBoolean("MMOITEMS_BOUNCING_CRACK"))
+        if (getNBTItem().getBoolean("MMOITEMS_BOUNCING_CRACK") && !getPlayerData().isOnCooldown(PlayerData.CooldownType.BOUNCING_CRACK)) {
+            getPlayerData().applyCooldown(PlayerData.CooldownType.BOUNCING_CRACK, 1);
             new BukkitRunnable() {
                 final Vector v = player.getEyeLocation().getDirection().multiply(.5);
                 final Location loc = block.getLocation().clone().add(.5, .5, .5);
@@ -58,7 +61,7 @@ public class Tool extends UseItem {
                     if (block.getType() == Material.AIR || MMOItems.plugin.getLanguage().isBlacklisted(block.getType()))
                         return;
 
-                    BlockBreakEvent breakEvent = new BlockBreakEvent(block, player);
+                    BlockBreakEvent breakEvent = new BouncingCrackBlockBreakEvent(block, player);
                     Bukkit.getPluginManager().callEvent(breakEvent);
                     if (breakEvent.isCancelled()) {
                         cancel();
@@ -69,6 +72,7 @@ public class Tool extends UseItem {
                     loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 1);
                 }
             }.runTaskTimer(MMOItems.plugin, 0, 1);
+        }
 			
 		/*if (getNBTItem().hasTag("MMOITEMS_BREAK_SIZE")) {
 			int breakSize = getNBTItem().getInteger("MMOITEMS_BREAK_SIZE");

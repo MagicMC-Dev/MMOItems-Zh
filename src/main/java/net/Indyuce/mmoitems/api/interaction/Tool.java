@@ -1,17 +1,14 @@
 package net.Indyuce.mmoitems.api.interaction;
 
-
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import net.Indyuce.mmoitems.MMOItems;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -60,6 +57,13 @@ public class Tool extends UseItem {
                     Block block = loc.getBlock();
                     if (block.getType() == Material.AIR || MMOItems.plugin.getLanguage().isBlacklisted(block.getType()))
                         return;
+
+                    BlockBreakEvent breakEvent = new BlockBreakEvent(block, player);
+                    Bukkit.getPluginManager().callEvent(breakEvent);
+                    if (breakEvent.isCancelled()) {
+                        cancel();
+                        return;
+                    }
 
                     block.breakNaturally(getItem());
                     loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1, 1);

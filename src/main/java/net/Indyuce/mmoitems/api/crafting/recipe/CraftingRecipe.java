@@ -200,7 +200,6 @@ public class CraftingRecipe extends Recipe {
 
 			if (result != null)
 				new SmartGive(data.getPlayer()).give(result);
-			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 
 			// Play sound
 			if (!hasOption(RecipeOption.SILENT_CRAFT))

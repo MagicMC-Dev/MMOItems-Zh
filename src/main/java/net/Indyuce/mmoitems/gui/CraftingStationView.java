@@ -191,9 +191,6 @@ public class CraftingStationView extends PluginInventory {
 				// Remove from crafting queue
 				playerData.getCrafting().getQueue(station).remove(recipeInfo);
 
-				// Apply triggers
-				recipe.getTriggers().forEach(trigger -> trigger.whenCrafting(playerData));
-
 				// Play sounds
 				CustomSoundListener.stationCrafting(result, player);
 				if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
@@ -250,6 +247,7 @@ public class CraftingStationView extends PluginInventory {
 		if (recipe.getRecipe().whenUsed(playerData, ingredients, recipe, station)) {
 			recipe.getIngredients().forEach(ingredient -> ingredient.takeAway());
 			recipe.getConditions().forEach(condition -> condition.getCondition().whenCrafting(playerData));
+			recipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(playerData));
 
 			updateData();
 		}

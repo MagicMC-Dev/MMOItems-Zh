@@ -56,7 +56,6 @@ public class UpgradingRecipe extends Recipe {
 		recipe.getUpgradeData().upgrade(recipe.getMMOItem());
 		recipe.getUpgraded().setItemMeta(recipe.getMMOItem().newBuilder().build().getItemMeta());
 
-		castRecipe.getRecipe().getTriggers().forEach(trigger -> trigger.whenCrafting(data));
 		Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(recipe.getUpgraded())).send(data.getPlayer());
 
 		// Play sound

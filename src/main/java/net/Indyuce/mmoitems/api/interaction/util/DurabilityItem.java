@@ -139,6 +139,11 @@ public class DurabilityItem {
     }
 
     public DurabilityItem decreaseDurability(int loss) {
+
+        // Do nothing
+        if (loss == 0)
+            return this;
+
         Validate.isTrue(loss > 0, "Loss must be greater than 0");
 
         /*

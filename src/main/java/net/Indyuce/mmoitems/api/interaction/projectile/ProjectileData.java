@@ -8,14 +8,18 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
+import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 
 public class ProjectileData {
 	private final NBTItem sourceItem;
 	private final PlayerMetadata shooter;
 	private final boolean customWeapon;
+
+    private double cachedInitialDamage;
 
 	public ProjectileData(PlayerMetadata shooter, NBTItem sourceItem, boolean customWeapon) {
 		this.shooter = shooter;
@@ -62,6 +66,20 @@ public class ProjectileData {
      */
     public void setDamage(double damage) {
         shooter.setStat("ATTACK_DAMAGE", damage);
+    }
+
+    /**
+     * @see {@link EntityManager#cacheInitialProjectileDamage(EntityDamageByEntityEvent)}
+     */
+    public double getCachedInitialDamage() {
+        return cachedInitialDamage;
+    }
+
+    /**
+     * @see {@link EntityManager#cacheInitialProjectileDamage(EntityDamageByEntityEvent)}
+     */
+    public void cacheInitialDamage(double cachedInitialDamage) {
+        this.cachedInitialDamage = cachedInitialDamage;
     }
 
 	public void applyPotionEffects(LivingEntity target) {

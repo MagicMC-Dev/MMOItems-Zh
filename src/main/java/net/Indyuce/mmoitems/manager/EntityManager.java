@@ -106,6 +106,30 @@ public class EntityManager implements Listener {
         Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
     }
 
+    /**
+     * This fixes an issue with Heroes and MythicMobs as they are
+     * plugins which MODIFY or apply damage modifiers to bow hit events.
+     * <p>
+     * By caching the event damage with LOWEST priority you basically store
+     * the VANILLA amount of damage the bow would have dealt if there was no
+     * plugin.
+     * <p>
+     * The main problem comes from not being able to SET the bow damage. You are
+     * only allowed to add flat modifiers to it, and if all the plugins do that
+     * the calculations are fully correct.
+     * <p>
+     * On NORMAL priority, MMOItems calculates the bow damage, substract from that
+     * the vanilla bow damage which outputs the damage modifier from MMOItems. This
+     * makes it compatible with other plugins modifying the damage.
+     *
+     * @see {@link #applyOnHitEffects(EntityDamageByEntityEvent)}
+     */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void cacheInitialProjectileDamage(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Projectile)
+            projectiles.get(event.getEntity().getEntityId()).cacheInitialDamage(event.getDamage());
+    }
+
     // Projectile damage and effects
     @EventHandler(ignoreCancelled = true)
     public void applyOnHitEffects(EntityDamageByEntityEvent event) {
@@ -113,10 +137,10 @@ public class EntityManager implements Listener {
             return;
 
         Projectile projectile = (Projectile) event.getDamager();
-        if (!isCustomProjectile(projectile))
+        ProjectileData data = projectiles.get(projectile.getEntityId());
+        if (data == null)
             return;
 
-        ProjectileData data = getProjectileData(projectile);
         LivingEntity target = (LivingEntity) event.getEntity();
         double damage = data.getDamage();
 
@@ -131,7 +155,7 @@ public class EntityManager implements Listener {
             damage += new ElementalAttack(data.getShooter(), data.getSourceItem(), damage, target).getDamageModifier();
         }
 
-        event.setDamage(damage);
+        event.setDamage(event.getDamage() + damage - data.getCachedInitialDamage());
 
         // Remove projectile if it has no piercing anymore
         if (!(projectile instanceof AbstractArrow) && ((AbstractArrow) projectile).getPierceLevel() <= 1)

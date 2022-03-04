@@ -95,13 +95,22 @@ public class MMOItems extends LuminePlugin {
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
 
+    /**
+     * Startup issues usually prevent the plugin from loading and just
+     * call {@link #disable()} directly afterwards which prints out
+     * another error log.
+     * <p>
+     * To prevent this, MMOItems stores a field to check if the plugin
+     * has successfully enabled before trying to call {@link #disable()}
+     */
+    private boolean hasLoadedSuccessfully;
+
 	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 8;
 
 	public MMOItems() { plugin = this; }
 
 	@Override
 	public void load() {
-
 
 		// Check if the ML build matches
 		if (MYTHICLIB_COMPATIBILITY_INDEX != MythicLib.MMOITEMS_COMPATIBILITY_INDEX) {
@@ -312,13 +321,16 @@ public class MMOItems extends LuminePlugin {
 		MMOItemsCommandTreeRoot mmoitemsCommand = new MMOItemsCommandTreeRoot();
 		getCommand("mmoitems").setExecutor(mmoitemsCommand);
 		getCommand("mmoitems").setTabCompleter(mmoitemsCommand);
+
+		// Mark plugin as successfully enabled
+		hasLoadedSuccessfully = true;
 	}
 
 	@Override
 	public void disable() {
 
 		// Support for early plugin disabling
-		if (!isEnabled())
+		if (!hasLoadedSuccessfully)
 			return;
 
 		// Save player data

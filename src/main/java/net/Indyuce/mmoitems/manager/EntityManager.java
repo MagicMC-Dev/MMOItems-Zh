@@ -158,7 +158,7 @@ public class EntityManager implements Listener {
         event.setDamage(event.getDamage() + damage - data.getCachedInitialDamage());
 
         // Remove projectile if it has no piercing anymore
-        if (!(projectile instanceof AbstractArrow) && ((AbstractArrow) projectile).getPierceLevel() <= 1)
+        if (!(projectile instanceof AbstractArrow) || ((AbstractArrow) projectile).getPierceLevel() <= 1)
             unregisterCustomProjectile(projectile);
     }
 

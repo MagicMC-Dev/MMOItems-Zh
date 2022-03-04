@@ -2,10 +2,6 @@ package net.Indyuce.mmoitems.comp.mythicmobs.mechanics;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
-import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
 import io.lumine.xikage.mythicmobs.adapters.SkillAdapter;
@@ -16,11 +12,11 @@ import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderDouble
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderFloat;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -45,10 +41,11 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
     @NotNull PlaceholderFloat velocity, scale;
     @NotNull PlaceholderDouble xOffset, yOffset, zOffset, fOffset, sOffset;
 
-    @Nullable ItemStack arrowItem = null;
+    @Nullable ItemStack arrowItem;
     boolean fullEvent;
     boolean scalePerArrow;
     boolean fromOrigin;
+    boolean allowPickup;
 
     public MMOItemsArrowVolleyMechanic(String line, MythicLineConfig mlc) {
         super(line, mlc);
@@ -64,6 +61,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         fullEvent = mlc.getBoolean(new String[] {"fullevent", "fe"}, false);
         scalePerArrow = mlc.getBoolean(new String[] {"scaleperarrow", "spa"}, false);
         fromOrigin = mlc.getBoolean(new String[] {"fromorigin", "fo"}, false);
+        allowPickup = mlc.getBoolean(new String[] {"allowpickup", "ap"}, false);
 
         //region Get Arrow Item
         String itemFilter = mlc.getString(new String[] {"arrowitem", "item", "ai"}, null);
@@ -175,6 +173,9 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             Arrow a = player.getWorld().spawnArrow(spawn, v, velocity, (spread/10.0F));
             a.setVelocity(a.getVelocity());
 
+            if (allowPickup) { a.setPickupStatus(AbstractArrow.PickupStatus.ALLOWED); }
+            else { a.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED); }
+
             // Identify arrow as the player's
             a.setShooter(player);
 
@@ -202,5 +203,5 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             for (Arrow a : arrowList) { a.remove(); }arrowList.clear(); }, removeDelay);
     }
 
-    static boolean syncEventBlock = false;
+    static boolean syncEventBlock;
 }

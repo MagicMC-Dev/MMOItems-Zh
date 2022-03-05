@@ -6,6 +6,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
+import net.Indyuce.mmoitems.skill.Shulker_Missile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,6 +80,8 @@ public class SkillManager {
         // Clear loaded skills
         if (clearBefore)
             skills.clear();
+
+        MythicLib.plugin.getSkills().registerSkillHandler(new Shulker_Missile());
 
         File skillFolder = new File(MMOItems.plugin.getDataFolder() + "/skill");
         if (!skillFolder.exists()) {

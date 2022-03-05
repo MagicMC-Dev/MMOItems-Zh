@@ -138,9 +138,6 @@ public class MMOItems extends LuminePlugin {
 		typeManager.reload();
 		templateManager.preloadTemplates();
 
-		// Register MMOItems-specific skills
-		MythicLib.plugin.getSkills().registerSkillHandler(new Shulker_Missile());
-
 		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null) new MMOCoreMMOLoader();
 
 		if (Bukkit.getPluginManager().getPlugin("mcMMO") != null)

@@ -97,6 +97,8 @@ lore-format:
 - '#repair#'
 - '#repair-percent#'
 - '#item-cooldown#'
+- '#lifesteal#'
+- '#spell-vampirism#'
 - '#additional-experience#'
 - '#additional-experience-alchemy#'
 - '#additional-experience-enchanting#'

@@ -91,6 +91,8 @@ public class ItemStats {
             PVE_DAMAGE_REDUCTION = new DoubleStat("PVE_DAMAGE_REDUCTION", VersionMaterial.PORKCHOP.toMaterial(), "PvE Damage Reduction", new String[]{"Reduces damage dealt by mobs.", "In %."}),
             PVP_DAMAGE_REDUCTION = new DoubleStat("PVP_DAMAGE_REDUCTION", VersionMaterial.SKELETON_SKULL.toMaterial(), "PvP Damage Reduction", new String[]{"Reduces damage dealt by players", "In %."}),
             UNDEAD_DAMAGE = new DoubleStat("UNDEAD_DAMAGE", VersionMaterial.SKELETON_SKULL.toMaterial(), "Undead Damage", new String[]{"Deals additional damage to undead.", "In %."}),
+            LIFESTEAL = new DoubleStat("LIFESTEAL", Material.REDSTONE, "Lifesteal", new String[]{"Percentage of damage you gain back as", "health when inflicting weapon damage."}),
+            SPELL_VAMPIRISM = new DoubleStat("SPELL_VAMPIRISM", Material.REDSTONE, "Spell Vampirism", new String[]{"Percentage of damage you gain back as", "health when inflicting skill damage."}),
 
     // Extra Stats
     UNBREAKABLE = new Unbreakable(),

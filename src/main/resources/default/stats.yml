@@ -14,6 +14,8 @@ handworn: '&3 &7■ Handworn'
 knockback: '&3 &7■ Knockback: &f#'
 recoil: '&3 &7■ Recoil: &f#%'
 note-weight: '&3 &7■ Note Weight: &f#'
+lifesteal: '&3 &7■ Lifesteal: &c+#%'
+spell-vampirism: '&3 &7■ Spell Vampirism: &c+#%'
 
 # Extra Damage
 pve-damage: '&3 &7■ PvE Damage: &f<plus>#%'

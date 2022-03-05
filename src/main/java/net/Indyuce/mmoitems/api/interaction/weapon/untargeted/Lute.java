@@ -30,24 +30,16 @@ import java.util.List;
 
 public class Lute extends UntargetedWeapon {
 	public Lute(Player player, NBTItem item) {
-		super(player, item, WeaponType.RIGHT_CLICK);
+		super(player, item, UntargetedWeaponType.RIGHT_CLICK);
 	}
 
 	@Override
-	public void untargetedAttack(EquipmentSlot slot) {
+	public boolean canAttack(EquipmentSlot slot) {
+		return true;
+	}
 
-		UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
-		if (durItem.isBroken())
-			return;
-
-		PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
-		double attackSpeed = 1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
-		if (!applyWeaponCosts(attackSpeed, CooldownType.ATTACK))
-			return;
-
-		if (durItem.isValid())
-			durItem.decreaseDurability(1).inventoryUpdate();
-
+	@Override
+	public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
 		double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 7);
 		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);

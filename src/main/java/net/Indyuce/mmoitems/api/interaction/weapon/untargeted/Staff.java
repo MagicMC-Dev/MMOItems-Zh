@@ -12,7 +12,6 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import org.bukkit.EntityEffect;
@@ -24,23 +23,16 @@ import org.bukkit.util.Vector;
 
 public class Staff extends UntargetedWeapon {
     public Staff(Player player, NBTItem item) {
-        super(player, item, WeaponType.LEFT_CLICK);
+        super(player, item, UntargetedWeaponType.LEFT_CLICK);
     }
 
     @Override
-    public void untargetedAttack(EquipmentSlot slot) {
+    public boolean canAttack(EquipmentSlot slot) {
+        return true;
+    }
 
-        UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
-        if (durItem.isBroken())
-            return;
-
-        PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
-        if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
-                CooldownType.ATTACK))
-            return;
-
-        if (durItem.isValid())
-            durItem.decreaseDurability(1).inventoryUpdate();
+    @Override
+    public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
 
         double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 1);
         double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
@@ -62,27 +54,14 @@ public class Staff extends UntargetedWeapon {
 
     }
 
-    @Override
-    public LivingEntity untargetedTargetTrace(EquipmentSlot slot) {
-
-        // Temporary Stats
-        PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
-
-        // Range
-        double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
-
-        // Raytrace
-        return new RayTrace(stats.getPlayer(), range,
-                entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION)).getHit();
-    }
-
     public void specialAttack(LivingEntity target) {
         if (!MMOItems.plugin.getConfig().getBoolean("item-ability.staff.enabled"))
             return;
 
-        if (!applyWeaponCosts(MMOItems.plugin.getConfig().getDouble("item-ability.staff.cooldown"), CooldownType.SPECIAL_ATTACK))
+        if (!checkWeaponCosts(CooldownType.SPECIAL_ATTACK))
             return;
 
+        applyWeaponCosts(MMOItems.plugin.getConfig().getDouble("item-ability.staff.cooldown"), CooldownType.SPECIAL_ATTACK);
         double power = MMOItems.plugin.getConfig().getDouble("item-ability.staff.power");
 
         try {

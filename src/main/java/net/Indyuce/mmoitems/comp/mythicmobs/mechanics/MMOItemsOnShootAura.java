@@ -10,7 +10,7 @@ import io.lumine.xikage.mythicmobs.skills.auras.Aura;
 import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
 import io.lumine.xikage.mythicmobs.utils.Events;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.event.MMOItemsSpecialWeaponAttack;
+import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.*;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -108,7 +108,7 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
         }
 
         public void auraStart() {
-            this.registerAuraComponent(Events.subscribe(MMOItemsSpecialWeaponAttack.class).filter((event) -> {
+            this.registerAuraComponent(Events.subscribe(SpecialWeaponAttackEvent.class).filter((event) -> {
 
                 //SOM//OotilityCeption.Log("\u00a7cStep 3 \u00a77Subscribe Run: " + getName(event.getEntity()) + "\u00a77 vs " + getName(this.entity.get()) + "\u00a78 ~\u00a7e " + event.getEntity().getUniqueId().equals(this.entity.get().getUniqueId()));
 

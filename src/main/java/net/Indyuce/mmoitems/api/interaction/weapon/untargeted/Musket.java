@@ -11,35 +11,24 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
-import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class Musket extends UntargetedWeapon {
     public Musket(Player player, NBTItem item) {
-        super(player, item, WeaponType.RIGHT_CLICK);
+        super(player, item, UntargetedWeaponType.RIGHT_CLICK);
     }
 
     @Override
-    public void untargetedAttack(EquipmentSlot slot) {
+    public boolean canAttack(EquipmentSlot slot) {
+        return true;
+    }
 
-        UntargetedDurabilityItem durItem = new UntargetedDurabilityItem(getPlayer(), getNBTItem(), slot);
-        if (durItem.isBroken())
-            return;
-
-        PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
-        if (!applyWeaponCosts(1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed")),
-                CooldownType.ATTACK))
-            return;
-
-        if (durItem.isValid())
-            durItem.decreaseDurability(1).inventoryUpdate();
-
+    @Override
+    public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
         double attackDamage = stats.getStat("ATTACK_DAMAGE");
         double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
         double recoil = getValue(getNBTItem().getStat(ItemStats.RECOIL.getId()), MMOItems.plugin.getConfig().getDouble("default.recoil"));
@@ -50,8 +39,8 @@ public class Musket extends UntargetedWeapon {
             getPlayer().setVelocity(getPlayer().getVelocity()
                     .add(getPlayer().getEyeLocation().getDirection().setY(0).normalize().multiply(-1 * knockback).setY(-.2)));
 
-        double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 180 + 30 * (slot == EquipmentSlot.MAIN_HAND ? -1 : 1));
-        Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
+        double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 90 + 45 * (slot == EquipmentSlot.MAIN_HAND ? 1 : -1));
+        Location loc = getPlayer().getLocation().add(Math.cos(a) * .5, 1.5, Math.sin(a) * .5);
 
         loc.setPitch((float) (loc.getPitch() + (RANDOM.nextDouble() - .5) * 2 * recoil));
         loc.setYaw((float) (loc.getYaw() + (RANDOM.nextDouble() - .5) * 2 * recoil));
@@ -65,22 +54,5 @@ public class Musket extends UntargetedWeapon {
 
         trace.draw(.5, Color.BLACK);
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, 2);
-    }
-
-    @Override
-    public LivingEntity untargetedTargetTrace(EquipmentSlot slot) {
-
-        // Temporary Stats
-        PlayerMetadata stats = getPlayerData().getStats().newTemporary(slot);
-
-        // Range
-        double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
-        double a = Math.toRadians(getPlayer().getEyeLocation().getYaw() + 160);
-        Location loc = getPlayer().getEyeLocation().add(new Vector(Math.cos(a), 0, Math.sin(a)).multiply(.5));
-        Vector vec = loc.getDirection();
-
-        // Raytrace
-        return new RayTrace(loc, vec, range,
-                entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION)).getHit();
     }
 }

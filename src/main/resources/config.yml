@@ -42,7 +42,8 @@ default-item-capacity:
     spread: 0
     max-spread: 0
 
-# Changes the default value for some stats.
+# Changes the default value for some stats. This mainly
+# accounts for untargeted weapons like staffs, muskets...
 default:
     attack-speed: 0.67
     range: 16

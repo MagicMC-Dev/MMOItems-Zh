@@ -11,13 +11,13 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
-import net.Indyuce.mmoitems.api.event.MMOItemsSpecialWeaponAttack;
+import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
 import net.Indyuce.mmoitems.api.interaction.*;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon.WeaponType;
+import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeaponType;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.Bukkit;
@@ -98,18 +98,9 @@ public class ItemUse implements Listener {
         if (useItem instanceof UntargetedWeapon) {
 
             UntargetedWeapon weapon = (UntargetedWeapon) useItem;
-            if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == WeaponType.RIGHT_CLICK)
-                    || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == WeaponType.LEFT_CLICK)) {
-
-                // Run attack event
-                MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, useItem, weapon.untargetedTargetTrace(EquipmentSlot.fromBukkit(event.getHand())));
-                Bukkit.getPluginManager().callEvent(attackEvent);
-
-                // Cancelled?
-                if (attackEvent.isCancelled()) { return; }
-
-                weapon.untargetedAttack(EquipmentSlot.fromBukkit(event.getHand()));
-            }
+            if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == UntargetedWeaponType.RIGHT_CLICK)
+                    || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == UntargetedWeaponType.LEFT_CLICK))
+                weapon.handleTargetFreeAttack(EquipmentSlot.fromBukkit(event.getHand()));
         }
     }
 
@@ -198,30 +189,18 @@ public class ItemUse implements Listener {
 
         // Special staff attack
         if (weapon instanceof Staff) {
-
-            // Run attack event
-            MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, weapon, target);
+            SpecialWeaponAttackEvent attackEvent = new SpecialWeaponAttackEvent(weapon.getPlayerData(), (Weapon) weapon, target);
             Bukkit.getPluginManager().callEvent(attackEvent);
-
-            // Cancelled?
-            if (attackEvent.isCancelled()) { return; }
-
-            // Run attack
-            ((Staff) weapon).specialAttack(target);
+            if (!attackEvent.isCancelled())
+                ((Staff) weapon).specialAttack(target);
         }
 
         // Special gauntlet attack
         if (weapon instanceof Gauntlet) {
-
-            // Run attack event
-            MMOItemsSpecialWeaponAttack attackEvent = new MMOItemsSpecialWeaponAttack(player, weapon, target);
+            SpecialWeaponAttackEvent attackEvent = new SpecialWeaponAttackEvent(weapon.getPlayerData(), (Weapon) weapon, target);
             Bukkit.getPluginManager().callEvent(attackEvent);
-
-            // Cancelled?
-            if (attackEvent.isCancelled()) { return; }
-
-            // Run attack
-            ((Gauntlet) weapon).specialAttack(target);
+            if (!attackEvent.isCancelled())
+                ((Gauntlet) weapon).specialAttack(target);
         }
     }
 
@@ -302,7 +281,7 @@ public class ItemUse implements Listener {
         PlayerData playerData = PlayerData.get((Player) event.getEntity());
         if (type != null) {
             Weapon weapon = new Weapon(playerData, item);
-            if (!weapon.checkItemRequirements() || !weapon.applyWeaponCosts()) {
+            if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
                 event.setCancelled(true);
                 return;
             }

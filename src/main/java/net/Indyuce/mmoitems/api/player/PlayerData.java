@@ -461,7 +461,7 @@ public class PlayerData {
         /**
          * Basic attack cooldown like staffs and lutes
          */
-        ATTACK,
+        BASIC_ATTACK,
 
         /**
          * Elemental attacks cooldown

@@ -4,7 +4,6 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.flags.CustomFlag;
 import io.lumine.mythic.lib.damage.AttackMetadata;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.interaction.UseItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
@@ -41,20 +40,21 @@ public class Weapon extends UseItem {
      *
      * @return If the attack was cast successfully
      */
-    public boolean applyWeaponCosts() {
-        return applyWeaponCosts(0, null);
+    public boolean checkAndApplyWeaponCosts() {
+        if (checkWeaponCosts(null)) {
+            applyWeaponCosts(0, null);
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * Applies cooldown, mana and stamina weapon costs
+     * Checks for cooldown, mana and stamina weapon costs
      *
-     * @param attackSpeed The weapon attack speed
-     * @param cooldown    The weapon cooldown type. When set to null, no
-     *                    cooldown will be applied. This is made to handle
-     *                    custom weapons
-     * @return If requirements were met ie the attack was cast successfully
+     * @return If requirements were met ie the attack can be cast successfully
      */
-    public boolean applyWeaponCosts(double attackSpeed, @Nullable CooldownType cooldown) {
+    public boolean checkWeaponCosts(@Nullable CooldownType cooldown) {
         if (cooldown != null && getPlayerData().isOnCooldown(cooldown))
             return false;
 
@@ -70,29 +70,43 @@ public class Weapon extends UseItem {
             return false;
         }
 
-        if (manaCost > 0)
-            playerData.getRPG().giveMana(-manaCost);
-
-        if (staminaCost > 0)
-            playerData.getRPG().giveStamina(-staminaCost);
-
-        if (cooldown != null)
-            getPlayerData().applyCooldown(cooldown, attackSpeed);
-
         return true;
     }
 
     /**
+     * Applies cooldown, mana and stamina weapon costs
+     *
+     * @param attackDelay The weapon attack period/delay
+     * @param cooldown    The weapon cooldown type. When set to null, no
+     *                    cooldown will be applied. This is made to handle
+     *                    custom weapons
+     */
+    public void applyWeaponCosts(double attackDelay, @Nullable CooldownType cooldown) {
+
+        double manaCost = getNBTItem().getStat("MANA_COST");
+        if (manaCost > 0)
+            playerData.getRPG().giveMana(-manaCost);
+
+        double staminaCost = getNBTItem().getStat("STAMINA_COST");
+        if (staminaCost > 0)
+            playerData.getRPG().giveStamina(-staminaCost);
+
+        if (cooldown != null)
+            getPlayerData().applyCooldown(cooldown, attackDelay);
+    }
+
+    /**
+     * Only applies mana and stamina costs. Cooldown is not required for
+     * targeted attacks since the vanilla attack bar already does that.
+     *
      * @param attackMeta The attack being performed
      * @param target     The attack target
      * @return If the attack is successful, or if it was canceled otherwise
      */
     public boolean handleTargetedAttack(AttackMetadata attackMeta, LivingEntity target) {
 
-        // Handle weapon cooldown, mana and stamina costs
-        double attackSpeed = getNBTItem().getStat(ItemStats.ATTACK_SPEED.getId());
-        attackSpeed = attackSpeed == 0 ? 1.493 : 1 / attackSpeed;
-        if (!applyWeaponCosts())
+        // Handle weapon mana and stamina costs ONLY
+        if (!checkAndApplyWeaponCosts())
             return false;
 
         // Handle item set attack effects

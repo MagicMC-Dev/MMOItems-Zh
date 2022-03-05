@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.listener;
 
-import com.google.gson.JsonParser;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -19,16 +18,13 @@ import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.inventory.EditableEquippedItem;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.type.NameData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -277,7 +273,7 @@ public class PlayerListener implements Listener {
 
         if (type != null) {
             Weapon weapon = new Weapon(playerData, nbtItem);
-            if (!weapon.checkItemRequirements() || !weapon.applyWeaponCosts()) {
+            if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
                 event.setCancelled(true);
                 return;
             }

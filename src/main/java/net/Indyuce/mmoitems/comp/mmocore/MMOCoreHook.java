@@ -10,6 +10,7 @@ import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmocore.api.player.stats.StatType;
 import net.Indyuce.mmocore.experience.Profession;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.event.item.UntargetedWeaponUseEvent;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
@@ -60,6 +61,13 @@ public class MMOCoreHook implements RPGHandler, Listener {
     @EventHandler
     public void updateInventoryOnClassChange(PlayerChangeClassEvent event) {
         net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void stopAttacksWhenCasting(UntargetedWeaponUseEvent event) {
+        PlayerData playerData = PlayerData.get(event.getPlayerData().getUniqueId());
+        if (playerData.isCasting())
+            event.setCancelled(true);
     }
 
     /**

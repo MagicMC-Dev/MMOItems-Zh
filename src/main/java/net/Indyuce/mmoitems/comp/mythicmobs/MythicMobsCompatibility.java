@@ -1,11 +1,10 @@
 package net.Indyuce.mmoitems.comp.mythicmobs;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent;
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicReloadedEvent;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent;
+import io.lumine.mythic.bukkit.events.MythicReloadedEvent;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.comp.mythicmobs.mechanics.MMOItemsArrowVolleyMechanic;
 import net.Indyuce.mmoitems.comp.mythicmobs.mechanics.MMOItemsOnShootAura;
@@ -16,7 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MythicMobsCompatibility implements Listener {
 
@@ -39,12 +41,13 @@ public class MythicMobsCompatibility implements Listener {
         // Switch Mechanic ig
         switch (event.getMechanicName().toLowerCase()) {
             case "mmoitemsvolley":
-                event.register(new MMOItemsArrowVolleyMechanic(event.getContainer().getConfigLine(), event.getConfig()));
+                event.register(new MMOItemsArrowVolleyMechanic(event.getContainer().getManager(), event.getContainer().getConfigLine(), event.getConfig()));
                 break;
             case "onmmoitemuse":
-                event.register(new MMOItemsOnShootAura(event.getContainer().getConfigLine(), event.getConfig()));
+                event.register(new MMOItemsOnShootAura(event.getContainer().getManager(), event.getContainer().getConfigLine(), event.getConfig()));
                 break;
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -61,15 +64,16 @@ public class MythicMobsCompatibility implements Listener {
         // Reload the abilities of online players...
         for (Player p : Bukkit.getOnlinePlayers()) {
             PlayerData data = PlayerData.get(p);
-            data.updateInventory(); }
+            data.updateInventory();
+        }
     }
 
     private Set<String> getFactions() {
         Set<String> allFactions = new HashSet<>();
 
         // Collects all mythic mobs + edited vanilla mobs in mythic mobs.
-        List<MythicMob> mobs = new ArrayList<>(MythicMobs.inst().getMobManager().getVanillaTypes());
-        mobs.addAll(MythicMobs.inst().getMobManager().getMobTypes());
+        List<MythicMob> mobs = new ArrayList<>(MythicBukkit.inst().getMobManager().getVanillaTypes());
+        mobs.addAll(MythicBukkit.inst().getMobManager().getMobTypes());
         // Adds their faction to the set if it is set.
 
         for (MythicMob mob : mobs)

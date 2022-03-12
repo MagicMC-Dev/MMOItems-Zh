@@ -1,14 +1,15 @@
 package net.Indyuce.mmoitems.comp.mythicmobs.mechanics;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.mobs.GenericCaster;
-import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.skills.auras.Aura;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderString;
-import io.lumine.xikage.mythicmobs.utils.Events;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.mobs.GenericCaster;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.auras.Aura;
+import io.lumine.mythic.utils.Events;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
@@ -24,22 +25,26 @@ import java.util.Optional;
 /**
  * Sure there is the 'onShoot' aura for bows, but what about
  * musket and crossbow and lute and...?
- *
+ * <p>
  * This Aura will cover all of those.
  *
  * @author Gunging
  */
 public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
-    @NotNull PlaceholderString skillName;
-    @NotNull String weaponTypes;
-    @Nullable Skill metaskill;
+    @NotNull
+    PlaceholderString skillName;
+    @NotNull
+    String weaponTypes;
+    @Nullable
+    Skill metaskill;
     boolean cancelEvent;
     boolean forceAsPower;
 
-    @NotNull final ArrayList<UseItemTypes> auraWeapons = new ArrayList<>();
+    @NotNull
+    final ArrayList<UseItemTypes> auraWeapons = new ArrayList<>();
 
-    public MMOItemsOnShootAura(String skill, MythicLineConfig mlc) {
-        super(skill, mlc);
+    public MMOItemsOnShootAura(SkillExecutor manager, String skill, MythicLineConfig mlc) {
+        super(manager, skill, mlc);
         skillName = mlc.getPlaceholderString(new String[]{"skill", "s", "ondamagedskill", "ondamaged", "od", "onhitskill", "onhit", "oh", "meta", "m", "mechanics", "$", "()"}, "skill not found");
         weaponTypes = mlc.getString(new String[]{"weapons", "weapon", "w"}, "MUSKET");
         metaskill = GetSkill(skillName.get());
@@ -47,7 +52,11 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
 
         // Parse weapon types
         ArrayList<String> weaponTypesUnparsed = new ArrayList<>();
-        if (weaponTypes.contains(",")) { weaponTypesUnparsed.addAll(Arrays.asList(weaponTypes.split(","))); } else { weaponTypesUnparsed.add(weaponTypes); }
+        if (weaponTypes.contains(",")) {
+            weaponTypesUnparsed.addAll(Arrays.asList(weaponTypes.split(",")));
+        } else {
+            weaponTypesUnparsed.add(weaponTypes);
+        }
 
         for (String weapon : weaponTypesUnparsed) {
             // Try to get
@@ -59,7 +68,8 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
                 // Yes
                 auraWeapons.add(weap);
 
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException ignored) {
+            }
         }
 
         // Attempt to fix meta skill
@@ -78,16 +88,16 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
         }
     }
 
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
         // Find caster
         SkillCaster caster;
 
         // Will be caster of the skill, as a mythicmob
-        if (MythicMobs.inst().getMobManager().isActiveMob(target)) {
+        if (MythicBukkit.inst().getMobManager().isActiveMob(target)) {
             //SOM//OotilityCeption.Log("\u00a73  * \u00a77Target as ActiveMob");
 
             // Just pull the mythicmob
-            caster = MythicMobs.inst().getMobManager().getMythicMobInstance(target);
+            caster = MythicBukkit.inst().getMobManager().getMythicMobInstance(target);
 
             // If its a player or some other non-mythicmob
         } else {
@@ -98,10 +108,10 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
         }
 
         new MMOItemsOnShootAura.Tracker(caster, data, target);
-        return true;
+        return SkillResult.SUCCESS;
     }
 
-    private class Tracker extends AuraTracker implements IParentSkill, Runnable {
+    private class Tracker extends Aura.AuraTracker implements IParentSkill, Runnable {
         public Tracker(SkillCaster caster, SkillMetadata data, AbstractEntity entity) {
             super(caster, entity, data);
             this.start();
@@ -113,14 +123,21 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
                 //SOM//OotilityCeption.Log("\u00a7cStep 3 \u00a77Subscribe Run: " + getName(event.getEntity()) + "\u00a77 vs " + getName(this.entity.get()) + "\u00a78 ~\u00a7e " + event.getEntity().getUniqueId().equals(this.entity.get().getUniqueId()));
 
                 // Player is the one who has the aura applied, right?
-                if (!event.getPlayer().getUniqueId().equals(this.entity.get().getUniqueId())) { return false; }
+                if (!event.getPlayer().getUniqueId().equals(this.entity.get().getUniqueId())) {
+                    return false;
+                }
 
                 // All custom weapons fire it if none specified.
-                if (auraWeapons.size() == 0) { return true; }
+                if (auraWeapons.size() == 0) {
+                    return true;
+                }
 
                 // Okay go through all weapon types, must match one
                 for (UseItemTypes weap : auraWeapons) {
-                    if (weap.getInst().isInstance(event.getWeapon())) { return true; } }
+                    if (weap.getInst().isInstance(event.getWeapon())) {
+                        return true;
+                    }
+                }
 
                 // None matched
                 return false;
@@ -131,7 +148,9 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
                 SkillMetadata meta = this.skillMetadata.deepClone();
 
                 // Refresh
-                if (metaskill == null) { metaskill = GetSkill(skillName.get(meta, meta.getCaster().getEntity())); }
+                if (metaskill == null) {
+                    metaskill = GetSkill(skillName.get(meta, meta.getCaster().getEntity()));
+                }
 
                 // Target obviously the projectile
                 AbstractEntity target = BukkitAdapter.adapt(event.getTarget());
@@ -142,7 +161,9 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
 
                     this.consumeCharge();
 
-                    if (cancelEvent) { event.setCancelled(true); }
+                    if (cancelEvent) {
+                        event.setCancelled(true);
+                    }
                 }
 
             }));
@@ -150,22 +171,30 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
         }
     }
 
-    @Nullable public static Skill GetSkill(String skillName) {
+    @Nullable
+    public static Skill GetSkill(String skillName) {
 
         if (SkillExists(skillName)) {
 
-            Optional<Skill> mSkillFk = MythicMobs.inst().getSkillManager().getSkill(skillName);
-            if (mSkillFk == null) { return null; }
-            if (mSkillFk.isPresent()) { return mSkillFk.get(); }
+            Optional<Skill> mSkillFk = MythicBukkit.inst().getSkillManager().getSkill(skillName);
+            if (mSkillFk == null) {
+                return null;
+            }
+            if (mSkillFk.isPresent()) {
+                return mSkillFk.get();
+            }
         }
 
         return null;
     }
+
     public static boolean SkillExists(String skillName) {
         // If null no
-        if (skillName == null) { return false; }
+        if (skillName == null) {
+            return false;
+        }
 
-        Optional<Skill> mSkillFk = MythicMobs.inst().getSkillManager().getSkill(skillName);
+        Optional<Skill> mSkillFk = MythicBukkit.inst().getSkillManager().getSkill(skillName);
 
         // Is there a skill of that name?
         if (mSkillFk.isPresent()) {
@@ -202,8 +231,14 @@ public class MMOItemsOnShootAura extends Aura implements ITargetedEntitySkill {
         /**
          * @return Class to use InstanceOf and identify a weapon.
          */
-        @NotNull public Class getInst() { return inst; }
-        @NotNull final Class inst;
+        @NotNull
+        public Class getInst() {
+            return inst;
+        }
+
+        @NotNull
+        final Class inst;
+
         UseItemTypes(@NotNull Class inst) {
             this.inst = inst;
         }

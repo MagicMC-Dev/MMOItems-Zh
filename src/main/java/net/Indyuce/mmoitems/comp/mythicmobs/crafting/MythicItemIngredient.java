@@ -1,9 +1,9 @@
 package net.Indyuce.mmoitems.comp.mythicmobs.crafting;
 
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.items.MythicItem;
 import io.lumine.mythic.lib.api.MMOLineConfig;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.items.MythicItem;
 import net.Indyuce.mmoitems.api.crafting.ingredient.Ingredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.apache.commons.lang.Validate;
@@ -20,44 +20,44 @@ import java.util.Optional;
  */
 @Deprecated
 public class MythicItemIngredient extends Ingredient<MythicItemPlayerIngredient> {
-	private final MythicItem mythicitem;
+    private final MythicItem mythicitem;
 
-	private final String display;
+    private final String display;
 
-	public MythicItemIngredient(MMOLineConfig config) {
-		super("mythicitem", config);
+    public MythicItemIngredient(MMOLineConfig config) {
+        super("mythicitem", config);
 
-		config.validate("item");
-		Optional<MythicItem> mmitem = MythicMobs.inst().getItemManager().getItem(config.getString("item"));
-		Validate.isTrue(mmitem.isPresent(), "Could not find MM Item with ID '" + config.getString("item") + "'");
+        config.validate("item");
+        Optional<MythicItem> mmitem = MythicBukkit.inst().getItemManager().getItem(config.getString("item"));
+        Validate.isTrue(mmitem.isPresent(), "Could not find MM Item with ID '" + config.getString("item") + "'");
 
-		display = config.contains("display") ? config.getString("display") : mmitem.get().getDisplayName();
-		mythicitem = mmitem.get();
-	}
+        display = config.contains("display") ? config.getString("display") : mmitem.get().getDisplayName();
+        mythicitem = mmitem.get();
+    }
 
-	@Override
-	public String getKey() {
-		return "mythicitem:" + mythicitem.getInternalName().toLowerCase();
-	}
+    @Override
+    public String getKey() {
+        return "mythicitem:" + mythicitem.getInternalName().toLowerCase();
+    }
 
-	@Override
-	public String formatDisplay(String s) {
-		return s.replace("#item#", display).replace("#amount#", "" + getAmount());
-	}
+    @Override
+    public String formatDisplay(String s) {
+        return s.replace("#item#", display).replace("#amount#", "" + getAmount());
+    }
 
-	@Override
-	public boolean matches(MythicItemPlayerIngredient playerIngredient) {
-		return false;
-	}
+    @Override
+    public boolean matches(MythicItemPlayerIngredient playerIngredient) {
+        return false;
+    }
 
-	@NotNull
-	@Override
-	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
-		return BukkitAdapter.adapt(mythicitem.generateItemStack(getAmount()));
-	}
+    @NotNull
+    @Override
+    public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+        return BukkitAdapter.adapt(mythicitem.generateItemStack(getAmount()));
+    }
 
-	@Override
-	public String toString() {
-		return getKey();
-	}
+    @Override
+    public String toString() {
+        return getKey();
+    }
 }

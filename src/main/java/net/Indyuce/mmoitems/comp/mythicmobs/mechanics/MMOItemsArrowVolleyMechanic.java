@@ -1,16 +1,18 @@
 package net.Indyuce.mmoitems.comp.mythicmobs.mechanics;
 
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.api.adapters.SkillAdapter;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.api.skills.*;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderDouble;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderFloat;
+import io.lumine.mythic.api.skills.placeholders.PlaceholderInt;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.skills.SkillExecutor;
+import io.lumine.mythic.core.skills.SkillMechanic;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
-import io.lumine.xikage.mythicmobs.adapters.AbstractLocation;
-import io.lumine.xikage.mythicmobs.adapters.SkillAdapter;
-import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.io.MythicLineConfig;
-import io.lumine.xikage.mythicmobs.skills.*;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderDouble;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderFloat;
-import io.lumine.xikage.mythicmobs.skills.placeholders.parsers.PlaceholderInt;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.listener.ItemUse;
 import org.bukkit.Bukkit;
@@ -37,34 +39,38 @@ import java.util.ArrayList;
  */
 public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITargetedEntitySkill, ITargetedLocationSkill {
 
-    @NotNull PlaceholderInt amount, spread, fireTicks, removeDelay;
-    @NotNull PlaceholderFloat velocity, scale;
-    @NotNull PlaceholderDouble xOffset, yOffset, zOffset, fOffset, sOffset;
+    @NotNull
+    PlaceholderInt amount, spread, fireTicks, removeDelay;
+    @NotNull
+    PlaceholderFloat velocity, scale;
+    @NotNull
+    PlaceholderDouble xOffset, yOffset, zOffset, fOffset, sOffset;
 
-    @Nullable ItemStack arrowItem;
+    @Nullable
+    ItemStack arrowItem;
     boolean fullEvent;
     boolean scalePerArrow;
     boolean fromOrigin;
     boolean allowPickup;
 
-    public MMOItemsArrowVolleyMechanic(String line, MythicLineConfig mlc) {
-        super(line, mlc);
+    public MMOItemsArrowVolleyMechanic(SkillExecutor manager, String line, MythicLineConfig mlc) {
+        super(manager, line, mlc);
         threadSafetyLevel = ThreadSafetyLevel.SYNC_ONLY;
 
-        amount = mlc.getPlaceholderInteger(new String[] {"amount", "arrows", "a"}, 20);
-        spread = mlc.getPlaceholderInteger(new String[] {"spread", "s"}, 45);
-        fireTicks = mlc.getPlaceholderInteger(new String[] {"fireticks", "ft", "f"}, 0);
-        removeDelay = mlc.getPlaceholderInteger(new String[] {"removedelay", "rd", "r"}, 200);
-        velocity = mlc.getPlaceholderFloat(new String[] {"velocity", "v"}, 20);
-        scale = mlc.getPlaceholderFloat(new String[] {"statsscale", "ss"}, 1);
+        amount = mlc.getPlaceholderInteger(new String[]{"amount", "arrows", "a"}, 20);
+        spread = mlc.getPlaceholderInteger(new String[]{"spread", "s"}, 45);
+        fireTicks = mlc.getPlaceholderInteger(new String[]{"fireticks", "ft", "f"}, 0);
+        removeDelay = mlc.getPlaceholderInteger(new String[]{"removedelay", "rd", "r"}, 200);
+        velocity = mlc.getPlaceholderFloat(new String[]{"velocity", "v"}, 20);
+        scale = mlc.getPlaceholderFloat(new String[]{"statsscale", "ss"}, 1);
 
-        fullEvent = mlc.getBoolean(new String[] {"fullevent", "fe"}, false);
-        scalePerArrow = mlc.getBoolean(new String[] {"scaleperarrow", "spa"}, false);
-        fromOrigin = mlc.getBoolean(new String[] {"fromorigin", "fo"}, false);
-        allowPickup = mlc.getBoolean(new String[] {"allowpickup", "ap"}, false);
+        fullEvent = mlc.getBoolean(new String[]{"fullevent", "fe"}, false);
+        scalePerArrow = mlc.getBoolean(new String[]{"scaleperarrow", "spa"}, false);
+        fromOrigin = mlc.getBoolean(new String[]{"fromorigin", "fo"}, false);
+        allowPickup = mlc.getBoolean(new String[]{"allowpickup", "ap"}, false);
 
         //region Get Arrow Item
-        String itemFilter = mlc.getString(new String[] {"arrowitem", "item", "ai"}, null);
+        String itemFilter = mlc.getString(new String[]{"arrowitem", "item", "ai"}, null);
         //DBG//MMOItems.log("Found In Config " + itemFilter);
         if (itemFilter != null) {
             //DBG//FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
@@ -85,16 +91,16 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         //endregion
 
         // Offsets
-        xOffset = mlc.getPlaceholderDouble(new String[] {"startxoffset", "sxo"}, 0);
-        yOffset = mlc.getPlaceholderDouble(new String[] {"startyoffset", "syo"}, 3);
-        zOffset = mlc.getPlaceholderDouble(new String[] {"startzoffset", "szo"}, 0);
-        fOffset = mlc.getPlaceholderDouble(new String[] {"startfoffset", "sfo"}, 0);
-        sOffset = mlc.getPlaceholderDouble(new String[] {"startsoffset", "sso"}, 0);
+        xOffset = mlc.getPlaceholderDouble(new String[]{"startxoffset", "sxo"}, 0);
+        yOffset = mlc.getPlaceholderDouble(new String[]{"startyoffset", "syo"}, 3);
+        zOffset = mlc.getPlaceholderDouble(new String[]{"startzoffset", "szo"}, 0);
+        fOffset = mlc.getPlaceholderDouble(new String[]{"startfoffset", "sfo"}, 0);
+        sOffset = mlc.getPlaceholderDouble(new String[]{"startsoffset", "sso"}, 0);
     }
 
 
     @Override
-    public boolean castAtLocation(SkillMetadata data, AbstractLocation target) {
+    public SkillResult castAtLocation(SkillMetadata data, AbstractLocation target) {
 
         // Caster must be a player
         if (data.getCaster().getEntity().getBukkitEntity() instanceof Player) {
@@ -107,34 +113,38 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             // Run as normal mythicmobs arrow volley
             SkillAdapter.get().executeVolley(data.getCaster(), target, amount.get(data), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data));
         }
-        return true;
+        return SkillResult.SUCCESS;
     }
 
     @Override
-    public boolean castAtEntity(SkillMetadata data, AbstractEntity target) {
+    public SkillResult castAtEntity(SkillMetadata data, AbstractEntity target) {
 
         // Caster must be a player
         if (data.getCaster().getEntity().getBukkitEntity() instanceof Player) {
 
             // MMOItems Volley!
-            executeMIVolley(data.getCaster(), data, target.getLocation(), amount.get(data,target), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data), scale);
+            executeMIVolley(data.getCaster(), data, target.getLocation(), amount.get(data, target), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data), scale);
 
         } else {
 
             // Run as normal mythicmobs arrow volley
-            SkillAdapter.get().executeVolley(data.getCaster(), target.getLocation(), amount.get(data,target), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data));
+            SkillAdapter.get().executeVolley(data.getCaster(), target.getLocation(), amount.get(data, target), velocity.get(data) * 0.1F, spread.get(data), fireTicks.get(data), removeDelay.get(data));
         }
-        return true;
+        return SkillResult.SUCCESS;
     }
 
 
-    public void executeMIVolley(@NotNull SkillCaster caster, @NotNull SkillMetadata data, @NotNull AbstractLocation t, int amount, float velocity, float spread, int fireTicks, int removeDelay, @NotNull PlaceholderFloat statsMultiplier)  {
+    public void executeMIVolley(@NotNull SkillCaster caster, @NotNull SkillMetadata data, @NotNull AbstractLocation t, int amount, float velocity, float spread, int fireTicks, int removeDelay, @NotNull PlaceholderFloat statsMultiplier) {
 
         // Cancel infinite loops
-        if (syncEventBlock) { return; }
+        if (syncEventBlock) {
+            return;
+        }
 
         // Skill caster MUST be a  player
-        if (!(caster.getEntity().getBukkitEntity() instanceof Player)) { return; }
+        if (!(caster.getEntity().getBukkitEntity() instanceof Player)) {
+            return;
+        }
         Player player = (Player) caster.getEntity().getBukkitEntity();
 
         // Target yeah
@@ -170,11 +180,14 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
         for (int i = 0; i < amount; i++) {
 
             // Spawn Arrow
-            Arrow a = player.getWorld().spawnArrow(spawn, v, velocity, (spread/10.0F));
+            Arrow a = player.getWorld().spawnArrow(spawn, v, velocity, (spread / 10.0F));
             a.setVelocity(a.getVelocity());
 
-            if (allowPickup) { a.setPickupStatus(AbstractArrow.PickupStatus.ALLOWED); }
-            else { a.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED); }
+            if (allowPickup) {
+                a.setPickupStatus(AbstractArrow.PickupStatus.ALLOWED);
+            } else {
+                a.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
+            }
 
             // Identify arrow as the player's
             a.setShooter(player);
@@ -182,25 +195,40 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             // Run Event
             syncEventBlock = true;
             EntityShootBowEvent shootBowEvent = new EntityShootBowEvent(player, bowItem, localArrowItem, a, EquipmentSlot.HAND, arrowForce, false);
-            if (fullEvent) { Bukkit.getPluginManager().callEvent(shootBowEvent); } else { use.handleCustomBows(shootBowEvent); }
+            if (fullEvent) {
+                Bukkit.getPluginManager().callEvent(shootBowEvent);
+            } else {
+                use.handleCustomBows(shootBowEvent);
+            }
             syncEventBlock = false;
 
             // Cancelled???
-            if (shootBowEvent.isCancelled()) { a.remove(); continue; }
+            if (shootBowEvent.isCancelled()) {
+                a.remove();
+                continue;
+            }
 
             // Set on fire I guess
-            if(fireTicks > 0) { a.setFireTicks(fireTicks); }
+            if (fireTicks > 0) {
+                a.setFireTicks(fireTicks);
+            }
 
             // Add to list
             arrowList.add(a);
 
             // Recalculate
-            if (scalePerArrow) { arrowForce = statsMultiplier.get(data); }
+            if (scalePerArrow) {
+                arrowForce = statsMultiplier.get(data);
+            }
         }
 
         // Remove after delay
         Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> {
-            for (Arrow a : arrowList) { a.remove(); }arrowList.clear(); }, removeDelay);
+            for (Arrow a : arrowList) {
+                a.remove();
+            }
+            arrowList.clear();
+        }, removeDelay);
     }
 
     static boolean syncEventBlock;

@@ -193,8 +193,8 @@
 
         <dependency>
             <groupId>io.lumine</groupId>
-            <artifactId>MythicMobs-Dist</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
 

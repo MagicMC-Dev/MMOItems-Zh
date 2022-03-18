@@ -82,7 +82,7 @@ public abstract class Recipe {
             try {
                 Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(format));
                 Validate.notNull(trigger, "Could not match trigger");
-                onUse.add(trigger);
+				collection.add(trigger);
             } catch (IllegalArgumentException exception) {
                 throw new IllegalArgumentException("Could not load " + triggerType + " trigger '" + format + "': " + exception.getMessage());
             }

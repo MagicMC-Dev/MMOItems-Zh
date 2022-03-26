@@ -95,11 +95,10 @@ public class ItemUse implements Listener {
             useItem.executeCommands();
         }
 
+        // Target free weapon attack
         if (useItem instanceof UntargetedWeapon) {
-
             UntargetedWeapon weapon = (UntargetedWeapon) useItem;
-            if ((event.getAction().name().contains("RIGHT_CLICK") && weapon.getWeaponType() == UntargetedWeaponType.RIGHT_CLICK)
-                    || (event.getAction().name().contains("LEFT_CLICK") && weapon.getWeaponType() == UntargetedWeaponType.LEFT_CLICK))
+            if (weapon.getWeaponType().corresponds(event.getAction()))
                 weapon.handleTargetFreeAttack(EquipmentSlot.fromBukkit(event.getHand()));
         }
     }

@@ -63,6 +63,9 @@ public class PlayerListener implements Listener {
         // No
         if (event instanceof Cancellable) { if (((Cancellable) event).isCancelled()) { return; } }
 
+        // Supports NPCs
+        if (!PlayerData.has(event.getEntity())) return;
+
         // Get Player
         PlayerData data = PlayerData.get(event.getEntity());
 

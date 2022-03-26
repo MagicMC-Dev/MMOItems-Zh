@@ -12,12 +12,13 @@ import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,13 +36,9 @@ public class SkillAPIHook implements RPGHandler, Listener, AttackHandler {
     }
 
     @Override
-    public boolean isAttacked(Entity entity) {
-        return damageInfo.containsKey(entity.getEntityId());
-    }
-
-    @Override
-    public AttackMetadata getAttack(Entity entity) {
-        return damageInfo.get(entity.getEntityId());
+    @Nullable
+    public AttackMetadata getAttack(EntityDamageEvent event) {
+        return damageInfo.get(event.getEntity().getEntityId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

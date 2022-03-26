@@ -16,10 +16,11 @@ import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,14 +39,12 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
     }
 
     @Override
-    public boolean isAttacked(Entity entity) {
-        SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
-        return info != null && info.getCharacter().getEntity() instanceof Player;
-    }
+    @Nullable
+    public AttackMetadata getAttack(EntityDamageEvent event) {
+        SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(event.getEntity());
+        if (info == null || !(info.getCharacter().getEntity() instanceof Player))
+            return null;
 
-    @Override
-    public AttackMetadata getAttack(Entity entity) {
-        SkillUseInfo info = Heroes.getInstance().getDamageManager().getSpellTargetInfo(entity);
         Player player = (Player) info.getCharacter().getEntity();
         Set<DamageType> types = info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).collect(Collectors.toSet());
         DamageMetadata damageMeta = new DamageMetadata(0, types.toArray(new DamageType[0]));

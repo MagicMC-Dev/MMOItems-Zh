@@ -36,7 +36,7 @@ public class AbilityEdition extends EditionInventory {
 	private RegisteredSkill ability;
 
 	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
-	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43 };
+	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43, 50, 51, 52 };
 
 	public AbilityEdition(Player player, MMOItemTemplate template, String configKey) {
 		super(player, template);

@@ -198,7 +198,7 @@ public class DurabilityItem {
                         UpgradeData data = new UpgradeData(new JsonParser().parse((String) uTag.getValue()).getAsJsonObject());
 
                         // If it cannot be downgraded (reached min), DEATH
-                        if (data.getLevel() > data.getMin())
+                        if (data.getLevel() <= data.getMin())
                             return null;
 
                         // Remove one level and FULLY repair item

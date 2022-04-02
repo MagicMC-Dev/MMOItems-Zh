@@ -119,6 +119,7 @@ public class CraftingStatus {
 			crafts.add(new CraftingInfo(recipe, started, delay));
 		}
 
+		@Deprecated
 		public CraftingStation getStation() {
 			return MMOItems.plugin.getCrafting().getStation(station);
 		}
@@ -139,6 +140,11 @@ public class CraftingStatus {
 				return uuid;
 			}
 
+			/**
+			 * @deprecated /mi reload stations force MI to save the recipe
+			 *         IDs instead of a direct reference to the crafting recipe
+			 */
+			@Deprecated
 			public CraftingRecipe getRecipe() {
 				return (CraftingRecipe) getStation().getRecipe(recipe);
 			}

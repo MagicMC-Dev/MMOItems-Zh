@@ -14,6 +14,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -24,6 +25,15 @@ public class CraftingStation extends PostLoadObject {
 	private final Sound sound;
 	private final StationItemOptions itemOptions;
 	private final int maxQueueSize;
+
+	/**
+	 * This is not all the recipes of that crafting station. It only
+	 * contains the recipes that are specific to that station, relative
+	 * to the position of that station in the station inheritance tree.
+	 * <p>
+	 * In other words that map doesn't contain the crafting recipes of
+	 * the parent crafting station saved in {@link #parent}
+	 */
 	private final Map<String, Recipe> recipes = new LinkedHashMap<>();
 
 	private CraftingStation parent;
@@ -80,31 +90,45 @@ public class CraftingStation extends PostLoadObject {
 		return sound;
 	}
 
+	@Nullable
 	public CraftingStation getParent() {
 		return parent;
 	}
 
+	/**
+	 * @return Recursively collects all recipes from that station and from
+	 *         its parent station.
+	 */
 	public Collection<Recipe> getRecipes() {
 		if (parent == null)
 			return recipes.values();
 
-		// collect recipes from station inheritance tree
+		// Collect recipes from station inheritance tree
 		List<Recipe> collected = new ArrayList<>(recipes.values());
 		CraftingStation next = parent;
 		while (next != null) {
-			collected.addAll(next.getRecipes());
-			next = next.getParent();
+			collected.addAll(next.recipes.values());
+			next = next.parent;
 		}
 
 		return collected;
 	}
 
+	/**
+	 * @param id Recipe identifier
+	 * @return Recursively checks if that station has the provided recipe.
+	 */
 	public boolean hasRecipe(String id) {
-		return recipes.containsKey(id);
+		return recipes.containsKey(id) || (parent != null && parent.hasRecipe(id));
 	}
 
+	/**
+	 * @param id Recipe identifier
+	 * @return Recursively finds the corresponding recipe
+	 */
 	public Recipe getRecipe(String id) {
-		return recipes.get(id);
+		Recipe found = recipes.get(id);
+		return found == null && parent != null ? parent.getRecipe(id) : found;
 	}
 
 	public int getMaxQueueSize() {
@@ -128,12 +152,20 @@ public class CraftingStation extends PostLoadObject {
 		return itemOptions;
 	}
 
+	/**
+	 * Keep in mind this method also has the effect of register a recipe
+	 * inside any crafting station that has the current station as child.
+	 *
+	 * @param recipe Recipe being registered
+	 * @see {@link #hasRecipe(String)}
+	 */
 	public void registerRecipe(Recipe recipe) {
 		recipes.put(recipe.getId(), recipe);
 	}
 
 	public int getMaxPage() {
-		return Math.max(1, (int) Math.ceil((double) recipes.size() / getLayout().getRecipeSlots().size()));
+		int recipes = getRecipes().size();
+		return Math.max(1, (int) Math.ceil((double) recipes / getLayout().getRecipeSlots().size()));
 	}
 
 	@Override

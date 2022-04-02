@@ -164,7 +164,7 @@ public class TemplateManager implements Reloadable {
 
 		} catch (IllegalArgumentException exception) {
 			MMOItems.plugin.getLogger().log(Level.INFO,
-					"An error occured while trying to reload item gen template '" + id + "': " + exception.getMessage());
+					"An error occurred while trying to reload item gen template '" + id + "': " + exception.getMessage());
 			return null;
 		}
 	}

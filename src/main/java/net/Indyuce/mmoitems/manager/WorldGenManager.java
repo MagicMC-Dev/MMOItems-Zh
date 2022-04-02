@@ -104,7 +104,7 @@ public class WorldGenManager implements Listener, Reloadable {
 				WorldGenTemplate template = new WorldGenTemplate(config.getConfigurationSection(key));
 				templates.put(template.getId(), template);
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occured when loading gen template '" + key + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred when loading gen template '" + key + "': " + exception.getMessage());
 			}
 		}
 	}

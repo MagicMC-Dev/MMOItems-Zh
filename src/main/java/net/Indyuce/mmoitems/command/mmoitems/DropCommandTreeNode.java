@@ -120,7 +120,7 @@ public class DropCommandTreeNode extends CommandTreeNode {
 		ItemStack item = new MMOItemDropItem(type, name, dropChance / 100, unidentifiedChance / 100, min, max).getItem(null);
 		if (item == null || item.getType() == Material.AIR) {
 			sender.sendMessage(
-					MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occured while attempting to generate the item called " + name + ".");
+					MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occurred while attempting to generate the item called " + name + ".");
 			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
 			return CommandResult.FAILURE;
 		}

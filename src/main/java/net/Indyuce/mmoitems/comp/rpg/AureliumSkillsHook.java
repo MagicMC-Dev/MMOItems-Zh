@@ -136,7 +136,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
             if (skillLevel < required && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
                 if (message) {
-                    Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "profession", skill.getDisplayName(Locale.getDefault())).send(player.getPlayer());
+                    Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", skill.getDisplayName(Locale.getDefault())).send(player.getPlayer());
                     player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
                 }
                 return false;

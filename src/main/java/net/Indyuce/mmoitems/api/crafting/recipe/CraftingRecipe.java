@@ -185,7 +185,6 @@ public class CraftingRecipe extends Recipe {
 		if (!data.isOnline())
 			return false;
 
-
 		/*
 		 * If the recipe is instant, take the ingredients off
 		 * and directly add the output to the player's inventory
@@ -197,6 +196,12 @@ public class CraftingRecipe extends Recipe {
 			Bukkit.getPluginManager().callEvent(event);
 			if (event.isCancelled())
 				return false;
+
+			/*
+			 * Since instant recipes bypass the crafting queue MI still needs
+			 * to apply the trigger list when using an instant recipe
+			 */
+			recipe.getRecipe().whenClaimed().forEach(trigger -> trigger.whenCrafting(data));
 
 			if (result != null)
 				new SmartGive(data.getPlayer()).give(result);

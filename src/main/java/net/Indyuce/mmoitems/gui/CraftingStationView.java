@@ -172,8 +172,7 @@ public class CraftingStationView extends PluginInventory {
 		}
 
 		if (!(tag = item.getString("queueId")).isEmpty()) {
-			UUID uuid = UUID.fromString(tag);
-			CraftingInfo recipeInfo = playerData.getCrafting().getQueue(station).getCraft(uuid);
+			CraftingInfo recipeInfo = playerData.getCrafting().getQueue(station).getCraft(UUID.fromString(tag));
 			CraftingRecipe recipe = recipeInfo.getRecipe();
 
 			/*

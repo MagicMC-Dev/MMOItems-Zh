@@ -7,19 +7,6 @@ public class CommandData {
 	private final double delay;
 	private final boolean console, op;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof CommandData)) { return false; }
-
-		// Any difference in these will cause this to not be equal
-		if (((CommandData) obj).getDelay() != getDelay()) { return false; }
-		if (((CommandData) obj).isConsoleCommand() != isConsoleCommand()) { return false; }
-		if (((CommandData) obj).hasOpPerms() != hasOpPerms()) { return false; }
-
-		// Finally, if the command strings match.
-		return ((CommandData) obj).getCommand().equals(getCommand());
-	}
-
 	public CommandData(String command, double delay, boolean console, boolean op) {
 		Validate.notNull(command, "Command cannot be null");
 
@@ -47,5 +34,13 @@ public class CommandData {
 
 	public boolean hasOpPerms() {
 		return op;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CommandData that = (CommandData) o;
+		return Double.compare(that.delay, delay) == 0 && console == that.console && op == that.op && command.equals(that.command);
 	}
 }

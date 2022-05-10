@@ -1,10 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
 
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
@@ -14,47 +11,33 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandListData implements StatData, Mergeable, RandomStatData {
-	@NotNull private final Set<CommandData> commands;
+	@NotNull private final List<CommandData> commands;
 
-	public CommandListData(@NotNull Set<CommandData> commands) {
+	public CommandListData(@NotNull List<CommandData> commands) {
 		this.commands = commands;
 	}
 
 	public CommandListData(CommandData... commands) {
-		this(new HashSet<>());
+		this(new ArrayList<>());
 
 		add(commands);
 	}
 
 	public void add(CommandData... commands) {
-		this.commands.addAll(Arrays.asList(commands));
+		for (CommandData data : commands)
+			this.commands.add(data);
 	}
 
-	@NotNull public Set<CommandData> getCommands() {
+	@NotNull public List<CommandData> getCommands() {
 		return commands;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof CommandListData)) { return false; }
-		if (((CommandListData) obj).getCommands().size() != getCommands().size()) { return false; }
-
-		for (CommandData objCommand : ((CommandListData) obj).getCommands()) {
-
-			if (objCommand == null) { continue; }
-
-			// Compare to mine
-			boolean unmatched = true;
-			for (CommandData thisCommand : getCommands()) {
-
-				// Unequal? Fail
-				if (objCommand.equals(thisCommand)) { unmatched = false; break; } }
-
-			if (unmatched) { return false; }
-		}
-
-		// Success
-		return true;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CommandListData that = (CommandListData) o;
+		return commands.equals(that.commands);
 	}
 
 	@Override
@@ -73,6 +56,6 @@ public class CommandListData implements StatData, Mergeable, RandomStatData {
 
 	@Override
 	public StatData randomize(MMOItemBuilder builder) {
-		return new CommandListData(new HashSet<>(commands));
+		return new CommandListData(new ArrayList<>(commands));
 	}
 }

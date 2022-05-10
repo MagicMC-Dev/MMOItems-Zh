@@ -126,8 +126,17 @@ public class EntityManager implements Listener {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void cacheInitialProjectileDamage(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Projectile)
-            projectiles.get(event.getEntity().getEntityId()).cacheInitialDamage(event.getDamage());
+        if (event.getEntity() instanceof Projectile) {
+
+            /*
+             * Some projectiles like Shulker Missiles are not handled
+             * by MMOItems, therefore it needs to check if it's in the
+             * projectile data map first before doing anything
+             */
+            ProjectileData projData = projectiles.get(event.getEntity().getEntityId());
+            if (projData != null)
+                projData.cacheInitialDamage(event.getDamage());
+        }
     }
 
     // Projectile damage and effects

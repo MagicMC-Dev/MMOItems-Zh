@@ -123,7 +123,7 @@ public class DeathDowngrading {
      *
      * @return The same list of items... but some of them possibly downgraded.
      */
-    @NotNull ArrayList<ItemStack> downgradeItems(@NotNull List<ItemStack> allItems, @NotNull Player player, double deathChance) {
+    @NotNull public static ArrayList<ItemStack> downgradeItems(@NotNull List<ItemStack> allItems, @NotNull Player player, double deathChance) {
 
         // List of result and downgrade
         ArrayList<ItemStack> result = new ArrayList<>();
@@ -256,7 +256,7 @@ public class DeathDowngrading {
      *
      * @return The death downgrade chance of the player
      */
-    public double getDeathDowngradeChance(@NotNull Player player) {
+    public static double getDeathDowngradeChance(@NotNull Player player) {
 
         // Get Player
         PlayerData data = PlayerData.get(player);

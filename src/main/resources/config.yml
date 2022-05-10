@@ -256,10 +256,13 @@ item-revision:
     # ´reroll-when-updated´ is set to true.
     default-item-level: -1
 
-    # Whether or not the current tier of the item should
-    # be carried over.
-    # Please note, that this value has no effect if
-    # ´reroll-when-updated´ is set to true.
+    # Unsocketing gems picks them up with the stats they had
+    # when first put into the item, disable this option to
+    # force them to be regenerated.
+    regenerate-gems-when-unsocketed: false
+
+    # Legacy option to carry tiers over, will take precedence
+    # If not specified next to the other keep- flags.
     keep-tiers: true
 
     # If an item is updated, and the new version does not
@@ -303,8 +306,11 @@ item-revision:
         # Modifiers of items ~ Sharp, Light, Heavy, Arcane
         modifications: true
 
-        # Third party plugin compatibility
+        # Skins applied by MMOItems
         skins: true
+
+        # Tier of the item
+        tier: true
 
         # Third party plugin compatibility
         advanced-enchantments: true
@@ -317,6 +323,7 @@ item-revision:
         upgrades: false
         lore: false
         exsh: false
+        tier: true
         skins: false
         reroll: true
         modifications: false

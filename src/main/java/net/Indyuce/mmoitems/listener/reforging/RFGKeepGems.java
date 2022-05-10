@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
@@ -148,8 +149,10 @@ public class RFGKeepGems implements Listener {
 
                 // Get MMOItem
                 MMOItem restoredGem = event.getOldMMOItem().extractGemstone(lost);
+                if (restoredGem == null) { continue; }
 
                 // Success? Add that gem there
-                if (restoredGem != null) { event.getReforger().addReforgingOutput(restoredGem.newBuilder().build()); } } }
+                event.getReforger().addReforgingOutput(restoredGem.newBuilder().build());
+            } }
     }
 }

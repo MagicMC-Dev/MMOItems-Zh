@@ -1,23 +1,25 @@
 package net.Indyuce.mmoitems.api.item.mmoitem;
 
+import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.stat.Enchants;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.GemSocketsData;
-import net.Indyuce.mmoitems.stat.data.GemstoneData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
+import net.Indyuce.mmoitems.stat.data.*;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -225,11 +227,25 @@ public class MMOItem implements ItemReference {
 	 */
 	public int getDamage() {
 
-		if (!hasData(ItemStats.ITEM_DAMAGE)) { return 0; }
+		// Does it use MMO Durability?
+		int maxDurability = hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData) getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
 
-		DoubleData durData = (DoubleData) getData(ItemStats.ITEM_DAMAGE);
+		if (maxDurability > 0) {
 
-		return SilentNumbers.round(durData.getValue());
+			// Apparently we must do this
+			NBTItem nbtItem = newBuilder().buildNBT();
+
+			// Durability
+			int durability = hasData(ItemStats.CUSTOM_DURABILITY) ? SilentNumbers.round(((DoubleData) getData(ItemStats.CUSTOM_DURABILITY)).getValue()) : maxDurability;
+
+			// Damage is the difference between max and current durability
+			return maxDurability - durability;
+
+		} else {
+
+			// Use vanilla durability
+			return hasData(ItemStats.ITEM_DAMAGE) ? SilentNumbers.round(((DoubleData) getData(ItemStats.ITEM_DAMAGE)).getValue()) : 0;
+		}
 	}
 
 	/**
@@ -240,9 +256,33 @@ public class MMOItem implements ItemReference {
 	 */
 	public void setDamage(int damage) {
 
+		// Too powerful
 		if (hasData(ItemStats.UNBREAKABLE)) { return; }
 
-		setData(ItemStats.ITEM_DAMAGE, new DoubleData(damage));
+		// Does it use MMO Durability?
+		int maxDurability = hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData) getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
+
+		if (maxDurability > 0) {
+
+			// Apparently we must do this
+			NBTItem nbtItem = newBuilder().buildNBT();
+
+			// Durability
+			setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(maxDurability - damage));
+
+			// Scale damage
+			Material mat = hasData(ItemStats.MATERIAL) ? ((MaterialData) getData(ItemStats.MATERIAL)).getMaterial() : Material.GOLD_INGOT;
+			double multiplier = ((double) damage) * ((double) mat.getMaxDurability()) / ((double) maxDurability);
+			if (multiplier == 0) { return; }
+
+			// Set to some decent amount of damage
+			setData(ItemStats.ITEM_DAMAGE, new DoubleData(multiplier));
+
+		} else {
+
+			// Use vanilla durability
+			setData(ItemStats.ITEM_DAMAGE, new DoubleData(damage));
+		}
 	}
 	//endregion
 
@@ -373,6 +413,9 @@ public class MMOItem implements ItemReference {
 		}
 		//XTC//MMOItems.log("\u00a7b   *\u00a77 Regen Size:\u00a79 " + regeneratedGems.values().size());
 
+		// If RevID updating, it basically just regenerates
+		if (MMOItemReforger.gemstonesRevIDWhenUnsocket) { return new ArrayList<>(regeneratedGems.values()); }
+
 		// Identify actual attributes
 		for (ItemStat stat : getStats()) {
 
@@ -420,6 +463,8 @@ public class MMOItem implements ItemReference {
 
 		// Can we generate?
 		MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
+
+		if (MMOItemReforger.gemstonesRevIDWhenUnsocket) { return restored; }
 
 		// Valid? neat-o
 		if (restored != null) {

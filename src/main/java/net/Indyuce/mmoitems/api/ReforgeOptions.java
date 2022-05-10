@@ -1,8 +1,10 @@
 package net.Indyuce.mmoitems.api;
 
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,7 @@ public class ReforgeOptions {
 	private final boolean keepSoulbind;
 	private final boolean keepExternalSH;
 	private final boolean keepModifications;
+	@Nullable private final Boolean keepTier;
 
 	private final boolean reroll;
 
@@ -78,6 +81,7 @@ public class ReforgeOptions {
 		keepModifications = config.getBoolean("modifications");
 		reroll = config.getBoolean("reroll");
 		keepAdvancedEnchantments = config.getBoolean("advanced-enchantments");
+		keepTier = config.contains("tier") ? config.getBoolean("tier", true) : null;
 	}
 
 	public ReforgeOptions(boolean... values) {
@@ -92,6 +96,7 @@ public class ReforgeOptions {
 		keepModifications = arr(values, 8);
 		keepAdvancedEnchantments = arr(values, 9);
 		keepSkins = arr(values, 10);
+		keepTier = arr(values, 11);
 	}
 
 	boolean arr(@NotNull boolean[] booleans, int idx) {
@@ -104,70 +109,56 @@ public class ReforgeOptions {
 	/**
 	 * Keeps the display name of the item.
 	 */
-	public boolean shouldReroll() {
-		return reroll;
-	}
+	public boolean shouldReroll() { return reroll; }
 
 	/**
 	 * Keeps the display name of the item.
 	 */
-	public boolean shouldKeepName() {
-		return keepName;
-	}
+	public boolean shouldKeepName() { return keepName; }
 
 	/**
 	 * Keeps the modifiers of the item.
 	 */
-	public boolean shouldKeepMods() {
-		return keepModifications;
-	}
+	public boolean shouldKeepMods() { return keepModifications; }
 
 	/**
 	 *  Keeps all lore lines that begin with {@link org.bukkit.ChatColor#GRAY}
 	 */
-	public boolean shouldKeepLore() {
-		return keepLore;
-	}
+	public boolean shouldKeepLore() { return keepLore; }
 
 	/**
 	 *  Keeps skins
 	 */
-	public boolean shouldKeepSkins() {
-		return keepSkins;
+	public boolean shouldKeepSkins() { return keepSkins; }
 
-	}
+	/**
+	 *  Should keep the tier? defaults to {@link MMOItemReforger#keepTiersWhenReroll}
+	 */
+	public boolean shouldKeepTier() { return keepTier == null ? MMOItemReforger.keepTiersWhenReroll : keepTier; }
 
 	/**
 	 * Should this keep the enchantments the player
 	 * manually cast onto this item? (Not from gem
 	 * stones nor upgrades).
 	 */
-	public boolean shouldKeepEnchantments() {
-		return keepEnchantments;
-	}
+	public boolean shouldKeepEnchantments() { return keepEnchantments; }
 
 	/**
 	 * Should this keep the enchantments the player
 	 * manually cast onto this item? (Not from gem
 	 * stones nor upgrades).
 	 */
-	public boolean shouldKeepAdvancedEnchants() {
-		return keepAdvancedEnchantments;
-	}
+	public boolean shouldKeepAdvancedEnchants() { return keepAdvancedEnchantments; }
 
 	/**
 	 * Keep 'extraneous' data registered onto the Stat History
 	 */
-	public boolean shouldKeepExternalSH() {
-		return keepExternalSH;
-	}
+	public boolean shouldKeepExternalSH() { return keepExternalSH; }
 
 	/**
 	 * Retains the upgrade level of the item.
 	 */
-	public boolean shouldKeepUpgrades() {
-		return keepUpgrades;
-	}
+	public boolean shouldKeepUpgrades() { return keepUpgrades; }
 
 	/**
 	 * Retains all gem stones if there are any, removing
@@ -175,14 +166,10 @@ public class ReforgeOptions {
 	 * <p></p>
 	 * Gemstones remember at what upgrade level they were inserted.
 	 */
-	public boolean shouldKeepGemStones() {
-		return keepGemStones;
-	}
+	public boolean shouldKeepGemStones() { return keepGemStones; }
 
 	/**
 	 * Retains the soulbind if it has any.
 	 */
-	public boolean shouldKeepSoulbind() {
-		return keepSoulbind;
-	}
+	public boolean shouldKeepSoulbind() { return keepSoulbind; }
 }

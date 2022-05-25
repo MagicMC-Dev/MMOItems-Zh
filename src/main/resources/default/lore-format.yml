@@ -41,6 +41,8 @@ lore-format:
 - '#arrow-velocity#'
 - '#critical-strike-chance#'
 - '#critical-strike-power#'
+- '#skill-critical-strike-chance#'
+- '#skill-critical-strike-power#'
 - '#range#'
 - '#pvp-damage#'
 - '#pve-damage#'

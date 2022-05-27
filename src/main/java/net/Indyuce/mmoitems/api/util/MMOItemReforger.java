@@ -412,11 +412,13 @@ public class MMOItemReforger {
 						: iLevel;
 
 
+
+
 		// Identify tier.
 		ItemTier tier =
 
 				// Does the item have a tier, and it should keep it?
-				(MMOItemReforger.keepTiersWhenReroll && getOldMMOItem().hasData(ItemStats.TIER)) ?
+				(options.shouldKeepTier() && getOldMMOItem().hasData(ItemStats.TIER)) ?
 
 						// The tier will be the current tier
 						MMOItems.plugin.getTiers().get(getOldMMOItem().getData(ItemStats.TIER).toString())
@@ -478,11 +480,13 @@ public class MMOItemReforger {
 	public static int autoSoulbindLevel = 1;
 	public static int defaultItemLevel = -32767;
 	public static boolean keepTiersWhenReroll = true;
+	public static boolean gemstonesRevIDWhenUnsocket = false;
 
 	public static void reload() {
 		autoSoulbindLevel = MMOItems.plugin.getConfig().getInt("soulbound.auto-bind.level", 1);
 		defaultItemLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -32767);
 		keepTiersWhenReroll = MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers");
+		gemstonesRevIDWhenUnsocket = MMOItems.plugin.getConfig().getBoolean("item-revision.regenerate-gems-when-unsocketed", false);
 	}
 	//endregion
 

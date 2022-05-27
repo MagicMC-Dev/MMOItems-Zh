@@ -15,7 +15,6 @@ public class RFGKeepDurability implements Listener {
 
     @EventHandler
     public void onReforge(MMOItemReforgeEvent event) {
-        //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Durability");
 
         // What was its durability? Transfer it
         event.getNewMMOItem().setDamage(event.getOldMMOItem().getDamage());

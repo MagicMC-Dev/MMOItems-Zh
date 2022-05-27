@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
@@ -19,6 +20,7 @@ import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.RefreshInventoryEvent;
 import net.Indyuce.mmoitems.api.interaction.Tool;
 import net.Indyuce.mmoitems.api.item.ItemReference;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
@@ -61,6 +63,7 @@ public class PlayerData {
     private final Set<ParticleRunnable> itemParticles = new HashSet<>();
     private ParticleRunnable overridingItemParticles = null;
     private boolean fullHands = false;
+    @Nullable
     private SetBonuses setBonuses = null;
     private final PlayerStats stats;
 
@@ -174,10 +177,7 @@ public class PlayerData {
         overridingItemParticles = null;
         if (MMOItems.plugin.hasPermissions()) {
             Permission perms = MMOItems.plugin.getVault().getPermissions();
-            permissions.forEach(perm -> {
-                if (perms.has(getPlayer(), perm))
-                    perms.playerRemove(getPlayer(), perm);
-            });
+            permissions.forEach(perm -> { if (perms.has(getPlayer(), perm)) { perms.playerRemove(getPlayer(), perm); } });
         }
         permissions.clear();
 
@@ -248,12 +248,10 @@ public class PlayerData {
              * Apply permissions if vault exists
              */
             if (MMOItems.plugin.hasPermissions() && item.hasData(ItemStats.GRANTED_PERMISSIONS)) {
+
                 permissions.addAll(((StringListData) item.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
                 Permission perms = MMOItems.plugin.getVault().getPermissions();
-                permissions.forEach(perm -> {
-                    if (!perms.has(getPlayer(), perm))
-                        perms.playerAdd(getPlayer(), perm);
-                });
+                permissions.forEach(perm -> { if (!perms.has(getPlayer(), perm)) { perms.playerAdd(getPlayer(), perm); } });
             }
         }
 
@@ -261,8 +259,6 @@ public class PlayerData {
          * calculate the player's item set and add the bonus permanent effects /
          * bonus abilities to the playerdata maps
          */
-        int max = 0;
-        ItemSet set = null;
         Map<ItemSet, Integer> sets = new HashMap<>();
         for (EquippedPlayerItem equipped : inventory.getEquipped()) {
             VolatileMMOItem item = equipped.getItem();
@@ -273,14 +269,28 @@ public class PlayerData {
 
             int nextInt = (sets.getOrDefault(itemSet, 0)) + 1;
             sets.put(itemSet, nextInt);
-            if (nextInt >= max) {
-                max = nextInt;
-                set = itemSet;
+        }
+
+        // Reset
+        setBonuses = null;
+        for (Map.Entry<ItemSet,Integer> equippedSetBonus : sets.entrySet()) {
+
+            if (setBonuses == null) {
+
+                // Set set bonuses
+                setBonuses = equippedSetBonus.getKey().getBonuses(equippedSetBonus.getValue());
+
+            } else {
+
+                // Merge bonuses
+                setBonuses.merge(equippedSetBonus.getKey().getBonuses(equippedSetBonus.getValue()));
             }
         }
-        setBonuses = set == null ? null : set.getBonuses(max);
 
-        if (hasSetBonuses()) {
+        if (setBonuses != null) {
+            Permission perms = MMOItems.plugin.getVault().getPermissions();
+            for (String perm : setBonuses.getPermissions())
+                if (!perms.has(getPlayer(), perm)) { perms.playerAdd(getPlayer(), perm); }
             for (AbilityData ability : setBonuses.getAbilities())
                 mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
             for (ParticleData particle : setBonuses.getParticles())

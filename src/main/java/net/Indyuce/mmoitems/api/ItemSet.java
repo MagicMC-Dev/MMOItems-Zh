@@ -1,11 +1,6 @@
 package net.Indyuce.mmoitems.api;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,6 +12,7 @@ import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemSet {
 	private final Map<Integer, SetBonuses> bonuses = new HashMap<>();
@@ -39,10 +35,14 @@ public class ItemSet {
 		Validate.isTrue(config.contains("bonuses"), "Could not find item set bonuses");
 
 		for (int j = 2; j <= itemLimit; j++)
-			if (config.getConfigurationSection("bonuses").contains("" + j)) {
+			if (config.getConfigurationSection("bonuses").contains(String.valueOf(j))) {
 				SetBonuses bonuses = new SetBonuses();
 
-				for (String key : config.getConfigurationSection("bonuses." + j).getKeys(false))
+				// Add permissions
+				for (String perm : config.getConfigurationSection("bonuses." + j).getStringList("granted-permissions")) { bonuses.addPermission(perm); }
+
+				for (String key : config.getConfigurationSection("bonuses." + j).getKeys(false)) {
+
 					try {
 						String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
 
@@ -75,6 +75,7 @@ public class ItemSet {
 					} catch (IllegalArgumentException exception) {
 						throw new IllegalArgumentException("Could not load set bonus '" + key + "': " + exception.getMessage());
 					}
+				}
 
 				this.bonuses.put(j, bonuses);
 			}
@@ -105,6 +106,7 @@ public class ItemSet {
 		private final Map<PotionEffectType, PotionEffect> permEffects = new HashMap<>();
 		private final Set<AbilityData> abilities = new HashSet<>();
 		private final Set<ParticleData> particles = new HashSet<>();
+		private final ArrayList<String> permissions = new ArrayList<>();
 
 		public void addStat(ItemStat stat, double value) {
 			stats.put(stat, value);
@@ -121,6 +123,8 @@ public class ItemSet {
 		public void addParticle(ParticleData particle) {
 			particles.add(particle);
 		}
+
+		public void addPermission(@NotNull String permission) { permissions.add(permission); }
 
 		public boolean hasStat(ItemStat stat) {
 			return stats.containsKey(stat);
@@ -146,6 +150,8 @@ public class ItemSet {
 			return abilities;
 		}
 
+		@NotNull public ArrayList<String> getPermissions() { return permissions; }
+
 		public void merge(SetBonuses bonuses) {
 			bonuses.getStats().forEach((stat, value) -> stats.put(stat, (stats.containsKey(stat) ? stats.get(stat) : 0) + value));
 
@@ -154,6 +160,8 @@ public class ItemSet {
 					permEffects.put(effect.getType(), effect);
 
 			abilities.addAll(bonuses.getAbilities());
+
+			permissions.addAll(bonuses.getPermissions());
 		}
 	}
 }

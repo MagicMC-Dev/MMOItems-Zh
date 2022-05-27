@@ -21,6 +21,8 @@ import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.inventory.EditableEquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
+import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
+import net.Indyuce.mmoitems.api.util.DeathDowngrading;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -39,6 +41,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -57,8 +61,9 @@ public class PlayerListener implements Listener {
     /**
      * If the player dies, its time to roll the death-downgrade stat!
      */
+    @SuppressWarnings("InstanceofIncompatibleInterface")
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onDeathForUpgradeLoss(PlayerDeathEvent event) {
+    public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent event) {
 
         // No
         if (event instanceof Cancellable) { if (((Cancellable) event).isCancelled()) { return; } }
@@ -66,126 +71,8 @@ public class PlayerListener implements Listener {
         // Supports NPCs
         if (!PlayerData.has(event.getEntity())) return;
 
-        // Get Player
-        PlayerData data = PlayerData.get(event.getEntity());
-
-        // Get total downgrade chance, anything less than zero is invalid
-        double deathChance = data.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
-        //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Current chance:\u00a7b " + deathChance);
-        if (deathChance <= 0) { return; }
-
-        List<EquippedPlayerItem> items = data.getInventory().getEquipped();
-        ArrayList<EditableEquippedItem> equipped = new ArrayList<>();
-
-        // Equipped Player Items yeah...
-        for (EquippedPlayerItem playerItem : items) {
-
-            // Null
-            if (playerItem == null) { continue; }
-            //DET//playerItem.getItem().hasData(ItemStats.NAME);
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Item:\u00a7b " + playerItem.getItem().getData(ItemStats.NAME));
-
-            // Cannot perform operations of items that are uneditable
-            if (!(playerItem.getEquipped() instanceof EditableEquippedItem)) {
-                //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Not equippable. \u00a7cCancel");
-                continue; }
-
-            // Not downgradeable on death? Snooze
-            if (!playerItem.getItem().hasData(ItemStats.DOWNGRADE_ON_DEATH)) {
-                //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Not Downgradeable. \u00a7cCancel");
-                continue; }
-
-            // No upgrade template no snooze
-            if(!playerItem.getItem().hasData(ItemStats.UPGRADE)) {
-                //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Not Upgradeable. \u00a7cCancel");
-                continue; }
-            if (!playerItem.getItem().hasUpgradeTemplate()) {
-                //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Null Template. \u00a7cCancel");
-                continue; }
-
-            // If it can be downgraded by one level...
-            UpgradeData upgradeData = (UpgradeData) playerItem.getItem().getData(ItemStats.UPGRADE);
-            if (upgradeData.getLevel() <= upgradeData.getMin()) {
-                //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Too downgraded. \u00a7cCancel");
-                continue; }
-
-            // Okay explore stat
-            equipped.add((EditableEquippedItem) playerItem.getEquipped());
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Yes. \u00a7aAccepted");
-        }
-
-        // Nothing to perform operations? Snooze
-        if (equipped.size() == 0) {
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 No items to downgrade. ");
-            return; }
-        Random random = new Random();
-
-        // Degrade those items!
-        while (deathChance >= 100 && equipped.size() > 0) {
-
-            // Decrease
-            deathChance -= 100;
-
-            // Downgrade random item
-            int d = random.nextInt(equipped.size());
-
-            /*
-             * The item was chosen, we must downgrade it by one level.
-             */
-            EditableEquippedItem equip = equipped.get(d);
-            LiveMMOItem mmo = new LiveMMOItem(equip.getItem());
-            mmo.getUpgradeTemplate().upgradeTo(mmo, mmo.getUpgradeLevel() - 1);
-
-            // Build NBT
-            ItemStack bakedItem = mmo.newBuilder().build();
-
-            // Set durability to zero (full repair)
-            DurabilityItem dur = new DurabilityItem(event.getEntity(), mmo.newBuilder().buildNBT());
-
-            if (dur.getDurability() != dur.getMaxDurability()) {
-                dur.addDurability(dur.getMaxDurability());
-                bakedItem.setItemMeta(dur.toItem().getItemMeta());}
-
-            // AH
-            equip.setItem(bakedItem);
-            equipped.remove(d);
-
-            Message.DEATH_DOWNGRADING.format(ChatColor.RED, "#item#", SilentNumbers.getItemName(equip.getItem().getItem(), false))
-                    .send(event.getEntity());
-
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Autodegrading\u00a7a " + mmo.getData(ItemStats.NAME));
-        }
-
-        // If there is chance, and there is size, and there is chance success
-        if (deathChance > 0 && equipped.size() > 0 && random.nextInt(100) < deathChance) {
-
-            // Downgrade random item
-            int d = random.nextInt(equipped.size());
-
-            /*
-             * The item was chosen, we must downgrade it by one level.
-             */
-            EditableEquippedItem equip = equipped.get(d);
-            LiveMMOItem mmo = new LiveMMOItem(equip.getItem());
-            mmo.getUpgradeTemplate().upgradeTo(mmo, mmo.getUpgradeLevel() - 1);
-
-            // Build NBT
-            ItemStack bakedItem = mmo.newBuilder().build();
-
-            // Set durability to zero (full repair)
-            DurabilityItem dur = new DurabilityItem(event.getEntity(), mmo.newBuilder().buildNBT());
-
-            if (dur.getDurability() != dur.getMaxDurability()) {
-                dur.addDurability(dur.getMaxDurability());
-                bakedItem.setItemMeta(dur.toItem().getItemMeta());}
-
-            // AH
-            equip.setItem(bakedItem);
-            equipped.remove(d);
-
-            Message.DEATH_DOWNGRADING.format(ChatColor.RED, "#item#", SilentNumbers.getItemName(equip.getItem().getItem(), false))
-                    .send(event.getEntity());
-        }
+        // See description of DelayedDeathDowngrade child class for full explanation
+        (new DelayedDeathDowngrade(event)).runTaskLater(MMOItems.plugin, 3L);
     }
 
     /**
@@ -338,5 +225,33 @@ public class PlayerListener implements Listener {
 
         // Call event for compatibility
         Bukkit.getPluginManager().callEvent(new AbilityUseEvent(playerData, abilityData, target));
+    }
+
+    /**
+     * Some plugins like to interfere with dropping items when the
+     * player dies, or whatever of that sort.
+     *
+     * MMOItems would hate to dupe items because of this, as such, we wait
+     * 3 ticks for those plugins to reasonably complete their operations and
+     * then downgrade the items the player still has equipped.
+     *
+     * If a plugin removes items in this time, they will be completely excluded
+     * and no dupes will be caused, and if a plugin adds items, they will be
+     * included and downgraded. I think that's reasonable behaviour.
+     *
+     * @author Gunging
+     */
+    private static class DelayedDeathDowngrade extends BukkitRunnable {
+
+        @NotNull final PlayerDeathEvent event;
+
+        DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {this.event = event;}
+
+        @Override
+        public void run() {
+
+            // Downgrade player's inventory
+            DeathDowngrading.playerDeathDowngrade(event.getEntity());
+        }
     }
 }

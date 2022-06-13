@@ -206,4 +206,9 @@ public class LoreBuilder {
     public List<String> getLore() {
         return lore;
     }
+
+    public void setLore(List<String> lore) {
+        this.lore.clear();
+        this.lore.addAll(lore);
+    }
 }

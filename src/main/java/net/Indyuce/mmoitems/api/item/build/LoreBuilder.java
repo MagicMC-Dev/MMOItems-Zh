@@ -202,4 +202,13 @@ public class LoreBuilder {
     private boolean isBar(String str) {
         return str.startsWith("{bar}") || str.startsWith("{sbar}");
     }
+
+    public List<String> getLore() {
+        return lore;
+    }
+
+    public void setLore(List<String> lore) {
+        this.lore.clear();
+        this.lore.addAll(lore);
+    }
 }

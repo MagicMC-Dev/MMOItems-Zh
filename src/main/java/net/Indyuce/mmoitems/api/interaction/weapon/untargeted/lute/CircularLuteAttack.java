@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -66,7 +67,7 @@ public class CircularLuteAttack implements LuteAttackHandler {
 					if (j == 0) sound.play(loc, 2, (float) (.5 + (double) ti / range));
 
 					for (Entity target : entities)
-						if (MMOUtils.canTarget(attack.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
+						if (UtilityMethods.canTarget(attack.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
 							attack.clone().applyEffectsAndDamage(nbt, (LivingEntity) target);
 							cancel();
 							return;

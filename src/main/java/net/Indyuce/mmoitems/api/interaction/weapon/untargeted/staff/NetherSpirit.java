@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
@@ -39,7 +40,7 @@ public class NetherSpirit implements StaffAttackHandler {
                     loc.getWorld().spawnParticle(Particle.FLAME, loc, 2, .07, .07, .07, 0);
                     loc.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 0);
                     for (Entity target : targets)
-                        if (MMOUtils.canTarget(attackMeta.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
+                        if (UtilityMethods.canTarget(attackMeta.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
                             attackMeta.applyEffectsAndDamage(nbt, (LivingEntity) target);
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
                             cancel();

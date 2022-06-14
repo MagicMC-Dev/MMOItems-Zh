@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.lute;
 
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import net.Indyuce.mmoitems.MMOItems;
@@ -57,7 +58,9 @@ public class SlashLuteAttack implements LuteAttackHandler {
 		}.runTaskTimer(MMOItems.plugin, 0, 1);
 
 		for (Entity entity : MMOUtils.getNearbyChunkEntities(attack.getPlayer().getLocation()))
-			if (entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40 && attack.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 6 && MMOUtils.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
+			if (entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40
+					&& attack.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 6
+					&& UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
 				attack.clone().applyEffectsAndDamage(nbt, (LivingEntity) entity);
 	}
 }

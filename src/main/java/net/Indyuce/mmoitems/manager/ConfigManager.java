@@ -2,14 +2,11 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
-import net.Indyuce.mmoitems.api.crafting.trigger.Trigger;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -248,12 +245,6 @@ public class ConfigManager implements Reloadable {
     public String getMessage(String path) {
         String found = messages.getConfig().getString(path);
         return MythicLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
-    }
-
-    @Deprecated
-    public String getAbilityName(Ability ability) {
-        String configName = abilities.getConfig().getString("ability." + ability.getLowerCaseID());
-        return configName != null ? configName : ability.getName();
     }
 
     @NotNull public String getCastingModeName(@NotNull TriggerType mode) {

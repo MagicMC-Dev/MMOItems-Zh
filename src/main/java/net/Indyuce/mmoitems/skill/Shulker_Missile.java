@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.skill;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
@@ -89,7 +90,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
                 return;
 
             ShulkerMissileEntityData data = (ShulkerMissileEntityData) MMOItems.plugin.getEntities().getEntityData(damager);
-            if (!MMOUtils.canTarget(data.attackMeta.getPlayer(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
+            if (!UtilityMethods.canTarget(data.attackMeta.getPlayer(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
                 event.setCancelled(true);
                 return;
             }

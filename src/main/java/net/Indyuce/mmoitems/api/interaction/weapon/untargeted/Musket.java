@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
@@ -46,7 +47,7 @@ public class Musket extends UntargetedWeapon {
         loc.setYaw((float) (loc.getYaw() + (RANDOM.nextDouble() - .5) * 2 * recoil));
         Vector vec = loc.getDirection();
 
-        RayTrace trace = new RayTrace(loc, vec, range, entity -> MMOUtils.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
+        RayTrace trace = new RayTrace(loc, vec, range, entity -> UtilityMethods.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit()) {
             ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL), stats);
             attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());

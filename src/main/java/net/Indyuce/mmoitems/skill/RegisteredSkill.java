@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.skill;
 
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.ability.Ability;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,17 +22,6 @@ public class RegisteredSkill {
         for (String mod : handler.getModifiers()) {
             modifierNames.put(mod, Objects.requireNonNull(config.getString("modifier." + mod + ".name"), "Could not find translation for modifier '" + mod + "'"));
             modifierDefaultValues.put(mod, config.getDouble("modifier." + mod + ".default-value"));
-        }
-    }
-
-    @Deprecated
-    public RegisteredSkill(@NotNull Ability ability) {
-        this.handler = ability;
-        this.name = MMOItems.plugin.getLanguage().getAbilityName(ability);
-
-        for (String mod : handler.getModifiers()) {
-            modifierDefaultValues.put(mod, ability.getDefaultValue(mod));
-            modifierNames.put(mod, MMOUtils.caseOnWords(mod.toLowerCase().replace("_", " ").replace("-", " ")));
         }
     }
 

@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
@@ -94,7 +95,7 @@ public class Lute extends UntargetedWeapon {
 					}
 
 					for (Entity target : entities)
-						if (MMOUtils.canTarget(getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
+						if (UtilityMethods.canTarget(getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
 							attackMeta.applyEffectsAndDamage(getNBTItem(), (LivingEntity) target);
 							cancel();
 							return;

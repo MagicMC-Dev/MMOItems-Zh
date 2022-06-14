@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
@@ -53,7 +54,7 @@ public enum Element {
 		Vector vec = target.getLocation().subtract(attacker.getPlayer().getLocation()).toVector().normalize().multiply(1.7).setY(.5);
 		target.setVelocity(vec);
 		for (Entity entity : target.getNearbyEntities(3, 1, 3))
-			if (MMOUtils.canTarget(attacker.getPlayer(), entity, InteractionType.OFFENSE_ACTION)) {
+			if (UtilityMethods.canTarget(attacker.getPlayer(), entity, InteractionType.OFFENSE_ACTION)) {
 				entity.playEffect(EntityEffect.HURT);
 				entity.setVelocity(vec);
 			}
@@ -70,14 +71,14 @@ public enum Element {
 
 				target.setVelocity(new Vector(0, 1, 0));
 				for (Entity entity : target.getNearbyEntities(3, 1, 3))
-					if (MMOUtils.canTarget(attacker.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
+					if (UtilityMethods.canTarget(attacker.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
 						entity.setVelocity(new Vector(0, 1, 0));
 			}, 29, 33),
 
 	THUNDER(VersionMaterial.GUNPOWDER.toMaterial(), ChatColor.YELLOW, new ElementParticle(Particle.FIREWORKS_SPARK, .05f, 8), (attacker, target, relative, absolute) -> {
 		target.getWorld().playSound(target.getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.toSound(), 2, 0);
 		for (Entity entity : target.getNearbyEntities(3, 2, 3))
-			if (MMOUtils.canTarget(attacker.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
+			if (UtilityMethods.canTarget(attacker.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
 				MythicLib.plugin.getDamage().damage(new ItemAttackMetadata(new DamageMetadata(absolute, DamageType.WEAPON), attacker), (LivingEntity) entity);
 
 		for (double k = 0; k < Math.PI * 2; k += Math.PI / 16)

@@ -42,7 +42,6 @@ import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
 import net.Indyuce.mmoitems.gui.listener.GuiListener;
 import net.Indyuce.mmoitems.listener.*;
 import net.Indyuce.mmoitems.manager.*;
-import net.Indyuce.mmoitems.skill.Shulker_Missile;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,7 +70,6 @@ public class MMOItems extends LuminePlugin {
 	private final CraftingManager stationRecipeManager = new CraftingManager();
 	private final LoreFormatManager formatManager = new LoreFormatManager();
 	private final TemplateManager templateManager = new TemplateManager();
-	private final AbilityManager abilityManager = new AbilityManager();
 	private final SkillManager skillManager = new SkillManager();
 	private final EntityManager entityManager = new EntityManager();
 	private final RecipeManager recipeManager = new RecipeManager();
@@ -480,11 +478,6 @@ public class MMOItems extends LuminePlugin {
 
 	public DropTableManager getDropTables() {
 		return dropTableManager;
-	}
-
-	@Deprecated
-	public AbilityManager getAbilities() {
-		return abilityManager;
 	}
 
 	public SkillManager getSkills() {

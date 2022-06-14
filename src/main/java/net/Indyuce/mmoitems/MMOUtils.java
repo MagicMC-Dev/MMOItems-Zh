@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
@@ -306,60 +307,6 @@ public class MMOUtils {
             player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), player.getHealth() + heal));
     }
     //endregion
-
-    /**
-     * Interaction type is set to OFFENSE_SKILL by default. No bounding box checks
-     *
-     * @param source Player targeting the entity
-     * @param target The entity being hit
-     * @return If the entity can be damaged, by a specific player, at a specific spot
-     */
-    public static boolean canTarget(Player source, Entity target) {
-        return canTarget(source, null, target, InteractionType.OFFENSE_SKILL);
-    }
-
-    /**
-     * Interaction type is set to OFFENSE_SKILL by default.
-     *
-     * @param source Player targeting the entity
-     * @param loc    If the given location is not null, this method checks if this
-     *               location is inside the bounding box of the entity hit
-     * @param target The entity being hit
-     * @return If the entity can be damaged, by a specific player, at a specific spot
-     */
-    public static boolean canTarget(Player source, Location loc, Entity target) {
-        return canTarget(source, loc, target, InteractionType.OFFENSE_SKILL);
-    }
-
-    /**
-     * No bounding box checks
-     *
-     * @param source      Player targeting the entity
-     * @param target      The entity being hit
-     * @param interaction Type of interaction
-     * @return If the entity can be damaged, by a specific player, at a specific spot
-     */
-    public static boolean canTarget(Player source, Entity target, InteractionType interaction) {
-        return canTarget(source, null, target, interaction);
-    }
-
-    /**
-     * @param source      Player targeting the entity
-     * @param loc         If the given location is not null, this method checks if this
-     *                    location is inside the bounding box of the entity hit
-     * @param target      The entity being hit
-     * @param interaction Type of interaction
-     * @return If the entity can be damaged, by a specific player, at a specific spot
-     */
-    public static boolean canTarget(@Nullable Player source, @Nullable Location loc, Entity target, InteractionType interaction) {
-
-        // Check for easy checks and other as well
-        if (!MythicLib.plugin.getEntities().canTarget(source, target, interaction))
-            return false;
-
-        // Check for bounding box
-        return loc == null || MythicLib.plugin.getVersion().getWrapper().isInBoundingBox(target, loc);
-    }
 
     private static final String[] romanChars = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
     private static final int[] romanValues = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};

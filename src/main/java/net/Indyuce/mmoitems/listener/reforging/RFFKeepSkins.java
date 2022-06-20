@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeFinishEvent;
 import net.Indyuce.mmoitems.api.interaction.ItemSkin;
 import org.bukkit.event.EventHandler;
@@ -24,7 +23,7 @@ public class RFFKeepSkins implements Listener {
         //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Skins");
 
         // Got skin?
-        if (!event.getReforger().getNBTItem().getBoolean(ItemSkin.tagHasSkin)) { return; }
+        if (!event.getReforger().getNBTItem().getBoolean(ItemSkin.HAS_SKIN_TAG)) { return; }
         //RFG// MMOItems.log("§8Reforge §4EFG§7 Item has skin");
 
         // Apply skin to result

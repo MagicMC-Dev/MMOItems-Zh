@@ -50,7 +50,7 @@ public class StoredTagsData implements StatData, Mergeable {
 			if (tag.startsWith("MMOITEMS_")) {
 
 				// Do not delete the skin tags (save them here)
-				if (!ItemSkin.tagHasSkin.equals(tag) && !ItemSkin.tagSkinID.equals(tag)) {
+				if (!ItemSkin.HAS_SKIN_TAG.equals(tag) && !ItemSkin.SKIN_ID_TAG.equals(tag)) {
 
 					// Not either of the skin tags, skip this.
 					// Must be handled by its respective stat.

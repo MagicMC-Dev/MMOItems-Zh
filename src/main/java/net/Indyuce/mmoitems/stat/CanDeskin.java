@@ -1,18 +1,10 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.lang.reflect.Field;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-
 import com.google.gson.JsonObject;
-
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.api.util.SmartGive;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -26,11 +18,17 @@ import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.SmartGive;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Field;
 
 public class CanDeskin extends BooleanStat implements ConsumableItemInteraction {
 	public CanDeskin() {
@@ -38,10 +36,9 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
 				new String[] { "Players can deskin their item", "and get their skin back", "from the item." }, new String[] { "consumable" });
 	}
 
-	// TODO needs some cleanup
 	@Override
 	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {
-		String skinId = target.getString("MMOITEMS_SKIN_ID");
+		final String skinId = target.getString("MMOITEMS_SKIN_ID");
 		Player player = playerData.getPlayer();
 
 		if (consumable.getNBTItem().getBoolean("MMOITEMS_CAN_DESKIN") && !skinId.isEmpty()) {
@@ -91,17 +88,16 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
 				}
 			}
 
-			targetItem.setItemMeta(targetItemMeta);
-			targetItem.setType(originalItem.getType());
-			target.getItem().setAmount(0);
-			new SmartGive(player).give(targetItem);
+			// Update deskined item
+			final ItemStack updated = target.getItem();
+			updated.setItemMeta(targetItemMeta);
+			updated.setType(originalItem.getType());
 
 			// Give back skin item
 			MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplateOrThrow(Type.SKIN, skinId);
 			MMOItem mmoitem = template.newBuilder(playerData.getRPG()).build();
-			ItemStack item = mmoitem.newBuilder().build();
+			new SmartGive(player).give(mmoitem.newBuilder().build());
 
-			new SmartGive(player).give(item);
 			Message.SKIN_REMOVED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(targetItem)).send(player);
 			return true;
 		}

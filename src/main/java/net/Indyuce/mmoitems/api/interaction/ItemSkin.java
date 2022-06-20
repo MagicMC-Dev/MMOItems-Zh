@@ -1,17 +1,16 @@
 package net.Indyuce.mmoitems.api.interaction;
 
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.version.VersionMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -102,7 +101,7 @@ public class ItemSkin extends UseItem {
 			}
 
 		// Apply skin
-		ItemStack item = applySkin(target, getNBTItem(), getMMOItem());
+		ItemStack item = applySkin(target, getMMOItem());
 
 		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 		Message.SKIN_APPLIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
@@ -110,35 +109,45 @@ public class ItemSkin extends UseItem {
 		return new ApplyResult(item);
 	}
 
-	public static final String tagHasSkin = "MMOITEMS_HAS_SKIN";
-	public static final String tagSkinID = "MMOITEMS_SKIN_ID";
+	public static final String HAS_SKIN_TAG = "MMOITEMS_HAS_SKIN";
+
+	/**
+	 * When applying a skin to an item, the skin item ID is saved
+	 * in the target item so that if deskined, it can be retrieved
+	 * and given back to the player.
+	 *
+	 *
+	 */
+	public static final String SKIN_ID_TAG = "MMOITEMS_SKIN_ID";
 
 	/**
 	 * Applies the skin information from a skin consumable onto any item.
 	 *
-	 * @param target Target item that the skin has been <b>successfully</b> applied to
-	 *
-	 * @param skinItemNBT Skin consumable, as NBT
-	 * @param skinItemMMO Skin consumable, as MMOItem
-	 *
+	 * @param target      Target item that the skin has been <b>successfully</b> applied to
+	 * @param skinItemMMO Skin consumable
 	 * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
 	 */
-	@NotNull public static ItemStack applySkin(@NotNull NBTItem target, @NotNull NBTItem skinItemNBT, @NotNull MMOItem skinItemMMO) {
+	@NotNull
+	public static ItemStack applySkin(@NotNull NBTItem target, @NotNull VolatileMMOItem skinItemMMO) {
+		final NBTItem skinItemNBT = skinItemMMO.getNBT();
 
-		target.addTag(new ItemTag(tagHasSkin, true));
-		target.addTag(new ItemTag(tagSkinID, skinItemNBT.getString(tagSkinID)));
-		if (skinItemNBT.getInteger("CustomModelData") != 0) {
-			target.addTag(new ItemTag("CustomModelData", skinItemNBT.getInteger("CustomModelData"))); }
-		if (!skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
-			target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES"))); }
+		target.addTag(new ItemTag(HAS_SKIN_TAG, true));
+		target.addTag(new ItemTag(SKIN_ID_TAG, skinItemNBT.getString("MMOITEMS_ITEM_ID")));
+		if (skinItemNBT.getInteger("CustomModelData") != 0)
+			target.addTag(new ItemTag("CustomModelData", skinItemNBT.getInteger("CustomModelData")));
+
+		if (!skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty())
+			target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES")));
 
 		ItemStack item = target.toItem();
-		if (item.getType() != skinItemNBT.getItem().getType()) { item.setType(skinItemNBT.getItem().getType()); }
+		if (item.getType() != skinItemNBT.getItem().getType())
+			item.setType(skinItemNBT.getItem().getType());
 
 		ItemMeta meta = item.getItemMeta();
 		ItemMeta skinMeta = skinItemNBT.getItem().getItemMeta();
 		if (skinMeta != null && meta != null) {
 
+			// TODO factorize with a ItemSkinStat stat interface
 			if (skinMeta.isUnbreakable()) {
 				meta.setUnbreakable(true);
 				if (meta instanceof Damageable && skinMeta instanceof Damageable)
@@ -181,11 +190,11 @@ public class ItemSkin extends UseItem {
 	@Nullable public static ItemStack applySkin(@NotNull NBTItem target, @NotNull NBTItem originalItemNBT) {
 
 		// No skin no service
-		if (!originalItemNBT.getBoolean("MMOITEMS_HAS_SKIN")) { return null; }
+		if (!originalItemNBT.getBoolean(HAS_SKIN_TAG)) { return null; }
 
 		// Copy over data
-		target.addTag(new ItemTag("MMOITEMS_HAS_SKIN", true));
-		target.addTag(new ItemTag("MMOITEMS_SKIN_ID", originalItemNBT.getString("MMOITEMS_ITEM_ID")));
+		target.addTag(new ItemTag(HAS_SKIN_TAG, true));
+		target.addTag(new ItemTag(SKIN_ID_TAG, originalItemNBT.getString("MMOITEMS_ITEM_ID")));
 		if (originalItemNBT.getInteger("CustomModelData") != 0) {
 			target.addTag(new ItemTag("CustomModelData", originalItemNBT.getInteger("CustomModelData"))); }
 		if (!originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {

@@ -1,20 +1,19 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
+import net.Indyuce.mmoitems.stat.data.type.Mergeable;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class EnchantListData implements StatData, Mergeable {
 	private final Map<Enchantment, Integer> enchants = new HashMap<>();
@@ -24,8 +23,8 @@ public class EnchantListData implements StatData, Mergeable {
 	}
 
 	public int getLevel(@NotNull Enchantment enchant) {
-		if (!enchants.containsKey(enchant)) { return 0; }
-		return enchants.get(enchant);
+		@Nullable Integer found = enchants.get(enchant);
+		return found == null ? 0 : found;
 	}
 
     public void addEnchant(Enchantment enchant, int level) {
@@ -57,7 +56,7 @@ public class EnchantListData implements StatData, Mergeable {
 			if (additiveMerge) {
 
 				// Additive
-				enchants.put(enchant, ((EnchantListData) data).getLevel(enchant) + enchants.get(enchant));
+				enchants.put(enchant, ((EnchantListData) data).getLevel(enchant) + enchants.getOrDefault(enchant, 0));
 			} else {
 
 				// Max Enchantment

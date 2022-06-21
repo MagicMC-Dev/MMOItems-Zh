@@ -30,12 +30,17 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 		ItemStack stack = player.getInventory().getItemInMainHand();
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(stack);
 		String tag = item.getString("MMOITEMS_TIER");
-		if (tag.equals("") || !item.getBoolean("MMOITEMS_CAN_DECONSTRUCT")) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding can't be deconstructed.");
+		if (tag.equals("")) {
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding has no tier.");
 			return CommandResult.FAILURE;
 		}
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(tag);
+		if (tier == null) {
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item tier no longer exists.");
+			return CommandResult.FAILURE;
+		}
+
 		PlayerData data = PlayerData.get(player);
 		List<ItemStack> loot = tier.getDeconstructedLoot(data);
 		if (loot.isEmpty()) {

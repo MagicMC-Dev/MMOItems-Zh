@@ -325,13 +325,11 @@ public class PlayerData {
     }
 
     public void updateStats() {
-        if (!mmoData.isOnline())
-            return;
 
-        // perm effects
+        // Perm effects
         permanentEffects.values().forEach(effect -> getPlayer().addPotionEffect(effect));
 
-        // two handed
+        // Two handed slowness
         if (fullHands)
             getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
     }

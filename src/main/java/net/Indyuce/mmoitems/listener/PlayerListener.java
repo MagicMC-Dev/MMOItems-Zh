@@ -1,36 +1,18 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.utils.Schedulers;
 import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
-import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.inventory.EditableEquippedItem;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
-import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.api.util.DeathDowngrading;
-import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.skill.RegisteredSkill;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.Cancellable;
@@ -198,33 +180,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void registerInventoryUpdates2(PlayerItemHeldEvent event) {
         PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-    }
-
-    @Deprecated
-    @EventHandler
-    public void registerOldEvent(PlayerCastSkillEvent event) {
-
-        // Find caster
-        PlayerData playerData = PlayerData.get(event.getPlayer().getUniqueId());
-
-        // Create registered skill
-        RegisteredSkill registeredSkill = new RegisteredSkill(event.getCast().getHandler(), event.getCast().getHandler().getId());
-        for (String mod : event.getCast().getHandler().getModifiers()) {
-            registeredSkill.setDefaultValue(mod, event.getMetadata().getModifier(mod));
-            registeredSkill.setName(mod, MMOUtils.caseOnWords(mod.toLowerCase().replace("-", " ").replace("_", " ")));
-        }
-
-        // Create ability data
-        AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.CAST);
-        for (String mod : event.getCast().getHandler().getModifiers())
-            abilityData.setModifier(mod, event.getMetadata().getModifier(mod));
-
-        // Find ability target
-        LivingEntity target = event.getMetadata().hasTargetEntity() && event.getMetadata().getTargetEntityOrNull() instanceof LivingEntity ?
-                (LivingEntity) event.getMetadata().getTargetEntityOrNull() : null;
-
-        // Call event for compatibility
-        Bukkit.getPluginManager().callEvent(new AbilityUseEvent(playerData, abilityData, target));
     }
 
     /**

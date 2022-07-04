@@ -3,6 +3,8 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.player.PlayerMetadata;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.util.ProjectileTrigger;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.GameMode;
@@ -29,12 +31,16 @@ public class Crossbow extends UntargetedWeapon {
         if (getPlayer().getGameMode() != GameMode.CREATIVE)
             getPlayer().getInventory().removeItem(new ItemStack(Material.ARROW));
 
-        getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
-        Arrow arrow = getPlayer().launchProjectile(Arrow.class);
-        arrow.setVelocity(
-                getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
+        final Arrow arrow = getPlayer().launchProjectile(Arrow.class);
+        arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * getValue(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
         getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
+        getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 
+        // Register custom projectile
         MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, true, 1);
+
+        // Trigger abilities
+        stats.getData().triggerSkills(TriggerType.SHOOT_BOW, arrow);
+        new ProjectileTrigger(stats.getData(), ProjectileTrigger.ProjectileType.ARROW, arrow, slot);
     }
 }

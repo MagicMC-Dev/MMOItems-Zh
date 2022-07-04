@@ -267,11 +267,6 @@ public class MMOItems extends LuminePlugin {
 			} else Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
 		}
 
-		if (Bukkit.getPluginManager().getPlugin("RealDualWield") != null) {
-			Bukkit.getPluginManager().registerEvents(new RealDualWieldHook(), this);
-			getLogger().log(Level.INFO, "Hooked onto RealDualWield");
-		}
-
 		if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
 			getLogger().log(Level.INFO, "Hooked onto BossShopPro");
 			(new BukkitRunnable() {

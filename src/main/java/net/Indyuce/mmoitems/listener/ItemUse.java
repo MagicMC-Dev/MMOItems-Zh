@@ -117,7 +117,8 @@ public class ItemUse implements Listener {
          */
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.get(player);
-        NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+        ItemStack weaponUsed = player.getInventory().getItem(((MeleeAttackMetadata) event.getAttack()).getHand().toBukkit());
+        NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(weaponUsed);
 
         if (item.hasType() && Type.get(item.getType()) != Type.BLOCK) {
             Weapon weapon = new Weapon(playerData, item);

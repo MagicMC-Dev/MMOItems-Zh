@@ -103,19 +103,10 @@ public class MMOItems extends LuminePlugin {
      */
     private boolean hasLoadedSuccessfully;
 
-	private static final int MYTHICLIB_COMPATIBILITY_INDEX = 8;
-
 	public MMOItems() { plugin = this; }
 
 	@Override
 	public void load() {
-
-		// Check if the ML build matches
-		if (MYTHICLIB_COMPATIBILITY_INDEX != MythicLib.MMOITEMS_COMPATIBILITY_INDEX) {
-			getLogger().log(Level.WARNING, "Your versions of MythicLib and MMOItems do not match. Make sure you are using the latest builds of both plugins");
-			setEnabled(false);
-			return;
-		}
 
 		if (getServer().getPluginManager().getPlugin("WorldEdit") != null) try {
 			new WorldEditSupport();

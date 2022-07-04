@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.player.inventory;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.Type;
@@ -13,7 +12,7 @@ public class EquippedItem {
 
 	/**
 	 * An item equipped by a player in a specific slot
-	 * 
+	 *
 	 * @param item The item equipped
 	 * @param slot The corresponding MMOItems slot type
 	 */
@@ -23,7 +22,7 @@ public class EquippedItem {
 
 	/**
 	 * An item equipped by a player in a specific slot
-	 * 
+	 *
 	 * @param item The item equipped
 	 * @param slot The corresponding MMOItems slot type, must not be null!
 	 */
@@ -35,7 +34,7 @@ public class EquippedItem {
 	public NBTItem getItem() {
 		return item;
 	}
-	
+
 	public EquipmentSlot getSlot() {
 		return slot;
 	}
@@ -50,7 +49,11 @@ public class EquippedItem {
 		if (slot == EquipmentSlot.ANY)
 			return true;
 
-		if (type.getEquipmentType() == EquipmentSlot.BOTH_HANDS)
+		/*
+		 * Main hand items apply their stats and options in off
+		 * hand as well but the reciprocal is false
+		 */
+		if (type.getEquipmentType() == EquipmentSlot.MAIN_HAND)
 			return slot.isHand();
 
 		return slot == type.getEquipmentType();

@@ -9,7 +9,7 @@ import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.player.modifier.ModifierType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.stat.type.AttackWeaponStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 
@@ -66,12 +66,12 @@ public class PlayerStats {
             // The index of the mmoitem stat modifier being added
             int index = 0;
 
-            for (EquippedPlayerItem item : playerData.getInventory().getEquipped()) {
-                double value = item.getItem().getNBT().getStat(stat.getId());
+            for (EquippedItem item : playerData.getInventory().getEquipped()) {
+                double value = item.getNBT().getStat(stat.getId());
 
                 if (value != 0) {
 
-                    Type type = item.getItem().getType();
+                    Type type = item.getCached().getType();
                     ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
                     // Apply hand weapon stat offset

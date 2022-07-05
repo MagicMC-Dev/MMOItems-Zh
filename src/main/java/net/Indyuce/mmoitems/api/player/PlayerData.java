@@ -4,7 +4,6 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
@@ -15,15 +14,12 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
 import net.Indyuce.mmoitems.api.event.RefreshInventoryEvent;
 import net.Indyuce.mmoitems.api.interaction.Tool;
 import net.Indyuce.mmoitems.api.item.ItemReference;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.particle.api.ParticleRunnable;
 import net.Indyuce.mmoitems.stat.data.*;
@@ -44,31 +40,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class PlayerData {
-    private static final Map<UUID, PlayerData> data = new HashMap<>();
     @NotNull
     private final MMOPlayerData mmoData;
 
-    /*
-     * reloaded everytime the player reconnects in case of major change.
-     */
+    // Reloaded everytime the player reconnects in case of major change.
     private RPGPlayer rpgPlayer;
 
     private final InventoryUpdateHandler inventory = new InventoryUpdateHandler(this);
     private final CraftingStatus craftingStatus = new CraftingStatus();
 
-    /*
-     * specific stat calculation TODO compress it in Map<ItemStat, DynamicStatData>
-     */
+    // Specific stat calculation TODO compress it in Map<ItemStat, DynamicStatData>
     private final Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
     private final Set<ParticleRunnable> itemParticles = new HashSet<>();
     private ParticleRunnable overridingItemParticles = null;
-    private boolean fullHands = false;
+    private boolean handsFull = false;
     @Nullable
     private SetBonuses setBonuses = null;
     private final PlayerStats stats;
-
-    // Cached so they can be properly removed again
     private final Set<String> permissions = new HashSet<>();
+
+    private static final Map<UUID, PlayerData> data = new HashMap<>();
 
     private PlayerData(@NotNull MMOPlayerData mmoData) {
         this.mmoData = mmoData;
@@ -127,9 +118,9 @@ public class PlayerData {
             overridingItemParticles.cancel();
     }
 
-    /*
-     * returns true if the player hands are full, i.e if the player is holding
-     * one two handed item and one other item at the same time
+    /**
+     * @return If the player hands are full i.e if the player is holding
+     *         two items in their hands, one being two handed
      */
     public boolean areHandsFull() {
         if (!mmoData.isOnline())
@@ -166,7 +157,7 @@ public class PlayerData {
             return;
 
         /*
-         * very important, clear particle data AFTER canceling the runnable
+         * Very important, clear particle data AFTER canceling the runnable
          * otherwise it cannot cancel and the runnable keeps going (severe)
          */
         inventory.getEquipped().clear();
@@ -177,21 +168,23 @@ public class PlayerData {
         overridingItemParticles = null;
         if (MMOItems.plugin.hasPermissions()) {
             Permission perms = MMOItems.plugin.getVault().getPermissions();
-            permissions.forEach(perm -> { if (perms.has(getPlayer(), perm)) { perms.playerRemove(getPlayer(), perm); } });
+            permissions.forEach(perm -> {
+                if (perms.has(getPlayer(), perm)) {
+                    perms.playerRemove(getPlayer(), perm);
+                }
+            });
         }
         permissions.clear();
 
         /*
-         * updates the full-hands boolean, this way it can be cached and used in
+         * Updates the full-hands boolean, this way it can be cached and used in
          * the updateEffects() method
          */
-        fullHands = areHandsFull();
+        handsFull = areHandsFull();
 
-        /*
-         * Find all the items the player can actually use
-         */
+        // Find all the items the player can actually use
         for (EquippedItem item : MMOItems.plugin.getInventory().getInventory(getPlayer())) {
-            NBTItem nbtItem = item.getItem();
+            NBTItem nbtItem = item.getNBT();
             if (nbtItem.getItem() == null || nbtItem.getItem().getType() == Material.AIR)
                 continue;
 
@@ -199,31 +192,31 @@ public class PlayerData {
              * If the item is a custom item, apply slot and item use
              * restrictions (items which only work in a specific equipment slot)
              */
-            Type type = Type.get(nbtItem.getType());
-            if (type == null || !item.matches(type) || !getRPG().canUse(nbtItem, false, false))
+            if (!item.isPlacementLegal() || !getRPG().canUse(nbtItem, false, false))
                 continue;
 
-            inventory.getEquipped().add(new EquippedPlayerItem(item));
+            item.cacheItem();
+            inventory.getEquipped().add(item);
         }
 
-        RefreshInventoryEvent riev = new RefreshInventoryEvent(inventory.getEquipped(), getPlayer(), this);
-        Bukkit.getPluginManager().callEvent(riev);
+        // Call Bukkit event
+        Bukkit.getPluginManager().callEvent(new RefreshInventoryEvent(inventory.getEquipped(), getPlayer(), this));
 
-        for (EquippedPlayerItem equipped : inventory.getEquipped()) {
-            VolatileMMOItem item = equipped.getItem();
+        for (EquippedItem equipped : inventory.getEquipped()) {
+            VolatileMMOItem item = equipped.getCached();
 
-            /*
-             * Apply permanent potion effects
-             */
+            // Stats which don't apply from off hand
+            if (equipped.getSlot() == EquipmentSlot.OFF_HAND && equipped.getCached().getType().getEquipmentType() != EquipmentSlot.OFF_HAND)
+                continue;
+
+            // Apply permanent potion effects
             if (item.hasData(ItemStats.PERM_EFFECTS))
                 ((PotionEffectListData) item.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(effect -> {
                     if (getPermanentPotionEffectAmplifier(effect.getType()) < effect.getLevel() - 1)
                         permanentEffects.put(effect.getType(), effect.toEffect());
                 });
 
-            /*
-             * Apply item particles
-             */
+            // Item particles
             if (item.hasData(ItemStats.ITEM_PARTICLES)) {
                 ParticleData particleData = (ParticleData) item.getData(ItemStats.ITEM_PARTICLES);
 
@@ -234,46 +227,41 @@ public class PlayerData {
                     itemParticles.add(particleData.start(this));
             }
 
-            /*
-             * Apply abilities
-             */
-            if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering") || !fullHands))
-                if (equipped.getSlot() != EquipmentSlot.OFF_HAND || !MMOItems.plugin.getConfig().getBoolean("disable-abilities-in-offhand"))
-                    for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
-                        ModifierSource modSource = equipped.getItem().getType() == null ? ModifierSource.OTHER : equipped.getItem().getType().getItemSet().getModifierSource();
-                        mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
-                    }
+            // Abilities
+            if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering") || !handsFull))
+                for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
+                    ModifierSource modSource = equipped.getCached().getType() == null ? ModifierSource.OTHER : equipped.getCached().getType().getItemSet().getModifierSource();
+                    mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
+                }
 
-            /*
-             * Apply permissions if vault exists
-             */
+            // Apply permissions if Vault exists
             if (MMOItems.plugin.hasPermissions() && item.hasData(ItemStats.GRANTED_PERMISSIONS)) {
 
                 permissions.addAll(((StringListData) item.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
                 Permission perms = MMOItems.plugin.getVault().getPermissions();
-                permissions.forEach(perm -> { if (!perms.has(getPlayer(), perm)) { perms.playerAdd(getPlayer(), perm); } });
+                permissions.forEach(perm -> {
+                    if (!perms.has(getPlayer(), perm)) {
+                        perms.playerAdd(getPlayer(), perm);
+                    }
+                });
             }
         }
 
-        /*
-         * calculate the player's item set and add the bonus permanent effects /
-         * bonus abilities to the playerdata maps
-         */
+        // Calculate the player's item set
         Map<ItemSet, Integer> sets = new HashMap<>();
-        for (EquippedPlayerItem equipped : inventory.getEquipped()) {
-            VolatileMMOItem item = equipped.getItem();
+        for (EquippedItem equipped : inventory.getEquipped()) {
+            VolatileMMOItem item = equipped.getCached();
             String tag = item.getNBT().getString("MMOITEMS_ITEM_SET");
             ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
             if (itemSet == null)
                 continue;
 
-            int nextInt = (sets.getOrDefault(itemSet, 0)) + 1;
-            sets.put(itemSet, nextInt);
+            sets.put(itemSet, sets.getOrDefault(itemSet, 0) + 1);
         }
 
-        // Reset
+        // Reset and compute item set bonuses
         setBonuses = null;
-        for (Map.Entry<ItemSet,Integer> equippedSetBonus : sets.entrySet()) {
+        for (Map.Entry<ItemSet, Integer> equippedSetBonus : sets.entrySet()) {
 
             if (setBonuses == null) {
 
@@ -287,10 +275,12 @@ public class PlayerData {
             }
         }
 
+        // Apply item set bonuses
         if (setBonuses != null) {
-            Permission perms = MMOItems.plugin.getVault().getPermissions();
+            final Permission perms = MMOItems.plugin.getVault().getPermissions();
             for (String perm : setBonuses.getPermissions())
-                if (!perms.has(getPlayer(), perm)) { perms.playerAdd(getPlayer(), perm); }
+                if (!perms.has(getPlayer(), perm))
+                    perms.playerAdd(getPlayer(), perm);
             for (AbilityData ability : setBonuses.getAbilities())
                 mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
             for (ParticleData particle : setBonuses.getParticles())
@@ -300,22 +290,13 @@ public class PlayerData {
                     permanentEffects.put(effect.getType(), effect);
         }
 
-        /*
-         * calculate all stats.
-         */
+        // Calculate player stats
         stats.updateStats();
 
-        /*
-         * update stuff from the external MMOCore plugins. the 'max mana' stat
-         * currently only supports Heroes since other APIs do not allow other
-         * plugins to easily increase this type of stat.
-         */
+        // Update stats from external plugins
         MMOItems.plugin.getRPG().refreshStats(this);
 
-        /*
-         * actually update the player inventory so the task doesn't infinitely
-         * loop on updating
-         */
+        // Actually update cached player inventory so the task doesn't infinitely loop
         inventory.helmet = getPlayer().getInventory().getHelmet();
         inventory.chestplate = getPlayer().getInventory().getChestplate();
         inventory.leggings = getPlayer().getInventory().getLeggings();
@@ -326,11 +307,11 @@ public class PlayerData {
 
     public void updateStats() {
 
-        // Perm effects
+        // Permanent effects
         permanentEffects.values().forEach(effect -> getPlayer().addPotionEffect(effect));
 
         // Two handed slowness
-        if (fullHands)
+        if (handsFull)
             getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
     }
 

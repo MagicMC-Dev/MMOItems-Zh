@@ -16,12 +16,6 @@ iterate-whole-inventory: false
 # When this is set to true, skins can only be applied to an item ONCE. 
 locked-skins: true
 
-# Enable/Disable abilities in the players offhand, stops
-# players using abilities when interacting with chests, mining etc.
-# Very useful if your have a lot of items that your players use in their
-# off-hand like tomes!
-disable-abilities-in-offhand: false
-
 # By default, all player inventories will be updated every
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10

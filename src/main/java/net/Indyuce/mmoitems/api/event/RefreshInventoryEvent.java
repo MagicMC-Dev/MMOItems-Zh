@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.api.event;
 
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -11,8 +11,8 @@ import java.util.List;
 
 public class RefreshInventoryEvent extends Event {
 
-    @NotNull final List<EquippedPlayerItem> itemsToEquip;
-    @NotNull public List<EquippedPlayerItem> getItemsToEquip() { return itemsToEquip; }
+    @NotNull final List<EquippedItem> itemsToEquip;
+    @NotNull public List<EquippedItem> getItemsToEquip() { return itemsToEquip; }
 
     @NotNull
     public Player getPlayer() {
@@ -27,7 +27,7 @@ public class RefreshInventoryEvent extends Event {
     @NotNull final Player player;
     @NotNull final PlayerData playerData;
 
-    public RefreshInventoryEvent(@NotNull List<EquippedPlayerItem> itemsToEquip, @NotNull Player player, @NotNull PlayerData playerData) {
+    public RefreshInventoryEvent(@NotNull List<EquippedItem> itemsToEquip, @NotNull Player player, @NotNull PlayerData playerData) {
         this.itemsToEquip = itemsToEquip;
         this.player = player;
         this.playerData = playerData;

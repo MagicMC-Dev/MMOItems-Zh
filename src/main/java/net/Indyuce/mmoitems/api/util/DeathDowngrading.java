@@ -9,7 +9,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.inventory.EditableEquippedItem;
-import net.Indyuce.mmoitems.api.player.inventory.EquippedPlayerItem;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -51,17 +50,17 @@ public class DeathDowngrading {
 
         // Make sure the equipped items list is up to date and retrieve it
         data.updateInventory();
-        List<EquippedPlayerItem> items = data.getInventory().getEquipped();
+        List<EquippedItem> items = data.getInventory().getEquipped();
         ArrayList<EditableEquippedItem> equipped = new ArrayList<>();
 
         // Equipped Player Items yeah...
-        for (EquippedPlayerItem playerItem : items) {
+        for (EquippedItem playerItem : items) {
 
             // Cannot downgrade? skip
             if (!canDeathDowngrade(playerItem)) { continue; }
 
             // Okay explore stat
-            equipped.add((EditableEquippedItem) playerItem.getEquipped());
+            equipped.add((EditableEquippedItem) playerItem);
             //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Yes. \u00a7aAccepted");
         }
 
@@ -88,7 +87,7 @@ public class DeathDowngrading {
             EditableEquippedItem equip = equipped.get(deathChosen);
 
             // Downgrade and remove from list
-            equip.setItem(downgrade(new LiveMMOItem(equip.getItem()), player));
+            equip.setItem(downgrade(new LiveMMOItem(equip.getNBT()), player));
             equipped.remove(deathChosen);
 
             //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Autodegrading\u00a7a " + mmo.getData(ItemStats.NAME));
@@ -106,7 +105,7 @@ public class DeathDowngrading {
             EditableEquippedItem equip = equipped.get(d);
 
             // Downgrade and remove from list
-            equip.setItem(downgrade(new LiveMMOItem(equip.getItem()), player));
+            equip.setItem(downgrade(new LiveMMOItem(equip.getNBT()), player));
             equipped.remove(d);
 
             //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Chancedegrade\u00a7a " + mmo.getData(ItemStats.NAME));
@@ -271,7 +270,7 @@ public class DeathDowngrading {
      * @return If this is an instance of {@link EditableEquippedItem} and meets {@link #canDeathDowngrade(MMOItem)}
      */
     @Contract("null->false")
-    public static boolean canDeathDowngrade(@Nullable EquippedPlayerItem playerItem) {
+    public static boolean canDeathDowngrade(@Nullable EquippedItem playerItem) {
 
         // Null
         if (playerItem == null) { return false; }
@@ -279,12 +278,12 @@ public class DeathDowngrading {
         //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Item:\u00a7b " + playerItem.getItem().getData(ItemStats.NAME));
 
         // Cannot perform operations of items that are uneditable
-        if (!(playerItem.getEquipped() instanceof EditableEquippedItem)) {
+        if (!(playerItem instanceof EditableEquippedItem)) {
             //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Not equippable. \u00a7cCancel");
             return false; }
 
         // Delegate to MMOItem Method
-        return canDeathDowngrade(playerItem.getItem());
+        return canDeathDowngrade(playerItem.getCached());
     }
 
     /**

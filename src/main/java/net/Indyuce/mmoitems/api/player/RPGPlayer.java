@@ -29,7 +29,6 @@ public abstract class RPGPlayer {
         this(PlayerData.get(player));
     }
 
-
     /**
      * Used to retrieve useful information like class name, level, mana and
      * stamina from RPG plugins. This instance is reloaded everytime the player
@@ -128,49 +127,6 @@ public abstract class RPGPlayer {
                     return false;
 
         //REQ//MMOItems. Log(" \u00a7a> Success use");
-        return true;
-    }
-
-    /**
-     * This does not apply ability costs like Mana or Stamina costs. This does not
-     * apply ability cooldown either but it does check if the ability is still on cooldown
-     *
-     * @param data Ability being cast
-     * @return If the player can cast the ability
-     * @deprecated Replaced by {@link AbilityData#getResult(SkillMetadata)}
-     */
-    @Deprecated
-    public boolean canCast(AbilityData data) {
-
-        if (playerData.getMMOPlayerData().getCooldownMap().isOnCooldown(data)) {
-            CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(data);
-            if (!data.getTrigger().isSilent()) {
-                StringBuilder progressBar = new StringBuilder(ChatColor.YELLOW + "");
-                double progress = (double) (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10;
-                String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
-                for (int j = 0; j < 10; j++)
-                    progressBar.append(progress >= j ? ChatColor.GREEN : ChatColor.WHITE).append(barChar);
-                Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(info.getRemaining() / 1000d), "#progress#",
-                        progressBar.toString(), "#s#", (info.getRemaining() > 1999 ? "s" : "")).send(player);
-            }
-            return false;
-        }
-
-        if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities")
-                && !player.hasPermission("mmoitems.ability." + data.getAbility().getHandler().getLowerCaseId())
-                && !player.hasPermission("mmoitems.bypass.ability"))
-            return false;
-
-        if (data.hasModifier("mana") && getMana() < data.getModifier("mana")) {
-            Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player);
-            return false;
-        }
-
-        if (data.hasModifier("stamina") && getStamina() < data.getModifier("stamina")) {
-            Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player);
-            return false;
-        }
-
         return true;
     }
 }

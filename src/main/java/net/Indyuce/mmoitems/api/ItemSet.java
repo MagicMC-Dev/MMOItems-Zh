@@ -150,7 +150,8 @@ public class ItemSet {
 			return abilities;
 		}
 
-		@NotNull public ArrayList<String> getPermissions() { return permissions; }
+		@NotNull
+		public ArrayList<String> getPermissions() { return permissions; }
 
 		public void merge(SetBonuses bonuses) {
 			bonuses.getStats().forEach((stat, value) -> stats.put(stat, (stats.containsKey(stat) ? stats.get(stat) : 0) + value));
@@ -163,5 +164,18 @@ public class ItemSet {
 
 			permissions.addAll(bonuses.getPermissions());
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ItemSet itemSet = (ItemSet) o;
+		return id.equals(itemSet.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

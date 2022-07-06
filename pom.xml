@@ -67,6 +67,11 @@
         </repository>
 
         <repository>
+            <id>lumine</id>
+            <url>https://mvn.lumine.io/repository/maven-private/</url>
+        </repository>
+
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -244,8 +249,8 @@
 
         <dependency>
             <groupId>com.herocraftonline</groupId>
-            <artifactId>heroes</artifactId>
-            <version>1.9.3</version>
+            <artifactId>Heroes</artifactId>
+            <version>1.9.22</version>
             <scope>provided</scope>
         </dependency>
 

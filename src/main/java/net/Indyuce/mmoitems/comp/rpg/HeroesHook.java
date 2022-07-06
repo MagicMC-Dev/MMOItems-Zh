@@ -16,6 +16,9 @@ import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,11 +27,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class HeroesHook implements RPGHandler, Listener, AttackHandler {
     private final Map<SkillType, DamageType> damages = new HashMap<>();
+
+    public static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", Material.EMERALD, "Max Stamina", new String[]{"Adds stamina to your max stamina bar"});
 
     public HeroesHook() {
         MythicLib.plugin.getDamage().registerHandler(this);
@@ -46,8 +49,7 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
             return null;
 
         Player player = (Player) info.getCharacter().getEntity();
-        Set<DamageType> types = info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).collect(Collectors.toSet());
-        DamageMetadata damageMeta = new DamageMetadata(0, types.toArray(new DamageType[0]));
+        DamageMetadata damageMeta = new DamageMetadata(0, info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).distinct().toArray(DamageType[]::new));
         return new AttackMetadata(damageMeta, MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND));
     }
 
@@ -56,6 +58,10 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
         Hero hero = Heroes.getInstance().getCharacterManager().getHero(data.getPlayer());
         hero.removeMaxMana("MMOItems");
         hero.addMaxMana("MMOItems", (int) data.getStats().getStat(ItemStats.MAX_MANA));
+        hero.removeMaxStamina("MMOItems");
+        hero.addMaxStamina("MMOItems", (int) data.getStats().getStat(MAX_STAMINA));
+        hero.removeMaxHealth("MMOItems");
+        hero.addMaxHealth("MMOItems", data.getStats().getStat(ItemStats.MAX_HEALTH));
     }
 
     @Override
@@ -82,43 +88,40 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
     }
 
     public static class HeroesPlayer extends RPGPlayer {
+        private final Hero hero;
+
         public HeroesPlayer(PlayerData playerData) {
             super(playerData);
+            hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
         }
 
         @Override
         public int getLevel() {
-            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getHeroLevel();
         }
 
         @Override
         public String getClassName() {
-            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getHeroClass().getName();
         }
 
         @Override
         public double getMana() {
-            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getMana();
         }
 
         @Override
         public double getStamina() {
-            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             return hero.getStamina();
         }
 
         @Override
         public void setMana(double value) {
-            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             hero.setMana((int) value);
         }
 
         @Override
         public void setStamina(double value) {
-            Hero hero = Heroes.getInstance().getCharacterManager().getHero(getPlayer());
             hero.setStamina((int) value);
         }
     }

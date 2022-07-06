@@ -35,6 +35,7 @@ import net.Indyuce.mmoitems.comp.parse.placeholders.DefaultPlaceholderParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderAPIParser;
 import net.Indyuce.mmoitems.comp.parse.placeholders.PlaceholderParser;
 import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
+import net.Indyuce.mmoitems.comp.rpg.HeroesHook;
 import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
@@ -139,6 +140,9 @@ public class MMOItems extends LuminePlugin {
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("MythicEnchants") != null) enchantPlugins.add(new MythicEnchantsSupport());
+
+		if (Bukkit.getPluginManager().getPlugin("Heroes") != null)
+			statManager.register(HeroesHook.MAX_STAMINA);
 	}
 
 	@Override

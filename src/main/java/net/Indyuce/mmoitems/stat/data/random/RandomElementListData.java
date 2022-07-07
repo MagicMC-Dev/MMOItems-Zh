@@ -17,7 +17,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RandomElementListData implements StatData, RandomStatData, UpdatableRandomStatData {
+public class RandomElementListData implements StatData, RandomStatData<ElementListData>, UpdatableRandomStatData {
 	private final Map<Element, NumericStatFormula> damage = new HashMap<>(), defense = new HashMap<>();
 
 	public RandomElementListData(ConfigurationSection config) {
@@ -60,7 +60,7 @@ public class RandomElementListData implements StatData, RandomStatData, Updatabl
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public ElementListData randomize(MMOItemBuilder builder) {
 		ElementListData elements = new ElementListData();
 		damage.forEach((element, formula) -> elements.setDamage(element, formula.calculate(builder.getLevel())));
 		defense.forEach((element, formula) -> elements.setDefense(element, formula.calculate(builder.getLevel())));

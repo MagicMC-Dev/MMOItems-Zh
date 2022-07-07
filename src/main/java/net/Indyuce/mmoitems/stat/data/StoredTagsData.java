@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StoredTagsData implements StatData, Mergeable {
+public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
 	private final List<ItemTag> tags = new ArrayList<>();
 
 	private static final List<String> ignoreList = Arrays.asList("Unbreakable", "BlockEntityTag", "display", "Enchantments", "HideFlags", "Damage",
@@ -123,17 +123,15 @@ public class StoredTagsData implements StatData, Mergeable {
 	}
 
 	@Override
-	public void merge(StatData data) {
-		Validate.isTrue(data instanceof StoredTagsData, "Cannot merge two different stat data types");
-		tags.addAll(((StoredTagsData) data).tags);
+	public void merge(StoredTagsData data) {
+		tags.addAll(data.tags);
 	}
 
 	@Override
-	public @NotNull
-	StatData cloneData() { return new StoredTagsData(getTags()); }
+	public StoredTagsData cloneData() { return new StoredTagsData(getTags()); }
 
 	@Override
-	public boolean isClear() {
-		return getTags().size() == 0;
+	public boolean isEmpty() {
+		return tags.isEmpty();
 	}
 }

@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -92,7 +93,7 @@ public abstract class ChooseStat extends StringStat {
     }
 
     @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+    public void whenDisplayed(List<String> lore, Optional<StringData> statData) {
         Validate.isTrue(choices.size() > 0, "\u00a77Invalid Chooseable Item Stat " + ChatColor.GOLD + getId() + "\u00a77' - \u00a7cNo options to choose from.");
 
         // To display current choosing, gets the very first element

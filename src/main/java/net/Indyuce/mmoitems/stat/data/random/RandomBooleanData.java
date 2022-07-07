@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class RandomBooleanData implements RandomStatData {
+public class RandomBooleanData implements RandomStatData<BooleanData> {
 	private final double chance;
 
 	private static final Random random = new Random();
@@ -24,7 +24,7 @@ public class RandomBooleanData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public BooleanData randomize(MMOItemBuilder builder) {
 		return new BooleanData(random.nextDouble() < chance);
 	}
 }

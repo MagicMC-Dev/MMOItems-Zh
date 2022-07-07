@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.*;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class StaffSpiritStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		StaffSpirit staffSpirit = StaffSpirit.valueOf(data.toString().toUpperCase().replace(" ", "_").replace("-", "_"));
 		item.addItemTag(new ItemTag("MMOITEMS_STAFF_SPIRIT", staffSpirit.name()));
 		item.getLore().insert("staff-spirit", staffSpirit.getName());

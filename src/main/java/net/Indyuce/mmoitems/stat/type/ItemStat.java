@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ItemStat {
+public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> {
     @NotNull
     private final String id, name, configPath, nbtPath;
     @NotNull
@@ -68,7 +68,7 @@ public abstract class ItemStat {
      * @param object Could be a config section, a string, a string list, etc.
      * @return Random stat data read from config, or throws an IAE
      */
-    public abstract RandomStatData whenInitialized(Object object);
+    public abstract R whenInitialized(Object object);
 
     /**
      * Called when applying a stat onto an mmoitem builder instance. Applies
@@ -77,7 +77,7 @@ public abstract class ItemStat {
      * @param item MMOItem builder which must be completed
      * @param data Stat data being applied
      */
-    public abstract void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data);
+    public abstract void whenApplied(@NotNull ItemStackBuilder item, @NotNull S data);
 
     /**
      * Usually called within <code>whenApplied</code>, this generates the
@@ -93,7 +93,7 @@ public abstract class ItemStat {
      * @author gunging
      */
     @NotNull
-    public abstract ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data);
+    public abstract ArrayList<ItemTag> getAppliedNBT(@NotNull S data);
 
     /**
      * Called when the stat item is clicked in the item edition menu
@@ -137,7 +137,7 @@ public abstract class ItemStat {
      * @author gunging
      */
     @Nullable
-    public abstract StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags);
+    public abstract S getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags);
 
     /**
      * Called when stat data is displayed in the edition GUI. We cannot use
@@ -149,7 +149,7 @@ public abstract class ItemStat {
      * @param statData Stat data being displayed, optional is empty if there is
      *                 no stat data
      */
-    public abstract void whenDisplayed(List<String> lore, Optional<RandomStatData> statData);
+    public abstract void whenDisplayed(List<String> lore, Optional<R> statData);
 
     @NotNull
     public String getName() {
@@ -265,5 +265,5 @@ public abstract class ItemStat {
      * @author gunging
      */
     @NotNull
-    public abstract StatData getClearStatData();
+    public abstract S getClearStatData();
 }

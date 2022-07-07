@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 
-public class DoubleStat extends ItemStat implements Upgradable, Previewable {
+public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> implements Upgradable, Previewable<NumericStatFormula, DoubleData> {
 	private final boolean moreIsBetter;
 
     private static final DecimalFormat digit = new DecimalFormat("0.####");
@@ -78,7 +78,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	public boolean moreIsBetter() { return moreIsBetter; }
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public NumericStatFormula whenInitialized(Object object) {
 
 		if (object instanceof Number)
 			return new NumericStatFormula(Double.parseDouble(object.toString()), 0, 0, 0);
@@ -90,7 +90,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
 		// Get Value
 		double value = ((DoubleData) data).getValue();
@@ -129,7 +129,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 		 * It is important that the tags are not excluded in getAppliedNBT() because the StatHistory does
 		 * need that blanc tag information to remember when an Item did not initially have any of a stat.
 		 */
-		if (((DoubleData) data).getValue() != 0) { item.addItemTag(getAppliedNBT(data)); }
+		if (data.getValue() != 0) { item.addItemTag(getAppliedNBT(data)); }
 	}
 
 	@NotNull public static String formatPath(@NotNull String format, boolean moreIsBetter, double value) {
@@ -162,7 +162,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 						(min < 0 && max > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(max)); }
 
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 		Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
 		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
 
@@ -213,13 +213,13 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 
 	@Override
 	@NotNull
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
 
 		// Create Fresh
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
 		// Add sole tag
-		ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
+		ret.add(new ItemTag(getNBTPath(), data.getValue()));
 
 		// Return thay
 		return ret;
@@ -247,7 +247,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 	@Override
 	@Nullable
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// You got a double righ
 		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -324,9 +324,9 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
 		if (statData.isPresent()) {
-			NumericStatFormula data = (NumericStatFormula) statData.get();
+			NumericStatFormula data = statData.get();
 			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + digit.format(data.getBase())
 					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
 			if (data.getSpread() > 0)
@@ -342,7 +342,7 @@ public class DoubleStat extends ItemStat implements Upgradable, Previewable {
 	}
 
 	@Override
-	@NotNull public StatData getClearStatData() {
+	@NotNull public DoubleData getClearStatData() {
 		return new DoubleData(0D);
 	}
 

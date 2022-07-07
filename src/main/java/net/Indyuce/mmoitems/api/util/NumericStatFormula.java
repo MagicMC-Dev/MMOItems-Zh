@@ -20,7 +20,7 @@ import java.util.Random;
  *
  * @author indyuce
  */
-public class NumericStatFormula implements RandomStatData, UpdatableRandomStatData {
+public class NumericStatFormula implements RandomStatData<DoubleData>, UpdatableRandomStatData {
 	private final double base, scale, spread, maxSpread;
 
 	private static final Random RANDOM = new Random();
@@ -186,7 +186,7 @@ public class NumericStatFormula implements RandomStatData, UpdatableRandomStatDa
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public DoubleData randomize(MMOItemBuilder builder) {
 		return new DoubleData(calculate(builder.getLevel()));
 	}
 

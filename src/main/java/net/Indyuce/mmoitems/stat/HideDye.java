@@ -28,8 +28,8 @@ public class HideDye extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		if (((BooleanData) data).isEnabled())
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
+		if (data.isEnabled())
 			item.getMeta().addItemFlags(ItemFlag.HIDE_DYE);
 	}
 
@@ -39,7 +39,7 @@ public class HideDye extends BooleanStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull BooleanData data) { return new ArrayList<>(); }
 
 	@Override
 	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
@@ -54,5 +54,5 @@ public class HideDye extends BooleanStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public BooleanData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 }

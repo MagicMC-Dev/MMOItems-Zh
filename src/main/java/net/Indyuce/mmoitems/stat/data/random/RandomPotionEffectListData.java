@@ -13,10 +13,9 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.bukkit.potion.PotionEffectType;
 
-public class RandomPotionEffectListData implements RandomStatData {
+public class RandomPotionEffectListData implements RandomStatData<PotionEffectListData> {
 	private final List<RandomPotionEffectData> effects = new ArrayList<>();
 
 	public RandomPotionEffectListData(ConfigurationSection config) {
@@ -82,7 +81,7 @@ public class RandomPotionEffectListData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public PotionEffectListData randomize(MMOItemBuilder builder) {
 		PotionEffectListData list = new PotionEffectListData();
 		effects.forEach(random -> list.add(random.randomize(builder)));
 		return list;

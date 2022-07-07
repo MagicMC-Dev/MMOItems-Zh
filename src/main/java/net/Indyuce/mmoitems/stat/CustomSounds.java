@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsumable {
+public class CustomSounds extends ItemStat<SoundListData, SoundListData> implements GemStoneStat, PlayerConsumable {
 	public CustomSounds() {
 		super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[]{"The custom sounds your item will use."},
 				new String[]{"all"});
@@ -89,7 +89,7 @@ public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsum
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<SoundListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -108,15 +108,15 @@ public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsum
 	}
 
 	@Override
-	public @NotNull StatData getClearStatData() {
+	public @NotNull SoundListData getClearStatData() {
 		return new SoundListData();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull SoundListData data) { item.addItemTag(getAppliedNBT(data)); }
 
 	@Override
-	public @NotNull ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public @NotNull ArrayList<ItemTag> getAppliedNBT(@NotNull SoundListData data) {
 
 		// Make Array
 		ArrayList<ItemTag> ret = new ArrayList<>();
@@ -137,7 +137,7 @@ public class CustomSounds extends ItemStat implements GemStoneStat, PlayerConsum
 		return ret;
 	}
 
-	public @Nullable StatData getLoadedNBT(@NotNull ArrayList<ItemTag> data) {
+	public @Nullable SoundListData getLoadedNBT(@NotNull ArrayList<ItemTag> data) {
 
 		// Something to build
 		SoundListData sounds = new SoundListData();

@@ -27,8 +27,8 @@ public class CustomDurability extends DoubleStat implements InternalStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		int current = (int) ((DoubleData) data).getValue();
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+		int current = (int) data.getValue();
 		if (current != 0)
 
 			// Shortcut oui oui

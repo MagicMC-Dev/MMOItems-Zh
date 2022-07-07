@@ -42,13 +42,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class Enchants extends ItemStat implements Upgradable {
+public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> implements Upgradable {
     public Enchants() {
         super("ENCHANTS", Material.ENCHANTED_BOOK, "Enchantments", new String[]{"The item enchants."}, new String[]{"all"});
     }
 
     @Override
-    public RandomStatData whenInitialized(Object object) {
+    public RandomEnchantListData whenInitialized(Object object) {
         Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
         return new RandomEnchantListData((ConfigurationSection) object);
     }
@@ -94,7 +94,7 @@ public class Enchants extends ItemStat implements Upgradable {
     }
 
     @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+    public void whenDisplayed(List<String> lore, Optional<RandomEnchantListData> statData) {
 
         if (statData.isPresent()) {
             lore.add(ChatColor.GRAY + "Current Value:");
@@ -112,7 +112,7 @@ public class Enchants extends ItemStat implements Upgradable {
 
     @NotNull
     @Override
-    public StatData getClearStatData() {
+    public EnchantListData getClearStatData() {
         return new EnchantListData();
     }
 
@@ -212,7 +212,7 @@ public class Enchants extends ItemStat implements Upgradable {
      */
     @Nullable
     @Override
-    public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+    public EnchantListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
         // Find tag
         ItemTag enchantTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -264,8 +264,7 @@ public class Enchants extends ItemStat implements Upgradable {
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-        EnchantListData enchants = (EnchantListData) data;
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull EnchantListData enchants) {
 
         for (Enchantment enchant : enchants.getEnchants()) {
             int lvl = enchants.getLevel(enchant);
@@ -286,7 +285,7 @@ public class Enchants extends ItemStat implements Upgradable {
         }
 
         // Apply tags
-        item.addItemTag(getAppliedNBT(data));
+        item.addItemTag(getAppliedNBT(enchants));
     }
 
     /**
@@ -294,13 +293,13 @@ public class Enchants extends ItemStat implements Upgradable {
      */
     @NotNull
     @Override
-    public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull EnchantListData data) {
         ArrayList<ItemTag> ret = new ArrayList<>();
 
         // Add enchantment pair data
         ArrayList<String> enchantments = new ArrayList<>();
-        for (Enchantment enchantment : ((EnchantListData) data).getEnchants()) {
-            enchantments.add(enchantment.getKey().getKey() + " " + ((EnchantListData) data).getLevel(enchantment));
+        for (Enchantment enchantment : data.getEnchants()) {
+            enchantments.add(enchantment.getKey().getKey() + " " + data.getLevel(enchantment));
         }
 
         // Add that one tag

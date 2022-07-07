@@ -21,14 +21,14 @@ public class PickaxePower extends DoubleStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 		int pickPower = (int) ((DoubleData) data).getValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", pickPower));
 		item.getLore().insert("pickaxe-power", formatNumericStat(pickPower, "#", "" + pickPower));
 	}
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 		Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
 		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
 

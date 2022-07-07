@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.stat.GemSockets;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -22,7 +23,7 @@ import java.util.*;
  * When used as a {@link RandomStatData}, the 'gems' set is useless
  * because items do not come with gems applied to it when generated.
  */
-public class GemSocketsData implements Mergeable, RandomStatData {
+public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, RandomStatData<GemSocketsData> {
     @NotNull
     private final Set<GemstoneData> gems = new HashSet<>();
     @NotNull
@@ -125,8 +126,7 @@ public class GemSocketsData implements Mergeable, RandomStatData {
     }
 
     @Override
-    public void merge(StatData data) {
-        Validate.isTrue(data instanceof GemSocketsData, "Cannot merge two different stat data types");
+    public void merge(GemSocketsData data) {
 
         // Combine both actual gems, and empty slots
         emptySlots.addAll(((GemSocketsData) data).emptySlots);
@@ -134,8 +134,7 @@ public class GemSocketsData implements Mergeable, RandomStatData {
     }
 
     @Override
-    public @NotNull
-    StatData cloneData() {
+    public GemSocketsData cloneData() {
 
         // Clone empty slots
         GemSocketsData ret = new GemSocketsData(new ArrayList<>(emptySlots));
@@ -148,12 +147,12 @@ public class GemSocketsData implements Mergeable, RandomStatData {
     }
 
     @Override
-    public boolean isClear() {
-        return getGemstones().size() == 0 && getEmptySlots().size() == 0;
+    public boolean isEmpty() {
+        return gems.isEmpty() && emptySlots.isEmpty();
     }
 
     @Override
-    public StatData randomize(MMOItemBuilder builder) {
+    public GemSocketsData randomize(MMOItemBuilder builder) {
         return new GemSocketsData(new ArrayList<>(emptySlots));
     }
 

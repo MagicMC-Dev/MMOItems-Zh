@@ -95,7 +95,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Get it
 		ItemTag listTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -112,7 +112,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -129,7 +129,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
 		// Make the result list
 		ArrayList<ItemTag> ret = new ArrayList<>();

@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class MaterialData implements StatData, RandomStatData {
+public class MaterialData implements StatData, RandomStatData<MaterialData> {
 	private Material material;
 
 	/*
@@ -29,7 +29,7 @@ public class MaterialData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public MaterialData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

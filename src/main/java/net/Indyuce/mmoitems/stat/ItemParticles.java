@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import io.lumine.utils.particles.effects.ParticleCircle;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemParticles extends ItemStat {
+public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 	public ItemParticles() {
 		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toMaterial(), "Item Particles", new String[] { "The particles displayed when",
 				"holding/wearing your item.", "", ChatColor.BLUE + "A tutorial is available on the wiki." }, new String[] { "all", "!block" });
@@ -56,13 +57,13 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ParticleData data) {
 		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull ParticleData data) {
 
 		// Ret
 		ArrayList<ItemTag> ret = new ArrayList<>();
@@ -74,14 +75,14 @@ public class ItemParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<ParticleData> statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup the item particles.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to clear.");
 	}
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new ParticleData(ParticleType.AURA, Particle.EXPLOSION_LARGE); }
+	public ParticleData getClearStatData() { return new ParticleData(ParticleType.AURA, Particle.EXPLOSION_LARGE); }
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
@@ -148,7 +149,7 @@ public class ItemParticles extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public ParticleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		ItemTag tagg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 		if (tagg != null) {

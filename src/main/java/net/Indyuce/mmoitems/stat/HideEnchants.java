@@ -20,8 +20,8 @@ public class HideEnchants extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		if (((BooleanData) data).isEnabled())
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
+		if (data.isEnabled())
 			item.getMeta().addItemFlags(ItemFlag.HIDE_ENCHANTS);
 	}
 
@@ -37,12 +37,12 @@ public class HideEnchants extends BooleanStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull BooleanData data) { return new ArrayList<>(); }
 	/**
 	 * This stat is saved not as a custom tag, but as the vanilla HideFlag itself.
 	 * Alas this method returns null.
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public BooleanData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 }

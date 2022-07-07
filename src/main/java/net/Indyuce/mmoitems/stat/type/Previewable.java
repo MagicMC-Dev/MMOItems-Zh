@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Gunging
  */
-public interface Previewable {
+public interface Previewable<R extends RandomStatData<S>, S extends StatData> {
 
     /**
      * Literally a copy of {@link ItemStat#whenApplied(ItemStackBuilder, StatData)}
@@ -25,5 +25,5 @@ public interface Previewable {
      *
      * @throws IllegalArgumentException If something go wrong
      */
-    void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException;
+    void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull S currentData, @NotNull R templateData) throws IllegalArgumentException;
 }

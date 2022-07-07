@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class SoundListData implements StatData, Mergeable, RandomStatData {
+public class SoundListData implements StatData, Mergeable, RandomStatData<SoundListData> {
 	private final Map<CustomSound, SoundData> sounds;
 
 	public SoundListData() {
@@ -76,12 +76,12 @@ public class SoundListData implements StatData, Mergeable, RandomStatData {
 	public @NotNull StatData cloneData() { return new SoundListData(mapData()); }
 
 	@Override
-	public boolean isClear() {
-		return mapData().size() == 0;
+	public boolean isEmpty() {
+		return sounds.isEmpty();
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public SoundListData randomize(MMOItemBuilder builder) {
 		return new SoundListData(new HashMap<>(sounds));
 	}
 }

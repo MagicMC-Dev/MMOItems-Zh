@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class Effects extends ItemStat implements PlayerConsumable {
+public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> implements PlayerConsumable {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public Effects() {
@@ -46,8 +46,8 @@ public class Effects extends ItemStat implements PlayerConsumable {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Must specify a config section"));
+	public RandomPotionEffectListData whenInitialized(Object object) {
+		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
 
@@ -89,11 +89,11 @@ public class Effects extends ItemStat implements PlayerConsumable {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomPotionEffectListData data = (RandomPotionEffectListData) statData.get();
+			RandomPotionEffectListData data = statData.get();
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
 						+ ChatColor.GRAY + " Level: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
@@ -108,17 +108,17 @@ public class Effects extends ItemStat implements PlayerConsumable {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public PotionEffectListData getClearStatData() {
 		return new PotionEffectListData();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
 
 		// Process Lore
 		List<String> lore = new ArrayList<>();
 		String effectFormat = ItemStat.translate("effect");
-		((PotionEffectListData) data).getEffects().forEach(effect -> {
+		data.getEffects().forEach(effect -> {
 			lore.add(effectFormat
 					.replace("#e",
 							MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
@@ -133,13 +133,13 @@ public class Effects extends ItemStat implements PlayerConsumable {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData data) {
 
 		// Create aJson Array
 		JsonArray array = new JsonArray();
 
 		// For every effect
-		for (PotionEffectData effect : ((PotionEffectListData) data).getEffects()) {
+		for (PotionEffectData effect : data.getEffects()) {
 
 			// Convert to Json Object
 			JsonObject object = new JsonObject();
@@ -174,7 +174,7 @@ public class Effects extends ItemStat implements PlayerConsumable {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find tag
 		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);

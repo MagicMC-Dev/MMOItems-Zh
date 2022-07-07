@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class RandomEnchantListData implements RandomStatData {
+public class RandomEnchantListData implements RandomStatData<EnchantListData> {
 	private final Map<Enchantment, NumericStatFormula> enchants = new HashMap<>();
 
 	public RandomEnchantListData(ConfigurationSection config) {
@@ -39,7 +39,7 @@ public class RandomEnchantListData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public EnchantListData randomize(MMOItemBuilder builder) {
 		EnchantListData list = new EnchantListData();
 		enchants.forEach((enchant, formula) -> list.addEnchant(enchant, (int) Math.max(formula.calculate(builder.getLevel()), enchant.getStartLevel())));
 		return list;

@@ -40,7 +40,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ArrowPotionEffects extends ItemStat {
+public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
 
 	public ArrowPotionEffects() {
@@ -49,7 +49,7 @@ public class ArrowPotionEffects extends ItemStat {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public RandomPotionEffectListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomPotionEffectListData((ConfigurationSection) object);
 	}
@@ -101,7 +101,7 @@ public class ArrowPotionEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
 			RandomPotionEffectListData data = (RandomPotionEffectListData) statData.get();
@@ -119,17 +119,17 @@ public class ArrowPotionEffects extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public PotionEffectListData getClearStatData() {
 		return new PotionEffectListData();
 	}
 
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
 		List<String> lore = new ArrayList<>();
 
 		String permEffectFormat = ItemStat.translate("arrow-potion-effects");
-		((PotionEffectListData) data).getEffects().forEach(effect -> {
+		data.getEffects().forEach(effect -> {
 			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
 				+ " " + MMOUtils.intToRoman(effect.getLevel()) + "(" + durationFormat.format(effect.getDuration()) + "s)"));
 		});
@@ -142,7 +142,7 @@ public class ArrowPotionEffects extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData data) {
 
 		// Build Tags list
 		ArrayList<ItemTag> tags = new ArrayList<>();
@@ -185,7 +185,7 @@ public class ArrowPotionEffects extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Found at path?
 		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);

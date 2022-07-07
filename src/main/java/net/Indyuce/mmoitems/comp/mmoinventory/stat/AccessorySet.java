@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.comp.mmoinventory.stat;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.MythicLib;
@@ -17,7 +18,7 @@ public class AccessorySet extends StringStat {
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
         item.addItemTag(new ItemTag(getNBTPath(), data.toString()));
     }
     @Override

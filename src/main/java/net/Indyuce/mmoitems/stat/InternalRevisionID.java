@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InternalRevisionID extends ItemStat implements InternalStat {
+public class InternalRevisionID extends ItemStat<RandomStatData<StatData>, StatData> implements InternalStat {
     public InternalRevisionID() {
         super("INTERNAL_REVISION_ID", Material.ITEM_FRAME, "Internal Revision ID", new String[] { "The Internal Revision ID is used to determine",
                         "if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!"},
@@ -45,7 +45,7 @@ public class InternalRevisionID extends ItemStat implements InternalStat {
     }
 
     @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+    public void whenDisplayed(List<String> lore, Optional<RandomStatData<StatData>> statData) {
         // not supported
     }
 

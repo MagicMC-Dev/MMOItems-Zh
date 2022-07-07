@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class Elements extends ItemStat implements Previewable {
+public class Elements extends ItemStat<RandomElementListData, ElementListData> implements Previewable<RandomElementListData, ElementListData> {
 	public Elements() {
 		super("ELEMENT", Material.SLIME_BALL, "Elements", new String[] { "The elements of your item." },
 				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
@@ -57,7 +57,7 @@ public class Elements extends ItemStat implements Previewable {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public RandomElementListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		return new RandomElementListData((ConfigurationSection) object);
 	}
@@ -98,7 +98,7 @@ public class Elements extends ItemStat implements Previewable {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomElementListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -118,13 +118,13 @@ public class Elements extends ItemStat implements Previewable {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new ElementListData(); }
+	public ElementListData getClearStatData() { return new ElementListData(); }
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ElementListData data) {
 
 		// Write Lore
-		ElementListData elements = (ElementListData) data;
+		ElementListData elements = data;
 		for (Element element : elements.getDamageElements()) {
 			String path = element.name().toLowerCase() + "-damage";
 			double value = elements.getDamage(element);
@@ -140,10 +140,10 @@ public class Elements extends ItemStat implements Previewable {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull ElementListData data) {
 
 		// Must be element list data
-		ElementListData elements = (ElementListData) data;
+		ElementListData elements = data;
 
 		// Create Array
 		ArrayList<ItemTag> ret = new ArrayList<>();
@@ -197,7 +197,7 @@ public class Elements extends ItemStat implements Previewable {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public ElementListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Create new
 		ElementListData elements = new ElementListData();
@@ -223,7 +223,7 @@ public class Elements extends ItemStat implements Previewable {
 	static HashMap<Element, String> damageNBTpaths = null;
 
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull ElementListData currentData, @NotNull RandomElementListData templateData) throws IllegalArgumentException {
 		Validate.isTrue(currentData instanceof ElementListData, "Current Data is not ElementListData");
 		Validate.isTrue(templateData instanceof RandomElementListData, "Template Data is not RandomElementListData");
 

@@ -26,13 +26,14 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import scala.math.Numeric;
 
 /**
  * Regarding the auto updating of items
  * @see RevisionInventory
  * @see MMOItemReforger
  */
-public class RevisionID extends ItemStat implements GemStoneStat {
+public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> implements GemStoneStat {
 	public RevisionID() {
 		super("REVISION_ID", Material.ITEM_FRAME, "Revision ID", new String[] { "The Revision ID is used to determine",
 		"if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!", "", "\u00a76The updater is smart and will apply", "\u00a76changes to the base stats of the item,", "\u00a76keeping gemstones intact (for example)."},
@@ -40,7 +41,7 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public NumericStatFormula whenInitialized(Object object) {
 		if (object instanceof Integer)
 			return new NumericStatFormula((Integer) object, 0, 0, 0);
 
@@ -48,15 +49,15 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
 		ArrayList<ItemTag> ret = new ArrayList<>();
-		ret.add(new ItemTag(getNBTPath(), (int) ((DoubleData) data).getValue()));
+		ret.add(new ItemTag(getNBTPath(), (int) data.getValue()));
 		return ret;
 	}
 
@@ -73,20 +74,20 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 		ArrayList<ItemTag> tags = new ArrayList<>();
 		if (mmoitem.getNBT().hasTag(getNBTPath()))
 			tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.INTEGER));
-		StatData data = getLoadedNBT(tags);
+		DoubleData data = getLoadedNBT(tags);
 		if (data != null) { mmoitem.setData(this, data); }
 	}
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 		ItemTag tag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 		if (tag != null) { return new DoubleData((int) tag.getValue()); }
 		return null;
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
 		if (statData.isPresent()) {
 			NumericStatFormula data = (NumericStatFormula) statData.get();
 			lore.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + ((int) data.getBase()));
@@ -100,7 +101,7 @@ public class RevisionID extends ItemStat implements GemStoneStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public DoubleData getClearStatData() {
 		return new DoubleData(0D);
 	}
 }

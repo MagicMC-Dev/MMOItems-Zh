@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompatibleIds extends ItemStat {
+public class CompatibleIds extends ItemStat<StringListData, StringListData> {
 	public CompatibleIds() {
 		super("COMPATIBLE_IDS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible IDs",
 				new String[] { "The item ids this skin is", "compatible with." }, new String[] { "skin" });
@@ -72,7 +72,7 @@ public class CompatibleIds extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -88,15 +88,15 @@ public class CompatibleIds extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public StringListData getClearStatData() {
 		return new StringListData();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
 
 		// Copy Array, for lore
-		List<String> compatibleIds = new ArrayList<>(((StringListData) data).getList());
+		List<String> compatibleIds = new ArrayList<>(data.getList());
 		item.getLore().insert("compatible-ids", compatibleIds);
 
 		// Add data
@@ -105,13 +105,13 @@ public class CompatibleIds extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
 		// Build Json Array
 		JsonArray array = new JsonArray();
 
 		// For each string in the ids of the data
-		for (String sts : ((StringListData) data).getList()) { array.add(sts); }
+		for (String sts : data.getList()) { array.add(sts); }
 
 		// Make returning array
 		ArrayList<ItemTag> tags = new ArrayList<>();
@@ -138,7 +138,7 @@ public class CompatibleIds extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find relevant tag
 		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);

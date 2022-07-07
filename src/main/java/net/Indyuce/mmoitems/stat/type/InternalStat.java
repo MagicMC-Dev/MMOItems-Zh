@@ -5,4 +5,5 @@ package net.Indyuce.mmoitems.stat.type;
  * edited in the item edition GUI since they only exist once the item is
  * physically generated.
  */
-public interface InternalStat { }
+public interface InternalStat {
+}

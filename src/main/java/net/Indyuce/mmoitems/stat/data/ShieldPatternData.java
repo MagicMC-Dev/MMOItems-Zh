@@ -11,7 +11,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class ShieldPatternData implements StatData, RandomStatData {
+public class ShieldPatternData implements StatData, RandomStatData<ShieldPatternData> {
 	private final DyeColor base;
 	private final List<Pattern> patterns = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class ShieldPatternData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public ShieldPatternData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

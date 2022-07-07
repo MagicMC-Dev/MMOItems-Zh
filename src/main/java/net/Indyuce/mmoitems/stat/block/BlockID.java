@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.block;
 
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -16,11 +17,11 @@ public class BlockID extends DoubleStat {
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
         super.whenApplied(item, data);
-        item.addItemTag(new ItemTag("CustomModelData", (int) ((DoubleData) data).getValue() +1000));
+        item.addItemTag(new ItemTag("CustomModelData", (int) data.getValue() +1000));
     }
 
     @Override
-    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
+    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
 }

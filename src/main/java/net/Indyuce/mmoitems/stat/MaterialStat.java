@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MaterialStat extends ItemStat {
+public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 	public MaterialStat() {
 		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "Material", new String[] { "Your item material." }, new String[] { "all" });
 	}
@@ -58,7 +58,7 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull MaterialData data) {
 		/*
 		 * material is handled directly in the MMOBuilder constructor, therefore
 		 * nothing needs to be done here
@@ -71,7 +71,7 @@ public class MaterialStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<MaterialData> statData) {
 		lore.add(ChatColor.GRAY + "Current Value: "
 				+ (statData.isPresent()
 						? ChatColor.GREEN + MMOUtils.caseOnWords(((MaterialData) statData.get()).getMaterial().name().toLowerCase().replace("_", " "))
@@ -84,7 +84,7 @@ public class MaterialStat extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public MaterialData getClearStatData() {
 		return new MaterialData(Material.IRON_ORE);
 	}
 
@@ -94,7 +94,7 @@ public class MaterialStat extends ItemStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull MaterialData data) { return new ArrayList<>(); }
 
 	/**
 	 * This stat is saved not as a custom tag, but as the vanilla material itself.
@@ -102,5 +102,5 @@ public class MaterialStat extends ItemStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public MaterialData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 }

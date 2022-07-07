@@ -7,17 +7,18 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StringData implements StatData, RandomStatData, Mergeable {
+public class StringData implements StatData, RandomStatData<StringData>, Mergeable<StringData> {
 	@Nullable private String value;
 
 	public StringData(@Nullable String str) {
 		this.value = str;
 	}
 
+	@Nullable public String getString() { return value; }
+
 	public void setString(@Nullable String str) {
 		this.value = str;
 	}
-	@Nullable public String getString() { return value; }
 
 	@Override
 	public String toString() {
@@ -25,29 +26,25 @@ public class StringData implements StatData, RandomStatData, Mergeable {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public StringData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 
 	@Override
-	public void merge(@Nullable StatData data) {
-		if (!(data instanceof StringData)) { return; }
+	public boolean isEmpty() {
+		return value == null || value.isEmpty();
+	}
+
+	@Override
+	public void merge(@Nullable StringData data) {
 
 		// Overwrite
-		value = ((StringData) data).getString();
+		value = data.getString();
 	}
 
 	@NotNull
 	@Override
-	public StatData cloneData() {
-
+	public StringData cloneData() {
 		return new StringData(value);
-	}
-
-	@Override
-	public boolean isClear() {
-
-		// If empty I guess
-		return value == null || value.isEmpty();
 	}
 }

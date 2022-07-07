@@ -10,7 +10,7 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
-public class PotionEffectListData implements StatData, Mergeable {
+public class PotionEffectListData implements StatData, Mergeable<PotionEffectListData> {
 	private final List<PotionEffectData> effects = new ArrayList<>();
 
 	// public PotionEffectListData(ConfigurationSection config) {
@@ -19,7 +19,6 @@ public class PotionEffectListData implements StatData, Mergeable {
 	// this.effects.add(new
 	// PotionEffectData(config.getConfigurationSection(key)));
 	// }
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -56,16 +55,15 @@ public class PotionEffectListData implements StatData, Mergeable {
 	}
 
 	@Override
-	public void merge(StatData data) {
-		Validate.isTrue(data instanceof PotionEffectListData, "Cannot merge two different stat data types");
-		effects.addAll(((PotionEffectListData) data).effects);
+	public boolean isEmpty() {
+		return effects.isEmpty();
 	}
 
 	@Override
-	public @NotNull StatData cloneData() { return new PotionEffectListData(getEffects().toArray(new PotionEffectData[0])); }
+	public void merge(PotionEffectListData data) {
+		effects.addAll(data.effects);
+	}
 
 	@Override
-	public boolean isClear() {
-		return getEffects().size() == 0;
-	}
+	public @NotNull PotionEffectListData cloneData() { return new PotionEffectListData(getEffects().toArray(new PotionEffectData[0])); }
 }

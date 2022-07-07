@@ -28,7 +28,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BooleanStat extends ItemStat {
+public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 	private static final DecimalFormat digit = new DecimalFormat("0.#");
 
 	public BooleanStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
@@ -36,7 +36,7 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public RandomBooleanData whenInitialized(Object object) {
 
 		if (object instanceof Boolean)
 			return new RandomBooleanData((boolean) object);
@@ -48,10 +48,10 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
 
 		// Only if enabled yo
-		if (((BooleanData) data).isEnabled()) {
+		if (data.isEnabled()) {
 
 			// Add those
 			item.addItemTag(getAppliedNBT(data));
@@ -63,12 +63,12 @@ public class BooleanStat extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull BooleanData data) {
 
 		// Create Fresh
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
-		if (((BooleanData) data).isEnabled()) {
+		if (data.isEnabled()) {
 
 			// Add sole tag
 			ret.add(new ItemTag(getNBTPath(), true));
@@ -123,7 +123,7 @@ public class BooleanStat extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public BooleanData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find relevant tag
 		ItemTag encoded = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -139,7 +139,7 @@ public class BooleanStat extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomBooleanData> statData) {
 
 		if (statData.isPresent()) {
 			double chance = ((RandomBooleanData) statData.get()).getChance();
@@ -156,7 +156,7 @@ public class BooleanStat extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public BooleanData getClearStatData() {
 		return new BooleanData(false);
 	}
 }

@@ -30,8 +30,9 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skills.types.Stat;
 
-public class Crafting extends ItemStat {
+public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 	public Crafting() {
 		super("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "Crafting",
 				new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
@@ -52,7 +53,7 @@ public class Crafting extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData<StatData>> statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the crafting edition menu.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all crafting recipes.");
 	}

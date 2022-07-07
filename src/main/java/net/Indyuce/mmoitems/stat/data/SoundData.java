@@ -21,7 +21,7 @@ public class SoundData {
 		this.pitch = pitch;
 	}
 
-	/*
+	/**
 	 * Loads a sound from a config file
 	 */
 	public SoundData(Object object) {

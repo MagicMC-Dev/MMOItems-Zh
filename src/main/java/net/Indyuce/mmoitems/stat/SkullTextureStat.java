@@ -7,16 +7,19 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SkullTextureStat extends StringStat {
+public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureData> {
 	public SkullTextureStat() {
 		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "Skull Texture",
 				new String[] { "The head texture &nvalue&7.", "Can be found on heads databases." }, new String[] { "all" },
@@ -34,7 +37,7 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public SkullTextureData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -50,7 +53,7 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<SkullTextureData> statData) {
 		lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN + "Texture value provided" : ChatColor.RED + "None"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
@@ -66,7 +69,7 @@ public class SkullTextureStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull SkullTextureData data) {
 		if (item.getItemStack().getType() != VersionMaterial.PLAYER_HEAD.toMaterial())
 			return;
 
@@ -84,7 +87,17 @@ public class SkullTextureStat extends StringStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull SkullTextureData data) { return new ArrayList<>(); }
+
+	@Override
+	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+		if (event.getAction() == InventoryAction.PICKUP_HALF) {
+			inv.getEditedSection().set(getPath(), null);
+			inv.registerTemplateEdition();
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
+		} else
+			new StatEdition(inv, this).enable("Write in the chat the text you want.");
+	}
 
 	@Override
 	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
@@ -101,9 +114,9 @@ public class SkullTextureStat extends StringStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public SkullTextureData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new SkullTextureData(new GameProfile(UUID.fromString("df930b7b-a84d-4f76-90ac-33be6a5b6c88"), "gunging")); }
+	public SkullTextureData getClearStatData() { return new SkullTextureData(new GameProfile(UUID.fromString("df930b7b-a84d-4f76-90ac-33be6a5b6c88"), "gunging")); }
 }

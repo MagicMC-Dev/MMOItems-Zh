@@ -5,6 +5,8 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.stat.data.ArrowParticlesData;
+import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ChooseStat;
@@ -49,7 +51,7 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
     }
 
     @NotNull
-    @Override public StatData getClearStatData() { return new StringData(NORMAL); }
+    @Override public StringData getClearStatData() { return new StringData(NORMAL); }
 
     @Override
     public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {

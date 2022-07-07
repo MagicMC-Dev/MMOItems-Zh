@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -31,13 +32,13 @@ public class ItemDamage extends DoubleStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 		if (item.getMeta() instanceof Damageable)
-			((Damageable) item.getMeta()).setDamage((int) ((DoubleData) data).getValue());
+			((Damageable) item.getMeta()).setDamage((int)  data.getValue());
 	}
 
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData);}
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException { whenApplied(item, currentData);}
 
 	/**
 	 * This stat is saved not as a custom tag, but as the vanilla HideFlag itself.
@@ -45,7 +46,7 @@ public class ItemDamage extends DoubleStat implements GemStoneStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) { return new ArrayList<>(); }
 
 	@Override
 	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
@@ -59,5 +60,5 @@ public class ItemDamage extends DoubleStat implements GemStoneStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 }

@@ -7,10 +7,13 @@ import me.badbones69.crazyenchantments.api.objects.CEnchantment;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CrazyEnchantsStat extends StringStat implements InternalStat {
+public class CrazyEnchantsStat extends ItemStat<RandomStatData<CrazyEnchantsData>, CrazyEnchantsData> implements InternalStat {
 
     /**
      * CrazyEnchants has no NBTTag where it stores enchant data.
@@ -37,8 +40,8 @@ public class CrazyEnchantsStat extends StringStat implements InternalStat {
      * https://github.com/badbones69/Crazy-Enchantments/blob/v1.8/plugin/src/main/java/me/badbones69/crazyenchantments/api/CrazyEnchantments.java
      */
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-        Map<CEnchantment, Integer> enchants = ((CrazyEnchantsData) data).getEnchants();
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull CrazyEnchantsData data) {
+        Map<CEnchantment, Integer> enchants = data.getEnchants();
 
         for (Map.Entry<CEnchantment, Integer> entry : enchants.entrySet()) {
             CEnchantment enchantment = entry.getKey();
@@ -54,41 +57,41 @@ public class CrazyEnchantsStat extends StringStat implements InternalStat {
             mmoitem.setData(this, new CrazyEnchantsData(enchants));
     }
 
+    @Nullable
     @Override
-    public RandomStatData whenInitialized(Object object) {
-        // Not supported
+    public RandomStatData<CrazyEnchantsData> whenInitialized(Object object) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void whenDisplayed(List<String> lore, Optional<RandomStatData<CrazyEnchantsData>> statData) {
+        throw new NotImplementedException();
+    }
+
+    @Nullable
+    @Override
+    public CrazyEnchantsData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
         return null;
     }
 
     @NotNull
     @Override
-    public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull CrazyEnchantsData data) {
         return new ArrayList<>();
     }
 
     @Override
-    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-        // Not supported
-    }
-
-    @Override
-    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-        // Not supported
-    }
-
-    @Nullable
-    @Override
-    public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
-        return null;
-    }
-
-    @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
-        // Not supported
-    }
-
-    @Override
-    public StatData getClearStatData() {
+    public CrazyEnchantsData getClearStatData() {
         return new CrazyEnchantsData(new HashMap<>());
     }
 }

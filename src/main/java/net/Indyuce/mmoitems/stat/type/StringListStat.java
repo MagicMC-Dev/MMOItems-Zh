@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class StringListStat extends ItemStat {
+public class StringListStat extends ItemStat<StringListData, StringListData> {
     public StringListStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
         super(id, mat, name, lore, types, materials);
     }
@@ -42,7 +42,7 @@ public class StringListStat extends ItemStat {
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
 
         // Empty stuff
         if (!(data instanceof StringListData)) { return; }
@@ -137,7 +137,7 @@ public class StringListStat extends ItemStat {
 
     @NotNull
     @Override
-    public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
         // Start out with a new JSON Array
         JsonArray array = new JsonArray();
@@ -204,7 +204,7 @@ public class StringListStat extends ItemStat {
 
     @Nullable
     @Override
-    public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+    public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
         // Get it
         ItemTag listTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -231,7 +231,7 @@ public class StringListStat extends ItemStat {
     }
 
     @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+    public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
         if (statData.isPresent()) {
             lore.add(ChatColor.GRAY + "Current Value:");
             StringListData data = (StringListData) statData.get();
@@ -247,7 +247,7 @@ public class StringListStat extends ItemStat {
 
     @NotNull
     @Override
-    public StatData getClearStatData() {
+    public StringListData getClearStatData() {
         return new StringListData();
     }
 }

@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,7 +31,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemTypeRestriction extends StringStat {
+public class ItemTypeRestriction extends ItemStat<StringListData, StringListData> {
 	public ItemTypeRestriction() {
 		super("ITEM_TYPE_RESTRICTION", Material.EMERALD, "Item Type Restriction",
 				new String[] { "This option defines the item types", "on which your gem can be applied." }, new String[] { "gem_stone" });
@@ -38,7 +39,7 @@ public class ItemTypeRestriction extends StringStat {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public RandomStatData whenInitialized(Object object) {
+	public StringListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
 		return new StringListData((List<String>) object);
 	}
@@ -108,7 +109,7 @@ public class ItemTypeRestriction extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -122,7 +123,7 @@ public class ItemTypeRestriction extends StringStat {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last element.");
 	}
 
-	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
 
 		// Add NBT
 		item.addItemTag(getAppliedNBT(data));
@@ -130,13 +131,13 @@ public class ItemTypeRestriction extends StringStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
 		// Make Array
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
 		// Add that tag
-		String joined = data instanceof StringListData ? String.join(",", ((StringListData) data).getList()) : ((StringData) data).getString();
+		String joined = String.join(",", ((StringListData) data).getList());
 		ret.add(new ItemTag(getNBTPath(), joined));
 
 		// Thats it
@@ -162,7 +163,7 @@ public class ItemTypeRestriction extends StringStat {
 			mmoitem.setData(this, bakedData);
 		}
 	}
-	@Nullable @Override public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	@Nullable @Override public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// You got a double righ
 		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -203,7 +204,7 @@ public class ItemTypeRestriction extends StringStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public StringListData getClearStatData() {
 		return new StringListData();
 	}
 }

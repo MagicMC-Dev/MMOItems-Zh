@@ -41,7 +41,7 @@ public class ItemSetStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 
 		// Display in lore
 		ItemSet set = MMOItems.plugin.getSets().get(data.toString());
@@ -55,7 +55,7 @@ public class ItemSetStat extends StringStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData data) {
 
 		ItemSet set = MMOItems.plugin.getSets().get(data.toString());
 		Validate.notNull(set, "Could not find item set with ID '" + data.toString() + "'");

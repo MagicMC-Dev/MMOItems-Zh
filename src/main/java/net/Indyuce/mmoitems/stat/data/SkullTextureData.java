@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class SkullTextureData implements StatData, RandomStatData {
+public class SkullTextureData implements StatData, RandomStatData<SkullTextureData> {
 	private final GameProfile profile;
 
 	public SkullTextureData(GameProfile profile) {
@@ -18,7 +18,7 @@ public class SkullTextureData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public SkullTextureData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

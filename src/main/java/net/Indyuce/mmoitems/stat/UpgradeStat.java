@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
+public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements ConsumableItemInteraction {
 	private static final Random random = new Random();
 
 	public UpgradeStat() {
@@ -60,7 +60,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull UpgradeData data) {
 		if (!(data instanceof UpgradeData)) { return; }
 
 		// Show in lore
@@ -75,7 +75,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull UpgradeData data) {
 		ArrayList<ItemTag> ret = new ArrayList<>();
 		ret.add(new ItemTag(getNBTPath(), data.toString()));
 		return ret;
@@ -151,7 +151,7 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public UpgradeData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Gettag
 		ItemTag uTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -175,14 +175,14 @@ public class UpgradeStat extends ItemStat implements ConsumableItemInteraction {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<UpgradeData> statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup upgrading.");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");
 	}
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new UpgradeData(null, null, false, false, 0, 0, 0D); }
+	public UpgradeData getClearStatData() { return new UpgradeData(null, null, false, false, 0, 0, 0D); }
 
 	@Override
 	public boolean handleConsumableEffect(@NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem target, Type targetType) {

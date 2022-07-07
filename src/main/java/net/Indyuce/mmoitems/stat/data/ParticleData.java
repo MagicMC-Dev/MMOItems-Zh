@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.particle.api.ParticleType;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class ParticleData implements StatData, RandomStatData {
+public class ParticleData implements StatData, RandomStatData<ParticleData> {
 	private final ParticleType type;
 	private final Particle particle;
 	private final Map<String, Double> modifiers = new HashMap<>();
@@ -140,7 +140,7 @@ public class ParticleData implements StatData, RandomStatData {
     }
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public ParticleData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

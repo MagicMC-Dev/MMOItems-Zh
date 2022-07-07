@@ -29,7 +29,7 @@ import io.lumine.mythic.lib.version.VersionMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DyeColor extends ItemStat {
+public class DyeColor extends ItemStat<ColorData, ColorData> {
 	public DyeColor() {
 		super("DYE_COLOR", VersionMaterial.RED_DYE.toMaterial(), "Dye Color",
 				new String[] { "The color of your item", "(for dyeable items).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
@@ -70,7 +70,7 @@ public class DyeColor extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<ColorData> statData) {
 		lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "None"));
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
@@ -79,7 +79,7 @@ public class DyeColor extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public ColorData getClearStatData() {
 		return new ColorData(0, 0, 0);
 	}
 
@@ -113,7 +113,7 @@ public class DyeColor extends ItemStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public ColorData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find tag
 		ItemTag dyedColour = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -132,7 +132,7 @@ public class DyeColor extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ColorData data) {
 
 		// Only does anything if it is a colourable meta
 		if (item.getMeta() instanceof LeatherArmorMeta) {
@@ -149,7 +149,7 @@ public class DyeColor extends ItemStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull ColorData data) {
 
 		// No tags are added
 		return new ArrayList<>();

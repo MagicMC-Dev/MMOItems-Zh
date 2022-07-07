@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Commands extends ItemStat {
+public class Commands extends ItemStat<CommandListData, CommandListData> {
 	private static final int max = 15;
 
 	public Commands() {
@@ -109,7 +109,7 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<CommandListData> statData) {
 		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
 				+ (statData.isPresent() ? ((CommandListData) statData.get()).getCommands().size() : "0"));
 		lore.add("");
@@ -117,12 +117,12 @@ public class Commands extends ItemStat {
 	}
 
 	@Override
-	public @NotNull StatData getClearStatData() {
+	public @NotNull CommandListData getClearStatData() {
 		return new CommandListData();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull CommandListData data) {
 
 		// Add persistent tags onto item
 		item.addItemTag(getAppliedNBT(data));
@@ -139,7 +139,7 @@ public class Commands extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull CommandListData data) {
 
 		// Will end up returning this
 		ArrayList<ItemTag> ret = new ArrayList<>();
@@ -148,7 +148,7 @@ public class Commands extends ItemStat {
 		JsonArray array = new JsonArray();
 
 		// Add each command
-		for (CommandData cd : ((CommandListData) data).getCommands()) {
+		for (CommandData cd : data.getCommands()) {
 
 			JsonObject object = new JsonObject();
 			object.addProperty("Command", cd.getCommand());
@@ -190,7 +190,7 @@ public class Commands extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public CommandListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find relevant tag
 		ItemTag relevant = ItemTag.getTagAtPath(getNBTPath(), storedTags);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -34,7 +35,7 @@ import io.lumine.mythic.lib.version.VersionMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ArrowParticles extends ItemStat {
+public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesData> {
 	public ArrowParticles() {
 		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toMaterial(), "Arrow Particles",
 				new String[] { "Particles that display around", "the arrows your bow fires." }, new String[] { "bow", "crossbow" });
@@ -58,13 +59,13 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ArrowParticlesData data) {
 		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull ArrowParticlesData data) {
 		ArrayList<ItemTag> tags = new ArrayList<>();
 		tags.add(new ItemTag(getNBTPath(), data.toString()));
 		return tags;
@@ -91,7 +92,7 @@ public class ArrowParticles extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public ArrowParticlesData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Get tag
 		ItemTag tagS = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -179,9 +180,9 @@ public class ArrowParticles extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<ArrowParticlesData> statData) {
 		if (statData.isPresent()) {
-			ArrowParticlesData cast = (ArrowParticlesData) statData.get();
+			ArrowParticlesData cast = statData.get();
 			lore.add(ChatColor.GRAY + "Current Value:");
 
 			lore.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD
@@ -204,7 +205,7 @@ public class ArrowParticles extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public ArrowParticlesData getClearStatData() {
 		return new ArrowParticlesData(Particle.EXPLOSION_LARGE, 1, 0, 1);
 	}
 }

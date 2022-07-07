@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class ColorData implements StatData, RandomStatData {
+public class ColorData implements StatData, RandomStatData<ColorData> {
 	private final int red, green, blue;
 
 	public ColorData(String string) {
@@ -51,7 +51,7 @@ public class ColorData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public ColorData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

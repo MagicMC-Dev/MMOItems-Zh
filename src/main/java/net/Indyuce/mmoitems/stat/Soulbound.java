@@ -10,6 +10,7 @@ import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
@@ -34,48 +35,47 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Soulbound extends ItemStat implements InternalStat, ItemRestriction {
+public class Soulbound extends ItemStat<RandomStatData<SoulboundData>, SoulboundData> implements InternalStat, ItemRestriction {
 	public Soulbound() {
 		super("SOULBOUND", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbound", new String[0], new String[] { "all" });
 	}
 
 	@Nullable
 	@Override
-	public RandomStatData whenInitialized(Object object) {
-		// not supported
-		return null;
+	public RandomStatData<SoulboundData> whenInitialized(Object object) {
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		// not supported
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		// not supported
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
-		// not supported
+	public void whenDisplayed(List<String> lore, Optional<RandomStatData<SoulboundData>> statData) {
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull SoulboundData data) {
 		item.addItemTag(getAppliedNBT(data));
 
 		// Lore stuff
 		String formattedLoreTag = Message.SOULBOUND_ITEM_LORE.getUpdated().replace("#player#", ((SoulboundData) data).getName()).replace("#level#",
-				MMOUtils.intToRoman(((SoulboundData) data).getLevel()));
+				MMOUtils.intToRoman(data.getLevel()));
 		item.getLore().insert("soulbound", formattedLoreTag.split(Pattern.quote("//")));
 	}
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull SoulboundData data) {
 		ArrayList<ItemTag> a = new ArrayList<>();
-		a.add(new ItemTag(getNBTPath(), ((SoulboundData) data).toJson().toString()));
+		a.add(new ItemTag(getNBTPath(), data.toJson().toString()));
 		return a;
 	}
 
@@ -90,7 +90,7 @@ public class Soulbound extends ItemStat implements InternalStat, ItemRestriction
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public SoulboundData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 		ItemTag tag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 		if (tag != null) {
 			try {
@@ -109,7 +109,7 @@ public class Soulbound extends ItemStat implements InternalStat, ItemRestriction
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() { return new SoulboundData(UUID.fromString("df930b7b-a84d-4f76-90ac-33be6a5b6c88"), "gunging", 0); }
+	public SoulboundData getClearStatData() { return new SoulboundData(UUID.fromString("df930b7b-a84d-4f76-90ac-33be6a5b6c88"), "gunging", 0); }
 
 	@Override
 	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {

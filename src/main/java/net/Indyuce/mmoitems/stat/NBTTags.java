@@ -74,10 +74,10 @@ public class NBTTags extends StringListStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) statData.get();
+			StringListData data = statData.get();
 			data.getList().forEach(str -> lore.add(ChatColor.GRAY + str));
 
 		} else
@@ -95,7 +95,7 @@ public class NBTTags extends StringListStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
 
 		// Start out with a new JSON Array
@@ -108,7 +108,7 @@ public class NBTTags extends StringListStat {
 		HashMap<String, ItemTag> tagsAdd = new HashMap<>();
 
 		// For every list entry
-		for (String str : ((StringListData) data).getList()) {
+		for (String str : data.getList()) {
 
 			// Are we looking at an extraneous?
 			if (str.startsWith(extraneousTag)) {

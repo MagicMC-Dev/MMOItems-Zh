@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -21,26 +22,26 @@ public class CustomModelData extends DoubleStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
 		// Edit meta
-		item.getMeta().setCustomModelData((int) ((DoubleData) data).getValue());
+		item.getMeta().setCustomModelData((int) data.getValue());
 
 		// Apply Custom Model Data
 		item.addItemTag(getAppliedNBT(data));
 	}
 
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException { whenApplied(item, currentData); }
 
 	@NotNull
-	@Override public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	@Override public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
 
 		// Make new ArrayList
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
 		// Add Integer
-		ret.add(new ItemTag(getNBTPath(), (int) ((DoubleData) data).getValue()));
+		ret.add(new ItemTag(getNBTPath(), (int) data.getValue()));
 
 		// Return thay
 		return ret;
@@ -63,7 +64,7 @@ public class CustomModelData extends DoubleStat implements GemStoneStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find Tag
 		ItemTag cmd = ItemTag.getTagAtPath(getNBTPath(), storedTags);

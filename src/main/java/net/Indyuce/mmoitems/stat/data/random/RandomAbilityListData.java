@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class RandomAbilityListData implements RandomStatData {
+public class RandomAbilityListData implements RandomStatData<AbilityListData> {
 	private final Set<RandomAbilityData> abilities = new LinkedHashSet<>();
 
 	public RandomAbilityListData(RandomAbilityData... abilities) {
@@ -24,7 +24,7 @@ public class RandomAbilityListData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public AbilityListData randomize(MMOItemBuilder builder) {
 		AbilityListData list = new AbilityListData();
 		abilities.forEach(random -> list.add(random.randomize(builder)));
 		return list;

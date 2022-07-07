@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * <p> • Chance of successful upgrade
  * </p> • May it get destroyed if unsucessful upgrade?
  */
-public class UpgradeData implements StatData, RandomStatData, Cloneable {
+public class UpgradeData implements StatData, RandomStatData<UpgradeData>, Cloneable {
 
 	/**
 	 * @return The String a consumable must match to Upgrade this Item
@@ -191,7 +191,7 @@ public class UpgradeData implements StatData, RandomStatData, Cloneable {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public UpgradeData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 

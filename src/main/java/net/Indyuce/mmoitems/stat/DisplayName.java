@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
@@ -28,7 +29,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		// Bake
 		String format;
 		if (data instanceof NameData) {
@@ -179,7 +180,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData data) {
 
 		if (data instanceof NameData) {
 
@@ -304,7 +305,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public StringData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// You got a double right
 		ItemTag tg = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -330,14 +331,12 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public StringData getClearStatData() {
 		return new NameData("");
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public StringData whenInitialized(Object object) {
 		return new NameData(object.toString());
 	}
-
-
 }

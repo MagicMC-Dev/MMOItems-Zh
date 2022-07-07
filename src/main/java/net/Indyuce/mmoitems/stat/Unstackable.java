@@ -18,8 +18,8 @@ public class Unstackable extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		if (((BooleanData) data).isEnabled()) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
+		if (data.isEnabled()) {
 			item.addItemTag(new ItemTag(getNBTPath(), true));
 			item.addItemTag(new ItemTag(getNBTPath() + "_UUID", UUID.randomUUID().toString()));
 		}

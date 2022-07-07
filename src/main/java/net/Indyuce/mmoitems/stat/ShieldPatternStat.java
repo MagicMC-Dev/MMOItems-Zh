@@ -7,6 +7,7 @@ import java.util.Set;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -35,21 +36,21 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ShieldPatternStat extends StringStat {
+public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPatternData> {
 	public ShieldPatternStat() {
 		super("SHIELD_PATTERN", Material.SHIELD, "Shield Pattern", new String[] { "The color & patterns", "of your shield." },
 				new String[] { "all" }, Material.SHIELD);
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public ShieldPatternData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		ShieldPatternData shieldPattern = new ShieldPatternData(
 				config.contains("color") ? DyeColor.valueOf(config.getString("color").toUpperCase().replace("-", "_").replace(" ", "_")) : null);
 
-		// apply patterns
+		// Apply patterns
 		for (String key : config.getKeys(false))
 			if (!key.equalsIgnoreCase("color")) {
 				String format = config.getString(key + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
@@ -65,7 +66,7 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ShieldPatternData data) {
 		BlockStateMeta meta = (BlockStateMeta) item.getMeta();
 		Banner banner = (Banner) meta.getBlockState();
 		ShieldPatternData pattern = (ShieldPatternData) data;
@@ -81,7 +82,7 @@ public class ShieldPatternStat extends StringStat {
 	 */
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull ShieldPatternData data) { return new ArrayList<>(); }
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
@@ -140,11 +141,11 @@ public class ShieldPatternStat extends StringStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<ShieldPatternData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			ShieldPatternData data = (ShieldPatternData) statData.get();
+			ShieldPatternData data =  statData.get();
 			lore.add(ChatColor.GRAY + "* Base Color: "
 					+ (data.getBaseColor() != null
 							? ChatColor.GREEN + MMOUtils.caseOnWords(data.getBaseColor().name().toLowerCase().replace("_", " "))
@@ -177,7 +178,7 @@ public class ShieldPatternStat extends StringStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public ShieldPatternData getClearStatData() {
 		return new ShieldPatternData(DyeColor.YELLOW);
 	}
 
@@ -187,7 +188,7 @@ public class ShieldPatternStat extends StringStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public ShieldPatternData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 
 	private int getNextAvailableKey(ConfigurationSection section) {
 		for (int j = 0; j < 100; j++)

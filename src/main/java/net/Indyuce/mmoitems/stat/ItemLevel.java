@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.stat;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
@@ -19,17 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemLevel extends ItemStat implements InternalStat {
+public class ItemLevel extends ItemStat<NumericStatFormula, DoubleData> implements InternalStat {
 	public ItemLevel() {
 		super("ITEM_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Item Level", new String[] { "The item level" }, new String[] { "all" });
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { item.addItemTag(getAppliedNBT(data)); }
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) { item.addItemTag(getAppliedNBT(data)); }
 
 	@Nullable
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public NumericStatFormula whenInitialized(Object object) {
 		// not supported
 		return null;
 	}
@@ -45,19 +46,19 @@ public class ItemLevel extends ItemStat implements InternalStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
 		// not supported
 	}
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
 
 		// Array
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
 		// Add
-		ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
+		ret.add(new ItemTag(getNBTPath(), data.getValue()));
 
 		return ret;
 	}
@@ -78,7 +79,7 @@ public class ItemLevel extends ItemStat implements InternalStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Get tag
 		ItemTag lTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -96,7 +97,7 @@ public class ItemLevel extends ItemStat implements InternalStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public DoubleData getClearStatData() {
 		return new DoubleData(0D);
 	}
 }

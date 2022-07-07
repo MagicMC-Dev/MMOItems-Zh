@@ -75,7 +75,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -92,7 +92,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
 		// Create Fresh
 		ArrayList<ItemTag> ret = new ArrayList<>();
@@ -121,7 +121,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find relevant tag
 		ItemTag encoded = ItemTag.getTagAtPath(getNBTPath(), storedTags);

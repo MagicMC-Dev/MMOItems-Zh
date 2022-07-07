@@ -43,14 +43,14 @@ import org.jetbrains.annotations.Nullable;
  * This class has not been updated for the item generation update!!! The potion
  * amplifier and duration are not numeric formulas but flat values.... TODO
  */
-public class PermanentEffects extends ItemStat {
+public class PermanentEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public PermanentEffects() {
 		super("PERM_EFFECTS", Material.POTION, "Permanent Effects", new String[] { "The potion effects your", "item grants to the holder." },
 				new String[] { "!miscellaneous", "!block", "all" });
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public RandomPotionEffectListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 
@@ -103,10 +103,10 @@ public class PermanentEffects extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomPotionEffectListData data = (RandomPotionEffectListData) statData.get();
+			RandomPotionEffectListData data = statData.get();
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
 						+ " " + effect.getAmplifier().toString());
@@ -121,12 +121,12 @@ public class PermanentEffects extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public PotionEffectListData getClearStatData() {
 		return new PotionEffectListData();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
 		List<String> lore = new ArrayList<>();
 
 		String permEffectFormat = ItemStat.translate("perm-effect");
@@ -142,14 +142,14 @@ public class PermanentEffects extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData data) {
 
 		// Them tags
 		ArrayList<ItemTag> ret = new ArrayList<>();
 		JsonObject object = new JsonObject();
 
 		// For every registered effect
-		for (PotionEffectData effect : ((PotionEffectListData) data).getEffects()) {
+		for (PotionEffectData effect : data.getEffects()) {
 
 			// Add Properies
 			object.addProperty(effect.getType().getName(), effect.getLevel());
@@ -178,7 +178,7 @@ public class PermanentEffects extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find tag
 		ItemTag oTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);

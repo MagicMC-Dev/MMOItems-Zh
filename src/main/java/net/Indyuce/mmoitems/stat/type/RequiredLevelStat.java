@@ -12,7 +12,6 @@ import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomRequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +36,7 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
         // Lore Management
         int lvl = (int) ((DoubleData) data).getValue();
@@ -49,9 +48,7 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
     }
 
     @Override
-    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
-        Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
-        Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 
         // Get Value
         double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
@@ -91,14 +88,14 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
 
     @NotNull
     @Override
-    public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
         ArrayList<ItemTag> ret = new ArrayList<>();
         ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
         return ret;
     }
 
     @Override
-    public RandomStatData whenInitialized(Object object) {
+    public RandomRequiredLevelData whenInitialized(Object object) {
         return new RandomRequiredLevelData(object);
     }
 
@@ -120,7 +117,7 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
 
     @Nullable
     @Override
-    public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+    public RequiredLevelData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
         ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
         if (rTag != null)
             return new RequiredLevelData((Double) rTag.getValue());
@@ -129,8 +126,7 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
     }
 
     @Override
-    public @NotNull
-    StatData getClearStatData() {
+    public RequiredLevelData getClearStatData() {
         return new RequiredLevelData(0D);
     }
 }

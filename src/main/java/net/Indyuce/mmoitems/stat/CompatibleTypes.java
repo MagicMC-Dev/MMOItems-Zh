@@ -30,7 +30,7 @@ import io.lumine.mythic.lib.version.VersionMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CompatibleTypes extends ItemStat {
+public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
 	public CompatibleTypes() {
 		super("COMPATIBLE_TYPES", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible Types",
 				new String[] { "The item types this skin is", "compatible with." }, new String[] { "skin" });
@@ -74,7 +74,7 @@ public class CompatibleTypes extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
@@ -90,12 +90,12 @@ public class CompatibleTypes extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public StringListData getClearStatData() {
 		return new StringListData();
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
 
 		// Copy Array, for lore
 		List<String> compatibleTypes = new ArrayList<>(((StringListData) data).getList());
@@ -107,7 +107,7 @@ public class CompatibleTypes extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData data) {
 
 		// Build Json Array
 		JsonArray array = new JsonArray();
@@ -140,7 +140,7 @@ public class CompatibleTypes extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find relevant tag
 		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);

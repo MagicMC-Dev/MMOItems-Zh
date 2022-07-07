@@ -32,17 +32,17 @@ public class CraftingPermission extends StringStat {
 	 */
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
+	public StringData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) { return null; }
 
 	/**
 	 * This stat is not saved onto items. This method is empty.
 	 */
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { }
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) { }
 
 	/**
 	 * This stat is not saved onto items. This method returns an empty array.
 	 */
 	@NotNull
-	@Override public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) { return new ArrayList<>(); }
+	@Override public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData data) { return new ArrayList<>(); }
 }

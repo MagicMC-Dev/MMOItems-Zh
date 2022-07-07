@@ -88,9 +88,10 @@ public class EnchantListData implements StatData, Mergeable {
 	}
 
 	@Override
-	public boolean isClear() {
-		// Any non lvl 0 enchantment?
-		for (Enchantment e : getEnchants()) { if (getLevel(e) != 0) { return false; } }
+	public boolean isEmpty() {
+		for (int level : enchants.values())
+			if (level > 0)
+				return false;
 		return true;
 	}
 

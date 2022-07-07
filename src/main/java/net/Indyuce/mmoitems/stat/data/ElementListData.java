@@ -14,6 +14,14 @@ public class ElementListData implements Mergeable {
     @NotNull
     private final Map<Element, Double> damage = new HashMap<>(), defense = new HashMap<>();
 
+    /**
+     * No way to add the elements directly from the constructor.
+     * <p></p>
+     * Use the set methods for that.
+     */
+    public ElementListData() {
+    }
+
     public double getDefense(Element element) {
         return defense.getOrDefault(element, 0d);
     }
@@ -28,39 +36,6 @@ public class ElementListData implements Mergeable {
 
     public Set<Element> getDamageElements() {
         return damage.keySet();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ElementListData)) {
-            return false;
-        }
-        if (((ElementListData) obj).damage.size() != damage.size() || ((ElementListData) obj).defense.size() != defense.size()) {
-            return false;
-        }
-
-        for (Element e : Element.values()) {
-
-            double expectedDA = getDamage(e);
-            double expectedDE = getDefense(e);
-            double realDA = ((ElementListData) obj).getDamage(e);
-            double realDE = ((ElementListData) obj).getDefense(e);
-
-            // Any differene?
-            if (expectedDA != realDA || expectedDE != realDE) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * No way to add the elements directly from the constructor.
-     * <p></p>
-     * Use the set methods for that.
-     */
-    public ElementListData() {
     }
 
     public void setDamage(Element element, double value) {
@@ -105,7 +80,32 @@ public class ElementListData implements Mergeable {
     }
 
     @Override
-    public boolean isClear() {
-        return getDamageElements().size() == 0 && getDefenseElements().size() == 0;
+    public boolean isEmpty() {
+        return damage.isEmpty() && defense.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ElementListData)) {
+            return false;
+        }
+        if (((ElementListData) obj).damage.size() != damage.size() || ((ElementListData) obj).defense.size() != defense.size()) {
+            return false;
+        }
+
+        for (Element e : Element.values()) {
+
+            double expectedDA = getDamage(e);
+            double expectedDE = getDefense(e);
+            double realDA = ((ElementListData) obj).getDamage(e);
+            double realDE = ((ElementListData) obj).getDefense(e);
+
+            // Any differene?
+            if (expectedDA != realDA || expectedDE != realDE) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

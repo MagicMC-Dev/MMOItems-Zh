@@ -32,5 +32,5 @@ public class GemUpgradeScaling extends ChooseStat implements GemStoneStat {
         setHint(HISTORIC, "Gem stats instantly upgrade to the current item level, and subsequently thereafter.");
     }
 
-    @NotNull @Override public StatData getClearStatData() { return new StringData(defaultValue); }
+    @NotNull @Override public StringData getClearStatData() { return new StringData(defaultValue); }
 }

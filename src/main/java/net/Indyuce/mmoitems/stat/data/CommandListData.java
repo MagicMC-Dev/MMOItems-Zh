@@ -10,7 +10,7 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
-public class CommandListData implements StatData, Mergeable, RandomStatData {
+public class CommandListData implements StatData, Mergeable, RandomStatData<CommandListData> {
 	@NotNull private final List<CommandData> commands;
 
 	public CommandListData(@NotNull List<CommandData> commands) {
@@ -52,10 +52,12 @@ public class CommandListData implements StatData, Mergeable, RandomStatData {
 	}
 
 	@Override
-	public boolean isClear() { return getCommands().size() == 0; }
+	public boolean isEmpty() {
+		return commands.isEmpty();
+	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public CommandListData randomize(MMOItemBuilder builder) {
 		return new CommandListData(new ArrayList<>(commands));
 	}
 }

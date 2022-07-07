@@ -1,9 +1,6 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * When a gem stone is applied onto an item with a lower level
@@ -21,31 +18,13 @@ public class RequiredLevelData extends DoubleData {
     }
 
     @Override
-    public void merge(StatData data) {
-        Validate.isTrue(data instanceof RequiredLevelData, "Cannot merge two different stat data types");
-        boolean additiveMerge = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-levels", false);
-
-        // Adding up
-        if (additiveMerge) {
-
-            // Additive
-            setValue(((RequiredLevelData) data).getValue() + getValue());
-
-        } else {
-
-            // Max Level
-            setValue(Math.max(((RequiredLevelData) data).getValue(), getValue()));
-        }
+    public void merge(DoubleData data) {
+        final boolean additiveMerge = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-levels", false);
+        setValue(additiveMerge ? data.getValue() + getValue() : Math.max(data.getValue(), getValue()));
     }
 
     @Override
-    public @NotNull
-    StatData cloneData() {
+    public DoubleData cloneData() {
         return new RequiredLevelData(getValue());
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(getValue());
     }
 }

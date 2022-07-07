@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
@@ -20,6 +21,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
+import scala.math.Numeric;
 
 /**
  * See {@link CustomDurability} for useful comments
@@ -32,14 +34,14 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 	}
 
 	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
+	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 		whenApplied(item, currentData);
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
-		int max = (int) ((DoubleData) data).getValue();
+		int max = (int) data.getValue();
 		int current = item.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY) ? (int) ((DoubleData) item.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue() : max;
 
 		item.addItemTag(new ItemTag(getNBTPath(), max));

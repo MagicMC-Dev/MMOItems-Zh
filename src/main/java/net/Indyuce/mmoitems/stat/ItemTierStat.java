@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.stat.data.StringData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 
@@ -19,7 +20,7 @@ public class ItemTierStat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		String path = data.toString().toUpperCase().replace("-", "_").replace(" ", "_");
 		Validate.isTrue(MMOItems.plugin.getTiers().has(path), "Could not find item tier with ID '" + path + "'");
 

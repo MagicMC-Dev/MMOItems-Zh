@@ -35,7 +35,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Abilities extends ItemStat {
+public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> {
 	private final DecimalFormat modifierFormat = new DecimalFormat("0.#");
 
 	public Abilities() {
@@ -44,7 +44,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public RandomStatData whenInitialized(Object object) {
+	public RandomAbilityListData whenInitialized(Object object) {
 		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a valid config section");
 		ConfigurationSection config = (ConfigurationSection) object;
 		RandomAbilityListData list = new RandomAbilityListData();
@@ -56,7 +56,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull AbilityListData data) {
 
 		//Modify Lore
 		List<String> abilityLore = new ArrayList<>();
@@ -64,7 +64,7 @@ public class Abilities extends ItemStat {
 
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
 
-		((AbilityListData) data).getAbilities().forEach(ability -> {
+		data.getAbilities().forEach(ability -> {
 			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger())).replace("#a", ability.getAbility().getName()));
 
 			for (String modifier : ability.getModifiers()) {
@@ -88,14 +88,14 @@ public class Abilities extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull AbilityListData data) {
 
 		// Make Array
 		ArrayList<ItemTag> ret = new ArrayList<>();
 
 		// Convert to JSON
 		JsonArray jsonArray = new JsonArray();
-		for (AbilityData ab : ((AbilityListData) data).getAbilities()) { jsonArray.add(ab.toJson()); }
+		for (AbilityData ab : data.getAbilities()) { jsonArray.add(ab.toJson()); }
 
 		// Put
 		ret.add(new ItemTag(getNBTPath(), jsonArray.toString()));
@@ -147,7 +147,7 @@ public class Abilities extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<RandomAbilityListData> statData) {
 		lore.add(ChatColor.GRAY + "Current Abilities: " + ChatColor.GOLD
 				+ (statData.isPresent() ? ((RandomAbilityListData) statData.get()).getAbilities().size() : 0));
 		lore.add("");
@@ -156,7 +156,7 @@ public class Abilities extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public AbilityListData getClearStatData() {
 		return new AbilityListData();
 	}
 
@@ -181,7 +181,7 @@ public class Abilities extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public AbilityListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Get Json Array thing
 		ItemTag jsonCompact = ItemTag.getTagAtPath(getNBTPath(), storedTags);

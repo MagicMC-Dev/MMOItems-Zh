@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import org.apache.commons.lang.Validate;
+import org.bouncycastle.util.StringList;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -44,7 +45,7 @@ public class Lore extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
 
 		// Apply yes
 		item.addItemTag(getAppliedNBT(data));
@@ -79,11 +80,11 @@ public class Lore extends StringListStat implements GemStoneStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) statData.get();
+			StringListData data =  statData.get();
 			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(element)));
 
 		} else

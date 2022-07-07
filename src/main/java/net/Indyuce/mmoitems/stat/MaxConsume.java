@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import org.bukkit.Material;
@@ -15,8 +16,8 @@ public class MaxConsume extends DoubleStat {
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-        int left = (int) ((DoubleData) data).getValue();
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+        int left = (int)  data.getValue();
 
         item.addItemTag(new ItemTag(getNBTPath(), left));
 

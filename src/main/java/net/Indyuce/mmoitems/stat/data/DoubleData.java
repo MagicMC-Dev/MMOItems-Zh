@@ -6,7 +6,7 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.jetbrains.annotations.NotNull;
 
-public class DoubleData implements StatData, Mergeable {
+public class DoubleData implements StatData, Mergeable<DoubleData> {
 	private double value;
 
 	public DoubleData(double value) {
@@ -30,22 +30,23 @@ public class DoubleData implements StatData, Mergeable {
 	}
 
 	@Override
-	public void merge(StatData data) {
-		Validate.isTrue(data instanceof DoubleData, "Cannot merge two different stat data types");
-		value += ((DoubleData) data).value;
+	public void merge(DoubleData data) {
+		value += data.value;
 	}
+
+	@Override
+	public DoubleData cloneData() { return new DoubleData(getValue()); }
+
+	@Override
+	public boolean isEmpty() {
+		return value == 0;
+	}
+
+	@Override
+	public String toString() { return String.valueOf(getValue()); }
 
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof DoubleData)) { return false; }
 		return ((DoubleData) obj).getValue() == getValue(); }
-
-	@Override
-	public @NotNull StatData cloneData() { return new DoubleData(getValue()); }
-
-	@Override
-	public boolean isClear() { return getValue() == 0; }
-
-	@Override
-	public String toString() { return String.valueOf(getValue()); }
 }

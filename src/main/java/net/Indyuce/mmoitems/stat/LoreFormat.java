@@ -1,5 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
+import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.data.StringListData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 
@@ -19,7 +21,7 @@ public class LoreFormat extends StringStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		String path = data.toString();
 		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(path), "Could not find lore format with ID '" + path + "'");
 

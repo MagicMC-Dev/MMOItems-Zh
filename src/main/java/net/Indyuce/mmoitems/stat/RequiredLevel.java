@@ -14,11 +14,9 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.RequiredLevelData;
 import net.Indyuce.mmoitems.stat.data.random.RandomRequiredLevelData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
-import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -28,116 +26,129 @@ import java.util.ArrayList;
 
 public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
-	/*
-	 * stat that uses a custom DoubleStatData because the merge algorithm is
-	 * slightly different. when merging two "required level", MMOItems should
-	 * only keep the highest levels of the two and not sum the two values
-	 */
-	public RequiredLevel() {
-		super("REQUIRED_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Required Level",
-				new String[] { "The level your item needs", "in order to be used." }, new String[] { "!block", "all" });
-	}
+    /*
+     * stat that uses a custom DoubleStatData because the merge algorithm is
+     * slightly different. when merging two "required level", MMOItems should
+     * only keep the highest levels of the two and not sum the two values
+     */
+    public RequiredLevel() {
+        super("REQUIRED_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Required Level",
+                new String[]{"The level your item needs", "in order to be used."}, new String[]{"!block", "all"});
+    }
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+    @Override
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
-		// Lore Management
-		int lvl = (int) ((DoubleData) data).getValue();
-		item.getLore().insert("required-level", formatNumericStat(lvl, "#", "" + lvl));
+        // Lore Management
+        int lvl = (int) ((DoubleData) data).getValue();
+        item.getLore().insert("required-level", formatNumericStat(lvl, "#", "" + lvl));
 
-		// Insert NBT
-		item.addItemTag(getAppliedNBT(data));
-	}
-	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull StatData currentData, @NotNull RandomStatData templateData) throws IllegalArgumentException {
-		Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
-		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+        // Insert NBT
+        item.addItemTag(getAppliedNBT(data));
+    }
 
-		// Get Value
-		double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
-		double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
+    @Override
+    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
 
-		// Cancel if it its NEGATIVE and this doesn't support negative stats.
-		if (techMaximum < 0 && !handleNegativeStats()) { return; }
-		if (techMinimum < 0 && !handleNegativeStats()) { techMinimum = 0; }
-		if (techMinimum < ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread()) { techMinimum = ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread(); }
-		if (techMaximum > ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread()) { techMaximum = ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread(); }
+        // Get Value
+        double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
+        double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
 
-		// Add NBT Path
-		item.addItemTag(getAppliedNBT(currentData));
+        // Cancel if it its NEGATIVE and this doesn't support negative stats.
+        if (techMaximum < 0 && !handleNegativeStats()) {
+            return;
+        }
+        if (techMinimum < 0 && !handleNegativeStats()) {
+            techMinimum = 0;
+        }
+        if (techMinimum < ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread()) {
+            techMinimum = ((NumericStatFormula) templateData).getBase() - ((NumericStatFormula) templateData).getMaxSpread();
+        }
+        if (techMaximum > ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread()) {
+            techMaximum = ((NumericStatFormula) templateData).getBase() + ((NumericStatFormula) templateData).getMaxSpread();
+        }
 
-		// Display if not ZERO
-		if (techMinimum != 0 || techMaximum != 0) {
+        // Add NBT Path
+        item.addItemTag(getAppliedNBT(currentData));
 
-			String builtRange;
-			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = SilentNumbers.readableRounding(techMinimum, 0); }
-			else { builtRange = SilentNumbers.removeDecimalZeros(String.valueOf(techMinimum)) + "-" + SilentNumbers.removeDecimalZeros(String.valueOf(techMaximum)); }
+        // Display if not ZERO
+        if (techMinimum != 0 || techMaximum != 0) {
 
-			// Just display normally
-			item.getLore().insert("required-level", formatNumericStat(techMinimum, "#", builtRange));
-		}
-	}
+            String builtRange;
+            if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
+                builtRange = SilentNumbers.readableRounding(techMinimum, 0);
+            } else {
+                builtRange = SilentNumbers.removeDecimalZeros(String.valueOf(techMinimum)) + "-" + SilentNumbers.removeDecimalZeros(String.valueOf(techMaximum));
+            }
 
-	@NotNull
-	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+            // Just display normally
+            item.getLore().insert("required-level", formatNumericStat(techMinimum, "#", builtRange));
+        }
+    }
 
-		// Make and bake
-		ArrayList<ItemTag> ret = new ArrayList<>();
-		ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
-		return ret;
-	}
+    @NotNull
+    @Override
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
 
-	@Override
-	public RandomStatData whenInitialized(Object object) {
-		return new RandomRequiredLevelData(object);
-	}
+        // Make and bake
+        ArrayList<ItemTag> ret = new ArrayList<>();
+        ret.add(new ItemTag(getNBTPath(), ((DoubleData) data).getValue()));
+        return ret;
+    }
 
-	@Override
-	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+    @Override
+    public RandomRequiredLevelData whenInitialized(Object object) {
+        return new RandomRequiredLevelData(object);
+    }
 
-		// Find relevat tgs
-		ArrayList<ItemTag> tags = new ArrayList<>();
-		if (mmoitem.getNBT().hasTag(getNBTPath()))
-			tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
+    @Override
+    public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
-		// Build
-		StatData data = getLoadedNBT(tags);
+        // Find relevat tgs
+        ArrayList<ItemTag> tags = new ArrayList<>();
+        if (mmoitem.getNBT().hasTag(getNBTPath()))
+            tags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
 
-		// Valid?
-		if (data != null) { mmoitem.setData(this, data); }
-	}
+        // Build
+        StatData data = getLoadedNBT(tags);
+
+        // Valid?
+        if (data != null) {
+            mmoitem.setData(this, data);
+        }
+    }
 
 
-	@Nullable
-	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+    @Nullable
+    @Override
+    public RequiredLevelData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
-		// Find
-		ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
+        // Find
+        ItemTag rTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 
-		// Found?
-		if (rTag != null) {
+        // Found?
+        if (rTag != null) {
 
-			// Yes
-			return new RequiredLevelData((Double) rTag.getValue());
-		}
+            // Yes
+            return new RequiredLevelData((Double) rTag.getValue());
+        }
 
-		// no
-		return null;
-	}
-	@Override
-	public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
-		int level = item.getInteger(ItemStats.REQUIRED_LEVEL.getNBTPath());
-		if (player.getLevel() < level && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
-			if (message) {
-				Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(player.getPlayer());
-				player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
-			}
-			return false;
-		}
-		return true;
-	}
+        // no
+        return null;
+    }
+
+    @Override
+    public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
+        int level = item.getInteger(ItemStats.REQUIRED_LEVEL.getNBTPath());
+        if (player.getLevel() < level && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
+            if (message) {
+                Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(player.getPlayer());
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+            }
+            return false;
+        }
+        return true;
+    }
 
 	/*
 	@NotNull
@@ -197,8 +208,9 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
 		return original;
 	}	///*/
 
-	@Override
-	public @NotNull StatData getClearStatData() {
-		return new RequiredLevelData(0D);
-	}
+    @Override
+    public @NotNull
+    RequiredLevelData getClearStatData() {
+        return new RequiredLevelData(0D);
+    }
 }

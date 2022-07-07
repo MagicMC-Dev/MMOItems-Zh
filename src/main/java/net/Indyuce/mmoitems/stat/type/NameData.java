@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Data that stores what an item is originally named like and prefixes or whatever.
  */
-public class NameData extends StringData implements Mergeable {
+public class NameData extends StringData implements Mergeable<StringData> {
     public NameData(@NotNull String str) {
         super(str);
     }
@@ -109,7 +109,7 @@ public class NameData extends StringData implements Mergeable {
     @NotNull public ArrayList<String> getSuffixes() { return suffixes; }
 
     @Override
-    public void merge(StatData data) {
+    public void merge(StringData data) {
 
         // Assimilate
         if (data instanceof NameData) {
@@ -131,7 +131,7 @@ public class NameData extends StringData implements Mergeable {
 
     @NotNull
     @Override
-    public StatData cloneData() {
+    public StringData cloneData() {
 
         NameData c = new NameData(getMainName());
         for (String p : getPrefixes()) { c.addPrefix(p);}
@@ -141,7 +141,7 @@ public class NameData extends StringData implements Mergeable {
     }
 
     @Override
-    public boolean isClear() {
-        return getMainName().isEmpty() && getPrefixes().size() == 0 && getSuffixes().size() == 0;
+    public boolean isEmpty() {
+        return super.isEmpty() && prefixes.isEmpty() && suffixes.isEmpty();
     }
 }

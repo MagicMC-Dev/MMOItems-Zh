@@ -13,10 +13,11 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import org.bouncycastle.util.StringList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StringListData implements StatData, RandomStatData, Mergeable {
+public class StringListData implements StatData, RandomStatData<StringListData>, Mergeable<StringListData> {
 	@NotNull private List<String> list;
 
 	@Override
@@ -49,22 +50,21 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public StringListData randomize(MMOItemBuilder builder) {
 		return new StringListData(new ArrayList<>(list));
 	}
 
 	@Override
-	public void merge(StatData data) {
-		Validate.isTrue(data instanceof StringListData, "Cannot merge two different stat data types");
-		list.addAll(((StringListData) data).list);
+	public void merge(StringListData data) {
+		list.addAll(data.list);
 	}
 
 	@Override
 	@NotNull
-	public StatData cloneData() { return new StringListData(new ArrayList<>(getList())); }
+	public StringListData cloneData() { return new StringListData(new ArrayList<>(getList())); }
 
 	@Override
-	public boolean isClear() { return getList().size() == 0; }
+	public boolean isEmpty() { return list.isEmpty(); }
 
 	@Override
 	public String toString() {
@@ -83,7 +83,10 @@ public class StringListData implements StatData, RandomStatData, Mergeable {
 	 *
 	 * @return If the value was actually removed. If it wasn't there
 	 * 		   in the first place, this will return false.
+	 *
+	 * @deprecated Deprecated
 	 */
+	@Deprecated
 	public boolean remove(@Nullable String str) {
 
 		if (!list.contains(str)) { return false; }

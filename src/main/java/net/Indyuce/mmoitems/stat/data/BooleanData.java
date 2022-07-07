@@ -14,6 +14,11 @@ public class BooleanData implements StatData {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return !state;
+	}
+
+	@Override
 	public String toString() {
 		return "" + state;
 	}

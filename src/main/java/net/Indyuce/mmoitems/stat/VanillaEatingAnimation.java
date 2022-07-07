@@ -15,8 +15,8 @@ public class VanillaEatingAnimation extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
-		if (((BooleanData) data).isEnabled())
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
+		if (data.isEnabled())
 			item.addItemTag(new ItemTag("MMOITEMS_VANILLA_EATING", true));
 	}
 }

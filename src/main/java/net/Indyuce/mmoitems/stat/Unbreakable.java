@@ -20,7 +20,7 @@ public class Unbreakable extends BooleanStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
 		if (((BooleanData) data).isEnabled()) {
 
 			// Hide unbreakable if
@@ -31,7 +31,7 @@ public class Unbreakable extends BooleanStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull BooleanData data) {
 		ArrayList<ItemTag> a = new ArrayList<>();
 		if (((BooleanData) data).isEnabled()) { a.add(new ItemTag(getNBTPath(), true)); }
 		return a;
@@ -48,7 +48,7 @@ public class Unbreakable extends BooleanStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public BooleanData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		ItemTag uTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
 

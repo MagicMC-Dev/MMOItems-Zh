@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class ArrowParticlesData implements StatData, RandomStatData {
+public class ArrowParticlesData implements StatData, RandomStatData<ArrowParticlesData> {
 	private final Particle particle;
 	private final int amount, red, green, blue;
 	private final double speed, offset;
@@ -90,7 +90,7 @@ public class ArrowParticlesData implements StatData, RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public ArrowParticlesData randomize(MMOItemBuilder builder) {
 		return this;
 	}
 }

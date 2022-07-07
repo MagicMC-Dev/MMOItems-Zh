@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * List of enchantments in an item yes
  */
-public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
+public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchantMap>, AdvancedEnchantMap> implements InternalStat {
     public AdvancedEnchantsStat() {
         super("ADVANCED_ENCHANTS", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Advanced Enchants", new String[]{"The AEnchants of this item. Format:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
     }
@@ -36,10 +36,10 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
     }
 
     @Override
-    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull AdvancedEnchantMap data) {
 
         // Do that
-        Map<String, Integer> aes = ((AdvancedEnchantMap) data).enchants;
+        Map<String, Integer> aes = data.enchants;
 
         // Enchant the item
         for (String ench : aes.keySet()) {
@@ -63,7 +63,7 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
 
     @NotNull
     @Override
-    public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull AdvancedEnchantMap data) {
         ArrayList<ItemTag> array = new ArrayList<>();
         Map<String, Integer> aes = ((AdvancedEnchantMap) data).enchants;
 
@@ -84,13 +84,13 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
     }
 
     @Override
-    public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+    public void whenDisplayed(List<String> lore, Optional<RandomStatData<AdvancedEnchantMap>> statData) {
         // Not supported
     }
 
     @NotNull
     @Override
-    public StatData getClearStatData() {
+    public AdvancedEnchantMap getClearStatData() {
         return new AdvancedEnchantMap();
     }
 
@@ -140,7 +140,7 @@ public class AdvancedEnchantsStat extends ItemStat implements InternalStat {
 
     @Nullable
     @Override
-    public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+    public AdvancedEnchantMap getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
         AdvancedEnchantMap enchants = new AdvancedEnchantMap();
 
         // Yes

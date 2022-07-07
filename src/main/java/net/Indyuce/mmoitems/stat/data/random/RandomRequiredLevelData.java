@@ -19,7 +19,7 @@ public class RandomRequiredLevelData extends NumericStatFormula {
     }
 
     @Override
-    public StatData randomize(MMOItemBuilder builder) {
+    public RequiredLevelData randomize(MMOItemBuilder builder) {
         return new RequiredLevelData(calculate(builder.getLevel()));
     }
 }

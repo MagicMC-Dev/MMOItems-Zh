@@ -8,7 +8,7 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.stat.data.RestoreData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 
-public class RandomRestoreData implements RandomStatData {
+public class RandomRestoreData implements RandomStatData<RestoreData> {
 	private final NumericStatFormula health, food, saturation;
 
 	public RandomRestoreData(ConfigurationSection config) {
@@ -32,7 +32,7 @@ public class RandomRestoreData implements RandomStatData {
 	}
 
 	@Override
-	public StatData randomize(MMOItemBuilder builder) {
+	public RestoreData randomize(MMOItemBuilder builder) {
 		return new RestoreData(health.calculate(builder.getLevel()), food.calculate(builder.getLevel()), saturation.calculate(builder.getLevel()));
 	}
 }

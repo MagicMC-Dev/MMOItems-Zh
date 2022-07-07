@@ -5,7 +5,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +20,11 @@ public class BrowserDisplayIDX extends DoubleStat {
 
     public BrowserDisplayIDX() { super("BROWSER_IDX", Material.GHAST_TEAR, "Browser Index", new String[] {"Used to display similar items together,", "neatly in the GUI \u00a7a/mmoitems browse", "", "Items with the same index are grouped."}, new String[]{"all"}); }
 
-    // Does not participate in actual items
-    @Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) { }
+    @Override
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
+        // Does not participate in actual items
+    }
+
     @Override public void whenLoaded(@NotNull ReadMMOItem mmoitem) { }
 
     /**

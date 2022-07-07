@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.codisimus.plugins.phatloots.loot.Gem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -32,7 +33,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GemSockets extends ItemStat {
+public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 	public GemSockets() {
 		super("GEM_SOCKETS", Material.EMERALD, "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." },
 				new String[] { "piercing", "slashing", "blunt", "offhand", "range", "tool", "armor", "accessory", "!gem_stone" });
@@ -46,11 +47,10 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StatData data) {
+	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull GemSocketsData sockets) {
 
 		// Append NBT Tags
-		GemSocketsData sockets = (GemSocketsData) data;
-		item.addItemTag(getAppliedNBT(data));
+		item.addItemTag(getAppliedNBT(sockets));
 
 		// Edit Lore
 		String empty = ItemStat.translate("empty-gem-socket"), filled = ItemStat.translate("filled-gem-socket");
@@ -83,11 +83,9 @@ public class GemSockets extends ItemStat {
 
 	@NotNull
 	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData data) {
+	public ArrayList<ItemTag> getAppliedNBT(@NotNull GemSocketsData sockets) {
 
 		// Well its just a Json tostring
-		GemSocketsData sockets = (GemSocketsData) data;
-
 		ArrayList<ItemTag> ret = new ArrayList<>();
 		ret.add(new ItemTag(getNBTPath(), sockets.toJson().toString()));
 
@@ -118,7 +116,7 @@ public class GemSockets extends ItemStat {
 
 	@Nullable
 	@Override
-	public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
+	public GemSocketsData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
 		// Find Tag
 		ItemTag gTag = ItemTag.getTagAtPath(getNBTPath(), storedTags);
@@ -178,11 +176,11 @@ public class GemSockets extends ItemStat {
 	}
 
 	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomStatData> statData) {
+	public void whenDisplayed(List<String> lore, Optional<GemSocketsData> statData) {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			GemSocketsData data = (GemSocketsData) statData.get();
+			GemSocketsData data = statData.get();
 			data.getEmptySlots().forEach(socket -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + socket + " Gem Socket"));
 
 		} else
@@ -195,7 +193,7 @@ public class GemSockets extends ItemStat {
 
 	@NotNull
 	@Override
-	public StatData getClearStatData() {
+	public GemSocketsData getClearStatData() {
 		return new GemSocketsData(new ArrayList<>());
 	}
 }

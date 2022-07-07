@@ -131,6 +131,7 @@ public class ItemStats {
             SOULBOUND_LEVEL = new SoulboundLevel(),
           //  AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
             ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "Item Cooldown", new String[]{"This cooldown applies for consumables", "as well as for item commands."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
+            COOLDOWN_REFERENCE = new StringStat("COOLDOWN_REFERENCE", Material.CHICKEN, "Cooldown Reference", new String[]{"Two items with the same cooldown reference", "will share their cooldowns. This is useful", "for health or mana pots for example."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
             VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(),
             GEM_COLOR = new GemColor(),
             GEM_UPGRADE_SCALING = new GemUpgradeScaling(),

@@ -8,7 +8,6 @@ import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
@@ -18,7 +17,7 @@ import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
-import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeaponType;
+import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.Bukkit;
@@ -74,9 +73,10 @@ public class ItemUse implements Listener {
 
         // Commands & consummables
         if (event.getAction().name().contains("RIGHT_CLICK")) {
-            if (useItem.getPlayerData().isOnCooldown(useItem.getMMOItem())) {
+            final String cooldownReference = getCooldownReference(useItem.getMMOItem());
+            if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem())))
+                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
                         .send(player);
                 event.setUseItemInHand(Event.Result.DENY);
                 return;
@@ -92,7 +92,7 @@ public class ItemUse implements Listener {
                     event.getItem().setAmount(event.getItem().getAmount() - 1);
             }
 
-            useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+            useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(cooldownReference, useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
             useItem.executeCommands();
         }
 
@@ -102,6 +102,11 @@ public class ItemUse implements Listener {
             if (weapon.getWeaponType().corresponds(event.getAction()))
                 weapon.handleTargetFreeAttack(EquipmentSlot.fromBukkit(event.getHand()));
         }
+    }
+
+    private String getCooldownReference(VolatileMMOItem mmoitem) {
+        final String ref = mmoitem.getNBT().getString("MMOITEMS_COOLDOWN_REFERENCE");
+        return ref != null && !ref.isEmpty() ? ref : mmoitem.getCooldownPath();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -322,9 +327,10 @@ public class ItemUse implements Listener {
 
         if (useItem instanceof Consumable) {
 
-            if (useItem.getPlayerData().isOnCooldown(useItem.getMMOItem())) {
+            final String cooldownReference = getCooldownReference(useItem.getMMOItem());
+            if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getItemCooldown(useItem.getMMOItem())))
+                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
                         .send(player);
                 event.setCancelled(true);
                 return;
@@ -342,7 +348,7 @@ public class ItemUse implements Listener {
             if (result == Consumable.ConsumableConsumeResult.NOT_CONSUME)
                 event.setCancelled(true);
 
-            useItem.getPlayerData().applyItemCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+            useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(cooldownReference, useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
             useItem.executeCommands();
         }
     }

@@ -366,14 +366,26 @@ public class PlayerData {
         mmoData.getCooldownMap().applyCooldown(type.name(), value);
     }
 
+    /**
+     * @deprecated Deprecated due to cooldown references
+     */
+    @Deprecated
     public boolean isOnCooldown(ItemReference ref) {
         return mmoData.getCooldownMap().isOnCooldown(ref);
     }
 
+    /**
+     * @deprecated Deprecated due to cooldown references
+     */
+    @Deprecated
     public void applyItemCooldown(ItemReference ref, double value) {
         mmoData.getCooldownMap().applyCooldown(ref, value);
     }
 
+    /**
+     * @deprecated Deprecated due to cooldown references
+     */
+    @Deprecated
     public double getItemCooldown(ItemReference ref) {
         return mmoData.getCooldownMap().getInfo(ref).getRemaining() / 1000d;
     }

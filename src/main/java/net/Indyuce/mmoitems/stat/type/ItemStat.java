@@ -104,10 +104,12 @@ public abstract class ItemStat {
     public abstract void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event);
 
     /**
-     * When inputing data using chat or anvil input in order to edit the item
-     * using the GUI editor. IAE are handled and exception messages are sent
-     * back to the player. Stat edition is not canceled until a right input is
-     * given or the player inputs 'cancel'
+     * When inputting data using player input in order to edit the item using
+     * the GUI editor. IAE's are handled and exception messages are sent back
+     * to the player. Stat edition is not canceled until a right input is given
+     * or the player inputs "cancel".
+     * <p>
+     * This method is called async inside of an AsyncPlayerChatEvent
      *
      * @param inv     Previously opened edition menu
      * @param message Player input

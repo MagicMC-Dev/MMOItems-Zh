@@ -49,7 +49,7 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
             return null;
 
         Player player = (Player) info.getCharacter().getEntity();
-        DamageMetadata damageMeta = new DamageMetadata(0, info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).distinct().toArray(DamageType[]::new));
+        DamageMetadata damageMeta = new DamageMetadata(event.getDamage(), info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).toArray(DamageType[]::new));
         return new AttackMetadata(damageMeta, MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND));
     }
 

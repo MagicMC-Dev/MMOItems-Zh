@@ -1,0 +1,15 @@
+THUNDER_BLESSING:
+  base:
+    material: BIRCH_SAPLING
+    disable-interaction: true
+    name: §bThunder's Blessing
+    attack-damage: 3.0
+    weapon-damage: 10.0
+    skill-damage: 50.0
+    tier: EPIC
+    perm-effects:
+      SPEED: 1.0
+    lore:
+      - §bThis talisman, when held in offhand,
+      - §ballows the user to greatly increase
+      - §bhis skill damage. §3It also gives Speed I.

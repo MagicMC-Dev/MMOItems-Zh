@@ -1,0 +1,36 @@
+UNRELIABLE_HAMMER:
+  base:
+    material: DIAMOND_AXE
+    name: §3Unreliable Greathammer
+    required-level: 10.0
+    tier: UNCOMMON
+    lore:
+      - §7This hammer has very randomized stats
+      - §7it may have §cvery low durability§7 or
+      - §7a §cvery high§7 one! It'll §cbreak§7 if it
+      - §7reaches zero.
+      - §7If it is upgraded, it will §cdowngrade§7
+      - §7instead.
+    max-durability:
+      base: 150.0
+      spread: 0.8
+      max-spread: 0.9
+    attack-damage:
+      base: 14.0
+      scale: 0.08
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed: 1.4
+    critical-strike-chance:
+      base: 12.0
+      spread: 0.05
+      max-spread: 0.09
+    critical-strike-power:
+      base: 10.0
+      spread: 0.05
+      max-spread: 0.09
+    blunt-power: 3.0
+    blunt-rating: 30.0
+    will-break: true
+    break-downgrade: true
+    durability-bar: true

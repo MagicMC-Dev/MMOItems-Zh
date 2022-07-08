@@ -1,0 +1,49 @@
+DUAL_LONGSWORD:
+  base:
+    material: WOODEN_SWORD
+    max-durability: 8400.0
+    name: §f§l§oDual Lon§8§l§ogsword
+    lore:
+      - §eShall light save you!
+      - §8And darkness consume you...
+    tier: EPIC
+    required-level: 45.0
+    required-class:
+      - Paladin
+    critical-strike-chance: 10.0
+    critical-strike-power:
+      base: 15.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    attack-damage:
+      base: 24.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed: 1.5
+    weapon-damage: 10.0
+    stamina-cost: 2.0
+    parry-rating: 30.0
+    parry-cooldown-reduction: 10.0
+    armor: 2.0
+    gem-sockets:
+      - White
+      - Black
+    perm-effects:
+      SPEED: 1.0
+      SLOW: 1.0
+    item-particles: {}
+    ability:
+      ability1:
+        type: HOLY_MISSILE
+        mode: SHIFT_RIGHT_CLICK
+        duration: 4.0
+        cooldown: 8.0
+        damage: 25.0
+      ability2:
+        type: CURSED_BEAM
+        mode: SHIFT_LEFT_CLICK
+        duration: 4.0
+        cooldown: 8.0
+        damage: 25.0

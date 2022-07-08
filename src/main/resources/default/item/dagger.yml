@@ -66,3 +66,134 @@ DRACULA_DAGGER:
     enchants:
       unbreaking: 10
     hide-enchants: true
+VERY_SHARP_DAGGER:
+  base:
+    material: IRON_SWORD
+    tier: RARE
+    max-durability: 1800.0
+    will-break: true
+    name: §7§l§oVery Sharp Dagger
+    displayed-type: §cSharp Dagger
+    required-level: 12.0
+    required-class:
+      - Assassin
+    attack-damage:
+      base: 10.0
+      scale: 0.13
+      spread: 0.1
+      max-spread: 0.23
+    attack-speed: 1.9
+    critical-strike-chance:
+      base: 30.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.23
+    critical-strike-power:
+      base: 80.0
+      scale: 0.09
+      spread: 0.08
+      max-spread: 0.2
+    weapon-damage:
+      base: 15.0
+      scale: 0.2
+      spread: 0.2
+      max-spread: 0.3
+    movement-speed: 0.02
+    gem-sockets:
+      - White
+    upgrade:
+      template: weapon-default
+    physical-damage:
+      base: 30.0
+      scale: 0.1
+      spread: 0.3
+      max-spread: 0.6
+    lore:
+      - §f§oExtremely sharp due to a very long
+      - §f§oprocess of refining.
+POISONOUS_DAGGER:
+  base:
+    material: WOODEN_SWORD
+    name: §2§l§oPoisonous Dagger
+    lore:
+      - §7Who knows what infected it...
+    max-durability: 4500.0
+    attack-damage:
+      base: 22.0
+      scale: 0.15
+      spread: 0.15
+      max-spread: 0.25
+    attack-speed: 1.75
+    critical-strike-chance:
+      base: 25.0
+      scale: 0.05
+      spread: 0.08
+      max-spread: 0.13
+    critical-strike-power:
+      base: 40.0
+      scale: 0.09
+      spread: 0.11
+      max-spread: 0.18
+    pvp-damage:
+      base: 15.0
+      scale: 0.03
+      spread: 0.15
+      max-spread: 0.2
+    weapon-damage:
+      base: 10.0
+      spread: 0.1
+      max-spread: 0.2
+    tier: LEGENDARY
+    gem-sockets:
+      - Green
+      - Green
+    magic-damage:
+      base: 12.0
+      spread: 0.1
+      max-spread: 0.2
+    required-level: 32.0
+    upgrade:
+      template: weapon-default
+    break-downgrade: true
+    element:
+      earth:
+        damage:
+          base: 30.0
+          scale: 0.0
+          spread: 0.1
+          max-spread: 0.2
+    ability:
+      ability1:
+        type: POISON
+        mode: ATTACK
+        duration: 4.0
+        stamina: 0.0
+        cooldown: 6.0
+        amplifier: 2.0
+SNEAKY_DAGGER:
+  base:
+    material: STONE_SWORD
+    name: §8§lSneaky Dagger
+    lore:
+      - §7This dagger is very sneaky.
+      - §8§oWhat dagger?
+    tier: UNCOMMON
+    attack-damage: 5.0
+    attack-speed: 2.2
+    critical-strike-chance:
+      base: 9.0
+      scale: 0.1
+      spread: 0.01
+      max-spread: 0.05
+    critical-strike-power:
+      base: 20.0
+      scale: 0.1
+      spread: 0.01
+      max-spread: 0.05
+    required-level: 5.0
+    ability:
+      ability1:
+        type: BACKSTAB
+        mode: ATTACK
+        cooldown: 3.0
+        extra: 50.0

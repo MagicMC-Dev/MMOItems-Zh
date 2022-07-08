@@ -28,38 +28,155 @@ BLAZE_WAND:
     hide-enchants: true
     enchants:
       unbreaking: 1
-    required-level: 45.0
+    required-level: 38.0
     attack-damage:
-      base: 15.0
-      spread: 0.08
-      max-spread: 0.25
-    attack-speed:
-      base: 1.2
-      spread: 0.05
-      max-spread: 0.14
-    critical-strike-chance: 20.0
-    range:
-      base: 22.5
-      spread: 0.03
-      max-spread: 0.1
-    tier: VERY_RARE
+      base: 14.0
+      spread: 0.11
+      scale: 0.04
+    attack-speed: 1.5
+    critical-strike-chance:
+      base: 5.0
+      scale: 0.04
+      spread: 0.06
+    range: 28.0
+    tier: LEGENDARY
     perm-effects:
       FIRE_RESISTANCE: 1
     ability:
-      on-hit:
-        type: BURN
-        mode: ATTACK
-        cooldown: 40.0
-        duration: 5.0
       right-click:
         type: FIREBOLT
         mode: RIGHT_CLICK
         damage: 5.0
         ignite: 3.0
-        cooldown: 20.0
+        cooldown: 10.0
+      ability1:
+        type: BURNING_HANDS
+        mode: SHIFT_RIGHT_CLICK
+        duration: 3.0
+        damage: 4.0
+        cooldown: 5.0
     gem-sockets:
-    - Red
-    - Red
-    - Blue
+      - Nether
+      - Nether
     name: '&c&lBlaze Wand'
     disable-crafting: true
+    lore:
+      - §eAh yeah, that's hot.
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v nether_star - 1.0..|v magma_cream - 1.0..|v nether_star - 1.0..
+            - v AIR 0 1..|v blaze_rod - 1.0..|v AIR 0 1..
+            - v AIR 0 1..|v blaze_rod - 1.0..|v AIR 0 1..
+    staff-spirit: NETHER_SPIRIT
+    critical-strike-power:
+      base: 12.1
+      scale: 0.04
+      spread: 0.06
+    undead-damage:
+      base: 60.0
+      scale: 0.1
+      spread: 0.19
+COSMOS_WAND:
+  base:
+    material: STICK
+    gem-sockets:
+      - Blue
+    staff-spirit: VOID_SPIRIT
+    attack-speed: 1.9
+    crafting:
+      shapeless:
+        '1':
+          input:
+            - m catalyst perfect_ender_pearl 1.0..
+            - v nether_star - 1.0..
+            - m catalyst enchanted_shulker_shell 1.0..
+            - v AIR - 1.0..
+            - v stick - 1.0..
+            - v AIR - 1.0..
+            - v AIR - 1.0..
+            - v stick - 1.0..
+            - v AIR - 1.0..
+    unbreakable: true
+    tier: EPIC
+    magic-damage:
+      base: 35.0
+      spread: 0.05
+      max-spread: 0.19
+    attack-damage:
+      base: 5.0
+      scale: 0.14
+      spread: 0.04
+      max-spread: 0.08
+    range: 20.0
+    ability:
+      ability2:
+        type: LIFE_ENDER
+        mode: SHIFT_RIGHT_CLICK
+        damage: 15.0
+        knockback: 1.5
+        cooldown: 14.0
+        radius: 5.0
+      ability1:
+        type: BLINK
+        timer: 1.0
+        range: 45.0
+        mode: RIGHT_CLICK
+        cooldown: 8.0
+    lore:
+      - §b§l§o"The stars are yours!"
+    name: §5§lCosmic Wand
+    upgrade:
+      max: 10
+      template: weapon-default
+    critical-strike-chance:
+      base: 10.0
+      scale: 0.02
+      spread: 0.15
+      max-spread: 0.26
+    critical-strike-power:
+      base: 6.0
+      scale: 0.02
+      spread: 0.15
+      max-spread: 0.26
+    required-level: 14.0
+SPELLCASTER_WAND:
+  base:
+    material: STICK
+    name: §dSpellcaster Wand
+    required-level: 1.0
+    required-class:
+      - Mage
+    range: 16.0
+    attack-damage:
+      base: 6.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed: 1.4
+    critical-strike-chance:
+      base: 6.0
+      spread: 0.1
+      max-spread: 0.15
+    critical-strike-power:
+      base: 12.0
+      spread: 0.1
+      max-spread: 0.15
+    magic-damage:
+      base: 15.0
+      scale: 0.1
+      spread: 0.08
+      max-spread: 0.12
+    tier: UNCOMMON
+    element:
+      water:
+        damage:
+          base: 20.0
+          scale: 0.0
+          spread: 0.2
+          max-spread: 0.3
+    mana-cost: 3.0
+    set: SPELLCASTER
+    lore:
+      - §7§o"You're a wizard, Harry."

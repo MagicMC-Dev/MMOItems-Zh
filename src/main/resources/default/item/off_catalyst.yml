@@ -1,0 +1,73 @@
+SCOPE:
+  base:
+    material: DIAMOND
+    name: ยง7Accuracy Scope
+    lore:
+      - ยง3Hold it in the offhand to increase
+      - ยง3ranged damage!
+    critical-strike-power:
+      base: 10.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.4
+    projectile-damage:
+      base: 30.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3
+    tier: RARE
+    required-level: 10.0
+    pve-damage:
+      base: 10.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3
+    pvp-damage:
+      base: 10.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3
+QUICKCASTER_CATALYST:
+  base:
+    material: PRISMARINE_CRYSTALS
+    name: §b§l§oQuickcaster's Catalyst
+    lore:
+      - §dVery useful for beginner mages.
+    handworn: true
+    magic-damage: 10.0
+    cooldown-reduction: 25.0
+    skill-damage: 15.0
+    max-mana: 5.0
+    mana-regeneration: 1.0
+    required-class:
+      - Mage
+    required-level: 5.0
+    tier: RARE
+CHARM_OF_LEVITATION:
+  base:
+    material: IRON_NUGGET
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    name: §9Charm of Levitation
+    handworn: true
+    lore:
+      - §bEveryone needs a quick fly!
+      - §9But you probably took it for the particles!
+      - §cShown as "charm". Needs to be held offhand.
+      - §aAdds +10 Stellium!
+    ability:
+      ability1:
+        type: MAGICAL_PATH
+        mode: RIGHT_CLICK
+        duration: 8.0
+        mana: 10.0
+        cooldown: 15.0
+    item-particles:
+      type: GALAXY
+      particle: END_ROD
+    displayed-type: Charm
+    disable-crafting: true
+    max-stellium: 10.0
+    tier: RARE
+    unstackable: true

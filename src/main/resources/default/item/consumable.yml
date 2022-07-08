@@ -7,7 +7,7 @@ SANDWITCH:
         duration: 10
         amplifier: 2
     lore:
-    - '&7Are you really that hungry?!'
+      - '&7Are you really that hungry?!'
     item-cooldown: 15
     restore-food: 5.0
 A_BIG_CARROT:
@@ -23,8 +23,8 @@ ROCK:
     material: COBBLESTONE
     name: '&fRock'
     lore:
-    - '&7Use it to sharpen your weapons,'
-    - '&7or &ndamage&7 your enemies.'
+      - '&7Use it to sharpen your weapons,'
+      - '&7or &ndamage&7 your enemies.'
     tier: TRASH
     item-cooldown: 3
     repair: 3.0
@@ -43,9 +43,9 @@ SCROLL_OF_IDENTIFICATION:
     crafting:
       shaped:
         '1':
-        - AIR AIR AIR
-        - PAPER DIAMOND PAPER
-        - AIR AIR AIR
+          - AIR AIR AIR
+          - PAPER DIAMOND PAPER
+          - AIR AIR AIR
     inedible: true
 ITEM_CRUSHER:
   base:
@@ -59,7 +59,7 @@ RECALL_POTION:
     hide-potion-effects: true
     name: '&9Recall Potion'
     lore:
-    - '&7Brings you back home.'
+      - '&7Brings you back home.'
     potion-color: 100 100 255
     commands:
       '1':
@@ -138,7 +138,7 @@ DEATH_STEW:
     material: MUSHROOM_STEW
     name: '&fDeath Soup'
     lore:
-    - '&8&oDon''t you dare drinking that...'
+      - '&8&oDon''t you dare drinking that...'
     tier: UNIQUE
     effects:
       HARM:
@@ -152,7 +152,7 @@ KARTOFFELSALAT:
     restore-stamina: 10.0
     item-cooldown: 30.0
     lore:
-    - '&7Very punchy, yet hard to finish.'
+      - '&7Very punchy, yet hard to finish.'
     restore-food: 3.0
     restore-saturation: 10.0
 LARGE_HEALTH_POTION:
@@ -189,7 +189,7 @@ TACO:
     name: '&fTaco'
     item-cooldown: 2.0
     lore:
-    - '&7&oA hot & tasty taco!'
+      - '&7&oA hot & tasty taco!'
     restore-health: 3.0
     restore-food: 8.0
     restore-saturation: 10.0
@@ -203,7 +203,7 @@ BURGER:
     restore-stamina: 30.0
     name: '&fTasty Burger'
     lore:
-    - '&7&oMmmmh, yummy!'
+      - '&7&oMmmmh, yummy!'
     restore-health: 4.0
     restore-food: 10.0
     restore-saturation: 9.0
@@ -228,8 +228,8 @@ SUSHI_ROLL:
       uuid: b7c55ea2-d4cc-467e-85c7-dd8052c1675b
     name: '&fSushi Roll'
     lore:
-    - '&7&oSushis are leggit the'
-    - '&7&obest food on Earth.'
+      - '&7&oSushis are leggit the'
+      - '&7&obest food on Earth.'
     item-cooldown: 0.5
     effects:
       SPEED:
@@ -293,7 +293,7 @@ SANTA_COOKIE:
     material: COOKIE
     name: '&cS&fa&cn&ft&ca''&fs &cC&fo&co&fk&ci&fe'
     lore:
-    - '&7&oWhere are the darn cookies!'
+      - '&7&oWhere are the darn cookies!'
     sounds:
       on-consume: entity.player.burp
     item-cooldown: 2.0
@@ -316,7 +316,7 @@ ENDER_NOTE:
     sounds:
       on-consume: entity.enderman.teleport
     lore:
-    - '&7Teleports you &5miles&7 away.'
+      - '&7Teleports you &5miles&7 away.'
     effects:
       HARM:
         duration: 1
@@ -332,7 +332,7 @@ THROW_COAL:
         mode: RIGHT_CLICK
     name: '&fThrowable Coal'
     lore:
-    - '&fChuck them at your friends'
+      - '&fChuck them at your friends'
     item-cooldown: 3.0
 EGGNOG:
   base:
@@ -345,20 +345,20 @@ EGGNOG:
         format: me Mmmmmh!
         cooldown: 3.0
     lore:
-    - '&eEarned during X-Mas 2018!'
-    - '&e&oA fresh & cold eggnog!'
+      - '&eEarned during X-Mas 2018!'
+      - '&e&oA fresh & cold eggnog!'
     crafting:
       shapeless:
         '1':
-        - EGG
-        - SUGAR
-        - AIR
-        - AIR
-        - AIR
-        - AIR
-        - AIR
-        - AIR
-        - AIR
+          - EGG
+          - SUGAR
+          - AIR
+          - AIR
+          - AIR
+          - AIR
+          - AIR
+          - AIR
+          - AIR
     restore-health: 2.0
     restore-food: 2.0
     restore-saturation: 4.0
@@ -371,7 +371,7 @@ MANGO:
       uuid: 1c6aa7d0-582e-4111-8376-74a2a2f74a58
     tier: COMMON
     lore:
-    - '&7&oSweet and sour, hmm. Perfect combination'
+      - '&7&oSweet and sour, hmm. Perfect combination'
     effects:
       REGENERATION:
         duration: 20
@@ -379,3 +379,27 @@ MANGO:
     vanilla-eating: false
     restore-food: 8
     restore-saturation: 10
+RECALL_STAR:
+  base:
+    material: NETHER_STAR
+    name: §f§lRecall Star
+    lore:
+      - §aExecuted §2/spawn§a when right-clicked.
+      - §bOtherwise, you could §9identify§b items with it.
+    max-consume: 5.0
+    can-identify: true
+    tier: EPIC
+    commands:
+      cmd0:
+        format: spawn
+        delay: 0.0
+        op: true
+    item-cooldown: 5.0
+GEM_REMOVER:
+  base:
+    material: SHEARS
+    lore:
+      - §7Removes a random gem applied on any item.
+    name: §6Gem Remover
+    disable-interaction: true
+    random-unsocket: 1.0

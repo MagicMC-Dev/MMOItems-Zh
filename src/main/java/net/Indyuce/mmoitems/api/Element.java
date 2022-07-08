@@ -10,7 +10,6 @@ import io.lumine.mythic.lib.version.VersionMaterial;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.listener.ElementListener;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;

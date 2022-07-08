@@ -18,3 +18,49 @@ STEEL_SHOVEL:
     - '&7A much more durable iron spade.'
     will-break: true
     unbreakable: true
+CRACK_PICKAXE:
+  base:
+    material: DIAMOND_PICKAXE
+    name: §7§lCrack Pickaxe
+    enchants:
+      fortune: 2.0
+      efficiency: 1.0
+    max-durability: 3650.0
+    tier: RARE
+    attack-damage: 6.0
+    attack-speed: 1.5
+    pickaxe-power: 4.0
+    bouncing-crack: true
+    lore:
+      - §cWill break adjacent blocks!
+AUTOSMELT_PICKAXE:
+  base:
+    material: NETHERITE_PICKAXE
+    name: §cAutosmelt pickaxe
+    lore:
+      - §7Will §csmelt§7 ores, like it
+      - §7implies. Works with enchantments.
+    attack-damage: 7.5
+    attack-speed: 1.6
+    tier: UNCOMMON
+    required-level: 5.0
+    pickaxe-power: 5.0
+    autosmelt: true
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v magma_cream - 1.0..|v netherite_block - 1.0..|v magma_cream - 1.0..
+            - v AIR 0 1..|v stick - 1.0..|v AIR 0 1..
+            - v AIR 0 1..|v stick - 1.0..|v AIR 0 1..
+UNBREAKABLE_SHEARS:
+  base:
+    material: SHEARS
+    enchants:
+      silk_touch: 1.0
+    lore:
+      - §7If you're tired to craft new shears,
+      - §7try out this one! It can also
+      - §7pick up §9glass§7 or §2grass§7!
+    tier: UNCOMMON
+    required-level: 5.0

@@ -1,0 +1,91 @@
+FLOWING_KATANA:
+  base:
+    material: IRON_SWORD
+    max-durability: 2400.0
+    tier: RARE
+    element:
+      earth:
+        defense:
+          base: 15.0
+          scale: 0.0
+          spread: 0.02
+          max-spread: 0.1
+      water:
+        defense:
+          base: 30.0
+          scale: 0.0
+          spread: 0.05
+          max-spread: 0.12
+    gem-sockets:
+      - White
+      - White
+    name: §3§lFlowing Katana
+    lore:
+      - §7§oA weapon made of water? This is stupid!
+    attack-damage:
+      base: 9.0
+      scale: 0.08
+      spread: 0.03
+      max-spread: 0.1
+    attack-speed: 1.6
+    critical-strike-chance:
+      base: 20.0
+      spread: 0.04
+      max-spread: 0.11
+    critical-strike-power:
+      base: 39.0
+      spread: 0.03
+      max-spread: 0.7
+    parry-rating:
+      base: 12.0
+      spread: 0.04
+      max-spread: 0.085
+    parry-cooldown-reduction:
+      base: 7.0
+      spread: 0.04
+      max-spread: 0.085
+    weapon-damage:
+      base: 8.0
+      spread: 0.04
+      max-spread: 0.06
+    required-level: 4.0
+    movement-speed: 0.035
+MASTER_KATANA:
+  base:
+    material: IRON_SWORD
+    name: §f§l§oMaster's Katana
+    required-dexterity: 20.0
+    required-level: 20.0
+    tier: EPIC
+    attack-damage:
+      base: 20.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-chance: 30.0
+    critical-strike-power:
+      base: 30.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    weapon-damage:
+      base: 10.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    pvp-damage: 25.0
+    max-durability: 9000.0
+    gem-sockets:
+      - Cyan
+      - Cyan
+    disable-enchanting: true
+    disable-repairing: true
+    lore:
+      - §7A §bperfect§7 katana that can't be
+      - §7used if you don't have enough §bdexterity.
+      - §7It can't §bbreak§7 or be §benchanted§7.
+    durability-bar: true
+    unbreakable: true
+    enchants:
+      sharpness: 3.0
+      sweeping: 3.0

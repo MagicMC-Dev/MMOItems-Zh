@@ -1,21 +1,24 @@
 PALADIN_SHIELD:
   base:
     material: SHIELD
-    name: '&f&m--[&e Paladin Shield &f&m]--'
-    tier: RARE
+    name: §e§lShield of the Sun
+    tier: MAGICAL
     two-handed: false
-    max-health: 8.0
     armor: 6.0
     armor-toughness: 3.0
     unbreakable: true
     block-power: 50.0
-    block-rating: 20.0
+    block-rating:
+      base: 20.0
+      scale: 0.02
+      spread: 0.09
+      max-spread: 0.17
     perm-effects:
       SLOW: 3
     gem-sockets:
-    - Red
-    - Red
-    required-level: 15.0
+      - Yellow
+      - Yellow
+    required-level: 25.0
     shield-pattern:
       color: YELLOW
       '0':
@@ -24,6 +27,20 @@ PALADIN_SHIELD:
       '1':
         pattern: STRIPE_MIDDLE
         color: YELLOW
+    attack-damage:
+      base: 6.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed:
+      base: 1.4
+      spread: 0.06
+      max-spread: 0.14
+    block-cooldown-reduction:
+      base: 10.0
+      scale: 0.02
+      spread: 0.09
+      max-spread: 0.17
 MAGICAL_SHIELD:
   base:
     material: SHIELD
@@ -33,8 +50,8 @@ MAGICAL_SHIELD:
       SLOW: 4
       DAMAGE_RESISTANCE: 4
     gem-sockets:
-    - Red
-    - Red
+      - Red
+      - Red
     shield-pattern:
       color: WHITE
       '0':
@@ -48,8 +65,8 @@ MAGICAL_SHIELD:
         color: YELLOW
     name: '&fMagical Shield'
     lore:
-    - '&7A rudimentary shield to'
-    - '&7carry your gem stones.'
+      - '&7A rudimentary shield to'
+      - '&7carry your gem stones.'
     block-rating: 5.0
     block-power:
       base: 6.0
@@ -71,3 +88,85 @@ ABSORBING_SHIELD:
     two-handed: true
     disable-smelting: false
     disable-crafting: true
+OBSIDIAN_SHIELD:
+  base:
+    material: SHIELD
+    name: §8Obsidian Shield
+    lore:
+      - §cThis shield is even stronger than
+      - §cdiamond.
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v obsidian - 1.0..|v diamond - 1.0..|v obsidian - 1.0..
+            - v obsidian - 1.0..|v obsidian - 1.0..|v obsidian - 1.0..
+            - v AIR 0 1..|v obsidian - 1.0..|v AIR 0 1..
+    attack-damage:
+      base: 6.0
+      scale: 0.2
+      spread: 0.1
+      max-spread: 0.18
+    block-rating:
+      base: 20.0
+      scale: 0.15
+      spread: 0.11
+      max-spread: 0.19
+    block-power: 100.0
+    tier: UNCOMMON
+    physical-damage-reduction:
+      base: 20.0
+      scale: 0.05
+      spread: 0.2
+      max-spread: 0.3
+    defense:
+      base: 10.0
+      spread: 0.1
+      max-spread: 0.2
+    shield-pattern:
+      color: BLACK
+    handworn: true
+SUPREME_SHIELD:
+  base:
+    material: SHIELD
+    tier: LEGENDARY
+    block-power: 100.0
+    block-rating:
+      base: 60.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    attack-damage:
+      base: 25.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    required-class:
+      - Warrior
+    name: §9§l§oSupreme Shield
+    lore:
+      - §7The mightiest of all §eshields§7.
+    movement-speed: -0.03
+    shield-pattern:
+      color: PURPLE
+    element:
+      earth:
+        defense: 25.0
+      lightness:
+        defense: 25.0
+      wind:
+        defense: 25.0
+      fire:
+        defense: 25.0
+    pve-damage-reduction:
+      base: 30.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3
+    armor-toughness: 2.0
+    armor: 8.0
+    projectile-damage-reduction:
+      base: 100.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3

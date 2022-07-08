@@ -1,0 +1,64 @@
+SHARP_SPEAR:
+  base:
+    material: TRIDENT
+    name: §7Sharp Spear
+    lore:
+      - §7A spear made for close combat.
+    critical-strike-chance:
+      base: 6.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 15.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    required-level: 5.0
+    tier: UNCOMMON
+    attack-damage:
+      base: 9.0
+      scale: 0.1
+      spread: 0.05
+      max-spread: 0.1
+    attack-speed: 1.7
+    ability:
+      ability1:
+        type: WEAKEN_TARGET
+        mode: ATTACK
+        duration: 2.0
+        cooldown: 0.5
+        extra-damage: 25.0
+    gem-sockets:
+      - Uncolored
+    upgrade:
+      reference: universal
+    stamina-cost: 4.0
+WARRIOR_SPEAR:
+  base:
+    material: TRIDENT
+    required-level: 20.0
+    tier: EPIC
+    projectile-damage: 1000.0
+    attack-damage: 2.0
+    attack-speed: 1.5
+    critical-strike-chance:
+      base: 5.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 20.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    lore:
+      - §7Deals §cvery high damage§7 when thrown!
+    enchants:
+      loyalty: 3.0
+    unbreakable: true
+    gem-sockets:
+      - Red
+      - Red
+    movement-speed: -0.02
+    name: §6§lWarrior's Spear

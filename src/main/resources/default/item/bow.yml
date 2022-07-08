@@ -51,9 +51,9 @@ HELL_BOW:
         damage: 4.0
         ignite: 6.0
     gem-sockets:
-    - Red
-    - Red
-    - Green
+      - Red
+      - Red
+      - Green
     name: '&cHell Bow'
     pve-damage:
       base: 25.0
@@ -84,6 +84,85 @@ MARKING_BOW:
     damage-reduction: -5.0
     required-level: 10.0
     lore:
-    - '&7Shoot an entity to &cmark &7it. The'
-    - '&7next attack against this entity'
-    - '&7will deal &c60%&7 extra damage.'
+      - '&7Shoot an entity to &cmark &7it. The'
+      - '&7next attack against this entity'
+      - '&7will deal &c60%&7 extra damage.'
+NETHERITE_BOW:
+  base:
+    material: BOW
+    max-durability: 8500.0
+    name: §c§lDark Netherite Bow
+    lore:
+      - §6§o"Bows made of metal can't work."
+      - §8§oBut it's a video game!
+    attack-damage: 25.0
+    arrow-velocity: 1.5
+    pvp-damage:
+      base: 25.0
+      scale: 0.1
+      spread: 0.2
+    projectile-damage:
+      base: 10.0
+      scale: 0.08
+      spread: 0.14
+    tier: RARE
+    ability:
+      ability1:
+        type: WITHER
+        mode: ATTACK
+        duration: 6.0
+        cooldown: 5.0
+        amplifier: 1.0
+    element:
+      darkness:
+        damage:
+          base: 60.0
+          scale: 0.2
+          spread: 0.35
+          max-spread: 0.0
+      fire:
+        damage:
+          base: 20.0
+          scale: 0.05
+          spread: 0.1
+          max-spread: 0.0
+    gem-sockets:
+      - Nether
+      - Nether
+    crafting:
+      smithing:
+        '1':
+          input: v bow - 1.0..|m material dark_netherite 1.0..
+    required-level: 14.0
+PRECISION_BOW:
+  base:
+    material: BOW
+    name: §7§lPrecision Bow
+    lore:
+      - §7The precision bow shoots much farther.
+    critical-strike-chance:
+      base: 15.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 40.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    required-level: 5.0
+    arrow-velocity: 2.0
+    attack-damage:
+      base: 16.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    projectile-damage:
+      base: 5.0
+      scale: 0.2
+      spread: 0.2
+      max-spread: 0.4
+    tier: RARE
+    max-durability: 2400.0
+    required-class:
+      - Archer

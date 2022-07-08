@@ -22,3 +22,84 @@ SANTAMMER:
         cooldown: 15.0
     lore:
     - '&eEarned during X-Mas 2018!'
+THOR_HAMMER:
+  base:
+    material: IRON_AXE
+    max-durability: 80000.0
+    name: §b§lThor's Hammer
+    lore:
+      - §bUse the power of the storm!
+      - §ePlays a custom sound when attacking!
+      - §aWill not drop on death!
+    element:
+      thunder:
+        damage: 150.0
+    magic-damage:
+      base: 15.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed: 1.4
+    required-level: 60.0
+    attack-damage:
+      base: 80.0
+      scale: 0.15
+      spread: 0.1
+      max-spread: 0.2
+    tier: MYTHICAL
+    stamina-cost: 15.0
+    mana-cost: 10.0
+    blunt-power: 6.0
+    blunt-rating: 75.0
+    gem-sockets:
+      - Thunder
+    sounds:
+      on-attack:
+        sound: entity.lightning_bolt.thunder
+        volume: 2.0
+        pitch: 0.2
+    enchants:
+      sharpness: 3.0
+      fire_aspect: 3.0
+    ability:
+      ability1:
+        type: SMITE
+        mode: RIGHT_CLICK
+        damage: 100.0
+        cooldown: 12.0
+    additional-experience: 15.0
+    unbreakable: true
+    disable-death-drop: true
+HEAVY_HAMMER:
+  base:
+    material: IRON_AXE
+    name: §7§lHeavy Hammer
+    max-durability: 3650.0
+    lore:
+      - §fA very heavy hammer.
+      - §7You almost can't move, but it's
+      - §7worth it!
+    perm-effects:
+      SLOW: 4.0
+    attack-damage:
+      base: 35.0
+      scale: 0.15
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-chance:
+      base: 10.0
+      scale: 0.15
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 20.0
+      scale: 0.15
+      spread: 0.1
+      max-spread: 0.2
+    required-level: 10.0
+    required-class:
+      - Warrior
+    stamina-cost: 4.0
+    blunt-power: 5.0
+    blunt-rating: 85.0
+    tier: RARE

@@ -169,3 +169,253 @@ SILVER_SWORD:
         - AIR AIR MATERIAL.SILVER_INGOT
         - AIR AIR MATERIAL.SILVER_INGOT
         - AIR AIR STICK
+AMETHYST_SWORD:
+  base:
+    material: IRON_SWORD
+    name: §9§l§oAmethyst Sword
+    lore:
+      - §dA quite magical component
+      - §dmakes this sword special.
+    enchants:
+      sharpness: 3.0
+    max-durability: 2200.0
+    item-particles:
+      type: DOUBLE_RINGS
+      particle: REDSTONE
+      color:
+        red: 128
+        green: 0
+        blue: 128
+    attack-damage:
+      base: 30.0
+      scale: 0.08
+      spread: 0.1
+      max-spread: 0.15
+    critical-strike-chance:
+      base: 4.0
+      spread: 0.1
+      max-spread: 0.3
+    critical-strike-power:
+      base: 15.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.3
+    required-level: 50.0
+    tier: LEGENDARY
+    magic-damage:
+      base: 60.0
+      scale: 0.15
+      spread: 0.15
+      max-spread: 0.25
+    parry-rating:
+      base: 10.0
+      spread: 0.1
+      max-spread: 0.2
+    parry-cooldown-reduction:
+      base: 15.0
+      spread: 0.04
+      max-spread: 0.08
+    weapon-damage:
+      base: 15.0
+      scale: 0.04
+      spread: 0.09
+      max-spread: 0.16
+    element:
+      earth:
+        damage:
+          base: 10.0
+          scale: 0.0
+          spread: 0.02
+          max-spread: 0.3
+      water:
+        damage:
+          base: 20.0
+          scale: 0.0
+          spread: 0.02
+          max-spread: 0.3
+    perm-effects:
+      REGENERATION: 1.0
+    ability:
+      ability1:
+        type: GRAND_HEAL
+        mode: RIGHT_CLICK
+        mana: 5.0
+        cooldown: 20.0
+        heal: 60.0
+        radius: 8.0
+    crafting:
+      supershaped:
+        '1':
+          input:
+            - v AIR 0 1..|v amethyst_block - 1.0..|v diamond_block - 1.0..|v amethyst_block
+              - 1.0..|v AIR 0 1..
+            - v amethyst_shard - 1.0..|v amethyst_block - 1.0..|v nether_star - 1.0..|v
+              amethyst_block - 1.0..|v amethyst_shard - 1.0..
+            - v AIR 0 1..|v amethyst_block - 1.0..|v diamond_block - 1.0..|v amethyst_block
+              - 1.0..|v AIR 0 1..
+            - v AIR 0 1..|v stick - 1.0..|v blaze_rod - 1.0..|v stick - 1.0..|v AIR
+              0 1..
+            - v AIR 0 1..|v AIR 0 1..|v blaze_rod - 1.0..|v AIR 0 1..|v AIR 0 1..
+      shaped:
+        '1':
+          input:
+            - v amethyst_block - 1.0..|v nether_star - 1.0..|v amethyst_block - 1.0..
+            - v amethyst_block - 1.0..|v amethyst_shard - 1.0..|v amethyst_block - 1.0..
+            - v AIR 0 1..|v stick - 1.0..|v AIR 0 1..
+    attack-speed: 1.6
+FROZEN_BLADE:
+  base:
+    material: DIAMOND_SWORD
+    lore:
+      - §bMade from ice so cold that
+      - §bit will never melt.
+    max-durability: 15000.0
+    tier: MYTHICAL
+    name: §b§lEternal Frozen Blade
+    weapon-damage:
+      base: 30.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.25
+    attack-damage:
+      base: 70.0
+      scale: 0.15
+      spread: 0.1
+      max-spread: 0.2
+    stamina-cost: 12.0
+    attack-speed: 1.6
+    critical-strike-chance:
+      base: 5.0
+      scale: 0.05
+      spread: 0.2
+      max-spread: 0.4
+    critical-strike-power:
+      base: 25.0
+      scale: 0.1
+      spread: 0.15
+      max-spread: 0.25
+    parry-rating:
+      base: 30.0
+      spread: 0.1
+      max-spread: 0.4
+    required-level: 70.0
+    element:
+      ice:
+        damage:
+          base: 60.0
+          scale: 0.0
+          spread: 0.1
+          max-spread: 0.2
+    gem-sockets:
+      - Blue
+      - Blue
+    ability:
+      ability1:
+        type: FROZEN_AURA
+        mode: RIGHT_CLICK
+        duration: 8.0
+        cooldown: 12.0
+        amplifier: 2.0
+        radius: 10.0
+    magic-damage:
+      base: 25.0
+      spread: 0.25
+      max-spread: 0.4
+    upgrade:
+      reference: weapon-default
+    disable-death-drop: true
+    two-handed: true
+    movement-speed: -0.01
+OMNIELEMENTAL_SWORD:
+  base:
+    material: IRON_SWORD
+    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §6§lS§e§lw§a§lo§2§lr§3§ld
+    attack-damage:
+      base: 30.0
+      scale: 0.12
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed: 1.6
+    required-level: 34.0
+    magic-damage:
+      base: 70.0
+      scale: 0.08
+      spread: 0.08
+      max-spread: 0.15
+    tier: VERY_RARE
+    gem-sockets:
+      - Uncolored
+      - Uncolored
+      - Uncolored
+    ability:
+      ability1:
+        type: FIREBOLT
+        mode: RIGHT_CLICK
+        damage: 15.0
+        ignite: 3.0
+        cooldown: 5.0
+      ability2:
+        type: ICE_CRYSTAL
+        mode: RIGHT_CLICK
+        damage: 3.0
+        cooldown: 5.0
+        amplifier: 2.0
+        duration: 3.0
+      ability4:
+        type: CURSED_BEAM
+        duration: 3.0
+        cooldown: 5.0
+        damage: 12.0
+        mode: RIGHT_CLICK
+      ability3:
+        type: HOLY_MISSILE
+        duration: 4.0
+        mode: RIGHT_CLICK
+        damage: 5.0
+        cooldown: 5.0
+    element:
+      darkness:
+        damage: 25.0
+      lightness:
+        damage: 25.0
+      fire:
+        damage: 25.0
+      ice:
+        damage: 25.0
+    lore:
+      - §7Why limit yourself to one element?
+    hide-enchants: true
+    enchants:
+      luck_of_the_sea: 1.0
+YANISDARK_SWORD:
+  base:
+    material: GOLDEN_SWORD
+    name: §e§lYanisDark's Sword
+    magic-damage: 25.0
+    attack-damage: 12.0
+    attack-speed: 1.6
+    critical-strike-chance:
+      base: 5.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 5.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    required-level: 10.0
+    enchants:
+      fortune: 5.0
+      looting: 5.0
+    additional-experience: 30.0
+    element:
+      lightness:
+        damage: 30.0
+    gem-sockets:
+      - Yellow
+    tier: RARE
+    lore:
+      - §eHere's a special gift!
+      - §2It won't break!
+    unbreakable: true

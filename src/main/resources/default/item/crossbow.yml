@@ -1,0 +1,57 @@
+MEDIEVAL_CROSSBOW:
+  base:
+    material: WOODEN_PICKAXE
+    name: §6§lMedieval Crossbow
+    lore:
+      - §6Like in the old times.
+      - §eFor more realism, it also poisons
+      - §eand makes a different sound!
+    tier: UNCOMMON
+    weapon-damage:
+      base: 15.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    attack-damage:
+      base: 9.0
+      scale: 0.1
+      spread: 0.05
+      max-spread: 0.1
+    arrow-velocity: 2.0
+    arrow-potion-effects:
+      POISON:
+        duration: 10.0
+        amplifier: 1
+    projectile-damage:
+      base: 20.0
+      scale: 0.05
+      spread: 0.05
+      max-spread: 0.2
+    sounds:
+      on-right-click:
+        sound: item.crossbow.hit
+        volume: 2.0
+        pitch: 0.0
+HANDGUN:
+  base:
+    material: IRON_HORSE_ARMOR
+    name: §7Hand Gun
+    attack-damage: 30.0
+    required-biomes:
+      - plains
+    lore:
+      - §cFor security reasons, this gun
+      - §cis only usable in §3plains§c.
+    attack-speed: 1.4
+    arrow-velocity: 4.0
+    required-level: 20.0
+    weapon-damage:
+      base: 15.0
+      scale: 0.06
+      spread: 0.08
+      max-spread: 0.15
+    gem-sockets:
+      - Red
+      - Red
+    max-durability: 2650.0
+    tier: RARE

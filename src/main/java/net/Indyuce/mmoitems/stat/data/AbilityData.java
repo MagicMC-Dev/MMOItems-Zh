@@ -138,10 +138,8 @@ public class AbilityData extends Skill {
 			meta.getCaster().getData().getCooldownMap().applyCooldown(this, cooldown);
 	}
 
-	@Nullable
 	@Override
 	public SkillHandler getHandler() {
-		if (ability == null) { return null; }
 		return ability.getHandler();
 	}
 

@@ -100,3 +100,87 @@ BLAZE_SOUL:
       base: 70.0
       spread: 0.042
       max-spread: 0.13
+NETHER_GEM:
+  base:
+    material: NETHERITE_SCRAP
+    name: §cNether Gem
+    lore:
+      - §c§oThe nether gem can be placed on
+      - §c§oitems containing nether sockets.
+    success-rate:
+      base: 60.0
+      scale: 0.12
+      spread: 0.25
+    gem-color: Nether
+    attack-damage:
+      base: 6.0
+      scale: 0.05
+      spread: 0.06
+      max-spread: 0.12
+    weapon-damage:
+      base: 14.0
+      scale: 0.1
+      spread: 0.09
+      max-spread: 0.15
+    critical-strike-chance:
+      base: 4.0
+      scale: 0.1
+      spread: 0.09
+      max-spread: 0.15
+    critical-strike-power:
+      base: 25.0
+      scale: 0.1
+      spread: 0.09
+      max-spread: 0.15
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v AIR 0 1..|v netherite_ingot - 1.0..|v AIR 0 1..
+            - v netherite_ingot - 1.0..|v magma_cream - 1.0..|v netherite_ingot - 1.0..
+            - v AIR 0 1..|v netherite_ingot - 1.0..|v AIR 0 1..
+    tier: RARE
+RAINBOW_GEM:
+  base:
+    material: AMETHYST_SHARD
+    name: §c§lR§6§la§e§li§a§ln§2§lb§9§lo§3§lw §c§lG§6§le§e§lm
+    lore:
+      - §eThe rainbow gem allows you to
+      - §eboost a large amount of stats!
+      - §2It will also upgrade your item
+      - §2depending on its previous upgrades!
+      - §cVery hard to craft!
+    attack-damage: 2.0
+    attack-speed: 0.1
+    critical-strike-chance: 10.0
+    critical-strike-power: 15.0
+    block-power: 2.0
+    block-rating: 2.0
+    block-cooldown-reduction: 2.5
+    cooldown-reduction: 5.0
+    weapon-damage: 5.0
+    magic-damage: 2.5
+    tier: LEGENDARY
+    unstackable: true
+    gem-color: Rainbow
+    gem-upgrade-scaling: HISTORIC
+    max-health: 5.0
+    max-mana: 5.0
+    crafting:
+      megashaped:
+        '1':
+          input:
+            - v netherite_sword - 1.0..|v netherite_helmet - 1.0..|v netherite_chestplate
+              - 1.0..|v netherite_leggings - 1.0..|v netherite_boots - 1.0..|v golden_sword
+              - 1.0..
+            - v diamond_helmet - 1.0..|v wither_skeleton_skull - 1.0..|v gold_ingot
+              - 1.0..|v gold_ingot - 1.0..|v nether_star - 1.0..|v golden_helmet - 1.0..
+            - v diamond_chestplate - 1.0..|v iron_ingot - 1.0..|v diamond_block - 1.0..|v
+              diamond_block - 1.0..|v amethyst_shard - 1.0..|v golden_chestplate - 1.0..
+            - v diamond_leggings - 1.0..|v iron_ingot - 1.0..|v diamond_block - 1.0..|v
+              diamond_block - 1.0..|v amethyst_shard - 1.0..|v golden_leggings - 1.0..
+            - v diamond_boots - 1.0..|v netherite_block - 1.0..|v copper_ingot - 1.0..|v
+              copper_ingot - 1.0..|v heart_of_the_sea - 1.0..|v golden_boots - 1.0..
+            - v iron_sword - 1.0..|v iron_helmet - 1.0..|v iron_chestplate - 1.0..|v
+              iron_leggings - 1.0..|v iron_boots - 1.0..|v diamond_sword - 1.0..
+    success-rate: 90.0

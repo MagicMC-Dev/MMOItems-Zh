@@ -1,3 +1,701 @@
+DRAGON_HELMET:
+  base:
+    material: DIAMOND_HELMET
+    max-durability: 5500.0
+    tier: EPIC
+    max-health: 4.0
+    armor-toughness: 3.0
+    magic-damage-reduction:
+      base: 3.0
+      spread: 0.05
+      max-spread: 0.17
+    armor: 3.5
+    element:
+      fire:
+        defense:
+          base: 5.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+      darkness:
+        defense:
+          base: 12.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+    name: §5§lDragon Helmet
+    enchants:
+      fire_protection: 4.0
+    lore:
+      - §c§oThis powerful armor is taken from
+      - §c§odragon scales.
+    required-level: 12.0
+    block-rating:
+      base: 4.0
+      scale: 0.075
+      spread: 0.02
+      max-spread: 0.08
+    gem-sockets:
+      - Magenta
+      - Black
+    set: DRAGON
+DRAGON_CHESTPLATE:
+  base:
+    material: DIAMOND_CHESTPLATE
+    max-durability: 6850.0
+    tier: EPIC
+    max-health: 10.0
+    armor-toughness: 3.0
+    magic-damage-reduction:
+      base: 8.0
+      spread: 0.05
+      max-spread: 0.17
+    armor: 7.0
+    element:
+      fire:
+        defense:
+          base: 18.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+      darkness:
+        defense:
+          base: 35.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+    name: §5§lDragon Chestplate
+    enchants:
+      fire_protection: 4.0
+    lore:
+      - §c§oThis powerful armor is taken from
+      - §c§odragon scales.
+    required-level: 12.0
+    block-rating:
+      base: 5.0
+      scale: 0.075
+      spread: 0.02
+      max-spread: 0.08
+    gem-sockets:
+      - Magenta
+      - Black
+    set: DRAGON
+DRAGON_LEGGINGS:
+  base:
+    material: DIAMOND_LEGGINGS
+    max-durability: 6150.0
+    tier: EPIC
+    max-health: 7.0
+    armor-toughness: 3.0
+    magic-damage-reduction:
+      base: 5.0
+      spread: 0.05
+      max-spread: 0.17
+    armor: 5.0
+    element:
+      fire:
+        defense:
+          base: 12.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+      darkness:
+        defense:
+          base: 22.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+    name: §5§lDragon Leggings
+    enchants:
+      fire_protection: 4.0
+    lore:
+      - §c§oThis powerful armor is taken from
+      - §c§odragon scales.
+    required-level: 12.0
+    block-rating:
+      base: 4.5
+      scale: 0.075
+      spread: 0.02
+      max-spread: 0.08
+    gem-sockets:
+      - Magenta
+      - Black
+    set: DRAGON
+DRAGON_BOOTS:
+  base:
+    material: DIAMOND_BOOTS
+    max-durability: 5500.0
+    tier: EPIC
+    max-health: 4.0
+    armor-toughness: 3.0
+    magic-damage-reduction:
+      base: 3.0
+      spread: 0.05
+      max-spread: 0.17
+    armor: 3.5
+    element:
+      fire:
+        defense:
+          base: 5.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+      darkness:
+        defense:
+          base: 12.0
+          scale: 0.0
+          spread: 0.07
+          max-spread: 0.2
+    name: §5§lDragon Boots
+    enchants:
+      fire_protection: 4.0
+    lore:
+      - §c§oThis powerful armor is taken from
+      - §c§odragon scales.
+    required-level: 12.0
+    block-rating:
+      base: 4.0
+      scale: 0.075
+      spread: 0.02
+      max-spread: 0.08
+    gem-sockets:
+      - Magenta
+      - Black
+    set: DRAGON
+SPELLCASTER_HELMET:
+  base:
+    material: LEATHER_HELMET
+    name: §dSpellcaster Helmet
+    lore:
+      - §d§lSuits very well for mages!
+    required-class:
+      - Mage
+    required-level: 1.0
+    block-power:
+      base: 10.0
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 7.0
+      spread: 0.1
+      max-spread: 0.2
+    tier: UNCOMMON
+    max-durability: 950.0
+    element:
+      water:
+        defense:
+          base: 5.0
+          scale: 0.0
+          spread: 0.2
+          max-spread: 0.3
+    max-mana: 6.0
+    magic-damage-reduction: 25.0
+    armor-toughness: 1.0
+    armor: 2.0
+    hide-dye: true
+    dye-color: 125 0 255
+    set: SPELLCASTER
+SPELLCASTER_CHESTPLATE:
+  base:
+    material: LEATHER_CHESTPLATE
+    name: §dSpellcaster Chestplate
+    lore:
+      - §d§lSuits very well for mages!
+    required-class:
+      - Mage
+    required-level: 1.0
+    block-power:
+      base: 15.0
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 10.0
+      spread: 0.1
+      max-spread: 0.2
+    tier: UNCOMMON
+    max-durability: 1450.0
+    element:
+      water:
+        defense:
+          base: 10.0
+          scale: 0.0
+          spread: 0.2
+          max-spread: 0.3
+    max-mana: 6.0
+    magic-damage-reduction: 25.0
+    armor-toughness: 1.0
+    armor: 4.0
+    hide-dye: true
+    dye-color: 125 0 255
+    set: SPELLCASTER
+SPELLCASTER_LEGGINGS:
+  base:
+    material: LEATHER_LEGGINGS
+    name: §dSpellcaster Leggings
+    lore:
+      - §d§lSuits very well for mages!
+    required-class:
+      - Mage
+    required-level: 1.0
+    block-power:
+      base: 12.0
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 8.5
+      spread: 0.1
+      max-spread: 0.2
+    tier: UNCOMMON
+    max-durability: 1450.0
+    element:
+      water:
+        defense:
+          base: 7.5
+          scale: 0.0
+          spread: 0.2
+          max-spread: 0.3
+    max-mana: 6.0
+    magic-damage-reduction: 25.0
+    armor-toughness: 1.0
+    armor: 3.0
+    hide-dye: true
+    dye-color: 125 0 255
+    set: SPELLCASTER
+SPELLCASTER_BOOTS:
+  base:
+    material: LEATHER_BOOTS
+    name: §dSpellcaster Boots
+    lore:
+      - §d§lSuits very well for mages!
+    required-class:
+      - Mage
+    required-level: 1.0
+    block-power:
+      base: 10.0
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 7.0
+      spread: 0.1
+      max-spread: 0.2
+    tier: UNCOMMON
+    max-durability: 950.0
+    element:
+      water:
+        defense:
+          base: 5.0
+          scale: 0.0
+          spread: 0.2
+          max-spread: 0.3
+    max-mana: 6.0
+    magic-damage-reduction: 25.0
+    armor-toughness: 1.0
+    armor: 2.0
+    hide-dye: true
+    dye-color: 125 0 255
+    set: SPELLCASTER
+OMNIELEMENTAL_HELMET:
+  base:
+    material: LEATHER_HELMET
+    required-level: 15.0
+    lore:
+      - §bDon't limit yourself to one element.
+      - §cIt will be downgraded on death or
+      - §cupon breaking.
+      - §9Gives Night Vision when worn.
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lH§6§le§e§ll§a§lm§2§le§3§lt
+    armor-toughness: 2.5
+    armor: 4.5
+    max-durability: 1950.0
+    element:
+      fire:
+        defense: 100.0
+      earth:
+        defense: 100.0
+    block-power:
+      base: 10.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 8.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    magic-damage:
+      base: 10.0
+      scale: 0.15
+      spread: 0.2
+      max-spread: 0.3
+    dye-color: 255 255 0
+    break-downgrade: true
+    death-downgrade: true
+    death-downgrade-chance: 100.0
+    gem-sockets:
+      - Rainbow
+      - Rainbow
+    perm-effects:
+      NIGHT_VISION: 1.0
+    tier: VERY_RARE
+    max-health: 5.0
+OMNIELEMENTAL_CHESTPLATE:
+  base:
+    material: LEATHER_CHESTPLATE
+    required-level: 15.0
+    lore:
+      - §bDon't limit yourself to one element.
+      - §cIt will be downgraded on death or
+      - §cupon breaking.
+      - §9Gives Resistance I when worn.
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lC§6§lh§e§le§a§ls§2§lt§3§lp§9§ll§b§la§f§lt§e§le
+    armor-toughness: 2.5
+    armor: 9.5
+    max-durability: 3900.0
+    element:
+      ice:
+        defense: 100.0
+      water:
+        defense: 100.0
+    block-power:
+      base: 12.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 10.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    magic-damage:
+      base: 15.0
+      scale: 0.15
+      spread: 0.2
+      max-spread: 0.3
+    dye-color: 150 200 255
+    break-downgrade: true
+    death-downgrade: true
+    death-downgrade-chance: 100.0
+    gem-sockets:
+      - Rainbow
+      - Rainbow
+    perm-effects:
+      DAMAGE_RESISTANCE: 1.0
+    tier: VERY_RARE
+    max-health: 5.0
+OMNIELEMENTAL_LEGGINGS:
+  base:
+    material: LEATHER_LEGGINGS
+    required-level: 15.0
+    lore:
+      - §bDon't limit yourself to one element.
+      - §cIt will be downgraded on death or
+      - §cupon breaking.
+      - §9Gives Speed I when worn.
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lL§6§le§e§lg§a§lg§2§li§3§ln§b§lg§f§ls
+    armor-toughness: 2.5
+    armor: 7.0
+    max-durability: 3000.0
+    element:
+      thunder:
+        defense: 100.0
+      wind:
+        defense: 100.0
+    block-power:
+      base: 10.5
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 8.5
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    magic-damage:
+      base: 12.0
+      scale: 0.15
+      spread: 0.2
+      max-spread: 0.3
+    dye-color: 180 180 0
+    break-downgrade: true
+    death-downgrade: true
+    death-downgrade-chance: 100.0
+    gem-sockets:
+      - Rainbow
+      - Rainbow
+    perm-effects:
+      SPEED: 1.0
+    tier: VERY_RARE
+    max-health: 5.0
+OMNIELEMENTAL_BOOTS:
+  base:
+    material: LEATHER_BOOTS
+    required-level: 15.0
+    lore:
+      - §bDon't limit yourself to one element.
+      - §cIt will be downgraded on death or
+      - §cupon breaking.
+      - §9Gives Jump Boost I when worn.
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lB§6§lo§e§lo§a§lt§2§ls
+    armor-toughness: 2.5
+    armor: 3.0
+    max-durability: 2150.0
+    element:
+      darkness:
+        defense: 100.0
+      lightness:
+        defense: 100.0
+    block-power:
+      base: 4.5
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    block-rating:
+      base: 5.5
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    magic-damage:
+      base: 8.0
+      scale: 0.15
+      spread: 0.2
+      max-spread: 0.3
+    dye-color: 160 160 160
+    break-downgrade: true
+    death-downgrade: true
+    death-downgrade-chance: 100.0
+    gem-sockets:
+      - Rainbow
+      - Rainbow
+    perm-effects:
+      JUMP: 1.0
+    tier: VERY_RARE
+    max-health: 5.0
+HELMET_OF_THE_SEA:
+  base:
+    material: LEATHER_HELMET
+    max-durability: 8000.0
+    attack-damage:
+      base: 6.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3
+    required-level: 10.0
+    weapon-damage:
+      base: 10.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.25
+    magic-damage:
+      base: 10.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.25
+    physical-damage:
+      base: 15.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.25
+    cooldown-reduction:
+      base: 15.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.25
+    pve-damage:
+      base: 15.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.25
+    tier: RARE
+    dye-color: 120 120 255
+    name: §9Helmet of the Ocean
+    hide-dye: true
+    element:
+      water:
+        defense:
+          base: 25.0
+          scale: 0.0
+          spread: 0.2
+          max-spread: 0.4
+    amphibian: DAMP
+    perm-effects:
+      NIGHT_VISION: 1.0
+      WATER_BREATHING: 1.0
+    lore:
+      - §3Will only work when §9§lUNDERWATER§3.
+      - §3Gives §9Night Vision §3and §9Water Breathing§3.
+UNDEADSLAYER_HELMET:
+  base:
+    material: NETHERITE_HELMET
+    max-durability: 10500.0
+    tier: EPIC
+    armor-toughness: 2.5
+MOON_BOOTS:
+  base:
+    material: DIAMOND_BOOTS
+    lore:
+      - §bMoon boots will simulate being on the moon!
+      - §7Gives §3Jump Boost II§7 when worn.
+      - §cWill only work in "the end" biome.
+    max-durability: 2650.0
+    name: §b§lMoon Boots
+    tier: UNIQUE
+    armor-toughness: 1.5
+    armor: 3.0
+    fall-damage-reduction: 75.0
+    perm-effects:
+      JUMP: 2.0
+    required-biomes:
+      - the_end
+CONTROL_DEVICES:
+  base:
+    material: LEATHER_HELMET
+    max-durability: 15000.0
+    name: §d§lControl Devices
+    dye-color: 255 102 204
+    ability: { }
+    set: PSYCHIC
+    perm-effects:
+      DAMAGE_RESISTANCE: 2.0
+      SPEED: 2.0
+      REGENERATION: 2.0
+      FIRE_RESISTANCE: 1.0
+      INCREASE_DAMAGE: 2.0
+    required-class:
+      - Mage
+    lore:
+      - §7To keep your powers in check...
+    armor-toughness: 2.0
+    armor: 7.0
+    tier: MAGICAL
+    unbreakable: true
+UNDEAD_SLAYER_HELMET:
+  base:
+    material: NETHERITE_HELMET
+    required-level: 80.0
+    undead-damage: 15.0
+    set: UNDEADSLAYER
+    name: §cUndead Slayer Helmet
+    max-durability: 17500.0
+    physical-damage: 5.0
+    armor: 8.0
+    armor-toughness: 4.0
+    tier: MYTHICAL
+    knockback-resistance: 0.25
+    perm-effects:
+      NIGHT_VISION: 1.0
+    element:
+      darkness:
+        defense: 50.0
+      thunder:
+        defense: 25.0
+    lore:
+      - §cThey'll fear you.
+    damage-reduction: 5.0
+    physical-damage-reduction: 8.0
+    magic-damage-reduction: 20.0
+    pve-damage-reduction: 5.0
+    enchants:
+      smite: 3.0
+      protection: 4.0
+UNDEAD_SLAYER_CHESTPLATE:
+  base:
+    material: NETHERITE_CHESTPLATE
+    required-level: 80.0
+    undead-damage: 15.0
+    set: UNDEADSLAYER
+    name: §cUndead Slayer Chestplate
+    max-durability: 19800.0
+    physical-damage: 5.0
+    armor: 11.0
+    armor-toughness: 4.0
+    tier: MYTHICAL
+    knockback-resistance: 0.25
+    perm-effects:
+      FIRE_RESISTANCE: 1.0
+      REGENERATION: 1.0
+    element:
+      darkness:
+        defense: 80.0
+      thunder:
+        defense: 50.0
+    lore:
+      - §cThey'll fear you.
+    damage-reduction: 10.0
+    physical-damage-reduction: 15.0
+    magic-damage-reduction: 50.0
+    pve-damage-reduction: 10.0
+    enchants:
+      smite: 3.0
+      protection: 4.0
+UNDEAD_SLAYER_LEGGINGS:
+  base:
+    material: NETHERITE_LEGGINGS
+    undead-damage: 15.0
+    set: UNDEADSLAYER
+    name: §cUndead Slayer Leggings
+    max-durability: 18800.0
+    physical-damage: 5.0
+    armor: 10.0
+    armor-toughness: 4.0
+    tier: MYTHICAL
+    knockback-resistance: 0.25
+    perm-effects:
+      SPEED: 1.0
+    element:
+      darkness:
+        defense: 60.0
+      thunder:
+        defense: 30.0
+    lore:
+      - §cThey'll fear you.
+    damage-reduction: 8.0
+    physical-damage-reduction: 10.0
+    magic-damage-reduction: 30.0
+    pve-damage-reduction: 8.0
+    enchants:
+      smite: 3.0
+      protection: 4.0
+UNDEAD_SLAYER_BOOTS:
+  base:
+    material: NETHERITE_BOOTS
+    required-level: 80.0
+    undead-damage: 15.0
+    set: UNDEADSLAYER
+    name: §cUndead Slayer Boots
+    max-durability: 15500.0
+    physical-damage: 5.0
+    armor: 8.0
+    armor-toughness: 4.0
+    tier: MYTHICAL
+    knockback-resistance: 0.25
+    perm-effects:
+      JUMP: 1.0
+    element:
+      darkness:
+        defense: 50.0
+      thunder:
+        defense: 25.0
+    lore:
+      - §cThey'll fear you.
+    damage-reduction: 5.0
+    physical-damage-reduction: 8.0
+    magic-damage-reduction: 20.0
+    pve-damage-reduction: 5.0
+    enchants:
+      smite: 3.0
+      protection: 4.0
 MYTHRIL_CHAINMAIL:
   base:
     material: CHAINMAIL_CHESTPLATE
@@ -17,8 +715,8 @@ MYTHRIL_CHAINMAIL:
       earth:
         defense: 6.4
     gem-sockets:
-    - Red
-    - Blue
+      - Red
+      - Blue
     required-level: 4.0
     tier: UNCOMMON
 STEEL_HELMET:
@@ -36,25 +734,25 @@ STEEL_HELMET:
     name: '&fSteel Helm'
     armor: 2.5
     lore:
-    - '&7Slightly better than an iron helmet.'
+      - '&7Slightly better than an iron helmet.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
       spread: 0.11
       max-spread: 0.33
     gem-sockets:
-    - Green
+      - Green
     set: STEEL
     crafting:
       shaped:
         '1':
-        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-        - AIR AIR AIR
+          - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - AIR AIR AIR
         '2':
-        - AIR AIR AIR
-        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - AIR AIR AIR
+          - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
 STEEL_CHESTPLATE:
   base:
     material: IRON_CHESTPLATE
@@ -70,21 +768,21 @@ STEEL_CHESTPLATE:
     name: '&fSteel Chestplate'
     armor: 6.5
     lore:
-    - '&7Slightly better than an iron chestplate.'
+      - '&7Slightly better than an iron chestplate.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
       spread: 0.11
       max-spread: 0.33
     gem-sockets:
-    - Blue
+      - Blue
     set: STEEL
     crafting:
       shaped:
         '1':
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
 STEEL_LEGGINGS:
   base:
     material: IRON_LEGGINGS
@@ -100,21 +798,21 @@ STEEL_LEGGINGS:
     name: '&fSteel Leggings'
     armor: 5.5
     lore:
-    - '&7Slightly better than iron leggings.'
+      - '&7Slightly better than iron leggings.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
       spread: 0.11
       max-spread: 0.33
     gem-sockets:
-    - Blue
+      - Blue
     set: STEEL
     crafting:
       shaped:
         '1':
-        - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
 STEEL_BOOTS:
   base:
     material: IRON_BOOTS
@@ -130,25 +828,25 @@ STEEL_BOOTS:
     name: '&fSteel Boots'
     armor: 2.5
     lore:
-    - '&7Slightly better than iron boots.'
+      - '&7Slightly better than iron boots.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
       spread: 0.11
       max-spread: 0.33
     gem-sockets:
-    - Green
+      - Green
     set: STEEL
     crafting:
       shaped:
         '2':
-        - AIR AIR AIR
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - AIR AIR AIR
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
         '1':
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-        - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
-        - AIR AIR AIR
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - MATERIAL.STEEL_INGOT AIR MATERIAL.STEEL_INGOT
+          - AIR AIR AIR
 CURSED_WITHER_SKULL:
   base:
     material: WITHER_SKELETON_SKULL
@@ -156,15 +854,15 @@ CURSED_WITHER_SKULL:
     required-level: 30.0
     tier: UNIQUE
     gem-sockets:
-    - Red
-    - Blue
+      - Red
+      - Blue
     armor: 3.0
     armor-toughness: 2.0
     perm-effects:
       ABSORPTION: 1
     lore:
-    - '&7Grants a permanent &62'
-    - '&6hearts &7absorption shield.'
+      - '&7Grants a permanent &62'
+      - '&6hearts &7absorption shield.'
     durability: 1.0
     element:
       thunder:
@@ -174,9 +872,9 @@ CURSED_WITHER_SKULL:
     crafting:
       shaped:
         '1':
-        - BONE BONE BONE
-        - BONE MATERIAL.UNIQUE_WEAPON_ESSENCE BONE
-        - BONE BONE BONE
+          - BONE BONE BONE
+          - BONE MATERIAL.UNIQUE_WEAPON_ESSENCE BONE
+          - BONE BONE BONE
 HUGE_MOTHRON_WINGS:
   base:
     material: ELYTRA
@@ -221,9 +919,9 @@ ARCANE_CHESTPLATE:
       type: GALAXY
       particle: SPELL_WITCH
     lore:
-    - '&2Enemies trying to attack you'
-    - '&2will be violently inflicted a wither'
-    - '&2effect for a short period of time.'
+      - '&2Enemies trying to attack you'
+      - '&2will be violently inflicted a wither'
+      - '&2effect for a short period of time.'
     set: ARCANE
 ARCANE_LEGGINGS:
   base:
@@ -239,8 +937,8 @@ ARCANE_LEGGINGS:
       type: GALAXY
       particle: SPELL_WITCH
     gem-sockets:
-    - Blue
-    - Green
+      - Blue
+      - Green
     set: ARCANE
 ARCANE_BOOTS:
   base:
@@ -256,8 +954,8 @@ ARCANE_BOOTS:
       type: GALAXY
       particle: SPELL_WITCH
     lore:
-    - '&2Greatly increases your'
-    - '&2fall damage reduction.'
+      - '&2Greatly increases your'
+      - '&2fall damage reduction.'
     fall-damage-reduction:
       base: 45.0
       spread: 0.033
@@ -270,7 +968,7 @@ GINGERBREAD_HELM:
     name: '&cGingerbread Helmet'
     required-level: 2.0
     lore:
-    - '&eEarned during X-Mas 2018!'
+      - '&eEarned during X-Mas 2018!'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -289,7 +987,7 @@ GINGERBREAD_TUNIC:
     name: '&cGingerbread Tunic'
     required-level: 2.0
     lore:
-    - '&eEarned during X-Mas 2018!'
+      - '&eEarned during X-Mas 2018!'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -308,7 +1006,7 @@ GINGERBREAD_LEGGINGS:
     name: '&cGingerbread Leggings'
     required-level: 2.0
     lore:
-    - '&eEarned during X-Mas 2018!'
+      - '&eEarned during X-Mas 2018!'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -327,7 +1025,7 @@ GINGERBREAD_BOOTS:
     name: '&cGingerbread Boots'
     required-level: 2.0
     lore:
-    - '&eEarned during X-Mas 2018!'
+      - '&eEarned during X-Mas 2018!'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -354,9 +1052,9 @@ DEAD_PHARAOH_HELMET:
     armor: 4.0
     undead-damage: 30.0
     lore:
-    - '&7This powerful forgotten helmet'
-    - '&7will greatly increase your power'
-    - '&7against undead creatures.'
+      - '&7This powerful forgotten helmet'
+      - '&7will greatly increase your power'
+      - '&7against undead creatures.'
     required-level: 9.0
 MOSSY_SKELETON_SKULL:
   base:
@@ -387,10 +1085,10 @@ SKELETON_CROWN:
         damage: 3.0
         cooldown: 9.0
     lore:
-    - '&7Every 9 seconds, summons a'
-    - '&cdeadly meteor&7 at your attacker,'
-    - '&7dealing &c4&7 damage while briefly'
-    - '&7knocking them away.'
+      - '&7Every 9 seconds, summons a'
+      - '&cdeadly meteor&7 at your attacker,'
+      - '&7dealing &c4&7 damage while briefly'
+      - '&7knocking them away.'
     disable-interaction: true
 WYVERN_CAP:
   base:
@@ -405,17 +1103,17 @@ WYVERN_CAP:
     perm-effects:
       JUMP: 2
     lore:
-    - '&7Grants permanent jump boost II'
+      - '&7Grants permanent jump boost II'
     crafting:
       shaped:
         '1':
-        - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
-        - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
-        - AIR AIR AIR
+          - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
+          - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
+          - AIR AIR AIR
         '2':
-        - AIR AIR AIR
-        - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
-        - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
+          - AIR AIR AIR
+          - TOME.WYVERN_FEATHER TOME.WYVERN_SOUL TOME.WYVERN_FEATHER
+          - TOME.WYVERN_FEATHER AIR TOME.WYVERN_FEATHER
 TRAVEL_BOOTS:
   base:
     material: LEATHER_BOOTS
@@ -447,7 +1145,7 @@ SHADOWVEIL:
         duration: 5.0
         cooldown: 20.0
     lore:
-    - '&7&oObtained from the depths of bedrock'
+      - '&7&oObtained from the depths of bedrock'
     max-health: 10.0
     armor: 3.0
     armor-toughness: 2.0
@@ -455,7 +1153,7 @@ SHADOWROBE:
   base:
     material: LEATHER_CHESTPLATE
     lore:
-    - '&7&oObtained from the depths of bedrock'
+      - '&7&oObtained from the depths of bedrock'
     name: '&cShadow Robe'
     max-durability: 1000.0
     disable-repairing: true
@@ -482,7 +1180,7 @@ SHADOWLEGGINGS:
   base:
     material: LEATHER_LEGGINGS
     lore:
-    - '&7&oObtained from the depths of bedrock'
+      - '&7&oObtained from the depths of bedrock'
     name: '&cShadow Leggings'
     enchants:
       unbreaking: 3
@@ -501,7 +1199,7 @@ SHADOWBOOTS:
     material: LEATHER_BOOTS
     name: '&cShadow Boots'
     lore:
-    - '&7&oObtained from the depths of bedrock'
+      - '&7&oObtained from the depths of bedrock'
     enchants:
       unbreaking: 3
       protection: 4

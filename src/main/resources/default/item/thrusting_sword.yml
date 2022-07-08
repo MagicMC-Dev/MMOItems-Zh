@@ -1,0 +1,29 @@
+SKILLED_SWORD:
+  base:
+    material: GOLDEN_SWORD
+    name: §fSkilled Sword
+    tier: EPIC
+    dodge-rating: 15.0
+    parry-rating: 40.0
+    parry-cooldown-reduction: 30.0
+    dodge-cooldown-reduction: 20.0
+    cooldown-reduction: 20.0
+    attack-damage: 17.0
+    attack-speed: 1.65
+    critical-strike-chance: 70.0
+    critical-strike-power:
+      base: 50.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    lore:
+      - §6Only for the masters.
+    required-dexterity: 14.0
+    required-level: 14.0
+    ability:
+      ability1:
+        type: THRUST
+        mode: RIGHT_CLICK
+        damage: 15.0
+        cooldown: 4.0
+        stamina: 2.0

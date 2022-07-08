@@ -93,3 +93,88 @@ BONE_STAFF:
       max-spread: 0.2
     lore: []
     name: '&fBone Staff'
+MANA_STAFF:
+  base:
+    material: DIAMOND_HOE
+    name: §b§lMana Staff
+    lore:
+      - §b§oThis staff uses pure ambiant mana.
+    tier: RARE
+    required-level: 15.0
+    critical-strike-chance:
+      base: 15.0
+      spread: 0.08
+      max-spread: 0.19
+    critical-strike-power:
+      base: 30.0
+      spread: 0.08
+      max-spread: 0.19
+    attack-damage:
+      base: 14.0
+      scale: 0.07
+      spread: 0.1
+    attack-speed: 0.7
+    perm-effects:
+      SPEED: 1.0
+    ability:
+      ability1:
+        type: REGEN_ALLY
+        mode: RIGHT_CLICK
+        duration: 3.0
+        cooldown: 8.0
+        heal: 10.0
+        mana: 10.0
+    magic-damage-reduction:
+      base: 15.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    magic-damage:
+      base: 12.0
+      scale: 0.07
+      spread: 0.12
+    mana-cost: 5.0
+    range: 32.0
+    element:
+      water:
+        damage:
+          base: 60.0
+          scale: 0.0
+          spread: 0.1
+          max-spread: 0.25
+    gem-sockets:
+      - Blue
+    staff-spirit: MANA_SPIRIT
+VOID_STAFF:
+  base:
+    material: NETHERITE_HOE
+    name: §5§lVoid Staff
+    attack-damage: 25.0
+    attack-speed: 1.5
+    required-level: 40.0
+    tier: LEGENDARY
+    critical-strike-chance:
+      base: 10.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 20.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    range: 30.0
+    mana-cost: 6.0
+    magic-damage: 40.0
+    staff-spirit: VOID_SPIRIT
+    required-class:
+      - Mage
+    ability:
+      ability1:
+        type: CURSED_BEAM
+        mode: RIGHT_CLICK
+        damage: 30.0
+        duration: 4.0
+        cooldown: 7.0
+    lore:
+      - §7Think of all the places this can go.

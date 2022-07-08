@@ -1,0 +1,91 @@
+MAKESHIFT_MUSKET:
+  base:
+    material: IRON_HORSE_ARMOR
+    name: §fMakeshift Musket
+    lore:
+      - §7A decent musket that doesn't require ammo.
+      - §eGreat for hunting mobs.
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v AIR 0 1..|v AIR 0 1..|v AIR 0 1..
+            - v iron_ingot - 1.0..|v iron_ingot - 1.0..|v copper_block - 1.0..
+            - v iron_nugget - 1.0..|v AIR 0 1..|v copper_ingot - 1.0..
+    critical-strike-chance:
+      base: 15.0
+      scale: 0.05
+      spread: 0.15
+      max-spread: 0.3
+    critical-strike-power:
+      base: 40.0
+      scale: 0.05
+      spread: 0.15
+      max-spread: 0.3
+    required-level: 8.0
+    attack-speed: 1.4
+    range: 48.0
+    weapon-damage:
+      base: 20.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    tier: RARE
+    pve-damage: 100.0
+    attack-damage:
+      base: 12.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    knockback: 0.15
+    recoil: 0.1
+    two-handed: true
+    max-durability: 1350.0
+SNIPER_RIFLE:
+  base:
+    material: DIAMOND_HORSE_ARMOR
+    name: §b§lSniper Rifle
+    max-durability: 6000.0
+    lore:
+      - §bWhen you need a lot of precision.
+    disable-interaction: true
+    range: 160.0
+    attack-damage:
+      base: 30.0
+      scale: 0.15
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-chance:
+      base: 30.0
+      spread: 0.15
+      max-spread: 0.3
+    critical-strike-power:
+      base: 60.0
+      spread: 0.15
+      max-spread: 0.3
+    required-level: 35.0
+    weapon-damage:
+      base: 10.0
+      scale: 0.05
+      spread: 0.05
+      max-spread: 0.1
+    projectile-damage:
+      base: 10.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    tier: EPIC
+    gem-sockets:
+      - Cyan
+      - Cyan
+    ability:
+      ability1:
+        type: STUN
+        mode: ATTACK
+        cooldown: 5.0
+        duration: 2.0
+    attack-speed: 0.9
+    knockback: 0.25
+    recoil: 0.01
+    displayed-type: Firearm
+    movement-speed: -0.05

@@ -5,8 +5,8 @@ HARDENED_STEEL_CLAYMORE:
     required-level: 13.0
     tier: RARE
     required-class:
-    - Warrior
-    - Paladin
+      - Warrior
+      - Paladin
     attack-damage:
       base: 5.5
       spread: 0.03
@@ -23,8 +23,8 @@ HARDENED_STEEL_CLAYMORE:
       sharpness: 4
       knockback: 2
     gem-sockets:
-    - Red
-    - Blue
+      - Red
+      - Blue
     perm-effects:
       FAST_DIGGING: 3
     ability:
@@ -50,10 +50,10 @@ CANDY_CANE_SWORD:
       spread: 0.02
       max-spread: 0.06
     lore:
-    - '&7This sword embodies the christmas spirit.'
-    - '&7Hit a monster to release it!'
-    - ''
-    - '&eEarned during X-Mas 2018!'
+      - '&7This sword embodies the christmas spirit.'
+      - '&7Hit a monster to release it!'
+      - ''
+      - '&eEarned during X-Mas 2018!'
     critical-strike-chance: 20.0
     critical-strike-power: 60.0
     ability:
@@ -72,20 +72,20 @@ MOLTEN_BLADE:
     crafting:
       shaped:
         '1':
-        - AIR MATERIAL.FIRE_ESSENCE AIR
-        - MATERIAL.FIRE_ESSENCE MATERIAL.FIRE_ESSENCE MATERIAL.FIRE_ESSENCE
-        - AIR BLAZE_ROD AIR
+          - AIR MATERIAL.FIRE_ESSENCE AIR
+          - MATERIAL.FIRE_ESSENCE MATERIAL.FIRE_ESSENCE MATERIAL.FIRE_ESSENCE
+          - AIR BLAZE_ROD AIR
     ability:
       ability1:
         type: MAGMA_FISSURE
         mode: ATTACK
         cooldown: 13.0
     lore:
-    - '&7Every 13s, your next melee'
-    - '&7attack summons a devastating'
-    - '&cmagma fissure&7 that dashes to'
-    - '&7your target, &cigniting &7it and'
-    - '&7dealing &cdamage&7 upon landing.'
+      - '&7Every 13s, your next melee'
+      - '&7attack summons a devastating'
+      - '&cmagma fissure&7 that dashes to'
+      - '&7your target, &cigniting &7it and'
+      - '&7dealing &cdamage&7 upon landing.'
     magic-damage: 30.0
     unbreakable: true
     two-handed: true
@@ -120,8 +120,8 @@ TWO_HANDED_STEEL_SWORD:
       ice:
         damage: 7.0
     gem-sockets:
-    - Blue
-    - Blue
+      - Blue
+      - Blue
     tier: UNCOMMON
     ability:
       right-click:
@@ -130,6 +130,48 @@ TWO_HANDED_STEEL_SWORD:
         cooldown: 8.0
         damage: 4.0
     lore:
-    - '&7Right click to &c&nsmash&7 nearby'
-    - '&7enemies for &c4&7 damage.'
+      - '&7Right click to &c&nsmash&7 nearby'
+      - '&7enemies for &c4&7 damage.'
     hide-enchants: true
+EARTHLY_GREATSWORD:
+  base:
+    material: STONE_SWORD
+    max-durability: 8400.0
+    required-level: 30.0
+    attack-damage:
+      base: 32.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-chance:
+      base: 10.0
+      scale: 0.1
+      spread: 0.2
+    critical-strike-power:
+      base: 60.0
+      scale: 0.1
+      spread: 0.2
+    required-class:
+      - Warrior
+    tier: EPIC
+    name: §2Earthly Greatsword
+    gem-sockets:
+      - Green
+    element:
+      earth:
+        damage: 50.0
+    attack-speed: 1.45
+    perm-effects:
+      SLOW: 1.0
+    two-handed: true
+    lore:
+      - §7Grants §cslowness I§7 when held.
+      - §7Needs to be §ctwo-handed§7.
+    ability:
+      ability1:
+        type: CIRCULAR_SLASH
+        damage: 15.0
+        cooldown: 3.0
+        knockback: 2.0
+        radius: 4.0
+        mode: RIGHT_CLICK

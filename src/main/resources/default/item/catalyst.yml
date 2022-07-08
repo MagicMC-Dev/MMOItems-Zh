@@ -4,15 +4,15 @@ NATURES_GIFT:
     disable-crafting: true
     name: '&9Magical Catalyst'
     lore:
-    - '&7No one knows where it was found.'
+      - '&7No one knows where it was found.'
     magic-damage:
       base: 15.0
       spread: 0.084
       max-spread: 0.25
     required-level: 4.0
     required-class:
-    - Wizard
-    - Paladin
+      - Wizard
+      - Paladin
     hide-enchants: true
     enchants:
       unbreaking: 1
@@ -57,3 +57,137 @@ FIRE_TOTEM:
       max-spread: 0.06
     required-level: 10.0
     disable-crafting: true
+ENCHANTED_SHULKER_SHELL:
+  base:
+    material: SHULKER_SHELL
+    name: §dEnchanted Shulker Shell
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    lore:
+      - §5§oThe power of shulkers is in your hands!
+      - §bComponent of the Cosmos Wand.
+    disable-crafting: true
+    ability:
+      ability1:
+        type: SHULKER_MISSILE
+        mode: RIGHT_CLICK
+        duration: 5.0
+        damage: 6.0
+        cooldown: 4.5
+        effect-duration: 3.0
+    tier: RARE
+    required-level: 5.0
+    item-particles:
+      type: DOUBLE_RINGS
+      particle: END_ROD
+      amount: 1.0
+PERFECT_ENDER_PEARL:
+  base:
+    material: ENDER_PEARL
+    disable-interaction: true
+    name: §5§lPerfect Ender Pearl
+    lore:
+      - §5§oExtracted from the essence of endermen.
+      - §bComponent of the Cosmos Wand.
+    tier: RARE
+    ability:
+      ability1:
+        type: BLINK
+        mode: RIGHT_CLICK
+        range: 38.0
+        cooldown: 8.0
+    enchants:
+      luck_of_the_sea: 1.0
+    hide-enchants: true
+    disable-crafting: true
+    item-particles:
+      type: AURA
+      particle: PORTAL
+    required-level: 5.0
+POWER_CRYSTAL:
+  base:
+    material: PRISMARINE_SHARD
+    name: §9§lPower Crystal
+    tier: RARE
+    handworn: true
+    fire-damage-reduction: 100.0
+    magic-damage-reduction: 100.0
+    unbreakable: true
+    knockback-resistance: 1.0
+    magic-damage:
+      base: 40.0
+      scale: 0.1
+      spread: 0.2
+      max-spread: 0.3
+    sounds:
+      on-right-click:
+        sound: minecraft:block.beacon.activate
+        volume: 2.0
+        pitch: 0.0
+    ability:
+      ability1:
+        type: MAGICAL_PATH
+        mode: RIGHT_CLICK
+        duration: 12.0
+        cooldown: 20.0
+    required-level: 5.0
+LUCK_CHARM:
+  base:
+    material: GOLD_NUGGET
+    name: §e§lLuck Charm
+    lore:
+      - §7Gives §2Luck III§7, §e+50%§7 Enchanting skill EXP
+      - §7and §e+25%§7 experience dropped on mobs
+      - §7when held.
+      - §cWon't drop on death and can't be stacked!
+    perm-effects:
+      LUCK: 3.0
+    additional-experience: 25.0
+    tier: MAGICAL
+    required-level: 5.0
+    required-class:
+      - Mage
+    disable-crafting: true
+    disable-smelting: true
+    disable-interaction: true
+    handworn: true
+    additional-experience-enchanting: 50.0
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v gold_block - 1.0..|v emerald - 1.0..|v gold_block - 1.0..
+            - v emerald - 1.0..|v nether_star - 1.0..|v emerald - 1.0..
+            - v gold_block - 1.0..|v emerald - 1.0..|v gold_block - 1.0..
+    disable-death-drop: true
+THIN_TRANSPARENT_GLOVES:
+  base:
+    material: LEATHER
+    name: §7Thin Transparent Gloves
+    set: PSYCHIC
+    required-class:
+      - Mage
+    attack-damage: 15.0
+    magic-damage: 100.0
+    tier: MAGICAL
+ICE_GOLEM_HEART:
+  base:
+    material: PRISMARINE_SHARD
+    name: §bIce Golem Heart
+    lore:
+      - §7Discontent falls. Hope rises.
+      - §cProtects you from lava when held.
+      - §2You can use two-handed weapons
+      - §2with it!
+    magic-damage: 15.0
+    amphibian: LAVA
+    perm-effects:
+      FIRE_RESISTANCE: 1.0
+    element:
+      ice:
+        defense: -100.0
+      fire:
+        defense: 100.0
+    handworn: true
+    fire-damage-reduction: 100.0

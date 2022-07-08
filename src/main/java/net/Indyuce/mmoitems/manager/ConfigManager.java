@@ -247,7 +247,8 @@ public class ConfigManager implements Reloadable {
         return MythicLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
     }
 
-    @NotNull public String getCastingModeName(@NotNull TriggerType mode) {
+    @NotNull
+    public String getCastingModeName(@NotNull TriggerType mode) {
         return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId(), mode.name());
     }
 
@@ -300,61 +301,79 @@ public class ConfigManager implements Reloadable {
     public enum DefaultFile {
 
         // Default general config files -> /MMOItems
-        ITEM_TIERS("item-tiers.yml", "", "item-tiers.yml"),
-        ITEM_TYPES("item-types.yml", "", "item-types.yml", true),
-        DROPS("drops.yml", "", "drops.yml"),
-        ITEM_SETS("item-sets.yml", "", "item-sets.yml"),
-        GEN_TEMPLATES("gen-templates.yml", "", "gen-templates.yml"),
-        UPGRADE_TEMPLATES("upgrade-templates.yml", "", "upgrade-templates.yml"),
-        EXAMPLE_MODIFIERS("modifiers/example-modifiers.yml", "modifiers", "example-modifiers.yml"),
+        ITEM_TIERS("", "item-tiers"),
+        ITEM_TYPES("", "item-types", true),
+        DROPS("", "drops"),
+        ITEM_SETS("", "item-sets"),
+        GEN_TEMPLATES("", "gen-templates"),
+        UPGRADE_TEMPLATES("", "upgrade-templates"),
+        EXAMPLE_MODIFIERS("modifiers", "example-modifiers"),
 
         // Default language files -> /MMOItems/language
-        LORE_FORMAT("lore-format.yml", "language", "lore-format.yml"),
-        STATS("stats.yml", "language", "stats.yml"),
+        LORE_FORMAT("language", "lore-format"),
+        STATS("language", "stats"),
 
         // Station layouts
-        DEFAULT_LAYOUT("layouts/default.yml", "layouts", "default.yml"),
-        EXPANDED_LAYOUT("layouts/expanded.yml", "layouts", "expanded.yml"),
+        DEFAULT_LAYOUT("layouts", "default"),
+        EXPANDED_LAYOUT("layouts", "expanded"),
 
         // Default item config files -> /MMOItems/item
-        ARMOR("item/armor.yml", "item", "armor.yml"),
-        AXE("item/axe.yml", "item", "axe.yml"),
-        BLOCK("item/block.yml", "item", "block.yml"),
-        BOW("item/bow.yml", "item", "bow.yml"),
-        CATALYST("item/catalyst.yml", "item", "catalyst.yml"),
-        CONSUMABLE("item/consumable.yml", "item", "consumable.yml"),
-        DAGGER("item/dagger.yml", "item", "dagger.yml"),
-        GEM_STONE("item/gem_stone.yml", "item", "gem_stone.yml"),
-        GREATSTAFF("item/greatstaff.yml", "item", "greatstaff.yml"),
-        GREATSWORD("item/greatsword.yml", "item", "greatsword.yml"),
-        HALBERD("item/halberd.yml", "item", "halberd.yml"),
-        HAMMER("item/hammer.yml", "item", "hammer.yml"),
-        LANCE("item/lance.yml", "item", "lance.yml"),
-        MATERIAL("item/material.yml", "item", "material.yml"),
-        MISCELLANEOUS("item/miscellaneous.yml", "item", "miscellaneous.yml"),
-        SHIELD("item/shield.yml", "item", "shield.yml"),
-        STAFF("item/staff.yml", "item", "staff.yml"),
-        SWORD("item/sword.yml", "item", "sword.yml"),
-        TOME("item/tome.yml", "item", "tome.yml"),
-        TOOL("item/tool.yml", "item", "tool.yml"),
-        WAND("item/wand.yml", "item", "wand.yml");
+        ARMOR,
+        AXE,
+        BLOCK,
+        BOW,
+        CATALYST,
+        CONSUMABLE,
+        CROSSBOW,
+        DAGGER,
+        GAUNTLET,
+        GEM_STONE,
+        GREATAXE,
+        GREATHAMMER,
+        GREATSTAFF,
+        GREATSWORD,
+        HALBERD,
+        HAMMER,
+        KATANA,
+        LANCE,
+        LONG_SWORD,
+        MATERIAL,
+        MISCELLANEOUS,
+        MUSKET,
+        OFF_CATALYST,
+        ORNAMENT,
+        SHIELD,
+        SPEAR,
+        STAFF,
+        SWORD,
+        TALISMAN,
+        THRUSTING_SWORD,
+        TOME,
+        TOOL,
+        WAND,
+        WHIP;
 
-        private final String folderPath, fileName, resourceName;
+        private final String folderPath, fileName;
 
         /**
-         * Allows to use the checkFile() method while not loading it
-         * automatically e.g item-types.yml
+         * Allows to use the checkFile() method while not
+         * loading it automatically e.g item-types.yml
          */
         private final boolean manual;
 
-        DefaultFile(String resourceName, String folderPath, String fileName) {
-            this(resourceName, folderPath, fileName, false);
+        DefaultFile() {
+            this.fileName = name().toLowerCase() + ".yml";
+            this.folderPath = "item";
+            this.manual = false;
         }
 
-        DefaultFile(String resourceName, String folderPath, String fileName, boolean manual) {
-            this.resourceName = resourceName;
+        DefaultFile(String folderPath, String fileName) {
+            this(folderPath, fileName, false);
+        }
+
+        DefaultFile(String folderPath, String fileName, boolean manual) {
             this.folderPath = folderPath;
-            this.fileName = fileName;
+            this.fileName = fileName + ".yml";
             this.manual = manual;
         }
 
@@ -371,7 +390,7 @@ public class ConfigManager implements Reloadable {
             if (!file.exists())
                 try {
                     if (!new YamlConverter(file).convert()) {
-                        Files.copy(MMOItems.plugin.getResource("default/" + resourceName), file.getAbsoluteFile().toPath());
+                        Files.copy(MMOItems.plugin.getResource("default/" + (folderPath.isEmpty() ? "" : folderPath + "/") + fileName), file.getAbsoluteFile().toPath());
                     }
 
                 } catch (IOException exception) {

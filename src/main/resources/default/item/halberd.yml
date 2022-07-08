@@ -39,3 +39,46 @@ DOUBLE_OR_NOTHING:
         duration: 4.0
         amplifier: 2.0
     pvp-damage: 12.0
+BRAVE_HALBERD:
+  base:
+    material: IRON_AXE
+    name: §eBrave's Halberd
+    lore:
+      - §7§oNo one knows his true name...
+      - §7§oBut he was so §e§obrave§7§o!
+    attack-damage:
+      base: 14.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-chance:
+      base: 20.0
+      spread: 0.1
+      max-spread: 0.2
+    critical-strike-power:
+      base: 35.0
+      spread: 0.1
+      max-spread: 0.2
+    weapon-damage: 25.0
+    tier: RARE
+    attack-speed: 1.55
+    pvp-damage: 25.0
+    max-durability: 6540.0
+    gem-sockets:
+      - Cyan
+    ability:
+      ability1:
+        type: HEAVY_CHARGE
+        mode: RIGHT_CLICK
+        damage: 20.0
+        cooldown: 10.0
+        knockback: 2.5
+        stamina: 5.0
+    crafting:
+      shaped:
+        '1':
+          input:
+            - m material steel_ingot 1.0..|v iron_block - 1.0..|m material steel_ingot
+              1.0..
+            - m material steel_ingot 1.0..|v stick - 1.0..|m material steel_ingot 1.0..
+            - v AIR 0 1..|v stick - 1.0..|v AIR 0 1..

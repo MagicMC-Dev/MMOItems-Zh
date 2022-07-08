@@ -1,3 +1,84 @@
+EXECUTIONER_AXE:
+  base:
+    material: IRON_AXE
+    name: §cExecutioner's Axe
+    disable-enchanting: true
+    disable-repairing: true
+    disable-interaction: true
+    lore:
+      - §7An axe that only serves for
+      - §7fighting, and it can't be §cenchanted§7.
+    attack-damage:
+      base: 17.0
+      scale: 0.1
+      spread: 0.1
+      max-spread: 0.2
+    attack-speed: 1.0
+    required-level: 10.0
+    stamina-cost: 2.0
+    weapon-damage:
+      base: 10.0
+      scale: 0.05
+      spread: 0.1
+      max-spread: 0.2
+    tier: RARE
+    physical-damage: 25.0
+    crafting:
+      shaped:
+        '1':
+          input:
+            - v AIR 0 1..|v iron_block - 1.0..|v diamond - 1.0..
+            - v AIR 0 1..|v stick - 1.0..|v iron_ingot - 1.0..
+            - v AIR 0 1..|v stick - 1.0..|v AIR 0 1..
+    max-durability: 3150.0
+    required-class:
+      - Warrior
+    ability:
+      ability1:
+        type: EARTHQUAKE
+        duration: 2.0
+        cooldown: 6.0
+        damage: 8.0
+        amplifier: 1.0
+        mode: RIGHT_CLICK
+UNDEAD_SLAYER:
+  base:
+    material: NETHERITE_AXE
+    name: §4§l§k||| §c§lUndead Slayer §4§l§k|||
+    undead-damage: 350.0
+    attack-damage: 7.0
+    required-level: 15.0
+    pve-damage: 50.0
+    critical-strike-chance: 30.0
+    critical-strike-power:
+      base: 60.0
+      scale: 0.02
+      spread: 0.1
+      max-spread: 0.2
+    max-durability: 9800.0
+    element:
+      darkness:
+        damage: 25.0
+    upgrade: { }
+    gem-sockets:
+      - Red
+      - Red
+    lore:
+      - §cFor those who aren't afraid of
+      - §cdealing with the underworld.
+    ability:
+      ability1:
+        type: CURSED_BEAM
+        mode: RIGHT_CLICK
+        duration: 5.0
+        damage: 10.0
+        cooldown: 9.0
+    tier: EPIC
+    physical-damage: 10.0
+    enchants:
+      smite: 3.0
+    attack-speed: 1.1
+    movement-speed: -0.02
 BUTCHER_AXE:
   base:
     material: IRON_AXE
@@ -18,17 +99,17 @@ BUTCHER_AXE:
       ice:
         damage: 3.2
     gem-sockets:
-    - Uncolored
+      - Uncolored
     crafting:
       shaped:
         '2':
-        - AIR IRON_BLOCK IRON_BLOCK
-        - AIR STICK IRON_BLOCK
-        - AIR STICK AIR
+          - AIR IRON_BLOCK IRON_BLOCK
+          - AIR STICK IRON_BLOCK
+          - AIR STICK AIR
         '1':
-        - IRON_BLOCK IRON_BLOCK AIR
-        - IRON_BLOCK STICK AIR
-        - AIR STICK AIR
+          - IRON_BLOCK IRON_BLOCK AIR
+          - IRON_BLOCK STICK AIR
+          - AIR STICK AIR
 BONE_CRACKER:
   base:
     material: STONE_AXE
@@ -39,7 +120,7 @@ BONE_CRACKER:
     tier: COMMON
     armor-toughness: 2.0
     gem-sockets:
-    - Uncolored
+      - Uncolored
     name: '&fBone Cracker'
     attack-damage:
       base: 11.0
@@ -70,12 +151,12 @@ SKULL_BREAKER:
     two-handed: true
     movement-speed: -0.02
     lore:
-    - '&7Its large blade &cslow&7 its targets'
-    - '&7when smashing it on their skull.'
+      - '&7Its large blade &cslow&7 its targets'
+      - '&7when smashing it on their skull.'
     required-level: 9.0
     required-class:
-    - Brute
-    - Warrior
+      - Brute
+      - Warrior
 SILVER_AXE:
   base:
     material: IRON_AXE
@@ -100,20 +181,20 @@ SILVER_AXE:
         cooldown: 20.0
         mode: SHIFT_RIGHT_CLICK
     lore:
-    - '&7Every &c20 &7seconds, shift and'
-    - '&7right-click to perform a devastating'
-    - '&7circular slash, dealing &c6 &7damage'
-    - '&7and knocking back nearby targets.'
+      - '&7Every &c20 &7seconds, shift and'
+      - '&7right-click to perform a devastating'
+      - '&7circular slash, dealing &c6 &7damage'
+      - '&7and knocking back nearby targets.'
     crafting:
       shaped:
         '2':
-        - AIR MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT
-        - AIR STICK MATERIAL.SILVER_INGOT
-        - AIR STICK AIR
+          - AIR MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT
+          - AIR STICK MATERIAL.SILVER_INGOT
+          - AIR STICK AIR
         '1':
-        - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
-        - MATERIAL.SILVER_INGOT STICK AIR
-        - AIR STICK AIR
+          - MATERIAL.SILVER_INGOT MATERIAL.SILVER_INGOT AIR
+          - MATERIAL.SILVER_INGOT STICK AIR
+          - AIR STICK AIR
 THE_UNBREAKABLE:
   base:
     material: IRON_AXE

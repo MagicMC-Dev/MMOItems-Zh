@@ -5,8 +5,8 @@ STEEL_INGOT:
     disable-repairing: true
     disable-crafting: true
     lore:
-    - '&7Can be used at the steel crafting'
-    - '&7station to craft advanced gear.'
+      - '&7Can be used at the steel crafting'
+      - '&7station to craft advanced gear.'
 UNCOMMON_WEAPON_ESSENCE:
   base:
     material: BLAZE_POWDER
@@ -14,7 +14,7 @@ UNCOMMON_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft uncommon items.'
+      - '&7Can be used to craft uncommon items.'
     name: '&eUncommon Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -30,7 +30,7 @@ RARE_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft rare items.'
+      - '&7Can be used to craft rare items.'
     name: '&eRare Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -41,7 +41,7 @@ VERY_RARE_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft very rare items.'
+      - '&7Can be used to craft very rare items.'
     name: '&eVery rare Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -52,7 +52,7 @@ LEGENDARY_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft legendary items.'
+      - '&7Can be used to craft legendary items.'
     name: '&eLegendary Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -63,7 +63,7 @@ MYTHICAL_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft mythical items.'
+      - '&7Can be used to craft mythical items.'
     name: '&eMythical Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -74,7 +74,7 @@ EPIC_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft epic items.'
+      - '&7Can be used to craft epic items.'
     name: '&eEpic Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -85,7 +85,7 @@ MAGICAL_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft magical items.'
+      - '&7Can be used to craft magical items.'
     name: '&eMagical Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -96,7 +96,7 @@ UNIQUE_WEAPON_ESSENCE:
       unbreaking: 1
     hide-enchants: true
     lore:
-    - '&7Can be used to craft unique items.'
+      - '&7Can be used to craft unique items.'
     name: '&eUnique Weapon Essence'
     disable-crafting: true
     disable-smelting: true
@@ -106,8 +106,8 @@ WEAPON_POWDER:
     tier: TRASH
     name: '&7Broken Weapon Powder'
     lore:
-    - '&7Can be used as regular gunpowder.'
-    - '&7Obtained when deconstructing an item.'
+      - '&7Can be used as regular gunpowder.'
+      - '&7Obtained when deconstructing an item.'
 MAGIC_FRAGMENT:
   base:
     material: MAGENTA_DYE
@@ -129,11 +129,7 @@ FIRE_ESSENCE:
     enchants:
       unbreaking: 1
     crafting:
-      shaped:
-        '1':
-        - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
-        - BLAZE_POWDER BLAZE_ROD BLAZE_POWDER
-        - BLAZE_POWDER BLAZE_POWDER BLAZE_POWDER
+      shaped: { }
 RARE_DIAMOND:
   base:
     material: DIAMOND
@@ -147,7 +143,7 @@ SILVER_COIN:
     material: IRON_NUGGET
     name: '&fSilver Coin'
     lore:
-    - '&7A very shiny silver coin.'
+      - '&7A very shiny silver coin.'
     enchants:
       unbreaking: 1
     hide-enchants: true
@@ -157,7 +153,7 @@ SILVER_INGOT:
     material: IRON_INGOT
     name: '&fSilver Ingot'
     lore:
-    - '&7A very shiny silver ingot.'
+      - '&7A very shiny silver ingot.'
     enchants:
       unbreaking: 1
     hide-enchants: true
@@ -165,6 +161,29 @@ SILVER_INGOT:
     crafting:
       shaped:
         '1':
-        - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
-        - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
-        - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+          - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+          - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+          - MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN MATERIAL.SILVER_COIN
+RESTORATION_GEM:
+  base:
+    material: EMERALD
+    name: §a§lRestoration Gem
+    lore:
+      - §7This gem can be used to repair magic items.
+    tier: UNCOMMON
+ITEM_UPGRADER:
+  base:
+    material: PAPER
+    name: §fUniversal Item Upgrader
+    lore:
+      - §7§oThis blueprint can upgrade any weapon.
+    tier: RARE
+DARK_NETHERITE:
+  base:
+    material: NETHERITE_INGOT
+    name: §cDark Netherite
+    lore:
+      - §cNetherite, but darker.
+      - §eCan be used in a smithing table
+      - §ewith netherite items.
+    tier: RARE

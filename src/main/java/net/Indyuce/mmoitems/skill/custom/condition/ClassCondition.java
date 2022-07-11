@@ -8,6 +8,7 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public class ClassCondition extends Condition {
     private final List<String> classes;
 

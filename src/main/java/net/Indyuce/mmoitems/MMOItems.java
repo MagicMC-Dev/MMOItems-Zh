@@ -1,11 +1,9 @@
 package net.Indyuce.mmoitems;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
-import io.lumine.mythic.utils.plugin.LuminePlugin;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
@@ -52,6 +50,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class MMOItems extends LuminePlugin {
+public class MMOItems extends JavaPlugin {
 	public static MMOItems plugin;
 
 	// Increment this when making breaking changes to items.
@@ -96,18 +95,18 @@ public class MMOItems extends LuminePlugin {
 
     /**
      * Startup issues usually prevent the plugin from loading and just
-     * call {@link #disable()} directly afterwards which prints out
+     * call {@link #onDisable()} directly afterwards which prints out
      * another error log.
      * <p>
      * To prevent this, MMOItems stores a field to check if the plugin
-     * has successfully enabled before trying to call {@link #disable()}
+     * has successfully enabled before trying to call {@link #onDisable()}
      */
     private boolean hasLoadedSuccessfully;
 
 	public MMOItems() { plugin = this; }
 
 	@Override
-	public void load() {
+	public void onLoad() {
 
 		if (getServer().getPluginManager().getPlugin("WorldEdit") != null) try {
 			new WorldEditSupport();
@@ -146,7 +145,7 @@ public class MMOItems extends LuminePlugin {
 	}
 
 	@Override
-	public void enable() {
+	public void onEnable() {
 		new SpigotPlugin(39267, this).checkForUpdate();
 		new MMOItemsMetrics();
 		MMOItemUIFilter.register();
@@ -312,7 +311,7 @@ public class MMOItems extends LuminePlugin {
 	}
 
 	@Override
-	public void disable() {
+	public void onDisable() {
 
 		// Support for early plugin disabling
 		if (!hasLoadedSuccessfully)

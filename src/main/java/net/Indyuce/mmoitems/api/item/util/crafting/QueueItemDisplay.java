@@ -1,10 +1,9 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import org.bukkit.Material;

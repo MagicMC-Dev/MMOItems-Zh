@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.gui.edition;
 
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.utils.items.ItemFactory;
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;

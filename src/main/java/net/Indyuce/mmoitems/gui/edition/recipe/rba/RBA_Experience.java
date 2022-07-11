@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.gui.edition.recipe.rba;
 
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.utils.items.ItemFactory;
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.type.RBA_DoubleButton;
 import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
 import org.bukkit.Material;

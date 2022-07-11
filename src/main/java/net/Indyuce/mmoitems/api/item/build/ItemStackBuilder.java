@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.gson.JsonArray;
+import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;

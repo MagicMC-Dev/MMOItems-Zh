@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.gui.edition.recipe.rba;
 
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.utils.items.ItemFactory;
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.type.RBA_BooleanButton;
 import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;

@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import com.google.gson.*;
+import io.lumine.mythic.lib.gson.*;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;

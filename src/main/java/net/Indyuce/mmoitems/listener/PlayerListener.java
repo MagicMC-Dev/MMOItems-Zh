@@ -1,10 +1,9 @@
 package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.event.armorequip.ArmorEquipEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import io.lumine.mythic.utils.Schedulers;
-import io.lumine.mythic.utils.events.extra.ArmorEquipEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.SoulboundInfo;
 import net.Indyuce.mmoitems.api.Type;
@@ -12,6 +11,7 @@ import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.DeathDowngrading;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -107,7 +107,7 @@ public class PlayerListener implements Listener {
             SoulboundInfo.read(player);
 
         if (deathItems.containsKey(player)) {
-            Schedulers.sync().runLater(() -> {
+            Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
                 player.getInventory().addItem(deathItems.get(player).toArray(new ItemStack[0]));
                 deathItems.remove(player);
             }, 10);

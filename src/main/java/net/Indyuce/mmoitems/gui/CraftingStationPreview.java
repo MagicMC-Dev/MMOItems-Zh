@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.gui;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.utils.adventure.text.Component;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;

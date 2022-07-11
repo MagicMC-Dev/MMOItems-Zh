@@ -1,12 +1,11 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.rba;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.utils.items.ItemFactory;
-import io.lumine.mythic.utils.version.ServerVersion;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
@@ -47,7 +46,7 @@ public class RBA_AmountOutput extends RecipeButtonAction {
         @NotNull ItemMeta buttonMeta = Objects.requireNonNull(button.getItemMeta());
         @NotNull ItemMeta resultMeta = Objects.requireNonNull(resultItem.getItemMeta());
 
-        if (ServerVersion.get().getMinor() >= 14 && resultMeta.hasCustomModelData()) { buttonMeta.setCustomModelData(resultMeta.getCustomModelData()); }
+        if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 13) && resultMeta.hasCustomModelData()) { buttonMeta.setCustomModelData(resultMeta.getCustomModelData()); }
         if (resultMeta instanceof LeatherArmorMeta) { ((LeatherArmorMeta) buttonMeta).setColor(((LeatherArmorMeta) resultMeta).getColor()); }
         if (resultMeta instanceof BannerMeta) { ((BannerMeta) buttonMeta).setPatterns(((BannerMeta) resultMeta).getPatterns()); }
         buttonMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, ItemFlag.HIDE_POTION_EFFECTS);

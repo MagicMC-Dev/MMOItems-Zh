@@ -59,27 +59,9 @@ public class Type {
     @NotNull private final String id;
     private String name;
     @NotNull private final TypeSet set;
-
-
-    /**
-     * @return Does it display as four rows in /mmoitems browse?
-     */
-    public boolean isFourGUIMode() { return fourGUIMode; }
     private boolean fourGUIMode;
-
-    /**
-     * @return Default lore format used by this Type
-     */
-    @Nullable public String getLoreFormat() { return loreFormat; }
-    @Nullable private String loreFormat;
-
-    /**
-     * Used for item type restrictions for gem stones to easily check if the
-     * item is a weapon.
-     */
-    private final boolean weapon;
-
-    @NotNull private final EquipmentSlot equipType;
+    @Nullable
+    private String loreFormat;
 
     /**
      * Used to display the item in the item explorer and in the item recipes
@@ -96,6 +78,25 @@ public class Type {
 
     private UnidentifiedItem unidentifiedTemplate;
 
+    @NotNull private final EquipmentSlot equipType;
+
+    /**
+     * Used for item type restrictions for gem stones to easily check if the
+     * item is a weapon.
+     */
+    private final boolean weapon;
+
+
+    /**
+     * @return Does it display as four rows in /mmoitems browse?
+     */
+    public boolean isFourGUIMode() { return fourGUIMode; }
+
+    /**
+     * @return Default lore format used by this Type
+     */
+    @Nullable public String getLoreFormat() { return loreFormat; }
+
     /**
      * List of stats which can be applied onto an item which has this type. This
      * improves performance when generating an item by a significant amount.
@@ -105,6 +106,7 @@ public class Type {
     public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType) {
         this(set, id, weapon, equipType, false);
     }
+
     public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType, boolean fourGUI) {
         this.set = set;
         this.id = id.toUpperCase().replace("-", "_").replace(" ", "_");

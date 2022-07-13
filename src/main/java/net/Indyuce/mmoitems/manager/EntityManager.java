@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.manager;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ElementalAttack;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
@@ -159,10 +158,8 @@ public class EntityManager implements Listener {
             damage *= 1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE));
 
         // Apply MMOItems specific modifications
-        if (data.isCustomWeapon()) {
+        if (data.isCustomWeapon())
             data.applyPotionEffects(target);
-            damage += new ElementalAttack(data.getShooter(), data.getSourceItem(), damage, target).getDamageModifier();
-        }
 
         event.setDamage(event.getDamage() + damage - data.getCachedInitialDamage());
 

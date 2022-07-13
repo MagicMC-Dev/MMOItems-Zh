@@ -1,28 +1,15 @@
 package net.Indyuce.mmoitems.api;
 
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.DamageMetadata;
-import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.lib.version.VersionSound;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.listener.ElementListener;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Consumer;
-import org.bukkit.util.Vector;
 
 public enum Element {
-	FIRE(Material.BLAZE_POWDER, ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), (attacker, target, relative, absolute) -> {
+	/*FIRE(Material.BLAZE_POWDER, ChatColor.DARK_RED, new ElementParticle(Particle.FLAME, .05f, 8), (attacker, target, relative, absolute) -> {
 		target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, target.getHeight() / 2, 0), 14);
 		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, .8f);
 		target.setFireTicks((int) (relative * 2));
@@ -110,7 +97,7 @@ public enum Element {
 
 	DARKNESS(Material.COAL, ChatColor.DARK_GRAY, new ElementParticle(Particle.BLOCK_CRACK, .07f, 32, Material.COAL_BLOCK), (attacker, target, relative, absolute) -> {
 		// TODO
-	}, 39, 41),
+	}, 39, 41),*/
 
 	;
 

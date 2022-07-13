@@ -4,10 +4,10 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 public class SunfireSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
+    public void handle(AttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
         attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
         new BukkitRunnable() {
             final Location target = getGround(attackMeta.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
@@ -41,7 +41,7 @@ public class SunfireSpirit implements StaffAttackHandler {
                         loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
                         for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
                             if (UtilityMethods.canTarget(attackMeta.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
-                                attackMeta.clone().applyEffectsAndDamage(nbt, (LivingEntity) target);
+                                attackMeta.clone().damage((LivingEntity) target);
                         cancel();
                         break;
                     }

@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
@@ -13,9 +14,6 @@ import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
-import net.Indyuce.mmoitems.api.interaction.util.UntargetedDurabilityItem;
-import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
@@ -46,7 +44,7 @@ public class Lute extends UntargetedWeapon {
 		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);
 
 		// Attack meta
-		ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE), stats);
+		AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE), stats);
 
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
 		SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
@@ -96,7 +94,7 @@ public class Lute extends UntargetedWeapon {
 
 					for (Entity target : entities)
 						if (UtilityMethods.canTarget(getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
-							attackMeta.applyEffectsAndDamage(getNBTItem(), (LivingEntity) target);
+							attackMeta.damage((LivingEntity) target);
 							cancel();
 							return;
 						}

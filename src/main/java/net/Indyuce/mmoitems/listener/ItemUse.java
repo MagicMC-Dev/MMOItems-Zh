@@ -8,7 +8,6 @@ import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
@@ -143,9 +142,6 @@ public class ItemUse implements Listener {
                 return;
             }
         }
-
-        // Cast on-hit abilities and add the extra damage to the damage event
-        new ItemAttackMetadata(event.getAttack()).applyEffects(item, event.getEntity());
     }
 
     /**

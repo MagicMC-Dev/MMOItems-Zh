@@ -43,9 +43,9 @@ public enum TypeSet {
                     && attack.getPlayer().getEyeLocation().getDirection()
                     .angle(entity.getLocation().subtract(attack.getPlayer().getLocation()).toVector()) < Math.PI / 3
                     && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
+                AttackMetadata subAttack = new AttackMetadata(attack.getDamage().clone(), attack);
                 subAttack.getDamage().multiplicativeModifier(.4);
-                subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
+                subAttack.damage((LivingEntity) entity);
             }
     }),
 
@@ -72,9 +72,9 @@ public enum TypeSet {
                     && attack.getPlayer().getEyeLocation().getDirection()
                     .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 12
                     && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION)) {
-                ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
+                AttackMetadata subAttack = new AttackMetadata(attack.getDamage().clone(), attack);
                 subAttack.getDamage().multiplicativeModifier(.6);
-                subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
+                subAttack.damage((LivingEntity) entity);
             }
     }),
 
@@ -98,9 +98,9 @@ public enum TypeSet {
                         MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
                 for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
                     if (UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                        ItemAttackMetadata subAttack = new ItemAttackMetadata(attack.getDamage().clone(), attack);
+                        AttackMetadata subAttack = new AttackMetadata(attack.getDamage().clone(), attack);
                         subAttack.getDamage().multiplicativeModifier(bluntRating);
-                        subAttack.applyEffectsAndDamage(weapon.getNBTItem(), (LivingEntity) entity);
+                        subAttack.damage((LivingEntity) entity);
                     }
             }
         }

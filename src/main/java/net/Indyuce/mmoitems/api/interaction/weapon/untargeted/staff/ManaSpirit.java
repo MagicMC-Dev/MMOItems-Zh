@@ -4,9 +4,9 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ManaSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(ItemAttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
+    public void handle(AttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
         new BukkitRunnable() {
             final Vector vec = attackMeta.getPlayer().getEyeLocation().getDirection().multiply(.4);
             final Location loc = attackMeta.getPlayer().getEyeLocation();
@@ -49,7 +49,7 @@ public class ManaSpirit implements StaffAttackHandler {
                     }
                     for (Entity target : targets)
                         if (UtilityMethods.canTarget(attackMeta.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
-                            attackMeta.applyEffectsAndDamage(nbt, (LivingEntity) target);
+                            attackMeta.damage((LivingEntity) target);
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
                             cancel();
                             return;

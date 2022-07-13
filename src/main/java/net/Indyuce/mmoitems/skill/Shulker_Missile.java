@@ -3,14 +3,13 @@ package net.Indyuce.mmoitems.skill;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.result.def.VectorSkillResult;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -63,7 +62,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
                         EntityType.SHULKER_BULLET);
                 shulkerBullet.setShooter(caster);
 
-                ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getCaster());
+                AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getCaster());
                 MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(attackMeta, skillMeta.getModifier("effect-duration")));
 
                 new BukkitRunnable() {
@@ -95,10 +94,6 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
                 return;
             }
 
-            // Void spirit
-            if (data.isWeaponAttack())
-                data.attackMeta.applyEffects(data.weapon, entity);
-
             event.setDamage(data.attackMeta.getDamage().getDamage());
 
             new BukkitRunnable() {
@@ -129,7 +124,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
     }
 
     public static class ShulkerMissileEntityData implements EntityData {
-        private final ItemAttackMetadata attackMeta;
+        private final AttackMetadata attackMeta;
         private final double duration;
 
         @Nullable
@@ -141,7 +136,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
          * @param attackMeta Attack meta
          * @param duration   Duration of levitation effect in seconds
          */
-        public ShulkerMissileEntityData(ItemAttackMetadata attackMeta, double duration) {
+        public ShulkerMissileEntityData(AttackMetadata attackMeta, double duration) {
             this(attackMeta, duration, null);
         }
 
@@ -151,11 +146,11 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
          * @param attackMeta Attack meta
          * @param weapon     Item used for the attack
          */
-        public ShulkerMissileEntityData(ItemAttackMetadata attackMeta, NBTItem weapon) {
+        public ShulkerMissileEntityData(AttackMetadata attackMeta, NBTItem weapon) {
             this(attackMeta, 0, weapon);
         }
 
-        private ShulkerMissileEntityData(ItemAttackMetadata attackMeta, double duration, NBTItem weapon) {
+        private ShulkerMissileEntityData(AttackMetadata attackMeta, double duration, NBTItem weapon) {
             this.attackMeta = attackMeta;
             this.duration = duration;
             this.weapon = weapon;

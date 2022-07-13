@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
+import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
@@ -11,8 +12,6 @@ import io.lumine.mythic.lib.util.RayTrace;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
 import org.bukkit.EntityEffect;
@@ -39,7 +38,7 @@ public class Staff extends UntargetedWeapon {
         double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 
         // Attack meta
-        ItemAttackMetadata attackMeta = new ItemAttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC), stats);
+        AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC), stats);
 
         StaffSpirit spirit = StaffSpirit.get(getNBTItem());
         if (spirit != null) {
@@ -49,7 +48,7 @@ public class Staff extends UntargetedWeapon {
 
         RayTrace trace = new RayTrace(stats.getPlayer(), slot, range, entity -> UtilityMethods.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
-            attackMeta.applyEffectsAndDamage(getNBTItem(), trace.getHit());
+            attackMeta.damage(trace.getHit());
         trace.draw(.5, tick -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
         getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 

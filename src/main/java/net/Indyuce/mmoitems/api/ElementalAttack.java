@@ -72,17 +72,18 @@ public class ElementalAttack {
     public double getDamageModifier() {
 
         // Elemental defense
-        for (ItemStack equip : target.getEquipment().getArmorContents()) {
-            NBTItem nbtEquip = MythicLib.plugin.getVersion().getWrapper().getNBTItem(equip);
-            if (nbtEquip.getType() != null)
-                for (Element element : absolute.keySet()) {
-                    double defense = nbtEquip.getStat(element.name() + "_DEFENSE") / 100;
-                    if (defense > 0) {
-                        relative.put(element, relative.get(element) * (1 - defense));
-                        absolute.put(element, absolute.get(element) * (1 - defense));
+        if (target.getEquipment() != null) // Null check for ModelEngine mobs
+            for (ItemStack equip : target.getEquipment().getArmorContents()) {
+                NBTItem nbtEquip = MythicLib.plugin.getVersion().getWrapper().getNBTItem(equip);
+                if (nbtEquip.getType() != null)
+                    for (Element element : absolute.keySet()) {
+                        double defense = nbtEquip.getStat(element.name() + "_DEFENSE") / 100;
+                        if (defense > 0) {
+                            relative.put(element, relative.get(element) * (1 - defense));
+                            absolute.put(element, absolute.get(element) * (1 - defense));
+                        }
                     }
-                }
-        }
+            }
 
         // Elemental attacks
         double correctionCoeff = 1;

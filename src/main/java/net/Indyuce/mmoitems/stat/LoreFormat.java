@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 
@@ -13,7 +14,7 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import org.jetbrains.annotations.NotNull;
 
-public class LoreFormat extends StringStat {
+public class LoreFormat extends StringStat implements GemStoneStat {
 	public LoreFormat() {
 		super("LORE_FORMAT", Material.MAP, "Lore Format", new String[] { "The lore format decides",
 				"where each stat goes.", "&9Formats can be configured in", "&9the lore-formats folder" },

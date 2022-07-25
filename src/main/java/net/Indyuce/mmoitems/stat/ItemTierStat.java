@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import net.Indyuce.mmoitems.stat.data.StringData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 
@@ -13,7 +14,7 @@ import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemTierStat extends StringStat {
+public class ItemTierStat extends StringStat implements GemStoneStat {
 	public ItemTierStat() {
 		super("TIER", Material.DIAMOND, "Item Tier", new String[] { "The tier defines how rare your item is", "and what item is dropped when your",
 				"item is deconstructed.", "&9Tiers can be configured in the tiers.yml file" }, new String[] { "all" });

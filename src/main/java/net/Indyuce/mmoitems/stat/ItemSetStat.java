@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import org.apache.commons.lang.Validate;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ItemSetStat extends StringStat {
+public class ItemSetStat extends StringStat implements GemStoneStat {
 	public ItemSetStat() {
 		super("SET", Material.LEATHER_CHESTPLATE, "Item Set",
 				new String[] { "Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear." },

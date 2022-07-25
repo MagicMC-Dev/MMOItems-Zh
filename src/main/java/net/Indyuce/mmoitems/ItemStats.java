@@ -35,7 +35,7 @@ public class ItemStats {
             GEN_TEMPLATE = new GenTemplate(),
 
     // Misc Stats
-    DISPLAYED_TYPE = new StringStat("DISPLAYED_TYPE", VersionMaterial.OAK_SIGN.toMaterial(), "Displayed Type", new String[]{"This option will only affect the", "type displayed on the item lore."}, new String[]{"all"}),
+    DISPLAYED_TYPE = new DisplayedType(),
             ENCHANTS = new Enchants(),
             HIDE_ENCHANTS = new HideEnchants(),
             PERMISSION = new Permission(),
@@ -141,7 +141,7 @@ public class ItemStats {
 
     // Crafting Stats
     CRAFTING = new Crafting(),
-            CRAFT_PERMISSION = new StringStat("CRAFT_PERMISSION", VersionMaterial.OAK_SIGN.toMaterial(), "Crafting Recipe Permission", new String[]{"The permission needed to craft this item.", "Changing this value requires &o/mi reload recipes&7."}, new String[]{"all"}),
+            CRAFT_PERMISSION = new CraftingPermission(),
     //CRAFT_AMOUNT = new DoubleStat("CRAFTED_AMOUNT", Material.WOODEN_AXE, "Crafted Amount", new String[]{"The stack count for", "this item when crafted."}, new String[]{"all"}),
 
     // Unique Stats

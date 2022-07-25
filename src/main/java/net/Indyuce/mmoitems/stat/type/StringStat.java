@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class StringStat extends ItemStat<StringData, StringData> implements GemStoneStat {
+public class StringStat extends ItemStat<StringData, StringData> {
     public StringStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
         super(id, mat, name, lore, types, materials);
     }

@@ -6,8 +6,6 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.AttackMetadata;
-import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
@@ -43,13 +41,10 @@ public class Lute extends UntargetedWeapon {
 		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);
 
-		// Attack meta
-		AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE), stats);
-
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
 		SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
 		if (effect != null) {
-			effect.getAttack().handle(attackMeta, getNBTItem(), range, weight, sound);
+			effect.getAttack().handle(stats, attackDamage, getNBTItem(), range, weight, sound);
 			return;
 		}
 
@@ -80,10 +75,10 @@ public class Lute extends UntargetedWeapon {
 					loc.getWorld().spawnParticle(Particle.NOTE, loc, 0, 1, 0, 0, 1);
 				}
 
-				// play the sound
+				// Play the sound
 				sound.play(loc, 2, (float) (.5 + (double) ti / range));
 
-				// damage entities
+				// Damage entities
 				List<Entity> entities = MMOUtils.getNearbyChunkEntities(loc);
 				for (int j = 0; j < 3; j++) {
 					loc.add(vec.add(weight));
@@ -94,7 +89,7 @@ public class Lute extends UntargetedWeapon {
 
 					for (Entity target : entities)
 						if (UtilityMethods.canTarget(getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
-							attackMeta.damage((LivingEntity) target);
+							stats.attack((LivingEntity) target, attackDamage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
 							cancel();
 							return;
 						}

@@ -10,6 +10,7 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -95,7 +96,7 @@ public abstract class EditionInventory extends PluginInventory {
      * @param stat The stat which data we are looking for
      * @return Optional which contains the corresponding random stat data
      */
-    public Optional<RandomStatData> getEventualStatData(ItemStat stat) {
+    public <R extends RandomStatData<S>, S extends StatData> Optional<R> getEventualStatData(ItemStat<R, S> stat) {
 
         /*
          * The item data map used to display what the player is currently
@@ -103,7 +104,7 @@ public abstract class EditionInventory extends PluginInventory {
          * map. Otherwise, use the base item data map
          */
         Map<ItemStat, RandomStatData> map = editedModifier != null ? editedModifier.getItemData() : template.getBaseItemData();
-        return map.containsKey(stat) ? Optional.of(map.get(stat)) : Optional.empty();
+        return map.containsKey(stat) ? Optional.of((R) map.get(stat)) : Optional.empty();
     }
 
     public void registerTemplateEdition() {

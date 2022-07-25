@@ -19,6 +19,7 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +51,7 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
 
         Player player = (Player) info.getCharacter().getEntity();
         DamageMetadata damageMeta = new DamageMetadata(event.getDamage(), info.getSkill().getTypes().stream().filter(damages::containsKey).map(damages::get).toArray(DamageType[]::new));
-        return new AttackMetadata(damageMeta, MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND));
+        return new AttackMetadata(damageMeta, (LivingEntity) event.getEntity(), MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND));
     }
 
     @Override

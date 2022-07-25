@@ -5,6 +5,8 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import org.bukkit.Location;
@@ -20,10 +22,10 @@ import java.util.List;
 public class NetherSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(AttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
+    public void handle(PlayerMetadata caster, double damage, NBTItem nbt, EquipmentSlot slot, double range) {
         new BukkitRunnable() {
-            final Vector vec = attackMeta.getPlayer().getEyeLocation().getDirection().multiply(.3);
-            final Location loc = attackMeta.getPlayer().getEyeLocation();
+            final Vector vec = caster.getPlayer().getEyeLocation().getDirection().multiply(.3);
+            final Location loc = caster.getPlayer().getEyeLocation();
             int ti = 0;
 
             public void run() {
@@ -40,8 +42,8 @@ public class NetherSpirit implements StaffAttackHandler {
                     loc.getWorld().spawnParticle(Particle.FLAME, loc, 2, .07, .07, .07, 0);
                     loc.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 0);
                     for (Entity target : targets)
-                        if (UtilityMethods.canTarget(attackMeta.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
-                            attackMeta.damage((LivingEntity) target);
+                        if (UtilityMethods.canTarget(caster.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
+                            caster.attack((LivingEntity) target, damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
                             loc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc, 0);
                             cancel();
                             return;

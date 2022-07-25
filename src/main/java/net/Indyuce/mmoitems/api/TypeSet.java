@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
@@ -42,11 +43,8 @@ public enum TypeSet {
             if (entity.getLocation().distanceSquared(loc) < 40
                     && attack.getPlayer().getEyeLocation().getDirection()
                     .angle(entity.getLocation().subtract(attack.getPlayer().getLocation()).toVector()) < Math.PI / 3
-                    && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                AttackMetadata subAttack = new AttackMetadata(attack.getDamage().clone(), attack);
-                subAttack.getDamage().multiplicativeModifier(.4);
-                subAttack.damage((LivingEntity) entity);
-            }
+                    && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target))
+                attack.attack((LivingEntity) entity, attack.getDamage().getDamage() * .4, DamageType.WEAPON, DamageType.PHYSICAL);
     }),
 
     /**
@@ -71,11 +69,8 @@ public enum TypeSet {
             if (!entity.equals(target) && entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40
                     && attack.getPlayer().getEyeLocation().getDirection()
                     .angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 12
-                    && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION)) {
-                AttackMetadata subAttack = new AttackMetadata(attack.getDamage().clone(), attack);
-                subAttack.getDamage().multiplicativeModifier(.6);
-                subAttack.damage((LivingEntity) entity);
-            }
+                    && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
+                attack.attack((LivingEntity) entity, attack.getDamage().getDamage() * .6, DamageType.WEAPON, DamageType.PHYSICAL);
     }),
 
     /**
@@ -97,11 +92,8 @@ public enum TypeSet {
                 double bluntRating = weapon.getValue(attack.getStat("BLUNT_RATING"),
                         MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
                 for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
-                    if (UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target)) {
-                        AttackMetadata subAttack = new AttackMetadata(attack.getDamage().clone(), attack);
-                        subAttack.getDamage().multiplicativeModifier(bluntRating);
-                        subAttack.damage((LivingEntity) entity);
-                    }
+                    if (UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target))
+                        attack.attack((LivingEntity) entity, attack.getDamage().getDamage() * bluntRating, DamageType.WEAPON, DamageType.PHYSICAL);
             }
         }
 

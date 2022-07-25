@@ -6,6 +6,9 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.util.SoundReader;
@@ -22,10 +25,10 @@ import java.util.List;
 public class SimpleLuteAttack implements LuteAttackHandler {
 
     @Override
-    public void handle(AttackMetadata attack, NBTItem nbt, double range, Vector weight, SoundReader sound) {
+    public void handle(PlayerMetadata caster, double damage, NBTItem nbt, double range, Vector weight, SoundReader sound) {
         new BukkitRunnable() {
-            final Vector vec = attack.getPlayer().getEyeLocation().getDirection().multiply(.4);
-            final Location loc = attack.getPlayer().getEyeLocation();
+            final Vector vec = caster.getPlayer().getEyeLocation().getDirection().multiply(.4);
+            final Location loc = caster.getPlayer().getEyeLocation();
             int ti = 0;
 
             public void run() {
@@ -47,10 +50,10 @@ public class SimpleLuteAttack implements LuteAttackHandler {
                             double red = Double.parseDouble(String.valueOf(obj.get("Red")));
                             double green = Double.parseDouble(String.valueOf(obj.get("Green")));
                             double blue = Double.parseDouble(String.valueOf(obj.get("Blue")));
-                            ProjectileParticlesData.shootParticle(attack.getPlayer(), particle, loc, red, green, blue);
+                            ProjectileParticlesData.shootParticle(caster.getPlayer(), particle, loc, red, green, blue);
                             // If it's not colored, just shoot the particle
                         } else {
-                            ProjectileParticlesData.shootParticle(attack.getPlayer(), particle, loc, 0, 0, 0);
+                            ProjectileParticlesData.shootParticle(caster.getPlayer(), particle, loc, 0, 0, 0);
                         }
                         // If no particle has been provided via projectile particle attribute, default to this particle
                     } else {
@@ -60,8 +63,8 @@ public class SimpleLuteAttack implements LuteAttackHandler {
                     if (j == 0) sound.play(loc, 2, (float) (.5 + (double) ti / range));
 
                     for (Entity target : entities)
-                        if (UtilityMethods.canTarget(attack.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
-                            attack.clone().damage((LivingEntity) target);
+                        if (UtilityMethods.canTarget(caster.getPlayer(), loc, target, InteractionType.OFFENSE_ACTION)) {
+                            caster.attack((LivingEntity) target, damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
                             cancel();
                             return;
                         }

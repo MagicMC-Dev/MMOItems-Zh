@@ -4,8 +4,6 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.AttackMetadata;
-import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.util.RayTrace;
@@ -48,7 +46,7 @@ public class Musket extends UntargetedWeapon {
 
         RayTrace trace = new RayTrace(loc, vec, range, entity -> UtilityMethods.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
-            new AttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.PHYSICAL), stats).damage(trace.getHit());
+            stats.attack(trace.getHit(), attackDamage, DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE);
 
         trace.draw(.5, Color.BLACK);
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2, 2);

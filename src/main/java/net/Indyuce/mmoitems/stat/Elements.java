@@ -4,9 +4,9 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.element.Element;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
@@ -14,11 +14,12 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ElementsEdition;
 import net.Indyuce.mmoitems.stat.data.ElementListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Previewable;
+import net.Indyuce.mmoitems.util.ElementStatType;
+import net.Indyuce.mmoitems.util.Pair;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,246 +30,192 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 public class Elements extends ItemStat<RandomElementListData, ElementListData> implements Previewable<RandomElementListData, ElementListData> {
-	public Elements() {
-		super("ELEMENT", Material.SLIME_BALL, "Elements", new String[] { "The elements of your item." },
-				new String[] { "slashing", "piercing", "blunt", "offhand", "range", "tool", "armor", "gem_stone" });
+    public Elements() {
+        super("ELEMENT", Material.SLIME_BALL, "Elements", new String[]{"The elements of your item."},
+                new String[]{"slashing", "piercing", "blunt", "offhand", "range", "tool", "armor", "gem_stone"});
+    }
 
-		// Initialize paths
-		if (defenseNBTpaths == null) {
+    @Override
+    public RandomElementListData whenInitialized(Object object) {
+        Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+        return new RandomElementListData((ConfigurationSection) object);
+    }
 
-			// Initialize
-			defenseNBTpaths = new HashMap<>();
-			damageNBTpaths = new HashMap<>();
+    @Override
+    public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
+        if (event.getAction() == InventoryAction.PICKUP_ALL)
+            new ElementsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
 
-			// Initialize
-			for (Element element : Element.values()) {
+        if (event.getAction() == InventoryAction.PICKUP_HALF)
+            if (inv.getEditedSection().contains("element")) {
+                inv.getEditedSection().set("element", null);
+                inv.registerTemplateEdition();
+                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
+            }
+    }
 
-				// Add I guess
-				defenseNBTpaths.put(element, "MMOITEMS_" + element.name() + "_DEFENSE");
-				damageNBTpaths.put(element, "MMOITEMS_" + element.name() + "_DAMAGE");
-			}
+    @Override
+    public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
+        String elementPath = info[0].toString();
 
-		}
-	}
+        NumericStatFormula formula = new NumericStatFormula(message);
+        formula.fillConfigurationSection(inv.getEditedSection(), "element." + elementPath);
 
-	@Override
-	public RandomElementListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
-		return new RandomElementListData((ConfigurationSection) object);
-	}
+        // clear element config section
+        String elementName = elementPath.split("\\.")[0];
+        if (inv.getEditedSection().contains("element")) {
+            if (inv.getEditedSection().getConfigurationSection("element").contains(elementName)
+                    && inv.getEditedSection().getConfigurationSection("element." + elementName).getKeys(false).isEmpty())
+                inv.getEditedSection().set("element." + elementName, null);
+            if (inv.getEditedSection().getConfigurationSection("element").getKeys(false).isEmpty())
+                inv.getEditedSection().set("element", null);
+        }
 
-	@Override
-	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new ElementsEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+        inv.registerTemplateEdition();
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
+                + " successfully changed to " + ChatColor.GOLD + formula.toString() + ChatColor.GRAY + ".");
+    }
 
-		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			if (inv.getEditedSection().contains("element")) {
-				inv.getEditedSection().set("element", null);
-				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
-			}
-	}
+    @Override
+    public void whenDisplayed(List<String> lore, Optional<RandomElementListData> statData) {
 
-	@Override
-	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		String elementPath = info[0].toString();
+        if (statData.isPresent()) {
+            lore.add(ChatColor.GRAY + "Current Value:");
+            RandomElementListData data = statData.get();
+            data.getKeys().forEach(key -> lore.add(ChatColor.GRAY + "* " + key + ": " + ChatColor.RED + data.getStat(key.getKey(), key.getValue())));
 
-		NumericStatFormula formula = new NumericStatFormula(message);
-		formula.fillConfigurationSection(inv.getEditedSection(), "element." + elementPath);
+        } else
+            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
 
-		// clear element config section
-		String elementName = elementPath.split("\\.")[0];
-		if (inv.getEditedSection().contains("element")) {
-			if (inv.getEditedSection().getConfigurationSection("element").contains(elementName)
-					&& inv.getEditedSection().getConfigurationSection("element." + elementName).getKeys(false).isEmpty())
-				inv.getEditedSection().set("element." + elementName, null);
-			if (inv.getEditedSection().getConfigurationSection("element").getKeys(false).isEmpty())
-				inv.getEditedSection().set("element", null);
-		}
+        lore.add("");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the elements edition menu.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all the elements.");
+    }
 
-		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
-				+ " successfully changed to " + ChatColor.GOLD + formula.toString() + ChatColor.GRAY + ".");
-	}
+    @NotNull
+    @Override
+    public ElementListData getClearStatData() {
+        return new ElementListData();
+    }
 
-	@Override
-	public void whenDisplayed(List<String> lore, Optional<RandomElementListData> statData) {
+    @Override
+    public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ElementListData data) {
 
-		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
-			RandomElementListData data = (RandomElementListData) statData.get();
-			data.getDamageElements().forEach(
-					element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + ChatColor.RED + data.getDamage(element) + " (%)"));
-			data.getDefenseElements().forEach(
-					element -> lore.add(ChatColor.GRAY + "* " + element.getName() + " Damage: " + ChatColor.RED + data.getDefense(element) + " (%)"));
+        List<String> lore = new ArrayList<>();
 
-		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+        // Write Lore
+        for (Pair<Element, ElementStatType> pair : data.getKeys()) {
+            final String format = ItemStat.translate("elemental-" + pair.getValue().lowerCaseName())
+                    .replace("#color", pair.getKey().getColor())
+                    .replace("#icon", pair.getKey().getLoreIcon())
+                    .replace("#name", pair.getKey().getName());
+            double value = data.getStat(pair.getKey(), pair.getValue());
+            lore.add(DoubleStat.formatPath(format, true, value));
+        }
 
-		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the elements edition menu.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all the elements.");
-	}
+        // Insert non-empty lore
+        if (!lore.isEmpty())
+            item.getLore().insert("elements", lore);
 
-	@NotNull
-	@Override
-	public ElementListData getClearStatData() { return new ElementListData(); }
+        // Addtags
+        item.addItemTag(getAppliedNBT(data));
+    }
 
-	@Override
-	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ElementListData data) {
+    @NotNull
+    @Override
+    public ArrayList<ItemTag> getAppliedNBT(@NotNull ElementListData data) {
 
-		// Write Lore
-		ElementListData elements = data;
-		for (Element element : elements.getDamageElements()) {
-			String path = element.name().toLowerCase() + "-damage";
-			double value = elements.getDamage(element);
-			item.getLore().insert(path, DoubleStat.formatPath(ItemStat.translate(path), true, value)); }
-		for (Element element : elements.getDefenseElements()) {
-			String path = element.name().toLowerCase() + "-defense";
-			double value = elements.getDefense(element);
-			item.getLore().insert(path, DoubleStat.formatPath(ItemStat.translate(path), true, value)); }
+        // Create Array
+        ArrayList<ItemTag> ret = new ArrayList<>();
+        for (Pair<Element, ElementStatType> pair : data.getKeys())
+            ret.add(new ItemTag("MMOITEMS_" + pair, data.getStat(pair.getKey(), pair.getValue())));
 
-		// Addtags
-		item.addItemTag(getAppliedNBT(data));
-	}
+        // Thats it
+        return ret;
+    }
 
-	@NotNull
-	@Override
-	public ArrayList<ItemTag> getAppliedNBT(@NotNull ElementListData data) {
+    @Override
+    public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
 
-		// Must be element list data
-		ElementListData elements = data;
+        // Seek the relevant tags
+        ArrayList<ItemTag> relevantTags = new ArrayList<>();
+        for (Element element : Element.values())
+            for (ElementStatType statType : ElementStatType.values()) {
+                final String path = "MMOITEMS_" + element.getName() + "_" + statType.name();
+                if (mmoitem.getNBT().hasTag(path))
+                    relevantTags.add(ItemTag.getTagAtPath(path, mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
+            }
 
-		// Create Array
-		ArrayList<ItemTag> ret = new ArrayList<>();
+        // Generate Data
+        StatData data = getLoadedNBT(relevantTags);
 
-		// Add damages
-		for (Element element : elements.getDamageElements()) {
+        // Found?
+        if (data != null) {
+            mmoitem.setData(this, data);
+        }
+    }
 
-			// Obtain damage
-			double value = elements.getDamage(element);
+    @Nullable
+    @Override
+    public ElementListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
 
-			// Create Tag
-			ret.add(new ItemTag(damageNBTpaths.get(element), value));
-		}
+        // Create new
+        ElementListData elements = new ElementListData();
+        boolean success = false;
 
-		// Add defenses
-		for (Element element : elements.getDefenseElements()) {
+        // Try to find every existing element
+        for (Element element : Element.values())
+            for (ElementStatType statType : ElementStatType.values()) {
+                final String path = "MMOITEMS_" + element.getName() + "_" + statType.name();
+                ItemTag tag = ItemTag.getTagAtPath(path, storedTags);
+                if (tag != null)
+                    elements.setStat(element, statType, (double) tag.getValue());
+            }
 
-			// Obtain defense
-			double value = elements.getDefense(element);
+        if (success) {
+            return elements;
+        }
+        return null;
+    }
 
-			// Create Tag
-			ret.add(new ItemTag(defenseNBTpaths.get(element), value));
-		}
+    @Override
+    public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull ElementListData currentData, @NotNull RandomElementListData templateData) throws IllegalArgumentException {
+        Validate.isTrue(currentData instanceof ElementListData, "Current Data is not ElementListData");
+        Validate.isTrue(templateData instanceof RandomElementListData, "Template Data is not RandomElementListData");
 
-		// Thats it
-		return ret;
-	}
+        // Examine every element stat possible
+        for (Element element : Element.values())
+            for (ElementStatType statType : ElementStatType.values()) {
 
-	@Override
-	public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
+                NumericStatFormula nsf = templateData.getStat(element, statType);
 
-		// Seek the relevant tags
-		ArrayList<ItemTag> relevantTags = new ArrayList<>();
-		for (Element element : Element.values()) {
+                // Get Value
+                double techMinimum = nsf.calculate(0, -2.5);
+                double techMaximum = nsf.calculate(0, 2.5);
 
-			// Add I guess
-			if (mmoitem.getNBT().hasTag(damageNBTpaths.get(element)))
-				relevantTags.add(ItemTag.getTagAtPath(damageNBTpaths.get(element), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
+                // Display if not ZERO
+                if (techMinimum != 0 || techMaximum != 0) {
 
+                    // Get path
+                    String path = element.getId().toLowerCase() + "-" + statType.name().toLowerCase().replace("_", "-");
 
-			if (mmoitem.getNBT().hasTag(defenseNBTpaths.get(element)))
-				relevantTags.add(ItemTag.getTagAtPath(defenseNBTpaths.get(element), mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
-		}
+                    String builtRange;
+                    if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
+                        builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum);
+                    } else {
+                        builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum, techMaximum);
+                    }
 
-		// Generate Data
-		StatData data = getLoadedNBT(relevantTags);
+                    // Just display normally
+                    item.getLore().insert(path, builtRange);
+                }
+            }
 
-		// Found?
-		if (data != null) { mmoitem.setData(this, data); }
-	}
-
-	@Nullable
-	@Override
-	public ElementListData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
-
-		// Create new
-		ElementListData elements = new ElementListData();
-		boolean success = false;
-
-		// Try to find every existing element
-		for (Element element : Element.values()) {
-
-			// Find Damage and Defense Tags
-			ItemTag damTag = ItemTag.getTagAtPath(damageNBTpaths.get(element), storedTags);
-			ItemTag defTag = ItemTag.getTagAtPath(defenseNBTpaths.get(element), storedTags);
-
-			// Found?
-			if (damTag != null) { elements.setDamage(element, (double) damTag.getValue()); success = true; }
-			if (defTag != null) { elements.setDefense(element, (double) defTag.getValue()); success = true; }
-		}
-
-		if (success) { return elements; }
-		return null;
-	}
-
-	static HashMap<Element, String> defenseNBTpaths = null;
-	static HashMap<Element, String> damageNBTpaths = null;
-
-	@Override
-	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull ElementListData currentData, @NotNull RandomElementListData templateData) throws IllegalArgumentException {
-		Validate.isTrue(currentData instanceof ElementListData, "Current Data is not ElementListData");
-		Validate.isTrue(templateData instanceof RandomElementListData, "Template Data is not RandomElementListData");
-
-		// Examine every element
-		for (Element element : Element.values()) {
-
-			NumericStatFormula nsf = ((RandomElementListData) templateData).getDamage(element);
-			NumericStatFormula nsfDEF = ((RandomElementListData) templateData).getDefense(element);
-
-			// Get Value
-			double techMinimum = nsf.calculate(0, -2.5);
-			double techMaximum = nsf.calculate(0, 2.5);
-
-			// Get Value
-			double techMinimumDEF = nsfDEF.calculate(0, -2.5);
-			double techMaximumDEF = nsfDEF.calculate(0, 2.5);
-
-			// Display if not ZERO
-			if (techMinimum != 0 || techMaximum != 0) {
-
-				// Get path
-				String path = element.name().toLowerCase() + "-damage";
-
-				String builtRange;
-				if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum); }
-				else { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum, techMaximum); }
-
-				// Just display normally
-				item.getLore().insert(path, builtRange); }
-
-			// Display if not ZERO
-			if (techMinimumDEF != 0 || techMaximumDEF != 0) {
-
-				// Get path
-				String path = element.name().toLowerCase() + "-defense";
-
-				String builtRange;
-				if (SilentNumbers.round(techMinimumDEF, 2) == SilentNumbers.round(techMaximumDEF, 2)) { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimumDEF); }
-				else { builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimumDEF, techMaximumDEF); }
-
-				// Just display normally
-				item.getLore().insert(path, builtRange); }
-		}
-
-		// Addtags
-		item.addItemTag(getAppliedNBT(currentData));
-	}
+        // Add tags
+        item.addItemTag(getAppliedNBT(currentData));
+    }
 }

@@ -37,18 +37,15 @@ public class Staff extends UntargetedWeapon {
         double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 1);
         double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 
-        // Attack meta
-        AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(attackDamage, DamageType.WEAPON, DamageType.PROJECTILE, DamageType.MAGIC), stats);
-
         StaffSpirit spirit = StaffSpirit.get(getNBTItem());
         if (spirit != null) {
-            spirit.getAttack().handle(attackMeta, getNBTItem(), slot, range);
+            spirit.getAttack().handle(stats, attackDamage, getNBTItem(), slot, range);
             return;
         }
 
         RayTrace trace = new RayTrace(stats.getPlayer(), slot, range, entity -> UtilityMethods.canTarget(stats.getPlayer(), entity, InteractionType.OFFENSE_ACTION));
         if (trace.hasHit())
-            attackMeta.damage(trace.getHit());
+            stats.attack(trace.getHit(), attackDamage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
         trace.draw(.5, tick -> tick.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, tick, 0, .1, .1, .1, 0));
         getPlayer().getWorld().playSound(getPlayer().getLocation(), VersionSound.ENTITY_FIREWORK_ROCKET_TWINKLE.toSound(), 2, 2);
 

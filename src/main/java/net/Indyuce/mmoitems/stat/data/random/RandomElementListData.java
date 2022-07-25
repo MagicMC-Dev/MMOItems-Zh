@@ -1,100 +1,85 @@
 package net.Indyuce.mmoitems.stat.data.random;
 
-import java.util.HashMap;
+import io.lumine.mythic.lib.element.Element;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
+import net.Indyuce.mmoitems.stat.data.DoubleData;
+import net.Indyuce.mmoitems.stat.data.ElementListData;
+import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.util.ElementStatType;
+import net.Indyuce.mmoitems.util.Pair;
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
-import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.ConfigurationSection;
-
-import net.Indyuce.mmoitems.api.Element;
-import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.stat.data.ElementListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class RandomElementListData implements StatData, RandomStatData<ElementListData>, UpdatableRandomStatData {
-	private final Map<Element, NumericStatFormula> damage = new HashMap<>(), defense = new HashMap<>();
+    private final Map<Pair<Element, ElementStatType>, NumericStatFormula> stats = new LinkedHashMap<>();
 
-	public RandomElementListData(ConfigurationSection config) {
-		Validate.notNull(config, "Config cannot be null");
+    public RandomElementListData(ConfigurationSection config) {
+        Validate.notNull(config, "Config cannot be null");
 
-		for (String key : config.getKeys(false)) {
-			Element element = Element.valueOf(key.toUpperCase());
-			if (config.contains(key + ".damage"))
-				damage.put(element, new NumericStatFormula(config.get(key + ".damage")));
-			if (config.contains(key + ".defense"))
-				defense.put(element, new NumericStatFormula(config.get(key + ".defense")));
-		}
-	}
+        for (Element element : Element.values())
+            for (ElementStatType statType : ElementStatType.values()) {
+                final String path = statType.getConcatenatedConfigPath(element);
+                if (config.contains(path))
+                    stats.put(Pair.of(element, statType), new NumericStatFormula(config.get(path)));
+            }
+    }
 
-	public boolean hasDamage(Element element) {
-		return damage.containsKey(element);
-	}
+    public boolean hasStat(Element element, ElementStatType statType) {
+        return stats.containsKey(statType.getConcatenatedTagPath(element));
+    }
 
-	public boolean hasDefense(Element element) {
-		return defense.containsKey(element);
-	}
+    @NotNull
+    public NumericStatFormula getStat(Element element, ElementStatType statType) {
+        return stats.getOrDefault(Pair.of(element, statType), NumericStatFormula.ZERO);
+    }
 
-	@NotNull public NumericStatFormula getDefense(@NotNull Element element) { return defense.getOrDefault(element, NumericStatFormula.ZERO); }
-	@NotNull public NumericStatFormula getDamage(@NotNull Element element) { return damage.getOrDefault(element, NumericStatFormula.ZERO); }
+    public Set<Pair<Element, ElementStatType>> getKeys() {
+        return stats.keySet();
+    }
 
-	public Set<Element> getDefenseElements() {
-		return defense.keySet();
-	}
+    public void setStat(Element element, ElementStatType statType, NumericStatFormula formula) {
+        stats.put(Pair.of(element, statType), formula);
+    }
 
-	public Set<Element> getDamageElements() {
-		return damage.keySet();
-	}
+    @Override
+    public ElementListData randomize(MMOItemBuilder builder) {
+        ElementListData elements = new ElementListData();
+        stats.forEach((key, value) -> elements.setStat(key.getKey(), key.getValue(), value.calculate(builder.getLevel())));
+        return elements;
+    }
 
-	public void setDamage(Element element, NumericStatFormula formula) {
-		damage.put(element, formula);
-	}
+    @NotNull
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel) {
 
-	public void setDefense(Element element, NumericStatFormula formula) {
-		defense.put(element, formula);
-	}
+        // Start brand new
+        ElementListData elements = new ElementListData();
+        ElementListData originalElements = (ElementListData) original;
 
-	@Override
-	public ElementListData randomize(MMOItemBuilder builder) {
-		ElementListData elements = new ElementListData();
-		damage.forEach((element, formula) -> elements.setDamage(element, formula.calculate(builder.getLevel())));
-		defense.forEach((element, formula) -> elements.setDefense(element, formula.calculate(builder.getLevel())));
-		return elements;
-	}
+        // Evaluate each
+        for (Element element : Element.values())
+            for (ElementStatType statType : ElementStatType.values()) {
 
-	@NotNull
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel) {
+                // Whats its
+                NumericStatFormula currentTemplateData = getStat(element, statType);
+                DoubleData itemData = new DoubleData(originalElements.getStat(element, statType));
 
-		// Start brand new
-		ElementListData elements = new ElementListData();
-		ElementListData originalElements = (ElementListData) original;
+                // Evaluate
+                DoubleData result = currentTemplateData.reroll(stat, itemData, determinedItemLevel);
 
-		// Evaluate each
-		for (Element elm : Element.values()) {
+                // Apply
+                elements.setStat(element, statType, result.getValue());
+            }
 
-			// Whats its
-			NumericStatFormula damageGen = getDamage(elm);
-			NumericStatFormula defenseGen = getDefense(elm);
-			DoubleData damageVal = new DoubleData(originalElements.getDamage(elm));
-			DoubleData defenseVal = new DoubleData(originalElements.getDefense(elm));
-			
-			// Evaluate
-			DoubleData damageResult = damageGen.reroll(stat, damageVal, determinedItemLevel);
-			DoubleData defenseResult = defenseGen.reroll(stat, defenseVal, determinedItemLevel);
-
-			// Apply
-			elements.setDamage(elm, damageResult.getValue());
-			elements.setDefense(elm, defenseResult.getValue());
-		}
-
-		// THats it
-		return (T) elements;
-	}
+        // THats it
+        return (T) elements;
+    }
 }

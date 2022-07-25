@@ -6,6 +6,9 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.util.SoundReader;
@@ -20,10 +23,10 @@ import org.bukkit.util.Vector;
 public class SlashLuteAttack implements LuteAttackHandler {
 
     @Override
-    public void handle(AttackMetadata attack, NBTItem nbt, double range, Vector weight, SoundReader sound) {
+    public void handle(PlayerMetadata caster, double damage, NBTItem nbt, double range, Vector weight, SoundReader sound) {
         new BukkitRunnable() {
-            final Vector vec = attack.getPlayer().getEyeLocation().getDirection();
-            final Location loc = attack.getPlayer().getLocation().add(0, 1.3, 0);
+            final Vector vec = caster.getPlayer().getEyeLocation().getDirection();
+            final Location loc = caster.getPlayer().getLocation().add(0, 1.3, 0);
             double ti = 1;
 
             public void run() {
@@ -34,7 +37,7 @@ public class SlashLuteAttack implements LuteAttackHandler {
                     if (random.nextBoolean()) {
                         loc.setDirection(vec);
                         loc.setYaw(loc.getYaw() + k);
-                        loc.setPitch(attack.getPlayer().getEyeLocation().getPitch());
+                        loc.setPitch(caster.getPlayer().getEyeLocation().getPitch());
 
                         if (nbt.hasTag("MMOITEMS_PROJECTILE_PARTICLES")) {
                             JsonObject obj = MythicLib.plugin.getJson().parse(nbt.getString("MMOITEMS_PROJECTILE_PARTICLES"), JsonObject.class);
@@ -44,10 +47,10 @@ public class SlashLuteAttack implements LuteAttackHandler {
                                 double red = Double.parseDouble(String.valueOf(obj.get("Red")));
                                 double green = Double.parseDouble(String.valueOf(obj.get("Green")));
                                 double blue = Double.parseDouble(String.valueOf(obj.get("Blue")));
-                                ProjectileParticlesData.shootParticle(attack.getPlayer(), particle, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), red, green, blue);
+                                ProjectileParticlesData.shootParticle(caster.getPlayer(), particle, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), red, green, blue);
                                 // If it's not colored, just shoot the particle
                             } else {
-                                ProjectileParticlesData.shootParticle(attack.getPlayer(), particle, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), 0, 0, 0);
+                                ProjectileParticlesData.shootParticle(caster.getPlayer(), particle, loc.clone().add(loc.getDirection().multiply(1.5 * ti)), 0, 0, 0);
                             }
                             // If no particle has been provided via projectile particle attribute, default to this particle
                         } else {
@@ -57,10 +60,10 @@ public class SlashLuteAttack implements LuteAttackHandler {
             }
         }.runTaskTimer(MMOItems.plugin, 0, 1);
 
-        for (Entity entity : MMOUtils.getNearbyChunkEntities(attack.getPlayer().getLocation()))
-            if (entity.getLocation().distanceSquared(attack.getPlayer().getLocation()) < 40
-                    && attack.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(attack.getPlayer().getLocation().toVector())) < Math.PI / 6
-                    && UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
-                attack.clone().damage((LivingEntity) entity);
+        for (Entity entity : MMOUtils.getNearbyChunkEntities(caster.getPlayer().getLocation()))
+            if (entity.getLocation().distanceSquared(caster.getPlayer().getLocation()) < 40
+                    && caster.getPlayer().getEyeLocation().getDirection().angle(entity.getLocation().toVector().subtract(caster.getPlayer().getLocation().toVector())) < Math.PI / 6
+                    && UtilityMethods.canTarget(caster.getPlayer(), entity, InteractionType.OFFENSE_ACTION))
+                caster.attack((LivingEntity) entity, damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
     }
 }

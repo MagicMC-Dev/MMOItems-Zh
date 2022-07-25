@@ -4,7 +4,8 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -19,10 +20,10 @@ import org.bukkit.util.Vector;
 public class ThunderSpirit implements StaffAttackHandler {
 
     @Override
-    public void handle(AttackMetadata attackMeta, NBTItem nbt, EquipmentSlot slot, double range) {
-        attackMeta.getPlayer().getWorld().playSound(attackMeta.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
+    public void handle(PlayerMetadata caster, double damage, NBTItem nbt, EquipmentSlot slot, double range) {
+        caster.getPlayer().getWorld().playSound(caster.getPlayer().getLocation(), Sound.ENTITY_WITHER_SHOOT, 2, 2);
         new BukkitRunnable() {
-            final Location target = getGround(attackMeta.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
+            final Location target = getGround(caster.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
             final double a = RANDOM.nextDouble() * Math.PI * 2;
             final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
             final Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
@@ -38,8 +39,8 @@ public class ThunderSpirit implements StaffAttackHandler {
                         loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 24, 0, 0, 0, .12);
                         loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
                         for (Entity target : MMOUtils.getNearbyChunkEntities(loc))
-                            if (UtilityMethods.canTarget(attackMeta.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
-                                attackMeta.clone().damage((LivingEntity) target);
+                            if (UtilityMethods.canTarget(caster.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
+                                caster.attack((LivingEntity) target, damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
                         cancel();
                     }
                 }

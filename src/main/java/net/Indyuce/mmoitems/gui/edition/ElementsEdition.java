@@ -1,16 +1,19 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.element.Element;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.Element;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.data.random.RandomElementListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import io.lumine.mythic.lib.api.util.AltChar;
+import net.Indyuce.mmoitems.util.ElementStatType;
+import net.Indyuce.mmoitems.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,102 +21,125 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ElementsEdition extends EditionInventory {
-	private static final int[] slots = { 19, 25, 20, 24, 28, 34, 29, 33, 30, 32, 37, 43, 38, 42, 39, 41 };
+    private final List<Element> elements = new ArrayList<>();
+    private final int maxPage;
+    private final Map<Integer, Pair<Element, ElementStatType>> editableStats = new HashMap<>();
 
-	public ElementsEdition(Player player, MMOItemTemplate template) {
-		super(player, template);
-	}
+    private int page = 1;
 
-	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "Elements E.: " + template.getId());
-		int n = 0;
+    private static final int[] INIT_SLOTS = {19, 28, 37};
+    private static final int ELEMENTS_PER_PAGE = 3;
 
-		for (Element element : Element.values()) {
-			ItemStack attack = element.getItem().clone();
-			ItemMeta attackMeta = attack.getItemMeta();
-			attackMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Damage");
-			List<String> attackLore = new ArrayList<>();
-			Optional<RandomStatData> statData = getEventualStatData(ItemStats.ELEMENTS);
-			attackLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-					+ (statData.isPresent() && ((RandomElementListData) statData.get()).hasDamage(element)
-							? ((RandomElementListData) statData.get()).getDamage(element) + " (%)"
-							: "---"));
-			attackLore.add("");
-			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-			attackLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
-			attackMeta.setLore(attackLore);
-			attack.setItemMeta(attackMeta);
+    public ElementsEdition(Player player, MMOItemTemplate template) {
+        super(player, template);
 
-			ItemStack defense = element.getItem().clone();
-			ItemMeta defenseMeta = defense.getItemMeta();
-			defenseMeta.setDisplayName(ChatColor.GREEN + element.getName() + " Defense");
-			List<String> defenseLore = new ArrayList<>();
-			defenseLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN
-					+ (statData.isPresent() && ((RandomElementListData) statData.get()).hasDefense(element)
-							? ((RandomElementListData) statData.get()).getDefense(element) + " (%)"
-							: "---"));
-			defenseLore.add("");
-			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-			defenseLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
-			defenseMeta.setLore(defenseLore);
-			defense.setItemMeta(defenseMeta);
+        elements.addAll(MythicLib.plugin.getElements().getAll());
+        maxPage = 1 + (MythicLib.plugin.getElements().getAll().size() - 1) / ELEMENTS_PER_PAGE;
+    }
 
-			inv.setItem(slots[n], attack);
-			inv.setItem(slots[n + 1], defense);
-			n += 2;
-		}
+    @Override
+    public Inventory getInventory() {
+        Inventory inv = Bukkit.createInventory(this, 54, "Elements: " + template.getId());
 
-		addEditionInventoryItems(inv, true);
+        final Optional<RandomElementListData> statData = getEventualStatData(ItemStats.ELEMENTS);
 
-		return inv;
-	}
+        ItemStack prevPage = new ItemStack(Material.ARROW);
+        ItemMeta prevPageMeta = prevPage.getItemMeta();
+        prevPageMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
+        prevPage.setItemMeta(prevPageMeta);
+        inv.setItem(25, prevPage);
 
-	@Override
-	public void whenClicked(InventoryClickEvent event) {
-		ItemStack item = event.getCurrentItem();
+        ItemStack nextPage = new ItemStack(Material.ARROW);
+        ItemMeta nextPageMeta = nextPage.getItemMeta();
+        nextPageMeta.setDisplayName(ChatColor.GREEN + "Next Page");
+        nextPage.setItemMeta(nextPageMeta);
+        inv.setItem(43, nextPage);
 
-		event.setCancelled(true);
-		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
-			return;
+        editableStats.clear();
 
-		String elementPath = getElementPath(event.getSlot());
-		if (elementPath == null)
-			return;
+        final int startingIndex = (page - 1) * ELEMENTS_PER_PAGE;
+        for (int i = 0; i < ELEMENTS_PER_PAGE; i++) {
+            final int index = startingIndex + i;
+            if (index >= elements.size())
+                break;
 
-		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("Write in the value you want.");
+            Element element = elements.get(index);
+            int k = 0;
+            for (ElementStatType statType : ElementStatType.values()) {
+                ItemStack statItem = new ItemStack(element.getIcon());
+                ItemMeta statMeta = statItem.getItemMeta();
+                statMeta.setDisplayName(ChatColor.GREEN + element.getName() + " " + statType.getName());
+                List<String> statLore = new ArrayList<>();
+                statLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN +
+                        (statData.isPresent() && statData.get().hasStat(element, statType)
+                                ? statData.get().getStat(element, statType)
+                                : "---"));
+                statLore.add("");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
+                statMeta.setLore(statLore);
+                statItem.setItemMeta(statMeta);
 
-		else if (event.getAction() == InventoryAction.PICKUP_HALF) {
-			getEditedSection().set("element." + elementPath, null);
+                final int slot = INIT_SLOTS[i] + k;
+                inv.setItem(slot, statItem);
+                editableStats.put(slot, Pair.of(element, statType));
+                k++;
+            }
+        }
 
-			// clear element config section
-			String elementName = elementPath.split("\\.")[0];
-			if (getEditedSection().contains("element." + elementName)
-					&& getEditedSection().getConfigurationSection("element." + elementName).getKeys(false).isEmpty()) {
-				getEditedSection().set("element." + elementName, null);
-				if (getEditedSection().getConfigurationSection("element").getKeys(false).isEmpty())
-					getEditedSection().set("element", null);
-			}
+        addEditionInventoryItems(inv, true);
 
-			registerTemplateEdition();
-			new ElementsEdition(player, template).open(getPreviousPage());
-			player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(elementPath.replace(".", " ")) + ChatColor.GRAY
-					+ " successfully removed.");
-		}
-	}
+        return inv;
+    }
 
-	public String getElementPath(int guiSlot) {
-		for (Element element : Element.values())
-			if (element.getDamageGuiSlot() == guiSlot)
-				return element.name().toLowerCase() + ".damage";
-			else if (element.getDefenseGuiSlot() == guiSlot)
-				return element.name().toLowerCase() + ".defense";
-		return null;
-	}
+    @Override
+    public void whenClicked(InventoryClickEvent event) {
+        ItemStack item = event.getCurrentItem();
+
+        event.setCancelled(true);
+        if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
+            return;
+
+        if (page > 1 && item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
+            page--;
+            open();
+            return;
+        }
+
+        if (page < maxPage && item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
+            page++;
+            open();
+            return;
+        }
+
+        Pair<Element, ElementStatType> edited = editableStats.get(event.getSlot());
+        if (edited == null)
+            return;
+
+        final String elementPath = edited.getValue().getConcatenatedConfigPath(edited.getKey());
+
+        if (event.getAction() == InventoryAction.PICKUP_ALL)
+            new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("Write in the value you want.");
+
+        else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+            getEditedSection().set("element." + elementPath, null);
+
+            // Clear element config section
+            String elementName = edited.getKey().getId();
+            if (getEditedSection().contains("element." + elementName)
+                    && getEditedSection().getConfigurationSection("element." + elementName).getKeys(false).isEmpty()) {
+                getEditedSection().set("element." + elementName, null);
+                if (getEditedSection().getConfigurationSection("element").getKeys(false).isEmpty())
+                    getEditedSection().set("element", null);
+            }
+
+            registerTemplateEdition();
+            new ElementsEdition(player, template).open(getPreviousPage());
+            player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + edited.getKey().getName() + " " + edited.getValue().getName() + ChatColor.GRAY
+                    + " successfully removed.");
+        }
+    }
 }

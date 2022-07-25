@@ -3,9 +3,9 @@ package net.Indyuce.mmoitems.skill;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.skill.SkillMetadata;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.result.def.VectorSkillResult;
@@ -62,8 +62,7 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
                         EntityType.SHULKER_BULLET);
                 shulkerBullet.setShooter(caster);
 
-                AttackMetadata attackMeta = new AttackMetadata(new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getCaster());
-                MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(attackMeta, skillMeta.getModifier("effect-duration")));
+                MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(skillMeta.getCaster(), new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getModifier("effect-duration"), null));
 
                 new BukkitRunnable() {
                     double ti = 0;
@@ -89,12 +88,12 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
                 return;
 
             ShulkerMissileEntityData data = (ShulkerMissileEntityData) MMOItems.plugin.getEntities().getEntityData(damager);
-            if (!UtilityMethods.canTarget(data.attackMeta.getPlayer(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
+            if (!UtilityMethods.canTarget(data.caster.getPlayer(), null, entity, data.isWeaponAttack() ? InteractionType.OFFENSE_ACTION : InteractionType.OFFENSE_SKILL)) {
                 event.setCancelled(true);
                 return;
             }
 
-            event.setDamage(data.attackMeta.getDamage().getDamage());
+            event.setDamage(data.damage.getDamage());
 
             new BukkitRunnable() {
                 final Location loc = entity.getLocation();
@@ -124,40 +123,22 @@ public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements 
     }
 
     public static class ShulkerMissileEntityData implements EntityData {
-        private final AttackMetadata attackMeta;
+        private final PlayerMetadata caster;
+        private final DamageMetadata damage;
         private final double duration;
 
         @Nullable
         private final NBTItem weapon;
 
-        /**
-         * Used for the Shulker missile ability
-         *
-         * @param attackMeta Attack meta
-         * @param duration   Duration of levitation effect in seconds
-         */
-        public ShulkerMissileEntityData(AttackMetadata attackMeta, double duration) {
-            this(attackMeta, duration, null);
-        }
-
-        /**
-         * Used for the void staff attack spirit (no levitation effect)
-         *
-         * @param attackMeta Attack meta
-         * @param weapon     Item used for the attack
-         */
-        public ShulkerMissileEntityData(AttackMetadata attackMeta, NBTItem weapon) {
-            this(attackMeta, 0, weapon);
-        }
-
-        private ShulkerMissileEntityData(AttackMetadata attackMeta, double duration, NBTItem weapon) {
-            this.attackMeta = attackMeta;
+        public ShulkerMissileEntityData(PlayerMetadata caster, DamageMetadata damage, double duration, NBTItem weapon) {
+            this.caster = caster;
+            this.damage = damage;
             this.duration = duration;
             this.weapon = weapon;
         }
 
         public boolean isWeaponAttack() {
-            return attackMeta.getDamage().hasType(DamageType.WEAPON);
+            return damage.hasType(DamageType.WEAPON);
         }
     }
 }

@@ -2,9 +2,9 @@ package net.Indyuce.mmoitems.comp.parse.placeholders;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.math.EvaluatedFormula;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.parser.client.eval.DoubleEvaluator;
 import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
@@ -154,7 +154,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		String formula = MythicLib.plugin.getConfig().getString("defense-application", "#damage# * (1 - (#defense# / (#defense# + 100)))");
 		formula = formula.replace("#defense#", String.valueOf(data.getStatMap().getStat("DEFENSE")));
 		formula = formula.replace("#damage#", String.valueOf(100));
-		return Math.max(0, new EvaluatedFormula(formula).evaluate());
+		return Math.max(0, new DoubleEvaluator().evaluate(formula));
 	}
 	
 	private String getCurrentDurabilityBar(ItemStack item, String barChar, int length) {

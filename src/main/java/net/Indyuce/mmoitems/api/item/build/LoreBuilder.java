@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.math.EvaluatedFormula;
+import io.lumine.mythic.lib.parser.client.eval.DoubleEvaluator;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -159,7 +159,7 @@ public class LoreBuilder {
 
             String result;
             try {
-                result = MythicLib.plugin.getMMOConfig().decimals.format(new EvaluatedFormula(match).evaluate());
+                result = MythicLib.plugin.getMMOConfig().decimals.format(new DoubleEvaluator().evaluate(match));
             } catch (RuntimeException ignored) {
                 result = "<InvalidFormula>";
             }

@@ -137,9 +137,7 @@ public class ElementsEdition extends EditionInventory {
             }
 
             registerTemplateEdition();
-            new ElementsEdition(player, template).open(getPreviousPage());
-            player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + edited.getKey().getName() + " " + edited.getValue().getName() + ChatColor.GRAY
-                    + " successfully removed.");
+            player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + edited.getKey().getName() + " " + edited.getValue().getName() + ChatColor.GRAY + " successfully removed.");
         }
     }
 }

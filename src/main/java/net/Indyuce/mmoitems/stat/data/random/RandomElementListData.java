@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class RandomElementListData implements StatData, RandomStatData<ElementListData>, UpdatableRandomStatData {
+public class RandomElementListData implements RandomStatData<ElementListData>, UpdatableRandomStatData {
     private final Map<Pair<Element, ElementStatType>, NumericStatFormula> stats = new LinkedHashMap<>();
 
     public RandomElementListData(ConfigurationSection config) {
@@ -32,7 +32,7 @@ public class RandomElementListData implements StatData, RandomStatData<ElementLi
     }
 
     public boolean hasStat(Element element, ElementStatType statType) {
-        return stats.containsKey(statType.getConcatenatedTagPath(element));
+        return stats.containsKey(Pair.of(element, statType));
     }
 
     @NotNull

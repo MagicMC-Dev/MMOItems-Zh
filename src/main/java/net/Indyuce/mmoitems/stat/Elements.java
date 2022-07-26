@@ -86,7 +86,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         if (statData.isPresent()) {
             lore.add(ChatColor.GRAY + "Current Value:");
             RandomElementListData data = statData.get();
-            data.getKeys().forEach(key -> lore.add(ChatColor.GRAY + "* " + key + ": " + ChatColor.RED + data.getStat(key.getKey(), key.getValue())));
+            data.getKeys().forEach(key -> lore.add(ChatColor.GRAY + "* " + key.getKey().getName() + " " + key.getValue().getName() + ": " + ChatColor.RED + data.getStat(key.getKey(), key.getValue())));
 
         } else
             lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

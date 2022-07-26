@@ -354,6 +354,32 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	/**
+	 * Decide by which system will the RPG Requirements of the player will be checked.
+	 * <p>
+	 * For example, required level, is that vanilla XP levels, MMOCore levels, McMMO Leves or what?
+	 *
+	 * This method is called on server startup and will try to read the preferred RPG
+	 * provider in the main plugin config. If it can't be found, it will look for RPG
+	 * plugins in the installed plugin list.
+	 */
+	public void findRpgPlugin() {
+		if (rpgPlugin != null) return;
+
+		// Preferred rpg provider
+		String preferred = plugin.getConfig().getString("preferred-rpg-provider", null);
+		if (preferred != null && setRPG(RPGHandler.PluginEnum.valueOf(preferred.toUpperCase())))
+			return;
+
+		// Look through installed plugins
+		for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values())
+			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null && setRPG(pluginEnum))
+				return;
+
+		// Just use the default
+		setRPG(new DefaultHook());
+	}
+
+	/**
 	 * The RPGHandler interface lets MMOItems fetch and manipulate RPG data like
 	 * player level, class, resources like mana and stamina for item or skill
 	 * costs, item restrictions, etc.
@@ -368,6 +394,7 @@ public class MMOItems extends JavaPlugin {
 			HandlerList.unregisterAll((Listener) rpgPlugin);
 
 		rpgPlugin = handler;
+		getLogger().log(Level.INFO, "Now using " + handler.getClass().getSimpleName() + " as RPG provider");
 
 		// Register new events
 		if (handler instanceof Listener && isEnabled())
@@ -538,32 +565,6 @@ public class MMOItems extends JavaPlugin {
 	}
 
 	//region Easy-Access API
-
-	/**
-	 * Decide by which system will the RPG Requirements of the player will be checked.
-	 * <p>
-	 * For example, required level, is that vanilla XP levels, MMOCore levels, McMMO Leves or what?
-	 *
-	 * This method is called on server startup and will try to read the preferred RPG
-	 * provider in the main plugin config. If it can't be found, it will look for RPG
-	 * plugins in the installed plugin list.
-	 */
-	public void findRpgPlugin() {
-		if (rpgPlugin != null) return;
-
-		// Preferred rpg provider
-		String preferred = plugin.getConfig().getString("preferred-rpg-provider", null);
-		if (preferred != null && setRPG(RPGHandler.PluginEnum.valueOf(preferred.toUpperCase())))
-			return;
-
-		// Look through installed plugins
-		for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values())
-			if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null && setRPG(pluginEnum))
-				return;
-
-		// Just use the default
-		setRPG(new DefaultHook());
-	}
 
 	/**
 	 * @return Generates an item given an item template. The item level will

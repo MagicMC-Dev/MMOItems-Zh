@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.text.DecimalFormat;
 import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
@@ -42,7 +41,6 @@ public class ConfigManager implements Reloadable {
     // TODO remove ability-player-damage and add some WG flag or something
     public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate;
     public String abilitySplitter;
-    public DecimalFormat healIndicatorDecimalFormat, damageIndicatorDecimalFormat;
     public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
     public NumericStatFormula defaultItemCapacity;
     public ReforgeOptions revisionOptions, phatLootsOptions;
@@ -195,8 +193,6 @@ public class ConfigManager implements Reloadable {
 
         String healDecimal = MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format");
         String harmDecimal = MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format");
-        healIndicatorDecimalFormat = healDecimal != null ? new DecimalFormat(healDecimal) : new DecimalFormat("0.#");
-        damageIndicatorDecimalFormat = harmDecimal != null ? new DecimalFormat(harmDecimal) : new DecimalFormat("0.#");
         abilitySplitter = getStatFormat("ability-splitter");
         dodgeKnockbackForce = MMOItems.plugin.getConfig().getDouble("mitigation.dodge.knockback.force");
         dodgeKnockbackEnabled = MMOItems.plugin.getConfig().getBoolean("mitigation.dodge.knockback.enabled");

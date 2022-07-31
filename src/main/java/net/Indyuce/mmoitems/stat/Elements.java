@@ -113,8 +113,8 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
                     .replace("#color", pair.getKey().getColor())
                     .replace("#icon", pair.getKey().getLoreIcon())
                     .replace("#name", pair.getKey().getName());
-            double value = data.getStat(pair.getKey(), pair.getValue());
-            lore.add(DoubleStat.formatPath(format, true, value));
+            final double value = data.getStat(pair.getKey(), pair.getValue());
+            lore.add(DoubleStat.formatPath("ELEMENTAL_STAT", format, true, value));
         }
 
         // Insert non-empty lore
@@ -205,9 +205,9 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
                     String builtRange;
                     if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
-                        builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum);
+                        builtRange = DoubleStat.formatPath(statType.getConcatenatedTagPath(element), ItemStat.translate(path), true, techMinimum);
                     } else {
-                        builtRange = DoubleStat.formatPath(ItemStat.translate(path), true, techMinimum, techMaximum);
+                        builtRange = DoubleStat.formatPath(statType.getConcatenatedTagPath(element), ItemStat.translate(path), true, techMinimum, techMaximum);
                     }
 
                     // Just display normally

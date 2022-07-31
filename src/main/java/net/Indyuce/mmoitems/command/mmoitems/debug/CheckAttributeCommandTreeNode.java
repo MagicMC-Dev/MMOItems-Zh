@@ -14,6 +14,8 @@ import io.lumine.mythic.lib.command.api.CommandTreeNode;
 import io.lumine.mythic.lib.command.api.Parameter;
 
 public class CheckAttributeCommandTreeNode extends CommandTreeNode {
+	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.####");
+
 	public CheckAttributeCommandTreeNode(CommandTreeNode parent) {
 		super(parent, "checkattribute");
 
@@ -40,7 +42,7 @@ public class CheckAttributeCommandTreeNode extends CommandTreeNode {
 			sender.sendMessage(ChatColor.AQUA + "Value = " + ChatColor.RESET + att.getValue());
 			for (AttributeModifier mod : att.getModifiers())
 				sender.sendMessage(
-						mod.getName() + " " + new DecimalFormat("0.####").format(mod.getAmount()) + " " + mod.getOperation() + " " + mod.getSlot());
+						mod.getName() + " " + DECIMAL_FORMAT.format(mod.getAmount()) + " " + mod.getOperation() + " " + mod.getSlot());
 		} catch (IllegalArgumentException exception) {
 			player.sendMessage("Couldn't find attribute.");
 		}

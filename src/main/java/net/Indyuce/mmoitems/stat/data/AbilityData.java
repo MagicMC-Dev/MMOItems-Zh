@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
 import com.google.gson.JsonObject;
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import io.lumine.mythic.lib.skill.Skill;
@@ -18,9 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -92,7 +91,7 @@ public class AbilityData extends Skill {
 				String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
 				for (int j = 0; j < 10; j++)
 					progressBar.append(progress >= j ? ChatColor.GREEN : ChatColor.WHITE).append(barChar);
-				Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", "" + new DecimalFormat("0.#").format(info.getRemaining() / 1000d), "#progress#",
+				Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(info.getRemaining() / 1000d), "#progress#",
 						progressBar.toString(), "#s#", (info.getRemaining() > 1999 ? "s" : "")).send(player);
 			}
 			return false;

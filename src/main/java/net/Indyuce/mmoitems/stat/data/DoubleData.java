@@ -1,10 +1,7 @@
 package net.Indyuce.mmoitems.stat.data;
 
-import org.apache.commons.lang.Validate;
-
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.jetbrains.annotations.NotNull;
 
 public class DoubleData implements StatData, Mergeable<DoubleData> {
 	private double value;

@@ -1,20 +1,11 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.google.gson.*;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import net.Indyuce.mmoitems.skill.RegisteredSkill;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -23,21 +14,25 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula.FormulaSaveOption;
 import net.Indyuce.mmoitems.gui.edition.AbilityListEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomAbilityData;
 import net.Indyuce.mmoitems.stat.data.random.RandomAbilityListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> {
-	private final DecimalFormat modifierFormat = new DecimalFormat("0.#");
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> {
 	public Abilities() {
 		super("ABILITY", Material.BLAZE_POWDER, "Item Abilities",
 				new String[] { "Make your item cast amazing abilities", "to kill monsters or buff yourself." }, new String[] { "!block", "all" });
@@ -69,9 +64,9 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
 			for (String modifier : ability.getModifiers()) {
 				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
-						this.modifierFormat.format(ability.getModifier(modifier)));
+						MythicLib.plugin.getMMOConfig().decimal.format(ability.getModifier(modifier)));
 				abilityLore.add(modifierFormat.replace("#m", ability.getAbility().getModifierName(modifier)).replace("#v",
-						this.modifierFormat.format(ability.getModifier(modifier))));
+						MythicLib.plugin.getMMOConfig().decimal.format(ability.getModifier(modifier))));
 			}
 
 			if (splitter)

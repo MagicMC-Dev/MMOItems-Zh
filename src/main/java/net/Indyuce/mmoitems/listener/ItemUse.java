@@ -40,10 +40,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.text.DecimalFormat;
-
 public class ItemUse implements Listener {
-    private static final DecimalFormat DIGIT = new DecimalFormat("0.#");
 
     @EventHandler
     public void rightClickEffects(PlayerInteractEvent event) {
@@ -75,7 +72,7 @@ public class ItemUse implements Listener {
             final String cooldownReference = getCooldownReference(useItem.getMMOItem());
             if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
+                        .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
                         .send(player);
                 event.setUseItemInHand(Event.Result.DENY);
                 return;
@@ -326,7 +323,7 @@ public class ItemUse implements Listener {
             final String cooldownReference = getCooldownReference(useItem.getMMOItem());
             if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", DIGIT.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
+                        .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
                         .send(player);
                 event.setCancelled(true);
                 return;

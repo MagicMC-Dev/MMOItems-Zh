@@ -1,7 +1,5 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -34,7 +32,7 @@ public class AbilityEdition extends EditionInventory {
 
 	private RegisteredSkill ability;
 
-	private static final DecimalFormat modifierFormat = new DecimalFormat("0.###");
+	private static final DecimalFormat MODIFIER_FORMAT = new DecimalFormat("0.###");
 	private static final int[] slots = { 23, 24, 25, 32, 33, 34, 41, 42, 43, 50, 51, 52 };
 
 	public AbilityEdition(Player player, MMOItemTemplate template, String configKey) {
@@ -109,12 +107,12 @@ public class AbilityEdition extends EditionInventory {
 				try {
 					modifierItemLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD
 							+ (section.contains(modifier) ? new NumericStatFormula(section.get(modifier)).toString()
-									: modifierFormat.format(ability.getDefaultModifier(modifier))));
+									: MODIFIER_FORMAT.format(ability.getDefaultModifier(modifier))));
 				} catch (IllegalArgumentException exception) {
 					modifierItemLore.add(ChatColor.GRAY + "Could not read value. Using default");
 				}
 
-				modifierItemLore.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + modifierFormat.format(ability.getDefaultModifier(modifier)));
+				modifierItemLore.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + MODIFIER_FORMAT.format(ability.getDefaultModifier(modifier)));
 				modifierItemLore.add("");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to reset.");

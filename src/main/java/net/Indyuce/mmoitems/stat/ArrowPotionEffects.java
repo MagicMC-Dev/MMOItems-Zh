@@ -1,25 +1,12 @@
 package net.Indyuce.mmoitems.stat;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.potion.PotionEffectType;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -31,18 +18,21 @@ import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
+import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
-	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
+import java.util.*;
 
+public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public ArrowPotionEffects() {
 		super("ARROW_POTION_EFFECTS", Material.TIPPED_ARROW, "Arrow Potion Effects",
 				new String[] { "The effects to be applied when", "entities are shot by this bow" }, new String[] { "bow", "crossbow" });
@@ -131,7 +121,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 		String permEffectFormat = ItemStat.translate("arrow-potion-effects");
 		data.getEffects().forEach(effect -> {
 			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
-				+ " " + MMOUtils.intToRoman(effect.getLevel()) + "(" + durationFormat.format(effect.getDuration()) + "s)"));
+					+ " " + MMOUtils.intToRoman(effect.getLevel()) + "(" + MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration()) + "s)"));
 		});
 
 		item.getLore().insert("arrow-potion-effects", lore);

@@ -1,12 +1,11 @@
 package net.Indyuce.mmoitems.stat.type;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import net.Indyuce.mmoitems.stat.data.DoubleData;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,16 +20,12 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.BooleanData;
 import net.Indyuce.mmoitems.stat.data.random.RandomBooleanData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
-	private static final DecimalFormat digit = new DecimalFormat("0.#");
-
 	public BooleanStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
 		super(id, mat, name, lore, types, materials);
 	}
@@ -98,7 +93,7 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 		inv.getEditedSection().set(getPath(), probability / 100);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + ChatColor.GREEN
-				+ digit.format(probability) + "% Chance" + ChatColor.GRAY + ".");
+				+ MythicLib.plugin.getMMOConfig().decimal.format(probability) + "% Chance" + ChatColor.GRAY + ".");
 	}
 
 	@Override
@@ -142,9 +137,9 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 	public void whenDisplayed(List<String> lore, Optional<RandomBooleanData> statData) {
 
 		if (statData.isPresent()) {
-			double chance = ((RandomBooleanData) statData.get()).getChance();
+			final double chance = statData.get().getChance();
 			lore.add(ChatColor.GRAY + "Current Value: " + (chance >= 1 ? ChatColor.GREEN + "True"
-					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + digit.format(chance * 100) + "% Chance"));
+					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + MythicLib.plugin.getMMOConfig().decimal.format(chance * 100) + "% Chance"));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "False");

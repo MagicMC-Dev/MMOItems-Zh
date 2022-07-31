@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.PlusMinusPercent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.manager.StatManager;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
@@ -18,7 +19,6 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.data.type.UpgradeInfo;
 import org.apache.commons.lang.Validate;
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> implements Upgradable, Previewable<NumericStatFormula, DoubleData> {
 	private final boolean moreIsBetter;
 
-    private static final DecimalFormat digit = new DecimalFormat("0.####");
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.####");
 
     public DoubleStat(String id, Material mat, String name, String[] lore) {
         this(id, mat, name, lore, new String[]{"!miscellaneous", "!block", "all"}, true);
@@ -93,7 +93,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
 		// Get Value
-		double value = ((DoubleData) data).getValue();
+		double value = data.getValue();
 
 		// Cancel if it its NEGATIVE and this doesn't support negative stats.
 		if (value < 0 && !handleNegativeStats()) { return; }
@@ -117,7 +117,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 
 		// Display in lore
 		if (value != 0 || upgradeShift != 0) {
-			String loreInsert = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter, value * multiplyWhenDisplaying());
+			String loreInsert = formatPath(getId(), MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter, value * multiplyWhenDisplaying());
 			if (upgradeShift != 0)
 				loreInsert += MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (MythicLib.plugin.getMMOConfig().decimals.format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying())));
 			item.getLore().insert(getPath(), loreInsert);
@@ -132,34 +132,39 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 		if (data.getValue() != 0) { item.addItemTag(getAppliedNBT(data)); }
 	}
 
-	@NotNull public static String formatPath(@NotNull String format, boolean moreIsBetter, double value) {
-
-		// Thats it
-		return format
-
-				// Replace conditional pluses with +value
-				.replace("<plus>#",getColorPrefix(value < 0 && moreIsBetter) + (value > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(value))
-
-				// Replace loose pounds with the value
-				.replace("#",getColorPrefix(value < 0 && moreIsBetter) + MythicLib.plugin.getMMOConfig().decimals.format(value))
-
-				// Replace loose <plus>es
-				.replace("<plus>", (value > 0 ? "+" : ""));
+	@NotNull
+	@Deprecated
+	public static String formatPath(@NotNull String format, boolean moreIsBetter, double value) {
+		return formatPath("ATTACK_DAMAGE", format, moreIsBetter, value);
 	}
 
-	@NotNull public static String formatPath(@NotNull String format, boolean moreIsBetter, double min, double max) {
-
-		// Thats it
+	@NotNull
+	public static String formatPath(@NotNull String stat, @NotNull String format, boolean moreIsBetter, double value) {
+		final String valueFormatted = StatManager.format(stat, value);
+		final String colorPrefix = getColorPrefix(value < 0 && moreIsBetter);
 		return format
+				.replace("<plus>#", colorPrefix + (value > 0 ? "+" : "") + valueFormatted) // Replace conditional pluses with +value
+				.replace("#", colorPrefix + valueFormatted) // Replace loose pounds with the value
+				.replace("<plus>", (value > 0 ? "+" : "")); // Replace loose <plus>es
+	}
 
-				// Replace conditional pluses with +value
-				.replace("<plus>","")
+	@NotNull
+	@Deprecated
+	public static String formatPath(@NotNull String format, boolean moreIsBetter, double min, double max) {
+		return formatPath("ATTACK_DAMAGE", format, moreIsBetter, min, max);
+	}
 
-				// Replace loose pounds with the value
-				.replace("#", getColorPrefix(min < 0 && moreIsBetter) +
-						(min > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(min)
-							+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + getColorPrefix(max < 0 && moreIsBetter) +
-						(min < 0 && max > 0 ? "+" : "") + MythicLib.plugin.getMMOConfig().decimals.format(max)); }
+	@NotNull
+	public static String formatPath(@NotNull String stat, @NotNull String format, boolean moreIsBetter, double min, double max) {
+		final String minFormatted = StatManager.format(stat, min), maxFormatted = StatManager.format(stat, max);
+		final String minPrefix = getColorPrefix(min < 0 && moreIsBetter), maxPrefix = getColorPrefix(max < 0 && moreIsBetter);
+		return format
+				.replace("<plus>", "")
+				.replace("#",
+						minPrefix + (min > 0 ? "+" : "") + minFormatted
+								+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") +
+								maxPrefix + (min < 0 && max > 0 ? "+" : "") + maxFormatted);
+	}
 
 	@Override
 	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
@@ -182,10 +187,10 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 
 			String builtRange;
 			if (SilentNumbers.round(techMinimum, 2) == SilentNumbers.round(techMaximum, 2)) {
-				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMaximum * multiplyWhenDisplaying());
+				builtRange = formatPath(getId(), MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMaximum * multiplyWhenDisplaying());
 
 			} else {
-				builtRange = formatPath(MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMinimum * multiplyWhenDisplaying(), techMaximum * multiplyWhenDisplaying()); }
+				builtRange = formatPath(getId(), MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter(), techMinimum * multiplyWhenDisplaying(), techMaximum * multiplyWhenDisplaying()); }
 
 			// Just display normally
 			item.getLore().insert(getPath(), builtRange); }
@@ -327,11 +332,11 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 	public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
 		if (statData.isPresent()) {
 			NumericStatFormula data = statData.get();
-			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + digit.format(data.getBase())
-					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + digit.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
+			lore.add(ChatColor.GRAY + "Base Value: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getBase())
+					+ (data.getScale() != 0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getScale()) + ChatColor.GRAY + ")" : ""));
 			if (data.getSpread() > 0)
-				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.GREEN + digit.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
-						+ ChatColor.GREEN + digit.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
+				lore.add(ChatColor.GRAY + "Spread: " + ChatColor.GREEN + DECIMAL_FORMAT.format(data.getSpread() * 100) + "%" + ChatColor.GRAY + " (Max: "
+						+ ChatColor.GREEN + DECIMAL_FORMAT.format(data.getMaxSpread() * 100) + "%" + ChatColor.GRAY + ")");
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");

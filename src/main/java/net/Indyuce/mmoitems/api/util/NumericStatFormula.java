@@ -24,7 +24,7 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 	private final double base, scale, spread, maxSpread;
 
 	private static final Random RANDOM = new Random();
-	private static final DecimalFormat DIGIT = new DecimalFormat("0.####");
+	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.####");
 
 	public static final NumericStatFormula ZERO = new NumericStatFormula(0, 0, 0, 0);
 
@@ -220,13 +220,13 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 	public String toString() {
 
 		if (scale == 0 && spread == 0)
-			return DIGIT.format(base);
+			return DECIMAL_FORMAT.format(base);
 
 		if (scale == 0)
-			return "[" + DIGIT.format(base * (1 - maxSpread)) + " -> " + DIGIT.format(base * (1 + maxSpread)) + "] (" + DIGIT.format(spread * 100)
-					+ "% Spread) (" + DIGIT.format(base) + " Avg)";
+			return "[" + DECIMAL_FORMAT.format(base * (1 - maxSpread)) + " -> " + DECIMAL_FORMAT.format(base * (1 + maxSpread)) + "] (" + DECIMAL_FORMAT.format(spread * 100)
+					+ "% Spread) (" + DECIMAL_FORMAT.format(base) + " Avg)";
 
-		return "{Base=" + DIGIT.format(base) + (scale != 0 ? ",Scale=" + DIGIT.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
+		return "{Base=" + DECIMAL_FORMAT.format(base) + (scale != 0 ? ",Scale=" + DECIMAL_FORMAT.format(scale) : "") + (spread != 0 ? ",Spread=" + spread : "")
 				+ (maxSpread != 0 ? ",Max=" + maxSpread : "") + "}";
 	}
 

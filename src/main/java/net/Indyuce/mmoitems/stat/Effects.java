@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
 import com.google.gson.*;
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -19,7 +20,6 @@ import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.PlayerConsumable;
@@ -34,12 +34,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> implements PlayerConsumable {
-	private final DecimalFormat durationFormat = new DecimalFormat("0.#");
-
 	public Effects() {
 		super("EFFECTS", Material.POTION, "Effects", new String[]{"The potion effects your", "consumable item grants."},
 				new String[]{"consumable"});
@@ -123,7 +120,7 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
 					.replace("#e",
 							MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
 									+ (effect.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(effect.getLevel())))
-					.replace("#d", durationFormat.format(effect.getDuration())));
+					.replace("#d", MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration())));
 		});
 		item.getLore().insert("effects", lore);
 

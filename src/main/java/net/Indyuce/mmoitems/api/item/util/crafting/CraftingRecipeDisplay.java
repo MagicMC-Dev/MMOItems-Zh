@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -17,7 +18,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +25,6 @@ import java.util.ListIterator;
 import java.util.Map;
 
 public class CraftingRecipeDisplay extends ConfigItem {
-	private static final DecimalFormat craftingTimeFormat = new DecimalFormat("0.#");
-
 	public CraftingRecipeDisplay() {
 		super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "{conditions}&8Conditions:", "{crafting_time}",
 				"{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!",
@@ -76,7 +74,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 					}
 
 					replace.put(str, str.replace("{crafting_time}", "").replace("#crafting-time#",
-							craftingTimeFormat.format(craftingRecipe.getCraftingTime())));
+							MythicLib.plugin.getMMOConfig().decimal.format(craftingRecipe.getCraftingTime())));
 				}
 
 				if (str.startsWith("{conditions}")) {

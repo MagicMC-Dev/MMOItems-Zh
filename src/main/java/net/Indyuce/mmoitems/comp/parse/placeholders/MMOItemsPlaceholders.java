@@ -4,13 +4,11 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.manager.StatManager;
 import io.lumine.mythic.lib.parser.client.eval.DoubleEvaluator;
-import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -20,16 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-
 public class MMOItemsPlaceholders extends PlaceholderExpansion {
-	private final DecimalFormat oneDigit = new DecimalFormat("0.#"), twoDigits = new DecimalFormat("0.##");
-
-	public MMOItemsPlaceholders() {
-		oneDigit.setDecimalFormatSymbols(MythicLib.plugin.getMMOConfig().formatSymbols);
-		twoDigits.setDecimalFormatSymbols(MythicLib.plugin.getMMOConfig().formatSymbols);
-	}
 
 	@Override
 	public String getAuthor() {
@@ -64,7 +53,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		// i don't register it in the starts with condition because it will mess
 		// with substring
 		if (identifier.equals("stat_defense_percent"))
-			return twoDigits.format(100 - calculateDefense(MMOPlayerData.get(player))) + "%";
+			return MythicLib.plugin.getMMOConfig().decimal.format(100 - calculateDefense(MMOPlayerData.get(player))) + "%";
 
 		if (identifier.startsWith("stat_elements") && player.isOnline()) {
 			// index 0 = element
@@ -83,20 +72,15 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 						}
 					}
 
-				return twoDigits.format(value);
+				return MythicLib.plugin.getMMOConfig().decimal.format(value);
 			}
-		}
-		else if (identifier.startsWith("stat_")) {
-			ItemStat stat = MMOItems.plugin.getStats().get(identifier.substring(5).toUpperCase());
-			if (stat != null)
-				return twoDigits.format(PlayerData.get(player).getStats().getStat(stat));
+		} else if (identifier.startsWith("stat_")) {
+			final String stat = identifier.substring(5).toUpperCase();
+			return StatManager.format(stat, MMOPlayerData.get(player).getStatMap().getStat(stat));
 		}
 
-		if (identifier.startsWith("ability_cd_")) {
-			MMOPlayerData data = MMOPlayerData.get(player);
-			CooldownInfo info = data.getCooldownMap().getInfo("mmoitems_skill_" + identifier.substring(11));
-			return info == null ? "0" : oneDigit.format(info.getRemaining() / 1000d);
-		}
+		if (identifier.startsWith("ability_cd_"))
+			return MythicLib.plugin.getMMOConfig().decimal.format(MMOPlayerData.get(player).getCooldownMap().getCooldown("skill_" + identifier.substring(11)));
 
 		if(identifier.startsWith("type_")) {
 			String t = identifier.substring(5, identifier.lastIndexOf("_")).toUpperCase();
@@ -136,7 +120,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 			NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getPlayer().getInventory().getItemInMainHand());
 			double durability = item.getDouble("MMOITEMS_DURABILITY");
 			double maxDurability = item.getDouble("MMOITEMS_MAX_DURABILITY");
-			return oneDigit.format(durability / maxDurability * 100);
+			return MythicLib.plugin.getMMOConfig().decimal.format(durability / maxDurability * 100);
 		}
 
 		if (identifier.equals("durability_bar_square"))

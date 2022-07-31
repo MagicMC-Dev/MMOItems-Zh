@@ -62,13 +62,13 @@
     <repositories>
 
         <repository>
-            <id>nexus</id>
-            <url>https://mvn.lumine.io/repository/maven-public/</url>
+            <id>phoenix</id>
+            <url>https://la-grange-evasion.pro.dns-orange.fr/repository/maven-public/</url>
         </repository>
 
         <repository>
-            <id>lumine</id>
-            <url>https://mvn.lumine.io/repository/maven-private/</url>
+            <id>nexus</id>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
 
         <repository>

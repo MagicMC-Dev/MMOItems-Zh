@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.skill.custom.condition;
 
 import io.lumine.mythic.lib.skill.SkillMetadata;
-import io.lumine.mythic.lib.skill.custom.condition.Condition;
+import io.lumine.mythic.lib.script.condition.Condition;
 import io.lumine.mythic.lib.util.configobject.ConfigObject;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 

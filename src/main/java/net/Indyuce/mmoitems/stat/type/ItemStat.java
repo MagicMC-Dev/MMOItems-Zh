@@ -14,10 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> {
     @NotNull
@@ -239,8 +236,16 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ItemStat && ((ItemStat) obj).getId().equals(getId());
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemStat<?, ?> itemStat = (ItemStat<?, ?>) o;
+        return id.equals(itemStat.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public static String translate(String path) {

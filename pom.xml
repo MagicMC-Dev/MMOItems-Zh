@@ -15,14 +15,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus</id>
-            <name>Lumine Releases</name>
-            <url>https://mvn.lumine.io/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <finalName>${project.name}-${project.version}</finalName>
         <defaultGoal>clean package install</defaultGoal>
@@ -63,7 +55,7 @@
 
         <repository>
             <id>phoenix</id>
-            <url>https://la-grange-evasion.pro.dns-orange.fr/repository/maven-public/</url>
+            <url>https://nexus.phoenixdvpt.fr/repository/maven-public/</url>
         </repository>
 
         <repository>

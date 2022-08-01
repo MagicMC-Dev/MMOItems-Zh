@@ -1,9 +1,16 @@
 package net.Indyuce.mmoitems.command.mmoitems;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
-
+import io.lumine.mythic.lib.UtilityMethods;
+import io.lumine.mythic.lib.api.util.SmartGive;
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.Parameter;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ItemTier;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.item.template.explorer.*;
+import net.Indyuce.mmoitems.api.player.PlayerData;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,19 +19,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ItemTier;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.item.template.explorer.ClassFilter;
-import net.Indyuce.mmoitems.api.item.template.explorer.IDFilter;
-import net.Indyuce.mmoitems.api.item.template.explorer.TemplateExplorer;
-import net.Indyuce.mmoitems.api.item.template.explorer.TypeFilter;
-import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import io.lumine.mythic.lib.api.util.SmartGive;
-import io.lumine.mythic.lib.command.api.CommandTreeNode;
-import io.lumine.mythic.lib.command.api.Parameter;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Random;
 
 public class GenerateCommandTreeNode extends CommandTreeNode {
 	private static final Random random = new Random();
@@ -50,19 +48,24 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
 					: target;
 			Validate.notNull(give, "You cannot use -gimme");
 
-			RPGPlayer rpgPlayer = PlayerData.get(target).getRPG();
+			final RPGPlayer rpgPlayer = PlayerData.get(target).getRPG();
 			final int itemLevel = handler.hasArgument("level") ? Integer.parseInt(handler.getValue("level"))
 					: (handler.hasArgument("matchlevel") ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : 1 + random.nextInt(100));
-			final ItemTier itemTier = handler.hasArgument("tier")
+			final @Nullable ItemTier itemTier = handler.hasArgument("tierset") ? null : handler.hasArgument("tier")
 					? MMOItems.plugin.getTiers().getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_"))
 					: MMOItems.plugin.getTemplates().rollTier();
 
-			TemplateExplorer builder = new TemplateExplorer();
+			final TemplateExplorer builder = new TemplateExplorer();
 			if (handler.hasArgument("matchclass"))
 				builder.applyFilter(new ClassFilter(rpgPlayer));
 			if (handler.hasArgument("class"))
 				builder.applyFilter(new ClassFilter(handler.getValue("class").replace("-", " ").replace("_", " ")));
 			String type = null;
+			if (handler.hasArgument("tierset")) {
+				String format = UtilityMethods.enumName(handler.getValue("tierset"));
+				Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Could not find tier with ID '" + format + "'");
+				builder.applyFilter(new TierFilter(format));
+			}
 			if (handler.hasArgument("type")) {
 				type = handler.getValue("type");
 				Validate.isTrue(Type.isValid(type), "Could not find type with ID '" + type + "'");

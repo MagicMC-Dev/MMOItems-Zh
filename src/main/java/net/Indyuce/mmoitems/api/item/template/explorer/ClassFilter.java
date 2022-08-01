@@ -7,6 +7,9 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 
 import java.util.function.Predicate;
 
+/**
+ * Filters items with a specific class
+ */
 public class ClassFilter implements Predicate<MMOItemTemplate> {
 	private final String name;
 

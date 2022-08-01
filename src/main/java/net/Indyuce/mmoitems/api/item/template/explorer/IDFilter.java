@@ -4,6 +4,9 @@ import java.util.function.Predicate;
 
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 
+/**
+ * Filters items with a specific ID
+ */
 public class IDFilter implements Predicate<MMOItemTemplate> {
 	private final String id;
 

@@ -22,7 +22,7 @@ public interface TemplateOption {
      * This stat is not saved onto items. This method is empty.
      */
     public default void whenLoaded(@NotNull ReadMMOItem mmoitem) {
-        throw new RuntimeException("Not supported");
+        // Cannot throw an exception since it will be called
     }
 
     /**

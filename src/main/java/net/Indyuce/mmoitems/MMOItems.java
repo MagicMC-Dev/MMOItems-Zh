@@ -207,7 +207,6 @@ public class MMOItems extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new DurabilityListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DisableInteractions(), this);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
-		Bukkit.getPluginManager().registerEvents(new ElementListener(), this);
 		Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), this);
 		if (Bukkit.getPluginManager().getPlugin("PhatLoots") != null) {
 			Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), this);

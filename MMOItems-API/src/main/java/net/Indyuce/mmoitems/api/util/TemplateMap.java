@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  *            template
  */
 public class TemplateMap<C> {
-	private final Map<String, Submap> typeMap = new HashMap<>();
+	private final Map<Type, Submap> typeMap = new HashMap<>();
 
 	/**
 	 * @param type
@@ -31,7 +31,7 @@ public class TemplateMap<C> {
 	 */
 	public boolean hasValue(@Nullable Type type, @Nullable String id) {
 		if(type == null || id == null) { return false; }
-		return typeMap.containsKey(type.getId()) && typeMap.get(type.getId()).idMap.containsKey(id);
+		return typeMap.containsKey(type) && typeMap.get(type).idMap.containsKey(id);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class TemplateMap<C> {
 	 */
 	@Nullable public C getValue(@Nullable Type type, @Nullable String id) {
 		if(type == null || id == null) { return null; }
-		Submap m = typeMap.get(type.getId());
+		Submap m = typeMap.get(type);
 		if (m == null) { return null; }
 		return m.idMap.get(id);
 	}
@@ -58,8 +58,8 @@ public class TemplateMap<C> {
 	 */
 	public void removeValue(@Nullable Type type, @Nullable String id) {
 		if(type == null || id == null) { return; }
-		if (typeMap.containsKey(type.getId()))
-			typeMap.get(type.getId()).idMap.remove(id);
+		if (typeMap.containsKey(type))
+			typeMap.get(type).idMap.remove(id);
 	}
 
 	/**
@@ -75,9 +75,9 @@ public class TemplateMap<C> {
 	public void setValue(@NotNull Type type, @NotNull String id, @NotNull C value) {
 		Validate.notNull(value, "Value cannot be null");
 
-		if (!typeMap.containsKey(type.getId()))
-			typeMap.put(type.getId(), new Submap());
-		typeMap.get(type.getId()).idMap.put(id, value);
+		if (!typeMap.containsKey(type))
+			typeMap.put(type, new Submap());
+		typeMap.get(type).idMap.put(id, value);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class TemplateMap<C> {
 	 *         specific item type
 	 */
 	@NotNull public Collection<C> collectValues(@NotNull Type type) {
-		return typeMap.containsKey(type.getId()) ? typeMap.get(type.getId()).idMap.values() : new HashSet<>();
+		return typeMap.containsKey(type) ? typeMap.get(type).idMap.values() : new HashSet<>();
 	}
 
 	/**

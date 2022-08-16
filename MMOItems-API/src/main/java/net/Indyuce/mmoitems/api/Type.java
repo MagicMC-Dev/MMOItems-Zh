@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Type {
@@ -56,9 +57,11 @@ public class Type {
     public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, EquipmentSlot.ACCESSORY);
     public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, EquipmentSlot.OTHER);
 
-    @NotNull private final String id;
+    @NotNull
+    private final String id;
     private String name;
-    @NotNull private final TypeSet set;
+    @NotNull
+    private final TypeSet set;
     private boolean fourGUIMode;
     @Nullable
     private String loreFormat;
@@ -78,7 +81,8 @@ public class Type {
 
     private UnidentifiedItem unidentifiedTemplate;
 
-    @NotNull private final EquipmentSlot equipType;
+    @NotNull
+    private final EquipmentSlot equipType;
 
     /**
      * Used for item type restrictions for gem stones to easily check if the
@@ -90,12 +94,17 @@ public class Type {
     /**
      * @return Does it display as four rows in /mmoitems browse?
      */
-    public boolean isFourGUIMode() { return fourGUIMode; }
+    public boolean isFourGUIMode() {
+        return fourGUIMode;
+    }
 
     /**
      * @return Default lore format used by this Type
      */
-    @Nullable public String getLoreFormat() { return loreFormat; }
+    @Nullable
+    public String getLoreFormat() {
+        return loreFormat;
+    }
 
     /**
      * List of stats which can be applied onto an item which has this type. This
@@ -270,11 +279,6 @@ public class Type {
         return stat.isCompatible(this);
     }
 
-    @Override
-    public boolean equals(Object object) {
-        return object instanceof Type && ((Type) object).id.equals(id);
-    }
-
     private ItemStack read(String str) {
         Validate.notNull(str, "Input must not be null");
 
@@ -284,8 +288,23 @@ public class Type {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Type type = (Type) o;
+        return id.equals(type.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString() {
-        return getId();
+        return "Type{" +
+                "id='" + id + '\'' +
+                '}';
     }
 
     /**

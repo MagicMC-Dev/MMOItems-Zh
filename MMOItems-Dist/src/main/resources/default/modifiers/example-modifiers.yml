@@ -1,0 +1,106 @@
+sharp:
+    chance: 0.3
+    prefix: '&fSharp'
+    stats:
+        attack-damage: 3
+        lore:
+        - '&7Much sharper!'
+
+fiery:
+    chance: 0.1
+    prefix:
+        format: '&cFiery'
+        priority: 1
+    stats:
+        ability:
+            on-hit:
+                type: burn
+                mode: on_hit
+
+# Lucky modifier which grants more crit chance
+lucky:
+    prefix: '&fLucky'
+    stats:
+        critical-strike-chance:
+            base: 9
+            spread: .1
+            max-spread: .3
+
+# Gives more man mana
+arcane:
+    suffix: '&fof the Arcane'
+    stats:
+        max-mana:
+            base: 6
+            scale: 1
+            spread: .1
+            max-spread: .3
+
+ancient:
+    prefix: '&fAncient'
+    stats:
+        magic-damage:
+            base: 7
+            scale: 3
+            spread: .5
+            max-spread: .9
+
+accuracy:
+    suffix: 'of Accuracy'
+    stats:
+        critical-strike-chance:
+            base: 9
+            spread: .1
+            max-spread: .3
+        weapon-damage:
+            base: 12
+            spread: .1
+            max-spread: .3
+
+swiftness:
+    suffix: 'of Swiftness'
+    stats:
+        perm-effects:
+            speed: 1
+
+# Modifier that makes weapons two-handed but more damage and crit power
+heavy:
+    prefix: '&fHeavy'
+    stats:
+        two-handed: true
+        attack-damage:
+            base: 3
+            scale: 1
+        critical-strike-power:
+            base: 10
+            scale: 2
+
+# Elemental modifiers
+blazing:
+    prefix: '&fBlazing'
+    stats:
+        element:
+            fire:
+                damage:
+                    base: 20
+                    spread: .2
+                    max-spread: .5
+
+# Love u terraria!
+impending-doom:
+    suffix: '&fof Impending Doom'
+    stats:
+        magic-damage:
+            base: 7
+            scale: 3
+            spread: .5
+            max-spread: .9
+        ability:
+            on-hit:
+                type: life_ender
+                mode: on-hit
+                damage:
+                    base: 5
+                    scale: 2
+                    spread: .3
+                    max-spread: .5

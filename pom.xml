@@ -4,11 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.Indyuce</groupId>
     <artifactId>MMOItems</artifactId>
-    <version>6.7.5-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <version>${revision}</version>
+
+    <modules>
+        <module>MMOItems-API</module>
+        <module>MMOItems-Dist</module>
+    </modules>
+
     <name>MMOItems</name>
     <description>A great item solution for your RPG server!!</description>
 
     <properties>
+        <revision>6.7.5-SNAPSHOT</revision>
         <downloadSources>false</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,14 +24,6 @@
     </properties>
 
     <build>
-        <finalName>${project.name}-${project.version}</finalName>
-        <defaultGoal>clean package install</defaultGoal>
-        <resources>
-            <resource>
-                <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources/</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -35,6 +35,12 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+
+            <!--
+            Clears all 'target' folders before building the plugin again.
+            This prevents MythicLib from including old versions of previous
+            classes when building the same version again
+            -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
@@ -52,7 +58,6 @@
     </build>
 
     <repositories>
-
         <repository>
             <id>phoenix</id>
             <url>https://nexus.phoenixdvpt.fr/repository/maven-public/</url>
@@ -63,84 +68,9 @@
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
 
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-
-        <repository>
-            <id>mojang</id>
-            <url>https://libraries.minecraft.net/</url>
-        </repository>
-
-        <repository>
-            <id>sk89q-repo</id>
-            <url>https://maven.enginehub.org/repo/</url>
-        </repository>
-
-        <repository>
-            <id>inventive-repo</id>
-            <url>https://repo.inventivetalent.org/content/groups/public/</url>
-        </repository>
-
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-
-        <!-- Repository used to fetch all Spigot builds -->
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-
-        <!-- AE -->
-        <repository>
-            <id>egg82-ninja</id>
-            <url>https://www.myget.org/F/egg82-java/maven/</url>
-        </repository>
-
-        <!-- holographic displays -->
-        <repository>
-            <id>codemc-repo</id>
-            <url>https://repo.codemc.io/repository/maven-public/</url>
-        </repository>
-
     </repositories>
 
-    <!-- Order of dependencies matters in Maven because the first wins when
-        multiple classes match. -->
-
     <dependencies>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-clean-plugin</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <!-- Spigot API -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>authlib</artifactId>
-            <version>1.5.21</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.Indyuce</groupId>
-            <artifactId>MMOCore</artifactId>
-            <version>1.9.5-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>io.lumine</groupId>
@@ -150,205 +80,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.lumine</groupId>
-            <artifactId>MythicEnchants</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>22.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.RednedEpic</groupId>
-            <artifactId>PhatLoots</artifactId>
-            <version>4.2.3</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.9.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.lumine</groupId>
-            <artifactId>Mythic-Dist</artifactId>
-            <version>5.1.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Local dependencies -->
-        <dependency>
-            <groupId>com.github.Eniripsa96</groupId>
-            <artifactId>SkillAPI</artifactId>
-            <version>master</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>n3kas</groupId>
-            <artifactId>ae.api</artifactId>
-            <version>5.7.6</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.black_ixx</groupId>
-            <artifactId>BossShop</artifactId>
-            <version>2.0.9</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.bekvon.bukkit.residence</groupId>
-            <artifactId>Residence</artifactId>
-            <version>4.8.7.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.herocraftonline</groupId>
-            <artifactId>Heroes</artifactId>
-            <version>1.9.22</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>2.1.104</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>us.eunoians</groupId>
-            <artifactId>McRPG</artifactId>
-            <version>1.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.baks</groupId>
-            <artifactId>rpl</artifactId>
-            <version>3.9.30</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.leothepro555</groupId>
-            <artifactId>skills</artifactId>
-            <version>12.3.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.skills.main</groupId>
-            <artifactId>SkillsPro</artifactId>
-            <version>18.9.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.robin</groupId>
-            <artifactId>BattleLevels</artifactId>
-            <version>6.9.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.arasple.mc</groupId>
-            <artifactId>TrHologram</artifactId>
-            <version>1.11</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.4.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.tobiyas</groupId>
-            <artifactId>RacesAndClasses</artifactId>
-            <version>1.2.6</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.endlesscode</groupId>
-            <artifactId>rpginventory</artifactId>
-            <version>2.3.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sainttx.holograms</groupId>
-            <artifactId>Holograms</artifactId>
-            <version>2.9.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.archyx</groupId>
-            <artifactId>AureliumSkills</artifactId>
-            <version>1.2.8</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.badbones69</groupId>
-            <artifactId>crazyenchantments</artifactId>
-            <version>1.8-db9</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>Citizens</artifactId>
-            <version>2.0.25</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.inventivetalent</groupId>
-            <artifactId>glowapi</artifactId>
-            <version>1.4.8</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.denizenscript</groupId>
-            <artifactId>denizen</artifactId>
-            <version>1.2.1-b1744-REL</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.denizenscript</groupId>
-            <artifactId>depenizen</artifactId>
-            <version>2.0.0-b709</version>
             <scope>provided</scope>
         </dependency>
 

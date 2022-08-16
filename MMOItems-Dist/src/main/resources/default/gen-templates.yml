@@ -1,0 +1,58 @@
+basic-template:
+
+    # A list of materials this template can replace.
+    replace: [STONE]
+    
+    # The chance for a chunk to be chosen for world gen.
+    # (0.7 = 70% chance)
+    chunk-chance: 0.7
+    
+    # The depth range of the generation. This example
+    # allows the blocks to generate between Y coord 10 and 24
+    depth: 10=24
+    
+    # How many blocks to generate in each vein.
+    # (Note this is a maximum value and smaller veins can appear)
+    vein-size: 5
+    
+    # The amount of veins to generate per chunk.
+    vein-count: 2
+
+slime-chunks-only:
+    replace: [STONE]
+    
+    # Use this option to only enable this template in slime chunks
+    slime-chunk: true
+    
+    chunk-chance: 0.6
+    depth: 0=100
+    vein-size: 1
+    vein-count: 4
+
+# Example use of the 'biome' option
+moutain-template:
+    replace: [EMERALD_ORE]
+    chunk-chance: 0.7
+    depth: 10=100
+    vein-size: 6
+    vein-count: 2
+    
+    # Spawns in mountain biomes
+    # If you use '!mountains', the blocks will spawn everywhere but in mountain biomes.
+    # No ! -> biome whitelist
+    # Using ! -> biome blacklist
+    biomes:
+    - moutains
+
+# Example use of the 'world' option
+nether-template:
+    replace: [NETHER_QUARTZ_ORE]
+    chunk-chance: 0.7
+    depth: 10=100
+    vein-size: 6
+    vein-count: 2
+    
+    # Provide world list here. White/blacklist based
+    # on !is still a thing for the world list
+    worlds:
+    - world_nether

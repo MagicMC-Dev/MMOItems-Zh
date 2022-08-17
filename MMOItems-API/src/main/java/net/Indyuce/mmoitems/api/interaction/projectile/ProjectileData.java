@@ -6,89 +6,85 @@ import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.player.PlayerMetadata;
-import net.Indyuce.mmoitems.manager.EntityManager;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
+import org.apache.commons.lang.Validate;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * Since MMOItems 6.7.5 vanilla bows and custom bows are
+ * not treated the same way:
+ * - vanilla bows see NO changes in their damage computations
+ * - custom bows override
+ */
 public class ProjectileData {
-	private final NBTItem sourceItem;
-	private final PlayerMetadata shooter;
-	private final boolean customWeapon;
+    private final NBTItem sourceItem;
+    private final PlayerMetadata shooter;
+    private final double damageMultiplier;
 
-    private double cachedInitialDamage;
+    @Deprecated
+    public ProjectileData(PlayerMetadata shooter, NBTItem sourceItem, boolean customWeapon, double damageMultiplier) {
+        this(shooter, sourceItem, damageMultiplier);
+    }
 
-	public ProjectileData(PlayerMetadata shooter, NBTItem sourceItem, boolean customWeapon) {
-		this.shooter = shooter;
-		this.sourceItem = sourceItem;
-		this.customWeapon = customWeapon;
-	}
+    public ProjectileData(PlayerMetadata shooter, NBTItem sourceItem, double damageMultiplier) {
+        this.shooter = shooter;
+        this.sourceItem = sourceItem;
+        this.damageMultiplier = damageMultiplier;
+    }
 
-	public NBTItem getSourceItem() {
-		return sourceItem;
-	}
+    public NBTItem getSourceItem() {
+        return sourceItem;
+    }
 
-	public PlayerMetadata getShooter() {
-		return shooter;
-	}
+    public PlayerMetadata getShooter() {
+        return shooter;
+    }
 
-	/**
-	 * Used to check if that projectile data is linked to
-	 * a projectile that want sent using a MMOItems bow.
-	 * <p>
-	 * If so, it needs to apply on-hit effects like
-	 * elemental damage or on-hit potion effects
-	 */
-	public boolean isCustomWeapon() {
-		return customWeapon;
-	}
+    public double getDamageMultiplier() {
+        return damageMultiplier;
+    }
 
     /**
-     * Attack damage is handled in a weird fashion for projectile
-     * attacks. Attack damage is not stored in a simple field but
-     * rather the player's attack damage stat is temporarily changed.
+     * Used to check if that projectile data is linked to
+     * a projectile that want sent using a MMOItems bow.
      * <p>
-     * Using this convention the attack damage is handled the same
-     * way for both melee and projectile attacks.
+     * If so, it needs to apply on-hit effects like
+     * elemental damage or on-hit potion effects
+     */
+    @Deprecated
+    public boolean isCustomWeapon() {
+        return true;
+    }
+
+    /**
+     * Will throw an error if it's not a custom bow
      *
-     * @return Projectile damage, not taking into account crits and
-     * on-hit effects which are only applied afterwards by MythicLib
+     * @return Damage of custom bow
      */
     public double getDamage() {
+        Validate.isTrue(isCustomWeapon(), "Not a custom bow");
         return shooter.getStat("ATTACK_DAMAGE");
     }
 
     /**
      * @see {@link #getDamage()}
      */
+    @Deprecated
     public void setDamage(double damage) {
+        Validate.isTrue(isCustomWeapon(), "Not a custom bow");
         shooter.setStat("ATTACK_DAMAGE", damage);
     }
 
-    /**
-     * @see {@link EntityManager#cacheInitialProjectileDamage(EntityDamageByEntityEvent)}
-     */
-    public double getCachedInitialDamage() {
-        return cachedInitialDamage;
+    public void applyPotionEffects(LivingEntity target) {
+        if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
+            for (JsonElement entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
+                if (!entry.isJsonObject())
+                    continue;
+
+                JsonObject object = entry.getAsJsonObject();
+                target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),
+                        object.get("duration").getAsDouble(), object.get("level").getAsInt()).toEffect());
+            }
     }
-
-    /**
-     * @see {@link EntityManager#cacheInitialProjectileDamage(EntityDamageByEntityEvent)}
-     */
-    public void cacheInitialDamage(double cachedInitialDamage) {
-        this.cachedInitialDamage = cachedInitialDamage;
-    }
-
-	public void applyPotionEffects(LivingEntity target) {
-		if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
-			for (JsonElement entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
-				if (!entry.isJsonObject())
-					continue;
-
-				JsonObject object = entry.getAsJsonObject();
-				target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),
-						object.get("duration").getAsDouble(), object.get("level").getAsInt()).toEffect());
-			}
-	}
 }

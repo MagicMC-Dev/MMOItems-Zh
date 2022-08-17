@@ -26,7 +26,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class PlayerListener implements Listener {
     private final Map<Player, ArrayList<ItemStack>> deathItems = new HashMap<>();
@@ -144,14 +147,14 @@ public class PlayerListener implements Listener {
         PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
 
         if (type != null) {
-            Weapon weapon = new Weapon(playerData, nbtItem);
+            final Weapon weapon = new Weapon(playerData, nbtItem);
             if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
                 event.setCancelled(true);
                 return;
             }
-        }
 
-        MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), type != null, 1);
+            MMOItems.plugin.getEntities().registerCustomProjectile(nbtItem, playerData.getStats().newTemporary(EquipmentSlot.fromBukkit(item.getSlot())), event.getEntity(), 1);
+        }
     }
 
     /**

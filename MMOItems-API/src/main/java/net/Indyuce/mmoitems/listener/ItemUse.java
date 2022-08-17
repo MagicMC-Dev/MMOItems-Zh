@@ -274,10 +274,10 @@ public class ItemUse implements Listener {
         if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
             return;
 
-        NBTItem item = NBTItem.get(event.getBow());
-        Type type = Type.get(item.getType());
+        final NBTItem item = NBTItem.get(event.getBow());
+        final Type type = Type.get(item.getType());
+        final PlayerData playerData = PlayerData.get((Player) event.getEntity());
 
-        PlayerData playerData = PlayerData.get((Player) event.getEntity());
         if (type != null) {
             Weapon weapon = new Weapon(playerData, item);
             if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
@@ -285,20 +285,15 @@ public class ItemUse implements Listener {
                 return;
             }
 
-			/*if (!checkDualWield((Player) event.getEntity(), item, bowSlot)) {
-				event.setCancelled(true);
-				return;
-			}*/
+            // Have to get hand manually because 1.15 and below does not have event.getHand()
+            ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
+            final EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
+            MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event.getForce());
         }
 
-        // Have to get hand manually because 1.15 and below does not have event.getHand()
-        ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
-        EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
-
-        Arrow arrow = (Arrow) event.getProjectile();
+        final Arrow arrow = (Arrow) event.getProjectile();
         if (item.getStat("ARROW_VELOCITY") > 0)
             arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
-        MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), type != null, event.getForce());
     }
 
     /**

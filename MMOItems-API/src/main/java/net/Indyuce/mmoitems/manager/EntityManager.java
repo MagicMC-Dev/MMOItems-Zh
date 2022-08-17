@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.damage.ProjectileAttackMetadata;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
@@ -8,7 +10,10 @@ import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,33 +38,24 @@ public class EntityManager implements Listener {
 
     private final Map<Integer, ProjectileData> projectiles = new WeakHashMap<>();
 
+    @Deprecated
+    public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, boolean customWeapon, double damageMultiplicator) {
+        registerCustomProjectile(sourceItem, attacker, entity, damageMultiplicator);
+    }
+
     /**
      * Registers a custom projectile. This is used for bows, crossbows and tridents.
-     * <p>
-     * Default bow/trident damage is set to 7 just like vanilla Minecraft.
      *
      * @param sourceItem          Item used to shoot the projectile
      * @param attacker            Cached stats of the player shooting the projectile
      * @param entity              The custom entity
-     * @param customWeapon        Is the source weapon is a custom item
      * @param damageMultiplicator The damage coefficient. For bows, this is basically the pull force.
      *                            For tridents or anything else this is always set to 1
      */
-    public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, boolean customWeapon, double damageMultiplicator) {
+    public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, double damageMultiplicator) {
 
         // Initialize projectile data
-        ProjectileData projectileData = new ProjectileData(attacker, sourceItem, customWeapon);
-
-        /*
-         * For bows, MC default value is 7. When using custom bows, the attack
-         * damage stats returns the correct amount of damage. When using a vanilla
-         * bow, attack damage is set to 2 because it's the default fist damage value.
-         * Therefore MMOItems adds 5 to match the vanilla bow damage which is 7.
-         *
-         * Damage coefficient is how much you pull the bow. It's a float between
-         * 0 and 1 for bows, and it is always 1 for tridents or crossbows.
-         */
-        projectileData.setDamage((attacker.getStat("ATTACK_DAMAGE") + (customWeapon ? 0 : 5)) * damageMultiplicator);
+        final ProjectileData projectileData = new ProjectileData(attacker, sourceItem, damageMultiplicator);
 
         /*
          * Load arrow particles if the entity is an arrow and if the item has
@@ -100,84 +96,54 @@ public class EntityManager implements Listener {
         entities.remove(entity.getEntityId());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void unregisterEntityData(EntityDeathEvent event) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
-    }
-
     /**
-     * This fixes an issue with Heroes and MythicMobs as they are
-     * plugins which MODIFY or apply damage modifiers to bow hit events.
+     * This event is called on LOWEST and only edits the custom bow base damage.
+     * It does NOT take into account the base damage passed in Bow#getDamage()
+     * and fully overrides any change.
      * <p>
-     * By caching the event damage with LOWEST priority you basically store
-     * the VANILLA amount of damage the bow would have dealt if there was no
-     * plugin.
-     * <p>
-     * The main problem comes from not being able to SET the bow damage. You are
-     * only allowed to add flat modifiers to it, and if all the plugins do that
-     * the calculations are fully correct.
-     * <p>
-     * On NORMAL priority, MMOItems calculates the bow damage, substract from that
-     * the vanilla bow damage which outputs the damage modifier from MMOItems. This
-     * makes it compatible with other plugins modifying the damage.
-     *
-     * @see {@link #applyOnHitEffects(EntityDamageByEntityEvent)}
+     * Event order: ProjectileHit -> EntityDamage / EntityDeathEvent
      */
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void cacheInitialProjectileDamage(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Projectile) {
-
-            /*
-             * Some projectiles like Shulker Missiles are not handled
-             * by MMOItems, therefore it needs to check if it's in the
-             * projectile data map first before doing anything
-             */
-            ProjectileData projData = projectiles.get(event.getEntity().getEntityId());
-            if (projData != null)
-                projData.cacheInitialDamage(event.getDamage());
-        }
-    }
-
-    // Projectile damage and effects
-    @EventHandler(ignoreCancelled = true)
-    public void applyOnHitEffects(EntityDamageByEntityEvent event) {
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void customBowDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
             return;
 
-        Projectile projectile = (Projectile) event.getDamager();
-        ProjectileData data = projectiles.get(projectile.getEntityId());
+        final Projectile projectile = (Projectile) event.getDamager();
+        final ProjectileData data = projectiles.get(projectile.getEntityId());
         if (data == null)
             return;
 
-        LivingEntity target = (LivingEntity) event.getEntity();
-        double damage = data.getDamage();
+        // Calculate custom base bow damage
+        double baseDamage = data.getDamage();
 
         // Apply power vanilla enchant
         if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()
                 && data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
-            damage *= 1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE));
+            baseDamage *= 1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE));
+
+        event.setDamage(baseDamage);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onHitEffects(PlayerAttackEvent event) {
+        if (!(event.getAttack() instanceof ProjectileAttackMetadata projAttack))
+            return;
+
+        final ProjectileData data = projectiles.get(projAttack.getProjectile().getEntityId());
+        if (data == null)
+            return;
 
         // Apply MMOItems specific modifications
-        if (data.isCustomWeapon())
-            data.applyPotionEffects(target);
-
-        event.setDamage(event.getDamage() + damage - data.getCachedInitialDamage());
-
-        // Remove projectile if it has no piercing anymore
-        if (!(projectile instanceof AbstractArrow) || ((AbstractArrow) projectile).getPierceLevel() <= 1)
-            unregisterCustomProjectile(projectile);
+        data.applyPotionEffects(event.getEntity());
     }
 
-    // Unregister custom projectiles from the map
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void unregisterOnBlockHit(ProjectileHitEvent event) {
-        if (event.getHitBlock() != null)
-            projectiles.remove(event.getEntity().getEntityId());
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void unregisterProjectileData(ProjectileHitEvent event) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomProjectile(event.getEntity()));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void unregisterOnEntityHit(EntityDeathEvent event) {
-        projectiles.remove(event.getEntity().getEntityId());
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void unregisterEntityData(EntityDeathEvent event) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> unregisterCustomEntity(event.getEntity()));
     }
 }

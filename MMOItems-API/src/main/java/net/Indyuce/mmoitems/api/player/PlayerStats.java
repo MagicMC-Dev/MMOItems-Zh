@@ -75,7 +75,7 @@ public class PlayerStats {
                     ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
                     // Apply hand weapon stat offset
-                    if (item.getSlot().isHand() && stat instanceof AttackWeaponStat)
+                    if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttackWeaponStat)
                         value -= ((AttackWeaponStat) stat).getOffset(playerData);
 
                     packet.addModifier(new StatModifier("MMOItem-" + index++, stat.getId(), value, ModifierType.FLAT, item.getSlot(), source));

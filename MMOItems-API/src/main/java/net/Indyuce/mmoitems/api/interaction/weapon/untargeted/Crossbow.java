@@ -37,7 +37,7 @@ public class Crossbow extends UntargetedWeapon {
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 
         // Register custom projectile
-        MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, true, 1);
+        MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, 1);
 
         // Trigger abilities
         stats.getData().triggerSkills(TriggerType.SHOOT_BOW, arrow);

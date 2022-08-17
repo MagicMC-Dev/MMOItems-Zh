@@ -69,15 +69,13 @@ public class EquippedItem {
         if (type == null)
             return false;
 
+        // Equips anywhere
         if (slot == EquipmentSlot.ANY)
             return true;
 
-        /*
-         * Main hand items apply their stats and options in off
-         * hand as well but the reciprocal is false
-         */
-        if (type.getEquipmentType() == EquipmentSlot.MAIN_HAND)
-            return slot.isHand();
+        // Does it work in offhand
+        if (slot == EquipmentSlot.OFF_HAND)
+            return type.isOffhandItem();
 
         return slot == type.getEquipmentType();
     }

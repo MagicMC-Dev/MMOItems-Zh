@@ -38,7 +38,6 @@ import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.gui.listener.GuiListener;
 import net.Indyuce.mmoitems.listener.*;
 import net.Indyuce.mmoitems.manager.*;
 import org.apache.commons.lang.Validate;
@@ -79,6 +78,7 @@ public class MMOItems extends JavaPlugin {
 	private final PlayerInventoryHandler inventory = new PlayerInventoryHandler();
 	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private final List<EnchantPlugin<? extends Enchantment>> enchantPlugins = new ArrayList<>();
+	private final StatManager statManager = new StatManager();
 
 	private DropTableManager dropTableManager;
 	private WorldGenManager worldGenManager;
@@ -86,7 +86,6 @@ public class MMOItems extends JavaPlugin {
 	private ConfigManager configManager;
 	private BlockManager blockManager;
 	private TierManager tierManager;
-	private StatManager statManager;
 	private SetManager setManager;
 
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
@@ -119,11 +118,7 @@ public class MMOItems extends JavaPlugin {
 		saveDefaultConfig();
 		configManager = new ConfigManager();
 
-		/*
-		 * Stat manager must be initialized before MMOCore compatibility
-		 * initializes so that MMOCore can register its stats
-		 */
-		statManager = new StatManager();
+		statManager.load();
 		typeManager.reload();
 		templateManager.preloadTemplates();
 
@@ -187,6 +182,7 @@ public class MMOItems extends JavaPlugin {
 		dropTableManager = new DropTableManager();
 		worldGenManager = new WorldGenManager();
 		blockManager = new BlockManager();
+		MMOItems.plugin.getStats().reload(false);
 
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null) vaultSupport = new VaultSupport();
 

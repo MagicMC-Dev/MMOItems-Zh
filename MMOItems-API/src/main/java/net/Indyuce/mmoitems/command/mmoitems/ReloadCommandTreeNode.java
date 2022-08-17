@@ -64,6 +64,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 		MMOItems.plugin.getLayouts().reload();
 		MMOItems.plugin.getFormats().reload();
 		MMOItems.plugin.getTemplates().reload();
+		MMOItems.plugin.getStats().reload(true);
 		sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " "
 				+ MMOItems.plugin.getDescription().getVersion() + " reloaded.");
 		sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED

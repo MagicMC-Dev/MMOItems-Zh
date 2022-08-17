@@ -132,7 +132,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         // Create Array
         ArrayList<ItemTag> ret = new ArrayList<>();
         for (Pair<Element, ElementStatType> pair : data.getKeys())
-            ret.add(new ItemTag("MMOITEMS_" + pair, data.getStat(pair.getKey(), pair.getValue())));
+            ret.add(new ItemTag("MMOITEMS_" + pair.getValue().getConcatenatedTagPath(pair.getKey()), data.getStat(pair.getKey(), pair.getValue())));
 
         // Thats it
         return ret;
@@ -145,7 +145,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         ArrayList<ItemTag> relevantTags = new ArrayList<>();
         for (Element element : Element.values())
             for (ElementStatType statType : ElementStatType.values()) {
-                final String path = "MMOITEMS_" + element.getName() + "_" + statType.name();
+                final String path = "MMOITEMS_" + statType.getConcatenatedTagPath(element);
                 if (mmoitem.getNBT().hasTag(path))
                     relevantTags.add(ItemTag.getTagAtPath(path, mmoitem.getNBT(), SupportedNBTTagValues.DOUBLE));
             }
@@ -165,7 +165,6 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
         // Create new
         ElementListData elements = new ElementListData();
-        boolean success = false;
 
         // Try to find every existing element
         for (Element element : Element.values())
@@ -176,10 +175,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
                     elements.setStat(element, statType, (double) tag.getValue());
             }
 
-        if (success) {
-            return elements;
-        }
-        return null;
+        return elements.isEmpty() ? null : elements;
     }
 
     @Override

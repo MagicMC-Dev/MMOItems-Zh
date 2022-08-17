@@ -1,9 +1,12 @@
 package net.Indyuce.mmoitems.manager;
 
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.element.Element;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.*;
+import net.Indyuce.mmoitems.util.ElementStatType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,14 +30,35 @@ public class StatManager {
 	 * Load default stats using java reflection, get all public static final
 	 * fields in the ItemStat and register them as stat instances
 	 */
-	public StatManager() {
+	public void load() {
 		for (Field field : ItemStats.class.getFields())
 			try {
 				if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
 					register((ItemStat) field.get(null));
 			} catch (IllegalArgumentException | IllegalAccessException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register stat called " + field.getName());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register stat called '" + field.getName() + "': " + exception.getMessage());
 			}
+	}
+
+	/**
+	 * @see FictiveNumericStat
+	 * @deprecated
+	 */
+	@Deprecated
+	public void reload(boolean cleanFirst) {
+
+		// Clean fictive numeric stats before
+		if (cleanFirst)
+			for (Iterator<DoubleStat> ite = numeric.iterator(); ite.hasNext(); ) {
+				DoubleStat stat = ite.next();
+				if (stat instanceof FictiveNumericStat)
+					ite.remove();
+			}
+
+		// Register elemental stats
+		for (ElementStatType type : ElementStatType.values())
+			for (Element element : MythicLib.plugin.getElements().getAll())
+				numeric.add(new FictiveNumericStat(element, type));
 	}
 
 	public Collection<ItemStat> getAll() {
@@ -85,7 +109,7 @@ public class StatManager {
 
 	/**
 	 * Registers a stat in MMOItems
-	 * 
+	 *
 	 * @param      id   Useless.
 	 * @param      stat The stat instance
 	 * @deprecated      Stat IDs are now stored in the stat instance directly.
@@ -101,7 +125,7 @@ public class StatManager {
 	 * Registers a stat in MMOItems. It must be done right after MMOItems loads
 	 * before any manager is initialized because stats are commonly used when
 	 * loading configs.
-	 * 
+	 *
 	 * @param stat The stat to register
 	 */
 	public void register(ItemStat stat) {

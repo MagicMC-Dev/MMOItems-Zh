@@ -69,9 +69,8 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull ShieldPatternData data) {
 		BlockStateMeta meta = (BlockStateMeta) item.getMeta();
 		Banner banner = (Banner) meta.getBlockState();
-		ShieldPatternData pattern = (ShieldPatternData) data;
-		banner.setBaseColor(pattern.getBaseColor());
-		banner.setPatterns(pattern.getPatterns());
+		banner.setBaseColor(data.getBaseColor());
+		banner.setPatterns(data.getPatterns());
 		((BlockStateMeta) item.getMeta()).setBlockState(banner);
 		item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 	}

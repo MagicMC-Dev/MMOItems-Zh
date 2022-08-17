@@ -72,7 +72,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
      * Fixes https://gitlab.com/phoenix-dvpmt/mmocore/-/issues/545
      */
     @EventHandler
-    public void updateInventoryOnClassChange(AsyncPlayerDataLoadEvent event) {
+    public void updateInventoryOnLoad(AsyncPlayerDataLoadEvent event) {
         if (net.Indyuce.mmoitems.api.player.PlayerData.has(event.getPlayer()))
             net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
     }

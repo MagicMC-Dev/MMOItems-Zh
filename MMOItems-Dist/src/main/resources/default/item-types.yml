@@ -161,9 +161,10 @@ LUTE:
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
+# Applies stats in mainhand only
 CATALYST:
     display: PRISMARINE_SHARD
-    name: 'Catalyst'
+    name: 'Catalyst (Mainhand)'
     unident-item:
         name: '&f#prefix#Unidentified Catalyst'
         lore:
@@ -174,9 +175,10 @@ CATALYST:
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
+# Applies stats in offhand only
 OFF_CATALYST:
     display: PRISMARINE_CRYSTALS
-    name: 'Offhand Catalyst'
+    name: 'Catalyst (Offhand)'
     unident-item:
         name: '&f#prefix#Unidentified Offhand Catalyst'
         lore:
@@ -186,6 +188,20 @@ OFF_CATALYST:
         - '{tier}&8Item Info:'
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
+
+# Applies stats in both hands
+BOTH_CATALYST:
+    display: PRISMARINE_CRYSTALS
+    name: 'Catalyst'
+    unident-item:
+        name: '&f#prefix#Unidentified Offhand Catalyst'
+        lore:
+            - '&7This item is unidentified. I must'
+            - '&7find a way to identify it!'
+            - '{tier}'
+            - '{tier}&8Item Info:'
+            - '{range}&8- &7Lvl Range: &e#range#'
+            - '{tier}&8- &7Item Tier: #prefix##tier#'
 
 ORNAMENT:
     display: GOLD_NUGGET

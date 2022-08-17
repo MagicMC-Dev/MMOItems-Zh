@@ -40,15 +40,16 @@ public class Type {
     public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, EquipmentSlot.MAIN_HAND);
     public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, EquipmentSlot.MAIN_HAND);
 
-    // Offhand
+    // Hand Accessories
     public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, EquipmentSlot.MAIN_HAND);
-    public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OFF_HAND);
+    public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OTHER);
+    public static final Type BOTH_CATALYST = new Type(TypeSet.OFFHAND, "BOTH_CATALYST", false, EquipmentSlot.MAIN_HAND);
 
     // Any
     public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.ANY);
 
     // Extra
-    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR, true);
+    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR);
     public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, EquipmentSlot.MAIN_HAND);
     public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, EquipmentSlot.MAIN_HAND);
     public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, EquipmentSlot.MAIN_HAND);
@@ -57,12 +58,13 @@ public class Type {
     public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, EquipmentSlot.ACCESSORY);
     public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, EquipmentSlot.OTHER);
 
-    @NotNull
     private final String id;
-    private String name;
-    @NotNull
     private final TypeSet set;
-    private boolean fourGUIMode;
+    private final EquipmentSlot equipType;
+    private final boolean weapon;
+
+    private String name;
+
     @Nullable
     private String loreFormat;
 
@@ -81,52 +83,23 @@ public class Type {
 
     private UnidentifiedItem unidentifiedTemplate;
 
-    @NotNull
-    private final EquipmentSlot equipType;
-
-    /**
-     * Used for item type restrictions for gem stones to easily check if the
-     * item is a weapon.
-     */
-    private final boolean weapon;
-
-
-    /**
-     * @return Does it display as four rows in /mmoitems browse?
-     */
-    public boolean isFourGUIMode() {
-        return fourGUIMode;
-    }
-
-    /**
-     * @return Default lore format used by this Type
-     */
-    @Nullable
-    public String getLoreFormat() {
-        return loreFormat;
-    }
-
     /**
      * List of stats which can be applied onto an item which has this type. This
      * improves performance when generating an item by a significant amount.
      */
     private final List<ItemStat> available = new ArrayList<>();
 
-    public Type(TypeSet set, String id, boolean weapon, EquipmentSlot equipType) {
-        this(set, id, weapon, equipType, false);
+    @Deprecated
+    public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType, boolean fourGUIMode) {
+        this(set, id, weapon, equipType);
     }
 
-    public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType, boolean fourGUI) {
+    public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType) {
         this.set = set;
         this.id = id.toUpperCase().replace("-", "_").replace(" ", "_");
         this.equipType = equipType;
-        this.fourGUIMode = fourGUI;
         this.weapon = weapon;
         this.loreFormat = null;
-
-        //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 Registering\u00a7f " + id);
-        //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 > 4GUI\u00a7b " + fourGUIMode);
-        //TYP//MMOItems.log("\u00a78TYPE \u00a75HARDCODED\u00a77 > Lore\u00a7b " + loreFormat);
     }
 
     public Type(@NotNull TypeManager manager, @NotNull ConfigurationSection config) {
@@ -134,30 +107,14 @@ public class Type {
 
         parent = manager.get(config.getString("parent", "").toUpperCase().replace("-", "_").replace(" ", "_"));
 
-        // Parent existed?
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 Reading config overrides for\u00a7f " + id + "\u00a78 (parent\u00a77 " + parent + "\u00a78)");
-
         set = (parent != null ? parent.set : TypeSet.EXTRA);
         weapon = (parent != null && parent.weapon);
         equipType = (parent != null ? parent.equipType : EquipmentSlot.OTHER);
-        this.fourGUIMode = config.getBoolean("AlternateGUIMode", (parent != null && parent.fourGUIMode));
         this.loreFormat = config.getString("LoreFormat", (parent != null ? parent.loreFormat : null));
-
-        // Parent existed?
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 > Type\u00a7f " + equipType.toString());
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 > 4GUI\u00a7b " + fourGUIMode);
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Config \u00a79 " + config.getBoolean("AlternateGUIMode"));
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.fourGUIMode));
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a77 > Lore\u00a7b " + loreFormat);
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Config \u00a79 " + config.getString("LoreFormat"));
-        //TYP//MMOItems.log("\u00a78TYPE \u00a72CONFIG\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.loreFormat));
     }
 
     public void load(ConfigurationSection config) {
         Validate.notNull(config, "Could not find config for " + getId());
-
-        // Parent existed?
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 Loading config overrides for\u00a7f " + id + "\u00a78 (parent\u00a77 " + parent + "\u00a78)");
 
         name = config.getString("name", name);
         item = read(config.getString("display", item == null ? Material.STONE.toString() : item.getType().toString()));
@@ -165,21 +122,12 @@ public class Type {
         (unidentifiedTemplate = new UnidentifiedItem(this)).update(config.getConfigurationSection("unident-item"));
 
         // Getting overridden?
-        fourGUIMode = config.getBoolean("AlternateGUIMode", (parent != null && parent.fourGUIMode) || fourGUIMode);
         loreFormat = config.getString("LoreFormat", (parent != null ? parent.loreFormat : loreFormat));
-
-        // Parent existed?
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 > Type\u00a7f " + equipType.toString());
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 > 4GUI\u00a7b " + fourGUIMode);
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Config \u00a79 " + config.getBoolean("AlternateGUIMode"));
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.fourGUIMode));
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a77 > Lore\u00a7b " + loreFormat);
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Config \u00a79 " + config.getString("LoreFormat"));
-        //TYP//MMOItems.log("\u00a78TYPE \u00a7aLOAD\u00a78 >>> Parent \u00a79 " + (parent == null ? "<null>" : parent.loreFormat));
     }
 
     /**
-     * @deprecated Type is no longer an enum so that external plugins can register their own types. Use getId() instead
+     * @deprecated Type is no longer an enum so that external plugins
+     *         can register their own types. Use getId() instead
      */
     @Deprecated
     public String name() {
@@ -224,7 +172,30 @@ public class Type {
     }
 
     /**
-     * @return The parentmost parent of this type, or itself, if it has no parent.
+     * @return Does it display as four rows in /mmoitems browse?
+     */
+    public boolean isFourGUIMode() {
+        return equipType == EquipmentSlot.ARMOR;
+    }
+
+    /**
+     * @return Should its stats apply in offhand
+     */
+    public boolean isOffhandItem() {
+        final Type supertype = getSupertype();
+        return supertype.equals(OFF_CATALYST) || supertype.equals(BOTH_CATALYST);
+    }
+
+    /**
+     * @return Default lore format used by this Type
+     */
+    @Nullable
+    public String getLoreFormat() {
+        return loreFormat;
+    }
+
+    /**
+     * @return The highest parent of this type, or itself, if it has no parent.
      */
     public Type getSupertype() {
         Type parentMost = this;

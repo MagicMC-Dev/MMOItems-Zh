@@ -2,14 +2,15 @@ package net.Indyuce.mmoitems.comp.mmocore;
 
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.MMOCore;
+import net.Indyuce.mmocore.api.event.AsyncPlayerDataLoadEvent;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.event.PlayerResourceUpdateEvent;
-import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.player.attribute.PlayerAttribute;
 import net.Indyuce.mmocore.api.player.stats.StatType;
 import net.Indyuce.mmocore.experience.Profession;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
@@ -35,9 +36,9 @@ public class MMOCoreHook implements RPGHandler, Listener {
 
             // Adds profession specific Additional Experience stats.
             MMOItems.plugin.getStats().register(new DoubleStat((StatType.ADDITIONAL_EXPERIENCE.name() + '_' + profession.getId())
-                .replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
-                VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "Additional Experience (MMOCore)"
-                , new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."}, new String[]{"!block", "all"}));
+                    .replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
+                    VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "Additional Experience (MMOCore)"
+                    , new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."}, new String[]{"!block", "all"}));
 
             MMOItems.plugin.getStats().register(new Required_Profession(profession));
         }
@@ -63,25 +64,29 @@ public class MMOCoreHook implements RPGHandler, Listener {
     }
 
     /**
-     * Removing this as it is causing issues when players log on for the first time.
-     * Right after MMOCore loads the player data, MMOItems player data is not loaded yet
-     * so net.Indyuce.mmoitems.api.player.PlayerData.get() returns null so this can't work
+     * Updates inventory when player data has finished loading. This may
+     * cause issues because in some cases the MMOCore player data is done
+     * loading before MI data is even initialized in which case MI should
+     * not do anymore.
+     * <p>
+     * Fixes https://gitlab.com/phoenix-dvpmt/mmocore/-/issues/545
      */
-	/*@EventHandler
-	public void updateInventoryOnPlayerDataLoad(PlayerDataLoadEvent event) {
-		net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
-	}*/
+    @EventHandler
+    public void updateInventoryOnClassChange(AsyncPlayerDataLoadEvent event) {
+        if (net.Indyuce.mmoitems.api.player.PlayerData.has(event.getPlayer()))
+            net.Indyuce.mmoitems.api.player.PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+    }
 
     public static class MMOCoreRPGPlayer extends RPGPlayer {
-        private final PlayerData data;
+        private final net.Indyuce.mmocore.api.player.PlayerData data;
 
-        public MMOCoreRPGPlayer(net.Indyuce.mmoitems.api.player.PlayerData playerData) {
+        public MMOCoreRPGPlayer(PlayerData playerData) {
             super(playerData);
 
-            data = PlayerData.get(playerData.getUniqueId());
+            data = net.Indyuce.mmocore.api.player.PlayerData.get(playerData.getUniqueId());
         }
 
-        public PlayerData getData() {
+        public net.Indyuce.mmocore.api.player.PlayerData getData() {
             return data;
         }
 

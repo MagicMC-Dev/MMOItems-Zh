@@ -2,6 +2,10 @@ package net.Indyuce.mmoitems.comp.parse;
 
 import org.bukkit.entity.Player;
 
+/**
+ * @deprecated Not used
+ */
+@Deprecated
 public interface StringInputParser {
 
 	/*

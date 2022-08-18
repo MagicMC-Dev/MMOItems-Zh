@@ -15,7 +15,10 @@ import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.command.MMOItemsCommandTreeRoot;
-import net.Indyuce.mmoitems.comp.*;
+import net.Indyuce.mmoitems.comp.MMOItemsMetrics;
+import net.Indyuce.mmoitems.comp.MMOItemsRewardTypes;
+import net.Indyuce.mmoitems.comp.McMMONonRPGHook;
+import net.Indyuce.mmoitems.comp.WorldEditSupport;
 import net.Indyuce.mmoitems.comp.eco.VaultSupport;
 import net.Indyuce.mmoitems.comp.enchants.CrazyEnchantsStat;
 import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
@@ -38,7 +41,7 @@ import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.listener.*;
+import net.Indyuce.mmoitems.listener.CraftingListener;
 import net.Indyuce.mmoitems.manager.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -76,6 +79,7 @@ public class MMOItems extends JavaPlugin {
 	private final TypeManager typeManager = new TypeManager();
 	private final ItemManager itemManager = new ItemManager();
 	private final PlayerInventoryHandler inventory = new PlayerInventoryHandler();
+	@Deprecated
 	private final List<StringInputParser> stringInputParsers = new ArrayList<>();
 	private final List<EnchantPlugin<? extends Enchantment>> enchantPlugins = new ArrayList<>();
 	private final StatManager statManager = new StatManager();
@@ -551,6 +555,10 @@ public class MMOItems extends JavaPlugin {
 		return vaultSupport;
 	}
 
+	/**
+	 * @deprecated Not used
+	 */
+	@Deprecated
 	public List<StringInputParser> getStringInputParsers() {
 		return stringInputParsers;
 	}

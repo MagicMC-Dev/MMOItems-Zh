@@ -14,8 +14,10 @@ import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
+import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.type.BooleanStat;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
+import net.Indyuce.mmoitems.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -64,8 +66,8 @@ public class CanUnsocket extends BooleanStat implements ConsumableItemInteractio
          * Cancel if no gem could be extracted.
          */
         mmo = new LiveMMOItem(target);
-        ArrayList<MMOItem> mmoGemStones = mmo.extractGemstones();
-        if (mmoGemStones.size() == 0) {
+        final List<Pair<GemstoneData, MMOItem>> mmoGemStones = mmo.extractGemstones();
+        if (mmoGemStones.isEmpty()) {
             Message.RANDOM_UNSOCKET_GEM_TOO_OLD.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
             return false; }
 

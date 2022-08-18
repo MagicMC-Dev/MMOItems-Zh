@@ -5,9 +5,7 @@ import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
-import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.event.item.DeconstructItemEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -16,10 +14,11 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
+import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.util.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -74,8 +73,8 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
          * Cancel if no gem could be extracted.
          */
         MMOItem mmo = new LiveMMOItem(target);
-        ArrayList<MMOItem> mmoGemStones = mmo.extractGemstones();
-        if (mmoGemStones.size() == 0) {
+        List<Pair<GemstoneData, MMOItem>> mmoGemStones = mmo.extractGemstones();
+        if (mmoGemStones.isEmpty()) {
             Message.RANDOM_UNSOCKET_GEM_TOO_OLD.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
             return false; }
 
@@ -95,7 +94,10 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
             if (randomGem >= mmoGemStones.size()) { randomGem = mmoGemStones.size() - 1;}
 
             // Choose gem
-            MMOItem gem = mmoGemStones.get(randomGem);
+            final Pair<GemstoneData, MMOItem> pair = mmoGemStones.get(randomGem);
+            final MMOItem gem = pair.getValue();
+            final GemstoneData gemData = pair.getKey();
+
             mmoGemStones.remove(randomGem);
             //GEM//MMOItems.log("\u00a73   *\u00a77 Chose to remove\u00a7b " + gem.getType() + " " + gem.getId());
 
@@ -111,14 +113,14 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
                     // Drop
                     items2Drop.add(builtGem);
                     String chosenColor;
-                    if (gem.getAsGemColor() != null) {
+                    if (gemData.getSocketColor() != null) {
                         //GEM//MMOItems.log("\u00a7b   *\u00a77 Restored slot\u00a7e " + gem.getAsGemColor());
-                        chosenColor = gem.getAsGemColor(); } else {
+                        chosenColor = gemData.getSocketColor(); } else {
                         //GEM//MMOItems.log("\u00a7b   *\u00a77 Restored slot\u00a76 " + GemSocketsData.getUncoloredGemSlot() + " \u00a78(Uncolored Def)");
                         chosenColor = GemSocketsData.getUncoloredGemSlot(); }
 
                     // Unregister
-                    mmo.removeGemStone(gem.getAsGemUUID(), chosenColor);
+                    mmo.removeGemStone(gemData.getHistoricUUID(), chosenColor);
 
                     // Gem Removal Count Decreased
                     s--;

@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
@@ -116,17 +115,12 @@ public class TierManager implements Reloadable{
 
 	/**
 	 * @param item Item you seek the tier of
-	 *
 	 * @return The tier of this item, it it has any
+	 * @deprecated Use {@link MMOItem#getTier()}
 	 */
-	@Nullable public ItemTier findTier(@NotNull MMOItem item) {
-		try {
-
-			// Has that data?
-			return item.hasData(ItemStats.TIER) ? get(item.getData(ItemStats.TIER).toString()) : null;
-
-		// Pretty sure there is no way for this exception to be thrown tho
-		} catch (IllegalArgumentException exception) { return null; }
+	@Nullable
+	@Deprecated
+	public ItemTier findTier(@NotNull MMOItem item) {
+		return item.getTier();
 	}
-
 }

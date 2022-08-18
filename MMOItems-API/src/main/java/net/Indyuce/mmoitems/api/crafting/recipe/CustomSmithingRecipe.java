@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.api.crafting.ingredients.*;
 import io.lumine.mythic.lib.api.crafting.outputs.MRORecipe;
 import io.lumine.mythic.lib.api.crafting.outputs.MythicRecipeOutput;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicCachedResult;
-import io.lumine.mythic.lib.api.crafting.recipes.MythicCraftingManager;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipe;
 import io.lumine.mythic.lib.api.crafting.recipes.vmp.VanillaInventoryMapping;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -580,8 +579,10 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
 
         // Extract gemstones
         ArrayList<MMOItem> compGemstones = new ArrayList<>();
-        if (item != null) { compGemstones.addAll(item.extractGemstones()); }
-        if (ingot != null) { compGemstones.addAll(ingot.extractGemstones()); }
+        if (item != null)
+            item.extractGemstones().forEach(pair -> compGemstones.add(pair.getValue()));
+        if (ingot != null)
+            ingot.extractGemstones().forEach(pair -> compGemstones.add(pair.getValue()));
 
         // Which stones would not fit
         ArrayList<ItemStack> remainingStones = new ArrayList<>();

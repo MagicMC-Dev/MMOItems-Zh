@@ -7,7 +7,6 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.UpgradeTemplate;
-import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.item.ItemReference;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
@@ -17,9 +16,9 @@ import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import net.Indyuce.mmoitems.util.Pair;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +28,14 @@ import java.util.*;
 public class MMOItem implements ItemReference {
 	private final Type type;
 	private final String id;
+
+	/**
+	 * Where data about all the item stats is stored. When the item is
+	 * generated, this map is read and all the stats are applied. The order in
+	 * which stats are added is not very important anymore
+	 */
+	@NotNull
+	private final Map<ItemStat, StatData> stats = new HashMap<>();
 
 	/**
 	 * Constructor used to generate an ItemStack based on some stat data
@@ -45,16 +52,11 @@ public class MMOItem implements ItemReference {
 		this.id = id;
 	}
 
-	@Override public Type getType() { return type; }
+	@Override
+	public Type getType() { return type; }
 
-	@Override public String getId() { return id; }
-
-	/**
-	 * Where data about all the item stats is stored. When the item is
-	 * generated, this map is read and all the stats are applied. The order in
-	 * which stats are added is not very important anymore
-	 */
-	@NotNull private final Map<ItemStat, StatData> stats = new HashMap<>();
+	@Override
+	public String getId() { return id; }
 
 	/**
 	 * Will merge that data into this item:
@@ -169,21 +171,23 @@ public class MMOItem implements ItemReference {
 	 * its original stats, and from which gem stone came each stat, in order to allow
 	 * removal of gem stones in the future. This is where that is remembered.
 	 */
-	@NotNull final Map<String, StatHistory> mergeableStatHistory = new HashMap<>();
+	@NotNull
+	private final Map<ItemStat, StatHistory> mergeableStatHistory = new HashMap<>();
 
 	/**
 	 * Gets the history associated to this stat, if there is any
 	 * <p></p>
 	 * A stat history is basically the memmory of its original stats, from when it was created, its gem stone stats, those added by which gem, and its upgrade bonuses.
 	 */
-	@Nullable public StatHistory getStatHistory(@NotNull ItemStat stat) {
+	@Nullable
+	public StatHistory getStatHistory(@NotNull ItemStat stat) {
 
 		/*
 		 * As an assumption for several enchantment recognition operations,
 		 * Enchantment data must never be clear and lack history. This is
 		 * the basis for when an item is 'old'
 		 */
-		if (stat instanceof Enchants) { return mergeableStatHistory.getOrDefault(stat.getNBTPath(), StatHistory.from(this, stat, true)); }
+		if (stat instanceof Enchants) { return mergeableStatHistory.getOrDefault(stat, StatHistory.from(this, stat, true)); }
 
 		/*
 		 * Normal stat, just fetch.
@@ -191,15 +195,15 @@ public class MMOItem implements ItemReference {
 		try {
 
 			// Well that REALLY should work
-			return mergeableStatHistory.get(stat.getNBTPath());
+			return mergeableStatHistory.get(stat);
 
 		} catch (ClassCastException ignored) {
 			return null;
 		}
 	}
-	@NotNull public ArrayList<StatHistory> getStatHistories() {
 
-		// Those
+	@NotNull
+	public ArrayList<StatHistory> getStatHistories() {
 		return new ArrayList<>(mergeableStatHistory.values());
 	}
 
@@ -209,7 +213,7 @@ public class MMOItem implements ItemReference {
 	 * A stat history is basically the memmory of its original stats, from when it was created, its gem stone stats, those added by which gem, and its upgrade bonuses.
 	 */
 	public void setStatHistory(@NotNull ItemStat stat, @NotNull StatHistory hist) {
-		mergeableStatHistory.put(stat.getNBTPath(), hist);
+		mergeableStatHistory.put(stat, hist);
 	}
 
 	//region Other API
@@ -217,7 +221,11 @@ public class MMOItem implements ItemReference {
 	/**
 	 * @return The tier of this item, if it has one.
 	 */
-	@Nullable public ItemTier getTier() { return MMOItems.plugin.getTiers().findTier(this); }
+	@Nullable
+	public ItemTier getTier() {
+		final @Nullable StatData found = stats.get(ItemStats.TIER);
+		return found == null ? null : MMOItems.plugin.getTiers().get(found.toString());
+	}
 
 	/**
 	 * A MMOItem from the template only has damage
@@ -373,6 +381,7 @@ public class MMOItem implements ItemReference {
 	//endregion
 
 	//region Gem Sockets API
+
 	/**
 	 * It is not 100% fool proof, since some GemStones just don't have
 	 * enough information to be extracted (legacy gemstones).
@@ -381,72 +390,37 @@ public class MMOItem implements ItemReference {
 	 * from calling it much because it completely loads all the stats
 	 * of every Gem Stone.
 	 *
-	 * @see #getAsGemColor()
-	 *
 	 * @return The list of GemStones contained here.
 	 */
-	@NotNull public ArrayList<MMOItem> extractGemstones() {
-		//XTC//MMOItems.log("\u00a73   *\u00a77 Extracting gems from this\u00a7b " + getType() + " " + getId());
+	@NotNull
+	public List<Pair<GemstoneData, MMOItem>> extractGemstones() {
 
 		// Found?
-		GemSocketsData thisSocketsData = (GemSocketsData) getData(ItemStats.GEM_SOCKETS);
-		if (thisSocketsData == null) {
-			//XTC//MMOItems.log("\u00a7a   *\u00a77 Clear array - no data");
-			return new ArrayList<>(); }
+		final @Nullable GemSocketsData thisSocketsData = (GemSocketsData) getData(ItemStats.GEM_SOCKETS);
+		if (thisSocketsData == null)
+			return new ArrayList<>();
 
-		// All right, whats all yous data
-		HashMap<UUID, MMOItem> regeneratedGems = new HashMap<>();
+		// Find restored items
+		final List<Pair<GemstoneData, MMOItem>> pairs = new ArrayList<>();
 		for (GemstoneData gem : thisSocketsData.getGemstones()) {
-			//XTC//MMOItems.log("\u00a7a   *\u00a77 Found gem stone -\u00a7a " + gem.getMMOItemType() + " " + gem.getMMOItemID());
-
-			// Can we generate?
-			MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
-
-			// Valid? neat-o
-			if (restored != null) {
-				//XTC//MMOItems.log("\u00a7a   *\u00a73>\u00a77 Valid, regenerated \u00a7e" + ((StringData) restored.getData(ItemStats.NAME)));
-
-				restored.asGemColor = gem.getSocketColor();
-				restored.asGemUUID = gem.getHistoricUUID();
-				regeneratedGems.put(gem.getHistoricUUID(), restored);
-				//XTC//MMOItems.log("\u00a7a   >\u00a77 Color \u00a7e" + restored.getAsGemColor());
-				//XTC//MMOItems.log("\u00a7a   >\u00a77 UUID \u00a7e" + restored.getAsGemUUID().toString());
-			}
+			final MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
+			if (restored != null)
+				pairs.add(Pair.of(gem, restored));
 		}
-		//XTC//MMOItems.log("\u00a7b   *\u00a77 Regen Size:\u00a79 " + regeneratedGems.values().size());
 
-		// If RevID updating, it basically just regenerates
-		if (MMOItemReforger.gemstonesRevIDWhenUnsocket) { return new ArrayList<>(regeneratedGems.values()); }
+		// If RevID updating, no need to identify stats
+		if (MMOItemReforger.gemstonesRevIDWhenUnsocket)
+			return pairs;
 
-		// Identify actual attributes
-		for (ItemStat stat : getStats()) {
+		// Identify actual stats
+		for (StatHistory hist : mergeableStatHistory.values())
+			for (Pair<GemstoneData, MMOItem> gem : pairs) {
+				final StatData historicGemData = hist.getGemstoneData(gem.getKey().getHistoricUUID());
+				if (historicGemData != null)
+					gem.getValue().setData(hist.getItemStat(), historicGemData);
+			}
 
-			// Mergeable right
-			if (!(stat.getClearStatData() instanceof Mergeable)) {
-				continue; }
-
-			// Any stat affected by gems is sure to have a Stat History
-			StatHistory hist = getStatHistory(stat);
-			if (hist == null) {
-				continue; }
-			//XTC//MMOItems.log("\u00a7a   *\u00a7c>\u00a7a Found Stat History \u00a79" + stat.getId());
-
-			// Data associated with any of the gems?
-			for (Map.Entry<UUID, MMOItem> gem : regeneratedGems.entrySet()) {
-
-				// History got gem registered?
-				StatData historicGemData = hist.getGemstoneData(gem.getKey());
-				if (historicGemData == null) { continue;}
-				//XTC//MMOItems.log("\u00a7a   *\u00a77 Found data for gem \u00a7e" + gem.getKey());
-
-				// This gemstone had this data... Override.
-				gem.getValue().setData(stat, historicGemData);
-
-			} }
-
-		// Thats the gemstones we was searching for
-		//XTC//MMOItems.log("\u00a7b   *\u00a77 Result Size:\u00a79 " + regeneratedGems.values().size());
-		return new ArrayList<>(regeneratedGems.values());
+		return pairs;
 	}
 
 	/**
@@ -454,74 +428,30 @@ public class MMOItem implements ItemReference {
 	 * wish to actually remove the GemStone, you must do so through {@link #removeGemStone(UUID, String)}
 	 *
 	 * @param gem Gemstone that you believe is in here
-	 *
 	 * @return The gemstone as it was when inserted, or <code>null</code>
-	 * 		   if such gemstone is not in here.
-	 *
+	 *         if such gemstone is not in here.
 	 * @see #extractGemstones() More optimized method for extracting all gemstones at the same time.
 	 */
-	@Nullable public MMOItem extractGemstone(@NotNull GemstoneData gem) {
-		//XTC//MMOItems.log("\u00a7a   *\u00a77 Extracting gem stone -\u00a7a " + gem.getMMOItemType() + " " + gem.getMMOItemID());
+	@Nullable
+	public MMOItem extractGemstone(@NotNull GemstoneData gem) {
 
-		// Can we generate?
-		MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
+		final MMOItem restored = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gem.getMMOItemType()), gem.getMMOItemID());
+		if (restored == null)
+			return null;
 
-		if (MMOItemReforger.gemstonesRevIDWhenUnsocket) { return restored; }
+		// If RevID updating, no need to identify stats
+		if (MMOItemReforger.gemstonesRevIDWhenUnsocket)
+			return restored;
 
-		// Valid? neat-o
-		if (restored != null) {
-			//XTC//MMOItems.log("\u00a7a   *\u00a73>\u00a77 Valid, regenerated \u00a7e" + restored.getData(ItemStats.NAME));
+		// Identify actual stats
+		for (StatHistory hist : mergeableStatHistory.values()) {
+			final StatData historicGemData = hist.getGemstoneData(gem.getHistoricUUID());
+			if (historicGemData != null)
+				restored.setData(hist.getItemStat(), historicGemData);
+		}
 
-			restored.asGemColor = gem.getSocketColor();
-			restored.asGemUUID = gem.getHistoricUUID();
-			//XTC//MMOItems.log("\u00a7a   >\u00a77 Color \u00a7e" + restored.getAsGemColor());
-			//XTC//MMOItems.log("\u00a7a   >\u00a77 UUID \u00a7e" + restored.getAsGemUUID().toString());
-
-		// Cannot be removed
-		} else {
-			//XTC//MMOItems.log("\u00a7a   *\u00a7c Gem too old / MMOItem missing");
-			return null; }
-
-		// Identify actual attributes
-		for (ItemStat stat : getStats()) {
-
-			// Mergeable right
-			if (!(stat.getClearStatData() instanceof Mergeable)) { continue; }
-
-			// Any stat affected by gems is sure to have a Stat History
-			StatHistory hist = getStatHistory(stat);
-			if (hist == null) { continue; }
-			//XTC//MMOItems.log("\u00a7a   *\u00a7c>\u00a7a Found Stat History \u00a79" + stat.getId());
-
-			// History got gem registered?
-			StatData historicGemData = hist.getGemstoneData(gem.getHistoricUUID());
-			if (historicGemData == null) { continue;}
-			//XTC//MMOItems.log("\u00a7a   *\u00a77 Found data for gem \u00a7e" + gem.getHistoricUUID());
-
-			// This gemstone had this data... Override.
-			restored.setData(stat, historicGemData); }
-
-		// That's it
-		//XTC//MMOItems.log("\u00a7a   *\u00a77 Restored \u00a7e" + gem.getName() + "\u00a7a Successfully");
 		return restored;
 	}
-
-	@Nullable String asGemColor;
-	@NotNull UUID asGemUUID = UUID.randomUUID();
-
-	/**
-	 * @return Supposing this MMOItem is a Gem Stone within an item,
-	 * 		   obtained via {@link #extractGemstones()}, then this
-	 * 		   will be the color of the slot it occupies.
-	 */
-	@Nullable public String getAsGemColor() { return asGemColor; }
-
-	/**
-	 * @return Supposing this MMOItem is a Gem Stone within an item,
-	 * 		   obtained via {@link #extractGemstones()}, then what
-	 * 		   was its UUID?
-	 */
-	@NotNull public UUID getAsGemUUID() { return asGemUUID; }
 
 	/**
 	 * Deletes this UUID from all Stat Histories.

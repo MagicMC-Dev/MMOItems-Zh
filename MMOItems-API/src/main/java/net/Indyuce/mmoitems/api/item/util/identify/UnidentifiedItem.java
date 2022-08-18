@@ -56,7 +56,7 @@ public class UnidentifiedItem extends ConfigItem {
 			 * load item data
 			 */
 			MMOItem mmoitem = new VolatileMMOItem(item);
-			ItemTier tier = MMOItems.plugin.getTiers().findTier(mmoitem);
+			ItemTier tier = mmoitem.getTier();
 			int level = mmoitem.hasData(ItemStats.REQUIRED_LEVEL) ? (int) ((DoubleData) mmoitem.getData(ItemStats.REQUIRED_LEVEL)).getValue() : -1;
 
 			/*

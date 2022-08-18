@@ -41,7 +41,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 			format = data.toString();
 		}
 
-		ItemTier tier = MMOItems.plugin.getTiers().findTier(item.getMMOItem());
+		ItemTier tier = item.getMMOItem().getTier();
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
 		if (tier != null) {

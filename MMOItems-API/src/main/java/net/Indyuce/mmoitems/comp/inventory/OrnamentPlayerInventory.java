@@ -36,8 +36,8 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 		// Ornaments
 		for (ItemStack item : player.getInventory().getContents()) {
 			NBTItem nbtItem;
-			if (item != null && (nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getEquipmentType() == EquipmentSlot.ANY)
-				list.add(new EquippedItem(nbtItem, EquipmentSlot.ANY));
+			if (item != null && (nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item)).hasType() && Type.get(nbtItem.getType()).getSupertype().equals(Type.ORNAMENT))
+				list.add(new EquippedItem(nbtItem, EquipmentSlot.OTHER));
 		}
 
 		return list;
@@ -47,7 +47,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 	public void a(EntityPickupItemEvent event) {
 		if (event.getEntityType() == EntityType.PLAYER) {
 			NBTItem nbt = NBTItem.get(event.getItem().getItemStack());
-			if (nbt.hasType() && Type.get(nbt.getType()).getEquipmentType() == EquipmentSlot.ANY)
+			if (nbt.hasType() && Type.get(nbt.getType()).getSupertype().equals(Type.ORNAMENT))
 				PlayerData.get((Player) event.getEntity()).updateInventory();
 		}
 	}
@@ -55,7 +55,7 @@ public class OrnamentPlayerInventory implements PlayerInventory, Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void b(PlayerDropItemEvent event) {
 		NBTItem nbt = NBTItem.get(event.getItemDrop().getItemStack());
-		if (nbt.hasType() && Type.get(nbt.getType()).getEquipmentType() == EquipmentSlot.ANY)
+		if (nbt.hasType() && Type.get(nbt.getType()).getSupertype().equals(Type.ORNAMENT))
 			PlayerData.get(event.getPlayer()).updateInventory();
 	}
 }

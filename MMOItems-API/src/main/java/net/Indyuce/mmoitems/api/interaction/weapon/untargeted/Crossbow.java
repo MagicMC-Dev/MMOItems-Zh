@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import io.lumine.mythic.lib.util.ProjectileTrigger;
+import io.lumine.mythic.lib.util.CustomProjectile;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.GameMode;
@@ -41,6 +41,6 @@ public class Crossbow extends UntargetedWeapon {
 
         // Trigger abilities
         stats.getData().triggerSkills(TriggerType.SHOOT_BOW, arrow);
-        new ProjectileTrigger(stats.getData(), ProjectileTrigger.ProjectileType.ARROW, arrow, slot);
+        new CustomProjectile(stats.getData(), CustomProjectile.ProjectileType.ARROW, arrow, slot);
     }
 }

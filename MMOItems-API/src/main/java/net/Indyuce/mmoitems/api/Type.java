@@ -42,24 +42,25 @@ public class Type {
 
     // Hand Accessories
     public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, EquipmentSlot.MAIN_HAND);
-    public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OTHER);
-    public static final Type BOTH_CATALYST = new Type(TypeSet.OFFHAND, "BOTH_CATALYST", false, EquipmentSlot.MAIN_HAND);
+    public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OFF_HAND);
+    public static final Type MAIN_CATALYST = new Type(TypeSet.OFFHAND, "MAIN_CATALYST", false, EquipmentSlot.MAIN_HAND);
 
     // Any
-    public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.ANY);
+    public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.OTHER);
 
     // Extra
     public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR);
     public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, EquipmentSlot.MAIN_HAND);
     public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, EquipmentSlot.MAIN_HAND);
     public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, EquipmentSlot.MAIN_HAND);
-    public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, EquipmentSlot.OTHER);
-    public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, EquipmentSlot.OTHER);
+    public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, null);
+    public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, null);
     public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, EquipmentSlot.ACCESSORY);
-    public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, EquipmentSlot.OTHER);
+    public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, null);
 
     private final String id;
     private final TypeSet set;
+    @Nullable
     private final EquipmentSlot equipType;
     private final boolean weapon;
 
@@ -155,6 +156,7 @@ public class Type {
         return name;
     }
 
+    @Nullable
     public EquipmentSlot getEquipmentType() {
         return equipType;
     }
@@ -163,10 +165,18 @@ public class Type {
         return item.clone();
     }
 
+    /**
+     * @deprecated Use {@link #getSupertype()}
+     */
+    @Deprecated
     public boolean isSubtype() {
         return parent != null;
     }
 
+    /**
+     * @deprecated Use {@link #getSupertype()}
+     */
+    @Deprecated
     public Type getParent() {
         return parent;
     }
@@ -175,15 +185,15 @@ public class Type {
      * @return Does it display as four rows in /mmoitems browse?
      */
     public boolean isFourGUIMode() {
-        return equipType == EquipmentSlot.ARMOR;
+        return getSupertype().equipType == EquipmentSlot.ARMOR;
     }
 
     /**
-     * @return Should its stats apply in offhand
+     * @return If an item can be equipped in both hands
      */
-    public boolean isOffhandItem() {
-        final Type supertype = getSupertype();
-        return supertype.equals(OFF_CATALYST) || supertype.equals(BOTH_CATALYST);
+    public boolean isHandItem() {
+        final @NotNull Type supertype = getSupertype();
+        return supertype.equipType == EquipmentSlot.MAIN_HAND && !supertype.equals(MAIN_CATALYST);
     }
 
     /**
@@ -199,11 +209,8 @@ public class Type {
      */
     public Type getSupertype() {
         Type parentMost = this;
-
-        while (parentMost.isSubtype()) {
-            parentMost = parentMost.getParent();
-        }
-
+        while (parentMost.parent != null)
+            parentMost = parentMost.parent;
         return parentMost;
     }
 
@@ -212,11 +219,12 @@ public class Type {
      *         or if this type is a subtype of the given type.
      */
     public boolean corresponds(Type type) {
-        return equals(type) || (isSubtype() && getParent().equals(type));
+        return getSupertype().equals(type);
     }
 
+    @Deprecated
     public boolean corresponds(TypeSet set) {
-        return getItemSet() == set;
+        return getSupertype().getItemSet() == set;
     }
 
     /**
@@ -298,8 +306,8 @@ public class Type {
      * @param id The type id
      * @return The type or null if it couldn't be found
      */
-    public static @Nullable
-    Type get(@Nullable String id) {
+    @Nullable
+    public static Type get(@Nullable String id) {
         if (id == null) {
             return null;
         }

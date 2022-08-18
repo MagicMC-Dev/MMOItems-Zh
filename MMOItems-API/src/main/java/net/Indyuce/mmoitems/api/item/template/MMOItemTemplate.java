@@ -67,7 +67,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	protected void whenPostLoaded(ConfigurationSection config) {
 
 		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-		ffp.activatePrefix(true, getType().toString() + " " + getId());
+		ffp.activatePrefix(true, getType().getId() + " " + getId());
 
 		if (config.contains("option"))
 			for (TemplateOption option : TemplateOption.values())

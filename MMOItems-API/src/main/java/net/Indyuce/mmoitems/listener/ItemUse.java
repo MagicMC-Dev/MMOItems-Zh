@@ -286,7 +286,7 @@ public class ItemUse implements Listener {
             }
 
             // Have to get hand manually because 1.15 and below does not have event.getHand()
-            ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
+            final ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
             final EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
             MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event.getForce());
         }

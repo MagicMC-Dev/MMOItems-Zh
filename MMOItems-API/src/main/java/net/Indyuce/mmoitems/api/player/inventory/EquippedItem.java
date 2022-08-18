@@ -55,8 +55,12 @@ public class EquippedItem {
 
     /**
      * The slot this equipped item is defined to be, will this <code>Type</code>
-     * actually add its stats to the player when held here?
-     * <p></p>
+     * actually add register its modifiers to the player when held here?
+     * <p>
+     * There's a difference between registering modifiers and applying it stats.
+     * For instance, modifiers from both hands are registered if the placement is
+     * legal but might not be taken into account during stat calculation!
+     * <p>
      * An <code>OFF_CATALYST</code> may only add in the <code>OFFHAND</code>, and such.
      */
     public boolean isPlacementLegal() {
@@ -70,12 +74,12 @@ public class EquippedItem {
             return false;
 
         // Equips anywhere
-        if (slot == EquipmentSlot.ANY)
+        if (slot == EquipmentSlot.OTHER || type.getEquipmentType() == EquipmentSlot.OTHER)
             return true;
 
-        // Does it work in offhand
-        if (slot == EquipmentSlot.OFF_HAND)
-            return type.isOffhandItem();
+        // Hand items
+        if (type.isHandItem())
+            return slot.isHand();
 
         return slot == type.getEquipmentType();
     }

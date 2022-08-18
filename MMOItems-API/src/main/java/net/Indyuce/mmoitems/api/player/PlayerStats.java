@@ -70,12 +70,11 @@ public class PlayerStats {
                 double value = item.getNBT().getStat(stat.getId());
 
                 if (value != 0) {
-
-                    Type type = item.getCached().getType();
-                    ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
+                    final Type type = item.getCached().getType();
+                    final ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
 
                     // Apply hand weapon stat offset
-                    if (item.getSlot() == EquipmentSlot.MAIN_HAND && stat instanceof AttackWeaponStat)
+                    if (source.isWeapon() && stat instanceof AttackWeaponStat)
                         value -= ((AttackWeaponStat) stat).getOffset(playerData);
 
                     packet.addModifier(new StatModifier("MMOItem-" + index++, stat.getId(), value, ModifierType.FLAT, item.getSlot(), source));

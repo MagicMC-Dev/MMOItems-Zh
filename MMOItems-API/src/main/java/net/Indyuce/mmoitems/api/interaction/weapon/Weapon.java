@@ -26,7 +26,7 @@ public class Weapon extends UseItem {
 
     @Override
     public boolean checkItemRequirements() {
-        if (playerData.areHandsFull()) {
+        if (playerData.isEncumbered()) {
             Message.HANDS_TOO_CHARGED.format(ChatColor.RED).send(getPlayer());
             return false;
         }

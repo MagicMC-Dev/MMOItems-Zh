@@ -161,10 +161,10 @@ LUTE:
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
-# Applies stats in mainhand only
+# Applies stats in both hands
 CATALYST:
     display: PRISMARINE_SHARD
-    name: 'Catalyst (Mainhand)'
+    name: 'Catalyst'
     unident-item:
         name: '&f#prefix#Unidentified Catalyst'
         lore:
@@ -189,10 +189,10 @@ OFF_CATALYST:
         - '{range}&8- &7Lvl Range: &e#range#'
         - '{tier}&8- &7Item Tier: #prefix##tier#'
 
-# Applies stats in both hands
-BOTH_CATALYST:
+# Applies stats in mainhand only
+MAIN_CATALYST:
     display: PRISMARINE_CRYSTALS
-    name: 'Catalyst'
+    name: 'Catalyst (Mainhand)'
     unident-item:
         name: '&f#prefix#Unidentified Offhand Catalyst'
         lore:

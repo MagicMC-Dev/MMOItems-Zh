@@ -53,7 +53,7 @@ public class PlayerData {
     private final Map<PotionEffectType, PotionEffect> permanentEffects = new HashMap<>();
     private final Set<ParticleRunnable> itemParticles = new HashSet<>();
     private ParticleRunnable overridingItemParticles = null;
-    private boolean handsFull = false;
+    private boolean encumbered = false;
     @Nullable
     private SetBonuses setBonuses = null;
     private final PlayerStats stats;
@@ -118,25 +118,28 @@ public class PlayerData {
             overridingItemParticles.cancel();
     }
 
+    @Deprecated
+    public boolean areHandsFull() {
+        return isEncumbered();
+    }
+
     /**
      * @return If the player hands are full i.e if the player is holding
      *         two items in their hands, one being two handed
      */
-    public boolean areHandsFull() {
-        if (!mmoData.isOnline())
-            return false;
+    public boolean isEncumbered() {
 
         // Get the mainhand and offhand items.
-        NBTItem main = MythicLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
-        NBTItem off = MythicLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
+        final NBTItem main = MythicLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInMainHand());
+        final NBTItem off = MythicLib.plugin.getVersion().getWrapper().getNBTItem(getPlayer().getInventory().getItemInOffHand());
 
         // Is either hand two-handed?
-        boolean mainhand_twohanded = main.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
-        boolean offhand_twohanded = off.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+        final boolean mainhand_twohanded = main.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+        final boolean offhand_twohanded = off.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
 
         // Is either hand encumbering: Not NULL, not AIR, and not Handworn
-        boolean mainhand_encumbering = (main.getItem() != null && main.getItem().getType() != Material.AIR && !main.getBoolean(ItemStats.HANDWORN.getNBTPath()));
-        boolean offhand_encumbering = (off.getItem() != null && off.getItem().getType() != Material.AIR && !off.getBoolean(ItemStats.HANDWORN.getNBTPath()));
+        final boolean mainhand_encumbering = (main.getItem() != null && main.getItem().getType() != Material.AIR && !main.getBoolean(ItemStats.HANDWORN.getNBTPath()));
+        final boolean offhand_encumbering = (off.getItem() != null && off.getItem().getType() != Material.AIR && !off.getBoolean(ItemStats.HANDWORN.getNBTPath()));
 
         // Will it encumber?
         return (mainhand_twohanded && offhand_encumbering) || (mainhand_encumbering && offhand_twohanded);
@@ -177,10 +180,10 @@ public class PlayerData {
         permissions.clear();
 
         /*
-         * Updates the full-hands boolean, this way it can be cached and used in
-         * the updateEffects() method
+         * Updates the encumbered boolean, this way it can be
+         * cached and used in the updateEffects() method
          */
-        handsFull = areHandsFull();
+        encumbered = isEncumbered();
 
         // Find all the items the player can actually use
         for (EquippedItem item : MMOItems.plugin.getInventory().getInventory(getPlayer())) {
@@ -203,10 +206,19 @@ public class PlayerData {
         Bukkit.getPluginManager().callEvent(new RefreshInventoryEvent(inventory.getEquipped(), getPlayer(), this));
 
         for (EquippedItem equipped : inventory.getEquipped()) {
-            VolatileMMOItem item = equipped.getCached();
+            final VolatileMMOItem item = equipped.getCached();
 
-            // Stats which don't apply from off hand
-            if (equipped.getSlot() == EquipmentSlot.OFF_HAND && equipped.getCached().getType().getEquipmentType() != EquipmentSlot.OFF_HAND)
+            // Abilities
+            if (item.hasData(ItemStats.ABILITIES))
+                for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
+                    ModifierSource modSource = equipped.getCached().getType() == null ? ModifierSource.OTHER : equipped.getCached().getType().getItemSet().getModifierSource();
+                    mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
+                }
+
+            // Modifier application rules
+            final ModifierSource source = item.getType().getItemSet().getModifierSource();
+            final EquipmentSlot equipmentSlot = equipped.getSlot();
+            if (source.isWeapon() && equipmentSlot == EquipmentSlot.MAIN_HAND.getOppositeHand())
                 continue;
 
             // Apply permanent potion effects
@@ -227,16 +239,8 @@ public class PlayerData {
                     itemParticles.add(particleData.start(this));
             }
 
-            // Abilities
-            if (item.hasData(ItemStats.ABILITIES) && (MMOItems.plugin.getConfig().getBoolean("abilities-bypass-encumbering") || !handsFull))
-                for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
-                    ModifierSource modSource = equipped.getCached().getType() == null ? ModifierSource.OTHER : equipped.getCached().getType().getItemSet().getModifierSource();
-                    mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
-                }
-
             // Apply permissions if Vault exists
             if (MMOItems.plugin.hasPermissions() && item.hasData(ItemStats.GRANTED_PERMISSIONS)) {
-
                 permissions.addAll(((StringListData) item.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
                 Permission perms = MMOItems.plugin.getVault().getPermissions();
                 permissions.forEach(perm -> {
@@ -311,7 +315,7 @@ public class PlayerData {
         permanentEffects.values().forEach(effect -> getPlayer().addPotionEffect(effect));
 
         // Two handed slowness
-        if (handsFull)
+        if (encumbered)
             getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1, true, false));
     }
 

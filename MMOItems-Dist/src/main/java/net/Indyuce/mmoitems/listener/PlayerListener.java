@@ -138,13 +138,13 @@ public class PlayerListener implements Listener {
         if (!(event.getEntity() instanceof Trident) || !(event.getEntity().getShooter() instanceof Player))
             return;
 
-        InteractItem item = new InteractItem((Player) event.getEntity().getShooter(), Material.TRIDENT);
+        final InteractItem item = new InteractItem((Player) event.getEntity().getShooter(), Material.TRIDENT);
         if (!item.hasItem())
             return;
 
-        NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
-        Type type = Type.get(nbtItem.getType());
-        PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
+        final NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item.getItem());
+        final Type type = Type.get(nbtItem.getType());
+        final PlayerData playerData = PlayerData.get((Player) event.getEntity().getShooter());
 
         if (type != null) {
             final Weapon weapon = new Weapon(playerData, nbtItem);

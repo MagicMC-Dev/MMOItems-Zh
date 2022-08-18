@@ -83,7 +83,7 @@ public class UseItem {
      * @param command Command to execute
      */
     private void scheduleCommandExecution(CommandData command) {
-        String parsed = MMOItems.plugin.getPlaceholderParser().parse(player, command.getCommand());
+        String parsed = MythicLib.plugin.getPlaceholderParser().parse(player, command.getCommand());
 
         if (!command.hasDelay())
             dispatchCommand(parsed, command.isConsoleCommand(), command.hasOpPerms());

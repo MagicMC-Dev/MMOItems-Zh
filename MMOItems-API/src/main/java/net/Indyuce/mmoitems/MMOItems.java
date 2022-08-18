@@ -88,6 +88,7 @@ public class MMOItems extends JavaPlugin {
 	private TierManager tierManager;
 	private SetManager setManager;
 
+	@Deprecated
 	private PlaceholderParser placeholderParser = new DefaultPlaceholderParser();
 	private VaultSupport vaultSupport;
 	private RPGHandler rpgPlugin;
@@ -513,6 +514,7 @@ public class MMOItems extends JavaPlugin {
 		return upgradeManager;
 	}
 
+	@Deprecated
 	public PlaceholderParser getPlaceholderParser() {
 		return placeholderParser;
 	}

@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.api.crafting.trigger;
 
-import net.Indyuce.mmoitems.MMOItems;
+import io.lumine.mythic.lib.MythicLib;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 
@@ -17,6 +17,6 @@ public class MessageTrigger extends Trigger {
 	@Override
 	public void whenCrafting(PlayerData data) {
 		if(!data.isOnline()) return;
-		data.getPlayer().sendMessage(MMOItems.plugin.getPlaceholderParser().parse(data.getPlayer(), message));
+		data.getPlayer().sendMessage(MythicLib.plugin.getPlaceholderParser().parse(data.getPlayer(), message));
 	}
 }

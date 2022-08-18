@@ -70,8 +70,7 @@ public class PlayerStats {
                 double value = item.getNBT().getStat(stat.getId());
 
                 if (value != 0) {
-                    final Type type = item.getCached().getType();
-                    final ModifierSource source = type == null ? ModifierSource.OTHER : type.getItemSet().getModifierSource();
+                    final ModifierSource source = item.getCached().getType().getModifierSource();
 
                     // Apply hand weapon stat offset
                     if (source.isWeapon() && stat instanceof AttackWeaponStat)

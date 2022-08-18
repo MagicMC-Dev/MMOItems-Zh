@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.util.identify.UnidentifiedItem;
 import net.Indyuce.mmoitems.manager.TypeManager;
@@ -22,46 +22,45 @@ import java.util.Objects;
 public class Type {
 
     // Slashing
-    public static final Type SWORD = new Type(TypeSet.SLASHING, "SWORD", true, EquipmentSlot.MAIN_HAND);
+    public static final Type SWORD = new Type(TypeSet.SLASHING, "SWORD", true, ModifierSource.MELEE_WEAPON);
 
     // Piercing
-    public static final Type DAGGER = new Type(TypeSet.PIERCING, "DAGGER", true, EquipmentSlot.MAIN_HAND);
-    public static final Type SPEAR = new Type(TypeSet.PIERCING, "SPEAR", true, EquipmentSlot.MAIN_HAND);
+    public static final Type DAGGER = new Type(TypeSet.PIERCING, "DAGGER", true, ModifierSource.MELEE_WEAPON);
+    public static final Type SPEAR = new Type(TypeSet.PIERCING, "SPEAR", true, ModifierSource.MELEE_WEAPON);
 
     // Blunt
-    public static final Type HAMMER = new Type(TypeSet.BLUNT, "HAMMER", true, EquipmentSlot.MAIN_HAND);
-    public static final Type GAUNTLET = new Type(TypeSet.BLUNT, "GAUNTLET", true, EquipmentSlot.MAIN_HAND);
+    public static final Type HAMMER = new Type(TypeSet.BLUNT, "HAMMER", true, ModifierSource.MELEE_WEAPON);
+    public static final Type GAUNTLET = new Type(TypeSet.BLUNT, "GAUNTLET", true, ModifierSource.MELEE_WEAPON);
 
     // Range
-    public static final Type WHIP = new Type(TypeSet.RANGE, "WHIP", true, EquipmentSlot.MAIN_HAND);
-    public static final Type STAFF = new Type(TypeSet.RANGE, "STAFF", true, EquipmentSlot.MAIN_HAND);
-    public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, EquipmentSlot.MAIN_HAND);
-    public static final Type CROSSBOW = new Type(TypeSet.RANGE, "CROSSBOW", false, EquipmentSlot.MAIN_HAND);
-    public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, EquipmentSlot.MAIN_HAND);
-    public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, EquipmentSlot.MAIN_HAND);
+    public static final Type WHIP = new Type(TypeSet.RANGE, "WHIP", true, ModifierSource.RANGED_WEAPON);
+    public static final Type STAFF = new Type(TypeSet.RANGE, "STAFF", true, ModifierSource.RANGED_WEAPON);
+    public static final Type BOW = new Type(TypeSet.RANGE, "BOW", true, ModifierSource.RANGED_WEAPON);
+    public static final Type CROSSBOW = new Type(TypeSet.RANGE, "CROSSBOW", false, ModifierSource.RANGED_WEAPON);
+    public static final Type MUSKET = new Type(TypeSet.RANGE, "MUSKET", true, ModifierSource.RANGED_WEAPON);
+    public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, ModifierSource.RANGED_WEAPON);
 
     // Hand Accessories
-    public static final Type CATALYST = new Type(TypeSet.OFFHAND, "CATALYST", false, EquipmentSlot.MAIN_HAND);
-    public static final Type OFF_CATALYST = new Type(TypeSet.OFFHAND, "OFF_CATALYST", false, EquipmentSlot.OFF_HAND);
-    public static final Type MAIN_CATALYST = new Type(TypeSet.OFFHAND, "MAIN_CATALYST", false, EquipmentSlot.MAIN_HAND);
+    public static final Type CATALYST = new Type(TypeSet.EXTRA, "CATALYST", false, ModifierSource.HAND_ITEM);
+    public static final Type OFF_CATALYST = new Type(TypeSet.EXTRA, "OFF_CATALYST", false, ModifierSource.OFFHAND_ITEM);
+    public static final Type MAIN_CATALYST = new Type(TypeSet.EXTRA, "MAIN_CATALYST", false, ModifierSource.MAINHAND_ITEM);
 
     // Any
-    public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, EquipmentSlot.OTHER);
+    public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, ModifierSource.OTHER);
 
     // Extra
-    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, EquipmentSlot.ARMOR);
-    public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, EquipmentSlot.MAIN_HAND);
-    public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, EquipmentSlot.MAIN_HAND);
-    public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, EquipmentSlot.MAIN_HAND);
-    public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, null);
-    public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, null);
-    public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, EquipmentSlot.ACCESSORY);
-    public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, null);
+    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, ModifierSource.OTHER);
+    public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, ModifierSource.MELEE_WEAPON);
+    public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, ModifierSource.MAINHAND_ITEM);
+    public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, ModifierSource.MAINHAND_ITEM);
+    public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, ModifierSource.VOID);
+    public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, ModifierSource.VOID);
+    public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, ModifierSource.OTHER);
+    public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, ModifierSource.VOID);
 
     private final String id;
     private final TypeSet set;
-    @Nullable
-    private final EquipmentSlot equipType;
+    private final ModifierSource modifierSource;
     private final boolean weapon;
 
     private String name;
@@ -91,14 +90,14 @@ public class Type {
     private final List<ItemStat> available = new ArrayList<>();
 
     @Deprecated
-    public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType, boolean fourGUIMode) {
-        this(set, id, weapon, equipType);
+    public Type(TypeSet set, String id, boolean weapon, ModifierSource modSource, boolean fourGUIMode) {
+        this(set, id, weapon, modSource);
     }
 
-    public Type(@NotNull TypeSet set, @NotNull String id, boolean weapon, @NotNull EquipmentSlot equipType) {
+    public Type(TypeSet set, String id, boolean weapon, ModifierSource modSource) {
         this.set = set;
         this.id = id.toUpperCase().replace("-", "_").replace(" ", "_");
-        this.equipType = equipType;
+        this.modifierSource = modSource;
         this.weapon = weapon;
         this.loreFormat = null;
     }
@@ -110,7 +109,7 @@ public class Type {
 
         set = (parent != null ? parent.set : TypeSet.EXTRA);
         weapon = (parent != null && parent.weapon);
-        equipType = (parent != null ? parent.equipType : EquipmentSlot.OTHER);
+        modifierSource = (parent != null ? parent.modifierSource : ModifierSource.OTHER);
         this.loreFormat = config.getString("LoreFormat", (parent != null ? parent.loreFormat : null));
     }
 
@@ -156,9 +155,8 @@ public class Type {
         return name;
     }
 
-    @Nullable
-    public EquipmentSlot getEquipmentType() {
-        return equipType;
+    public ModifierSource getModifierSource() {
+        return modifierSource;
     }
 
     public ItemStack getItem() {
@@ -185,15 +183,7 @@ public class Type {
      * @return Does it display as four rows in /mmoitems browse?
      */
     public boolean isFourGUIMode() {
-        return getSupertype().equipType == EquipmentSlot.ARMOR;
-    }
-
-    /**
-     * @return If an item can be equipped in both hands
-     */
-    public boolean isHandItem() {
-        final @NotNull Type supertype = getSupertype();
-        return supertype.equipType == EquipmentSlot.MAIN_HAND && !supertype.equals(MAIN_CATALYST);
+        return getSupertype().modifierSource == ModifierSource.ARMOR;
     }
 
     /**

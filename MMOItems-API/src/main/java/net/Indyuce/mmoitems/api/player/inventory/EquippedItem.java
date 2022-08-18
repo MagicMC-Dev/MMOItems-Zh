@@ -2,11 +2,14 @@ package net.Indyuce.mmoitems.api.player.inventory;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.player.modifier.ModifierSource;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class EquippedItem {
@@ -54,33 +57,23 @@ public class EquippedItem {
     }
 
     /**
-     * The slot this equipped item is defined to be, will this <code>Type</code>
-     * actually add register its modifiers to the player when held here?
-     * <p>
-     * There's a difference between registering modifiers and applying it stats.
-     * For instance, modifiers from both hands are registered if the placement is
-     * legal but might not be taken into account during stat calculation!
-     * <p>
-     * An <code>OFF_CATALYST</code> may only add in the <code>OFFHAND</code>, and such.
+     * This is a small optimization which reduces the amount of items
+     * taken into account by the MMOItems player inventory handler.
+     *
+     * @return If item placement is legal
      */
     public boolean isPlacementLegal() {
 
-        // Find item type
-        final String typeFormat = item.getString("MMOITEMS_ITEM_TYPE");
-        final Type type = typeFormat == null ? null : Type.get(typeFormat);
-
         // Vanilla items are ignored
+        final @Nullable String typeFormat = item.getString("MMOITEMS_ITEM_TYPE");
+        if (typeFormat == null)
+            return false;
+
+        final @Nullable Type type = MMOItems.plugin.getTypes().get(typeFormat);
         if (type == null)
             return false;
 
-        // Equips anywhere
-        if (slot == EquipmentSlot.OTHER || type.getEquipmentType() == EquipmentSlot.OTHER)
-            return true;
-
-        // Hand items
-        if (type.isHandItem())
-            return slot.isHand();
-
-        return slot == type.getEquipmentType();
+        final ModifierSource modSource = type.getModifierSource();
+        return EquipmentSlot.OFF_HAND.isCompatible(modSource, slot) || EquipmentSlot.MAIN_HAND.isCompatible(modSource, slot);
     }
 }

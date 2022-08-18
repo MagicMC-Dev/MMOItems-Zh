@@ -8,6 +8,8 @@ import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -20,9 +22,15 @@ public class TypeManager implements Reloadable {
 	 */
 	public void reload() {
 		map.clear();
-		registerAll(Type.ACCESSORY, Type.ARMOR, Type.BLOCK, Type.BOW, Type.CATALYST, Type.CONSUMABLE, Type.CROSSBOW, Type.DAGGER, Type.GAUNTLET,
-				Type.GEM_STONE, Type.SKIN, Type.HAMMER, Type.LUTE, Type.MISCELLANEOUS, Type.MUSKET, Type.OFF_CATALYST, Type.ORNAMENT, Type.SPEAR,
-				Type.STAFF, Type.SWORD, Type.TOOL, Type.WHIP);
+
+		// Load default types
+		for (Field field : Type.class.getFields())
+			try {
+				if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof Type)
+					register((Type) field.get(null));
+			} catch (Exception exception) {
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register type called '" + field.getName() + "': " + exception.getMessage());
+			}
 
 		/*
 		 * Register all other types. Important: check if the map already

@@ -211,14 +211,14 @@ public class PlayerData {
             // Abilities
             if (item.hasData(ItemStats.ABILITIES))
                 for (AbilityData abilityData : ((AbilityListData) item.getData(ItemStats.ABILITIES)).getAbilities()) {
-                    ModifierSource modSource = equipped.getCached().getType() == null ? ModifierSource.OTHER : equipped.getCached().getType().getItemSet().getModifierSource();
+                    ModifierSource modSource = equipped.getCached().getType().getModifierSource();
                     mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", abilityData, equipped.getSlot(), modSource));
                 }
 
             // Modifier application rules
-            final ModifierSource source = item.getType().getItemSet().getModifierSource();
+            final ModifierSource source = item.getType().getModifierSource();
             final EquipmentSlot equipmentSlot = equipped.getSlot();
-            if (source.isWeapon() && equipmentSlot == EquipmentSlot.MAIN_HAND.getOppositeHand())
+            if (!EquipmentSlot.MAIN_HAND.isCompatible(source, equipmentSlot))
                 continue;
 
             // Apply permanent potion effects

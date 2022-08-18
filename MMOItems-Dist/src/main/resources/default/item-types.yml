@@ -180,7 +180,7 @@ OFF_CATALYST:
     display: PRISMARINE_CRYSTALS
     name: 'Catalyst (Offhand)'
     unident-item:
-        name: '&f#prefix#Unidentified Offhand Catalyst'
+        name: '&f#prefix#Unidentified Catalyst'
         lore:
         - '&7This item is unidentified. I must'
         - '&7find a way to identify it!'
@@ -194,7 +194,7 @@ MAIN_CATALYST:
     display: PRISMARINE_CRYSTALS
     name: 'Catalyst (Mainhand)'
     unident-item:
-        name: '&f#prefix#Unidentified Offhand Catalyst'
+        name: '&f#prefix#Unidentified Catalyst'
         lore:
             - '&7This item is unidentified. I must'
             - '&7find a way to identify it!'

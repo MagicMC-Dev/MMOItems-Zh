@@ -74,14 +74,10 @@ public class UnidentifiedItem extends ConfigItem {
 			} else
 				name = name.replace("#prefix#", "");
 
-			/*
-			 * remove useless lore lines
-			 */
+			// Remove useless lore lines
 			lore.removeIf(s -> (s.startsWith("{tier}") && tier == null) || (s.startsWith("{range}") && (tier == null || level < 0)));
 
-			/*
-			 * apply placeholders
-			 */
+			// Apply placeholders
 			for (String placeholder : placeholders.keySet())
 				name = name.replace("#" + placeholder + "#", placeholders.get(placeholder));
 			for (int n = 0; n < lore.size(); n++) {
@@ -91,9 +87,7 @@ public class UnidentifiedItem extends ConfigItem {
 				lore.set(n, MythicLib.plugin.parseColors(str.replace("{range}", "").replace("{tier}", "")));
 			}
 
-			/*
-			 * apply changes to item
-			 */
+			// Apply changes to item
 			item.getItem().setAmount(1);
 			ItemStack unidentified = MythicLib.plugin.getVersion().getWrapper().copyTexture(item)
 					.addTag(new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", serialize(item.toItem()))).toItem();

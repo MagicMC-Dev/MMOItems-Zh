@@ -75,8 +75,8 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 
 		if (statData.isPresent()) {
 			lore.add(ChatColor.GRAY + "Current Value:");
-			StringListData data = (StringListData) statData.get();
-			data.getList().forEach(element -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(element)));
+			StringListData data = statData.get();
+			data.getList().forEach(element -> lore.add(ChatColor.GRAY + element));
 
 		} else
 			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");

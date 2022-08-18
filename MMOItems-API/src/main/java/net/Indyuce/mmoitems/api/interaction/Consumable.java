@@ -88,9 +88,9 @@ public class Consumable extends UseItem {
             /**
              * This dynamically updates the item lore
              */
-            String format = MythicLib.inst().parseColors(MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
-            String old = format.replace("#", "" + (usesLeft + 1));
-            String replaced = format.replace("#", "" + usesLeft);
+            final String format = MythicLib.inst().parseColors(MMOItems.plugin.getLanguage().getStatFormat("max-consume"));
+            final String old = format.replace("#", String.valueOf(usesLeft + 1));
+            final String replaced = format.replace("#", String.valueOf(usesLeft));
             ItemStack newItem = new LoreUpdate(nbtItem.toItem(), old, replaced).updateLore();
 
             /**

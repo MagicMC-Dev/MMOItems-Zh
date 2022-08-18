@@ -135,18 +135,19 @@ public class ItemTier {
 	@NotNull private UnidentificationInfo getDefaultUnident() { return new UnidentificationInfo(UnidentificationInfo.UNIDENT_NAME, UnidentificationInfo.UNIDENT_PREFIX, 0); }
 
 	public class UnidentificationInfo {
-		@NotNull private final String unidentificationName, prefix;
+		@NotNull
+		private final String name, prefix;
 		private final int range;
 
 		public static final String UNIDENT_NAME = "Unidentified Item";
 		public static final String UNIDENT_PREFIX = "Unknown";
 
 		public UnidentificationInfo(@NotNull ConfigurationSection config) {
-			this(color(config.getString("name", UNIDENT_NAME)), color(config.getString("prefix", UNIDENT_PREFIX)), config.getInt("range"));
+			this(config.getString("name", UNIDENT_NAME), config.getString("prefix", UNIDENT_PREFIX), config.getInt("range"));
 		}
 
 		public UnidentificationInfo(@NotNull String name, @NotNull String prefix, int range) {
-			unidentificationName = name;
+			this.name = name;
 			this.prefix = prefix;
 			this.range = range;
 		}
@@ -154,7 +155,7 @@ public class ItemTier {
 		@NotNull public String getPrefix() { return prefix; }
 
 		@NotNull public String getDisplayName() {
-			return unidentificationName;
+			return name;
 		}
 
 		public int[] calculateRange(int level) {
@@ -162,9 +163,5 @@ public class ItemTier {
 			return new int[] { min, min + range };
 		}
 
-	}
-
-	private String color(@Nullable String str) {
-		return MythicLib.plugin.parseColors(str);
 	}
 }

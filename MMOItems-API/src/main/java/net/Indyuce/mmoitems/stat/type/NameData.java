@@ -61,7 +61,7 @@ public class NameData extends StringData implements Mergeable<StringData> {
     }
 
     /**
-     * @return The full, built name.
+     * @return The built suffix
      */
     @NotNull
     public String bakeSuffix() {

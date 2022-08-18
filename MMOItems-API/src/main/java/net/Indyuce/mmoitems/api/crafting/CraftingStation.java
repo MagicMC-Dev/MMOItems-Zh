@@ -42,7 +42,7 @@ public class CraftingStation extends PostLoadObject {
 		super(config);
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = MythicLib.plugin.parseColors(config.getString("name", "Station"));
+		this.name = config.getString("name", "Unnamed");
 		this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
 		this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 
@@ -66,7 +66,7 @@ public class CraftingStation extends PostLoadObject {
 		Validate.notNull(sound, "Crafting station sound must not be null");
 
 		this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-		this.name = MythicLib.plugin.parseColors(name);
+		this.name = name;
 		this.layout = layout;
 		this.sound = sound;
 		this.itemOptions = itemOptions;
@@ -78,7 +78,12 @@ public class CraftingStation extends PostLoadObject {
 		return id;
 	}
 
+	@Deprecated
 	public String getName() {
+		return MythicLib.plugin.parseColors(name);
+	}
+
+	public String getUnformattedName() {
 		return name;
 	}
 

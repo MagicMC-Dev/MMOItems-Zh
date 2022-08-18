@@ -70,7 +70,7 @@ public class StringStat extends ItemStat<StringData, StringData> {
         inv.getEditedSection().set(getPath(), message);
         inv.registerTemplateEdition();
         inv.getPlayer().sendMessage(
-                MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
+                MMOItems.plugin.getPrefix() + getName() + " successfully changed to '" + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + "'.");
     }
 
     @Override
@@ -84,7 +84,7 @@ public class StringStat extends ItemStat<StringData, StringData> {
             relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), mmoitem.getNBT(), SupportedNBTTagValues.STRING));
 
         // Use that
-        StringData bakedData = (StringData) getLoadedNBT(relevantTags);
+        StringData bakedData = getLoadedNBT(relevantTags);
 
         // Valid?
         if (bakedData != null) {

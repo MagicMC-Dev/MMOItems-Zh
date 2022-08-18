@@ -238,9 +238,9 @@ public class DurabilityItem {
         ItemStack item = nbtItem.toItem();
 
         // Item lore update
-        String format = MythicLib.inst().parseColors(MMOItems.plugin.getLanguage().getStatFormat("durability").replace("#m", String.valueOf(maxDurability)));
-        String old = format.replace("#c", String.valueOf(initialDurability));
-        String replaced = format.replace("#c", String.valueOf(durability));
+        final String format = MythicLib.inst().parseColors(MMOItems.plugin.getLanguage().getStatFormat("durability").replace("#m", String.valueOf(maxDurability)));
+        final String old = format.replace("#c", String.valueOf(initialDurability));
+        final String replaced = format.replace("#c", String.valueOf(durability));
         return new LoreUpdate(item, old, replaced).updateLore();
     }
 }

@@ -234,7 +234,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
     public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
         if (statData.isPresent()) {
             lore.add(ChatColor.GRAY + "Current Value:");
-            StringListData data = (StringListData) statData.get();
+            StringListData data = statData.get();
             data.getList().forEach(element -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(element)));
 
         } else

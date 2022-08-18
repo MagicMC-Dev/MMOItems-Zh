@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.version.VersionMaterial;
@@ -9,8 +8,6 @@ import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
@@ -23,6 +20,7 @@ import java.util.ArrayList;
 
 public class DisplayName extends StringStat implements GemStoneStat {
 	private final String[] cleanFilter = {ChatColor.BOLD.toString(), ChatColor.ITALIC.toString(), ChatColor.UNDERLINE.toString(), ChatColor.STRIKETHROUGH.toString(), ChatColor.MAGIC.toString()};
+
 	public DisplayName() {
 		super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "Display Name", new String[] { "The item display name." },
 				new String[] { "all" });
@@ -30,33 +28,23 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
+
 		// Bake
-		String format;
-		if (data instanceof NameData) {
-
-			format = ((NameData) data).bake();
-
-		} else {
-
-			format = data.toString();
-		}
+		String format = data.toString();
 
 		ItemTier tier = item.getMMOItem().getTier();
 		format = format.replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "");
 		format = format.replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f");
-		if (tier != null) {
-			for (String filter: cleanFilter){
-				if (ChatColor.getLastColors(tier.getName()).contains(filter)){
+		if (tier != null)
+			for (String filter : cleanFilter)
+				if (ChatColor.getLastColors(tier.getName()).contains(filter))
 					format = format.replace("<tier-color-cleaned>", ChatColor.getLastColors(tier.getName().replace(filter, "")));
-				}
-			}
-		}
 
 		// Is this upgradable?
 		format = cropUpgrade(format);
 		if (item.getMMOItem().hasUpgradeTemplate()) { format = appendUpgradeLevel(format, item.getMMOItem().getUpgradeLevel()); }
 
-		item.getMeta().setDisplayName(MythicLib.plugin.parseColors(format));
+		item.getMeta().setDisplayName(format);
 
 		// Force Stat History generation
 		StatHistory.from(item.getMMOItem(), this);
@@ -66,9 +54,8 @@ public class DisplayName extends StringStat implements GemStoneStat {
 	}
 
 	@NotNull String cropUpgrade(@NotNull String format) {
-		String suff = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix", " &8(&e+#lvl#&8)");
-		if (suff == null || suff.isEmpty()) { return format; }
-		String suffix = MythicLib.plugin.parseColors(suff);
+		String suffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix", " &8(&e+#lvl#&8)");
+		if (suffix == null || suffix.isEmpty()) { return format; }
 
 		//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
 		//MMOItems.getConsole().sendMessage("Format " + format);
@@ -141,37 +128,22 @@ public class DisplayName extends StringStat implements GemStoneStat {
 		return format;
 	}
 
-	@NotNull public static String appendUpgradeLevel(@NotNull String format, int lvl) {
-		String suffix = MythicLib.plugin.parseColors(MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix"));
-
-		//MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
-		//MMOItems.getConsole().sendMessage("Format " + format);
-
+	@NotNull
+	public static String appendUpgradeLevel(@NotNull String format, int lvl) {
+		String suffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix");
 		if (suffix != null && lvl != 0) {
-
-			// Get the current suffix
 			String actSuffix = levelPrefix(suffix, lvl);
-
-			//MMOItems.getConsole().sendMessage("Current " + actSuffix);
-
-			// Append it
 			return format + actSuffix;
 		}
 
 		return format;
 	}
 
-
-	@NotNull public static String levelPrefix(@NotNull String template, int toLevel) {
-
-		// Ez
-		template = template.replace("#lvl#", String.valueOf(toLevel));
-
-		// 00f
-		template = template.replace("+-", "-");
-
-		// Yes
-		return template;
+	@NotNull
+	public static String levelPrefix(@NotNull String template, int toLevel) {
+		return template
+				.replace("#lvl#", String.valueOf(toLevel))
+				.replace("+-", "-");
 	}
 
 	/**

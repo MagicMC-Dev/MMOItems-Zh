@@ -119,7 +119,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 		if (value != 0 || upgradeShift != 0) {
 			String loreInsert = formatPath(getId(), MMOItems.plugin.getLanguage().getStatFormat(getPath()), moreIsBetter, value * multiplyWhenDisplaying());
 			if (upgradeShift != 0)
-				loreInsert += MythicLib.plugin.parseColors(UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (MythicLib.plugin.getMMOConfig().decimals.format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying())));
+				loreInsert += UpgradeTemplate.getUpgradeChangeSuffix(plus(upgradeShift * multiplyWhenDisplaying()) + (MythicLib.plugin.getMMOConfig().decimals.format(upgradeShift * multiplyWhenDisplaying())), !isGood(upgradeShift * multiplyWhenDisplaying()));
 			item.getLore().insert(getPath(), loreInsert);
 		}
 

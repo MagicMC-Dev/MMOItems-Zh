@@ -49,7 +49,7 @@ public class Type {
     public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, ModifierSource.OTHER);
 
     // Extra
-    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, ModifierSource.OTHER);
+    public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, ModifierSource.ARMOR);
     public static final Type TOOL = new Type(TypeSet.EXTRA, "TOOL", false, ModifierSource.MELEE_WEAPON);
     public static final Type CONSUMABLE = new Type(TypeSet.EXTRA, "CONSUMABLE", false, ModifierSource.MAINHAND_ITEM);
     public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, ModifierSource.MAINHAND_ITEM);

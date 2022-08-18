@@ -25,6 +25,7 @@ public abstract class ReadMMOItem extends MMOItem {
 	}
 
 	@Override
+	@Deprecated
 	public int getDamage() {
 
 		// Does it use custom durability?

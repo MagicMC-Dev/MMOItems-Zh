@@ -225,6 +225,7 @@ public class MMOItem implements ItemReference {
 	 *
 	 * @return The damage suffered by this item
 	 */
+	@Deprecated
 	public int getDamage() {
 
 		// Does it use MMO Durability?
@@ -254,6 +255,7 @@ public class MMOItem implements ItemReference {
 	 *
 	 * @param damage The damage suffered by this item
 	 */
+	@Deprecated
 	public void setDamage(int damage) {
 
 		// Too powerful

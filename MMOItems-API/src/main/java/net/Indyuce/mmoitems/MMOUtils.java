@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.lumine.mythic.lib.MythicLib;
@@ -9,6 +10,8 @@ import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.api.Type;
 import org.apache.commons.codec.binary.Base64;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -44,6 +47,33 @@ public class MMOUtils {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    /**
+     * Source: https://gist.github.com/Mystiflow/c42f45bac9916c84e381155f72a96d84
+     */
+    private static final Map<ChatColor, Color> COLOR_MAPPINGS = ImmutableMap.<ChatColor, Color>builder()
+            .put(ChatColor.BLACK, Color.fromRGB(0, 0, 0))
+            .put(ChatColor.DARK_BLUE, Color.fromRGB(0, 0, 170))
+            .put(ChatColor.DARK_GREEN, Color.fromRGB(0, 170, 0))
+            .put(ChatColor.DARK_AQUA, Color.fromRGB(0, 170, 170))
+            .put(ChatColor.DARK_RED, Color.fromRGB(170, 0, 0))
+            .put(ChatColor.DARK_PURPLE, Color.fromRGB(170, 0, 170))
+            .put(ChatColor.GOLD, Color.fromRGB(255, 170, 0))
+            .put(ChatColor.GRAY, Color.fromRGB(170, 170, 170))
+            .put(ChatColor.DARK_GRAY, Color.fromRGB(85, 85, 85))
+            .put(ChatColor.BLUE, Color.fromRGB(85, 85, 255))
+            .put(ChatColor.GREEN, Color.fromRGB(85, 255, 85))
+            .put(ChatColor.AQUA, Color.fromRGB(85, 255, 255))
+            .put(ChatColor.RED, Color.fromRGB(255, 85, 85))
+            .put(ChatColor.LIGHT_PURPLE, Color.fromRGB(255, 85, 255))
+            .put(ChatColor.YELLOW, Color.fromRGB(255, 255, 85))
+            .put(ChatColor.WHITE, Color.fromRGB(255, 255, 255))
+            .build();
+
+    @NotNull
+    public static Color toRGB(ChatColor color) {
+        return Objects.requireNonNull(COLOR_MAPPINGS.get(color), "Not a color");
     }
 
     public static int getPickaxePower(Player player) {

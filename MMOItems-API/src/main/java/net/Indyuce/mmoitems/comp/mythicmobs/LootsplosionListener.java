@@ -4,8 +4,10 @@ import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.entity.Item;
@@ -74,7 +76,7 @@ public class LootsplosionListener implements Listener {
                     if (nbt.hasTag("MMOITEMS_TIER")) {
                         ItemTier tier = MMOItems.plugin.getTiers().get(nbt.getString("MMOITEMS_TIER"));
                         if (tier.hasColor())
-                            new LootColor(item, tier.getColor().toBukkit());
+                            new LootColor(item, tier.getColor());
                     }
                 });
         }
@@ -92,9 +94,9 @@ public class LootsplosionListener implements Listener {
 
         private int j = 0;
 
-        public LootColor(Item item, Color color) {
+        public LootColor(Item item, ChatColor color) {
             this.item = item;
-            this.color = color;
+            this.color = MMOUtils.toRGB(color);
 
             runTaskTimer(MMOItems.plugin, 0, 1);
         }

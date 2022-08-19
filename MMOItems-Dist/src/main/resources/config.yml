@@ -44,11 +44,14 @@ default:
     blunt-rating: 33
     recoil: 0.1
 
-# Enable/disable the item glow feature. Make sure you
-# reload your server when changing this option. This
-# option might take extra performance so consider toggling
-# it off if you have players or mobs dropping many items.
-item-glow: true
+# Restart server when changing this option
+dropped-items:
+
+    # Items glow based on their tier
+    tier-glow: true
+
+    # Display item name over the dropped item
+    hints: true
 
 item-upgrading:
 

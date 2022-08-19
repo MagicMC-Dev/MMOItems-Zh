@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
-import net.Indyuce.mmoitems.MMOItems;
+import io.lumine.mythic.lib.UtilityMethods;
 import net.Indyuce.mmoitems.api.droptable.DropTable;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import net.Indyuce.mmoitems.comp.itemglow.TierColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public class ItemTier {
 	@Nullable private final DropTable deconstruct;
 
 	// item glow options
-	@Nullable private TierColor color = null;
+	@Nullable private ChatColor color = null;
 	private boolean hint = false;
 
 	// item generation
@@ -54,30 +54,12 @@ public class ItemTier {
 		if (unidentificationSection == null) { unidentificationInfo = getDefaultUnident(); }
 		else { unidentificationInfo = new UnidentificationInfo(unidentificationSection); }
 
-		//noinspection ErrorNotRethrown
-		try {
-
-			// Is it defined?
-			ConfigurationSection glowSection = config.getConfigurationSection("item-glow");
-
-			// Alr then lets read it
-			if (glowSection != null) {
-
-				// Does it hint?
-				hint = glowSection.getBoolean("hint");
-
-				// Does it color?
-				color = new TierColor(config.getString("color", "WHITE"), GLOW);
-			}
-
-		} catch (NoClassDefFoundError | IllegalAccessException | NoSuchFieldException | SecurityException exception) {
-
-			// No hints
+		if (config.contains("item-glow")) {
+			hint = config.getBoolean("item-glow.hint");
+			color = ChatColor.valueOf(UtilityMethods.enumName(config.getString("item-glow.color", "WHITE")));
+		} else {
 			hint = false;
 			color = null;
-
-			// Grrr but GlowAPI crashing shall not crash MMOItems tiers wtf
-			MMOItems.print(null, "Could not load glow color for tier $r{0}$b;$f {1}", "Tier Hints", id, exception.getMessage());
 		}
 
 		// What are the chances?
@@ -95,7 +77,7 @@ public class ItemTier {
 
 	public boolean hasColor() { return color != null; }
 
-	@Nullable public TierColor getColor() { return color; }
+	@Nullable public ChatColor getColor() { return color; }
 
 	public boolean isHintEnabled() { return hint; }
 

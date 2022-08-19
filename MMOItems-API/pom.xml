@@ -326,13 +326,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.inventivetalent</groupId>
-            <artifactId>glowapi</artifactId>
-            <version>1.4.8</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.denizenscript</groupId>
             <artifactId>denizen</artifactId>
             <version>1.2.1-b1744-REL</version>

@@ -25,8 +25,6 @@ import net.Indyuce.mmoitems.comp.enchants.EnchantPlugin;
 import net.Indyuce.mmoitems.comp.enchants.MythicEnchantsSupport;
 import net.Indyuce.mmoitems.comp.enchants.advanced_enchants.AdvancedEnchantmentsHook;
 import net.Indyuce.mmoitems.comp.inventory.*;
-import net.Indyuce.mmoitems.comp.itemglow.ItemGlowListener;
-import net.Indyuce.mmoitems.comp.itemglow.NoGlowListener;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
@@ -246,13 +244,6 @@ public class MMOItems extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			getLogger().log(Level.INFO, "Hooked onto PlaceholderAPI");
 			placeholderParser = new PlaceholderAPIParser();
-		}
-
-		if (getConfig().getBoolean("item-glow")) {
-			if (Bukkit.getPluginManager().getPlugin("GlowAPI") != null && Bukkit.getPluginManager().getPlugin("PacketListenerApi") != null) {
-				Bukkit.getPluginManager().registerEvents(new ItemGlowListener(), this);
-				getLogger().log(Level.INFO, "Hooked onto GlowAPI (Item Glow)");
-			} else Bukkit.getPluginManager().registerEvents(new NoGlowListener(), this);
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {

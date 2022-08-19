@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.manager.StatManager;
-import io.lumine.mythic.lib.parser.client.eval.DoubleEvaluator;
+import io.lumine.mythic.lib.util.DefenseFormula;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
@@ -52,29 +52,13 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		// registering before identifier.startsWith("stat_") to prevent issues
 		// i don't register it in the starts with condition because it will mess
 		// with substring
-		if (identifier.equals("stat_defense_percent"))
-			return MythicLib.plugin.getMMOConfig().decimal.format(100 - calculateDefense(MMOPlayerData.get(player))) + "%";
+		if (identifier.equals("stat_defense_percent")) {
+			final double defenseStat = MMOPlayerData.get(player).getStatMap().getStat("DEFENSE");
+			final double damageReduction = 100 - new DefenseFormula().getAppliedDamage(defenseStat, 100);
+			return MythicLib.plugin.getMMOConfig().decimal.format(damageReduction);
+		}
 
-		if (identifier.startsWith("stat_elements") && player.isOnline()) {
-			// index 0 = element
-			// index 1 = defense/damage
-			String[] param = identifier.split("_");
-
-			if (param.length > 3) {
-				String tag = "MMOITEMS_" + param[2].toUpperCase() + "_" + param[3].toUpperCase();
-
-				double value = 0;
-				for (EquipmentSlot slot : EquipmentSlot.values())
-					if (hasItem((Player) player, slot)) {
-						NBTItem nbtItem = NBTItem.get(((Player) player).getInventory().getItem(slot));
-						if (nbtItem.hasTag(tag)) {
-							value += nbtItem.getDouble(tag);
-						}
-					}
-
-				return MythicLib.plugin.getMMOConfig().decimal.format(value);
-			}
-		} else if (identifier.startsWith("stat_")) {
+		if (identifier.startsWith("stat_")) {
 			final String stat = identifier.substring(5).toUpperCase();
 			return StatManager.format(stat, MMOPlayerData.get(player).getStatMap().getStat(stat));
 		}
@@ -97,13 +81,13 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 					return type.getName();
 			}*/
 		}
-		
+
 		if(identifier.startsWith("tier_")) {
 			String t = identifier.substring(5).toUpperCase();
 			if(!MMOItems.plugin.getTiers().has(t)) return "Invalid tier";
 			return MMOItems.plugin.getTiers().get(t).getName();
 		}
-		
+
 		if (!player.isOnline())
 			return null;
 
@@ -134,13 +118,6 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		return null;
 	}
 
-	private double calculateDefense(MMOPlayerData data) {
-		String formula = MythicLib.plugin.getConfig().getString("defense-application", "#damage# * (1 - (#defense# / (#defense# + 100)))");
-		formula = formula.replace("#defense#", String.valueOf(data.getStatMap().getStat("DEFENSE")));
-		formula = formula.replace("#damage#", String.valueOf(100));
-		return Math.max(0, new DoubleEvaluator().evaluate(formula));
-	}
-	
 	private String getCurrentDurabilityBar(ItemStack item, String barChar, int length) {
 		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
 		double durability = nbtItem.getDouble("MMOITEMS_DURABILITY");

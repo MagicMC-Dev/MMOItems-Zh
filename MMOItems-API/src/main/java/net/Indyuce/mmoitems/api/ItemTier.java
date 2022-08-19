@@ -82,7 +82,7 @@ public class ItemTier {
 
 		// What are the chances?
 		chance = config.getDouble("generation.chance");
-		capacity = config.contains("generation.capacity") ? new NumericStatFormula(config.getConfigurationSection("generation.capacity")) : null;
+		capacity = config.contains("generation.capacity") ? new NumericStatFormula(config.get("generation.capacity")) : null;
 	}
 
 	@NotNull public String getId() { return id; }

@@ -50,7 +50,95 @@ GINGERBREAD:
     - '&8[4] +5% Damage Reduction'
     - '&8[4] Permanent Jump III'
 
-# Not used by default, but works.
+DRAGON:
+    name: '&5Dragon Set'
+    bonuses:
+        '4':
+            ability-1:
+                type: MAGICAL_SHIELD
+                cooldown: 10
+                duration: 5
+                power: 60
+                radius: 5
+                mode: WHEN_HIT
+    lore-tag:
+        - '&3Full Dragon Set Bonus:'
+        - '&7When an enemy attacks you, a &bmagical'
+        - '&bshield&7 appears on you, protecting'
+        - '&7you from &c60%&7 of all damage for'
+        - '&c5s&7. &7&o10s cooldown.'
+PSYCHIC:
+    name: '&dPsychic'
+    bonuses:
+        '2':
+            ability-1:
+                type: TELEKINESY
+                duration: 8.0
+                cooldown: 12.0
+                knockback: 2.0
+                mode: RIGHT_CLICK
+            ability-2:
+                type: BLINK
+                cooldown: 8.0
+                range: 60
+                mode: SHIFT_RIGHT_CLICK
+    lore-tag:
+        - '&dPsychic:'
+        - '&7When equipping &dControl Devices&7 and'
+        - '&7holding &fThin Transparent Gloves&7, you'
+        - '&7can use telekinesy on an entity with'
+        - '&7&3right-click&7 and teleport to the block'
+        - '&7you are facing with &3shift-right-click&7.'
+        - '&8&oGood grief...'
+UNDEADSLAYER:
+    name: '&4&l&k||| &4> &c&lUndead Slayer Set'
+    bonuses:
+        '4':
+            pve-damage: 10
+        '5':
+            undead-damage: 15
+    lore-tag:
+        - '&4&l&k||| &4> &c&lUndead Slayer Set'
+        - '&7The full &carmor set&7 gives you &c+10%&7 PvE damage.'
+        - '&7Using the &cundead slayer&7 weapon gives an additional'
+        - '&c+15% &7undead damage.'
+SPELLCASTER:
+    name: '&dSpellcaster Set'
+    bonuses:
+        '3':
+            max-mana: 10
+        '4':
+            magic-damage: 25
+        '5' :
+            potion-speed: 1
+    lore-tag:
+        - '&dSpellcaster Set Bonus:'
+        - '&3[3] +10 Max Mana'
+        - '&3[4] +25% Magic Damage'
+        - '&3If you hold the Spellcaster Wand&7,'
+        - '&7&bPermanent Speed I&7.'
+
+OMNIELEMENTAL:
+    name: '&eOmnielemental Set'
+    bonuses:
+        '4':
+            water-defense: 100
+            fire-defense: 100
+            wind-defense: 100
+            earth-defense: 100
+        '5':
+            ice-defense: 100
+            thunder-defense: 100
+        '6':
+            lightness-defense: 100
+            darkness-defense: 100
+    lore-tag:
+        - '&eOmnielemental Set Bonus:'
+        - '&7[4] Protects you from &cFire&7, &3Water&7, Wind and &2Earth.'
+        - '&7[5] Protects you from &bIce&7 and &eThunder&7 aswell.'
+        - '&7[6] Protects you from &fLightness&7 and &8Darkness&7.'
+
+# Not used by default
 HATRED:
     name: '&cHatred Set'
     bonuses:
@@ -61,6 +149,6 @@ HATRED:
                 cooldown: 30
                 mode: ATTACK
     lore-tag:
-    - '&7Hatred Set Bonus:'
-    - '&8[2] -6% Damage Taken'
-    - '&8[2] Summons a devastating fire meteor on hit.'
+        - '&7Hatred Set Bonus:'
+        - '&8[2] -6% Damage Taken'
+        - '&8[2] Summons a devastating fire meteor on hit.'

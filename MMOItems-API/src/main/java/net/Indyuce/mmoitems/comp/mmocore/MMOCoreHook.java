@@ -12,6 +12,7 @@ import net.Indyuce.mmocore.experience.Profession;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
+import net.Indyuce.mmoitems.comp.mmocore.stat.ExtraAttribute;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
 import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
@@ -30,8 +31,11 @@ public class MMOCoreHook implements RPGHandler, Listener {
      * class has to be instantiated again for the registered stats to update
      */
     public MMOCoreHook() {
-        for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll())
+        for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll()) {
             MMOItems.plugin.getStats().register(new Required_Attribute(attribute));
+            MMOItems.plugin.getStats().register(new ExtraAttribute(attribute));
+        }
+
         for (Profession profession : MMOCore.plugin.professionManager.getAll()) {
 
             // Adds profession specific Additional Experience stats.

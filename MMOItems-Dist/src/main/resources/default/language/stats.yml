@@ -121,10 +121,14 @@ tier: '&3 &7Tier: #'
 required-class: '&3 &7# Item'
 required-level: '&eRequires Lvl #'
 
-# Attributes
+# MMOCore Attributes
 required-dexterity: '&eRequires &c# &eDexterity'
 required-strength: '&eRequires &c# &eStrength'
 required-intelligence: '&eRequires &c# &eIntelligence'
+
+additional-dexterity: '&3 &7■ Extra Dexterity: &f<plus>#'
+additional-strength: '&3 &7■ Extra Strength: &f<plus>#'
+additional-intelligence: '&3 &7■ Extra Intelligence: &f<plus>#'
 
 # Professions
 profession-alchemy: '&eAlchemy Level: &c#'

@@ -74,7 +74,7 @@ public class PlayerData {
             craftingStatus.load(this, config.getConfigurationSection("crafting-queue"));
 
         if (MMOItems.plugin.hasPermissions() && config.contains("permissions-from-items")) {
-            Permission perms = MMOItems.plugin.getVault().getPermissions();
+            final Permission perms = MMOItems.plugin.getVault().getPermissions();
             config.getStringList("permissions-from-items").forEach(perm -> {
                 if (perms.has(getPlayer(), perm))
                     perms.playerRemove(getPlayer(), perm);
@@ -170,7 +170,7 @@ public class PlayerData {
         itemParticles.clear();
         overridingItemParticles = null;
         if (MMOItems.plugin.hasPermissions()) {
-            Permission perms = MMOItems.plugin.getVault().getPermissions();
+            final Permission perms = MMOItems.plugin.getVault().getPermissions();
             permissions.forEach(perm -> {
                 if (perms.has(getPlayer(), perm)) {
                     perms.playerRemove(getPlayer(), perm);

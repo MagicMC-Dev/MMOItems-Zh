@@ -1,9 +1,10 @@
 package net.Indyuce.mmoitems.comp.eco;
 
+import io.lumine.mythic.lib.api.MMOLineConfig;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.condition.Condition;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.apache.commons.lang.Validate;
 
 public class MoneyCondition extends Condition {
 	private final double amount;
@@ -11,13 +12,13 @@ public class MoneyCondition extends Condition {
 	public MoneyCondition(MMOLineConfig config) {
 		super("money");
 
-		config.validate("amount");
+		Validate.isTrue(MMOItems.plugin.hasEconomy(), "No economy plugin found");
+		config.validateKeys("amount");
 		amount = config.getDouble("amount");
 	}
 
 	@Override
 	public boolean isMet(PlayerData data) {
-		if(!data.isOnline()) return false;
 		return MMOItems.plugin.getVault().getEconomy().has(data.getPlayer(), amount);
 	}
 
@@ -28,7 +29,6 @@ public class MoneyCondition extends Condition {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
-		if(!data.isOnline()) return;
 		MMOItems.plugin.getVault().getEconomy().withdrawPlayer(data.getPlayer(), amount);
 	}
 }

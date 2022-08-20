@@ -241,12 +241,11 @@ public class PlayerData {
 
             // Apply permissions if Vault exists
             if (MMOItems.plugin.hasPermissions() && item.hasData(ItemStats.GRANTED_PERMISSIONS)) {
+                final Permission perms = MMOItems.plugin.getVault().getPermissions();
                 permissions.addAll(((StringListData) item.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
-                Permission perms = MMOItems.plugin.getVault().getPermissions();
                 permissions.forEach(perm -> {
-                    if (!perms.has(getPlayer(), perm)) {
+                    if (!perms.has(getPlayer(), perm))
                         perms.playerAdd(getPlayer(), perm);
-                    }
                 });
             }
         }
@@ -281,10 +280,12 @@ public class PlayerData {
 
         // Apply item set bonuses
         if (setBonuses != null) {
-            final Permission perms = MMOItems.plugin.getVault().getPermissions();
-            for (String perm : setBonuses.getPermissions())
-                if (!perms.has(getPlayer(), perm))
-                    perms.playerAdd(getPlayer(), perm);
+            if (MMOItems.plugin.hasPermissions()) {
+                final Permission perms = MMOItems.plugin.getVault().getPermissions();
+                for (String perm : setBonuses.getPermissions())
+                    if (!perms.has(getPlayer(), perm))
+                        perms.playerAdd(getPlayer(), perm);
+            }
             for (AbilityData ability : setBonuses.getAbilities())
                 mmoData.getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
             for (ParticleData particle : setBonuses.getParticles())

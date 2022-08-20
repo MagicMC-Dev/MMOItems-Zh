@@ -117,10 +117,10 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
 		String effectFormat = ItemStat.translate("effect");
 		data.getEffects().forEach(effect -> {
 			lore.add(effectFormat
-					.replace("#e",
+					.replace("{effect}",
 							MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
 									+ (effect.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(effect.getLevel())))
-					.replace("#d", MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration())));
+					.replace("{duration}", MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration())));
 		});
 		item.getLore().insert("effects", lore);
 

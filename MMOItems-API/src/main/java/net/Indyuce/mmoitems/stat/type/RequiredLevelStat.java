@@ -40,7 +40,7 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
 
         // Lore Management
         int lvl = (int) ((DoubleData) data).getValue();
-        String format = MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", "" + lvl);
+        String format = MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("{value}", String.valueOf(lvl));
         item.getLore().insert(getPath(), format);
 
         // Insert NBT
@@ -82,7 +82,7 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
             }
 
             // Just display normally
-            item.getLore().insert(getPath(), formatNumericStat(techMinimum, "#", builtRange));
+            item.getLore().insert(getPath(), formatNumericStat(techMinimum, "{value}", builtRange));
         }
     }
 

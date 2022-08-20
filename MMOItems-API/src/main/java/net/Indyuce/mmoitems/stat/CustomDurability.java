@@ -34,18 +34,4 @@ public class CustomDurability extends DoubleStat implements InternalStat {
 			// Shortcut oui oui
 			item.addItemTag(new ItemTag(getNBTPath(), current));
 	}
-
-/*	@Override
-	public String getDynamicLoreId() {
-		return getPath();
-	}
-
-	@Override
-	public String calculatePlaceholder(NBTItem item) {
-
-		int max = (int) item.getInteger("MMOITEMS_MAX_DURABILITY");
-		int current = item.hasTag("MMOITEMS_DURABILITY") ? item.getInteger("MMOITEMS_DURABILITY") : max;
-
-		return MMOItems.plugin.getLanguage().getStatFormat(ItemStats.CUSTOM_DURABILITY.getPath()).replace("#c", "" + current).replace("#m", "" + max);
-	}*/
 }

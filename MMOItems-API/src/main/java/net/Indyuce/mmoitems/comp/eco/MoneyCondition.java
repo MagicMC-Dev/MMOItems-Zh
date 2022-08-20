@@ -24,7 +24,7 @@ public class MoneyCondition extends Condition {
 
 	@Override
 	public String formatDisplay(String string) {
-		return string.replace("#money#", "" + amount);
+		return string.replace("#money#", String.valueOf(amount));
 	}
 
 	@Override

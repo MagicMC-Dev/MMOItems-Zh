@@ -26,9 +26,9 @@ import java.util.ArrayList;
 
 public class RequiredLevel extends DoubleStat implements ItemRestriction {
 
-    /*
-     * stat that uses a custom DoubleStatData because the merge algorithm is
-     * slightly different. when merging two "required level", MMOItems should
+    /**
+     * Stat that uses a custom DoubleStatData because the merge algorithm is
+     * slightly different. When merging two "required level", MMOItems should
      * only keep the highest levels of the two and not sum the two values
      */
     public RequiredLevel() {
@@ -40,8 +40,8 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
 
         // Lore Management
-        int lvl = (int) ((DoubleData) data).getValue();
-        item.getLore().insert("required-level", formatNumericStat(lvl, "#", "" + lvl));
+        int lvl = (int) data.getValue();
+        item.getLore().insert("required-level", formatNumericStat(lvl, "{value}", String.valueOf(lvl)));
 
         // Insert NBT
         item.addItemTag(getAppliedNBT(data));
@@ -82,7 +82,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
             }
 
             // Just display normally
-            item.getLore().insert("required-level", formatNumericStat(techMinimum, "#", builtRange));
+            item.getLore().insert("required-level", formatNumericStat(techMinimum, "{value}", builtRange));
         }
     }
 

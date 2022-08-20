@@ -75,9 +75,9 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 				}
 			}
 
-			lore.add(filled.replace("#", gemName));
+			lore.add(filled.replace("{name}", gemName));
 		}
-		sockets.getEmptySlots().forEach(slot -> lore.add(empty.replace("#", slot)));
+		sockets.getEmptySlots().forEach(slot -> lore.add(empty.replace("{name}", slot)));
 		item.getLore().insert("gem-stones", lore);
 	}
 

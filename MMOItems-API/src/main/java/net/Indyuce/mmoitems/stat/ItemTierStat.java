@@ -27,7 +27,7 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(path);
 		item.addItemTag(new ItemTag("MMOITEMS_TIER", path));
-		item.getLore().insert("tier", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", tier.getName()));
+		item.getLore().insert("tier", MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("{value}", tier.getName()));
 	}
 
 	@Override

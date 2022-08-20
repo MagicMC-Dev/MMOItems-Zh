@@ -132,7 +132,7 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 		String commandFormat = ItemStat.translate("command");
 		((CommandListData) data).getCommands().forEach(command -> {
 
-			lore.add(commandFormat.replace("#c", "/" + command.getCommand()).replace("#d", "" + command.getDelay()));
+			lore.add(commandFormat.replace("{format}", "/" + command.getCommand()).replace("{cooldown}", String.valueOf(command.getDelay())));
 		});
 		item.getLore().insert("commands", lore);
 	}

@@ -110,9 +110,9 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         // Write Lore
         for (Pair<Element, ElementStatType> pair : data.getKeys()) {
             final String format = ItemStat.translate("elemental-" + pair.getValue().lowerCaseName())
-                    .replace("#color", pair.getKey().getColor())
-                    .replace("#icon", pair.getKey().getLoreIcon())
-                    .replace("#name", pair.getKey().getName());
+                    .replace("{color}", pair.getKey().getColor())
+                    .replace("{icon}", pair.getKey().getLoreIcon())
+                    .replace("{element}", pair.getKey().getName());
             final double value = data.getStat(pair.getKey(), pair.getValue());
             lore.add(DoubleStat.formatPath("ELEMENTAL_STAT", format, true, value));
         }

@@ -202,7 +202,7 @@ public class ItemStackBuilder {
 		if (builtMMOItem.getType() == Type.GEM_STONE) lore.insert("gem-stone-lore", ItemStat.translate("gem-stone-lore"));
 
 		// Display item type
-		lore.insert("item-type", ItemStat.translate("item-type").replace("#",
+		lore.insert("item-type", ItemStat.translate("item-type").replace("{type}",
 				builtMMOItem.getStats().contains(ItemStats.DISPLAYED_TYPE) ? builtMMOItem.getData(ItemStats.DISPLAYED_TYPE)
 						.toString() : builtMMOItem.getType().getName()));
 

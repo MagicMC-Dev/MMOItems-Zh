@@ -60,12 +60,12 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 		String modifierFormat = ItemStat.translate("ability-modifier"), abilityFormat = ItemStat.translate("ability-format");
 
 		data.getAbilities().forEach(ability -> {
-			abilityLore.add(abilityFormat.replace("#c", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger())).replace("#a", ability.getAbility().getName()));
+			abilityLore.add(abilityFormat.replace("{trigger}", MMOItems.plugin.getLanguage().getCastingModeName(ability.getTrigger())).replace("{ability}", ability.getAbility().getName()));
 
 			for (String modifier : ability.getModifiers()) {
 				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
 						MythicLib.plugin.getMMOConfig().decimal.format(ability.getModifier(modifier)));
-				abilityLore.add(modifierFormat.replace("#m", ability.getAbility().getModifierName(modifier)).replace("#v",
+				abilityLore.add(modifierFormat.replace("{modifier}", ability.getAbility().getModifierName(modifier)).replace("{value}",
 						MythicLib.plugin.getMMOConfig().decimal.format(ability.getModifier(modifier))));
 			}
 

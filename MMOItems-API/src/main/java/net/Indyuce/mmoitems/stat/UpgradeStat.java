@@ -67,10 +67,9 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 		item.addItemTag(getAppliedNBT(data));
 
 		// Show in lore
-		if (((UpgradeData) data).getMaxUpgrades() > 0) {
+		if (data.getMaxUpgrades() > 0)
 			item.getLore().insert(getPath(),
-					MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("#", String.valueOf(((UpgradeData) data).getMaxUpgrades())));
-		}
+					MMOItems.plugin.getLanguage().getStatFormat(getPath()).replace("{value}", String.valueOf(data.getMaxUpgrades())));
 	}
 
 	@NotNull

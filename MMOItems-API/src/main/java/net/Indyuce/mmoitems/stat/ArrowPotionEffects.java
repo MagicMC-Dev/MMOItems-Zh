@@ -120,7 +120,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 
 		String permEffectFormat = ItemStat.translate("arrow-potion-effects");
 		data.getEffects().forEach(effect -> {
-			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
+			lore.add(permEffectFormat.replace("{effect}", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
 					+ " " + MMOUtils.intToRoman(effect.getLevel()) + "(" + MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration()) + "s)"));
 		});
 

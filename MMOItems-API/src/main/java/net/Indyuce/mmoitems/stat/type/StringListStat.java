@@ -1,10 +1,12 @@
 package net.Indyuce.mmoitems.stat.type;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
+import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -12,11 +14,7 @@ import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringListData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -46,12 +44,12 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
 
         // Empty stuff
         if (!(data instanceof StringListData)) { return; }
-        if (((StringListData) data).getList().size() == 0) { return; }
+        if (data.getList().size() == 0) { return; }
 
         // Chop
-        String joined = String.join(", ", ((StringListData) data).getList());
+        String joined = String.join(", ", data.getList());
         String format = MMOItems.plugin.getLanguage().getStatFormat(getPath());
-        String finalStr = format.replace("#", joined);
+        String finalStr = format.replace("{value}", joined);
 
         // Identify colour
         StringBuilder col = new StringBuilder(""); int pnd = format.indexOf('#');

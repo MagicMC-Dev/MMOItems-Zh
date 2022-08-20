@@ -143,8 +143,8 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 		final String valueFormatted = StatManager.format(stat, value);
 		final String colorPrefix = getColorPrefix(value < 0 && moreIsBetter);
 		return format
-				.replace("<plus>#", colorPrefix + (value > 0 ? "+" : "") + valueFormatted) // Replace conditional pluses with +value
-				.replace("#", colorPrefix + valueFormatted) // Replace loose pounds with the value
+				.replace("<plus>{value}", colorPrefix + (value > 0 ? "+" : "") + valueFormatted) // Replace conditional pluses with +value
+				.replace("{value}", colorPrefix + valueFormatted) // Replace loose pounds with the value
 				.replace("<plus>", (value > 0 ? "+" : "")); // Replace loose <plus>es
 	}
 
@@ -160,7 +160,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 		final String minPrefix = getColorPrefix(min < 0 && moreIsBetter), maxPrefix = getColorPrefix(max < 0 && moreIsBetter);
 		return format
 				.replace("<plus>", "")
-				.replace("#",
+				.replace("{value}",
 						minPrefix + (min > 0 ? "+" : "") + minFormatted
 								+ MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") +
 								maxPrefix + (min < 0 && max > 0 ? "+" : "") + maxFormatted);
@@ -173,8 +173,8 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 
 		// Get Value
 		//SPRD//MMOItems.log("\u00a7c༺\u00a77 Calulating deviations of \u00a7b" + item.getMMOItem().getType().toString() + " " + item.getMMOItem().getId() + "\u00a77's \u00a7e" + getId());
-		double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);
-		double techMaximum = ((NumericStatFormula) templateData).calculate(0, 2.5);
+		double techMinimum = templateData.calculate(0, -2.5);
+		double techMaximum = templateData.calculate(0, 2.5);
 
 		// Cancel if it its NEGATIVE and this doesn't support negative stats.
 		if (techMaximum < 0 && !handleNegativeStats()) { return; }

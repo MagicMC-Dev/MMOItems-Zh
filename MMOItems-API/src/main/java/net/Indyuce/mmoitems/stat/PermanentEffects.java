@@ -131,7 +131,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 
 		String permEffectFormat = ItemStat.translate("perm-effect");
 		((PotionEffectListData) data).getEffects().forEach(effect -> {
-			lore.add(permEffectFormat.replace("#", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
+			lore.add(permEffectFormat.replace("{effect}", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel())));
 		});
 
 		item.getLore().insert("perm-effects", lore);

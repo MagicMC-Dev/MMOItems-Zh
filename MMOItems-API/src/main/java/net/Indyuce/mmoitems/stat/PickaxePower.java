@@ -22,10 +22,10 @@ public class PickaxePower extends DoubleStat {
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
-		int pickPower = (int) ((DoubleData) data).getValue();
+		int pickPower = (int) data.getValue();
 
 		item.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", pickPower));
-		item.getLore().insert("pickaxe-power", formatNumericStat(pickPower, "#", "" + pickPower));
+		item.getLore().insert("pickaxe-power", formatNumericStat(pickPower, "{value}", String.valueOf(pickPower)));
 	}
 	@Override
 	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
@@ -61,7 +61,7 @@ public class PickaxePower extends DoubleStat {
 			else { builtRange = MythicLib.plugin.getMMOConfig().decimals.format(techMinimum) + "-" + MythicLib.plugin.getMMOConfig().decimals.format(techMaximum); }
 
 			// Just display normally
-			item.getLore().insert("pickaxe-power", formatNumericStat(techMinimum, "#", builtRange));
+			item.getLore().insert("pickaxe-power", formatNumericStat(techMinimum, "{value}", builtRange));
 		}
 	}
 }

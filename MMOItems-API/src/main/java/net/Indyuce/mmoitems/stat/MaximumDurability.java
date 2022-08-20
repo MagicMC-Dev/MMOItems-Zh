@@ -11,8 +11,6 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
@@ -21,7 +19,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
-import scala.math.Numeric;
 
 /**
  * See {@link CustomDurability} for useful comments
@@ -47,7 +44,7 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
 		item.addItemTag(new ItemTag(getNBTPath(), max));
 
 		// Display durability in lore here.
-		String format = MMOItems.plugin.getLanguage().getStatFormat("durability").replace("#m", "" + max).replace("#c", "" + current);
+		String format = MMOItems.plugin.getLanguage().getStatFormat("durability").replace("{max}", String.valueOf(max)).replace("{current}", String.valueOf(current));
 		item.getLore().insert("durability", format);
 	}
 

@@ -4,7 +4,6 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.comp.target.InteractionType;
 import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
-import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
@@ -89,7 +88,7 @@ public enum TypeSet {
             target.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, target.getLocation().add(0, 1, 0), 0);
             double bluntPower = attack.getStat("BLUNT_POWER");
             if (bluntPower > 0) {
-                double bluntRating = weapon.getValue(attack.getStat("BLUNT_RATING"),
+                double bluntRating = weapon.requireNonZero(attack.getStat("BLUNT_RATING"),
                         MMOItems.plugin.getConfig().getDouble("default.blunt-rating")) / 100;
                 for (Entity entity : target.getNearbyEntities(bluntPower, bluntPower, bluntPower))
                     if (UtilityMethods.canTarget(attack.getPlayer(), entity, InteractionType.OFFENSE_ACTION) && !entity.equals(target))

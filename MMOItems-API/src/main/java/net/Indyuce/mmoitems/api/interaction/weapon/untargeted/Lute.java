@@ -37,8 +37,8 @@ public class Lute extends UntargetedWeapon {
 
 	@Override
 	public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
-		double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 7);
-		double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+		double attackDamage = requireNonZero(stats.getStat("ATTACK_DAMAGE"), 7);
+		double range = requireNonZero(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 		Vector weight = new Vector(0, -.003 * getNBTItem().getStat(ItemStats.NOTE_WEIGHT.getId()), 0);
 
 		LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());

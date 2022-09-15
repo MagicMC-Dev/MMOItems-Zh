@@ -50,7 +50,7 @@ public abstract class UntargetedWeapon extends Weapon {
             return;
 
         // Apply weapon costs
-        double attackDelay = 1 / getValue(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
+        double attackDelay = 1 / requireNonZero(stats.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
         applyWeaponCosts(attackDelay, PlayerData.CooldownType.BASIC_ATTACK);
 
         // Specific weapon attack effect

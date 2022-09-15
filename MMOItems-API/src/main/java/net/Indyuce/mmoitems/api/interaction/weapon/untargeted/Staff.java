@@ -4,8 +4,6 @@ import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.comp.target.InteractionType;
-import io.lumine.mythic.lib.damage.AttackMetadata;
-import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.util.RayTrace;
@@ -34,8 +32,8 @@ public class Staff extends UntargetedWeapon {
     @Override
     public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
 
-        double attackDamage = getValue(stats.getStat("ATTACK_DAMAGE"), 1);
-        double range = getValue(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+        double attackDamage = requireNonZero(stats.getStat("ATTACK_DAMAGE"), 1);
+        double range = requireNonZero(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
 
         StaffSpirit spirit = StaffSpirit.get(getNBTItem());
         if (spirit != null) {

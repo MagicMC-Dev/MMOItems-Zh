@@ -125,8 +125,10 @@ public class Weapon extends UseItem {
         return loc;
     }
 
-    // returns default getValue if stat equals 0
-    public double getValue(double a, double def) {
-        return a <= 0 ? def : a;
+    /**
+     * @return First argument, or second if zero or lower
+     */
+    public double requireNonZero(double number, double elseNumber) {
+        return number <= 0 ? elseNumber : number;
     }
 }

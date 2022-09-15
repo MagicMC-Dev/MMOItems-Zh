@@ -64,7 +64,7 @@ public class ProjectileData {
      */
     public double getDamage() {
         Validate.isTrue(isCustomWeapon(), "Not a custom bow");
-        return shooter.getStat("ATTACK_DAMAGE");
+        return shooter.getStat("ATTACK_DAMAGE") * damageMultiplier;
     }
 
     /**

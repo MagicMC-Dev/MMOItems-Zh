@@ -276,10 +276,10 @@ public class ItemUse implements Listener {
 
         final NBTItem item = NBTItem.get(event.getBow());
         final Type type = Type.get(item.getType());
-        final PlayerData playerData = PlayerData.get((Player) event.getEntity());
 
         if (type != null) {
-            Weapon weapon = new Weapon(playerData, item);
+            final PlayerData playerData = PlayerData.get((Player) event.getEntity());
+            final Weapon weapon = new Weapon(playerData, item);
             if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
                 event.setCancelled(true);
                 return;
@@ -289,11 +289,11 @@ public class ItemUse implements Listener {
             final ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
             final EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
             MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event.getForce());
-        }
 
-        final Arrow arrow = (Arrow) event.getProjectile();
-        if (item.getStat("ARROW_VELOCITY") > 0)
-            arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
+            final Arrow arrow = (Arrow) event.getProjectile();
+            if (item.getStat("ARROW_VELOCITY") > 0)
+                arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
+        }
     }
 
     /**

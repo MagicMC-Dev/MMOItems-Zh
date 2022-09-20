@@ -82,10 +82,17 @@ public class PlayerData {
         }
     }
 
-    public void save() {
+    public void save(boolean clearForMap) {
+
+        // Empty map if required
+        if (clearForMap)
+            data.remove(getUniqueId());
+
+        // Cancel runnables
         cancelRunnables();
 
-        ConfigFile config = new ConfigFile("/userdata", getUniqueId().toString());
+        // Save data in config
+        final ConfigFile config = new ConfigFile("/userdata", getUniqueId().toString());
         config.getConfig().createSection("crafting-queue");
         config.getConfig().set("permissions-from-items", new ArrayList<>(permissions));
         craftingStatus.save(config.getConfig().getConfigurationSection("crafting-queue"));

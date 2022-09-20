@@ -26,22 +26,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerListener implements Listener {
-    private final Map<Player, ArrayList<ItemStack>> deathItems = new HashMap<>();
+    private final Map<Player, List<ItemStack>> deathItems = new HashMap<>();
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void loadPlayerData(PlayerJoinEvent event) {
         MMOItems.plugin.getRecipes().refreshRecipeBook(event.getPlayer());
-        PlayerData.load(event.getPlayer()); }
+        PlayerData.load(event.getPlayer());
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void savePlayerData(PlayerQuitEvent event) { PlayerData.get(event.getPlayer()).save(); }
-
+    public void savePlayerData(PlayerQuitEvent event) {
+        PlayerData.get(event.getPlayer()).save(true);
+    }
 
     /**
      * If the player dies, its time to roll the death-downgrade stat!

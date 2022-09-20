@@ -303,7 +303,7 @@ public class MMOItems extends JavaPlugin {
 			return;
 
 		// Save player data
-		PlayerData.getLoaded().forEach(PlayerData::save);
+		PlayerData.getLoaded().forEach(data -> data.save(false));
 
 		// Drop abandonned soulbound items
 		SoulboundInfo.getAbandonnedInfo().forEach(SoulboundInfo::dropItems);

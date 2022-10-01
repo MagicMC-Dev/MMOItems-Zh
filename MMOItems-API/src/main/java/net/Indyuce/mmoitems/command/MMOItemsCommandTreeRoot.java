@@ -31,6 +31,7 @@ public class MMOItemsCommandTreeRoot extends CommandTreeRoot {
 		addChild(new EditCommandTreeNode(this));
 		addChild(new CopyCommandTreeNode(this));
 		addChild(new GiveCommandTreeNode(this));
+		addChild(new TakeCommandTreeNode(this));
 
 		addChild(new GenerateCommandTreeNode(this));
 		// addChild(new HelpCommandTreeNode(this));

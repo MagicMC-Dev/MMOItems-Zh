@@ -73,8 +73,8 @@ public enum TypeSet {
     }),
 
     /**
-     * Blunt weapons are like 1.9 sweep attacks. They damage all enemies nearby
-     * and apply a slight knockback
+     * Blunt weapons are like 1.9 sweep attacks. They damage
+     * all enemies nearby and apply a slight knockback
      */
     BLUNT((attack, damager, target, weapon) -> {
         final Random random = new Random();
@@ -119,6 +119,11 @@ public enum TypeSet {
      * distance and still deal some good damage
      */
     RANGE,
+
+    /**
+     * Hand/Mainhand/Offhand catalysts
+     */
+    CATALYST,
 
     /**
      * Any other item type, like armor, consumables, etc. They all have their

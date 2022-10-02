@@ -41,9 +41,9 @@ public class Type {
     public static final Type LUTE = new Type(TypeSet.RANGE, "LUTE", true, ModifierSource.RANGED_WEAPON);
 
     // Hand Accessories
-    public static final Type CATALYST = new Type(TypeSet.EXTRA, "CATALYST", false, ModifierSource.HAND_ITEM);
-    public static final Type OFF_CATALYST = new Type(TypeSet.EXTRA, "OFF_CATALYST", false, ModifierSource.OFFHAND_ITEM);
-    public static final Type MAIN_CATALYST = new Type(TypeSet.EXTRA, "MAIN_CATALYST", false, ModifierSource.MAINHAND_ITEM);
+    public static final Type CATALYST = new Type(TypeSet.CATALYST, "CATALYST", false, ModifierSource.HAND_ITEM);
+    public static final Type OFF_CATALYST = new Type(TypeSet.CATALYST, "OFF_CATALYST", false, ModifierSource.OFFHAND_ITEM);
+    public static final Type MAIN_CATALYST = new Type(TypeSet.CATALYST, "MAIN_CATALYST", false, ModifierSource.MAINHAND_ITEM);
 
     // Any
     public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, ModifierSource.OTHER);

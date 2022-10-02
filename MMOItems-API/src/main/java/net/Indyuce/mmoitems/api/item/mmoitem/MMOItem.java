@@ -223,8 +223,7 @@ public class MMOItem implements ItemReference {
 	 */
 	@Nullable
 	public ItemTier getTier() {
-		final @Nullable StatData found = stats.get(ItemStats.TIER);
-		return found == null ? null : MMOItems.plugin.getTiers().get(found.toString());
+		return hasData(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(stats.get(ItemStats.TIER).toString()) : null;
 	}
 
 	/**

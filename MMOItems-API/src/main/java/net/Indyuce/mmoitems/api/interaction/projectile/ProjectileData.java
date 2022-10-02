@@ -1,8 +1,5 @@
 package net.Indyuce.mmoitems.api.interaction.projectile;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.player.PlayerMetadata;
@@ -77,14 +74,10 @@ public class ProjectileData {
     }
 
     public void applyPotionEffects(LivingEntity target) {
-        if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
-            for (JsonElement entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), JsonArray.class)) {
-                if (!entry.isJsonObject())
-                    continue;
-
-                JsonObject object = entry.getAsJsonObject();
-                target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(object.get("type").getAsString()),
-                        object.get("duration").getAsDouble(), object.get("level").getAsInt()).toEffect());
+        if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS")) {
+            for (ArrowPotionEffectArrayItem entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), ArrowPotionEffectArrayItem[].class)) {
+                target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(entry.type), entry.duration, entry.level).toEffect());
             }
+        }
     }
 }

@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
@@ -11,6 +10,7 @@ import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.interaction.projectile.ArrowPotionEffectArrayItem;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
@@ -141,7 +141,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 		JsonArray array = new JsonArray();
 
 		// For every potion effect
-		((PotionEffectListData) data).getEffects().forEach(effect -> {
+		data.getEffects().forEach(effect -> {
 
 			// Get as Json Object
 			JsonObject object = new JsonObject();
@@ -187,17 +187,9 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 			PotionEffectListData effects = new PotionEffectListData();
 
 			// All right, parse Json
-			for(JsonElement entry : MythicLib.plugin.getJson().parse((String) tg.getValue(), JsonArray.class)) {
+			for (ArrowPotionEffectArrayItem entry : MythicLib.plugin.getJson().parse((String) tg.getValue(), ArrowPotionEffectArrayItem[].class))
+				effects.add(new PotionEffectData(PotionEffectType.getByName(entry.type), entry.duration, entry.level));
 
-				// Fail if not Json Object
-				if(!entry.isJsonObject()) continue;
-				JsonObject object = entry.getAsJsonObject();
-
-				// Add
-				effects.add(new PotionEffectData(
-						PotionEffectType.getByName(object.get("type").getAsString()),
-						object.get("duration").getAsDouble(), object.get("level").getAsInt()));
-			}
 
 			// Return
 			return effects;

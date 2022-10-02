@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -13,10 +12,8 @@ import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.PotionEffectData;
 import net.Indyuce.mmoitems.stat.data.PotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectData;
 import net.Indyuce.mmoitems.stat.data.random.RandomPotionEffectListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.Validate;
@@ -30,7 +27,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import scala.concurrent.impl.FutureConvertersImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +35,8 @@ import java.util.Set;
 
 public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public PotionEffects() {
-		super("POTION_EFFECT", Material.POTION, "Potion Effects", new String[] { "The effects of your potion.", "(May have an impact on color)." },
-				new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
+		super("POTION_EFFECT", Material.POTION, "Potion Effects", new String[] { "The effects of your potion.", "(May have an impact on color).", "Does NOT support tipped arrows." },
+				new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION);
 	}
 
 	@Override
@@ -137,7 +133,7 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull PotionEffectListData data) {
-		if (item.getItemStack().getType().name().contains("POTION") || item.getItemStack().getType() == Material.TIPPED_ARROW)
+		if (item.getItemStack().getType().name().contains("POTION"))
 			for (PotionEffectData effect : data.getEffects())
 				((PotionMeta) item.getMeta()).addCustomEffect(effect.toEffect(), false);
 	}

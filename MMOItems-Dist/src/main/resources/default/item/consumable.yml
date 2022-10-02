@@ -403,3 +403,13 @@ GEM_REMOVER:
     name: §6Gem Remover
     disable-interaction: true
     random-unsocket: 1.0
+    inedible: true
+SKIN_REMOVER:
+  base:
+    material: SHEARS
+    lore:
+    - §7Removes a skin applied on any item.
+    name: §6Skin Remover
+    disable-interaction: true
+    can-deskin: true
+    inedible: true

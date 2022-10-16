@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.skill;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ public class RegisteredSkill {
 
         this.name = Objects.requireNonNull(config.getString("name"), "Could not fill skill name");
         for (String mod : handler.getModifiers()) {
-            modifierNames.put(mod, Objects.requireNonNull(config.getString("modifier." + mod + ".name"), "Could not find translation for modifier '" + mod + "'"));
+            modifierNames.put(mod, config.getString("modifier." + mod + ".name", UtilityMethods.caseOnWords(mod.replace("_", " ").replace("-", " ").toLowerCase())));
             modifierDefaultValues.put(mod, config.getDouble("modifier." + mod + ".default-value"));
         }
     }

@@ -10,7 +10,7 @@ public enum Message {
 	// General restrictions
 	HANDS_TOO_CHARGED("You can't do anything, your hands are too charged.", "two-handed"),
 	SPELL_ON_COOLDOWN("#progress# &eYou must wait #left# second#s# before casting this spell.", "ability-cooldown"),
-	ITEM_ON_COOLDOWN("This item is on cooldown! Please wait #left#s.", "item-cooldown"),
+	ITEM_ON_COOLDOWN("This item is on cooldown! Please wait #left# second#s#.", "item-cooldown"),
 	NOT_ENOUGH_PERMS_COMMAND("You don't have enough permissions."),
 
 	// Item restrictions

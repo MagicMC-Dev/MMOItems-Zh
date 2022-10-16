@@ -71,8 +71,9 @@ public class ItemUse implements Listener {
         if (event.getAction().name().contains("RIGHT_CLICK")) {
             final String cooldownReference = getCooldownReference(useItem.getMMOItem());
             if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
+                final double cd = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference);
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
+                        .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(cd), "#s#", cd >= 2 ? "s" : "")
                         .send(player);
                 event.setUseItemInHand(Event.Result.DENY);
                 return;
@@ -317,8 +318,9 @@ public class ItemUse implements Listener {
 
             final String cooldownReference = getCooldownReference(useItem.getMMOItem());
             if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
+                final double cd = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference);
                 Message.ITEM_ON_COOLDOWN
-                        .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference)))
+                        .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(cd), "#s#", cd >= 2 ? "s" : "")
                         .send(player);
                 event.setCancelled(true);
                 return;

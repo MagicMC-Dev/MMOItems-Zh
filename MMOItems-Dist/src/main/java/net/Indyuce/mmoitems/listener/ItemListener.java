@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -73,7 +74,7 @@ public class ItemListener implements Listener {
 			event.setCancelled(true);
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void playerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 

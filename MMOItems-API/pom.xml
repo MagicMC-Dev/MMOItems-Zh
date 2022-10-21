@@ -118,7 +118,6 @@
     the first wins when multiple classpaths match
     -->
     <dependencies>
-
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -126,7 +125,6 @@
             <version>1.18-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -134,211 +132,209 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- AuthLib -->
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- MMOCore Api -->
         <dependency>
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOCore-API</artifactId>
             <version>1.9.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- MythicEnchants -->
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicEnchants</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- PhatLoots -->
         <dependency>
             <groupId>com.github.RednedEpic</groupId>
             <artifactId>PhatLoots</artifactId>
             <version>4.2.3</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- placeholderapi -->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.9.2</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Mythic -->
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
             <version>5.1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- WordGuard -->
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Vault -->
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Local dependencies -->
+        <!-- SkillAPI -->
         <dependency>
             <groupId>com.github.Eniripsa96</groupId>
             <artifactId>SkillAPI</artifactId>
             <version>master</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- AE Api -->
         <dependency>
             <groupId>n3kas</groupId>
             <artifactId>ae.api</artifactId>
             <version>5.7.6</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- BossShop -->
         <dependency>
             <groupId>org.black_ixx</groupId>
             <artifactId>BossShop</artifactId>
             <version>2.0.9</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Residence -->
         <dependency>
             <groupId>com.bekvon.bukkit.residence</groupId>
             <artifactId>Residence</artifactId>
             <version>4.8.7.2</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Heroes -->
         <dependency>
             <groupId>com.herocraftonline</groupId>
             <artifactId>Heroes</artifactId>
             <version>1.9.22</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- mcMMO -->
         <dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
             <version>2.1.104</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- McRPG -->
         <dependency>
             <groupId>us.eunoians</groupId>
             <artifactId>McRPG</artifactId>
             <version>1.1.2</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Rpl -->
         <dependency>
             <groupId>me.baks</groupId>
             <artifactId>rpl</artifactId>
             <version>3.9.30</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Skills -->
         <dependency>
             <groupId>me.leothepro555</groupId>
             <artifactId>skills</artifactId>
             <version>12.3.5</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- SkillsPro -->
         <dependency>
             <groupId>org.skills.main</groupId>
             <artifactId>SkillsPro</artifactId>
             <version>18.9.0.1</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- BattleLevels -->
         <dependency>
             <groupId>me.robin</groupId>
             <artifactId>BattleLevels</artifactId>
             <version>6.9.1</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- TrHologram -->
         <dependency>
             <groupId>me.arasple.mc</groupId>
             <artifactId>TrHologram</artifactId>
             <version>1.11</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- HolographicDisplays API -->
         <dependency>
             <groupId>com.gmail.filoghost.holographicdisplays</groupId>
             <artifactId>holographicdisplays-api</artifactId>
             <version>2.4.0</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- RacesAndClasses -->
         <dependency>
             <groupId>de.tobiyas</groupId>
             <artifactId>RacesAndClasses</artifactId>
             <version>1.2.6</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Rpg Inventory -->
         <dependency>
             <groupId>ru.endlesscode</groupId>
             <artifactId>rpginventory</artifactId>
             <version>2.3.0</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Holograms -->
         <dependency>
             <groupId>com.sainttx.holograms</groupId>
             <artifactId>Holograms</artifactId>
             <version>2.9.1</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Aurelium Skills -->
         <dependency>
             <groupId>com.archyx</groupId>
             <artifactId>AureliumSkills</artifactId>
             <version>1.2.8</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Crazy Enchantments -->
         <dependency>
             <groupId>me.badbones69</groupId>
             <artifactId>crazyenchantments</artifactId>
             <version>1.8-db9</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Citizens -->
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>Citizens</artifactId>
             <version>2.0.25</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Denizen -->
         <dependency>
             <groupId>com.denizenscript</groupId>
             <artifactId>denizen</artifactId>
             <version>1.2.1-b1744-REL</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Denizen -->
         <dependency>
             <groupId>com.denizenscript</groupId>
             <artifactId>depenizen</artifactId>
             <version>2.0.0-b709</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
 </project>

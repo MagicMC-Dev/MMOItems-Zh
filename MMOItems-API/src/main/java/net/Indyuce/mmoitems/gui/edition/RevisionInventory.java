@@ -10,9 +10,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.stat.RevisionID;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -124,7 +122,7 @@ public class RevisionInventory extends EditionInventory {
                     break;
                 case 30:
                     which = soulbind.clone();
-                    enable = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepSoulbind();
+                    enable = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepSoulBind();
                     break;
                 case 33:
                     id = getEditedSection().getInt(ItemStats.REVISION_ID.getPath(), 1);

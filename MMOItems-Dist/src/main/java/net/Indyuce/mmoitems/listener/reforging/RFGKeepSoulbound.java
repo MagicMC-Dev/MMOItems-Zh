@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
-import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.stat.data.SoulboundData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,7 +34,7 @@ public class RFGKeepSoulbound implements Listener {
           //      event.getNewMMOItem().setData(ItemStats.SOULBOUND, new SoulboundData(event.getPlayer().getUniqueId(), event.getPlayer().getName(), MMOItemReforger.autoSoulbindLevel));
           //  }
 
-        } else if (event.getOptions().shouldKeepSoulbind()) {
+        } else if (event.getOptions().shouldKeepSoulBind()) {
             //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Soulbound");
 
             // Keep it

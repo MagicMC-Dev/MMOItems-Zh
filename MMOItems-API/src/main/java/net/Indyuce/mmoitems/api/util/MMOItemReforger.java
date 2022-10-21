@@ -42,498 +42,584 @@ import java.util.*;
  */
 public class MMOItemReforger {
 
-	/**
-	 * Create this reforger to handle all operations regarding RevID
-	 * increases on any ItemStack, including: 									<br>
-	 *   * Should it update? 					{@link #shouldReforge(String)} 	<br>
-	 *   * Make a fresh version					<br>
-	 *   * Transfer stats from old to fresh 	<br>
-	 *   * Build the fresh version	 			<br>
-	 *
-	 * @param stack The ItemStack you want to update, or at least
-	 *              know if it should update due to RevID increase.
-	 *              <br><br>
-	 *              Gets the NBTItem from {@link NBTItem#get(ItemStack)}
-	 */
-	public MMOItemReforger(@NotNull ItemStack stack) {
-		this.stack = stack;
-		nbtItem = NBTItem.get(stack);
+    /**
+     * Create this reforger to handle all operations regarding RevID
+     * increases on any ItemStack, including: 									<br>
+     * * Should it update? 					{@link #shouldReforge(String)} 	<br>
+     * * Make a fresh version					<br>
+     * * Transfer stats from old to fresh 	<br>
+     * * Build the fresh version	 			<br>
+     *
+     * @param stack The ItemStack you want to update, or at least
+     *              know if it should update due to RevID increase.
+     *              <br><br>
+     *              Gets the NBTItem from {@link NBTItem#get(ItemStack)}
+     */
+    public MMOItemReforger(@NotNull ItemStack stack) {
+        this.stack = stack;
+        nbtItem = NBTItem.get(stack);
 
-		Validate.isTrue(stack.getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
-		meta = stack.getItemMeta();
-	}
-	/**
-	 * Create this reforger to handle all operations regarding RevID
-	 * increases on any ItemStack, including: 									<br>
-	 *   * Should it update? 					{@link #shouldReforge(String)} 	<br>
-	 *   * Make a fresh version					<br>
-	 *   * Transfer stats from old to fresh 	<br>
-	 *   * Build the fresh version	 			<br>
-	 *
-	 * @param nbtItem If for any reason you already generated an NBTItem,
-	 *                you may pass it here I guess, the ItemStack will be
-	 *                regenerated through {@link NBTItem#getItem()}
-	 */
-	public MMOItemReforger(@NotNull NBTItem nbtItem) {
-		this.nbtItem = nbtItem;
-		stack = nbtItem.getItem();
+        Validate.isTrue(stack.getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
+        meta = stack.getItemMeta();
+    }
 
-		Validate.isTrue(stack.getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
-		meta = stack.getItemMeta();
-	}
-	/**
-	 * Create this reforger to handle all operations regarding RevID
-	 * increases on any ItemStack, including: 									<br>
-	 *   * Should it update? 					{@link #shouldReforge(String)} 	<br>
-	 *   * Make a fresh version					<br>
-	 *   * Transfer stats from old to fresh 	<br>
-	 *   * Build the fresh version	 			<br>
-	 *
-	 *
-	 * @param nbtItem If for any reason you already generated an NBTItem,
-	 *                you may pass it here to ease the performance of
-	 *                generating it again from the ItemStack.
-	 *
-	 * @param stack The ItemStack you want to update, or at least
-	 *              know if it should update due to RevID increase.
-	 */
-	public MMOItemReforger(@NotNull ItemStack stack, @NotNull NBTItem nbtItem) {
-		this.stack = stack;
-		this.nbtItem = nbtItem;
+    /**
+     * Create this reforger to handle all operations regarding RevID
+     * increases on any ItemStack, including: 									<br>
+     * * Should it update? 					{@link #shouldReforge(String)} 	<br>
+     * * Make a fresh version					<br>
+     * * Transfer stats from old to fresh 	<br>
+     * * Build the fresh version	 			<br>
+     *
+     * @param nbtItem If for any reason you already generated an NBTItem,
+     *                you may pass it here I guess, the ItemStack will be
+     *                regenerated through {@link NBTItem#getItem()}
+     */
+    public MMOItemReforger(@NotNull NBTItem nbtItem) {
+        this.nbtItem = nbtItem;
+        stack = nbtItem.getItem();
 
-		Validate.isTrue(stack.getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
-		meta = stack.getItemMeta();
-	}
+        Validate.isTrue(stack.getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
+        meta = stack.getItemMeta();
+    }
 
-	/**
-	 * The original ItemStack itself, not even a clone.
-	 */
-	@NotNull final ItemStack stack;
-	/**
-	 * @return The original ItemStack, not even a clone.
-	 */
-	@NotNull public ItemStack getStack() { return stack; }
+    /**
+     * Create this reforger to handle all operations regarding RevID
+     * increases on any ItemStack, including: 									<br>
+     * * Should it update? 					{@link #shouldReforge(String)} 	<br>
+     * * Make a fresh version					<br>
+     * * Transfer stats from old to fresh 	<br>
+     * * Build the fresh version	 			<br>
+     *
+     * @param nbtItem If for any reason you already generated an NBTItem,
+     *                you may pass it here to ease the performance of
+     *                generating it again from the ItemStack.
+     * @param stack   The ItemStack you want to update, or at least
+     *                know if it should update due to RevID increase.
+     */
+    public MMOItemReforger(@NotNull ItemStack stack, @NotNull NBTItem nbtItem) {
+        this.stack = stack;
+        this.nbtItem = nbtItem;
 
-	/**
-	 * The original ItemStack itself, not even a clone.
-	 */
-	@Nullable ItemStack result;
-	/**
-	 * @return The original ItemStack, not even a clone.
-	 */
-	@Nullable public ItemStack getResult() { return result; }
-	/**
-	 * The original ItemStack itself, not even a clone.
-	 */
-	public void setResult(@Nullable ItemStack item) { result = item; }
+        Validate.isTrue(stack.getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
+        meta = stack.getItemMeta();
+    }
 
-	/**
-	 * The original NBTItem information.
-	 */
-	@NotNull final NBTItem nbtItem;
-	/**
-	 * @return The original NBTItem information.
-	 */
-	@NotNull public NBTItem getNBTItem() { return nbtItem; }
+    /**
+     * The original ItemStack itself, not even a clone.
+     */
+    @NotNull
+    final ItemStack stack;
 
-	/**
-	 * The meta of {@link #getStack()} but without
-	 * that pesky {@link Nullable} annotation.
-	 */
-	@NotNull final ItemMeta meta;
-	/**
-	 * @return The meta of {@link #getStack()} but without that
-	 * 		   pesky {@link Nullable} annotation.
-	 */
-	@NotNull public ItemMeta getMeta() { return meta; }
+    /**
+     * @return The original ItemStack, not even a clone.
+     */
+    @NotNull
+    public ItemStack getStack() {
+        return stack;
+    }
 
-	/**
-	 * The player to reroll modifiers based on their level
-	 */
-	@Nullable RPGPlayer player;
-	/**
-	 * @return  player The player to reroll modifiers based on their level
-	 */
-	@Nullable public RPGPlayer getPlayer() { return player; }
-	/**
-	 * @param player The player to reroll modifiers based on their level
-	 */
-	public void setPlayer(@Nullable RPGPlayer player) { this.player = player;}
-	/**
-	 * @param player The player to reroll modifiers based on their level
-	 */
-	public void setPlayer(@Nullable Player player) {
-		if (player == null) { this.player = null; return; }
+    /**
+     * The original ItemStack itself, not even a clone.
+     */
+    @Nullable
+    ItemStack result;
 
-		// Get data
-		this.player = PlayerData.get(player).getRPG();
-	}
+    /**
+     * @return The original ItemStack, not even a clone.
+     */
+    @Nullable
+    public ItemStack getResult() {
+        return result;
+    }
 
-	/**
-	 * If the item should update, this wont be null anymore.
-	 *
-	 * Guaranteed not-null when updating.
-	 */
-	@Nullable LiveMMOItem oldMMOItem;
-	/**
-	 * @return The MMOItem being updated. For safety, it should be cloned,
-	 * 		   in case any plugin decides to make changes in it... though
-	 * 		   this should be entirely for <b>reading purposes only</b>.
-	 */
-	@SuppressWarnings({"NullableProblems", "ConstantConditions"})
-	@NotNull public LiveMMOItem getOldMMOItem() { return oldMMOItem; }
+    /**
+     * The original ItemStack itself, not even a clone.
+     */
+    public void setResult(@Nullable ItemStack item) {
+        result = item;
+    }
 
-	/**
-	 * The loaded template of the MMOItem in question.
-	 *
-	 * Guaranteed not-null when updating.
-	 */
-	@Nullable private MMOItemTemplate template;
-	/**
-	 * @return The loaded template of the MMOItem in question.
-	 */
-	@SuppressWarnings({"NullableProblems", "ConstantConditions"})
-	@NotNull public MMOItemTemplate getTemplate() { return template; }
+    /**
+     * The original NBTItem information.
+     */
+    @NotNull
+    final NBTItem nbtItem;
 
-	/**
-	 * The Updated version of the MMOItem, with
-	 * its revised stats.
-	 *
-	 * Guaranteed not-null when updating.
-	 */
-	@Nullable private MMOItem freshMMOItem;
-	/**
-	 * @return The Updated version of the MMOItem, with
-	 *         its revised stats.
-	 */
-	@SuppressWarnings({"NullableProblems", "ConstantConditions"})
-	@NotNull public MMOItem getFreshMMOItem() { return freshMMOItem; }
-	/**
-	 * @param mmo The Updated version of the MMOItem, with
-	 *            the revised stats.
-	 */
-	public void setFreshMMOItem(@NotNull MMOItem mmo) { freshMMOItem = mmo; }
+    /**
+     * @return The original NBTItem information.
+     */
+    @NotNull
+    public NBTItem getNBTItem() {
+        return nbtItem;
+    }
 
-	/**
-	 * If it is possible to update this ItemStack via this class.
-	 */
-	@Nullable Boolean canUpdate;
-	/**
-	 * The value is stored so the operations don't have to run again on
-	 * subsequent calls, which also means you have to make a new
-	 * MMOItemReforger if you make changes, because it wont be read again.
-	 *
-	 * @return If this is a loaded MMOItem. That's all required.
-	 */
-	@SuppressWarnings("NestedAssignment")
-	public boolean canReforge() {
-		//RFG//MMOItems.log("§8Reforge §4CAN §7Can reforge? " + SilentNumbers.getItemName(getStack()));
+    /**
+     * The meta of {@link #getStack()} but without
+     * that pesky {@link Nullable} annotation.
+     */
+    @NotNull
+    final ItemMeta meta;
 
-		// Already went through these operations ~
-		if (canUpdate != null) { return canUpdate; }
+    /**
+     * @return The meta of {@link #getStack()} but without that
+     * pesky {@link Nullable} annotation.
+     */
+    @NotNull
+    public ItemMeta getMeta() {
+        return meta;
+    }
 
-		// Does it not have type?
-		if (!getNBTItem().hasType()) { return canUpdate = false; }
+    /**
+     * The player to reroll modifiers based on their level
+     */
+    @Nullable
+    RPGPlayer player;
 
-		// Ay get template
-		template = MMOItems.plugin.getTemplates().getTemplate(getNBTItem());
-		if (template == null) { return canUpdate = false; }
+    /**
+     * @return player The player to reroll modifiers based on their level
+     */
+    @Nullable
+    public RPGPlayer getPlayer() {
+        return player;
+    }
 
-		// Success
-		return canUpdate = true;
-	}
+    /**
+     * @param player The player to reroll modifiers based on their level
+     */
+    public void setPlayer(@Nullable RPGPlayer player) {
+        this.player = player;
+    }
 
-	/**
-	 * If it is recommended to update because the RevID value in the ItemStack is outdated.
-	 */
-	@Nullable Boolean shouldUpdate;
-	/**
-	 * The value is stored so the operations don't have to run again on
-	 * subsequent calls, which also means you have to make a new
-	 * MMOItemReforger if you make changes, because it wont be read again.
-	 *
-	 * @param reason Why the item should be updated?
-	 *
-	 *               Used to disable updating items in the config,
-	 *               only during specific 'reasons' like the player
-	 *               joining or picking the item up.
-	 *
-	 * @return If this is an MMOItem with an outdated RevID value.
-	 */
-	@SuppressWarnings("NestedAssignment")
-	public boolean shouldReforge(@Nullable String reason) {
-		//RFG//MMOItems.log("§8Reforge §4SHD §7Should reforge? " + SilentNumbers.getItemName(getStack()));
+    /**
+     * @param player The player to reroll modifiers based on their level
+     */
+    public void setPlayer(@Nullable Player player) {
+        if (player == null) {
+            this.player = null;
+            return;
+        }
 
-		// Already went through these operations ~
-		if (shouldUpdate != null) { return shouldUpdate; }
+        // Get data
+        this.player = PlayerData.get(player).getRPG();
+    }
 
-		// Fist of all, can it update?
-		if (!canReforge()) { return shouldUpdate = false; }
+    /**
+     * If the item should update, this wont be null anymore.
+     * <p>
+     * Guaranteed not-null when updating.
+     */
+    @Nullable
+    LiveMMOItem oldMMOItem;
 
-		// Its not GooP Converter's VANILLA is it?
-		if ("VANILLA".equals(nbtItem.getString("MMOITEMS_ITEM_ID"))) { return false; }
+    /**
+     * @return The MMOItem being updated. For safety, it should be cloned,
+     * in case any plugin decides to make changes in it... though
+     * this should be entirely for <b>reading purposes only</b>.
+     */
+    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
+    @NotNull
+    public LiveMMOItem getOldMMOItem() {
+        return oldMMOItem;
+    }
 
-		// Disabled in config?
-		if (reason != null && MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + reason)) { return shouldUpdate = false; }
+    /**
+     * The loaded template of the MMOItem in question.
+     * <p>
+     * Guaranteed not-null when updating.
+     */
+    @Nullable
+    private MMOItemTemplate template;
 
-		// Greater RevID in template? Go ahead, update!
-		int templateRevision = getTemplate().getRevisionId();
-		int mmoitemRevision = (getNBTItem().hasTag(ItemStats.REVISION_ID.getNBTPath()) ? getNBTItem().getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1);
-		if (templateRevision > mmoitemRevision) { return shouldUpdate = true; }
+    /**
+     * @return The loaded template of the MMOItem in question.
+     */
+    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
+    @NotNull
+    public MMOItemTemplate getTemplate() {
+        return template;
+    }
 
-		// What about in the internal revision?
-		int internalRevision = (nbtItem.hasTag(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) ? nbtItem.getInteger(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) : 1);
-		if (MMOItems.INTERNAL_REVISION_ID > internalRevision) { return shouldUpdate = true; }
+    /**
+     * The Updated version of the MMOItem, with
+     * its revised stats.
+     * <p>
+     * Guaranteed not-null when updating.
+     */
+    @Nullable
+    private MMOItem freshMMOItem;
 
-		// Actually, no need
-		return shouldUpdate = false;
-	}
+    /**
+     * @return The Updated version of the MMOItem, with
+     * its revised stats.
+     */
+    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
+    @NotNull
+    public MMOItem getFreshMMOItem() {
+        return freshMMOItem;
+    }
 
-	/**
-	 * Sometimes, reforging will take away things from the item that
-	 * we don't want to be destroyed forever, these items will drop
-	 * back to the player at the end of the operation.
-	 * <br><br>
-	 * One example are gemstones, when the updated object has less
-	 * gemstone capacity or different color slots, it would be sad
-	 * if the current gemstones ceased to exist. Instead, when the
-	 * event runs, the gemstone updater stores the gem items here
-	 * so that the player gets them back at the completion of this.
-	 */
-	@NotNull final ArrayList<ItemStack> reforgingOutput = new ArrayList<>();
-	/**
-	 * Sometimes, reforging will take away things from the item that
-	 * we don't want to be destroyed forever, these items will drop
-	 * back to the player at the end of the operation.
-	 * <br><br>
-	 * One example are gemstones, when the updated object has less
-	 * gemstone capacity or different color slots, it would be sad
-	 * if the current gemstones ceased to exist. Instead, when the
-	 * event runs, the gemstone updater stores the gem items here
-	 * so that the player gets them back at the completion of this.
-	 *
-	 * @param item Add an item to this process.
-	 */
-	public void addReforgingOutput(@Nullable ItemStack item) {
+    /**
+     * @param mmo The Updated version of the MMOItem, with
+     *            the revised stats.
+     */
+    public void setFreshMMOItem(@NotNull MMOItem mmo) {
+        freshMMOItem = mmo;
+    }
 
-		// Ew
-		if (SilentNumbers.isAir(item)) { return; }
-		if (!item.getType().isItem()) { return; }
+    /**
+     * If it is possible to update this ItemStack via this class.
+     */
+    @Nullable
+    Boolean canUpdate;
 
-		// Add that
-		reforgingOutput.add(item);
-	}
-	/**
-	 * Sometimes, reforging will take away things from the item that
-	 * we don't want to be destroyed forever, these items will drop
-	 * back to the player at the end of the operation.
-	 * <br><br>
-	 * One example are gemstones, when the updated object has less
-	 * gemstone capacity or different color slots, it would be sad
-	 * if the current gemstones ceased to exist. Instead, when the
-	 * event runs, the gemstone updater stores the gem items here
-	 * so that the player gets them back at the completion of this.
-	 */
-	public void clearReforgingOutput() { reforgingOutput.clear(); }
-	/**
-	 * Sometimes, reforging will take away things from the item that
-	 * we don't want to be destroyed forever, these items will drop
-	 * back to the player at the end of the operation.
-	 * <br><br>
-	 * One example are gemstones, when the updated object has less
-	 * gemstone capacity or different color slots, it would be sad
-	 * if the current gemstones ceased to exist. Instead, when the
-	 * event runs, the gemstone updater stores the gem items here
-	 * so that the player gets them back at the completion of this.
-	 *
-	 * @return All the items that will be dropped. The list itself.
-	 */
-	@NotNull public ArrayList<ItemStack> getReforgingOutput() { return reforgingOutput; }
+    /**
+     * The value is stored so the operations don't have to run again on
+     * subsequent calls, which also means you have to make a new
+     * MMOItemReforger if you make changes, because it wont be read again.
+     *
+     * @return If this is a loaded MMOItem. That's all required.
+     */
+    @SuppressWarnings("NestedAssignment")
+    public boolean canReforge() {
+        //RFG//MMOItems.log("§8Reforge §4CAN §7Can reforge? " + SilentNumbers.getItemName(getStack()));
 
-	/**
-	 * The item level modifying the values of RandomStatData
-	 * upon creating a new MMOItem from the template.
-	 */
-	int generationItemLevel;
-	/**
-	 * @return The item level modifying the values of RandomStatData
-	 * 		   upon creating a new MMOItem from the template.
-	 */
-	public int getGenerationItemLevel() { return generationItemLevel; }
+        // Already went through these operations ~
+        if (canUpdate != null) return canUpdate;
 
-	/**
-	 * <b>Make sure to check {@link #canReforge()} because an
-	 * exception will be generated if you don't!</b>
-	 * <br><br>
-	 * Go through all the modules and build the output item!
-	 * <br><br>
-	 * Subsequent calls will destroy the past result and
-	 * generate a brand-new one.
-	 *
-	 * @param options Additional options to pass onto the modules.
-	 *
-	 * @return If reforged successfully. Basically <code>true</code>, unless cancelled.
-	 */
-	public boolean reforge(@NotNull ReforgeOptions options) {
-		//RFG//MMOItems.log("§8Reforge §4RFG§7 Reforging " + SilentNumbers.getItemName(getStack()));
+        // Does it not have type?
+        if (!getNBTItem().hasType()) return canUpdate = false;
 
-		// Throw fail
-		if (!canReforge()) { throw new IllegalArgumentException("Unreforgable Item " + SilentNumbers.getItemName(getStack())); }
+        // Ay get template
+        template = MMOItems.plugin.getTemplates().getTemplate(getNBTItem());
+        if (template == null) return canUpdate = false;
 
-		// Prepare everything properly
-		oldMMOItem = new LiveMMOItem(getNBTItem());
+        // Success
+        return canUpdate = true;
+    }
 
-		// Not blacklisted right!?
-		if (options.isBlacklisted(getOldMMOItem().getId())) { return false; }
+    /**
+     * If it is recommended to update because the RevID value in the ItemStack is outdated.
+     */
+    @Nullable
+    Boolean shouldUpdate;
 
-		/*
-		 * THis chunk will determine the level the item was, and
-		 * regenerate a new one based on that level ~ the "Item Level" which
-		 *
-		 *
-		 * which I honestly don't know how to use I've just been
-		 * copying and pasting this around, leaving this code untouched
-		 * since I first started polishing the RevID workings.
-		 *
-		 *                      - gunging
-		 */
-		int iLevel = MMOItemReforger.defaultItemLevel;
+    /**
+     * The value is stored so the operations don't have to run again on
+     * subsequent calls, which also means you have to make a new
+     * MMOItemReforger if you make changes, because it wont be read again.
+     *
+     * @param reason Why the item should be updated?
+     *               <p>
+     *               Used to disable updating items in the config,
+     *               only during specific 'reasons' like the player
+     *               joining or picking the item up.
+     * @return If this is an MMOItem with an outdated RevID value.
+     */
+    @SuppressWarnings("NestedAssignment")
+    public boolean shouldReforge(@Nullable String reason) {
+        //RFG//MMOItems.log("§8Reforge §4SHD §7Should reforge? " + SilentNumbers.getItemName(getStack()));
 
-		// What level with the regenerated item will be hmmmm.....
-		generationItemLevel =
+        // Already went through these operations ~
+        if (shouldUpdate != null)
+            return shouldUpdate;
 
-				// No default level specified?
-				(iLevel == -32767) ?
+        // Fist of all, can it update?
+        if (!canReforge())
+            return shouldUpdate = false;
 
-						// Does the item have level?
-						(getOldMMOItem().hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData)getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue() : 0 )
+        // Its not GooP Converter's VANILLA is it?
+        if ("VANILLA".equals(nbtItem.getString("MMOITEMS_ITEM_ID")))
+            return false;
 
-						// Default level was specified, use that.
-						: iLevel;
+        // Disabled in config?
+        if (reason != null && MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + reason))
+            return shouldUpdate = false;
+
+        // Greater RevID in template? Go ahead, update!
+        int templateRevision = getTemplate().getRevisionId();
+        int mmoitemRevision = (getNBTItem().hasTag(ItemStats.REVISION_ID.getNBTPath()) ? getNBTItem().getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1);
+        if (templateRevision > mmoitemRevision)
+            return shouldUpdate = true;
+
+        // What about in the internal revision?
+        int internalRevision = (nbtItem.hasTag(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) ? nbtItem.getInteger(ItemStats.INTERNAL_REVISION_ID.getNBTPath()) : 1);
+        if (MMOItems.INTERNAL_REVISION_ID > internalRevision)
+            return shouldUpdate = true;
+
+        // Actually, no need
+        return shouldUpdate = false;
+    }
+
+    /**
+     * Sometimes, reforging will take away things from the item that
+     * we don't want to be destroyed forever, these items will drop
+     * back to the player at the end of the operation.
+     * <br><br>
+     * One example are gemstones, when the updated object has less
+     * gemstone capacity or different color slots, it would be sad
+     * if the current gemstones ceased to exist. Instead, when the
+     * event runs, the gemstone updater stores the gem items here
+     * so that the player gets them back at the completion of this.
+     */
+    @NotNull
+    final ArrayList<ItemStack> reforgingOutput = new ArrayList<>();
+
+    /**
+     * Sometimes, reforging will take away things from the item that
+     * we don't want to be destroyed forever, these items will drop
+     * back to the player at the end of the operation.
+     * <br><br>
+     * One example are gemstones, when the updated object has less
+     * gemstone capacity or different color slots, it would be sad
+     * if the current gemstones ceased to exist. Instead, when the
+     * event runs, the gemstone updater stores the gem items here
+     * so that the player gets them back at the completion of this.
+     *
+     * @param item Add an item to this process.
+     */
+    public void addReforgingOutput(@Nullable ItemStack item) {
+        // Ew
+        if (!SilentNumbers.isAir(item) && item.getType().isItem())
+            // Add that
+            reforgingOutput.add(item);
+    }
+
+    /**
+     * Sometimes, reforging will take away things from the item that
+     * we don't want to be destroyed forever, these items will drop
+     * back to the player at the end of the operation.
+     * <br><br>
+     * One example are gemstones, when the updated object has less
+     * gemstone capacity or different color slots, it would be sad
+     * if the current gemstones ceased to exist. Instead, when the
+     * event runs, the gemstone updater stores the gem items here
+     * so that the player gets them back at the completion of this.
+     */
+    public void clearReforgingOutput() {
+        reforgingOutput.clear();
+    }
+
+    /**
+     * Sometimes, reforging will take away things from the item that
+     * we don't want to be destroyed forever, these items will drop
+     * back to the player at the end of the operation.
+     * <br><br>
+     * One example are gemstones, when the updated object has less
+     * gemstone capacity or different color slots, it would be sad
+     * if the current gemstones ceased to exist. Instead, when the
+     * event runs, the gemstone updater stores the gem items here
+     * so that the player gets them back at the completion of this.
+     *
+     * @return All the items that will be dropped. The list itself.
+     */
+    @NotNull
+    public ArrayList<ItemStack> getReforgingOutput() {
+        return reforgingOutput;
+    }
+
+    /**
+     * The item level modifying the values of RandomStatData
+     * upon creating a new MMOItem from the template.
+     */
+    int generationItemLevel;
+
+    /**
+     * @return The item level modifying the values of RandomStatData
+     * upon creating a new MMOItem from the template.
+     */
+    public int getGenerationItemLevel() {
+        return generationItemLevel;
+    }
+
+    /**
+     * <b>Make sure to check {@link #canReforge()} because an
+     * exception will be generated if you don't!</b>
+     * <br><br>
+     * Go through all the modules and build the output item!
+     * <br><br>
+     * Subsequent calls will destroy the past result and
+     * generate a brand-new one.
+     *
+     * @param options Additional options to pass onto the modules.
+     * @return If reforged successfully. Basically <code>true</code>, unless cancelled.
+     */
+    public boolean reforge(@NotNull ReforgeOptions options) {
+        //RFG//MMOItems.log("§8Reforge §4RFG§7 Reforging " + SilentNumbers.getItemName(getStack()));
+
+        // Throw fail
+        if (!canReforge())
+            throw new IllegalArgumentException("Unreforgable Item " + SilentNumbers.getItemName(getStack()));
+
+        // Prepare everything properly
+        oldMMOItem = new LiveMMOItem(getNBTItem());
+
+        // Not blacklisted right!?
+        if (options.isBlacklisted(getOldMMOItem().getId()))
+            return false;
+
+        /*
+         * THis chunk will determine the level the item was, and
+         * regenerate a new one based on that level ~ the "Item Level" which
+         *
+         *
+         * which I honestly don't know how to use I've just been
+         * copying and pasting this around, leaving this code untouched
+         * since I first started polishing the RevID workings.
+         *
+         *                      - gunging
+         */
+        int iLevel = MMOItemReforger.defaultItemLevel;
+
+        // What level with the regenerated item will be hmmmm.....
+        generationItemLevel =
+
+                // No default level specified?
+                (iLevel == -32767) ?
+
+                        // Does the item have level?
+                        (getOldMMOItem().hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue() : 0)
+
+                        // Default level was specified, use that.
+                        : iLevel;
 
 
+        // Identify tier.
+        ItemTier tier =
 
+                // Does the item have a tier, and it should keep it?
+                (options.shouldKeepTier() && getOldMMOItem().hasData(ItemStats.TIER)) ?
 
-		// Identify tier.
-		ItemTier tier =
+                        // The tier will be the current tier
+                        MMOItems.plugin.getTiers().get(getOldMMOItem().getData(ItemStats.TIER).toString())
 
-				// Does the item have a tier, and it should keep it?
-				(options.shouldKeepTier() && getOldMMOItem().hasData(ItemStats.TIER)) ?
+                        // The item either has no tier, or shouldn't keep it. Null
+                        : null;
 
-						// The tier will be the current tier
-						MMOItems.plugin.getTiers().get(getOldMMOItem().getData(ItemStats.TIER).toString())
+        // Build it again (Reroll RNG)
+        setFreshMMOItem(getTemplate().newBuilder(generationItemLevel, tier).build());
+        //RFG//MMOItems.log("§8Reforge §4RFG§7 Generated at Lvl \u00a73" + generationItemLevel);
 
-						// The item either has no tier, or shouldn't keep it. Null
-						: null;
+        // Run event
+        //RFG//MMOItems.log("§8Reforge §3RFG§7 Running Reforge Event");
+        MMOItemReforgeEvent mmoREV = new MMOItemReforgeEvent(this, options);
+        Bukkit.getPluginManager().callEvent(mmoREV);
 
-		// Build it again (Reroll RNG)
-		setFreshMMOItem(getTemplate().newBuilder(generationItemLevel, tier).build());
-		//RFG//MMOItems.log("§8Reforge §4RFG§7 Generated at Lvl \u00a73" + generationItemLevel);
+        // Cancelled? it ends there
+        if (mmoREV.isCancelled())
+            //RFG//MMOItems.log("§8Reforge §4RFG§c Event Cancelled");
+            return false;
+        //RFG//MMOItems.log("§8Reforge §2RFG§7 Running Reforge Finish");
 
-		// Run event
-		//RFG//MMOItems.log("§8Reforge §3RFG§7 Running Reforge Event");
-		MMOItemReforgeEvent mmoREV = new MMOItemReforgeEvent(this, options);
-		Bukkit.getPluginManager().callEvent(mmoREV);
+        /*
+         * Properly recalculate all based on histories
+         */
+        for (StatHistory hist : getFreshMMOItem().getStatHistories())
+            // Recalculate that shit
+            getFreshMMOItem().setData(hist.getItemStat(), hist.recalculate(getFreshMMOItem().getUpgradeLevel()));
 
-		// Cancelled? it ends there
-		if (mmoREV.isCancelled()) {
-			//RFG//MMOItems.log("§8Reforge §4RFG§c Event Cancelled");
-			return false; }
-		//RFG//MMOItems.log("§8Reforge §2RFG§7 Running Reforge Finish");
+        if (getFreshMMOItem().hasUpgradeTemplate()) {
 
-		/*
-		 * Properly recalculate all based on histories
-		 */
-		for (StatHistory hist : getFreshMMOItem().getStatHistories()) {
+            for (ItemStat stat : getFreshMMOItem().getUpgradeTemplate().getKeys()) {
 
-			// Recalculate that shit
-			getFreshMMOItem().setData(hist.getItemStat(), hist.recalculate(getFreshMMOItem().getUpgradeLevel()));
-		}
-		if (getFreshMMOItem().hasUpgradeTemplate()) {
+                // That stat yes
+                StatHistory hist = StatHistory.from(getFreshMMOItem(), stat);
 
-			for (ItemStat stat : getFreshMMOItem().getUpgradeTemplate().getKeys()) {
+                // Recalculate that shit
+                getFreshMMOItem().setData(hist.getItemStat(), hist.recalculate(getFreshMMOItem().getUpgradeLevel()));
+            }
+        }
 
-				// That stat yes
-				StatHistory hist = StatHistory.from(getFreshMMOItem(), stat);
+        // Build ItemStack
+        result = getFreshMMOItem().newBuilder().build();
 
-				// Recalculate that shit
-				getFreshMMOItem().setData(hist.getItemStat(), hist.recalculate(getFreshMMOItem().getUpgradeLevel()));
-			}
-		}
+        // Run another event...
+        MMOItemReforgeFinishEvent mmoFIN = new MMOItemReforgeFinishEvent(result, this, options);
+        Bukkit.getPluginManager().callEvent(mmoFIN);
 
-		// Build ItemStack
-		result = getFreshMMOItem().newBuilder().build();
+        // Finally, the result item.
+        setResult(mmoFIN.getFinishedItem());
+        //RFG//MMOItems.log("§8Reforge §6RFG§7 Finished " + SilentNumbers.getItemName(getResult()));
 
-		// Run another event...
-		MMOItemReforgeFinishEvent mmoFIN = new MMOItemReforgeFinishEvent(result,this, options);
-		Bukkit.getPluginManager().callEvent(mmoFIN);
+        // That's the result
+        return !mmoFIN.isCancelled();
+    }
 
-		// Finally, the result item.
-		setResult(mmoFIN.getFinishedItem());
-		//RFG//MMOItems.log("§8Reforge §6RFG§7 Finished " + SilentNumbers.getItemName(getResult()));
+    //region Config Values
+    public static int autoSoulbindLevel = 1;
+    public static int defaultItemLevel = -32767;
+    public static boolean keepTiersWhenReroll = true;
+    public static boolean gemstonesRevIDWhenUnsocket = false;
 
-		// That's the result
-		return !mmoFIN.isCancelled();
-	}
+    public static void reload() {
+        autoSoulbindLevel = MMOItems.plugin.getConfig().getInt("soulbound.auto-bind.level", 1);
+        defaultItemLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -32767);
+        keepTiersWhenReroll = MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers");
+        gemstonesRevIDWhenUnsocket = MMOItems.plugin.getConfig().getBoolean("item-revision.regenerate-gems-when-unsocketed", false);
+    }
+    //endregion
 
-	//region Config Values
-	public static int autoSoulbindLevel = 1;
-	public static int defaultItemLevel = -32767;
-	public static boolean keepTiersWhenReroll = true;
-	public static boolean gemstonesRevIDWhenUnsocket = false;
+    //region Deprecated API
+    @Deprecated
+    public void update(@Nullable Player p, @NotNull ReforgeOptions options) {
+        if (p != null)
+            setPlayer(p);
+        reforge(options);
+    }
 
-	public static void reload() {
-		autoSoulbindLevel = MMOItems.plugin.getConfig().getInt("soulbound.auto-bind.level", 1);
-		defaultItemLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -32767);
-		keepTiersWhenReroll = MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers");
-		gemstonesRevIDWhenUnsocket = MMOItems.plugin.getConfig().getBoolean("item-revision.regenerate-gems-when-unsocketed", false);
-	}
-	//endregion
+    @Deprecated
+    public void update(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
+        if (player != null)
+            setPlayer(player);
+        reforge(options);
+    }
 
-	//region Deprecated API
-	@Deprecated
-	public void update(@Nullable Player p, @NotNull ReforgeOptions options) {
-		if (p != null) { setPlayer(p); }
-		reforge(options);
-	}
-	@Deprecated
-	public void update(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
-		if (player != null) { setPlayer(player); }
-		reforge(options);
-	}
-	@Deprecated
-	void regenerate(@Nullable RPGPlayer p) {
-		if (p != null) { setPlayer(p); }
-		reforge(new ReforgeOptions(false, false, false, false, false, false, false, true));
-	}
-	@Deprecated
-	int regenerate(@Nullable RPGPlayer player, @NotNull MMOItemTemplate template) {
-		if (player != null) { setPlayer(player); }
-		canUpdate = true;	//If the template exists, it EXISTS!
-		this.template = template;
-		reforge(new ReforgeOptions(false, false, false, false, false, false, false, true));
-		return 0;
-	}
-	@Deprecated
-	public void reforge(@Nullable Player p, @NotNull ReforgeOptions options) {
-		if (p != null) { setPlayer(p); }
-		reforge(options);
-	}
-	@Deprecated
-	public void reforge(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
-		if (player != null) { setPlayer(player); }
-		reforge(options);
-	}
-	@Deprecated
-	public ItemStack toStack() {
-		return getResult();
-	}
-	@Deprecated
-	public boolean hasChanges() {
-		return getResult() != null;
-	}
-	@Deprecated
-	@NotNull public ArrayList<MMOItem> getDestroyedGems() { return new ArrayList<>(); }
+    @Deprecated
+    void regenerate(@Nullable RPGPlayer p) {
+        if (p != null)
+            setPlayer(p);
+        reforge(new ReforgeOptions(false, false, false, false, false, false, false, true));
+    }
 
-	//endregion
+    @Deprecated
+    int regenerate(@Nullable RPGPlayer player, @NotNull MMOItemTemplate template) {
+        if (player != null)
+            setPlayer(player);
+        canUpdate = true;    //If the template exists, it EXISTS!
+        this.template = template;
+        reforge(new ReforgeOptions(false, false, false, false, false, false, false, true));
+        return 0;
+    }
+
+    @Deprecated
+    public void reforge(@Nullable Player p, @NotNull ReforgeOptions options) {
+        if (p != null)
+            setPlayer(p);
+        reforge(options);
+    }
+
+    @Deprecated
+    public void reforge(@Nullable RPGPlayer player, @NotNull ReforgeOptions options) {
+        if (player != null)
+            setPlayer(player);
+        reforge(options);
+    }
+
+    @Deprecated
+    public ItemStack toStack() {
+        return getResult();
+    }
+
+    @Deprecated
+    public boolean hasChanges() {
+        return getResult() != null;
+    }
+
+    @Deprecated
+    @NotNull
+    public ArrayList<MMOItem> getDestroyedGems() {
+        return new ArrayList<>();
+    }
+
+    //endregion
 }

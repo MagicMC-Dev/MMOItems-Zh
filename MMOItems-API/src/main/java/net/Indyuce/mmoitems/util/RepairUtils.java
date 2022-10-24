@@ -25,23 +25,27 @@ public class RepairUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static boolean repairPower(@NotNull PlayerData playerData, @NotNull NBTItem target, @NotNull Consumable consumable, double repairPower) {
+    public static boolean repairPower(@NotNull PlayerData playerData, @NotNull NBTItem target, @NotNull Consumable consumable, double repairPercentage, int repairUses) {
         final Player player = playerData.getPlayer();
-        if (!target.getBoolean("Unbreakable") && target.getItem().hasItemMeta() && target.getItem().getItemMeta() instanceof Damageable
+        final boolean percentage = repairPercentage > 0;
+        if (!target.getBoolean("Unbreakable")
+                && target.getItem().hasItemMeta()
+                && target.getItem().getItemMeta() instanceof Damageable
                 && ((Damageable) target.getItem().getItemMeta()).getDamage() > 0) {
-            RepairItemEvent called = new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairPower);
+            RepairItemEvent called = percentage ? new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairPercentage) : new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairUses);
             Bukkit.getPluginManager().callEvent(called);
             if (called.isCancelled())
                 return false;
+            int uses = percentage ? (int) (target.getItem().getType().getMaxDurability() * (repairPercentage / 100)) : repairUses;
 
             ItemMeta meta = target.getItem().getItemMeta();
-            ((Damageable) meta).setDamage(Math.max(0, ((Damageable) meta).getDamage() - called.getRepaired()));
+            ((Damageable) meta).setDamage(Math.max(0, ((Damageable) meta).getDamage() - uses));
             target.getItem().setItemMeta(meta);
             Message.REPAIRED_ITEM.format(ChatColor.YELLOW,
                             "#item#",
                             MMOUtils.getDisplayName(target.getItem()),
                             "#amount#",
-                            String.valueOf(called.getRepaired() == -1 ? called.getRepairedPercent() : called.getRepaired()))
+                            String.valueOf(uses))
                     .send(player);
             CustomSoundListener.playConsumableSound(consumable.getItem(), player);
             return true;

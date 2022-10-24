@@ -64,6 +64,6 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
         }
 
         // vanilla durability
-        return RepairUtils.repairPower(playerData, target, consumable, repairPower);
+        return RepairUtils.repairPower(playerData, target, consumable, repairPower, -1);
     }
 }

@@ -13,8 +13,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.stat.ExtraAttribute;
-import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Attribute;
-import net.Indyuce.mmoitems.comp.mmocore.stat.Required_Profession;
+import net.Indyuce.mmoitems.comp.mmocore.stat.RequiredAttribute;
+import net.Indyuce.mmoitems.comp.mmocore.stat.RequiredProfession;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
      */
     public MMOCoreHook() {
         for (PlayerAttribute attribute : MMOCore.plugin.attributeManager.getAll()) {
-            MMOItems.plugin.getStats().register(new Required_Attribute(attribute));
+            MMOItems.plugin.getStats().register(new RequiredAttribute(attribute));
             MMOItems.plugin.getStats().register(new ExtraAttribute(attribute));
         }
 
@@ -43,8 +43,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
                     .replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
                     VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "Additional Experience (MMOCore)"
                     , new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."}, new String[]{"!block", "all"}));
-
-            MMOItems.plugin.getStats().register(new Required_Profession(profession));
+            MMOItems.plugin.getStats().register(new RequiredProfession(profession));
         }
     }
 

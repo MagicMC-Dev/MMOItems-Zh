@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.util;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.api.event.item.RepairItemEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.player.PlayerData;

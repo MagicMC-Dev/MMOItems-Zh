@@ -9,7 +9,7 @@ import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;

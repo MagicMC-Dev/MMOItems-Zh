@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.DeconstructItemEvent;

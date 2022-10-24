@@ -112,13 +112,14 @@ public class MMOItems extends JavaPlugin {
 
     @Override
     public void onLoad() {
-
-        if (getServer().getPluginManager().getPlugin("WorldEdit") != null) try {
-            new WorldEditSupport();
-            getLogger().log(Level.INFO, "Hooked onto WorldEdit");
-        } catch (Exception exception) {
-            getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: " + exception.getMessage());
-        }
+        PluginUtils.isDependencyPresent("WorldEdit", u -> {
+            try {
+                new WorldEditSupport();
+                getLogger().log(Level.INFO, "Hooked onto WorldEdit");
+            } catch (Exception exception) {
+                getLogger().log(Level.WARNING, "Could not initialize support with WorldEdit 7: ", exception);
+            }
+        });
 
         // Initialize default config files
         saveDefaultConfig();
@@ -168,6 +169,7 @@ public class MMOItems extends JavaPlugin {
          * After tiers, sets and upgrade templates are loaded, MI template data
          * can be fully loaded
          */
+        statManager.loadElements();
         formatManager.reload();
         tierManager = new TierManager();
         setManager = new SetManager();
@@ -177,7 +179,7 @@ public class MMOItems extends JavaPlugin {
         dropTableManager = new DropTableManager();
         worldGenManager = new WorldGenManager();
         blockManager = new BlockManager();
-        MMOItems.plugin.getStats().reload(false);
+       statManager.reload(false);
 
 
         PluginUtils.hookDependencyIfPresent("Vault", u -> vaultSupport = new VaultSupport());

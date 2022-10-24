@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;

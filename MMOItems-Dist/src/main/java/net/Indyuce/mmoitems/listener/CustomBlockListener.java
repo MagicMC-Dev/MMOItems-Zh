@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.listener;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;

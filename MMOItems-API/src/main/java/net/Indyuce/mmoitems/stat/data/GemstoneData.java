@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.stat.data;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.type.ItemStat;

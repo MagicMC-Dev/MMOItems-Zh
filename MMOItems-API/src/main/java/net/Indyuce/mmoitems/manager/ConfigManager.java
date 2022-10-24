@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;

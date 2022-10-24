@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;

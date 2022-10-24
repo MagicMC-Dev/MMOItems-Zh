@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerData.CooldownType;

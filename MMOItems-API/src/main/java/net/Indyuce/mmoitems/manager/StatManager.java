@@ -36,7 +36,7 @@ public class StatManager {
                 if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
                     register((ItemStat<?, ?>) field.get(null));
             } catch (IllegalArgumentException | IllegalAccessException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register stat called '" + field.getName() + "': " + exception.getMessage());
+                MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register stat called '%s'".formatted(field.getName()), exception.getMessage());
             }
     }
 
@@ -51,9 +51,18 @@ public class StatManager {
             numeric.removeIf(stat -> stat instanceof FictiveNumericStat);
 
         // Register elemental stats
-        for (ElementStatType type : ElementStatType.values())
-            for (Element element : MythicLib.plugin.getElements().getAll())
+        loadElements();
+    }
+
+    /**
+     * Register all MythicLib elements as stats
+     */
+    public void loadElements() {
+        for (ElementStatType type : ElementStatType.values()) {
+            for (Element element : MythicLib.plugin.getElements().getAll()) {
                 numeric.add(new FictiveNumericStat(element, type));
+            }
+        }
     }
 
     public Collection<ItemStat<?, ?>> getAll() {
@@ -99,7 +108,13 @@ public class StatManager {
     }
 
     public ItemStat<?, ?> get(String id) {
-        return stats.getOrDefault(id, null);
+        ItemStat<?, ?> stat = stats.getOrDefault(id, null);
+        if (stat == null)
+            stat = numeric.stream()
+                    .filter(doubleStat -> doubleStat.getId().equals(id))
+                    .findFirst()
+                    .orElse(null);
+        return stat;
     }
 
     /**

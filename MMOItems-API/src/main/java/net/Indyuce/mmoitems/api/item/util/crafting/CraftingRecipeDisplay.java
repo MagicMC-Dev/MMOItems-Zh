@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;

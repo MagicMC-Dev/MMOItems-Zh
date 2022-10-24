@@ -12,11 +12,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
-public class Required_Profession extends DoubleStat implements ItemRestriction, GemStoneStat {
+public class RequiredProfession extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final Profession profession;
 
     // TODO merge with RequiredLevelStat
-    public Required_Profession(Profession profession) {
+    public RequiredProfession(Profession profession) {
         super("PROFESSION_" + profession.getId().toUpperCase().replace("-", "_"), Material.PINK_DYE, profession.getName() + " Requirement (MMOCore)",
                 new String[]{"Amount of " + profession.getName() + " levels the", "player needs to use the item."}, new String[]{"!block", "all"});
 

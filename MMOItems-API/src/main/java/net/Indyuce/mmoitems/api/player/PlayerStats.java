@@ -8,7 +8,6 @@ import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.player.modifier.ModifierType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.stat.type.AttackWeaponStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -28,11 +27,11 @@ public class PlayerStats {
         return playerData.getMMOPlayerData().getStatMap();
     }
 
-    public double getStat(ItemStat stat) {
+    public double getStat(ItemStat<?, ?> stat) {
         return getMap().getInstance(stat.getId()).getTotal();
     }
 
-    public StatInstance getInstance(ItemStat stat) {
+    public StatInstance getInstance(ItemStat<?, ?> stat) {
         return getMap().getInstance(stat.getId());
     }
 
@@ -50,8 +49,7 @@ public class PlayerStats {
     }
 
     public void updateStats() {
-
-        for (ItemStat stat : MMOItems.plugin.getStats().getNumericStats()) {
+        for (ItemStat<?, ?> stat : MMOItems.plugin.getStats().getNumericStats()) {
 
             // Let MMOItems first add stat modifiers, and then update the stat instance
             StatInstance.ModifierPacket packet = getInstance(stat).newPacket();

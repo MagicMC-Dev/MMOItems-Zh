@@ -26,16 +26,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class Shulker_Missile extends SkillHandler<VectorSkillResult> implements Listener {
-    public Shulker_Missile() {
+public class ShulkerMissile extends SkillHandler<VectorSkillResult> implements Listener {
+    public ShulkerMissile() {
         super();
 
         registerModifiers("damage", "effect-duration", "duration");
     }
 
+    @NotNull
     @Override
     public VectorSkillResult getResult(SkillMetadata meta) {
         return new VectorSkillResult(meta);

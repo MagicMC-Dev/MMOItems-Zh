@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.RepairItemEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
@@ -12,14 +12,13 @@ import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
+import net.Indyuce.mmoitems.util.RepairUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,23 +64,6 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
         }
 
         // vanilla durability
-        if (!target.getBoolean("Unbreakable") && target.getItem().hasItemMeta() && target.getItem().getItemMeta() instanceof Damageable
-                && ((Damageable) target.getItem().getItemMeta()).getDamage() > 0) {
-
-            RepairItemEvent called = new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairPower);
-            Bukkit.getPluginManager().callEvent(called);
-            if (called.isCancelled())
-                return false;
-
-            ItemMeta meta = target.getItem().getItemMeta();
-            ((Damageable) meta).setDamage(Math.max(0, ((Damageable) meta).getDamage() - called.getRepaired()));
-            target.getItem().setItemMeta(meta);
-            Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepaired())
-                    .send(player);
-            CustomSoundListener.playConsumableSound(consumable.getItem(), player);
-            return true;
-        }
-
-        return false;
+        return RepairUtils.repairPower(playerData, target, consumable, repairPower);
     }
 }

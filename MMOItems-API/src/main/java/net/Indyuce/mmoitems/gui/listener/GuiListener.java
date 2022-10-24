@@ -2,15 +2,13 @@ package net.Indyuce.mmoitems.gui.listener;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.ItemBrowser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeEdition;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListEdition;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
 import org.bukkit.ChatColor;

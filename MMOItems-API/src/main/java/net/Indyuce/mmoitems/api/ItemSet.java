@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.api;
 
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
@@ -31,50 +31,55 @@ public class ItemSet {
         this.loreTag = config.getStringList("lore-tag");
         this.name = config.getString("name");
 
-        Validate.isTrue(config.contains("bonuses"), "Could not find item set bonuses");
+        Validate.isTrue(config.isConfigurationSection("bonuses"), "Could not find item set bonuses");
 
         for (int j = 2; j <= itemLimit; j++)
             if (config.getConfigurationSection("bonuses").contains(String.valueOf(j))) {
-                SetBonuses bonuses = new SetBonuses();
+                final String bonusesKey = "bonuses.%d".formatted(j);
+                final SetBonuses bonuses = new SetBonuses();
+                final ConfigurationSection bonusesSection = config.getConfigurationSection(bonusesKey);
+                Validate.notNull(bonusesSection, "Item set '%s' is not a valid configuration section.".formatted(id));
 
                 // Add permissions
-                for (String perm : config.getConfigurationSection("bonuses." + j).getStringList("granted-permissions"))
+                for (String perm : bonusesSection.getStringList("granted-permissions"))
                     bonuses.addPermission(perm);
 
-                for (String key : config.getConfigurationSection("bonuses." + j).getKeys(false))
+                for (String key : bonusesSection.getKeys(false))
                     if (!key.equals("granted-permissions")) {
-
                         try {
                             String format = key.toUpperCase().replace("-", "_").replace(" ", "_");
 
                             // ability
                             if (key.startsWith("ability-")) {
-                                bonuses.addAbility(new AbilityData(config.getConfigurationSection("bonuses." + j + "." + key)));
+                                final ConfigurationSection section = config.getConfigurationSection("%s.%s".formatted(bonusesKey, key));
+                                Validate.notNull(section, "Ability '%s' is not a valid configuration section.".formatted(key));
+                                bonuses.addAbility(new AbilityData(section));
                                 continue;
                             }
 
                             // potion effect
                             if (key.startsWith("potion-")) {
                                 PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-                                Validate.notNull(potionEffectType, "Could not load potion effect type from '" + format + "'");
+                                Validate.notNull(potionEffectType, "Could not load potion effect type from '%s'".formatted(format));
                                 bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
-                                        config.getInt("bonuses." + j + "." + key) - 1, true, false));
+                                        config.getInt("%s.%s".formatted(bonusesKey, key)) - 1, true, false));
                                 continue;
                             }
 
                             // particle effect
                             if (key.startsWith("particle-")) {
-                                bonuses.addParticle(new ParticleData(config.getConfigurationSection("bonuses." + j + "." + key)));
+                                final ConfigurationSection section = config.getConfigurationSection("bonuses.%d.%s".formatted(j, key));
+                                Validate.notNull(section, "Particle effect '%s' is not a valid configuration section.".formatted(key));
+                                bonuses.addParticle(new ParticleData(section));
                                 continue;
                             }
 
                             // stat
-                            ItemStat stat = MMOItems.plugin.getStats().get(format);
-                            Validate.notNull(stat, "Could not find stat called '" + format + "'");
-                            bonuses.addStat(stat, config.getDouble("bonuses." + j + "." + key));
-
+                            ItemStat<?, ?> stat = MMOItems.plugin.getStats().get(format);
+                            Validate.notNull(stat, "Could not find stat called '%s'".formatted(format));
+                            bonuses.addStat(stat, config.getDouble("bonuses.%d.%s".formatted(j, key)));
                         } catch (IllegalArgumentException exception) {
-                            throw new IllegalArgumentException("Could not load set bonus '" + key + "': " + exception.getMessage());
+                            throw new IllegalArgumentException("Could not load set bonus '%s': %s".formatted(key, exception.getMessage()));
                         }
                     }
 
@@ -103,13 +108,13 @@ public class ItemSet {
     }
 
     public static class SetBonuses {
-        private final Map<ItemStat, Double> stats = new HashMap<>();
+        private final Map<ItemStat<?, ?>, Double> stats = new HashMap<>();
         private final Map<PotionEffectType, PotionEffect> permEffects = new HashMap<>();
         private final Set<AbilityData> abilities = new HashSet<>();
         private final Set<ParticleData> particles = new HashSet<>();
         private final ArrayList<String> permissions = new ArrayList<>();
 
-        public void addStat(ItemStat stat, double value) {
+        public void addStat(ItemStat<?, ?> stat, double value) {
             stats.put(stat, value);
         }
 
@@ -129,15 +134,15 @@ public class ItemSet {
             permissions.add(permission);
         }
 
-        public boolean hasStat(ItemStat stat) {
+        public boolean hasStat(ItemStat<?, ?> stat) {
             return stats.containsKey(stat);
         }
 
-        public double getStat(ItemStat stat) {
+        public double getStat(ItemStat<?, ?> stat) {
             return stats.get(stat);
         }
 
-        public Map<ItemStat, Double> getStats() {
+        public Map<ItemStat<?, ?>, Double> getStats() {
             return stats;
         }
 

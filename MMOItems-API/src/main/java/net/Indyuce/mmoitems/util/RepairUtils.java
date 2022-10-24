@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,31 +24,40 @@ public class RepairUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static boolean repairPower(@NotNull PlayerData playerData, @NotNull NBTItem target, @NotNull Consumable consumable, double repairPercentage, int repairUses) {
+
+    /**
+     * Repairs a vanilla item.
+     * It will not work with MMOItems items.
+     *
+     * @param playerData       The player data.
+     * @param target           The target item.
+     * @param consumable       The consumable item.
+     * @param repairPercentage The repair percentage. (set to -1 to disable)
+     * @param repairUses       The repair uses. (set to -1 to disable)
+     * @return True if the item was repaired.
+     */
+    public static boolean repairVanillaItem(@NotNull PlayerData playerData, @NotNull NBTItem target, @NotNull Consumable consumable, double repairPercentage, int repairUses) {
         final Player player = playerData.getPlayer();
         final boolean percentage = repairPercentage > 0;
-        if (!target.getBoolean("Unbreakable")
-                && target.getItem().hasItemMeta()
-                && target.getItem().getItemMeta() instanceof Damageable
-                && ((Damageable) target.getItem().getItemMeta()).getDamage() > 0) {
-            RepairItemEvent called = percentage ? new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairPercentage) : new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairUses);
-            Bukkit.getPluginManager().callEvent(called);
-            if (called.isCancelled())
-                return false;
-            int uses = percentage ? (int) (target.getItem().getType().getMaxDurability() * (repairPercentage / 100)) : repairUses;
-
-            ItemMeta meta = target.getItem().getItemMeta();
-            ((Damageable) meta).setDamage(Math.max(0, ((Damageable) meta).getDamage() - uses));
-            target.getItem().setItemMeta(meta);
-            Message.REPAIRED_ITEM.format(ChatColor.YELLOW,
-                            "#item#",
-                            MMOUtils.getDisplayName(target.getItem()),
-                            "#amount#",
-                            String.valueOf(uses))
-                    .send(player);
-            CustomSoundListener.playConsumableSound(consumable.getItem(), player);
-            return true;
-        }
-        return false;
+        if (target.getBoolean("Unbreakable")
+                || !target.getItem().hasItemMeta()
+                || !(target.getItem().getItemMeta() instanceof Damageable meta)
+                || ((Damageable) target.getItem().getItemMeta()).getDamage() <= 0)
+            return false;
+        RepairItemEvent called = percentage ? new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairPercentage) : new RepairItemEvent(playerData, consumable.getMMOItem(), target, repairUses);
+        Bukkit.getPluginManager().callEvent(called);
+        if (called.isCancelled())
+            return false;
+        int repaired = percentage ? (int) ((repairPercentage / 100) * target.getItem().getType().getMaxDurability()) : repairUses;
+        meta.setDamage(Math.max(0, meta.getDamage() - repaired));
+        target.getItem().setItemMeta(meta);
+        Message.REPAIRED_ITEM.format(ChatColor.YELLOW,
+                        "#item#",
+                        MMOUtils.getDisplayName(target.getItem()),
+                        "#amount#",
+                        String.valueOf(repaired))
+                .send(player);
+        CustomSoundListener.playConsumableSound(consumable.getItem(), player);
+        return true;
     }
 }

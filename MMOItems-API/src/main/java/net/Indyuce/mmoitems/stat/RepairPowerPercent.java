@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class RepairPowerPercent extends DoubleStat implements ConsumableItemInteraction {
     public RepairPowerPercent() {
         super("REPAIR_PERCENT", Material.DAMAGED_ANVIL, "Repair Percentage",
-                new String[] { "The percentage of total durability to repair", "When dropped onto an item." },
+                new String[]{"The percentage of total durability to repair", "When dropped onto an item."},
                 new String[]{"consumable"});
     }
 
@@ -39,7 +39,7 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
         Player player = playerData.getPlayer();
 
         final String type = "MMOITEMS_REPAIR_TYPE";
-        if((target.hasTag(type) || consumable.getNBTItem().hasTag(type)) &&
+        if ((target.hasTag(type) || consumable.getNBTItem().hasTag(type)) &&
                 !target.getString(type).equals(consumable.getNBTItem().getString(type))) {
             Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
@@ -54,9 +54,10 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
 
             DurabilityItem durItem = new DurabilityItem(player, target);
             if (durItem.getDurability() < durItem.getMaxDurability()) {
-                target.getItem().setItemMeta(durItem.addDurability((int) (durItem.getMaxDurability()*called.getRepairedPercent())).toItem().getItemMeta());
+                int repaired = (int) (durItem.getMaxDurability() * repairPower / 100);
+                target.getItem().setItemMeta(durItem.addDurability(repaired).toItem().getItemMeta());
                 Message.REPAIRED_ITEM
-                        .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", "" + called.getRepairedPercent())
+                        .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", String.valueOf(repaired))
                         .send(player);
                 CustomSoundListener.playConsumableSound(consumable.getItem(), player);
             }
@@ -64,6 +65,6 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
         }
 
         // vanilla durability
-        return RepairUtils.repairPower(playerData, target, consumable, repairPower, -1);
+        return RepairUtils.repairVanillaItem(playerData, target, consumable, repairPower, -1);
     }
 }

@@ -132,7 +132,7 @@ public class PlayerData {
 
     /**
      * @return If the player hands are full i.e if the player is holding
-     *         two items in their hands, one being two handed
+     * two items in their hands, one being two handed
      */
     public boolean isEncumbered() {
 
@@ -430,7 +430,7 @@ public class PlayerData {
 
     @NotNull
     public static PlayerData get(UUID uuid) {
-        return Objects.requireNonNull(data.get(uuid), "Player data not loaded");
+        return Objects.requireNonNull(data.computeIfAbsent(uuid, PlayerData::load), "Player data not loaded");
     }
 
     /**
@@ -443,8 +443,7 @@ public class PlayerData {
     /**
      * Called when the corresponding MMOPlayerData has already been initialized.
      */
-    public static void load(@NotNull UUID player) {
-
+    public static PlayerData load(@NotNull UUID player) {
         /*
          * Double check they are online, for some reason even if this is fired
          * from the join event the player can be offline if they left in the
@@ -454,7 +453,7 @@ public class PlayerData {
             PlayerData playerData = new PlayerData(MMOPlayerData.get(player));
             data.put(player, playerData);
             playerData.updateInventory();
-            return;
+            return playerData;
         }
 
         /*
@@ -463,6 +462,7 @@ public class PlayerData {
          */
         PlayerData playerData = data.get(player);
         playerData.rpgPlayer = MMOItems.plugin.getRPG().getInfo(playerData);
+        return playerData;
     }
 
     public static Collection<PlayerData> getLoaded() {

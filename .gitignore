@@ -7,3 +7,13 @@
 .project
 MMOItems.eml
 MMOItems.iml
+
+MMOItems-API/target/
+
+MMOItems-Dist/target/
+
+MMOItems-Dist/.flattened-pom.xml
+
+MMOItems-API/.flattened-pom.xml
+
+MMOItems-Dist/dependency-reduced-pom.xml

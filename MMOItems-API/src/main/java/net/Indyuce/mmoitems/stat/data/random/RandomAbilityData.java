@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;

@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.command.api.CommandTreeNode;
 import io.lumine.mythic.lib.command.api.Parameter;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;

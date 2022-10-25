@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.stat.data.*;

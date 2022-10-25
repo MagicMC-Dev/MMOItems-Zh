@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.crafting.recipe;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;

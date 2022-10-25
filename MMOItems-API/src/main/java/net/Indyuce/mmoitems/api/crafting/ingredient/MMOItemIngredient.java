@@ -6,7 +6,7 @@ import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.ConfigMMOItem;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.MMOItemPlayerIngredient;

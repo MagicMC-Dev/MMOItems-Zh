@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.api.recipe;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

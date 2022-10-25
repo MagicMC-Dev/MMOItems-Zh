@@ -3,10 +3,10 @@ package net.Indyuce.mmoitems.manager;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.skill.handler.SkillHandler;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
-import net.Indyuce.mmoitems.skill.Shulker_Missile;
+import net.Indyuce.mmoitems.skill.ShulkerMissile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,7 +81,7 @@ public class SkillManager {
         if (clearBefore)
             skills.clear();
 
-        MythicLib.plugin.getSkills().registerSkillHandler(new Shulker_Missile());
+        MythicLib.plugin.getSkills().registerSkillHandler(new ShulkerMissile());
 
         File skillFolder = new File(MMOItems.plugin.getDataFolder() + "/skill");
         if (!skillFolder.exists()) {

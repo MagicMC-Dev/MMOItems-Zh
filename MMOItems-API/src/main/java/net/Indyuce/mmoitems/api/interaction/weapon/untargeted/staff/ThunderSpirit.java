@@ -8,7 +8,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;

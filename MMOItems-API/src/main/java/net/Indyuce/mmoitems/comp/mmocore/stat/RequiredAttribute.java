@@ -12,11 +12,11 @@ import net.Indyuce.mmoitems.stat.type.ItemRestriction;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
-public class Required_Attribute extends DoubleStat implements ItemRestriction, GemStoneStat {
+public class RequiredAttribute extends DoubleStat implements ItemRestriction, GemStoneStat {
     private final PlayerAttribute attribute;
 
     // TODO merge with RequiredLevelStat
-    public Required_Attribute(PlayerAttribute attribute) {
+    public RequiredAttribute(PlayerAttribute attribute) {
         super("REQUIRED_" + attribute.getId().toUpperCase().replace("-", "_"), VersionMaterial.GRAY_DYE.toMaterial(), attribute.getName() + " Requirement (MMOCore)", new String[]{"Amount of " + attribute.getName() + " points the", "player needs to use the item."}, new String[]{"!block", "all"});
 
         this.attribute = attribute;

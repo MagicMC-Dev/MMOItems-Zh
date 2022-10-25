@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.StringValue;
 import net.Indyuce.mmoitems.particle.AuraParticles;

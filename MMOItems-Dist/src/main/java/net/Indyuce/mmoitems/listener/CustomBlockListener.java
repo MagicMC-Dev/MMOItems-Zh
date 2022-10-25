@@ -51,19 +51,33 @@ public class CustomBlockListener implements Listener {
 		CustomBlock block = opt.get();
 		
 		final int power = MMOUtils.getPickaxePower(event.getPlayer());
-		
-		if(block.requirePowerToBreak() && power < block.getRequiredPower()) {
-		    event.setCancelled(true);
-		    return;
+
+		if ( block.requirePowerToBreak() && block.getRequiredPower()>0 ){
+			if (power < block.getRequiredPower()) {
+				event.setCancelled(true);
+				return;
+			}
+			else if (power >= block.getRequiredPower()) {
+				event.setDropItems(false);
+				event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0
+						: MMOUtils.getPickaxePower(event.getPlayer()) >= block.getRequiredPower()
+						? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0
+						: RANDOM.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
+						: 0);
+				return;
+			}
+			event.setCancelled(true);
+			return;
 		}
-		
+
 		event.setDropItems(false);
 		event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0
 				: MMOUtils.getPickaxePower(event.getPlayer()) >= block.getRequiredPower()
-						? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0
-								: RANDOM.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
-						: 0);
+				? block.getMaxExpDrop() == 0 && block.getMinExpDrop() == 0 ? 0
+				: RANDOM.nextInt((block.getMaxExpDrop() - block.getMinExpDrop()) + 1) + block.getMinExpDrop()
+				: 0);
 	}
+
 
 	@Deprecated
 	private static int getPickaxePower(Player player) {

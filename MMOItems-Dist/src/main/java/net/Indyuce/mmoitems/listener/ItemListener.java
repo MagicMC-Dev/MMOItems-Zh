@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.listener;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.listener.reforging.*;
 import org.bukkit.Bukkit;
@@ -25,7 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ItemListener implements Listener {
 
@@ -60,21 +63,31 @@ public class ItemListener implements Listener {
 
         inv.setResult(air);
         Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-            boolean repairDisabled = Arrays.stream(inv.getMatrix())
+            List<ItemStack> items = Arrays.stream(inv.getMatrix())
                     .filter(Objects::nonNull)
                     .filter(itemStack -> !itemStack.getType().isAir())
+                    .collect(Collectors.toList());
+            boolean repairDisabled = items.stream()
                     .allMatch(itemStack -> {
                         final NBTItem nbtItem = NBTItem.get(itemStack);
                         return nbtItem.hasTag("MMOITEMS_DISABLE_REPAIRING") && nbtItem.getBoolean("MMOITEMS_DISABLE_REPAIRING");
                     });
-            if (repairDisabled) {
-                inv.setItem(0, air);
-                player.updateInventory();
-                System.out.println("YEAH");
-                return;
+            boolean hasDurability = items.stream().allMatch(itemStack -> new DurabilityItem(player, itemStack).isValid());
+            ItemStack result;
+            if (repairDisabled || !hasDurability)
+                result = air;
+            else {
+                result = items.get(0);
+                DurabilityItem durabilityItem = new DurabilityItem(player, result);
+                int durability = items.stream()
+                        .map(itemStack -> new DurabilityItem(player, itemStack))
+                        .map(DurabilityItem::getDurability)
+                        .reduce(0, Integer::sum);
+                durabilityItem.addDurability(durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), durability));
+                result = durabilityItem.toItem();
             }
-            System.out.println("NOPE");
-            // TODO: repair
+            inv.setItem(0, result);
+            player.updateInventory();
         }, 1);
     }
 

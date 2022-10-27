@@ -61,42 +61,57 @@ public class ItemListener implements Listener {
         final Player player = (Player) e.getView().getPlayer();
         final CraftingInventory inv = e.getInventory();
         final ItemStack air = new ItemStack(Material.AIR);
+        final ItemStack originalResult = inv.getResult();
 
-        //inv.setResult(air);
+        inv.setResult(air);
         Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
             List<ItemStack> items = Arrays.stream(inv.getMatrix())
                     .filter(Objects::nonNull)
                     .filter(itemStack -> !itemStack.getType().isAir())
                     .collect(Collectors.toList());
+            long mmoItemsCount = items.stream()
+                    .filter(itemStack -> NBTItem.get(itemStack).hasTag("MMOITEMS_ITEM_ID"))
+                    .count();
+            // If there are no MMOItems in the crafting matrix, do nothing
+            if (mmoItemsCount == 0) {
+                inv.setResult(originalResult);
+                player.updateInventory();
+                return;
+            }
+
+            // If both items are not MMO items or if they don't have the same id return
+            if (mmoItemsCount == 1
+                    || !NBTItem.get(items.get(0)).getString("MMOITEMS_ITEM_ID").equals(NBTItem.get(items.get(1)).getString("MMOITEMS_ITEM_ID"))) {
+                inv.setResult(air);
+                player.updateInventory();
+                return;
+            }
+            inv.setResult(originalResult);
+
+            // Is repair disabled in config?
             boolean repairDisabled = items.stream()
                     .allMatch(itemStack -> {
                         final NBTItem nbtItem = NBTItem.get(itemStack);
                         return nbtItem.hasTag("MMOITEMS_DISABLE_REPAIRING") && nbtItem.getBoolean("MMOITEMS_DISABLE_REPAIRING");
                     });
-            boolean repairPartiallyDisabled = items.stream()
-                    .anyMatch(itemStack -> {
-                        final NBTItem nbtItem = NBTItem.get(itemStack);
-                        return nbtItem.hasTag("MMOITEMS_DISABLE_REPAIRING") && nbtItem.getBoolean("MMOITEMS_DISABLE_REPAIRING");
-                    });
+
+            // Does the item have a MMO durability tag?
             boolean hasCustomDurability = items.stream().allMatch(itemStack -> new DurabilityItem(player, itemStack).isValid());
 
-            ItemStack result = null;
-            if (repairDisabled || repairPartiallyDisabled)
-                result = air;
+            if (repairDisabled)
+                inv.setResult(air);
             else if (hasCustomDurability) {
-                result = items.get(0);
-                DurabilityItem durabilityItem = new DurabilityItem(player, result);
-                int durability = items.stream()
+                DurabilityItem durabilityItem = new DurabilityItem(player, items.get(0));
+                int summedDurability = items.stream()
                         .map(itemStack -> new DurabilityItem(player, itemStack))
                         .map(DurabilityItem::getDurability)
                         .reduce(0, Integer::sum);
-                durabilityItem.addDurability(durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), durability));
-                result = durabilityItem.toItem();
+                int finalDurability = durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), summedDurability);
+                if (finalDurability > 0)
+                    durabilityItem.addDurability(finalDurability);
+                inv.setResult(durabilityItem.toItem());
             }
-            if (repairDisabled || hasCustomDurability) {
-                inv.setResult(result);
-                player.updateInventory();
-            }
+            player.updateInventory();
         }, 1);
     }
 

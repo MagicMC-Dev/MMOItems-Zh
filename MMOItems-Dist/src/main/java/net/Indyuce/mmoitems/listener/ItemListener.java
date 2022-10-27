@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +62,7 @@ public class ItemListener implements Listener {
         final CraftingInventory inv = e.getInventory();
         final ItemStack air = new ItemStack(Material.AIR);
 
-        inv.setResult(air);
+        //inv.setResult(air);
         Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
             List<ItemStack> items = Arrays.stream(inv.getMatrix())
                     .filter(Objects::nonNull)
@@ -72,11 +73,17 @@ public class ItemListener implements Listener {
                         final NBTItem nbtItem = NBTItem.get(itemStack);
                         return nbtItem.hasTag("MMOITEMS_DISABLE_REPAIRING") && nbtItem.getBoolean("MMOITEMS_DISABLE_REPAIRING");
                     });
-            boolean hasDurability = items.stream().allMatch(itemStack -> new DurabilityItem(player, itemStack).isValid());
-            ItemStack result;
-            if (repairDisabled || !hasDurability)
+            boolean repairPartiallyDisabled = items.stream()
+                    .anyMatch(itemStack -> {
+                        final NBTItem nbtItem = NBTItem.get(itemStack);
+                        return nbtItem.hasTag("MMOITEMS_DISABLE_REPAIRING") && nbtItem.getBoolean("MMOITEMS_DISABLE_REPAIRING");
+                    });
+            boolean hasCustomDurability = items.stream().allMatch(itemStack -> new DurabilityItem(player, itemStack).isValid());
+
+            ItemStack result = null;
+            if (repairDisabled || repairPartiallyDisabled)
                 result = air;
-            else {
+            else if (hasCustomDurability) {
                 result = items.get(0);
                 DurabilityItem durabilityItem = new DurabilityItem(player, result);
                 int durability = items.stream()
@@ -86,8 +93,10 @@ public class ItemListener implements Listener {
                 durabilityItem.addDurability(durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), durability));
                 result = durabilityItem.toItem();
             }
-            inv.setItem(0, result);
-            player.updateInventory();
+            if (repairDisabled || hasCustomDurability) {
+                inv.setResult(result);
+                player.updateInventory();
+            }
         }, 1);
     }
 

@@ -16,13 +16,14 @@ public class RFGKeepUpgrades implements Listener {
 
     @EventHandler
     public void onReforge(MMOItemReforgeEvent event) {
-        if (!event.getOptions().shouldKeepUpgrades()) { return; }
-        //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Upgrades");
+        final UpgradeData upgrade = ((UpgradeData) event.getOldMMOItem().getData(ItemStats.UPGRADE));
+        final UpgradeData newOne = ((UpgradeData) event.getNewMMOItem().getData(ItemStats.UPGRADE));
 
-        UpgradeData upgrade = ((UpgradeData) event.getOldMMOItem().getData(ItemStats.UPGRADE));
-        UpgradeData newOne = ((UpgradeData) event.getNewMMOItem().getData(ItemStats.UPGRADE));
-
-        if (upgrade == null || newOne == null) { return; }
+        if (!event.getOptions().shouldKeepUpgrades()
+                || upgrade == null
+                || newOne == null
+                || newOne.getMaxUpgrades() <= 0)
+            return;
 
         //UPGRD//MMOItems.log("  \u00a7e* \u00a77Existing Upgrade Detected");
 

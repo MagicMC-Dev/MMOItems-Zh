@@ -62,6 +62,6 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
         }
 
         // vanilla durability
-        return RepairUtils.repairPower(playerData, target, consumable, repairPower);
+        return RepairUtils.repairVanillaItem(playerData, target, consumable, -1, repairPower);
     }
 }

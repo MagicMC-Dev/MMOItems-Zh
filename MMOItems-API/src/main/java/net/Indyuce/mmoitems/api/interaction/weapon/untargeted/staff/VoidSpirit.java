@@ -2,12 +2,11 @@ package net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import io.lumine.mythic.lib.damage.AttackMetadata;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.skill.Shulker_Missile;
+import net.Indyuce.mmoitems.skill.ShulkerMissile;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ShulkerBullet;
@@ -34,6 +33,6 @@ public class VoidSpirit implements StaffAttackHandler {
                 shulkerBullet.setVelocity(vec);
             }
         }.runTaskTimer(MMOItems.plugin, 0, 1);
-        MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new Shulker_Missile.ShulkerMissileEntityData(caster, new DamageMetadata(damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE), 0, nbt));
+        MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissile.ShulkerMissileEntityData(caster, new DamageMetadata(damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE), 0, nbt));
     }
 }

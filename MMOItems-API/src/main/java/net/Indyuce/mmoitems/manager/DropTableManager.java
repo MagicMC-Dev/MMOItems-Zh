@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.UtilityMethods;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.MMOUtils;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.droptable.DropTable;

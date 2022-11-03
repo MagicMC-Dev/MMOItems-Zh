@@ -17,8 +17,26 @@
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
-    <build>
+    <!-- Dependencies -->
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- MMOItems API -->
+        <dependency>
+            <groupId>net.Indyuce</groupId>
+            <artifactId>MMOItems-API</artifactId>
+            <version>${revision}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
+    <!-- Build -->
+    <build>
         <!-- Includes default files in the Bukkit module -->
         <resources>
             <resource>
@@ -28,7 +46,6 @@
         </resources>
 
         <plugins>
-
             <!-- Completely necessary for dev build deployment -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -92,28 +109,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
     </build>
-
-    <dependencies>
-
-        <!-- Spigot API -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.Indyuce</groupId>
-            <artifactId>MMOItems-API</artifactId>
-            <version>${revision}</version>
-            <optional>true</optional>
-        </dependency>
-
-    </dependencies>
-
 </project>

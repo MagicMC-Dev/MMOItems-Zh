@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems;
+package net.Indyuce.mmoitems.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.authlib.GameProfile;
@@ -8,6 +8,7 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
@@ -32,6 +33,10 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class MMOUtils {
+
+    public MMOUtils() {
+        throw new IllegalArgumentException("This class cannot be instantiated.");
+    }
 
     /**
      * @return The skull texture URL from a given player head

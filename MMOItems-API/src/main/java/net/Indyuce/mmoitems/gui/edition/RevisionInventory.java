@@ -122,7 +122,7 @@ public class RevisionInventory extends EditionInventory {
                     break;
                 case 30:
                     which = soulbind.clone();
-                    enable = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepSoulbind();
+                    enable = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepSoulBind();
                     break;
                 case 33:
                     id = getEditedSection().getInt(ItemStats.REVISION_ID.getPath(), 1);

@@ -7,3 +7,7 @@
 .project
 MMOItems.eml
 MMOItems.iml
+MMOItems-API.eml
+MMOItems-API.iml
+MMOItems-Dist.eml
+MMOItems-Dist.iml

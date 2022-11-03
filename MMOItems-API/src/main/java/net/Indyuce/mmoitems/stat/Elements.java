@@ -169,7 +169,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
         // Try to find every existing element
         for (Element element : Element.values())
             for (ElementStatType statType : ElementStatType.values()) {
-                final String path = "MMOITEMS_" + element.getName() + "_" + statType.name();
+                final String path = "MMOITEMS_" + statType.getConcatenatedTagPath(element);
                 ItemTag tag = ItemTag.getTagAtPath(path, storedTags);
                 if (tag != null)
                     elements.setStat(element, statType, (double) tag.getValue());

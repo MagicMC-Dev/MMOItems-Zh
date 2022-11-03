@@ -82,34 +82,32 @@ public class MMOUtils {
     }
 
     public static int getPickaxePower(Player player) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if (item != null && item.getType() != Material.AIR) {
-            NBTItem nbt = NBTItem.get(item);
-            if (nbt.hasType())
-                return nbt.getInteger("MMOITEMS_PICKAXE_POWER");
-            else {
-                switch (item.getType().name()) {
-                    case "WOODEN_PICKAXE":
-                    case "WOOD_PICKAXE":
-                        return 5;
-                    case "STONE_PICKAXE":
-                        return 10;
-                    case "GOLDEN_PICKAXE":
-                    case "GOLD_PICKAXE":
-                        return 15;
-                    case "IRON_PICKAXE":
-                        return 20;
-                    case "DIAMOND_PICKAXE":
-                        return 25;
-                    case "NETHERITE_PICKAXE":
-                        return 30;
-                    default:
-                        return 0;
-                }
-            }
-        }
+        final ItemStack item = player.getInventory().getItemInMainHand();
+        if (item == null || item.getType() == Material.AIR)
+            return 0;
 
-        return 0;
+        final NBTItem nbt = NBTItem.get(item);
+        if (nbt.hasTag("MMOITEMS_PICKAXE_POWER"))
+            return nbt.getInteger("MMOITEMS_PICKAXE_POWER");
+
+        switch (item.getType().name()) {
+            case "WOODEN_PICKAXE":
+            case "WOOD_PICKAXE":
+                return 5;
+            case "STONE_PICKAXE":
+                return 10;
+            case "GOLDEN_PICKAXE":
+            case "GOLD_PICKAXE":
+                return 15;
+            case "IRON_PICKAXE":
+                return 20;
+            case "DIAMOND_PICKAXE":
+                return 25;
+            case "NETHERITE_PICKAXE":
+                return 30;
+            default:
+                return 0;
+        }
     }
 
     /**

@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 
 public class ShulkerMissile extends SkillHandler<VectorSkillResult> implements Listener {
     public ShulkerMissile() {
-        super();
+        super("SHULKER_MISSILE");
 
         registerModifiers("damage", "effect-duration", "duration");
     }

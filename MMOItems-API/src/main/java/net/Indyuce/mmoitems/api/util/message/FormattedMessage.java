@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.api.util.message;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.adventure.text.serializer.gson.GsonComponentSerializer;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
 import net.Indyuce.mmocore.api.player.PlayerActivity;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
@@ -63,13 +61,11 @@ public class FormattedMessage {
         if (message.isEmpty())
             return;
 
-        final String jsonMessage = GsonComponentSerializer.gson().serialize(LegacyComponent.simpleParse(message));
-
         if (actionBar) {
             if (Bukkit.getPluginManager().isPluginEnabled("MMOCore"))
                 PlayerData.get(player).setLastActivity(PlayerActivity.ACTION_BAR_MESSAGE);
 
-            MythicLib.plugin.getVersion().getWrapper().sendActionBar(player, jsonMessage);
+            MythicLib.plugin.getVersion().getWrapper().sendActionBar(player, message);
         } else
             player.sendMessage(message);
     }

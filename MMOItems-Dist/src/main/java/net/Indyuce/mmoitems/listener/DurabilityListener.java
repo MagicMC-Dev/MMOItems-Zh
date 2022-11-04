@@ -22,24 +22,47 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DurabilityListener implements Listener {
-    private final List<DamageCause> ignoredCauses = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
-            DamageCause.FIRE_TICK, DamageCause.SUFFOCATION, DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
-
-    private final EquipmentSlot[] armorSlots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     /**
-     * Handles custom durability for non-'vanilla durability' items
+     * Handles durability for ANY damageable items.
      */
     @EventHandler(ignoreCancelled = true)
+    public void itemDamage(PlayerItemDamageEvent event) {
+        final DurabilityItem item = new DurabilityItem(event.getPlayer(), event.getItem());
+        if (!item.isValid())
+            return;
+
+        // Calculate item durability loss
+        item.decreaseDurability(event.getDamage());
+
+        /*
+         * If the item is broken and if it is meant to be lost when broken,
+         * do NOT cancel the event and make sure the item is destroyed
+         */
+        final ItemStack newVersion = item.toItem();
+        if (newVersion == null) {
+            event.setDamage(999);
+            return;
+        }
+
+        event.setCancelled(true);
+        event.getItem().setItemMeta(newVersion.getItemMeta());
+    }
+
+    private static final List<DamageCause> IGNORED_CAUSES = Arrays.asList(DamageCause.DROWNING, DamageCause.SUICIDE, DamageCause.FALL, DamageCause.VOID,
+            DamageCause.FIRE_TICK, DamageCause.SUFFOCATION, DamageCause.POISON, DamageCause.WITHER, DamageCause.STARVATION, DamageCause.MAGIC);
+    private static final EquipmentSlot[] ARMOR_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    @EventHandler(ignoreCancelled = true)
     public void playerDamage(EntityDamageEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER || ignoredCauses.contains(event.getCause()))
+        if (event.getEntityType() != EntityType.PLAYER || IGNORED_CAUSES.contains(event.getCause()))
             return;
 
         Player player = (Player) event.getEntity();
         int damage = Math.max((int) event.getDamage() / 4, 1);
-        for (EquipmentSlot slot : armorSlots)
+        for (EquipmentSlot slot : ARMOR_SLOTS)
             if (hasItem(player, slot))
-                handleVanillaDamage(player.getInventory().getItem(slot), player, slot, damage);
+                handleUndamageableItem(player.getInventory().getItem(slot), player, slot, damage);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -50,7 +73,7 @@ public class DurabilityListener implements Listener {
         Player player = (Player) event.getDamager();
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
+        handleUndamageableItem(item, player, EquipmentSlot.HAND, 1);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -60,30 +83,7 @@ public class DurabilityListener implements Listener {
         Player player = (Player) event.getEntity();
         ItemStack item = event.getBow();
 
-        handleVanillaDamage(item, player, EquipmentSlot.HAND, 1);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void itemDamage(PlayerItemDamageEvent event) {
-        DurabilityItem item = new DurabilityItem(event.getPlayer(), event.getItem());
-        if (item.isValid()) {
-
-            // Calculate item durability loss
-            item.decreaseDurability(event.getDamage());
-
-            /*
-             * If the item is broken and if it is meant to be lost when broken,
-             * do NOT cancel the event and make sure the item is destroyed
-             */
-            ItemStack newVersion = item.toItem();
-            if (newVersion == null) {
-                event.setDamage(999);
-                return;
-            }
-
-            event.setCancelled(true);
-            event.getItem().setItemMeta(newVersion.getItemMeta());
-        }
+        handleUndamageableItem(item, player, EquipmentSlot.HAND, 1);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -96,24 +96,27 @@ public class DurabilityListener implements Listener {
     }
 
     /**
-     * This method is for all the items which have 0 max durability
-     * i.E which are not breakable hence the {@link Material#getMaxDurability()} call
+     * This method is for all the items which have 0 max durability i.e
+     * which are not breakable hence the {@link Material#getMaxDurability()}
      */
-    private void handleVanillaDamage(ItemStack stack, Player player, EquipmentSlot slot, int damage) {
-        DurabilityItem item = new DurabilityItem(player, stack);
+    private void handleUndamageableItem(ItemStack stack, Player player, EquipmentSlot slot, int damage) {
+        if (stack.getType().getMaxDurability() != 0)
+            return;
 
-        if (item.isValid() && stack.getType().getMaxDurability() == 0) {
-            item.decreaseDurability(damage);
+        final DurabilityItem item = new DurabilityItem(player, stack);
+        if (!item.isValid())
+            return;
 
-            ItemStack newVersion = item.toItem();
-            if (newVersion == null) {
-                player.getInventory().setItem(slot, null);
-                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-                return;
-            }
+        item.decreaseDurability(damage);
 
-            player.getInventory().getItem(slot).setItemMeta(newVersion.getItemMeta());
+        ItemStack newVersion = item.toItem();
+        if (newVersion == null) {
+            player.getInventory().setItem(slot, null);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+            return;
         }
+
+        player.getInventory().getItem(slot).setItemMeta(newVersion.getItemMeta());
     }
 
     private boolean hasItem(Player player, EquipmentSlot slot) {

@@ -104,7 +104,7 @@ public class DurabilityItem {
 
     /**
      * @return If both this is a VALID custom durability item and if the item is broken.
-     * This will return <code>false</code> if it is not a valid item
+     *         This will return <code>false</code> if it is not a valid item
      */
     public boolean isBroken() {
         return maxDurability > 0 && durability <= 0;
@@ -120,7 +120,7 @@ public class DurabilityItem {
 
     /**
      * @return If the item actually supports custom durability. It is completely
-     * disabled when the player is in creative mode just like vanilla durability.
+     *         disabled when the player is in creative mode just like vanilla durability.
      */
     public boolean isValid() {
         return maxDurability > 0 && player.getGameMode() != GameMode.CREATIVE;
@@ -140,20 +140,24 @@ public class DurabilityItem {
 
     public DurabilityItem decreaseDurability(int loss) {
 
-        // Do nothing
+        // This happens when Unbreaking applies for a damageable item
         if (loss == 0)
             return this;
-
-        Validate.isTrue(loss > 0, "Loss must be greater than 0");
 
         /*
          * Calculate the chance of the item not losing any durability because of
          * the vanilla unbreaking enchantment ; an item with unbreaking X has 1
          * 1 chance out of (X + 1) to lose a durability point, that's 50% chance
          * -> 33% chance -> 25% chance -> 20% chance...
+         *
+         * This should only be taken into account if the item being damaged is
+         * UNDAMAGEABLE since Bukkit already applies the enchant for damageable items.
          */
-        if (getUnbreakingLevel() > 0 && RANDOM.nextInt(getUnbreakingLevel()) != 0)
-            return this;
+        if (nbtItem.getItem().getType().getMaxDurability() == 0) {
+            final int unbreakingLevel = getUnbreakingLevel();
+            if (unbreakingLevel > 0 && RANDOM.nextInt(unbreakingLevel + 1) != 0)
+                return this;
+        }
 
         CustomDurabilityDamage event = new CustomDurabilityDamage(this, loss);
         Bukkit.getPluginManager().callEvent(event);
@@ -178,8 +182,8 @@ public class DurabilityItem {
      * 3) item downgrade
      *
      * @return Newest version of the damaged item.
-     * <code>null</code> if the item breaks. That method CANNOT
-     * return a null value if the item has no decreased its durability.
+     *         <code>null</code> if the item breaks. That method CANNOT
+     *         return a null value if the item has no decreased its durability.
      */
     @Nullable
     public ItemStack toItem() {

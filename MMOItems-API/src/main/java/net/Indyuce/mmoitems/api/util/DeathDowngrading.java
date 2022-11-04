@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.UpgradeData;
-import net.Indyuce.mmoitems.stat.type.NameData;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -243,8 +243,7 @@ public class DeathDowngrading {
             bakedItem.setItemMeta(dur.toItem().getItemMeta());}
 
         // Send downgrading message
-        Message.DEATH_DOWNGRADING.format(ChatColor.RED, "#item#", (mmo.getData(ItemStats.NAME) instanceof NameData) ? mmo.getData(ItemStats.NAME).toString() : SilentNumbers.getItemName(bakedItem, false))
-                .send(player);
+        Message.DEATH_DOWNGRADING.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(mmo.getNBT().getItem())).send(player);
 
         // Uuuuh
         return bakedItem;

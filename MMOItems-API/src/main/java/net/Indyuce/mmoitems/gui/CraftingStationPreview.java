@@ -5,13 +5,13 @@ import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.CraftingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -46,7 +46,7 @@ public class CraftingStationPreview extends PluginInventory {
 	public Inventory getInventory() {
 
 		// Create inventory of a nice size (5x6)
-		Inventory inv = Bukkit.createInventory(this, 45, MythicLib.plugin.getPlaceholderParser().parse(getPlayer(), Message.RECIPE_PREVIEW.formatRaw(ChatColor.RESET)));
+		Inventory inv = Bukkit.createInventory(this, 45, MythicLib.plugin.getPlaceholderParser().parse(getPlayer(), Message.RECIPE_PREVIEW.format(ChatColor.RESET).toString()));
 		ingredients.clear();
 
 		// Include each ingredient

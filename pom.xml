@@ -41,7 +41,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicLib-dist</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- Jetbrains Annotations -->

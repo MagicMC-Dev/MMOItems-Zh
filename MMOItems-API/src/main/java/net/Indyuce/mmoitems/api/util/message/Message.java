@@ -103,11 +103,12 @@ public enum Message {
 		return actionBarConfigPath;
 	}
 
+	@Deprecated
 	public String formatRaw(ChatColor prefix, String... toReplace) {
 		return format(prefix, toReplace).toString();
 	}
 
-	public PlayerMessage format(ChatColor prefix, String... toReplace) {
-		return new PlayerMessage(this).format(prefix, toReplace);
+	public FormattedMessage format(ChatColor prefix, String... toReplace) {
+		return new FormattedMessage(this).format(prefix, toReplace);
 	}
 }

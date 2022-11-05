@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.gui.edition.recipe.rba.type;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

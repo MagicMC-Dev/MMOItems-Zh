@@ -1,8 +1,8 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.interpreters;
+package net.Indyuce.mmoitems.gui.edition.recipe.interpreter;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,34 +16,32 @@ import java.util.List;
  *
  * YML Save Format: <br> <code>
  *
- *    - A|B|C|D|E|F <br>
- *    - G|H|I|J|K|L <br>
- *    - M|N|O|P|Q|R <br>
- *    - S|T|U|V|W|X <br>
- *    - Y|Z|1|2|3|4 <br>
- *    - 5|6|7|8|9|0
+ *    - A|B|C|D|E <br>
+ *    - F|G|H|I|J <br>
+ *    - K|L|M|N|O <br>
+ *    - P|Q|R|S|T <br>
+ *    - U|V|W|X|Y
  * </code>
  *
  * @author Gunging
  */
-public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
+public class RMGRI_SuperShaped implements RMG_RecipeInterpreter {
 
 
     /**
-     * Builds a valid 6x6 matrix of input/output recipe.
+     * Builds a valid 5x5 matrix of input/output recipe.
      *
      * @param config List as it is saved in the config.
      *
      * @return Transcribed into array of arrays.
      */
-    @NotNull
-    ProvidedUIFilter[][] buildIngredientsFromList(@NotNull List<String> config) {
+    @NotNull ProvidedUIFilter[][] buildIngredientsFromList(@NotNull List<String> config) {
 
         // Start with a base
-        ProvidedUIFilter[][] ret = new ProvidedUIFilter[6][6];
+        ProvidedUIFilter[][] ret = new ProvidedUIFilter[5][5];
 
         // Each row ig
-        for (int r = 0; r < 6; r++) {
+        for (int r = 0; r < 5; r++) {
 
             // Get current row
             String row = config.size() > r ? config.get(r) : null;
@@ -57,7 +55,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
             String[] poofs = s.split("\\|");
 
             // Parse
-            for (int p = 0; p < 6; p++) {
+            for (int p = 0; p < 5; p++) {
 
                 String poof = poofs.length > p ? poofs[p] : null;
                 //READ//MMOItems.log("\u00a7b*\u00a77 Coord\u00a7b " + r + " " + p + "\u00a77 as\u00a73 " + poof);
@@ -75,22 +73,20 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
     /**
      * Turns something like <br> <code>
      *
-     *     [ A, B, C, D, E, F ], <br>
-     *     [ G, H, I, J, K, L ], <br>
-     *     [ M, N, O, P, Q, R ], <br>
-     *     [ S, T, U, V, W, X ], <br>
-     *     [ Y, Z, 1, 2, 3, 4 ], <br>
-     *     [ 5, 6, 7, 8, 9, 0 ]  <br>
+     *     [ A, B, C, D, E ], <br>
+     *     [ F, G, H, I, J ], <br>
+     *     [ K, L, M, N, O ], <br>
+     *     [ P, Q, R, S, T ], <br>
+     *     [ U, V, W, X, Y ]  <br>
      *
      * </code> <br>
      * into <br> <code>
      *
-     *    - A|B|C|D|E|F <br>
-     *    - G|H|I|J|K|L <br>
-     *    - M|N|O|P|Q|R <br>
-     *    - S|T|U|V|W|X <br>
-     *    - Y|Z|1|2|3|4 <br>
-     *    - 5|6|7|8|9|0
+     *    - A|B|C|D|E <br>
+     *    - F|G|H|I|J <br>
+     *    - K|L|M|N|O <br>
+     *    - P|Q|R|S|T <br>
+     *    - U|V|W|X|Y
      * </code>
      *
      * @param ingredients Array of arrays of UIFilters
@@ -103,7 +99,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
         // Well, build it would ye?
         ArrayList<String> ret = new ArrayList<>();
 
-        for (int r = 0; r < 6; r++) {
+        for (int r = 0; r < 5; r++) {
 
             // Get row
             ProvidedUIFilter[] poofs = ingredients.length > r ? ingredients[r] : new ProvidedUIFilter[5];
@@ -133,34 +129,34 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
     /**
      * Sets the ingredient in the rows matrix.
      *
-     * @param slot The slot, which must be between 0 and 35  (or this method will do nothing)
+     * @param slot The slot, which must be between 0 and 24  (or this method will do nothing)
      * @param poof Ingredient to register
      */
     public void setInput(int slot, @NotNull ProvidedUIFilter poof) {
-        if (slot < 0 || slot > 35) { return; }
-        inputRecipe[SilentNumbers.floor(slot / 6.0)][slot - (6 * SilentNumbers.floor(slot / 6.0))] = poof;
+        if (slot < 0 || slot > 24) { return; }
+        inputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))] = poof;
     }
     @Nullable
     @Override public ProvidedUIFilter getInput(int slot) {
-        if (slot < 0 || slot > 35) { return null; }
-        return inputRecipe[SilentNumbers.floor(slot / 6.0)][slot - (6 * SilentNumbers.floor(slot / 6.0))];
+        if (slot < 0 || slot > 24) { return null; }
+        return inputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))];
     }
 
     @NotNull final ProvidedUIFilter[][] outputRecipe;
     /**
      * Sets the ingredient in the rows matrix.
      *
-     * @param slot The slot, which must be between 0 and 35  (or this method will do nothing)
+     * @param slot The slot, which must be between 0 and 24  (or this method will do nothing)
      * @param poof Ingredient to register
      */
     public void setOutput(int slot, @NotNull ProvidedUIFilter poof) {
-        if (slot < 0 || slot > 35) { return; }
-        outputRecipe[SilentNumbers.floor(slot / 6.0)][slot - (6 * SilentNumbers.floor(slot / 6.0))] = poof;
+        if (slot < 0 || slot > 24) { return; }
+        outputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))] = poof;
     }
     @Nullable
     @Override public ProvidedUIFilter getOutput(int slot) {
-        if (slot < 0 || slot > 35) { return null; }
-        return outputRecipe[SilentNumbers.floor(slot / 6.0)][slot - (6 * SilentNumbers.floor(slot / 6.0))];
+        if (slot < 0 || slot > 24) { return null; }
+        return outputRecipe[SilentNumbers.floor(slot / 5.0)][slot - (5 * SilentNumbers.floor(slot / 5.0))];
     }
 
     @NotNull final ConfigurationSection section;
@@ -173,10 +169,14 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
 
     /**
      * Generate an interpreter from this <i>updated</i> configuration section.
+     * <br><br>
+     * By 'updated' I mean that, for now, we <b>should call {@link RecipeMakerGUI#moveInput()}
+     * on this configuration before passing it here</b>, to move the input list from being the recipe name
+     * section itself to the 'input' section within.
      *
      * @param recipeNameSection <b><code>[ID].base.crafting.shaped.[name]</code></b> section
      */
-    public RMGRI_MegaShaped(@NotNull ConfigurationSection recipeNameSection) {
+    public RMGRI_SuperShaped(@NotNull ConfigurationSection recipeNameSection) {
 
         // Save
         section = recipeNameSection;
@@ -230,7 +230,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
             String[] curSplit = curr.split("\\|");
 
             // Correct length?
-            if (curSplit.length == 6) {
+            if (curSplit.length == 5) {
 
                 // Assumed to be updated.
                 return curr;
@@ -241,7 +241,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
                 StringBuilder ret = new StringBuilder();
 
                 // Must append three
-                for (int r = 0; r < 6; r++) {
+                for (int r = 0; r < 5; r++) {
 
                     // Append a bar after the first
                     if (r != 0) { ret.append("|"); }
@@ -262,7 +262,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
             String[] curSplit = curr.split(" ");
 
             // Must append three
-            for (int r = 0; r < 6; r++) {
+            for (int r = 0; r < 5; r++) {
 
                 // Append a bar after the first
                 if (r != 0) { ret.append("|"); }
@@ -278,9 +278,9 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
         } else {
 
             // Just that i guess
-            return RecipeMakerGUI.poofFromLegacy(curr) + "|v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
+            return RecipeMakerGUI.poofFromLegacy(curr) + "|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
         }
     }
-    public static final String emptyRow = "v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
+    public static final String emptyRow = "v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
     //endregion
 }

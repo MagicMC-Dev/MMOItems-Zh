@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.gui.edition.recipe.rba;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.type.RBA_BooleanButton;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

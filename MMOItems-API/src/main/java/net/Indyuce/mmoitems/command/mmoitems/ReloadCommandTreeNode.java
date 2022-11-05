@@ -85,7 +85,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
         MMOItems.plugin.getRecipes().reload();
         sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + (MMOItems.plugin.getRecipes().getLoadedLegacyRecipes().size()
+                + (MMOItems.plugin.getRecipes().getBukkitRecipes().size()
                 + MMOItems.plugin.getRecipes().getBooklessRecipes().size()
                 + MMOItems.plugin.getRecipes().getCustomRecipes().size())
                 + ChatColor.GRAY + " Recipes");

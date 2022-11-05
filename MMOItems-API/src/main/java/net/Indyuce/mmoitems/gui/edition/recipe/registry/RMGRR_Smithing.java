@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.registry;
 
 import io.lumine.mythic.lib.api.crafting.ingredients.MythicRecipeIngredient;
-import io.lumine.mythic.lib.api.crafting.outputs.MythicRecipeOutput;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeBlueprint;
 import io.lumine.mythic.lib.api.crafting.recipes.MythicRecipeStation;
 import io.lumine.mythic.lib.api.crafting.recipes.ShapedRecipe;
@@ -9,16 +8,15 @@ import io.lumine.mythic.lib.api.crafting.recipes.ShapelessRecipe;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.recipe.CustomSmithingRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_Smithing;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Smithing;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.*;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RMG_Smithing;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_Smithing;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;

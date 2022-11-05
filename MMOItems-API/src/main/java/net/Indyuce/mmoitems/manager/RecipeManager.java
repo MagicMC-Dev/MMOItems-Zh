@@ -20,7 +20,7 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.BurningRecipeInformation;
 import org.bukkit.Bukkit;
@@ -35,10 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
 
 /**
  * Manages the custom crafting of MMOItem components and stuff.
@@ -51,19 +48,22 @@ public class RecipeManager implements Reloadable {
      * Recipes which are handled by the vanilla spigot API.
      * All recipes registered here are Keyed
      */
-    final HashSet<Recipe> loadedLegacyRecipes = new HashSet<>();
+    private final ArrayList<Recipe> loadedLegacyRecipes = new ArrayList<>();
 
     /**
-     * All the custom recipes loaded by MMOItems.
-     * <p></p>
-     * <b>Except that for the time being, only Workbench recipes are supported
-     * by mythic lib so for any other kind use the legacy array.</b>
+     * Recipes handled by MMOItems and MythicLib.
+     * They do support the knowledge book.
      */
-    final HashMap<NamespacedKey, MythicRecipeBlueprint> customRecipes = new HashMap<>();
-    final ArrayList<MythicRecipeBlueprint> booklessRecipes = new ArrayList<>();
+    private final ArrayList<MythicRecipeBlueprint> customRecipes = new ArrayList<>();
+
+    /**
+     * Recipes handled by MMOItems but not MythicLib.
+     * They do not support the knowledge book.
+     */
+    private final ArrayList<MythicRecipeBlueprint> booklessRecipes = new ArrayList<>();
 
     @NotNull
-    ArrayList<NamespacedKey> blacklistedFromAutomaticDiscovery = new ArrayList<>();
+    private final ArrayList<NamespacedKey> blacklistedFromAutomaticDiscovery = new ArrayList<>();
 
     private boolean book;
 
@@ -119,16 +119,7 @@ public class RecipeManager implements Reloadable {
 
                                     // The result of sending to MythicLib
                                     MythicRecipeBlueprint blueprint = rr.sendToMythicLib(template, typeSection, recipeName, nkRef, ffpMinor);
-
-                                    // Was it registered in the book, then?
-                                    if (nkRef.getValue() != null) {
-                                        customRecipes.put(nkRef.getValue(), blueprint);
-
-                                        // Bookless, include in the other list.
-                                    } else {
-                                        booklessRecipes.add(blueprint);
-                                    }
-
+                                    (nkRef.getValue() != null ? customRecipes : booklessRecipes).add(blueprint);
 
                                     // Well something went wrong...
                                 } catch (IllegalArgumentException error) {
@@ -156,7 +147,7 @@ public class RecipeManager implements Reloadable {
         ffp.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
 
         // Load legacy recipes onto Bukkit System
-        Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getLoadedLegacyRecipes().forEach(Bukkit::addRecipe));
+        Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getBukkitRecipes().forEach(Bukkit::addRecipe));
     }
 
     public void registerBurningRecipe(@NotNull BurningRecipeType recipeType, @NotNull MMOItem mmo, @NotNull BurningRecipeInformation info, int amount, @NotNull NamespacedKey key, boolean hidden) {
@@ -176,38 +167,34 @@ public class RecipeManager implements Reloadable {
         }
     }
 
-    public Set<Recipe> getLoadedLegacyRecipes() {
+    @NotNull
+    public ArrayList<Recipe> getBukkitRecipes() {
         return loadedLegacyRecipes;
     }
 
-    public HashMap<NamespacedKey, MythicRecipeBlueprint> getCustomRecipes() {
+    @NotNull
+    public ArrayList<MythicRecipeBlueprint> getCustomRecipes() {
         return customRecipes;
     }
 
+    @NotNull
     public ArrayList<MythicRecipeBlueprint> getBooklessRecipes() {
         return booklessRecipes;
     }
 
     @Nullable
-    ArrayList<NamespacedKey> generatedNKs;
+    private ArrayList<NamespacedKey> generatedNamespacedKeys;
 
     public ArrayList<NamespacedKey> getNamespacedKeys() {
+        if (generatedNamespacedKeys != null)
+            return generatedNamespacedKeys;
 
-        if (generatedNKs != null) {
-            return generatedNKs;
-        }
+        // Collect all name-spaced keys
+        generatedNamespacedKeys = new ArrayList<>();
+        customRecipes.forEach(blueprint -> generatedNamespacedKeys.add(blueprint.getNk()));
+        loadedLegacyRecipes.forEach(recipe -> generatedNamespacedKeys.add(((Keyed) recipe).getKey()));
 
-        // Collect all Namespaces
-        ArrayList<NamespacedKey> nkMythic = new ArrayList<>(customRecipes.keySet());
-        ArrayList<NamespacedKey> nkLegacy = loadedLegacyRecipes.stream().map(recipe -> ((Keyed) recipe).getKey()).distinct().collect(Collectors.toCollection(ArrayList::new));
-        nkMythic.addAll(nkLegacy);
-        generatedNKs = new ArrayList<>();
-        for (NamespacedKey nk : nkMythic) {
-            if (nk != null) {
-                generatedNKs.add(nk);
-            }
-        }
-        return generatedNKs;
+        return generatedNamespacedKeys;
     }
 
     @NotNull
@@ -238,79 +225,62 @@ public class RecipeManager implements Reloadable {
             blacklistedFromAutomaticDiscovery.clear();
 
             // Disable and forget all blueprints
-            for (NamespacedKey b : customRecipes.keySet()) {
-                if (b == null) {
-                    continue;
-                }
-                customRecipes.get(b).disable();
+            customRecipes.forEach(blueprint -> {
                 try {
-                    Bukkit.removeRecipe(b);
-                } catch (Throwable e) {
-                    MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", b.getKey(), e.getMessage());
+                    blueprint.disable();
+                    Bukkit.removeRecipe(blueprint.getNk());
+                } catch (Throwable throwable) {
+                    MMOItems.plugin.getLogger().log(Level.INFO, "Could not unregister knowledge book recipe '" + blueprint.getNk() + "': " + throwable.getMessage());
                 }
-            }
+            });
             customRecipes.clear();
 
-            for (MythicRecipeBlueprint b : booklessRecipes) {
+            for (MythicRecipeBlueprint b : booklessRecipes)
                 b.disable();
-            }
             booklessRecipes.clear();
 
             // Load all recipes
-            generatedNKs = null;
+            generatedNamespacedKeys = null;
             loadRecipes();
 
-            // Refresh the book I suppose
-            if (book) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
+            // Refresh book for online players
+            if (book)
+                for (Player player : Bukkit.getOnlinePlayers())
                     refreshRecipeBook(player);
-                }
-            }
-
         });
     }
 
+    /**
+     * TODO For some reason, we have to refresh the book every time
+     * the player joins the server or something; the thing is
+     * that recipes that are hidden from the book are lost when
+     * doing this (if they had unlocked them somehow).
+     * -
+     * Kind of need to somehow remember what recipes have been
+     * unlocked by who so that they don't get lost...
+     */
     public void refreshRecipeBook(Player player) {
 
-        /*
-         * todo For some reason, we have to refresh the book every time
-         *      the player joins the server or something; the thing is
-         *      that recipes that are hidden from the book are lost when
-         *      doing this (if they had unlocked them somehow).
-         *      -
-         *      Kind of need to somehow remember what recipes have been
-         *      unlocked by who so that they don't get lost...
-         */
-
-        // Book disabled?
+        // Book disabled? Hide all recipes
         if (!book) {
-
-            // Hide all recipes
-            for (NamespacedKey key : player.getDiscoveredRecipes()) {
-                if ("mmoitems".equals(key.getNamespace())) {
+            for (NamespacedKey key : player.getDiscoveredRecipes())
+                if ("mmoitems".equals(key.getNamespace()))
                     player.undiscoverRecipe(key);
-                }
-            }
 
-            // Done woah
             return;
         }
-
 
         if (MythicLib.plugin.getVersion().isStrictlyHigher(1, 16)) {
 
             // Undiscovers the recipes apparently
-            for (NamespacedKey key : player.getDiscoveredRecipes()) {
-                if ("mmoitems".equals(key.getNamespace()) && !getNamespacedKeys().contains(key)) {
+            for (NamespacedKey key : player.getDiscoveredRecipes())
+                if ("mmoitems".equals(key.getNamespace()) && !getNamespacedKeys().contains(key))
                     player.undiscoverRecipe(key);
-                }
-            }
 
             // And discovers them again
             for (NamespacedKey recipe : getNamespacedKeys()) {
-                if (recipe == null) {
+                if (recipe == null)
                     continue;
-                }
 
                 // Not blacklisted right
                 boolean blacklisted = false;

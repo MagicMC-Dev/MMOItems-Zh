@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.recipes;
+package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
@@ -15,9 +15,8 @@ import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMG_RecipeInterpreter;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_InputOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.Bukkit;

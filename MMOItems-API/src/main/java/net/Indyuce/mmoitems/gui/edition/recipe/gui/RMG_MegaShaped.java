@@ -1,9 +1,8 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.recipes;
+package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_MegaShaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMG_RecipeInterpreter;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_MegaShaped;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_InputOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.entity.Player;

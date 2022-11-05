@@ -10,7 +10,7 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeListGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,25 +1,30 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.recipes;
+package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMGRI_Shaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMG_RecipeInterpreter;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_BurningLegacy;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
+import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_CookingTime;
+import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_Experience;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_InputOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 
+
 /**
- * Edits shaped recipes, very nice.
+ * The legacy recipes that are not supported by MythicLib that all happen to have to do
+ * with burning stuff - furnaces, campfires, the other furnaces...
  *
  * @author Gunging
  */
-public class RMG_Shaped extends RecipeMakerGUI {
+public class RMG_BurningLegacy extends RecipeMakerGUI {
 
-    @NotNull HashMap<Integer, Integer> inputLinks = new HashMap<>();
+    @NotNull
+    HashMap<Integer, Integer> inputLinks = new HashMap<>();
 
     /**
      * An editor for a Shaped Recipe. Because the recipe is loaded from the YML when this is created,
@@ -29,29 +34,23 @@ public class RMG_Shaped extends RecipeMakerGUI {
      * @param template Template of which a recipe is being edited
      * @param recipeName Name of this recipe
      */
-    public RMG_Shaped(@NotNull Player player, @NotNull MMOItemTemplate template, @NotNull String recipeName, @NotNull RecipeRegistry recipeRegistry) {
+    public RMG_BurningLegacy(@NotNull Player player, @NotNull MMOItemTemplate template, @NotNull String recipeName, @NotNull RecipeRegistry recipeRegistry) {
         super(player, template, recipeName, recipeRegistry);
-        addButton(new RBA_InputOutput(this));
         addButton(new RBA_HideFromBook(this));
+        addButton(new RBA_Experience(this));
+        addButton(new RBA_CookingTime(this));
+
+        // NO OUTPUT
+        if (!isShowingInput()) { switchInput(); }
 
         // Get section and build interpreter
-        interpreter = new RMGRI_Shaped(getNameSection());
+        interpreter = new RMGRI_BurningLegacy(getNameSection());
 
-        // Bind inputs
-        inputLinks.put(30, 0);
-        inputLinks.put(31, 1);
-        inputLinks.put(32, 2);
-
-        inputLinks.put(39, 3);
-        inputLinks.put(40, 4);
-        inputLinks.put(41, 5);
-
-        inputLinks.put(48, 6);
-        inputLinks.put(49, 7);
-        inputLinks.put(50, 8);
+        // Bind inputs - Furnace only has which item to smelt
+        inputLinks.put(40, 0);
     }
 
-    @Override public int getButtonsRow() { return 1; }
+    @Override public int getButtonsRow() { return 2; }
 
     @Override
     public void putRecipe(@NotNull Inventory target) {
@@ -70,8 +69,6 @@ public class RMG_Shaped extends RecipeMakerGUI {
         return found != null ? found : -1;
     }
 
-    @NotNull final RMGRI_Shaped interpreter;
-    @NotNull
-    @Override
-    public RMG_RecipeInterpreter getInterpreter() { return interpreter; }
+    @NotNull final RMGRI_BurningLegacy interpreter;
+    @NotNull @Override public RMG_RecipeInterpreter getInterpreter() { return interpreter; }
 }

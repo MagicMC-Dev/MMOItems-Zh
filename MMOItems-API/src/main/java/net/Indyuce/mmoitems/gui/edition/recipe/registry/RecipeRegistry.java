@@ -9,7 +9,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * With information on displaying and creating Recipes.
@@ -51,7 +50,7 @@ public interface RecipeRegistry {
      *
      * @param inv Edition Inventory by which the player is opening this
      * @param recipeName Name of the recipe
-     * @param otherParams Whatever else required by the constructor of the {@link net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI}
+     * @param otherParams Whatever else required by the constructor of the {@link net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI}
      */
     void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams);
 

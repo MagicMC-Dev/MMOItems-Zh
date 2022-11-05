@@ -10,8 +10,8 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.recipes.RecipeMakerGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreters.RMG_RecipeInterpreter;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import org.bukkit.ChatColor;
@@ -30,7 +30,6 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.skills.types.Stat;
 
 public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 	public Crafting() {

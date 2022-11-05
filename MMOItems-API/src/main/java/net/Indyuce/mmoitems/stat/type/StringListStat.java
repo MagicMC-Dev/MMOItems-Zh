@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.stat.type;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
@@ -47,10 +46,11 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
         if (data.getList().size() == 0) { return; }
 
         // Chop
-        String joined = String.join(", ", data.getList());
-        String format = MMOItems.plugin.getLanguage().getStatFormat(getPath());
-        String finalStr = format.replace("{value}", joined);
+        final String joined = String.join(", ", data.getList());
+        final String format = MMOItems.plugin.getLanguage().getStatFormat(getPath());
+        final String finalStr = format.replace("{value}", joined);
 
+        /*
         // Identify colour
         StringBuilder col = new StringBuilder(""); int pnd = format.indexOf('#');
         if (pnd > 0) {
@@ -124,12 +124,11 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
                     }
                 }
             }
-        }
+        } */
 
         // Display in lore
-        item.getLore().insert(getPath(), SilentNumbers.chop(finalStr, 50, col.toString()));
-
-        // Apply yes
+       // item.getLore().insert(getPath(), SilentNumbers.chop(finalStr, 50, col.toString()));
+        item.getLore().insert(getPath(), finalStr);
         item.addItemTag(getAppliedNBT(data));
     }
 
@@ -212,7 +211,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
             try {
 
                 // Value must be a Json Array
-                JsonArray array = new JsonParser().parse((String) listTag.getValue()).getAsJsonArray();
+                String[] array = new Gson().fromJson((String) listTag.getValue(), String[].class);
 
                 // Create String List Data
                 return new StringListData(array);

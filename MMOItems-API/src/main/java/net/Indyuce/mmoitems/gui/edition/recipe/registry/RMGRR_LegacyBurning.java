@@ -10,12 +10,12 @@ import net.Indyuce.mmoitems.api.recipe.CraftingType;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_BurningLegacy;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_CookingTime;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_Experience;
 import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_BurningLegacy;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.BurningRecipeInformation;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import org.apache.commons.lang.Validate;
@@ -44,22 +44,16 @@ public abstract class RMGRR_LegacyBurning implements RecipeRegistry {
     @NotNull @Override public String getRecipeTypeName() { return "§8{§4§oL§8} " + capitalizeFirst(getRecipeConfigPath()); }
 
     @SuppressWarnings("NotNullFieldNotInitialized")
-    @NotNull ItemStack displayListItem;
+    @NotNull
+    private final ItemStack displayListItem = RecipeMakerGUI.rename(getLegacyBurningType().getItem(), FFPMMOItems.get().getExampleFormat() + capitalizeFirst(getRecipeConfigPath()) + " Recipe");
 
-    @NotNull @Override public ItemStack getDisplayListItem() {
-
-        //noinspection ConstantConditions
-        if (displayListItem == null) {
-            displayListItem = RecipeMakerGUI.rename(getLegacyBurningType().getItem(), FFPMMOItems.get().getExampleFormat() + capitalizeFirst(getRecipeConfigPath()) + " Recipe");
-
-            displayListItem = RecipeMakerGUI.addLore(displayListItem, SilentNumbers.toArrayList(" "));
-            displayListItem = RecipeMakerGUI.addLore(displayListItem, SilentNumbers.chop("\u00a74To accept input amounts, this recipe requires recipe-amounts to be enabled in the config.yml", 60, "\u00a74"));
-        }
-
-        return displayListItem; }
+    @NotNull
+    @Override
+    public ItemStack getDisplayListItem() {
+        return displayListItem;
+    }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) { new RMG_BurningLegacy(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage()); }
-
 
     /**
      * Actually doesnt really send this thing to MythicLib

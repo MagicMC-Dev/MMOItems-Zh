@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy;
 
-import net.Indyuce.mmoitems.api.recipe.CraftingType;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RMGRR_LegacyBurning;
 import org.jetbrains.annotations.NotNull;
 

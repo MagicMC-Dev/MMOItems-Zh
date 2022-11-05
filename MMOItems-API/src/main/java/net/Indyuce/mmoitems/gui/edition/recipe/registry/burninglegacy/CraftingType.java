@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.api.recipe;
+package net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.version.VersionMaterial;

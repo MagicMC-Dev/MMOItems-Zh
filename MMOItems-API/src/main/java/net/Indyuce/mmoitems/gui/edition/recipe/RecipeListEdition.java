@@ -18,7 +18,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.recipe.CraftingType;
+import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.CraftingType;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import io.lumine.mythic.lib.api.util.AltChar;
 

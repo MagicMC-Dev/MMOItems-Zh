@@ -39,7 +39,6 @@ import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.listener.CraftingListener;
 import net.Indyuce.mmoitems.manager.*;
 import net.Indyuce.mmoitems.util.PluginUtils;
 import org.apache.commons.lang.Validate;
@@ -249,20 +248,6 @@ public class MMOItems extends JavaPlugin {
 
         // Compatibility with /reload
         Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));
-
-        boolean book = getConfig().getBoolean("recipes.use-recipe-book");
-        boolean amounts = getConfig().getBoolean("recipes.recipe-amounts");
-
-        if (book && amounts) {
-            getLogger().warning("Tried to enable recipe book while amounts are active!");
-            getLogger().warning("Please use only ONE of these options!");
-            getLogger().warning("Disabling both options for now...");
-            book = false;
-            amounts = false;
-        }
-
-        recipeManager.load(book, amounts);
-        if (amounts) Bukkit.getPluginManager().registerEvents(new CraftingListener(), this);
 
         // Amount and bukkit recipes
         getLogger().log(Level.INFO, "Loading recipes, please wait...");

@@ -181,15 +181,8 @@ action-bar-display:
     item-break: false
 
 recipes:
-
-    # Allows you to use stack amounts for recipe ingredients.
-    # This will enable a custom crafting system which
-    # can cause lots of trouble. If you don't need specific
-    # ingredient amounts then DO NOT enable this!
-    recipe-amounts: false
     
-    # Enables the vanilla recipe book for MMOItem recipes!
-    # THIS IS NOT COMPATIBLE WITH RECIPE AMOUNTS!
+    # Enables the vanilla recipe book for MMOItems recipes
     use-recipe-book: true
 
 # "repair" prevents players from repairing MMOItems.

@@ -430,7 +430,7 @@ public class PlayerData {
 
     @NotNull
     public static PlayerData get(UUID uuid) {
-        return Objects.requireNonNull(data.computeIfAbsent(uuid, PlayerData::load), "Player data not loaded");
+        return Objects.requireNonNull(data.get(uuid), "Player data not loaded");
     }
 
     /**

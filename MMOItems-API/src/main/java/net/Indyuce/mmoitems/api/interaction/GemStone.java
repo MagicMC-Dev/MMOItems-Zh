@@ -2,7 +2,6 @@ package net.Indyuce.mmoitems.api.interaction;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.event.item.ApplyGemStoneEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
@@ -17,6 +16,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -127,15 +127,13 @@ public class GemStone extends UseItem {
 
                 // Get that gem
                 GemSocketsData registeredGemData = (GemSocketsData) gemStory.getModifiersBonus(uid);
-                if (registeredGemData != null) {
+                if (registeredGemData != null && registeredGemData.getEmptySocket(gemType) != null) {
+                    //UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Gemstone\u00a77: \u00a73" + foundSocketColor);
 
-                    if (registeredGemData.getEmptySocket(gemType) != null) {
-                        //UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76Gemstone\u00a77: \u00a73" + foundSocketColor);
-
-                        // Charmer
-                        success = true;
-                        registeredGemData.apply(gemType, gemData);
-                    }
+                    // Charmer
+                    success = true;
+                    registeredGemData.apply(gemType, gemData);
+                    break;
                 }
             }
 
@@ -145,11 +143,7 @@ public class GemStone extends UseItem {
 
                     // Get that gem
                     GemSocketsData registeredGemData = (GemSocketsData) extraneousGem;
-                    if (registeredGemData == null) {
-                        continue;
-                    }
-
-                    if (registeredGemData.getEmptySocket(gemType) != null) {
+                    if (registeredGemData != null && registeredGemData.getEmptySocket(gemType) != null) {
                         //UPGRD//MMOItems.log("\u00a77Applied Gemstone @\u00a76External\u00a77: \u00a73" + foundSocketColor);
 
                         // Charmer

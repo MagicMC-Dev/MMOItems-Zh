@@ -36,13 +36,6 @@ public class DisplayName extends StringStat implements GemStoneStat {
                 .replace("<tier-color>", tier != null ? ColorUtils.getLastColors(tier.getName()) : "&f")
                 .replace("<tier-color-cleaned>", tier != null ? ColorUtils.stripDecoration(ColorUtils.getLastColors(tier.getName())) : "&f");
 
-        if (tier != null) {
-            System.out.println("Name: " + tier.getName());
-            System.out.println("Format: " + format);
-            System.out.println("Last Colors: " + ColorUtils.getLastColors(tier.getName()) + " w: " + ColorUtils.stripDecoration(ChatColor.getLastColors(tier.getName())));
-            System.out.println("===================\n");
-        }
-
         // Is this upgradable?
         format = cropUpgrade(format);
         if (item.getMMOItem().hasUpgradeTemplate())

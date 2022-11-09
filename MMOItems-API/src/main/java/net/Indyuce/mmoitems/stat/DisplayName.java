@@ -32,11 +32,12 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
         // Bake
         String format = data.toString()
-                .replace("<tier-name>", tier != null ? ChatColor.stripColor(tier.getName()) : "")
+                .replace("<tier-name>", tier != null ? ColorUtils.stripColors(tier.getName()) : "")
                 .replace("<tier-color>", tier != null ? ChatColor.getLastColors(tier.getName()) : "&f")
                 .replace("<tier-color-cleaned>", tier != null ? ColorUtils.stripDecoration(ChatColor.getLastColors(tier.getName())) : "&f");
 
         if (tier != null) {
+            System.out.println("Name: " + tier.getName());
             System.out.println("Format: " + format);
             System.out.println("Last Colors: " + ChatColor.getLastColors(tier.getName()) + " w: " + ColorUtils.stripDecoration(ChatColor.getLastColors(tier.getName())));
             System.out.println("===================\n");

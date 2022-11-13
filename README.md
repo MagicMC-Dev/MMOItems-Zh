@@ -17,3 +17,4 @@ And then add MMOItems-API as dependency
     <scope>provided</scope>
 </dependency>
 ```
+

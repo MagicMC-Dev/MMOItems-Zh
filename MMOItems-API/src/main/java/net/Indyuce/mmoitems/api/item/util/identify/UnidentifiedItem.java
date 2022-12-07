@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.item.util.identify;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
+import io.lumine.mythic.lib.util.AdventureUtils;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.Type;
@@ -91,8 +92,8 @@ public class UnidentifiedItem extends ConfigItem {
             ItemMeta meta = unidentified.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
             meta.setUnbreakable(true);
-            meta.setDisplayName(MythicLib.plugin.parseColors(name));
-            meta.setLore(lore);
+            AdventureUtils.setDisplayName(meta, name);
+            AdventureUtils.setLore(meta, lore);
             if (customModelData != null) {
                 meta.setCustomModelData(customModelData);
             }

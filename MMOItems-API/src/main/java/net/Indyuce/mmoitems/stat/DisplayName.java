@@ -35,15 +35,14 @@ public class DisplayName extends StringStat implements GemStoneStat {
         String format = data.toString();
 
         ItemTier tier = item.getMMOItem().getTier();
-        format = format.replace("<tier-name>", tier != null ? parser.stripColors(tier.getUnparsedName()) : "");
-        format = format.replace("<tier-color>", tier != null ? parser.lastColor(tier.getUnparsedName(), true) : "&f");
-        format = format.replace("<tier-color-cleaned>", tier != null ? parser.lastColor(tier.getUnparsedName(), false) : "");
+        format = format.replace("<tier-name>", tier != null ? parser.stripColors(tier.getUnparsedName()) : "")
+                .replace("<tier-color>", tier != null ? parser.lastColor(tier.getUnparsedName(), true) : "&f")
+                .replace("<tier-color-cleaned>", tier != null ? parser.lastColor(tier.getUnparsedName(), false) : "");
 
         // Is this upgradable?
         format = cropUpgrade(format);
-        if (item.getMMOItem().hasUpgradeTemplate()) {
+        if (item.getMMOItem().hasUpgradeTemplate())
             format = appendUpgradeLevel(format, item.getMMOItem().getUpgradeLevel());
-        }
 
         item.getMeta().setDisplayName(format);
 

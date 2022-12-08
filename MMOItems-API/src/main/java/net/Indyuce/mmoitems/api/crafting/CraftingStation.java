@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.crafting;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.PostLoadObject;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.IngredientInventory;
@@ -22,7 +21,6 @@ import java.util.logging.Level;
 public class CraftingStation extends PostLoadObject {
     private final String id;
     private final String name;
-    private final String unparsedName;
     private final Layout layout;
     private final Sound sound;
     private final StationItemOptions itemOptions;
@@ -44,8 +42,7 @@ public class CraftingStation extends PostLoadObject {
         super(config);
 
         this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-        this.unparsedName = config.getString("name", "Unnamed");
-        this.name = MythicLib.plugin.parseColors(unparsedName);
+        this.name = config.getString("name", "Unnamed");
         this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
         this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 
@@ -69,8 +66,7 @@ public class CraftingStation extends PostLoadObject {
         Validate.notNull(sound, "Crafting station sound must not be null");
 
         this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
-        this.unparsedName = name;
-        this.name = MythicLib.plugin.parseColors(name);
+        this.name = name;
         this.layout = layout;
         this.sound = sound;
         this.itemOptions = itemOptions;
@@ -85,10 +81,6 @@ public class CraftingStation extends PostLoadObject {
     @Deprecated
     public String getName() {
         return name;
-    }
-
-    public String getUnparsedName() {
-        return unparsedName;
     }
 
     public Layout getLayout() {

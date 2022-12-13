@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.api.item.build;
 
 import com.google.gson.JsonArray;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.util.AdventureUtils;
@@ -21,6 +19,7 @@ import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.Previewable;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -31,7 +30,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class ItemStackBuilder {
@@ -218,7 +220,11 @@ public class ItemStackBuilder {
 
         GenerateLoreEvent event = new GenerateLoreEvent(builtMMOItem, lore, parsedLore, unparsedLore);
         Bukkit.getPluginManager().callEvent(event);
-        AdventureUtils.setLore(meta, event.getParsedLore());
+        AdventureUtils.setLore(meta, event.getParsedLore().stream()
+                .map(s -> ChatColor.WHITE + s)
+                .toList());
+        if (meta.hasDisplayName())
+            AdventureUtils.setDisplayName(meta, ChatColor.WHITE + meta.getDisplayName());
 
         /*
          * Save dynamic lore for later calculations. Not used anymore, but
@@ -239,17 +245,28 @@ public class ItemStackBuilder {
         NBTItem nbtItem = NBTItem.get(item);
 
         // Apply item display name using Components for colors
-        if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName())
-            nbtItem.setDisplayNameComponent(AdventureUtils.asComponent(meta.getDisplayName()));
+//        if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
+//            AdventureUtils.setDisplayName(meta, meta.getDisplayName());
+//            Component displayNameComponent = AdventureUtils.asComponent(meta.getDisplayName()).colorIfAbsent(NamedTextColor.WHITE);
+//            if (displayNameComponent.decorations().isEmpty())
+//                displayNameComponent = displayNameComponent.decoration(TextDecoration.ITALIC, false);
+//            nbtItem.setDisplayNameComponent(displayNameComponent);
+//        }
 
-        if (meta.hasLore()) {
-            List<Component> componentLore = new LinkedList<>();
-            MythicLib.plugin.parseColors(meta.getLore())
-                    .stream()
-                    .map(AdventureUtils::asComponent)
-                    .forEach(componentLore::add);
-            nbtItem.setLoreComponents(componentLore);
-        }
+//        if (meta.hasLore()) {
+//            List<Component> componentLore = new LinkedList<>();
+//            MythicLib.plugin.parseColors(meta.getLore())
+//                    .stream()
+//                    .peek(component -> System.out.println("Component: " + component))
+//                    .map(AdventureUtils::asComponent)
+//                    .peek(component -> component.decorations().forEach((textDecoration, state) -> {
+//
+//                        System.out.println("Decoration: " + textDecoration + " State: " + state);
+//                    }))
+//                    .forEach(componentLore::add);
+//            System.out.println("=========================================\n");
+//            nbtItem.setLoreComponents(componentLore);
+//        }
 
         return nbtItem.addTag(tags);
     }

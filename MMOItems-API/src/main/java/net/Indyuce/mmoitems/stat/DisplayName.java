@@ -21,8 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class DisplayName extends StringStat implements GemStoneStat {
-    private final String[] cleanFilter = {ChatColor.BOLD.toString(), ChatColor.ITALIC.toString(), ChatColor.UNDERLINE.toString(), ChatColor.STRIKETHROUGH.toString(), ChatColor.MAGIC.toString()};
-
     public DisplayName() {
         super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "Display Name", new String[]{"The item display name."},
                 new String[]{"all"});

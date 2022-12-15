@@ -7,6 +7,7 @@ import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.util.ColorUtils;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
@@ -49,7 +50,9 @@ public class ItemBrowser extends PluginInventory {
     }
 
 
-    @NotNull @Override public Inventory getInventory() {
+    @NotNull
+    @Override
+    public Inventory getInventory() {
 
         /*
          * ------------------------------
@@ -82,7 +85,7 @@ public class ItemBrowser extends PluginInventory {
                 ItemStack item = currentType.getItem();
                 item.setAmount(Math.max(1, Math.min(64, items)));
                 ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(ChatColor.GREEN + currentType.getName() + ChatColor.DARK_GRAY + " (Click to browse)");
+                meta.setDisplayName("%s%s %s(Click to browse)".formatted(ChatColor.GREEN, ColorUtils.stripColors(currentType.getName()), ChatColor.DARK_GRAY));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
                 lore.add(String.valueOf(ChatColor.GRAY) + ChatColor.ITALIC + "There " + (items == 1 ? "is" : "are") + " "
@@ -114,7 +117,9 @@ public class ItemBrowser extends PluginInventory {
             previous.setItemMeta(previousMeta);
 
             // Fill
-            while (n < slots.length) { inv.setItem(slots[n++], glass); }
+            while (n < slots.length) {
+                inv.setItem(slots[n++], glass);
+            }
             inv.setItem(18, page > 1 ? previous : null);
             inv.setItem(26, max >= MMOItems.plugin.getTypes().getAll().size() ? null : next);
 
@@ -129,7 +134,7 @@ public class ItemBrowser extends PluginInventory {
          *          Displays all the items of the chosen Type
          *  ------------------------------
          */
-        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
+        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + ColorUtils.stripColors(type.getName()));
 
         /*
          * Build cool Item Stacks for buttons and sh
@@ -181,7 +186,8 @@ public class ItemBrowser extends PluginInventory {
                     ChatColor.RED + "By downloading the default resourcepack you can", ChatColor.RED + "edit the blocks however you want.",
                     ChatColor.RED + "You will still have to add it to your server!"));
             downloadPack.setItemMeta(downloadMeta);
-            inv.setItem(45, downloadPack); }
+            inv.setItem(45, downloadPack);
+        }
 
         // Get templates of this type
         HashMap<Double, ArrayList<MMOItemTemplate>> templates = BrowserDisplayIDX.select(MMOItems.plugin.getTemplates().getTemplates(type));
@@ -208,7 +214,11 @@ public class ItemBrowser extends PluginInventory {
 
             // Claim columns
             int totalSpaceAdd = indexTemplates.getValue().size();
-            while (totalSpaceAdd > 0) { totalSpaceCount += sc; totalSpaceAdd -= sc; } }
+            while (totalSpaceAdd > 0) {
+                totalSpaceCount += sc;
+                totalSpaceAdd -= sc;
+            }
+        }
 
         /*
          * Over the page-range currently in use...
@@ -231,7 +241,10 @@ public class ItemBrowser extends PluginInventory {
                  *         and add one
                  */
                 n += 7;
-                if (n >= usedSlots.length) { n -= 7 * sc; n++; }
+                if (n >= usedSlots.length) {
+                    n -= 7 * sc;
+                    n++;
+                }
                 continue;
             }
 
@@ -252,12 +265,18 @@ public class ItemBrowser extends PluginInventory {
                  *         and add one
                  */
                 n += 7;
-                if (n >= usedSlots.length) { n -= 7 * sc; n++; }
-                continue; }
+                if (n >= usedSlots.length) {
+                    n -= 7 * sc;
+                    n++;
+                }
+                continue;
+            }
 
             ItemMeta meta = item.getItemMeta();
             List<String> lore = meta.getLore();
-            if (lore == null) { lore = new ArrayList<>(); }
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
             lore.add("");
 
             // Deleting lore?
@@ -265,10 +284,11 @@ public class ItemBrowser extends PluginInventory {
                 lore.add(ChatColor.RED + AltChar.cross + " CLICK TO DELETE " + AltChar.cross);
                 meta.setDisplayName(ChatColor.RED + "DELETE: " + (meta.hasDisplayName() ? meta.getDisplayName() : MMOUtils.getDisplayName(item)));
 
-            // Editing lore?
+                // Editing lore?
             } else {
                 lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to obtain this item.");
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item."); }
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to edit this item.");
+            }
 
             meta.setLore(lore);
             item.setItemMeta(meta);
@@ -286,16 +306,25 @@ public class ItemBrowser extends PluginInventory {
              *         and add one
              */
             n += 7;
-            if (n >= usedSlots.length) { n -= 7 * sc; n++; }
+            if (n >= usedSlots.length) {
+                n -= 7 * sc;
+                n++;
+            }
         }
 
         // Put the buttons
-        if (!deleteMode) { inv.setItem(51, create); }
+        if (!deleteMode) {
+            inv.setItem(51, create);
+        }
         inv.setItem(47, delete);
         inv.setItem(49, back);
         inv.setItem(18, page > 1 ? previous : null);
         inv.setItem(26, max >= totalSpaceCount ? null : next);
-        for (int i : usedSlots) { if (SilentNumbers.isAir(inv.getItem(i))) { inv.setItem(i, noItem); } }
+        for (int i : usedSlots) {
+            if (SilentNumbers.isAir(inv.getItem(i))) {
+                inv.setItem(i, noItem);
+            }
+        }
         return inv;
     }
 

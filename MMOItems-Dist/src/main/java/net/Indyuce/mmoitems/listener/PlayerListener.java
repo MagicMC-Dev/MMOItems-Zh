@@ -31,13 +31,13 @@ import java.util.*;
 public class PlayerListener implements Listener {
     private final Map<Player, List<ItemStack>> deathItems = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void loadPlayerData(PlayerJoinEvent event) {
         MMOItems.plugin.getRecipes().refreshRecipeBook(event.getPlayer());
         PlayerData.load(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void savePlayerData(PlayerQuitEvent event) {
         PlayerData.get(event.getPlayer()).save(true);
     }
@@ -48,7 +48,6 @@ public class PlayerListener implements Listener {
     @SuppressWarnings("InstanceofIncompatibleInterface")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent event) {
-
         // No
         if (event instanceof Cancellable) { if (((Cancellable) event).isCancelled()) { return; } }
 

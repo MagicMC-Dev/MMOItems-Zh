@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.comp.inventory;
 
+import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -38,6 +40,8 @@ public class PlayerInventoryHandler {
      */
     public void register(@NotNull PlayerInventory pInventory) {
         registeredInventories.add(pInventory);
+        if (pInventory instanceof Listener)
+            Bukkit.getPluginManager().registerEvents((Listener) pInventory, MMOItems.plugin);
     }
 
     public void unregisterIf(Predicate<PlayerInventory> filter) {

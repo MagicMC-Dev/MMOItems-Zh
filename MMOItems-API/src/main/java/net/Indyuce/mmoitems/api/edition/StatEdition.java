@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.input.AnvilGUI;
 import net.Indyuce.mmoitems.api.edition.input.ChatEdition;
-import net.Indyuce.mmoitems.comp.parse.StringInputParser;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -51,7 +50,7 @@ public class StatEdition implements Edition {
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
 
 		/*
-		 * anvil text input feature. enables players to use an anvil to input
+		 * Anvil text input feature. enables players to use an anvil to input
 		 * text if they are having conflicts with their chat management plugins.
 		 */
 		if (MMOItems.plugin.getConfig().getBoolean("anvil-text-input") && MythicLib.plugin.getVersion().isBelowOrEqual(1, 13)) {
@@ -59,20 +58,15 @@ public class StatEdition implements Edition {
 			return;
 		}
 
-		/*
-		 * default chat edition feature
-		 */
+		// Default chat edition feature
 		new ChatEdition(this);
 		inv.getPlayer().sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
 	}
 
 	@Override
 	public boolean processInput(String input) {
-		// apply string input parsers
-		for (StringInputParser parser : MMOItems.plugin.getStringInputParsers())
-			input = parser.parseInput(inv.getPlayer(), input);
 
-		// if cancel, open back inventory
+		// If cancel, open back inventory
 		if (input.equals("cancel")) {
 			inv.open();
 			return true;

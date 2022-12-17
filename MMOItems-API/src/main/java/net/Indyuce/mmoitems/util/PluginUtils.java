@@ -30,5 +30,4 @@ public class PluginUtils {
         callback.accept(null);
         MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto %s".formatted(name));
     }
-
 }

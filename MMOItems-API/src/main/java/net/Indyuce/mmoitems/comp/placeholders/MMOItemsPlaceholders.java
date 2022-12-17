@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.comp.parse.placeholders;
+package net.Indyuce.mmoitems.comp.placeholders;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;

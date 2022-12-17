@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.comp.inventory;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,16 +23,16 @@ public class DefaultPlayerInventory implements PlayerInventory {
 		if (player.getEquipment() == null) { return list; }
 
 		// Mainhand
-		list.add(new EIDefaultInventory(player, -7, player.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
+		list.add(new SlotEquippedItem(player, -7, player.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
 
 		// Offhand
-		list.add(new EIDefaultInventory(player, -106, player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
+		list.add(new SlotEquippedItem(player, -106, player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
 
 		// Armor
-		list.add(new EIDefaultInventory(player, 103, player.getEquipment().getHelmet(), EquipmentSlot.ARMOR));
-		list.add(new EIDefaultInventory(player, 102, player.getEquipment().getChestplate(), EquipmentSlot.ARMOR));
-		list.add(new EIDefaultInventory(player, 101, player.getEquipment().getLeggings(), EquipmentSlot.ARMOR));
-		list.add(new EIDefaultInventory(player, 100, player.getEquipment().getBoots(), EquipmentSlot.ARMOR));
+		list.add(new SlotEquippedItem(player, 103, player.getEquipment().getHelmet(), EquipmentSlot.ARMOR));
+		list.add(new SlotEquippedItem(player, 102, player.getEquipment().getChestplate(), EquipmentSlot.ARMOR));
+		list.add(new SlotEquippedItem(player, 101, player.getEquipment().getLeggings(), EquipmentSlot.ARMOR));
+		list.add(new SlotEquippedItem(player, 100, player.getEquipment().getBoots(), EquipmentSlot.ARMOR));
 
 		return list;
 	}

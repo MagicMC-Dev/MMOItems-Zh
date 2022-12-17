@@ -2,29 +2,38 @@ package net.Indyuce.mmoitems.comp.inventory;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import net.Indyuce.mmoitems.api.player.inventory.EditableEquippedItem;
+import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EIDefaultInventory extends EditableEquippedItem {
-    @NotNull public Player getPlayer() { return player; }
-    @NotNull Player player;
+public class SlotEquippedItem extends EquippedItem {
+    private final Player player;
+    private final int slotNumber;
 
-    public int getSlotNumber() { return slotNumber; }
-    int slotNumber;
-
-    public EIDefaultInventory(@NotNull Player player, int slotNumber, ItemStack item, EquipmentSlot slot) {
+    public SlotEquippedItem(@NotNull Player player, int slotNumber, ItemStack item, EquipmentSlot slot) {
         super(item, slot);
+
         this.player = player;
         this.slotNumber = slotNumber;
     }
 
-    public EIDefaultInventory(@NotNull Player player, int slotNumber, NBTItem item, EquipmentSlot slot) {
+    public SlotEquippedItem(@NotNull Player player, int slotNumber, NBTItem item, EquipmentSlot slot) {
         super(item, slot);
+
         this.player = player;
         this.slotNumber = slotNumber;
+    }
+
+    @NotNull
+    public Player getPlayer() {
+        return player;
+    }
+
+    @NotNull
+    public int getSlotNumber() {
+        return slotNumber;
     }
 
     @Override

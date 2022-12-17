@@ -28,6 +28,10 @@ inventory-update-delay: 10
 # interval [playerLevel - spread, playerLevel + spread]
 item-level-spread: 2
 
+# There is currently a client-side Minecraft issue
+# where left clicking a
+fix-left-click-interact: false
+
 # When an item is generated with no tier,
 # this is the capacity formula it will use.
 default-item-capacity:

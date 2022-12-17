@@ -8,7 +8,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import net.Indyuce.mmoitems.api.player.inventory.EditableEquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.EquippedItem;
 import net.Indyuce.mmoitems.api.player.inventory.InventoryUpdateHandler;
 import net.Indyuce.mmoitems.api.util.message.Message;
@@ -22,17 +21,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 public class DeathDowngrading {
+    private static final Random RANDOM = new Random();
 
     /**
      * This will go through the following steps:
      *
      *  #1 Evaluate the list of equipped items {@link InventoryUpdateHandler#getEquipped()} to
      *     find those that can be death-downgraded.
-     *
      *
      *  #2 Roll for death downgrade chances, downgrading the items
      *
@@ -41,7 +41,7 @@ public class DeathDowngrading {
     public static void playerDeathDowngrade(@NotNull Player player) {
 
         // Get Player
-        PlayerData data = PlayerData.get(player);
+        final PlayerData data = PlayerData.get(player);
 
         // Get total downgrade chance, anything less than zero is invalid
         double deathChance = data.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
@@ -50,27 +50,18 @@ public class DeathDowngrading {
 
         // Make sure the equipped items list is up to date and retrieve it
         data.updateInventory();
-        List<EquippedItem> items = data.getInventory().getEquipped();
-        ArrayList<EditableEquippedItem> equipped = new ArrayList<>();
-
-        // Equipped Player Items yeah...
-        for (EquippedItem playerItem : items) {
-
-            // Cannot downgrade? skip
-            if (!canDeathDowngrade(playerItem)) { continue; }
-
-            // Okay explore stat
-            equipped.add((EditableEquippedItem) playerItem);
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Yes. \u00a7aAccepted");
+        final List<EquippedItem> equipped = data.getInventory().getEquipped();
+        for (Iterator<EquippedItem> ite = equipped.iterator(); ite.hasNext(); ) {
+            EquippedItem next = ite.next();
+            if (next == null || !canDeathDowngrade(next.getCached()))
+                ite.remove();
         }
 
         // Nothing to perform operations? Snooze
         if (equipped.size() == 0) {
             //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 No items to downgrade. ");
-            return; }
-
-        // Create random
-        Random random = new Random();
+            return;
+        }
 
         // Degrade those items!
         while (deathChance >= 100 && equipped.size() > 0) {
@@ -78,13 +69,9 @@ public class DeathDowngrading {
             // Decrease
             deathChance -= 100;
 
-            // Downgrade random item
-            int deathChosen = random.nextInt(equipped.size());
-
-            /*
-             * The item was chosen, we must downgrade it by one level.
-             */
-            EditableEquippedItem equip = equipped.get(deathChosen);
+            // The item was randomly chosen, we must downgrade it by one level.
+            int deathChosen = RANDOM.nextInt(equipped.size());
+            EquippedItem equip = equipped.get(deathChosen);
 
             // Downgrade and remove from list
             equip.setItem(downgrade(new LiveMMOItem(equip.getNBT()), player));
@@ -94,15 +81,11 @@ public class DeathDowngrading {
         }
 
         // If there is chance, and there is size, and there is chance success
-        if (deathChance > 0 && equipped.size() > 0 && random.nextInt(100) < deathChance) {
+        if (deathChance > 0 && equipped.size() > 0 && RANDOM.nextInt(100) < deathChance) {
 
             // Downgrade random item
-            int d = random.nextInt(equipped.size());
-
-            /*
-             * The item was chosen, we must downgrade it by one level.
-             */
-            EditableEquippedItem equip = equipped.get(d);
+            int d = RANDOM.nextInt(equipped.size());
+            EquippedItem equip = equipped.get(d);
 
             // Downgrade and remove from list
             equip.setItem(downgrade(new LiveMMOItem(equip.getNBT()), player));
@@ -147,9 +130,6 @@ public class DeathDowngrading {
             }
         }
 
-        // Create random
-        Random random = new Random();
-
         // Degrade those items!
         while (deathChance >= 100 && downgrade.size() > 0) {
 
@@ -157,7 +137,7 @@ public class DeathDowngrading {
             deathChance -= 100;
 
             // Downgrade random item
-            int deathChosen = random.nextInt(downgrade.size());
+            int deathChosen = RANDOM.nextInt(downgrade.size());
 
             /*
              * The item was chosen, we must downgrade it by one level.
@@ -172,10 +152,10 @@ public class DeathDowngrading {
         }
 
         // If there is chance, and there is size, and there is chance success
-        if (deathChance > 0 && downgrade.size() > 0 && random.nextInt(100) < deathChance) {
+        if (deathChance > 0 && downgrade.size() > 0 && RANDOM.nextInt(100) < deathChance) {
 
             // Downgrade random item
-            int deathChosen = random.nextInt(downgrade.size());
+            int deathChosen = RANDOM.nextInt(downgrade.size());
 
             /*
              * The item was chosen, we must downgrade it by one level.
@@ -261,28 +241,6 @@ public class DeathDowngrading {
 
         // Get total downgrade chance, anything less than zero is invalid
         return data.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
-    }
-
-    /**
-     * @param playerItem Equipped Item you want to know if it can be death downgraded
-     *
-     * @return If this is an instance of {@link EditableEquippedItem} and meets {@link #canDeathDowngrade(MMOItem)}
-     */
-    @Contract("null->false")
-    public static boolean canDeathDowngrade(@Nullable EquippedItem playerItem) {
-
-        // Null
-        if (playerItem == null) { return false; }
-        //DET//playerItem.getItem().hasData(ItemStats.NAME);
-        //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Item:\u00a7b " + playerItem.getItem().getData(ItemStats.NAME));
-
-        // Cannot perform operations of items that are uneditable
-        if (!(playerItem instanceof EditableEquippedItem)) {
-            //DET//MMOItems.log("\u00a78DETH \u00a7cDG\u00a77 Not equippable. \u00a7cCancel");
-            return false; }
-
-        // Delegate to MMOItem Method
-        return canDeathDowngrade(playerItem.getCached());
     }
 
     /**

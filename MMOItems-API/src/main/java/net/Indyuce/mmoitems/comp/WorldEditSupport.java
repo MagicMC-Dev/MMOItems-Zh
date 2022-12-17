@@ -17,7 +17,7 @@ public class WorldEditSupport {
 		WorldEdit.getInstance().getBlockFactory().register(new WECustomBlockInputParser());
 	}
 
-	public static class WECustomBlockInputParser extends InputParser<BaseBlock> {
+	public class WECustomBlockInputParser extends InputParser<BaseBlock> {
 		public WECustomBlockInputParser() {
 			super(WorldEdit.getInstance());
 		}

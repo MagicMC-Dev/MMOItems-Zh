@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.player.inventory;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class EquippedItem {
+public abstract class EquippedItem {
     private final NBTItem item;
     private final EquipmentSlot slot;
 
@@ -76,4 +77,13 @@ public class EquippedItem {
         final ModifierSource modSource = type.getModifierSource();
         return EquipmentSlot.OFF_HAND.isCompatible(modSource, slot) || EquipmentSlot.MAIN_HAND.isCompatible(modSource, slot);
     }
+
+    /**
+     * Allows editing the item, wherever it is that it is
+     * currently equipped, due to stats like {@link ItemStats#DOWNGRADE_ON_DEATH}
+     * that target equipped items.
+     *
+     * @param item Item to replace in the current slot
+     */
+    public abstract void setItem(@Nullable ItemStack item);
 }

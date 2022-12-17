@@ -46,7 +46,7 @@ public class Type {
     public static final Type MAIN_CATALYST = new Type(TypeSet.CATALYST, "MAIN_CATALYST", false, ModifierSource.MAINHAND_ITEM);
 
     // Any
-    public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, ModifierSource.OTHER);
+    public static final Type ORNAMENT = new Type(TypeSet.EXTRA, "ORNAMENT", false, ModifierSource.VOID);
 
     // Extra
     public static final Type ARMOR = new Type(TypeSet.EXTRA, "ARMOR", false, ModifierSource.ARMOR);
@@ -55,7 +55,7 @@ public class Type {
     public static final Type MISCELLANEOUS = new Type(TypeSet.EXTRA, "MISCELLANEOUS", false, ModifierSource.MAINHAND_ITEM);
     public static final Type GEM_STONE = new Type(TypeSet.EXTRA, "GEM_STONE", false, ModifierSource.VOID);
     public static final Type SKIN = new Type(TypeSet.EXTRA, "SKIN", false, ModifierSource.VOID);
-    public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, ModifierSource.OTHER);
+    public static final Type ACCESSORY = new Type(TypeSet.EXTRA, "ACCESSORY", false, ModifierSource.ACCESSORY);
     public static final Type BLOCK = new Type(TypeSet.EXTRA, "BLOCK", false, ModifierSource.VOID);
 
     private final String id;

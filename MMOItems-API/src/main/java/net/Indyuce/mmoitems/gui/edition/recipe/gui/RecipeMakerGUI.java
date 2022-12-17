@@ -4,11 +4,12 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import io.lumine.mythic.lib.api.util.ItemFactory;
+import io.lumine.mythic.lib.util.AdventureUtils;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
@@ -56,14 +57,14 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * An editor for a recipe of this crafting system.
      * <br> <br>
      * Mind the difference between Recipe and Recipe Type: <br> <code>
-     *
-     *     > Recipe: This specific recipe being edited. An item may have multiple recipes of the same type. <br><br>
-     *     > Recipe Type: How to use the recipe, is it Shaped, Shapeless, Smithing, Smelting...?
+     * <p>
+     * > Recipe: This specific recipe being edited. An item may have multiple recipes of the same type. <br><br>
+     * > Recipe Type: How to use the recipe, is it Shaped, Shapeless, Smithing, Smelting...?
      * </code>
      *
-     * @param player Player to display the Edition Inventory to
-     * @param template MMOItem Template being edited
-     * @param recipeName Name of this particular Recipe
+     * @param player         Player to display the Edition Inventory to
+     * @param template       MMOItem Template being edited
+     * @param recipeName     Name of this particular Recipe
      * @param recipeRegistry Load/Save Information of this Recipe Type
      */
     public RecipeMakerGUI(@NotNull Player player, @NotNull MMOItemTemplate template, @NotNull String recipeName, @NotNull RecipeRegistry recipeRegistry) {
@@ -90,84 +91,126 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     }
 
     // Button Bar Buttons
-    @NotNull final ItemStack nextButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7eMore Options \u00a7c»").build();
-    @NotNull final ItemStack prevButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7c« \u00a7eMore Options").build();
-    @NotNull public final ItemStack noButton = ItemFactory.of(Material.IRON_BARS).name("\u00a78---").build();
+    @NotNull
+    final ItemStack nextButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7eMore Options \u00a7c»").build();
+    @NotNull
+    final ItemStack prevButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7c« \u00a7eMore Options").build();
+    @NotNull
+    public final ItemStack noButton = ItemFactory.of(Material.IRON_BARS).name("\u00a78---").build();
 
     // Ingredient-Related Buttons
-    @NotNull public final ItemStack emptySlot = ItemFactory.of(Material.BARRIER).name("\u00a77No Item").build();
-    @NotNull public final ItemStack airSlot = ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a77No Item").build();
+    @NotNull
+    public final ItemStack emptySlot = ItemFactory.of(Material.BARRIER).name("\u00a77No Item").build();
+    @NotNull
+    public final ItemStack airSlot = ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a77No Item").build();
 
-    @NotNull final Inventory myInventory;
+    @NotNull
+    final Inventory myInventory;
+
     /**
      * @return The inventory displayed to the player.
      */
-    @NotNull public Inventory getMyInventory() { return myInventory; }
+    @NotNull
+    public Inventory getMyInventory() {
+        return myInventory;
+    }
 
     /**
-     *[ID].base.crafting
+     * [ID].base.crafting
      */
-    @NotNull final ConfigurationSection craftingSection;
+    @NotNull
+    final ConfigurationSection craftingSection;
+
     /**
      * @return [ID].base.crafting
      */
-    @NotNull public ConfigurationSection getCraftingSection() { return craftingSection; }
+    @NotNull
+    public ConfigurationSection getCraftingSection() {
+        return craftingSection;
+    }
 
     /**
-     *[ID].base.crafting.[TYPE]
+     * [ID].base.crafting.[TYPE]
      */
-    @NotNull final ConfigurationSection typeSection;
+    @NotNull
+    final ConfigurationSection typeSection;
+
     /**
      * @return [ID].base.crafting.[TYPE]
      */
-    @NotNull public ConfigurationSection getTypeSection() { return typeSection; }
+    @NotNull
+    public ConfigurationSection getTypeSection() {
+        return typeSection;
+    }
 
     /**
-     *[ID].base.crafting.[TYPE].[NAME]
+     * [ID].base.crafting.[TYPE].[NAME]
      */
-    @NotNull final ConfigurationSection nameSection;
+    @NotNull
+    final ConfigurationSection nameSection;
+
     /**
      * @return [ID].base.crafting.[TYPE].[NAME]
      */
-    @NotNull public ConfigurationSection getNameSection() { return nameSection; }
+    @NotNull
+    public ConfigurationSection getNameSection() {
+        return nameSection;
+    }
 
-    @NotNull final RecipeRegistry recipeRegistry;
+    @NotNull
+    final RecipeRegistry recipeRegistry;
+
     /**
      * @return The information to save and load this recipe.
      */
-    @NotNull public RecipeRegistry getRecipeRegistry() { return recipeRegistry; }
+    @NotNull
+    public RecipeRegistry getRecipeRegistry() {
+        return recipeRegistry;
+    }
 
 
     /**
      * The reference to the Amount Button, for ease of access
      * of the ItemStack displayed for the output of this recipe.
      */
-    @NotNull final RBA_AmountOutput amountButton;
+    @NotNull
+    final RBA_AmountOutput amountButton;
+
     /**
      * @return The reference to the Amount Button, for ease of access
-     *         of the ItemStack displayed for the output of this recipe.
+     * of the ItemStack displayed for the output of this recipe.
      */
-    @NotNull public RBA_AmountOutput getAmountButton() { return amountButton; }
+    @NotNull
+    public RBA_AmountOutput getAmountButton() {
+        return amountButton;
+    }
 
-    @NotNull final String recipeName;
+    @NotNull
+    final String recipeName;
+
     /**
      * @return An item may have multiple recipes, this is the name
-     *         of the one being edited. So far, historically, they
-     *         have just been a number.
-     *         <br>
-     *         <br>
-     *         In YML, <code>[ID].crafting.[recipe].[name]</code> this
-     *         string is the value of [name]
-     *         <br>
-     *         Ex. <code>STEEL_SWORD.crafting.shaped.1</code>
+     * of the one being edited. So far, historically, they
+     * have just been a number.
+     * <br>
+     * <br>
+     * In YML, <code>[ID].crafting.[recipe].[name]</code> this
+     * string is the value of [name]
+     * <br>
+     * Ex. <code>STEEL_SWORD.crafting.shaped.1</code>
      */
-    @NotNull public String getRecipeName() { return recipeName; }
+    @NotNull
+    public String getRecipeName() {
+        return recipeName;
+    }
 
     int buttonsPage;
     /**
      * Map containing the absolute inventory slot links to the buttons placed there.
      */
-    @NotNull final HashMap<Integer, RecipeButtonAction> buttonsMap = new HashMap<>();
+    @NotNull
+    final HashMap<Integer, RecipeButtonAction> buttonsMap = new HashMap<>();
+
     /**
      * Puts the general buttons, used for any Recipe Maker variant.
      * <br><br>
@@ -193,14 +236,20 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     public void putButtons(@NotNull Inventory target) {
 
         // Ignore negative rows
-        if (getButtonsRow() < 0) { return; }
+        if (getButtonsRow() < 0) {
+            return;
+        }
 
         // Clear
         buttonsMap.clear();
 
         // Include page buttons
-        if (buttonsPage > 0) { myInventory.setItem((getButtonsRow() * 9) + 8, prevButtonPage); }
-        if (buttonsMap.size() >= ((buttonsPage + 1) * 7)) { myInventory.setItem((getButtonsRow() * 9), nextButtonPage); }
+        if (buttonsPage > 0) {
+            myInventory.setItem((getButtonsRow() * 9) + 8, prevButtonPage);
+        }
+        if (buttonsMap.size() >= ((buttonsPage + 1) * 7)) {
+            myInventory.setItem((getButtonsRow() * 9), nextButtonPage);
+        }
 
         // Fill the space I guess
         for (int p = 7 * buttonsPage; p < 7 * (buttonsPage + 1); p++) {
@@ -230,7 +279,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 // Just snooze
                 target.setItem(absolute, noButton);
 
-            // There exists a recipe for this slot
+                // There exists a recipe for this slot
             } else {
 
                 // Get button
@@ -244,6 +293,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
             }
         }
     }
+
     /**
      * Restrains a number between 1 and 7, which is the allowed
      * absolute slot values to put buttons onto.
@@ -279,6 +329,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
         // Sum to obtain final
         return rowAdditive + columnAdditive;
     }
+
     /**
      * Should probably avoid this being row #0, since that will occlude
      * the back button and those other edition inventory buttons.
@@ -288,15 +339,14 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     public abstract int getButtonsRow();
 
     /**
-     *
      * @param absolute Absolute slot clicked by the player, for example,
      *                 0 is the top left corner of the edition inventory.
-     *
      * @return <code>-1</code> If the slot is not one of the <b>input ingredient</b>
-     *         slots, or a number greater or equal to zero depending on which input
-     *         ingredient it is.
+     * slots, or a number greater or equal to zero depending on which input
+     * ingredient it is.
      */
     abstract int getInputSlot(int absolute);
+
     /**
      * Puts all the buttons onto this inventory.
      */
@@ -305,32 +355,35 @@ public abstract class RecipeMakerGUI extends EditionInventory {
         putButtons(getMyInventory());
         putRecipe(getMyInventory());
     }
+
     /**
      * Puts the buttons specific for this kind of recipe, display
      * in the correct places the input and output items.
      *
      * @param target The inventory being edited
-     *
      * @see #putButtons(Inventory) for a better, more lengthy description.
      */
     public abstract void putRecipe(@NotNull Inventory target);
+
     /**
      * Get the item stack associated with this slot, depending
      * on Input or Output being edited. If it is air, it will
      * return the chad {@link #emptySlot} ItemStack.
      *
      * @param input Should fetch from the INPUT section of the YML Config?
-     * @param slot Which slot of the crafting table?
-     *
+     * @param slot  Which slot of the crafting table?
      * @return The correct stack to display.
      */
-    @NotNull public ItemStack getDisplay(boolean input, int slot) {
+    @NotNull
+    public ItemStack getDisplay(boolean input, int slot) {
 
         // Find poof
         ProvidedUIFilter poof = input ? getInterpreter().getInput(slot) : getInterpreter().getOutput(slot);
 
         // Null equals fail
-        if (poof == null || poof.isAir()) { return isShowingInput() ? emptySlot : airSlot; }
+        if (poof == null || poof.isAir()) {
+            return isShowingInput() ? emptySlot : airSlot;
+        }
 
         // Generate display
         return poof.getDisplayStack(null);
@@ -339,15 +392,20 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     /**
      * All the buttons added by this recipe.
      */
-    @NotNull final ArrayList<RecipeButtonAction> buttons = new ArrayList<>();
+    @NotNull
+    final ArrayList<RecipeButtonAction> buttons = new ArrayList<>();
+
     /**
      * Registers a button to check when clicking the Edition Inventory for this recipe.
      *
      * @param rba Method to run and evaluate the button click.
      */
-    public void addButton(@NotNull RecipeButtonAction rba) { buttons.add(rba); }
+    public void addButton(@NotNull RecipeButtonAction rba) {
+        buttons.add(rba);
+    }
 
-    @NotNull public final String[] recipeLog = {
+    @NotNull
+    public final String[] recipeLog = {
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Write in the chat the item you want, follow any format:"),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Vanilla: $e[MATERIAL] [AMOUNT] $bex $eDIAMOND 2.."),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "MMOItem: $e[TYPE].[ID] [AMOUNT] $bex $eSWORD.CUTLASS 1.."),
@@ -357,10 +415,13 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     /**
      * @return The protocols to edit the ConfigurationSection based on the user input.
      */
-    @NotNull public abstract RMG_RecipeInterpreter getInterpreter();
+    @NotNull
+    public abstract RMG_RecipeInterpreter getInterpreter();
 
 
-    @NotNull @Override public Inventory getInventory() {
+    @NotNull
+    @Override
+    public Inventory getInventory() {
 
         // Put buttons
         refreshInventory();
@@ -368,10 +429,14 @@ public abstract class RecipeMakerGUI extends EditionInventory {
         // That's it lets GOOOO
         return myInventory;
     }
-    @Override public void whenClicked(InventoryClickEvent event) {
+
+    @Override
+    public void whenClicked(InventoryClickEvent event) {
 
         // Clicked inventory was not the observed inventory? Not our business
-        if (event.getView().getTopInventory() != event.getClickedInventory()) { return; }
+        if (event.getView().getTopInventory() != event.getClickedInventory()) {
+            return;
+        }
 
         // Disallow any clicking.
         event.setCancelled(true);
@@ -394,16 +459,19 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 } else {
 
                     // Query user for output
-                    new StatEdition(this, ItemStats.CRAFTING, OUTPUT, getInterpreter(), ingredient).enable(recipeLog); }
+                    new StatEdition(this, ItemStats.CRAFTING, OUTPUT, getInterpreter(), ingredient).enable(recipeLog);
+                }
 
-            // Maybe its a button
+                // Maybe its a button
             } else {
 
                 // Find button
                 RecipeButtonAction rmg = buttonsMap.get(event.getRawSlot());
 
                 // Found?
-                if (rmg != null) { rmg.runPrimary(); }
+                if (rmg != null) {
+                    rmg.runPrimary();
+                }
             }
 
             // Removing an ingredient?
@@ -422,7 +490,8 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 } else {
 
                     // Delete Output
-                    getInterpreter().deleteOutput(getInputSlot(event.getRawSlot())); }
+                    getInterpreter().deleteOutput(getInputSlot(event.getRawSlot()));
+                }
 
                 // Register
                 registerTemplateEdition();
@@ -430,14 +499,16 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 // Refresh yes
                 refreshInventory();
 
-            // Maybe its a button
+                // Maybe its a button
             } else {
 
                 // Find button
                 RecipeButtonAction rmg = buttonsMap.get(event.getRawSlot());
 
                 // Found?
-                if (rmg != null) { rmg.runSecondary(); }
+                if (rmg != null) {
+                    rmg.runSecondary();
+                }
             }
         }
     }
@@ -447,10 +518,11 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * There are several reasons why this was the best way, however
      * unique looking. The best reason is that, for an user editing
      * many recipes at once, its quicker to just toggle it globally.
-     *
+     * <p>
      * From a programmatic point of view, this is also easier to implement.
      */
-    @NotNull static final HashMap<UUID, Boolean> showingInput = new HashMap<>();
+    @NotNull
+    static final HashMap<UUID, Boolean> showingInput = new HashMap<>();
 
     /**
      * Change between showing input and output for some user.
@@ -465,7 +537,6 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
     /**
      * @param whom Player the inventory is built for
-     *
      * @return If the player wants to see the input recipes.
      */
     public static boolean isShowingInputFor(@NotNull UUID whom) {
@@ -477,12 +548,16 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     /**
      * @return If the player opening this inventory is looking at INPUT (as opposed to OUTPUT)
      */
-    public boolean isShowingInput() { return isShowingInputFor(getPlayer().getUniqueId()); }
+    public boolean isShowingInput() {
+        return isShowingInputFor(getPlayer().getUniqueId());
+    }
 
     /**
      * Switch between input and output for this player.
      */
-    public void switchInput() {  switchInputFor(getPlayer().getUniqueId()); }
+    public void switchInput() {
+        switchInputFor(getPlayer().getUniqueId());
+    }
     //endregion
 
     //region ############------- Constants -------############
@@ -503,13 +578,12 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     /**
      * Why is it so cumbersome to have a one line renaming method?
      *
-     * @param itm ItemStack.
-     *
+     * @param itm  ItemStack.
      * @param name Name to give to your item.
-     *
      * @return The item, renamed.
      */
-    @NotNull public static ItemStack rename(@NotNull ItemStack itm, @NotNull String name) {
+    @NotNull
+    public static ItemStack rename(@NotNull ItemStack itm, @NotNull String name) {
 
         // Bruh
         ItemMeta iMeta = itm.getItemMeta();
@@ -522,27 +596,32 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     /**
      * Why is it so cumbersome to have some lore lines method?
      *
-     * @param itm ItemStack.
-     *
+     * @param itm   ItemStack.
      * @param lines Lore to add to the item
-     *
      * @return The item, lored.
      */
-    @NotNull public static ItemStack addLore(@NotNull ItemStack itm, @NotNull ArrayList<String> lines) {
+    @NotNull
+    public static ItemStack addLore(@NotNull ItemStack itm, @NotNull ArrayList<String> lines) {
 
         // Not falling for that
-        if (!itm.hasItemMeta()) { return itm; }
+        if (!itm.hasItemMeta()) {
+            return itm;
+        }
 
         // Bruh
         ItemMeta iMeta = itm.getItemMeta();
-        if (iMeta == null) { return itm; }
+        if (iMeta == null) {
+            return itm;
+        }
 
         List<String> currentLore = iMeta.getLore();
-        if (currentLore == null) { currentLore = new ArrayList<>(); }
+        if (currentLore == null) {
+            currentLore = new ArrayList<>();
+        }
 
         // Add lore
-        for (String line : lines) { currentLore.add(MythicLib.plugin.parseColors(line)); }
-        iMeta.setLore(currentLore);
+        currentLore.addAll(lines);
+        AdventureUtils.setLore(iMeta, currentLore);
 
         // That's it
         itm.setItemMeta(iMeta);
@@ -555,16 +634,20 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      *
      * @param root Root section
      * @param path Path to get/create
-     *
      * @return The subsection of this config.
      */
-    @NotNull public static ConfigurationSection getSection(@NotNull ConfigurationSection root, @NotNull String path) {
+    @NotNull
+    public static ConfigurationSection getSection(@NotNull ConfigurationSection root, @NotNull String path) {
         ConfigurationSection section = root.getConfigurationSection(path);
-        if (section == null) { section = root.createSection(path); }
-        return section; }
+        if (section == null) {
+            section = root.createSection(path);
+        }
+        return section;
+    }
     //endregion
 
     //region ############------- Updating Legacy Formats -------############
+
     /**
      * In the past, crafting recipes only supported (for example) a 3x3 grid of input.
      * This was stored under [ID].base.crafting.shaped.recipe
@@ -585,7 +668,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * note that code wont run the same after it has been called, as any variable
      * that is not a ConfigurationSection within 3 levels deep of the passed
      * section will be cleared.
-     *
+     * <p>
      * For advanced debug purposes only.
      *
      * @param section Section to mess up
@@ -594,26 +677,32 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
         MMOItems.print(null, "\u00a7d-\u00a77 Section \u00a75" + section.getCurrentPath(), null);
         for (String key : section.getKeys(false)) {
-            MMOItems.print(null,"\u00a7d +\u00a77 " + key, null);
+            MMOItems.print(null, "\u00a7d +\u00a77 " + key, null);
 
-            MMOItems.print(null,"\u00a7d-\u00a7e-\u00a77 As List \u00a75" + section.getCurrentPath() + "." + key + "\u00a77 {\u00a7d" + section.getStringList(key).size() + "\u00a77}", null);
-            for (String listKey : section.getStringList(key)) { MMOItems.print(null,"\u00a7d +\u00a7e-\u00a77" + listKey, null); }
+            MMOItems.print(null, "\u00a7d-\u00a7e-\u00a77 As List \u00a75" + section.getCurrentPath() + "." + key + "\u00a77 {\u00a7d" + section.getStringList(key).size() + "\u00a77}", null);
+            for (String listKey : section.getStringList(key)) {
+                MMOItems.print(null, "\u00a7d +\u00a7e-\u00a77" + listKey, null);
+            }
 
             ConfigurationSection asSection = getSection(section, key);
-            MMOItems.print(null,"\u00a78--\u00a7d-\u00a77 Section \u00a75" + asSection.getCurrentPath(), null);
+            MMOItems.print(null, "\u00a78--\u00a7d-\u00a77 Section \u00a75" + asSection.getCurrentPath(), null);
             for (String asKey : asSection.getKeys(false)) {
-                MMOItems.print(null,"\u00a78--\u00a7d +\u00a77 " + asKey, null);
+                MMOItems.print(null, "\u00a78--\u00a7d +\u00a77 " + asKey, null);
 
-                MMOItems.print(null,"\u00a78--\u00a7d-\u00a7e-\u00a77 As List \u00a75" + asSection.getCurrentPath() + "." + asKey + "\u00a77 {\u00a7d" + asSection.getStringList(asKey).size() + "\u00a77}", null);
-                for (String listKey : asSection.getStringList(asKey)) { MMOItems.print(null,"\u00a78--\u00a7d +\u00a7e-\u00a77" + listKey, null); }
+                MMOItems.print(null, "\u00a78--\u00a7d-\u00a7e-\u00a77 As List \u00a75" + asSection.getCurrentPath() + "." + asKey + "\u00a77 {\u00a7d" + asSection.getStringList(asKey).size() + "\u00a77}", null);
+                for (String listKey : asSection.getStringList(asKey)) {
+                    MMOItems.print(null, "\u00a78--\u00a7d +\u00a7e-\u00a77" + listKey, null);
+                }
 
                 ConfigurationSection asESection = getSection(asSection, asKey);
-                MMOItems.print(null,"\u00a70--\u00a78--\u00a7d-\u00a77 Section \u00a75" + asESection.getCurrentPath(), null);
+                MMOItems.print(null, "\u00a70--\u00a78--\u00a7d-\u00a77 Section \u00a75" + asESection.getCurrentPath(), null);
                 for (String asEKey : asESection.getKeys(false)) {
-                    MMOItems.print(null,"\u00a70--\u00a78--\u00a7d +\u00a77 " + asEKey, null);
+                    MMOItems.print(null, "\u00a70--\u00a78--\u00a7d +\u00a77 " + asEKey, null);
 
-                    MMOItems.print(null,"\u00a70--\u00a78--\u00a7d-\u00a7e-\u00a77 As List \u00a75" + asESection.getCurrentPath() + "." + asEKey + "\u00a77 {\u00a7d" + asESection.getStringList(asEKey).size() + "\u00a77}", null);
-                    for (String listKey : asESection.getStringList(asEKey)) { MMOItems.print(null,"\u00a70--\u00a78--\u00a7d +\u00a7e-\u00a77" + listKey, null); }
+                    MMOItems.print(null, "\u00a70--\u00a78--\u00a7d-\u00a7e-\u00a77 As List \u00a75" + asESection.getCurrentPath() + "." + asEKey + "\u00a77 {\u00a7d" + asESection.getStringList(asEKey).size() + "\u00a77}", null);
+                    for (String listKey : asESection.getStringList(asEKey)) {
+                        MMOItems.print(null, "\u00a70--\u00a78--\u00a7d +\u00a7e-\u00a77" + listKey, null);
+                    }
                 }
             }
         }
@@ -626,7 +715,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * This method moves that into [ID].crafting.shaped.recipe.input
      *
      * @return The recipe name section result from this operation. <br>
-     *         [ID].base.crafting.[TYPE].[NAME]
+     * [ID].base.crafting.[TYPE].[NAME]
      */
     public static ConfigurationSection moveInput(@NotNull ConfigurationSection recipeSection, @NotNull String nameOfRecipe) {
         ConfigurationSection name;
@@ -686,25 +775,30 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * @param legacy Legacy string
      * @return Converted string as best as possible
      */
-    @NotNull public static String poofFromLegacy(@Nullable String legacy) {
+    @NotNull
+    public static String poofFromLegacy(@Nullable String legacy) {
         if (legacy == null || "[]".equals(legacy)) {
             //UPT//MMOItems.log("\u00a7b+\u00a77 Null, \u00a7b" + "v AIR - 1..");
-            return "v AIR - 1.."; }
+            return "v AIR - 1..";
+        }
 
         // Spaces are assumed to be updated
         if (legacy.contains(" ")) {
             //UPT//MMOItems.log("\u00a7b+\u00a77 Mirror, \u00a7b" + legacy);
-            return legacy; }
+            return legacy;
+        }
 
         // Split by amount
         int aLoc = legacy.indexOf(':');
-        QuickNumberRange amount = new QuickNumberRange(1.0 , null);
+        QuickNumberRange amount = new QuickNumberRange(1.0, null);
         if (aLoc > 0) {
 
             String am = legacy.substring(aLoc + 1);
             legacy = legacy.substring(0, aLoc);
             Integer du = SilentNumbers.IntegerParse(am);
-            if (du == null) { du = 1; }
+            if (du == null) {
+                du = 1;
+            }
             amount = new QuickNumberRange((double) du, null);
         }
 
@@ -737,12 +831,11 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      *
      * @param str String that's should be in one of the formats above.
      * @param ffp To tell what happened
-     *
-     * @throws IllegalArgumentException If not in the correct format.
-     *
      * @return An ingredient read from this string.
+     * @throws IllegalArgumentException If not in the correct format.
      */
-    @NotNull public static ProvidedUIFilter readIngredientFrom(@NotNull String str, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
+    @NotNull
+    public static ProvidedUIFilter readIngredientFrom(@NotNull String str, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
         /*
          * This entry, is it a vanilla material?
@@ -750,7 +843,10 @@ public abstract class RecipeMakerGUI extends EditionInventory {
          * Then build it as material.
          */
         Material asMaterial = null;
-        try { asMaterial = Material.valueOf(str.toUpperCase().replace(" ", "_").replace("-", "_")); } catch (IllegalArgumentException ignored) {}
+        try {
+            asMaterial = Material.valueOf(str.toUpperCase().replace(" ", "_").replace("-", "_"));
+        } catch (IllegalArgumentException ignored) {
+        }
         if (asMaterial != null) {
 
             // Is it AIR?
@@ -758,10 +854,13 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
                 ProvidedUIFilter result = new ProvidedUIFilter(VanillaUIFilter.get(), "AIR", "0");
                 result.setAmountRange(new QuickNumberRange(null, null));
-                return result; }
+                return result;
+            }
 
             // We snooze if its AIR or such
-            if (!asMaterial.isItem()) { throw new IllegalArgumentException("Invalid Ingredient $u" + str + "$b ($fNot an Item$b)."); }
+            if (!asMaterial.isItem()) {
+                throw new IllegalArgumentException("Invalid Ingredient $u" + str + "$b ($fNot an Item$b).");
+            }
 
             // All right create filter and go
             ProvidedUIFilter poof = UIFilterManager.getUIFilter("v", asMaterial.toString(), "", "1..", ffp);

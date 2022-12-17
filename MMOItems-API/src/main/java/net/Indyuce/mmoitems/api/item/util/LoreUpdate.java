@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api.item.util;
 
 
+import io.lumine.mythic.lib.util.AdventureUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -61,7 +62,7 @@ public class LoreUpdate {
                 lore.set(i, replace);
 
                 ItemMeta meta = item.getItemMeta();
-                meta.setLore(lore);
+                AdventureUtils.setLore(meta, lore);
                 item.setItemMeta(meta);
 
                 return item;

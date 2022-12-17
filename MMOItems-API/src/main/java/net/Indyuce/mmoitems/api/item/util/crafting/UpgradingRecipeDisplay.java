@@ -1,15 +1,15 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import io.lumine.mythic.lib.adventure.text.Component;
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
-import net.Indyuce.mmoitems.util.MMOUtils;
+import io.lumine.mythic.lib.util.AdventureUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
 import net.Indyuce.mmoitems.api.crafting.recipe.UpgradingRecipe;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -85,12 +85,13 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 			item.setItemMeta(meta);
 
 			NBTItem nbtItem = NBTItem.get(item);
-
-			nbtItem.setDisplayNameComponent(LegacyComponent.parse(name.replace("#name#", MMOUtils.getDisplayName(item))));
-
-			List<Component> componentLore = new ArrayList<>();
-			lore.forEach(line -> componentLore.add(LegacyComponent.parse(line)));
-			nbtItem.setLoreComponents(componentLore);
+            // Name
+            nbtItem.setDisplayNameComponent(AdventureUtils.asComponent(name.replace("#name#", MMOUtils.getDisplayName(item))));
+            // Lore
+			List<String> formattedLore = MythicLib.plugin.parseColors(lore);
+			nbtItem.setLoreComponents(formattedLore.stream()
+					.map(AdventureUtils::asComponent)
+					.toList());
 
 			return nbtItem.addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
 		}

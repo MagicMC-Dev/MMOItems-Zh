@@ -68,7 +68,6 @@ public class StatEdition implements Edition {
 
 	@Override
 	public boolean processInput(String input) {
-
 		// apply string input parsers
 		for (StringInputParser parser : MMOItems.plugin.getStringInputParsers())
 			input = parser.parseInput(inv.getPlayer(), input);
@@ -86,9 +85,7 @@ public class StatEdition implements Edition {
 
 			// Success
 			return true;
-
 		} catch (RuntimeException exception) {
-
 			// Add message to the FFP
 			if (!exception.getMessage().isEmpty()) { inv.getFFP().log(FriendlyFeedbackCategory.ERROR, exception.getMessage()); }
 

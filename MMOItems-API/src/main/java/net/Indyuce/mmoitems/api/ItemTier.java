@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Random;
 
 public class ItemTier {
-    private final String name, id;
+    private final String id;
+    private final String name;
+    private final String unparsedName;
     private final UnidentificationInfo unidentificationInfo;
 
     // Deconstruction
@@ -44,10 +46,10 @@ public class ItemTier {
      * @param config Configuration section to get all values from
      */
     public ItemTier(@NotNull ConfigurationSection config) {
-
         // The name and ID, crucial parts.
-        id = config.getName().toUpperCase().replace("-", "_");
-        name = MythicLib.plugin.parseColors(config.getString("name"));
+        this.id = config.getName().toUpperCase().replace("-", "_");
+        this.unparsedName = config.getString("name");
+        this.name = MythicLib.plugin.parseColors(unparsedName);
 
         // Deconstruct and Unidentification
         deconstructTable = config.contains("deconstruct-item") ? new DropTable(config.getConfigurationSection("deconstruct-item")) : null;
@@ -89,8 +91,8 @@ public class ItemTier {
 
     /**
      * @return Reads the deconstruction drop table. This may return a list
-     *         containing multiple items and they should all be added to the
-     *         player's inventory
+     * containing multiple items and they should all be added to the
+     * player's inventory
      */
     public List<ItemStack> getDeconstructedLoot(@NotNull PlayerData player) {
         //noinspection ConstantConditions
@@ -119,7 +121,7 @@ public class ItemTier {
 
     /**
      * @return If the item tier has a modifier capacity ie if this tier let
-     *         generated items have modifiers
+     * generated items have modifiers
      */
     public boolean hasCapacity() {
         return capacity != null;
@@ -127,8 +129,8 @@ public class ItemTier {
 
     /**
      * @return The formula for modifier capacity which can be then rolled to
-     *         generate a random amount of modifier capacity when generating a
-     *         random item
+     * generate a random amount of modifier capacity when generating a
+     * random item
      */
     @Nullable
     public NumericStatFormula getModifierCapacity() {
@@ -138,6 +140,10 @@ public class ItemTier {
     @NotNull
     public UnidentificationInfo getUnidentificationInfo() {
         return unidentificationInfo;
+    }
+
+    public @NotNull String getUnparsedName() {
+        return unparsedName;
     }
 
     public static class UnidentificationInfo {

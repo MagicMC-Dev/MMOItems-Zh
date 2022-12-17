@@ -5,15 +5,15 @@ import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import io.lumine.mythic.lib.util.AdventureUtils;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.ColorUtils;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.ItemEdition;
 import net.Indyuce.mmoitems.stat.BrowserDisplayIDX;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -85,13 +85,11 @@ public class ItemBrowser extends PluginInventory {
                 ItemStack item = currentType.getItem();
                 item.setAmount(Math.max(1, Math.min(64, items)));
                 ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName("%s%s %s(Click to browse)".formatted(ChatColor.GREEN, ColorUtils.stripColors(currentType.getName()), ChatColor.DARK_GRAY));
+                AdventureUtils.setDisplayName(meta, "&a%s&8 (lick to browse)".formatted(currentType.getName()));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                lore.add(String.valueOf(ChatColor.GRAY) + ChatColor.ITALIC + "There " + (items == 1 ? "is" : "are") + " "
-                        + (items < 1 ? String.valueOf(ChatColor.RED) + ChatColor.ITALIC + "no" : String.valueOf(ChatColor.GOLD) + ChatColor.ITALIC + items) + ChatColor.GRAY
-                        + ChatColor.ITALIC + " item" + (items == 1 ? "" : "s") + " in that currentType.");
-                meta.setLore(lore);
+                lore.add("&7&oThere %s %s &7&oitem%s in that currentType.".formatted(items == 1 ? "is" : "are", items < 1 ? "&c&ono" : "&6&o%d".formatted(items), items == 1 ? "" : "s"));
+                AdventureUtils.setLore(meta, lore);
                 item.setItemMeta(meta);
 
                 // Set item
@@ -134,7 +132,7 @@ public class ItemBrowser extends PluginInventory {
          *          Displays all the items of the chosen Type
          *  ------------------------------
          */
-        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + ColorUtils.stripColors(type.getName()));
+        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
 
         /*
          * Build cool Item Stacks for buttons and sh

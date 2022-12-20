@@ -40,8 +40,8 @@ public class WaveLuteAttack implements LuteAttackHandler {
 
                     // Display particle
                     final Vector vec = MMOUtils.rotateFunc(new Vector(.5, 0, 0), loc);
-                    projParticle.shootParticle(loc.clone().add(vec.multiply(Math.sin((double) ti / 2))));
-                    projParticle.shootParticle(loc.clone().add(vec.multiply(-1)));
+                    projParticle.shootParticle(loc.clone().add(vec.clone().multiply(Math.sin((double) ti / 2))));
+                    projParticle.shootParticle(loc.clone().add(vec.clone().multiply(-1)));
 
                     if (j == 0) sound.play(loc, 2, (float) (.5 + (double) ti / range));
 

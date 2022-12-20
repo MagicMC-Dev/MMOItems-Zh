@@ -16,8 +16,8 @@ public class StaffSpiritCommandTreeNode extends CommandTreeNode {
 		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Staff Spirits "
 				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 		for (StaffSpirit ss : StaffSpirit.values()) {
-			String lore = !ss.hasLore() ? " " + ChatColor.WHITE + ">> " + ChatColor.GRAY + "" + ChatColor.ITALIC + ss.getLore() : "";
-			sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + ss.getName() + lore);
+			String lore = ss.hasLore() ? " " + ChatColor.WHITE + ">> " + ChatColor.GRAY + "" + ChatColor.ITALIC + ss.getDefaultLore() : "";
+			sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + ss.name() + lore);
 		}
 		return CommandResult.SUCCESS;
 	}

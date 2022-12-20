@@ -8,8 +8,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.staff.*;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,14 +49,12 @@ public class StaffSpiritStat extends StringStat {
 		// targeted cursed projectile."), new CursedSpirit()),
 		;
 
-		private final String lore;
+		private final String name, defaultLore;
 		private final StaffAttackHandler handler;
 
-		private final String name;
-
-		StaffSpirit(String name, String lore, StaffAttackHandler handler) {
+		StaffSpirit(String name, String defaultLore, StaffAttackHandler handler) {
 			this.name = name;
-			this.lore = lore;
+			this.defaultLore = defaultLore;
 			this.handler = handler;
 		}
 
@@ -74,19 +70,16 @@ public class StaffSpiritStat extends StringStat {
 			return name;
 		}
 
-		/*
-		 * TODO make update
-		 */
 		public String getName() {
 			return MMOItems.plugin.getLanguage().getStaffSpiritName(this);
 		}
 
 		public boolean hasLore() {
-			return lore != null;
+			return defaultLore != null;
 		}
 
-		public String getLore() {
-			return lore;
+		public String getDefaultLore() {
+			return defaultLore;
 		}
 
 		public StaffAttackHandler getAttack() {

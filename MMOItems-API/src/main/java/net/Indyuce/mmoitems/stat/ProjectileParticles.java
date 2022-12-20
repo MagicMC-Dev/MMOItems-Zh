@@ -3,13 +3,11 @@ package net.Indyuce.mmoitems.stat;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
@@ -17,6 +15,7 @@ import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -76,18 +75,13 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
     @Override
     public void whenDisplayed(List<String> lore, Optional<ProjectileParticlesData> statData) {
         if (statData.isPresent()) {
-            String dataStr = statData.get().toString();
-            JsonObject data = MythicLib.plugin.getJson().parse(dataStr, JsonObject.class);
-
-            Particle particle = Particle.valueOf(data.get("Particle").getAsString());
+            final ProjectileParticlesData data = statData.get();
+            Particle particle = data.getParticle();
 
             lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + particle);
 
             if (ProjectileParticlesData.isColorable(particle)) {
-                String red = String.valueOf(data.get("Red"));
-                String green = String.valueOf(data.get("Green"));
-                String blue = String.valueOf(data.get("Blue"));
-                String colorStr = particle == Particle.NOTE ? red : red + " " + green + " " + blue;
+                String colorStr = particle == Particle.NOTE ? String.valueOf(data.getRed()) : data.getRed() + " " + data.getGreen() + " " + data.getBlue();
                 lore.add(ChatColor.GRAY + "Color: " + ChatColor.GREEN + colorStr);
             }
         } else

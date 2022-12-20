@@ -9,7 +9,7 @@ import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.item.CustomDurabilityDamage;
-import net.Indyuce.mmoitems.api.event.item.CustomDurabilityRepair;
+import net.Indyuce.mmoitems.api.event.item.ItemCustomRepairEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.util.LoreUpdate;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -126,10 +126,11 @@ public class DurabilityItem {
         return maxDurability > 0 && player.getGameMode() != GameMode.CREATIVE;
     }
 
+    @NotNull
     public DurabilityItem addDurability(int gain) {
         Validate.isTrue(gain > 0, "Durability gain must be greater than 0");
 
-        CustomDurabilityRepair event = new CustomDurabilityRepair(this, gain);
+        ItemCustomRepairEvent event = new ItemCustomRepairEvent(this, gain);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return this;

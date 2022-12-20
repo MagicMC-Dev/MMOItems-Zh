@@ -54,6 +54,33 @@ public class MMOUtils {
         }
     }
 
+    private static final String UNIVERSAL_REFERENCE = "all";
+
+    /**
+     * References are helpful to classify items that can interact together.
+     * They are a piece of text stored as an NBTTag for instance. Items can
+     * interact (in a certain way) only if the corresponding reference match.
+     * <p>
+     * A null reference is considered just like a non-null reference.
+     * Any item can interact with an item with the universal reference 'all'
+     * <p>
+     * TODO
+     * This is a simple symmetrical computation. Used for:
+     * - for item upgrading
+     * - item repairing
+     *
+     * @param ref1      First reference
+     * @param ref2      Second reference
+     * @return If items can interact
+     */
+    public static boolean checkReference(@Nullable String ref1, @Nullable String ref2) {
+        if (ref1 == null)
+            return ref2 == null || ref2.equals(UNIVERSAL_REFERENCE);
+        if (ref2 == null)
+            return ref1 == null || ref1.equals(UNIVERSAL_REFERENCE);
+        return ref1.equals(UNIVERSAL_REFERENCE) || ref2.equals(UNIVERSAL_REFERENCE) || ref1.equals(ref2);
+    }
+
     /**
      * Source: https://gist.github.com/Mystiflow/c42f45bac9916c84e381155f72a96d84
      */

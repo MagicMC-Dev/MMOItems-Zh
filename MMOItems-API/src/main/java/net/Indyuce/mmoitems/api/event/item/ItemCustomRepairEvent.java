@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomDurabilityRepair extends Event implements Cancellable {
+public class ItemCustomRepairEvent extends Event implements Cancellable {
 
     @NotNull
     private final DurabilityItem sourceItem;
@@ -17,7 +17,7 @@ public class CustomDurabilityRepair extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    public CustomDurabilityRepair(@NotNull DurabilityItem item, int impendingRepair) {
+    public ItemCustomRepairEvent(@NotNull DurabilityItem item, int impendingRepair) {
         sourceItem = item;
         durabilityIncrease = impendingRepair;
     }
@@ -59,6 +59,10 @@ public class CustomDurabilityRepair extends Event implements Cancellable {
     @NotNull
     @Override
     public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

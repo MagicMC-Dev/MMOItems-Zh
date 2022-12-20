@@ -1,20 +1,21 @@
 package net.Indyuce.mmoitems.api.event.item;
 
-import org.bukkit.event.HandlerList;
-
+import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.api.event.PlayerDataEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
-import io.lumine.mythic.lib.api.item.NBTItem;
+import org.bukkit.event.HandlerList;
 
+/**
+ * When a consumable is used to repair a VANILLA item.
+ */
 public class RepairItemEvent extends PlayerDataEvent {
     private static final HandlerList handlers = new HandlerList();
 
     private final VolatileMMOItem consumable;
     private final NBTItem target;
 
-    private int repaired = -1;
-    private double repairedPercent = -1;
+    private int repaired;
 
     /**
      * Called when a player repairs an item using a consumable
@@ -32,14 +33,6 @@ public class RepairItemEvent extends PlayerDataEvent {
         this.repaired = repaired;
     }
 
-    public RepairItemEvent(PlayerData playerData, VolatileMMOItem consumable, NBTItem target, double repaired) {
-        super(playerData);
-
-        this.consumable = consumable;
-        this.target = target;
-        this.repairedPercent = repaired;
-    }
-
     public VolatileMMOItem getConsumable() {
         return consumable;
     }
@@ -52,12 +45,15 @@ public class RepairItemEvent extends PlayerDataEvent {
         return repaired;
     }
 
+    @Deprecated
     public double getRepairedPercent() {
-        return repairedPercent;
+        final boolean customWeapon = target.hasTag("MMOITEMS_DURABILITY");
+        final double maxDurability = customWeapon ? target.getDouble("MMOITEMS_MAX_DURABILITY") : target.getItem().getType().getMaxDurability();
+        return (double) getRepaired() / maxDurability;
     }
 
     public void setRepaired(int repaired) {
-        this.repaired = repaired;
+        this.repaired = Math.max(0, repaired);
     }
 
     public HandlerList getHandlers() {

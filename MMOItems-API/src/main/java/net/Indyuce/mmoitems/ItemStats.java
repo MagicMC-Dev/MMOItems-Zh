@@ -163,7 +163,7 @@ public class ItemStats {
     //todo CAN_UNSOCKET = new CanUnsocket(),
     REPAIR = new RepairPower(),
             REPAIR_PERCENT = new RepairPowerPercent(),
-            REPAIR_TYPE = new RepairType(),
+            REPAIR_TYPE = new RepairReference(),
             INEDIBLE = new BooleanStat("INEDIBLE", Material.POISONOUS_POTATO, "Inedible", new String[]{"Players won't be able to right-click this consumable.", "", "No effects of it will take place."}, new String[]{"consumable"}),
             DISABLE_RIGHT_CLICK_CONSUME = new DisableStat("RIGHT_CLICK_CONSUME", Material.BAKED_POTATO, "Infinite Consume", new String[]{"consumable"}, "Players will be able to right-click this consumable", "and benefit from its effects, but it won't be consumed."),
             KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),

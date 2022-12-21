@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.api.item.util.crafting;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.util.AdventureUtils;
 import net.Indyuce.mmoitems.api.crafting.ConditionalDisplay;
 import net.Indyuce.mmoitems.api.crafting.condition.CheckedCondition;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
@@ -18,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CraftingRecipeDisplay extends ConfigItem {
     public CraftingRecipeDisplay() {

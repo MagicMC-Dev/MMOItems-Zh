@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.api.item.util.crafting;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.util.AdventureUtils;
@@ -81,19 +80,12 @@ public class UpgradingRecipeDisplay extends ConfigItem {
 
 			ItemStack item = upgradingRecipe.getItem().getPreview();
 			ItemMeta meta = item.getItemMeta();
+			AdventureUtils.setDisplayName(meta, name.replace("#name#", MMOUtils.getDisplayName(item)));
+			AdventureUtils.setLore(meta, lore);
 			meta.addItemFlags(ItemFlag.values());
 			item.setItemMeta(meta);
 
-			NBTItem nbtItem = NBTItem.get(item);
-            // Name
-            nbtItem.setDisplayNameComponent(AdventureUtils.asComponent(name.replace("#name#", MMOUtils.getDisplayName(item))));
-            // Lore
-			List<String> formattedLore = MythicLib.plugin.parseColors(lore);
-			nbtItem.setLoreComponents(formattedLore.stream()
-					.map(AdventureUtils::asComponent)
-					.toList());
-
-			return nbtItem.addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
+			return NBTItem.get(item).addTag(new ItemTag("recipeId", recipe.getRecipe().getId())).toItem();
 		}
 	}
 }

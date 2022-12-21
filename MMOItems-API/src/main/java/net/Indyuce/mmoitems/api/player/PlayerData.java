@@ -258,23 +258,21 @@ public class PlayerData {
         }
 
         // Calculate the player's item set
-        Map<ItemSet, Integer> sets = new HashMap<>();
+        final Map<ItemSet, Integer> itemSetCount = new HashMap<>();
         for (EquippedItem equipped : inventory.getEquipped()) {
-            VolatileMMOItem item = equipped.getCached();
-            String tag = item.getNBT().getString("MMOITEMS_ITEM_SET");
-            ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
+            final String tag =  equipped.getCached().getNBT().getString("MMOITEMS_ITEM_SET");
+            final @Nullable ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
             if (itemSet == null)
                 continue;
 
-            sets.put(itemSet, sets.getOrDefault(itemSet, 0) + 1);
+            itemSetCount.put(itemSet, itemSetCount.getOrDefault(itemSet, 0) + 1);
         }
 
         // Reset and compute item set bonuses
         setBonuses = null;
-        for (Map.Entry<ItemSet, Integer> equippedSetBonus : sets.entrySet()) {
+        for (Map.Entry<ItemSet, Integer> equippedSetBonus : itemSetCount.entrySet()) {
 
             if (setBonuses == null) {
-
                 // Set set bonuses
                 setBonuses = equippedSetBonus.getKey().getBonuses(equippedSetBonus.getValue());
 

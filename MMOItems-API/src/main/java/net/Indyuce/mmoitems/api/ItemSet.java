@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -95,11 +96,14 @@ public class ItemSet {
         return id;
     }
 
+    @NotNull
     public SetBonuses getBonuses(int items) {
-        SetBonuses bonuses = new SetBonuses();
-        for (int j = 2; j <= Math.min(items, itemLimit); j++)
-            if (this.bonuses.containsKey(j))
-                bonuses.merge(this.bonuses.get(j));
+        final SetBonuses bonuses = new SetBonuses();
+        for (int j = 2; j <= Math.min(items, itemLimit); j++) {
+            final @Nullable SetBonuses extra = this.bonuses.get(j);
+            if (extra != null)
+                bonuses.merge(extra);
+        }
         return bonuses;
     }
 
@@ -110,8 +114,8 @@ public class ItemSet {
     public static class SetBonuses {
         private final Map<ItemStat<?, ?>, Double> stats = new HashMap<>();
         private final Map<PotionEffectType, PotionEffect> permEffects = new HashMap<>();
-        private final Set<AbilityData> abilities = new HashSet<>();
-        private final Set<ParticleData> particles = new HashSet<>();
+        private final List<AbilityData> abilities = new ArrayList<>();
+        private final List<ParticleData> particles = new ArrayList<>();
         private final ArrayList<String> permissions = new ArrayList<>();
 
         public void addStat(ItemStat<?, ?> stat, double value) {
@@ -150,11 +154,11 @@ public class ItemSet {
             return permEffects.values();
         }
 
-        public Set<ParticleData> getParticles() {
+        public List<ParticleData> getParticles() {
             return particles;
         }
 
-        public Set<AbilityData> getAbilities() {
+        public List<AbilityData> getAbilities() {
             return abilities;
         }
 
@@ -170,9 +174,9 @@ public class ItemSet {
                 if (!permEffects.containsKey(effect.getType()) || permEffects.get(effect.getType()).getAmplifier() < effect.getAmplifier())
                     permEffects.put(effect.getType(), effect);
 
-            abilities.addAll(bonuses.getAbilities());
-
-            permissions.addAll(bonuses.getPermissions());
+            abilities.addAll(bonuses.abilities);
+            particles.addAll(bonuses.particles);
+            permissions.addAll(bonuses.permissions);
         }
     }
 

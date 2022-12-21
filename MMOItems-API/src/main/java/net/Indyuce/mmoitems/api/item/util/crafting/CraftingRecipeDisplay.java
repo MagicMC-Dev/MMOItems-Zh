@@ -111,18 +111,13 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
             ItemMeta meta = item.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
+            meta.setDisplayName(MythicLib.plugin.parseColors(name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
+            meta.setLore(lore.stream()
+                    .map(s -> MythicLib.plugin.parseColors(s))
+                    .collect(Collectors.toList()));
             item.setItemMeta(meta);
 
-            NBTItem nbtItem = NBTItem.get(item);
-            // Name
-            nbtItem.setDisplayNameComponent(AdventureUtils.asComponent(name.replace("#name#", (amount > 1 ? (ChatColor.WHITE + "" + amount + " x ") : "") + MMOUtils.getDisplayName(item))));
-            // Lore
-            List<String> formattedLore = MythicLib.plugin.parseColors(lore);
-            nbtItem.setLoreComponents(formattedLore.stream()
-                    .map(AdventureUtils::asComponent)
-                    .toList());
-
-            return nbtItem.addTag(new ItemTag("recipeId", craftingRecipe.getId())).toItem();
+            return NBTItem.get(item).addTag(new ItemTag("recipeId", craftingRecipe.getId())).toItem();
         }
     }
 }

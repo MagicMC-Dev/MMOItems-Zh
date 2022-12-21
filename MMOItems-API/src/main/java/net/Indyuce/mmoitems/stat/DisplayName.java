@@ -14,6 +14,7 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import net.Indyuce.mmoitems.util.ColorUtils;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class DisplayName extends StringStat implements GemStoneStat {
+
     public DisplayName() {
         super("NAME", VersionMaterial.OAK_SIGN.toMaterial(), "Display Name", new String[]{"The item display name."},
                 new String[]{"all"});
@@ -28,14 +30,13 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
-        final AdventureParser parser = MythicLib.plugin.getAdventureParser();
-        // Bake
-        String format = data.toString();
+        final ItemTier tier = item.getMMOItem().getTier();
 
-        ItemTier tier = item.getMMOItem().getTier();
-        format = format.replace("<tier-name>", tier != null ? parser.stripColors(tier.getUnparsedName()) : "")
-                .replace("<tier-color>", tier != null ? parser.lastColor(tier.getUnparsedName(), true) : "&f")
-                .replace("<tier-color-cleaned>", tier != null ? parser.lastColor(tier.getUnparsedName(), false) : "");
+        // Bake
+        String format = data.toString()
+                .replace("<tier-name>", tier != null ? ColorUtils.stripColors(tier.getName()) : "")
+                .replace("<tier-color>", tier != null ? ColorUtils.getLastColors(tier.getName()) : "&f")
+                .replace("<tier-color-cleaned>", tier != null ? ColorUtils.stripDecoration(ColorUtils.getLastColors(tier.getName())) : "&f");
 
         // Is this upgradable?
         format = cropUpgrade(format);
@@ -54,68 +55,65 @@ public class DisplayName extends StringStat implements GemStoneStat {
     @NotNull
     String cropUpgrade(@NotNull String format) {
         String suffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix", " &8(&e+#lvl#&8)");
-        if (suffix == null || suffix.isEmpty()) {
+        if (suffix == null || suffix.isEmpty())
             return format;
-        }
 
         //MMOItems.getConsole().sendMessage("Level " + upgradeLevel);
         //MMOItems.getConsole().sendMessage("Format " + format);
 
-        if (suffix != null) {
 
-            // Crop lvl
-            int lvlOFFSET = suffix.indexOf("#lvl#");
-            if (lvlOFFSET < 0) {
-                return format;
-            }
-            String sB4 = suffix.substring(0, lvlOFFSET);
-            String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
-            String sB4_alt = sB4.replace("+", "-");
-            String aFt_alt = aFt.replace("+", "-");
+        // Crop lvl
+        int lvlOFFSET = suffix.indexOf("#lvl#");
+        if (lvlOFFSET < 0)
+            return format;
+        String sB4 = suffix.substring(0, lvlOFFSET);
+        String aFt = suffix.substring(lvlOFFSET + "#lvl#".length());
+        String sB4_alt = sB4.replace("+", "-");
+        String aFt_alt = aFt.replace("+", "-");
 
-            // Remove it
-            if (format.contains(sB4)) {
+        // Remove it
+        if (format.contains(sB4)) {
 
-                // Get offsets
-                int sB4_offset = format.indexOf(sB4);
-                int aFt_offset = format.lastIndexOf(aFt);
+            // Get offsets
+            int sB4_offset = format.indexOf(sB4);
+            int aFt_offset = format.lastIndexOf(aFt);
 
-                // No after = to completion
-                if (aFt_offset < 0) {
-                    aFt_offset = format.length();
-                } else {
-                    aFt_offset += aFt.length();
-                }
-
-                // Remove that
-                String beforePrefix = format.substring(0, sB4_offset);
-                String afterPrefix = format.substring(aFt_offset);
-
-                // Replace
-                format = beforePrefix + afterPrefix;
+            // No after = to completion
+            if (aFt_offset < 0) {
+                aFt_offset = format.length();
+            } else {
+                aFt_offset += aFt.length();
             }
 
-            // Remove it
-            if (format.contains(sB4_alt)) {
+            // Remove that
+            String beforePrefix = format.substring(0, sB4_offset);
+            String afterPrefix = format.substring(aFt_offset);
 
-                // Get offsets
-                int sB4_offset = format.indexOf(sB4_alt);
-                int aFt_offset = format.lastIndexOf(aFt_alt);
+            // Replace
+            format = beforePrefix + afterPrefix;
+        }
 
-                // No after = to completion
-                if (aFt_offset < 0) {
-                    aFt_offset = format.length();
-                } else {
-                    aFt_offset += aFt_alt.length();
-                }
+        // Remove it
+        if (format.contains(sB4_alt)) {
 
-                // Remove that
-                String beforePrefix = format.substring(0, sB4_offset);
-                String afterPrefix = format.substring(aFt_offset);
+            // Get offsets
+            int sB4_offset = format.indexOf(sB4_alt);
+            int aFt_offset = format.lastIndexOf(aFt_alt);
 
-                // Replace
-                format = beforePrefix + afterPrefix;
+            // No after = to completion
+            if (aFt_offset < 0) {
+                aFt_offset = format.length();
+            } else {
+                aFt_offset += aFt_alt.length();
             }
+
+            // Remove that
+            String beforePrefix = format.substring(0, sB4_offset);
+            String afterPrefix = format.substring(aFt_offset);
+
+            // Replace
+            format = beforePrefix + afterPrefix;
+        }
 
 				/*/ Bake old indices for removal
 				ArrayList<String> oldSuffixii = new ArrayList<>(); boolean negativity = false;
@@ -135,8 +133,7 @@ public class DisplayName extends StringStat implements GemStoneStat {
 					//MMOItems.getConsole().sendMessage("Edited " + format);
 				} //*/
 
-            //MMOItems.getConsole().sendMessage("Final " + format);
-        }
+        //MMOItems.getConsole().sendMessage("Final " + format);
 
         return format;
     }
@@ -148,7 +145,6 @@ public class DisplayName extends StringStat implements GemStoneStat {
             String actSuffix = levelPrefix(suffix, lvl);
             return format + actSuffix;
         }
-
         return format;
     }
 

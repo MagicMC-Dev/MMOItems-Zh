@@ -1,12 +1,12 @@
 package net.Indyuce.mmoitems.comp.mmocore.load;
 
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import io.lumine.mythic.lib.api.util.SmartGive;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmocore.api.quest.trigger.Trigger;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import io.lumine.mythic.lib.api.MMOLineConfig;
-import io.lumine.mythic.lib.api.util.SmartGive;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,7 +27,7 @@ public class MMOItemTrigger extends Trigger {
 		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
 		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
 
-		amount = config.args().length > 0 ? Math.max(1, Integer.parseInt(config.args()[0])) : 1;
+		amount = Math.max(1, config.getInt("amount", 1));
 	}
 
 	@Override

@@ -14,7 +14,6 @@ import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.NameData;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import net.Indyuce.mmoitems.stat.type.StringStat;
-import net.Indyuce.mmoitems.util.ColorUtils;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +30,14 @@ public class DisplayName extends StringStat implements GemStoneStat {
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
         final ItemTier tier = item.getMMOItem().getTier();
+        final AdventureParser parser = MythicLib.plugin.getAdventureParser();
+        String format = data.toString();
 
         // Bake
-        String format = data.toString()
-                .replace("<tier-name>", tier != null ? ColorUtils.stripColors(tier.getName()) : "")
-                .replace("<tier-color>", tier != null ? ColorUtils.getLastColors(tier.getName()) : "&f")
-                .replace("<tier-color-cleaned>", tier != null ? ColorUtils.stripDecoration(ColorUtils.getLastColors(tier.getName())) : "&f");
+        format = format.replace("<tier-name>", tier != null ? parser.stripColors(tier.getUnparsedName()) : "")
+                .replace("<tier-color>", tier != null ? parser.lastColor(tier.getUnparsedName(), true) : "&f")
+                .replace("<tier-color-cleaned>", tier != null ? parser.lastColor(tier.getUnparsedName(), false) : "");
+
 
         // Is this upgradable?
         format = cropUpgrade(format);

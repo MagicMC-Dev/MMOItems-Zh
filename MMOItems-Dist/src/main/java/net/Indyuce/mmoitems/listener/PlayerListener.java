@@ -31,13 +31,13 @@ import java.util.*;
 public class PlayerListener implements Listener {
     private final Map<Player, List<ItemStack>> deathItems = new HashMap<>();
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void loadPlayerData(PlayerJoinEvent event) {
         MMOItems.plugin.getRecipes().refreshRecipeBook(event.getPlayer());
         PlayerData.load(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void savePlayerData(PlayerQuitEvent event) {
         PlayerData.get(event.getPlayer()).save(true);
     }
@@ -49,7 +49,11 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent event) {
         // No
-        if (event instanceof Cancellable) { if (((Cancellable) event).isCancelled()) { return; } }
+        if (event instanceof Cancellable) {
+            if (((Cancellable) event).isCancelled()) {
+                return;
+            }
+        }
 
         // Supports NPCs
         if (!PlayerData.has(event.getEntity())) return;
@@ -161,7 +165,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
+     * method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler
@@ -175,7 +179,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
+     * method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler
@@ -186,11 +190,11 @@ public class PlayerListener implements Listener {
     /**
      * Some plugins like to interfere with dropping items when the
      * player dies, or whatever of that sort.
-     *
+     * <p>
      * MMOItems would hate to dupe items because of this, as such, we wait
      * 3 ticks for those plugins to reasonably complete their operations and
      * then downgrade the items the player still has equipped.
-     *
+     * <p>
      * If a plugin removes items in this time, they will be completely excluded
      * and no dupes will be caused, and if a plugin adds items, they will be
      * included and downgraded. I think that's reasonable behaviour.
@@ -199,9 +203,12 @@ public class PlayerListener implements Listener {
      */
     private static class DelayedDeathDowngrade extends BukkitRunnable {
 
-        @NotNull final PlayerDeathEvent event;
+        @NotNull
+        final PlayerDeathEvent event;
 
-        DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {this.event = event;}
+        DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {
+            this.event = event;
+        }
 
         @Override
         public void run() {

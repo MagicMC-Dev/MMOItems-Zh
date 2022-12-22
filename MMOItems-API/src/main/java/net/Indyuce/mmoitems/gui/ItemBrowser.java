@@ -8,11 +8,6 @@ import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.util.AdventureUtils;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
-<<<<<<<<< Temporary merge branch 1
-=========
-import net.Indyuce.mmoitems.util.ColorUtils;
-import net.Indyuce.mmoitems.util.MMOUtils;
->>>>>>>>> Temporary merge branch 2
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.NewItemEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;

@@ -3,7 +3,6 @@ package net.Indyuce.mmoitems.gui;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
 import net.Indyuce.mmoitems.api.crafting.recipe.CheckedRecipe;
@@ -111,12 +110,14 @@ public class CraftingStationPreview extends PluginInventory {
 			item.setAmount(((CraftingRecipe) recipe.getRecipe()).getOutputAmount());
 			inv.setItem(16, item);
 		}
-		if (recipe.getRecipe() instanceof UpgradingRecipe) {
-			NBTItem nbtItem = NBTItem.get(((UpgradingRecipe) recipe.getRecipe()).getItem().getPreview());
-			nbtItem.setDisplayNameComponent(LegacyComponent.parse(
-					nbtItem.toItem().getItemMeta().getDisplayName() + ChatColor.GREEN + "+1!"));
 
-			inv.setItem(16, nbtItem.toItem());
+		if (recipe.getRecipe() instanceof UpgradingRecipe) {
+			final ItemStack item = ((UpgradingRecipe) recipe.getRecipe()).getItem().getPreview();
+			final ItemMeta itemMeta = item.getItemMeta();
+			itemMeta.setDisplayName(item.getItemMeta().getDisplayName() + ChatColor.GREEN + "+1!");
+			item.setItemMeta(itemMeta);
+
+			inv.setItem(16, item);
 		}
 
 		inv.setItem(10, ConfigItems.BACK.getItem());

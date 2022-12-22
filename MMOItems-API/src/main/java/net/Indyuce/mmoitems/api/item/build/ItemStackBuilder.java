@@ -242,33 +242,8 @@ public class ItemStackBuilder {
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
 
         item.setItemMeta(meta);
-        NBTItem nbtItem = NBTItem.get(item);
 
-        // Apply item display name using Components for colors
-//        if (mmoitem.hasData(ItemStats.NAME) && meta.hasDisplayName()) {
-//            AdventureUtils.setDisplayName(meta, meta.getDisplayName());
-//            Component displayNameComponent = AdventureUtils.asComponent(meta.getDisplayName()).colorIfAbsent(NamedTextColor.WHITE);
-//            if (displayNameComponent.decorations().isEmpty())
-//                displayNameComponent = displayNameComponent.decoration(TextDecoration.ITALIC, false);
-//            nbtItem.setDisplayNameComponent(displayNameComponent);
-//        }
-
-//        if (meta.hasLore()) {
-//            List<Component> componentLore = new LinkedList<>();
-//            MythicLib.plugin.parseColors(meta.getLore())
-//                    .stream()
-//                    .peek(component -> System.out.println("Component: " + component))
-//                    .map(AdventureUtils::asComponent)
-//                    .peek(component -> component.decorations().forEach((textDecoration, state) -> {
-//
-//                        System.out.println("Decoration: " + textDecoration + " State: " + state);
-//                    }))
-//                    .forEach(componentLore::add);
-//            System.out.println("=========================================\n");
-//            nbtItem.setLoreComponents(componentLore);
-//        }
-
-        return nbtItem.addTag(tags);
+        return NBTItem.get(item).addTag(tags);
     }
 
     /**

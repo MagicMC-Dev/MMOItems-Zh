@@ -1,21 +1,21 @@
 package net.Indyuce.mmoitems.api.crafting.ingredient;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.MMOLineConfig;
 import io.lumine.mythic.lib.api.crafting.uifilters.VanillaUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
-import io.lumine.mythic.lib.api.item.NBTItem;
-import io.lumine.mythic.lib.api.util.LegacyComponent;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackCategory;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.crafting.ingredient.inventory.VanillaPlayerIngredient;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -146,14 +146,15 @@ public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
 		ItemStack stack = filter.getItemStack(null);
 		stack.setAmount(getAmount());
 
-		// Apparently get as NBT Item
-		NBTItem item = NBTItem.get(stack);
-
 		// Then rename (okay)
-		if (displayName != null) { item.setDisplayNameComponent(LegacyComponent.parse(displayName)); }
+		if (displayName != null) {
+			ItemMeta meta = stack.getItemMeta();
+			meta.setDisplayName(MythicLib.plugin.parseColors(displayName));
+			stack.setItemMeta(meta);
+		}
 
 		// Return
-		return item.toItem();
+		return stack;
 	}
 
 	/**

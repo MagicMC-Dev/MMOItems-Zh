@@ -1,9 +1,7 @@
 package net.Indyuce.mmoitems.stat;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.SupportedNBTTagValues;
-import io.lumine.mythic.lib.comp.adventure.AdventureParser;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemTier;

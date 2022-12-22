@@ -154,19 +154,21 @@ public class CraftingStationPreview extends PluginInventory {
 
 		NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
 		switch (nbtItem.getString("ItemId")) {
-			case "CONFIRM" -> {
+			case "CONFIRM":
 				previous.processRecipe(recipe);
 				previous.open();
-			}
-			case "PREVIOUS_PAGE" -> {
+				return;
+			case "PREVIOUS_PAGE":
 				page--;
 				open();
-			}
-			case "NEXT_PAGE" -> {
+				return;
+			case "NEXT_PAGE":
 				page++;
 				open();
-			}
-			case "BACK" -> previous.open();
+				return;
+			case "BACK":
+				previous.open();
+				return;
 		}
 	}
 }

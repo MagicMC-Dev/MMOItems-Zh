@@ -38,7 +38,7 @@ public class RepairUtils {
         final Player player = playerData.getPlayer();
         if (target.getBoolean("Unbreakable")
                 || !target.getItem().hasItemMeta()
-                || !(target.getItem().getItemMeta() instanceof Damageable meta)
+                || !(target.getItem().getItemMeta() instanceof Damageable)
                 || ((Damageable) target.getItem().getItemMeta()).getDamage() <= 0)
             return false;
 
@@ -48,6 +48,7 @@ public class RepairUtils {
             return false;
 
         repairAmount = called.getRepaired();
+        final Damageable meta = (Damageable) target.getItem().getItemMeta();
         meta.setDamage(Math.max(0, meta.getDamage() - repairAmount));
         target.getItem().setItemMeta(meta);
         Message.REPAIRED_ITEM.format(ChatColor.YELLOW,

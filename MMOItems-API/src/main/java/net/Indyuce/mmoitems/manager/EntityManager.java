@@ -126,9 +126,10 @@ public class EntityManager implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onHitEffects(PlayerAttackEvent event) {
-        if (!(event.getAttack() instanceof ProjectileAttackMetadata projAttack))
+        if (!(event.getAttack() instanceof ProjectileAttackMetadata))
             return;
 
+        final ProjectileAttackMetadata projAttack = (ProjectileAttackMetadata) event.getAttack();
         final ProjectileData data = projectiles.get(projAttack.getProjectile().getEntityId());
         if (data == null)
             return;

@@ -132,7 +132,7 @@ public class ItemBrowser extends PluginInventory {
          *          Displays all the items of the chosen Type
          *  ------------------------------
          */
-        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? ("Delete Mode: ") : ("Item Explorer: ")) + type.getName());
+        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? "Delete Mode: " : "Item Explorer: ") + MythicLib.plugin.getAdventureParser().stripColors(type.getName()));
 
         /*
          * Build cool Item Stacks for buttons and sh

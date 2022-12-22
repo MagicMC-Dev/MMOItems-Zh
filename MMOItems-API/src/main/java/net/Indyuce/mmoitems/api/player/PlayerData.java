@@ -434,8 +434,8 @@ public class PlayerData {
     /**
      * Called when the corresponding MMOPlayerData has already been initialized.
      */
-    public static void load(@NotNull Player player) {
-        load(player.getUniqueId());
+    public static @NotNull PlayerData load(@NotNull Player player) {
+        return load(player.getUniqueId());
     }
 
     /**

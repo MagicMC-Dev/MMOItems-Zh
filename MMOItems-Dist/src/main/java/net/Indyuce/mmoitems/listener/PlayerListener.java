@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -46,10 +45,8 @@ public class PlayerListener implements Listener {
      * If the player dies, its time to roll the death-downgrade stat!
      */
     @SuppressWarnings("InstanceofIncompatibleInterface")
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent event) {
-        // No
-        if (event instanceof Cancellable) { if (((Cancellable) event).isCancelled()) { return; } }
 
         // Supports NPCs
         if (!PlayerData.has(event.getEntity())) return;
@@ -161,7 +158,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
+     * method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler
@@ -175,7 +172,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     *         method NEEDS some improvement in the future
+     * method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler
@@ -186,11 +183,11 @@ public class PlayerListener implements Listener {
     /**
      * Some plugins like to interfere with dropping items when the
      * player dies, or whatever of that sort.
-     *
+     * <p>
      * MMOItems would hate to dupe items because of this, as such, we wait
      * 3 ticks for those plugins to reasonably complete their operations and
      * then downgrade the items the player still has equipped.
-     *
+     * <p>
      * If a plugin removes items in this time, they will be completely excluded
      * and no dupes will be caused, and if a plugin adds items, they will be
      * included and downgraded. I think that's reasonable behaviour.
@@ -199,9 +196,12 @@ public class PlayerListener implements Listener {
      */
     private static class DelayedDeathDowngrade extends BukkitRunnable {
 
-        @NotNull final PlayerDeathEvent event;
+        @NotNull
+        final PlayerDeathEvent event;
 
-        DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {this.event = event;}
+        DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {
+            this.event = event;
+        }
 
         @Override
         public void run() {

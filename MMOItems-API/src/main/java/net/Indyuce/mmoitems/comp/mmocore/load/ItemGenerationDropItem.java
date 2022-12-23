@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate.TemplateOption;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import io.lumine.mythic.lib.api.MMOLineConfig;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ItemGenerationDropItem extends DropItem {
 	protected final int level;
@@ -36,13 +37,15 @@ public abstract class ItemGenerationDropItem extends DropItem {
 		soulbound = config.getDouble("soulbound", 0);
 	}
 
+	@NotNull
 	public MMOItem rollMMOItem(MMOItemTemplate template, RPGPlayer rpgPlayer) {
-		int itemLevel = level > 0 ? level
+		final int itemLevel = level > 0 ? level
 				: template.hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : 0;
-		ItemTier itemTier = tier != null ? tier : template.hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
+		final ItemTier itemTier = tier != null ? tier : template.hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
 		return new MMOItemBuilder(template, itemLevel, itemTier).build();
 	}
 
+	@NotNull
 	public ItemStack rollUnidentification(MMOItem mmoitem) {
 		return random.nextDouble() < unidentified ? mmoitem.getType().getUnidentifiedTemplate().newBuilder(mmoitem.newBuilder().buildNBT()).build()
 				: mmoitem.newBuilder().build();

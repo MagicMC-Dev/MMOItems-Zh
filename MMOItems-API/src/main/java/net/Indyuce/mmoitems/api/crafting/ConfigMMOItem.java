@@ -1,13 +1,13 @@
 package net.Indyuce.mmoitems.api.crafting;
 
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,7 +43,8 @@ public class ConfigMMOItem {
 	 *
 	 * @return A freshly-crafted item to be used by the player.
 	 */
-	@NotNull public ItemStack generate(@NotNull RPGPlayer player) {
+	@NotNull
+	public ItemStack generate(@NotNull RPGPlayer player) {
 		ItemStack item = template.newBuilder(player).build().newBuilder().build();
 		item.setAmount(amount);
 		return item;
@@ -53,12 +54,11 @@ public class ConfigMMOItem {
 		return template;
 	}
 
-	/*
-	 * reduce startup calculations so that item is calculated the first time it
-	 * needs to be displayed
+	/**
+	 * Result from this method is cached.
 	 */
 	public ItemStack getPreview() {
-		return preview == null ? (preview = template.newBuilder(0, null).build().newBuilder().build(true)).clone() : preview.clone();
+		return preview == null ? (preview = new MMOItemBuilder(template, 0, null, true).build().newBuilder().build(true)).clone() : preview.clone();
 	}
 
 	public int getAmount() { return amount; }

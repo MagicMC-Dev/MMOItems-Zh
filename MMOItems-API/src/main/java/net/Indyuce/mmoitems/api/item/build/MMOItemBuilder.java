@@ -32,17 +32,22 @@ public class MMOItemBuilder {
      */
     private final HashMap<UUID, NameModifier> nameModifiers = new HashMap<>();
 
+    public MMOItemBuilder(MMOItemTemplate template, int level, @Nullable ItemTier tier) {
+        this(template, level, tier, false);
+    }
+
     /**
      * Instance which is created everytime an mmoitem is being randomly
      * generated
      *
-     * @param template The mmoitem template used to generate an item.
-     * @param level    Specified item level.
-     * @param tier     Specified item tier which determines how many capacity it will
-     *                 have. If no tier is given, item uses the default capacity
-     *                 formula given in the main config file
+     * @param template   The mmoitem template used to generate an item.
+     * @param level      Specified item level.
+     * @param tier       Specified item tier which determines how many capacity it will
+     *                   have. If no tier is given, item uses the default capacity
+     *                   formula given in the main config file
+     * @param forDisplay Should it take modifiers into account
      */
-    public MMOItemBuilder(MMOItemTemplate template, int level, @Nullable ItemTier tier) {
+    public MMOItemBuilder(MMOItemTemplate template, int level, @Nullable ItemTier tier, boolean forDisplay) {
         this.level = level;
         this.tier = tier;
 
@@ -62,22 +67,23 @@ public class MMOItemBuilder {
             mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(level));
 
         // Roll item generation modifiers
-        for (TemplateModifier modifier : rollModifiers(template)) {
-            // Roll modifier chance; only apply if the rolled item has enough capacity
-            if (!modifier.rollChance() || modifier.getWeight() > capacity)
-                continue;
+        if (!forDisplay)
+            for (TemplateModifier modifier : rollModifiers(template)) {
+                // Roll modifier chance; only apply if the rolled item has enough capacity
+                if (!modifier.rollChance() || modifier.getWeight() > capacity)
+                    continue;
 
-            // Modifier UUID
-            UUID modUUID = UUID.randomUUID();
+                // Modifier UUID
+                UUID modUUID = UUID.randomUUID();
 
-            capacity -= modifier.getWeight();
-            if (modifier.hasNameModifier()) {
-                addModifier(modifier.getNameModifier(), modUUID);
+                capacity -= modifier.getWeight();
+                if (modifier.hasNameModifier()) {
+                    addModifier(modifier.getNameModifier(), modUUID);
+                }
+
+                for (ItemStat stat : modifier.getItemData().keySet())
+                    addModifierData(stat, modifier.getItemData().get(stat).randomize(this), modUUID);
             }
-
-            for (ItemStat stat : modifier.getItemData().keySet())
-                addModifierData(stat, modifier.getItemData().get(stat).randomize(this), modUUID);
-        }
     }
 
     public int getLevel() {

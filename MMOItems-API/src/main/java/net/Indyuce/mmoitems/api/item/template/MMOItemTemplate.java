@@ -161,20 +161,35 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 * template has the 'tiered' recipe option, a random tier will be picked. If
 	 * the template has the 'level-item' option, a random level will be picked
 	 *
-	 * @param  player The player for whom you are generating the item. Seems to only
-	 *                matter when rolling for the 'item level'
-	 *
-	 * @return        Item builder with random level and tier?
+	 * @param player The player for whom you are generating the item. Seems to only
+	 *               matter when rolling for the 'item level'
+	 * @return Item builder with random level and tier?
 	 */
 	public MMOItemBuilder newBuilder(@Nullable RPGPlayer player) {
+		return newBuilder(player, false);
+	}
+
+	/**
+	 * By default, item templates have item level 0 and no random tier. If the
+	 * template has the 'tiered' recipe option, a random tier will be picked. If
+	 * the template has the 'level-item' option, a random level will be picked
+	 *
+	 * @param player     The player for whom you are generating the item. Seems to only
+	 *                   matter when rolling for the 'item level'
+	 * @param forDisplay Should it take modifiers into account
+	 * @return Item builder with random level and tier?
+	 */
+	public MMOItemBuilder newBuilder(@Nullable RPGPlayer player, boolean forDisplay) {
 
 		// No player ~ default settings
-		if (player == null) { return newBuilder(0, null); }
+		if (player == null) {
+			return newBuilder(0, null);
+		}
 
 		// Read from player
 		int itemLevel = hasOption(TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(player.getLevel()) : 0;
 		ItemTier itemTier = hasOption(TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
-		return new MMOItemBuilder(this, itemLevel, itemTier);
+		return new MMOItemBuilder(this, itemLevel, itemTier, forDisplay);
 	}
 
 	/**

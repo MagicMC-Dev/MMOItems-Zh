@@ -247,7 +247,7 @@ public class ItemBrowser extends PluginInventory {
             }
 
             // Build item -> any errors?
-            ItemStack item = template.newBuilder(playerData.getRPG()).build().newBuilder().build();
+            final ItemStack item = template.newBuilder(playerData.getRPG(), true).build().newBuilder().build();
             if (item == null || item.getType().isAir() || !item.getType().isItem() || item.getItemMeta() == null) {
 
                 // Set Item

@@ -1,7 +1,6 @@
 package net.Indyuce.mmoitems.gui;
 
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.adventure.text.Component;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.api.crafting.ingredient.CheckedIngredient;
@@ -128,17 +127,12 @@ public class CraftingStationPreview extends PluginInventory {
 		bookStack.setAmount(1);
 
 		ItemMeta meta = bookStack.getItemMeta();
-
 		for (Enchantment ench : meta.getEnchants().keySet())
 			meta.removeEnchant(ench);
+		meta.setLore(meta.getLore().subList(0, meta.getLore().size() - 3));
 		bookStack.setItemMeta(meta);
 
-		NBTItem book = NBTItem.get(bookStack);
-
-		List<Component> lore = book.getLoreComponents();
-		book.setLoreComponents(lore.subList(0, lore.size() - 3));
-
-		inv.setItem(28, book.toItem());
+		inv.setItem(28, bookStack);
 
 		inv.setItem(20, page > 1 ? ConfigItems.PREVIOUS_PAGE.getItem() : ConfigItems.FILL.getItem());
 		inv.setItem(24, max < ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());

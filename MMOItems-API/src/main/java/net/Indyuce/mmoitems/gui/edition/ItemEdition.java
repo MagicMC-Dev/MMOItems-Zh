@@ -105,9 +105,20 @@ public class ItemEdition extends EditionInventory {
             open();
         }
 
-        String tag = NBTItem.get(item).getString("guiStat");
-        if (!tag.equals(""))
-            MMOItems.plugin.getStats().get(tag).whenClicked(this, event);
+        final String tag = NBTItem.get(item).getString("guiStat");
+        if (tag.isEmpty())
+            return;
+
+        // Check for OP stats
+        final ItemStat edited = MMOItems.plugin.getStats().get(tag);
+        if (MMOItems.plugin.hasPermissions() && MMOItems.plugin.getLanguage().opStatsEnabled
+                && MMOItems.plugin.getLanguage().opStats.contains(edited.getId())
+                && !MMOItems.plugin.getVault().getPermissions().has((Player) event.getWhoClicked(), "mmoitems.edit.op")) {
+            event.getWhoClicked().sendMessage(ChatColor.RED + "You are lacking permission to edit this stat.");
+            return;
+        }
+
+        edited.whenClicked(this, event);
     }
 
     public ItemEdition onPage(int value) {

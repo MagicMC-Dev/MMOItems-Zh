@@ -1,10 +1,10 @@
 package net.Indyuce.mmoitems.manager;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
 import net.Indyuce.mmoitems.api.item.util.ConfigItem;
@@ -15,6 +15,7 @@ import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Base64;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -37,13 +38,13 @@ public class ConfigManager implements Reloadable {
     // cached config files
     private ConfigFile abilities, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
 
-    // cached config options
-    // TODO remove ability-player-damage and add some WG flag or something
-    public boolean abilityPlayerDamage, dodgeKnockbackEnabled, replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate;
+    // Cached config options
+    public boolean replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate, opStatsEnabled;
     public String abilitySplitter;
-    public double dodgeKnockbackForce, soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
+    public double soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
     public NumericStatFormula defaultItemCapacity;
     public ReforgeOptions revisionOptions, phatLootsOptions;
+    public final List<String> opStats = new ArrayList<>();
 
     private static final String[] fileNames = {"abilities", "messages", "potion-effects", "stats", "items", "attack-effects"};
     private static final String[] languages = {"french", "chinese", "spanish", "russian", "polish"};
@@ -112,8 +113,6 @@ public class ConfigManager implements Reloadable {
             item.update(items.getConfig());
         }
         items.save();
-
-        final byte[] b = Base64.getDecoder().decode("ZWxHcmlmb1JlY29ub2NpbWllbnRv");
 
         ConfigFile messages = new ConfigFile("/language", "messages");
         for (Message message : Message.values()) {
@@ -189,13 +188,8 @@ public class ConfigManager implements Reloadable {
          */
         replaceMushroomDrops = MMOItems.plugin.getConfig().getBoolean("custom-blocks.replace-mushroom-drops");
         worldGenEnabled = MMOItems.plugin.getConfig().getBoolean("custom-blocks.enable-world-gen");
-        abilityPlayerDamage = MMOItems.plugin.getConfig().getBoolean("ability-player-damage");
 
-        String healDecimal = MMOItems.plugin.getConfig().getString("game-indicators.heal.decimal-format");
-        String harmDecimal = MMOItems.plugin.getConfig().getString("game-indicators.damage.decimal-format");
         abilitySplitter = getStatFormat("ability-splitter");
-        dodgeKnockbackForce = MMOItems.plugin.getConfig().getDouble("mitigation.dodge.knockback.force");
-        dodgeKnockbackEnabled = MMOItems.plugin.getConfig().getBoolean("mitigation.dodge.knockback.enabled");
         soulboundBaseDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.base");
         soulboundPerLvlDamage = MMOItems.plugin.getConfig().getDouble("soulbound.damage.per-lvl");
         upgradeRequirementsCheck = MMOItems.plugin.getConfig().getBoolean("item-upgrade-requirements-check");
@@ -204,6 +198,11 @@ public class ConfigManager implements Reloadable {
         rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
         levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
 
+        opStatsEnabled = MMOItems.plugin.getConfig().getBoolean("op-item-stats.enabled");
+        opStats.clear();
+        for (String key : MMOItems.plugin.getConfig().getStringList("op-item-stats.stats"))
+            opStats.add(UtilityMethods.enumName(key));
+
         ConfigurationSection keepData = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data");
         ConfigurationSection phatLoots = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
         ReforgeOptions.dropRestoredGems = MMOItems.plugin.getConfig().getBoolean("item-revision.drop-extra-gems", true);
@@ -211,9 +210,8 @@ public class ConfigManager implements Reloadable {
         phatLootsOptions = phatLoots != null ? new ReforgeOptions(phatLoots) : new ReforgeOptions(false, false, false, false, false, false, false, true);
 
         List<String> exemptedPhatLoots = MMOItems.plugin.getConfig().getStringList("item-revision.disable-phat-loot");
-        for (String epl : exemptedPhatLoots) {
+        for (String epl : exemptedPhatLoots)
             phatLootsOptions.addToBlacklist(epl);
-        }
 
         try {
             defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));
@@ -229,15 +227,21 @@ public class ConfigManager implements Reloadable {
             item.update(items.getConfig().getConfigurationSection(item.getId()));
     }
 
+    /**
+     * @return Can this block material be broken by tool mechanics
+     *         like 'Bouncing Crack'
+     */
     public boolean isBlacklisted(Material material) {
         return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(material.name());
     }
 
+    @NotNull
     public String getStatFormat(String path) {
         String found = stats.getConfig().getString(path);
         return found == null ? "<TranslationNotFound:" + path + ">" : found;
     }
 
+    @NotNull
     public String getMessage(String path) {
         String found = messages.getConfig().getString(path);
         return MythicLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
@@ -247,6 +251,8 @@ public class ConfigManager implements Reloadable {
     public String getCastingModeName(@NotNull TriggerType mode) {
         return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId(), mode.name());
     }
+
+
 
     @Deprecated
     public String getModifierName(String path) {

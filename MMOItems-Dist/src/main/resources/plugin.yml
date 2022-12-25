@@ -21,6 +21,9 @@ permissions:
     mmoitems.update:
         description: Access to /updateitem.
         default: op
+    mmoitems.edit.op:
+        description: Ability to edit op stats like commands.
+        default: false
     mmoitems.bypass.item:
         description: Bypasses item permission restriction.
         default: false

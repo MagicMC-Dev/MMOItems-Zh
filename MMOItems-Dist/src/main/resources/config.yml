@@ -57,6 +57,16 @@ dropped-items:
     # Display item name over the dropped item
     hints: true
 
+# Some item stats like 'Commands' or NBTTags can be abused to become op.
+# You can bind a specific permissions to these stats to limit their edition.
+# You need a perm plugin that supports Vault for that option to work.
+# The corresponding permission is "mmoitems.edit.op".
+op-item-stats:
+    enabled: false
+    stats:
+        - COMMANDS
+        - CUSTOM_NBT
+
 item-upgrading:
 
     # Display name suffix for upgraded items.

@@ -27,7 +27,7 @@
     <repositories>
         <repository>
             <id>phoenix</id>
-            <url>https://nexus.phoenixdvpt.fr/repository/maven-public/</url>
+            <url>https://nexus.phoenixdevt.fr/repository/maven-public/</url>
         </repository>
         <repository>
             <id>nexus</id>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicLib-dist</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
+            <version>1.5.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- Jetbrains Annotations -->

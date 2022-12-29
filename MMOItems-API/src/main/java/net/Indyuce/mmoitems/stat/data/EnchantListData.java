@@ -5,7 +5,6 @@ import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +50,6 @@ public class EnchantListData implements StatData, Mergeable {
 	public void merge(StatData data) {
 		Validate.isTrue(data instanceof EnchantListData, "Cannot merge two different stat data types");
 
-		Bukkit.broadcastMessage("Merging enchant lists");
 		final EnchantListData enchantList = (EnchantListData) data;
 		for (Enchantment enchant : enchantList.getEnchants())
 			addEnchant(enchant, Math.max(enchants.getOrDefault(enchant, 0), enchantList.getLevel(enchant)));

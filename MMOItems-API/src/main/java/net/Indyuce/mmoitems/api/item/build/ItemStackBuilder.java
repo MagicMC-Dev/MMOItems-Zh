@@ -75,10 +75,6 @@ public class ItemStackBuilder {
         // Store the internal TYPE-ID Information (not stats, so it must be done manually here)
         tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoitem.getType().getId()));
         tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoitem.getId()));
-
-        // And a last technical tag for updating items
-        if (MMOItems.INTERNAL_REVISION_ID > 1)
-            tags.add(new ItemTag("MMOITEMS_INTERNAL_REVISION_ID", MMOItems.INTERNAL_REVISION_ID));
     }
 
     public LoreBuilder getLore() {

@@ -1,6 +1,5 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeFinishEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +17,6 @@ public class RFFKeepAmount implements Listener {
         //RFG// MMOItems.log("§8Reforge §4RFF§7 Restoring Amount");
 
         // Set amount to original
-        event.getFinishedItem().setAmount(event.getReforger().getStack().getAmount());
+        event.getFinishedItem().setAmount(event.getReforger().getNBTItem().getItem().getAmount());
     }
 }

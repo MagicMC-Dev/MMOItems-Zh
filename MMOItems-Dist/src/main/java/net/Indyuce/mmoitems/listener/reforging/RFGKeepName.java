@@ -37,10 +37,10 @@ public class RFGKeepName implements Listener {
             transfer = new NameData(data.getMainName());
 
         // Well, got name?
-        } else if (event.getReforger().getMeta().hasDisplayName()) {
+        } else if (event.getReforger().getStack().getItemMeta().hasDisplayName()) {
 
             // That shall be the name of it
-            transfer = new NameData(event.getReforger().getMeta().getDisplayName());
+            transfer = new NameData(event.getReforger().getStack().getItemMeta().getDisplayName());
 
         // The item has no name
         } else {

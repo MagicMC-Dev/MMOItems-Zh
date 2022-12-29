@@ -2,10 +2,12 @@ package net.Indyuce.mmoitems.listener;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.listener.reforging.*;
+import net.Indyuce.mmoitems.reforge.ReforgeReason;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -32,10 +34,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ItemListener implements Listener {
-
-    // Aye
     public ItemListener() {
-        //RFG//MMOItems.log(" §b>§a>§e> §7Registering Listeners");
 
         // Register Reforger Listeners
         Bukkit.getPluginManager().registerEvents(new RFGKeepName(), MMOItems.plugin);
@@ -55,11 +54,12 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
-    private void onItemCraftRepair(PrepareItemCraftEvent e) {
-        if (!(e.getView().getPlayer() instanceof Player) || !e.isRepair())
+    private void onItemCraftRepair(PrepareItemCraftEvent event) {
+        if (!(event.getView().getPlayer() instanceof Player) || !event.isRepair())
             return;
-        final Player player = (Player) e.getView().getPlayer();
-        final CraftingInventory inv = e.getInventory();
+
+        final Player player = (Player) event.getView().getPlayer();
+        final CraftingInventory inv = event.getInventory();
         final ItemStack air = new ItemStack(Material.AIR);
         final ItemStack originalResult = inv.getResult();
 
@@ -116,25 +116,24 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    private void itemPickup(EntityPickupItemEvent e) {
-        if (!e.getEntity().getType().equals(EntityType.PLAYER)) return;
-
-        ItemStack newItem = modifyItem(e.getItem().getItemStack(), (Player) e.getEntity(), "pickup");
-        if (newItem != null) e.getItem().setItemStack(newItem);
+    private void itemPickup(EntityPickupItemEvent event) {
+        if (!event.getEntity().getType().equals(EntityType.PLAYER)) return;
+        ItemStack newItem = modifyItem(event.getItem().getItemStack(), (Player) event.getEntity(), ReforgeReason.PICKUP);
+        if (newItem != null) event.getItem().setItemStack(newItem);
     }
 
     @EventHandler(ignoreCancelled = true)
-    private void itemCraft(CraftItemEvent e) {
-        if (!(e.getWhoClicked() instanceof Player)) return;
-        ItemStack newItem = modifyItem(e.getCurrentItem(), (Player) e.getWhoClicked(), "craft");
-        if (newItem != null) e.setCurrentItem(newItem);
+    private void itemCraft(CraftItemEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        ItemStack newItem = modifyItem(event.getCurrentItem(), (Player) event.getWhoClicked(), ReforgeReason.CRAFT);
+        if (newItem != null) event.setCurrentItem(newItem);
     }
 
     @EventHandler(ignoreCancelled = true)
-    private void inventoryMove(InventoryClickEvent e) {
-        if (e.getInventory().getType() != InventoryType.CRAFTING || !(e.getWhoClicked() instanceof Player)) return;
-        ItemStack newItem = modifyItem(e.getCurrentItem(), (Player) e.getWhoClicked(), "click");
-        if (newItem != null) e.setCurrentItem(newItem);
+    private void inventoryMove(InventoryClickEvent event) {
+        if (event.getInventory().getType() != InventoryType.CRAFTING || !(event.getWhoClicked() instanceof Player)) return;
+        ItemStack newItem = modifyItem(event.getCurrentItem(), (Player) event.getWhoClicked(), ReforgeReason.CLICK);
+        if (newItem != null) event.setCurrentItem(newItem);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -148,59 +147,61 @@ public class ItemListener implements Listener {
     public void playerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        ItemStack newItem = modifyItem(player.getEquipment().getHelmet(), player, "join");
+        ItemStack newItem = modifyItem(player.getEquipment().getHelmet(), player, ReforgeReason.JOIN);
         if (newItem != null) player.getEquipment().setHelmet(newItem);
-        newItem = modifyItem(player.getEquipment().getChestplate(), player, "join");
+        newItem = modifyItem(player.getEquipment().getChestplate(), player, ReforgeReason.JOIN);
         if (newItem != null) player.getEquipment().setChestplate(newItem);
-        newItem = modifyItem(player.getEquipment().getLeggings(), player, "join");
+        newItem = modifyItem(player.getEquipment().getLeggings(), player, ReforgeReason.JOIN);
         if (newItem != null) player.getEquipment().setLeggings(newItem);
-        newItem = modifyItem(player.getEquipment().getBoots(), player, "join");
+        newItem = modifyItem(player.getEquipment().getBoots(), player, ReforgeReason.JOIN);
         if (newItem != null) player.getEquipment().setBoots(newItem);
 
         for (int j = 0; j < 9; j++) {
-            newItem = modifyItem(player.getInventory().getItem(j), player, "join");
+            newItem = modifyItem(player.getInventory().getItem(j), player, ReforgeReason.JOIN);
             if (newItem != null) player.getInventory().setItem(j, newItem);
         }
 
-        newItem = modifyItem(player.getEquipment().getItemInOffHand(), player, "join");
+        newItem = modifyItem(player.getEquipment().getItemInOffHand(), player, ReforgeReason.JOIN);
         if (newItem != null) player.getEquipment().setItemInOffHand(newItem);
     }
 
     @Nullable
-    private ItemStack modifyItem(@Nullable ItemStack stack, @NotNull Player player, @NotNull String reason) {
-        //RFG//MMOItems.log("§8Reforge §cMOD§7 Modifying " + SilentNumbers.getItemName(stack) + " §7due to§3 " + reason);
+    private ItemStack modifyItem(@Nullable ItemStack stack, @NotNull Player player, @NotNull ReforgeReason reason) {
 
         // Sleep on metaless stacks
-        if (stack == null) {
+        if (stack == null || !stack.hasItemMeta())
             return null;
-        }
-        if (!stack.hasItemMeta()) {
-            return null;
-        }
 
         // Create a reforger to look at it
         MMOItemReforger mod = new MMOItemReforger(stack);
-
-        // Shouldn't update? I sleep
-        if (!mod.shouldReforge(reason)) {
+        if (!mod.hasTemplate())
             return null;
-        }
+
+        // Its not GooP Converter's VANILLA is it?
+        if ("VANILLA".equals(mod.getNBTItem().getString("MMOITEMS_ITEM_ID")))
+            return null;
+
+        // Disabled in config?
+        if (MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + reason.name().toLowerCase()))
+            return null;
+
+        // Greater RevID in template? Go ahead, update!
+        int templateRevision =mod. getTemplate().getRevisionId();
+        int mmoitemRevision = (mod.getNBTItem().hasTag(ItemStats.REVISION_ID.getNBTPath()) ? mod.getNBTItem().getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1);
+        if (templateRevision <= mmoitemRevision)
+            return null;
 
         // All right update then
-        mod.setPlayer(player);
-        if (!mod.reforge(MMOItems.plugin.getLanguage().revisionOptions)) {
-
+        if (!mod.reforge(MMOItems.plugin.getLanguage().revisionOptions, player))
             return null;
-        }
 
         // Drop all those items
         for (ItemStack drop : player.getInventory().addItem(
                 mod.getReforgingOutput().toArray(new ItemStack[0])).values()) {
 
             // Not air right
-            if (SilentNumbers.isAir(drop)) {
+            if (SilentNumbers.isAir(drop))
                 continue;
-            }
 
             // Drop to the world
             player.getWorld().dropItem(player.getLocation(), drop);

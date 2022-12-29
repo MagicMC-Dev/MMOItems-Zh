@@ -347,7 +347,7 @@ public class MMOItem implements ItemReference {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	@NotNull public UpgradeTemplate getUpgradeTemplate() {
-		Validate.isTrue(hasUpgradeTemplate(), "Item without upgrade information");
+		Validate.isTrue(hasUpgradeTemplate(), "Item has no upgrade information");
 
 		// All Right
 		UpgradeData data = (UpgradeData) getData(ItemStats.UPGRADE);
@@ -359,7 +359,8 @@ public class MMOItem implements ItemReference {
 	/**
 	 * Get the list of GemStones inserted into this item
 	 */
-	@NotNull public Set<GemstoneData> getGemStones() {
+	@NotNull
+	public Set<GemstoneData> getGemStones() {
 
 		// Got gem sockets?
 		if (hasData(ItemStats.GEM_SOCKETS)) {

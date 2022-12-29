@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class PhatLootsHook implements Listener {
 
-
     @EventHandler
     public void OnLootBeLooted(MobDropLootEvent event) { handle(event);}
 
@@ -39,15 +38,9 @@ public class PhatLootsHook implements Listener {
             // Can reforge?
             MMOItemReforger mod = new MMOItemReforger(itm);
 
-            // Cancel that!
-            if (!mod.canReforge()) {
-                //UPD//MMOItems.log("\u00a71*\u00a78 Cant reforge this");
-                continue; }
-
             // All right update the bitch
-            if (!mod.reforge(MMOItems.plugin.getLanguage().phatLootsOptions)) {
-                //UPD//MMOItems.log("\u00a71*\u00a78 Cancelled while reforging");
-                continue; }
+            if (!mod.reforge(MMOItems.plugin.getLanguage().phatLootsOptions))
+                continue;
 
             // Changes?
             if (mod.hasChanges()) {

@@ -192,7 +192,6 @@ public class ItemStats {
             CUSTOM_DURABILITY = new CustomDurability(),
             STORED_TAGS = new StoredTags(),
             ITEM_LEVEL = new ItemLevel(),
-            INTERNAL_REVISION_ID = new InternalRevisionID(),
             BROWSER_DISPLAY_IDX = new BrowserDisplayIDX();
 
     /**

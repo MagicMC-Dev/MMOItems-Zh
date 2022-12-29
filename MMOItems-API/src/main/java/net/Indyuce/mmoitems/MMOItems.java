@@ -29,6 +29,7 @@ import net.Indyuce.mmoitems.comp.mmocore.MMOCoreMMOLoader;
 import net.Indyuce.mmoitems.comp.mmoinventory.MMOInventorySupport;
 import net.Indyuce.mmoitems.comp.mythicmobs.LootsplosionListener;
 import net.Indyuce.mmoitems.comp.mythicmobs.MythicMobsCompatibility;
+import net.Indyuce.mmoitems.comp.placeholders.MMOItemsPlaceholders;
 import net.Indyuce.mmoitems.comp.rpg.DefaultHook;
 import net.Indyuce.mmoitems.comp.rpg.HeroesHook;
 import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
@@ -58,9 +59,6 @@ import java.util.logging.Level;
 
 public class MMOItems extends JavaPlugin {
     public static MMOItems plugin;
-
-    // Increment this when making breaking changes to items.
-    public static final int INTERNAL_REVISION_ID = 1;
 
     private final PluginUpdateManager pluginUpdateManager = new PluginUpdateManager();
     private final CraftingManager stationRecipeManager = new CraftingManager();
@@ -217,6 +215,7 @@ public class MMOItems extends JavaPlugin {
 
         PluginUtils.hookDependencyIfPresent("CrazyEnchantments", unused -> getStats().register(new CrazyEnchantsStat()));
         PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", unused -> Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this));
+        PluginUtils.hookDependencyIfPresent("PlaceholderAPI", unused -> new MMOItemsPlaceholders().register());
 
         if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
             getLogger().log(Level.INFO, "Hooked onto BossShopPro");

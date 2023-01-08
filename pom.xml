@@ -35,6 +35,22 @@
         </repository>
     </repositories>
 
+    <!-- Deployment -->
+    <distributionManagement>
+        <repository>
+            <id>phoenixdevt-releases</id>
+            <name>PhoenixDevt Releases</name>
+            <url>https://nexus.phoenixdevt.fr/repository/maven-releases/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>phoenixdevt-snapshots</id>
+            <name>PhoenixDevt Snapshots</name>
+            <url>https://nexus.phoenixdevt.fr/repository/maven-snapshots/</url>
+        </snapshotRepository>
+
+    </distributionManagement>
+
     <!-- Dependencies -->
     <dependencies>
         <!-- MythicLib -->
@@ -52,7 +68,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 
     <!-- Build -->
     <build>

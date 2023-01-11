@@ -14,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.logging.Level;
@@ -45,16 +46,7 @@ public class StatManager {
             }
 
         // Custom stats
-        ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
-        ConfigFile config = new ConfigFile("custom-stats");
-        ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
-        Validate.notNull(section, "Custom stats section is null");
-        section.getKeys(true)
-                .stream()
-                .filter(section::isConfigurationSection)
-                .map(section::getConfigurationSection)
-                .filter(Objects::nonNull)
-                .forEach(this::registerCustomStat);
+        loadCustom();
     }
 
     /**
@@ -69,6 +61,25 @@ public class StatManager {
 
         // Register elemental stats
         loadElements();
+
+        // Register custom stats
+        loadCustom();
+    }
+
+    /**
+     * Load custom stats
+     */
+    public void loadCustom() {
+        ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
+        ConfigFile config = new ConfigFile("custom-stats");
+        ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
+        Validate.notNull(section, "Custom stats section is null");
+        section.getKeys(true)
+                .stream()
+                .filter(section::isConfigurationSection)
+                .map(section::getConfigurationSection)
+                .filter(Objects::nonNull)
+                .forEach(this::registerCustomStat);
     }
 
     /**
@@ -188,7 +199,7 @@ public class StatManager {
                     .forEach(type -> type.getAvailableStats().add(stat));
     }
 
-    public void registerCustomStat(@NotNull ConfigurationSection section) {
+    private void registerCustomStat(@NotNull ConfigurationSection section) {
         final String name = section.getString("name");
         final String type = section.getString("type");
 
@@ -196,29 +207,41 @@ public class StatManager {
         Validate.notNull(name, "Cannot register a custom stat without a name");
         Validate.notNull(type, "Cannot register a custom stat without a type");
 
+        Class<? extends ItemStat<?, ?>> statClass;
+        switch (type.toLowerCase()) {
+            case "double":
+                statClass = DoubleStat.class;
+                break;
+            case "boolean":
+                statClass = BooleanStat.class;
+                break;
+            case "text":
+                statClass = StringStat.class;
+                break;
+            case "text-list":
+                statClass = StringListStat.class;
+                break;
+            default:
+                throw new RuntimeException("Cannot register a custom stat of type " + type);
+        }
+
         final String statId = String.format("custom_%s", name.replace(" ", "_")).toUpperCase();
+
+        // Lore
         String[] lore = new String[0];
         if (section.isList("lore"))
             lore = section.getStringList("lore").toArray(new String[]{});
         else if (section.isString("lore"))
             lore = new String[]{section.getString("lore")};
 
-        switch (type.toLowerCase()) {
-            case "double":
-                register(new DoubleStat(statId, Material.PAPER, name, lore));
-                break;
-            case "boolean":
-                register(new BooleanStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
-                break;
-            case "text":
-                register(new StringStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
-                break;
-            case "text-list":
-                register(new StringListStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
-                break;
-
-            default:
-                throw new RuntimeException("Cannot register a custom stat of type " + type);
+        // Create a new stat instance
+        try {
+            ItemStat<?, ?> stat = statClass.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class)
+                    .newInstance(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}, new Material[0]);
+            register(stat);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException("Unable to create a custom stat of type " + type, e);
         }
     }
 }

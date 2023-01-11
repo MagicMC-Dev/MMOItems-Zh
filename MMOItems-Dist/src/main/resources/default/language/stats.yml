@@ -146,3 +146,6 @@ elemental-damage-percent: '{color}{icon}&7 +{value}% {element} Damage'
 elemental-defense: '{color}{icon}&7 {value} {element} Defense'
 elemental-defense-percent: '{color}{icon}&7 +{value}% {element} Defense'
 elemental-weakness: '{color}{icon}&7 {value}% {element} Weakness'
+
+# Custom stats
+custom-myluck: '&3 &7■ Luck: &f<plus>{value}'

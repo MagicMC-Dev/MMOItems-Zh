@@ -1,9 +1,16 @@
+# Add as many custom stats as you want below
 custom-stats:
+
+  # The key doesn't really matter, although it must be unique
+  # The lore for each stat can be defined in language/stats.yml
   1:
+    # The name will be used in the edition GUI and also for the stat id
+    # Format: "MyLuck" will be replaced with "CUSTOM_MYLUCK"
     name: "MyLuck"
-    type: "double" # can be double, boolean or text
-  2:
-    name: "MyExpMultipler"
+
+    # Allowed stats type:
+    # - double (numbers)
+    # - boolean (true/false)
+    # - text
+    # - text-list (a list of string)
     type: "double"
-    lore:
-      - "This is a test lore"

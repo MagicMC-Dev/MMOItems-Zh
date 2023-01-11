@@ -4,9 +4,14 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.element.Element;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.type.*;
 import net.Indyuce.mmoitems.util.ElementStatType;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -36,8 +41,20 @@ public class StatManager {
                 if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
                     register((ItemStat<?, ?>) field.get(null));
             } catch (IllegalArgumentException | IllegalAccessException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register stat called '%s'".formatted(field.getName()), exception.getMessage());
+                MMOItems.plugin.getLogger().log(Level.WARNING, String.format("Couldn't register stat called '%s'", field.getName()), exception.getMessage());
             }
+
+        // Custom stats
+        ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
+        ConfigFile config = new ConfigFile("custom-stats");
+        ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
+        Validate.notNull(section, "Custom stats section is null");
+        section.getKeys(true)
+                .stream()
+                .filter(section::isConfigurationSection)
+                .map(section::getConfigurationSection)
+                .filter(Objects::nonNull)
+                .forEach(this::registerCustomStat);
     }
 
     /**
@@ -169,5 +186,35 @@ public class StatManager {
                     .stream()
                     .filter(stat::isCompatible)
                     .forEach(type -> type.getAvailableStats().add(stat));
+    }
+
+    public void registerCustomStat(@NotNull ConfigurationSection section) {
+        final String name = section.getString("name");
+        final String type = section.getString("type");
+
+        Validate.notNull(section, "Cannot register a custom stat from a null section");
+        Validate.notNull(name, "Cannot register a custom stat without a name");
+        Validate.notNull(type, "Cannot register a custom stat without a type");
+
+        final String statId = String.format("custom_%s", name.replace(" ", "_")).toUpperCase();
+        String[] lore = new String[0];
+        if (section.isList("lore"))
+            lore = section.getStringList("lore").toArray(new String[]{});
+        else if (section.isString("lore"))
+            lore = new String[]{section.getString("lore")};
+
+        switch (type.toLowerCase()) {
+            case "double":
+                register(new DoubleStat(statId, Material.PAPER, name, lore));
+                break;
+            case "boolean":
+                register(new BooleanStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
+                break;
+            case "text":
+                register(new StringStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
+                break;
+            default:
+                throw new RuntimeException("Cannot register a custom stat of type " + type);
+        }
     }
 }

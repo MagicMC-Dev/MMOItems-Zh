@@ -1,0 +1,9 @@
+custom-stats:
+  1:
+    name: "MyLuck"
+    type: "double" # can be double, boolean or text
+  2:
+    name: "MyExpMultipler"
+    type: "double"
+    lore:
+      - "This is a test lore"

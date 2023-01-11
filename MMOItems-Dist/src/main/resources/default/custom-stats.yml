@@ -1,4 +1,7 @@
 # Add as many custom stats as you want below
+# -
+# For each custom stat you add, you must also add a corresponding
+# entry in the lore-format.yml and stats.yml files
 custom-stats:
 
   # The key doesn't really matter, although it must be unique
@@ -14,3 +17,8 @@ custom-stats:
     # - text
     # - text-list (a list of string)
     type: "double"
+
+    # The lore must be a list of strings
+    lore:
+      - "This is a test line #1"
+      - "This is a test line #2"

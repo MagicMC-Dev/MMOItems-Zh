@@ -213,6 +213,10 @@ public class StatManager {
             case "text":
                 register(new StringStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
                 break;
+            case "text-list":
+                register(new StringListStat(statId, Material.PAPER, name, lore, new String[]{"!miscellaneous", "!block", "all"}));
+                break;
+
             default:
                 throw new RuntimeException("Cannot register a custom stat of type " + type);
         }

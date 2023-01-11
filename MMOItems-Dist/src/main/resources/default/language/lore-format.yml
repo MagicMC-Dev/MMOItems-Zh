@@ -30,6 +30,7 @@ lore-format:
   - '#profession-woodcutting#'
   # - '{bar}&8&m--------&f&l &nStatistics&8 &m-------------'
   - '{bar}'
+  - '#custom-myluck#'
   - '#can-identify#'
   - '#can-deconstruct#'
   - '#can-deskin#'

@@ -13,7 +13,7 @@ custom-stats:
 
     # Allowed stats type:
     # - double (numbers)
-    # - text
+    # - text (Will not work as placeholder. You have get this value from ntb tag of the item with your custom plugin)
     type: "double"
 
     # The lore must be a list of strings

@@ -277,7 +277,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 			return;
 		}
 		new StatEdition(inv, this).enable("Write in the chat the numeric value you want.",
-				"Second Format: {Base} {Scaling Value} {Spread} {Max Spread}", "Third Format: {Min Value} -> {Max Value}");
+				"Second Format: {Base} {Scaling Value} {Spread} {Max Spread}", "Third Format: {Min Value}->{Max Value}");
 	}
 
 	@Override

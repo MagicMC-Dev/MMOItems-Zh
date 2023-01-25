@@ -1,0 +1,5 @@
+files:
+  - source: MMOItems-Dist/src/main/resources/default/language/*.yml
+    ignore:
+      - lore-format.yml
+    translation: /**/MMOItems-Dist/src/main/resources/default/language/%language%/%file_name%.%file_extension%

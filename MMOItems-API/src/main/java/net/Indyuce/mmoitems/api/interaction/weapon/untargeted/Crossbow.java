@@ -40,7 +40,7 @@ public class Crossbow extends UntargetedWeapon {
         MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, 1);
 
         // Trigger abilities
-        stats.getData().triggerSkills(TriggerType.SHOOT_BOW, arrow);
+        stats.getData().triggerSkills(TriggerType.SHOOT_BOW, slot, arrow);
         new CustomProjectile(stats.getData(), CustomProjectile.ProjectileType.ARROW, arrow, slot);
     }
 }

@@ -41,13 +41,13 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
         final @Nullable String repairType2 = target.getString(REPAIR_TYPE_TAG);
         if (!MMOUtils.checkReference(repairType1, repairType2)) {
             Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
-            player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1.5f);
             return false;
         }
 
         final boolean customWeapon = target.hasTag("MMOITEMS_DURABILITY");
         final double maxDurability = customWeapon ? target.getDouble("MMOITEMS_MAX_DURABILITY") : target.getItem().getType().getMaxDurability();
-        final int repairAmount = (int) (repairPower * maxDurability);
+        final int repairAmount = (int) (repairPower * maxDurability / 100);
 
         // Custom durability
         if (customWeapon) {

@@ -25,7 +25,7 @@ public class RFGKeepRNG implements Listener {
     public void onReforge(MMOItemReforgeEvent event) {
         // Rerolling stats? Nevermind
         if (event.getOptions().shouldReRoll()) {
-            event.setCancelled(true);
+//            event.setCancelled(true);
             //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping new item (Complete RNG Reroll)");
             return;
         }

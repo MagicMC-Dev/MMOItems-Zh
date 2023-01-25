@@ -5,7 +5,7 @@ Register the PhoenixDevt repo
 ```
 <repository>
     <id>phoenix</id>
-    <url>https://nexus.phoenixdevt.fr/repository/maven-public/</url>
+	<url>https://nexus.phoenixdevt.fr/repository/maven-public/</url>
 </repository>
 ```
 And then add MMOItems-API as dependency

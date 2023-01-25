@@ -1,0 +1,22 @@
+# Add as many custom stats as you want below
+# -
+# For each custom stat you add, you must also add a corresponding
+# entry in the lore-format.yml and stats.yml files
+custom-stats:
+
+  # The key doesn't really matter, although it must be unique
+  # The lore for each stat can be defined in language/stats.yml
+  1:
+    # The name will be used in the edition GUI and also for the stat id
+    # Format: "MyLuck" will be replaced with "CUSTOM_MYLUCK"
+    name: "MyLuck"
+
+    # Allowed stats type:
+    # - double (numbers)
+    # - text (Will not work as placeholder. You have get this value from ntb tag of the item with your custom plugin)
+    type: "double"
+
+    # The lore must be a list of strings
+    lore:
+      - "This is a test line #1"
+      - "This is a test line #2"

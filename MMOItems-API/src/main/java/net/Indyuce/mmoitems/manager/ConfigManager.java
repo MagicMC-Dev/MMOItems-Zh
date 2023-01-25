@@ -50,7 +50,6 @@ public class ConfigManager implements Reloadable {
     private static final String[] languages = {"french", "chinese", "spanish", "russian", "polish"};
 
     public ConfigManager() {
-
         mkdir("layouts");
         mkdir("item");
         mkdir("language");
@@ -310,6 +309,7 @@ public class ConfigManager implements Reloadable {
         GEN_TEMPLATES("", "gen-templates"),
         UPGRADE_TEMPLATES("", "upgrade-templates"),
         EXAMPLE_MODIFIERS("modifiers", "example-modifiers"),
+        CUSTOM_STATS("", "custom-stats"),
 
         // Default language files -> /MMOItems/language
         LORE_FORMAT("language", "lore-format"),

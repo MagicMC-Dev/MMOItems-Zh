@@ -1,8 +1,6 @@
 package net.Indyuce.mmoitems.manager;
 
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
-import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
@@ -11,13 +9,13 @@ import net.Indyuce.mmoitems.api.item.util.ConfigItem;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.api.util.message.Message;
-import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import net.Indyuce.mmoitems.stat.GemUpgradeScaling;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
 import net.Indyuce.mmoitems.stat.StaffSpiritStat.StaffSpirit;
-import net.Indyuce.mmoitems.util.MMOUtils;
+import net.Indyuce.mmoitems.util.LanguageFile;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -25,18 +23,23 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+/**
+ * Handles configuration options and language. Since MMOItems 6.9+
+ * language is handled by Crowdin which automatically pushes commits.
+ */
 public class ConfigManager implements Reloadable {
 
     // cached config files
-    private ConfigFile abilities, loreFormat, messages, potionEffects, stats, attackEffects, dynLore;
+    private ConfigFile loreFormat, stats, dynLore;
+
+    // Language
+    private final Map<TriggerType, String> triggerTypeNames = new HashMap<>();
+    private final Map<PotionEffectType, String> potionNames = new HashMap<>();
 
     // Cached config options
     public boolean replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate, opStatsEnabled;
@@ -45,9 +48,6 @@ public class ConfigManager implements Reloadable {
     public NumericStatFormula defaultItemCapacity;
     public ReforgeOptions revisionOptions, phatLootsOptions;
     public final List<String> opStats = new ArrayList<>();
-
-    private static final String[] fileNames = {"abilities", "messages", "potion-effects", "stats", "items", "attack-effects"};
-    private static final String[] languages = {"french", "chinese", "spanish", "russian", "polish"};
 
     public ConfigManager() {
         mkdir("layouts");
@@ -74,24 +74,6 @@ public class ConfigManager implements Reloadable {
             } else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
         }
 
-        // Setup non existing language files
-        for (String language : languages) {
-            File languageFolder = new File(MMOItems.plugin.getDataFolder() + "/language/" + language);
-            if (!languageFolder.exists())
-                if (languageFolder.mkdir()) {
-                    for (String fileName : fileNames)
-                        if (!new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").exists()) {
-                            try {
-                                Files.copy(MMOItems.plugin.getResource("language/" + language + "/" + fileName + ".yml"),
-                                        new File(MMOItems.plugin.getDataFolder() + "/language/" + language, fileName + ".yml").getAbsoluteFile().toPath(),
-                                        StandardCopyOption.REPLACE_EXISTING);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                } else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
-        }
-
         // Load files with default configuration
         for (DefaultFile file : DefaultFile.values())
             if (file.isAutomatic())
@@ -103,6 +85,24 @@ public class ConfigManager implements Reloadable {
          */
         MMOItems.plugin.getTypes().getAll().forEach(type -> type.getConfigFile().setup());
 
+        /*
+         * Only load config files after they have been initialized (above) so
+         * they do not crash the first time they generate and so we do not have
+         * to restart the server
+         */
+        reload();
+    }
+
+    /**
+     * This does both:
+     * - check that all fields are input in the config file
+     * - loads fields that it could find into MMOItems
+     * <p>
+     * These two steps are necessary for smooth language updates
+     */
+    private void loadTranslations() {
+
+        // TODO items
         ConfigFile items = new ConfigFile("/language", "items");
         for (ConfigItem item : ConfigItems.values) {
             if (!items.getConfig().contains(item.getId())) {
@@ -113,73 +113,50 @@ public class ConfigManager implements Reloadable {
         }
         items.save();
 
-        ConfigFile messages = new ConfigFile("/language", "messages");
+        // TODO messages
+        final LanguageFile messages = new LanguageFile("messages");
         for (Message message : Message.values()) {
             String path = message.name().toLowerCase().replace("_", "-");
             if (!messages.getConfig().contains(path))
                 messages.getConfig().set(path, message.getDefault());
+
         }
         messages.save();
 
-        ConfigFile abilities = new ConfigFile("/language", "abilities");
-        for (RegisteredSkill ability : MMOItems.plugin.getSkills().getAll()) {
-            String path = ability.getHandler().getLowerCaseId();
-            if (!abilities.getConfig().getKeys(true).contains("ability." + path))
-                abilities.getConfig().set("ability." + path, ability.getName());
-
-            for (String modifier : ability.getHandler().getModifiers())
-                if (!abilities.getConfig().getKeys(true).contains("modifier." + modifier))
-                    abilities.getConfig().set("modifier." + modifier, MMOUtils.caseOnWords(modifier.replace("-", " ")));
-        }
-        for (TriggerType mode : TriggerType.values())
-            if (!abilities.getConfig().contains("cast-mode." + mode.getLowerCaseId()))
-                abilities.getConfig().set("cast-mode." + mode.getLowerCaseId(), mode.getName());
-        abilities.save();
-
-        ConfigFile potionEffects = new ConfigFile("/language", "potion-effects");
-        for (PotionEffectType effect : PotionEffectType.values()) {
-            if (effect == null)
-                continue;
-
-            String path = effect.getName().toLowerCase().replace("_", "-");
-            if (!potionEffects.getConfig().contains(path))
-                potionEffects.getConfig().set(path, MMOUtils.caseOnWords(effect.getName().toLowerCase().replace("_", " ")));
-        }
-
+        // Potion effects
+        final LanguageFile potionEffects = new LanguageFile("potion-effects");
+        for (PotionEffectType effect : PotionEffectType.values())
+            potionNames.put(effect, potionEffects.computeTranslation(effect.getName().toLowerCase().replace("_", "-"),
+                    () -> UtilityMethods.caseOnWords(effect.getName().toLowerCase().replace("_", " "))));
         potionEffects.save();
 
-        ConfigFile attackEffects = new ConfigFile("/language", "attack-effects");
-        for (StaffSpirit spirit : StaffSpirit.values()) {
-            String path = spirit.name().toLowerCase().replace("_", "-");
-            if (!attackEffects.getConfig().contains("staff-spirit." + path))
-                attackEffects.getConfig().set("staff-spirit." + path, "&7" + AltChar.listSquare + " " + spirit.getDefaultName());
-        }
+        // Staff spirits
+        final LanguageFile attackEffects = new LanguageFile("attack-effects");
+        for (StaffSpirit sp : StaffSpirit.values())
+            sp.setName(attackEffects.computeTranslation("staff-spirit." + sp.name().toLowerCase().replace("_", "-"),
+                    () -> UtilityMethods.caseOnWords(sp.name().toLowerCase().replace("_", " "))));
 
-        for (LuteAttackEffect effect : LuteAttackEffect.values()) {
-            String path = effect.name().toLowerCase().replace("_", "-");
-            if (!attackEffects.getConfig().contains("lute-attack." + path))
-                attackEffects.getConfig().set("lute-attack." + path, "&7" + AltChar.listSquare + " " + effect.getDefaultName() + " Attacks");
-        }
+        // Lute attack effects
+        for (LuteAttackEffect eff : LuteAttackEffect.values())
+            eff.setName(attackEffects.computeTranslation("lute-attack." + eff.name().toLowerCase().replace("_", "-"),
+                    () -> UtilityMethods.caseOnWords(eff.name().toLowerCase().replace("_", " "))));
         attackEffects.save();
 
-        /*
-         * Only load config files after they have been initialized (above) so
-         * they do not crash the first time they generate and so we do not have
-         * to restart the server
-         */
-        reload();
+        // Trigger types
+        triggerTypeNames.clear();
+        final FileConfiguration abilities = new ConfigFile("/language", "abilities").getConfig();
+        for (TriggerType type : TriggerType.values())
+            triggerTypeNames.put(type, abilities.getString("cast-mode." + type.getLowerCaseId(), type.getName()));
     }
 
     public void reload() {
         MMOItems.plugin.reloadConfig();
 
-        abilities = new ConfigFile("/language", "abilities");
         loreFormat = new ConfigFile("/language", "lore-format");
-        messages = new ConfigFile("/language", "messages");
-        potionEffects = new ConfigFile("/language", "potion-effects");
         stats = new ConfigFile("/language", "stats");
-        attackEffects = new ConfigFile("/language", "attack-effects");
         dynLore = new ConfigFile("/language", "dynamic-lore");
+
+        loadTranslations();
 
         /*
          * Reload cached config options for quicker access - these options are
@@ -221,7 +198,7 @@ public class ConfigManager implements Reloadable {
                             + exception.getMessage());
         }
 
-        ConfigFile items = new ConfigFile("/language", "items");
+        final ConfigFile items = new ConfigFile("/language", "items");
         for (ConfigItem item : ConfigItems.values)
             item.update(items.getConfig().getConfigurationSection(item.getId()));
     }
@@ -240,38 +217,39 @@ public class ConfigManager implements Reloadable {
         return found == null ? "<TranslationNotFound:" + path + ">" : found;
     }
 
-    @NotNull
+    @Deprecated
     public String getMessage(String path) {
-        String found = messages.getConfig().getString(path);
-        return MythicLib.plugin.parseColors(found == null ? "<MessageNotFound:" + path + ">" : found);
+        return Message.valueOf(UtilityMethods.enumName(path)).getUpdated();
     }
 
     @NotNull
-    public String getCastingModeName(@NotNull TriggerType mode) {
-        return abilities.getConfig().getString("cast-mode." + mode.getLowerCaseId(), mode.name());
+    public String getCastingModeName(@NotNull TriggerType triggerType) {
+        return Objects.requireNonNull(triggerTypeNames.get(triggerType), "Trigger type name for '" + triggerType.name() + "' not found");
     }
-
-
 
     @Deprecated
     public String getModifierName(String path) {
-        return abilities.getConfig().getString("modifier." + path);
+        return UtilityMethods.caseOnWords(path.toLowerCase().replace("-", " ").replace("_", " "));
     }
 
+    @NotNull
     public List<String> getDefaultLoreFormat() {
         return loreFormat.getConfig().getStringList("lore-format");
     }
 
+    @NotNull
     public String getPotionEffectName(PotionEffectType type) {
-        return potionEffects.getConfig().getString(type.getName().toLowerCase().replace("_", "-"));
+        return Objects.requireNonNull(potionNames.get(type), "Potion effect name for '" + type.getName() + "' not found");
     }
 
+    @Deprecated
     public String getLuteAttackEffectName(LuteAttackEffect effect) {
-        return attackEffects.getConfig().getString("lute-attack." + effect.name().toLowerCase().replace("_", "-"));
+        return effect.getName();
     }
 
+    @Deprecated
     public String getStaffSpiritName(StaffSpirit spirit) {
-        return attackEffects.getConfig().getString("staff-spirit." + spirit.name().toLowerCase().replace("_", "-"));
+        return spirit.getName();
     }
 
     /**
@@ -295,9 +273,10 @@ public class ConfigManager implements Reloadable {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
     }
 
-    /*
-     * All config files that have a default configuration are stored here, they
-     * get copied into the plugin folder when the plugin enables
+    /**
+     * All config files that have a default configuration
+     * are stored here, they get copied into the plugin
+     * folder when the plugin enables.
      */
     public enum DefaultFile {
 
@@ -311,8 +290,14 @@ public class ConfigManager implements Reloadable {
         EXAMPLE_MODIFIERS("modifiers", "example-modifiers"),
         CUSTOM_STATS("", "custom-stats"),
 
-        // Default language files -> /MMOItems/language
+        // Default EN language files
+        ABILITIES("language", "abilities"),
+        ATTACK_EFFECTS("language", "attack-effects"),
+        CRAFTING_STATIONS("language", "crafting-stations"),
+        ITEMS("language", "items"),
         LORE_FORMAT("language", "lore-format"),
+        MESSAGES("language", "messages"),
+        POTION_EFFECTS("language", "potion-effects"),
         STATS("language", "stats"),
 
         // Station layouts

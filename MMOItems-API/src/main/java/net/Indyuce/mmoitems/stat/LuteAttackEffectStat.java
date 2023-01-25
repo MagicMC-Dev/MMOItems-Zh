@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.stat;
 
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
@@ -12,9 +13,12 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.StringStat;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 	public LuteAttackEffectStat() {
@@ -37,7 +41,7 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 		LuteAttackEffect effect = LuteAttackEffect.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
 		inv.getEditedSection().set("lute-attack-effect", effect.name());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + effect.getDefaultName() + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + effect.getName() + ".");
 	}
 
 	@Override
@@ -56,6 +60,9 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 
 		private final LuteAttackHandler handler;
 
+		@NotNull
+		private String name = UtilityMethods.caseOnWords(name().toLowerCase().replace("_", " "));
+
 		LuteAttackEffect(LuteAttackHandler handler) {
 			this.handler = handler;
 		}
@@ -64,12 +71,17 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 			return handler;
 		}
 
+		@Deprecated
 		public String getDefaultName() {
 			return name().charAt(0) + name().substring(1).toLowerCase();
 		}
 
 		public String getName() {
-			return MMOItems.plugin.getLanguage().getLuteAttackEffectName(this);
+			return name;
+		}
+
+		public void setName(@NotNull String str) {
+			this.name = Objects.requireNonNull(str);
 		}
 
 		public static LuteAttackEffect get(NBTItem item) {

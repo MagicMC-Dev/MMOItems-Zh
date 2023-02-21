@@ -319,6 +319,23 @@ item-revision:
         # Third party plugin compatibility
         advanced-enchantments: true
 
+    # Whether specific stats should be kept when gemstones
+    # within an item are updated to the latest revision.
+    keep-gem-data:
+
+        # Name of the item, usually renamed via anvil
+        display-name: true
+
+        # Enchantments put on the item by the player
+        enchantments: true
+
+        # Specific lore lines of the item...
+        # Warning, this prevents stats in the lore from updating visually!
+        lore: false
+
+        # Stats handled by RNG will be rerolled
+        reroll: false
+
     phat-loots:
         display-name: false
         enchantments: false

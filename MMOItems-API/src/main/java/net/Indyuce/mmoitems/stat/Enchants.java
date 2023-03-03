@@ -494,6 +494,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
      * @return Found bukkit enchantment instance
      */
     @SuppressWarnings("deprecation")
+    @Nullable
     public static Enchantment getEnchant(String key) {
         key = key.toLowerCase().replace("-", "_");
         Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(key));

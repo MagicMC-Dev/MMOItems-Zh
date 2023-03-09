@@ -153,7 +153,16 @@ public class GemstoneData {
      *
      * @param color Color of the slot this gem was inserted onto.
      */
-    public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color) {
+    public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color) { this(gemStoneMMOItem, color, UUID.randomUUID()); }
+
+    /**
+     * Create a GemStoneData from a GemStone MMOItem.
+     * <p></p>
+     * Basically extracts all the useable stats from the MMOItem, to have them ready to apply onto another MMOItem.
+     *
+     * @param color Color of the slot this gem was inserted onto.
+     */
+    public GemstoneData(@NotNull LiveMMOItem gemStoneMMOItem, @Nullable String color, @NotNull UUID forcedHistoryUUID) {
 
         // Get Name to Display
         name = MMOUtils.getDisplayName(gemStoneMMOItem.getNBT().getItem());
@@ -168,9 +177,8 @@ public class GemstoneData {
             effects.addAll(((PotionEffectListData) gemStoneMMOItem.getData(ItemStats.PERM_EFFECTS)).getEffects());
         }
 
-
         // Generate own historic UUID
-        historicUUID = UUID.randomUUID();
+        historicUUID = forcedHistoryUUID;
         mmoitemID = gemStoneMMOItem.getId();
         mmoitemType = gemStoneMMOItem.getType().getId();
         socketColor = color;

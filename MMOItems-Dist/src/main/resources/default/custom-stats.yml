@@ -8,7 +8,7 @@ custom-stats:
   # The lore for each stat can be defined in language/stats.yml
   1:
     # The name will be used in the edition GUI and also for the stat id
-    # Format: "MyLuck" will be replaced with "CUSTOM_MYLUCK"
+    # Format: "MyLuck" will be replaced with "custom-myluck"
     name: "MyLuck"
 
     # Allowed stats type:

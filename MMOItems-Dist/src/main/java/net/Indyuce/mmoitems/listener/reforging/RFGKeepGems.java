@@ -1,21 +1,25 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
+import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ReforgeOptions;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
+import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.MMOItemReforger;
+import net.Indyuce.mmoitems.stat.data.EnchantListData;
 import net.Indyuce.mmoitems.stat.data.GemSocketsData;
 import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
+import net.Indyuce.mmoitems.stat.type.GemStoneStat;
+import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Prevents gems from being lost when reforging.
@@ -32,107 +36,147 @@ public class RFGKeepGems implements Listener {
         //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping Gems");
 
         // Get those gems
-        GemSocketsData gems = (GemSocketsData) event.getOldMMOItem().getData(ItemStats.GEM_SOCKETS);
+        GemSocketsData oldGemstoneData = (GemSocketsData) event.getOldMMOItem().getData(ItemStats.GEM_SOCKETS);
 
         // No gems? why are we here
-        if (gems == null) { return; }
+        if (oldGemstoneData == null) { return; }
 
         // Get those gems
-        GemSocketsData current = (GemSocketsData) event.getNewMMOItem().getData(ItemStats.GEM_SOCKETS);
+        GemSocketsData newGemstoneData = (GemSocketsData) event.getNewMMOItem().getData(ItemStats.GEM_SOCKETS);
 
         //RFG//MMOItems.log(" \u00a7a@ \u00a77Applying Gemstones");
         ArrayList<GemstoneData> lostGems = new ArrayList<>();
 
-        // If has a upgrade template defined, just remember the level
-        if (current != null) {
+        // If it has an upgrade template defined, just remember the level
+        if (newGemstoneData != null) {
 
             // Get current ig
-            //RFG//MMOItems.log("  \u00a7a* \u00a77Existing Data Detected\u00a7a " + current.toString());
+            //RFG//MMOItems.log("  \u00a7a* \u00a77Existing Data Detected\u00a7a " + oldGemstoneData.toString());
 
             // Get those damn empty sockets
-            ArrayList<GemstoneData> putGems = new ArrayList<>();
-            ArrayList<String> availableSockets = new ArrayList<>(current.getEmptySlots());
-            ArrayList<GemstoneData> oldSockets = new ArrayList<>(gems.getGemstones());
+            ArrayList<GemstoneData> transferredGems = new ArrayList<>();
+            ArrayList<String> availableSockets = new ArrayList<>(newGemstoneData.getEmptySlots());
+            ArrayList<GemstoneData> oldSockets = new ArrayList<>(oldGemstoneData.getGemstones());
 
             // Remaining
-            for (GemstoneData data : oldSockets) {
-                //RFG//MMOItems.log("  \u00a7a*\u00a7e* \u00a77Fitting \u00a7f" + data.getHistoricUUID().toString() + "\u00a77 '" + data.getName());
+            for (GemstoneData oldSocketedGem : oldSockets) {
+                //RFG//MMOItems.log("  \u00a7a*\u00a7e* \u00a77Fitting \u00a7f" + oldSocketedGem.getHistoricUUID().toString() + "\u00a77 '" + oldSocketedGem.getName() + "\u00a7'");
 
                 // No more if no more sockets left
-                if (availableSockets.size() <= 0) {
+                if (availableSockets.size() == 0) {
                     //RFG//MMOItems.log(" \u00a7a  +\u00a7c+ \u00a77No More Sockets");
 
                     // This gemstone could not be inserted, it is thus lost
-                    lostGems.add(data);
-                    //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone lost - \u00a7cno socket \u00a78" + data.getHistoricUUID());
+                    lostGems.add(oldSocketedGem);
+                    //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone lost - \u00a7cno socket \u00a78" + oldSocketedGem.getHistoricUUID());
 
                     // Still some sockets to fill hMMM
                 } else {
 
                     // Get colour, uncolored if Unknown
-                    String colour = data.getSocketColor();
+                    String colour = oldSocketedGem.getSocketColor();
                     if (colour == null) { colour = GemSocketsData.getUncoloredGemSlot(); }
-                    String remembrance = null;
+                    String newColorToInsertInto = null;
 
                     // Does the gem data have an available socket?
-                    for (String slot : availableSockets) { if (slot.equals(GemSocketsData.getUncoloredGemSlot()) || colour.equals(slot)) { remembrance = slot; } }
+                    for (String slot : availableSockets) { if (slot.equals(GemSocketsData.getUncoloredGemSlot()) || colour.equals(slot)) { newColorToInsertInto = slot; } }
 
                     // Existed?
-                    if (remembrance != null) {
-                        //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone fit - \u00a7e " + remembrance + " \u00a78" + data.getHistoricUUID());
+                    if (newColorToInsertInto != null) {
+                        //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77\u00a7e ----------------------- ");
+                        //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone fit - \u00a7e " + newColorToInsertInto + " \u00a78" + oldSocketedGem.getHistoricUUID());
 
-                        // Remove
-                        availableSockets.remove(remembrance);
+                        // Get MMOItem
+                        MMOItem restoredGem = event.getOldMMOItem().extractGemstone(oldSocketedGem);
+                        if (restoredGem == null) {
+                            //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a7c Cannot rebuild gem Item Stack");
 
-                        // And guess what... THAT is the colour of this gem! Fabulous huh?
-                        data.setColour(remembrance);
+                            // Include as lost gem
+                            lostGems.add(oldSocketedGem);
+                            continue; }
 
-                        // Remember as a put gem
-                        putGems.add(data);
+                        // Reforge gemstone
+                        MMOItemReforger gemReforge = new MMOItemReforger(restoredGem.newBuilder().build());
+                        if (!gemReforge.canReforge()) {
+                            //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a7c Cannot reforge gem MMOItem");
 
-                        // Scourge the old item's stat histories and transfer all stats related to this gem
-                        for (StatHistory oldHist : event.getOldMMOItem().getStatHistories()) {
+                            // Include as lost gem
+                            lostGems.add(oldSocketedGem);
+                            continue;
+                        }
+                        gemReforge.setPlayer(event.getPlayer());
+                        if (!gemReforge.reforge(MMOItems.plugin.getLanguage().gemRevisionOptions)) {
+                            //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a7c Refoge event cancelled");
 
-                            // For every gem
-                            for (UUID oldHistGem : oldHist.getAllGemstones()) {
+                            // Include as lost gem
+                            lostGems.add(oldSocketedGem);
+                            continue;
+                        }
+                        //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Successfully\u00a7a applying gem");
 
-                                //RFG// MMOItems.log("§8Reforge §4GEM§7 Gemstone of\u00a73 " + oldHist.getItemStat().getId() + "\u00a7e " + oldHistGem);
+                        // Gems should not be dropping stuff but whatever
+                        event.getReforger().getReforgingOutput().addAll(gemReforge.getReforgingOutput());
 
-                                // Matches?
-                                if (oldHistGem.equals(data.getHistoricUUID())) {
-                                    //RFG// MMOItems.log("§8Reforge §4GEM§7 Match!");
+                        // Whatever
+                        LiveMMOItem gemResult = new LiveMMOItem(gemReforge.getResult());
+                        GemstoneData reforgedGemData = new GemstoneData(gemResult, newColorToInsertInto, oldSocketedGem.getHistoricUUID());
+                        reforgedGemData.setLevel(oldSocketedGem.getLevel());
 
-                                    // Get the gem data
-                                    StatData sData = oldHist.getGemstoneData(oldHistGem);
+                        // Remove, we have succeeded
+                        availableSockets.remove(newColorToInsertInto);
 
-                                    if (!(sData instanceof Mergeable)) { continue; }
+                        // Gem has been transferred (basically)
+                        transferredGems.add(reforgedGemData);
 
-                                    // Put it there
-                                    StatHistory newHist = StatHistory.from(event.getNewMMOItem(), oldHist.getItemStat());
+                        // Apply gemstone stats into the item
+                        for (ItemStat stat : gemResult.getStats()) {
 
-                                    // Include yes
-                                    newHist.registerGemstoneData(oldHistGem, ((Mergeable) sData).cloneData());
+                            // If it is not PROPER
+                            if (!(stat instanceof GemStoneStat)) {
+
+                                // Get the stat data
+                                StatData data = gemResult.getData(stat);
+
+                                // If the data is MERGEABLE
+                                if (data instanceof Mergeable) {
+
+                                    // Just ignore that lol
+                                    if (data instanceof EnchantListData && ((Mergeable) data).isClear()) { continue; }
+
+                                    //RFG//MMOItems.log("\u00a79>>> \u00a77Gem-Merging \u00a7c" + stat.getNBTPath() + "\u00a7e" + data.toString() + "\u00a78 " + reforgedGemData.getHistoricUUID().toString());
+
+                                    /*
+                                     * The gem data is registered directly into the history (emphasis on not recalculating with purge)
+                                     */
+                                    StatHistory hist = StatHistory.from(event.getNewMMOItem(), stat);
+                                    hist.registerGemstoneData(reforgedGemData.getHistoricUUID(), data);
+
+                                    //RFG//MMOItems.log("\u00a79>>> \u00a77 Stat history of this stat");
+                                    //RFG//hist.log();
                                 }
                             }
                         }
 
                     // No space/valid socket hmm
                     } else {
-                        //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone lost - \u00a7cno color \u00a78" + data.getHistoricUUID());
+                        //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 Gemstone lost - \u00a7cno color \u00a78" + oldSocketedGem.getHistoricUUID());
 
                         // Include as lost gem
-                        lostGems.add(data); }
+                        lostGems.add(oldSocketedGem); }
                 }
             }
 
             // Create with select socket slots and gems
-            GemSocketsData primeGems = new GemSocketsData(availableSockets);
-            for (GemstoneData gem : putGems) { if (gem == null) { continue; } primeGems.add(gem); }
-            //RFG//MMOItems.log("  \u00a7a* \u00a77Operation Result\u00a7a " + primeGems.toString());
+            GemSocketsData reforgedGemstoneData = new GemSocketsData(availableSockets);
+            for (GemstoneData gem : transferredGems) { if (gem == null) { continue; } reforgedGemstoneData.add(gem); }
+            //RFG//MMOItems.log("  \u00a7a* \u00a77Operation Result\u00a7a " + reforgedGemstoneData.toString());
+            //RFG//for (String s : reforgedGemstoneData.getEmptySlots()) { MMOItems.log("  \u00a7a* \u00a77Empty\u00a7f " + s); }
+            //RFG//for (GemstoneData s : reforgedGemstoneData.getGemstones()) { MMOItems.log("  \u00a7a*\u00a7f " + s.getName() + "\u00a77 " + s.getHistoricUUID()); }
 
             // That's the original data
             StatHistory gemStory = StatHistory.from(event.getNewMMOItem(), ItemStats.GEM_SOCKETS);
-            gemStory.setOriginalData(primeGems);
+            gemStory.setOriginalData(reforgedGemstoneData);
+            event.getNewMMOItem().setData(ItemStats.GEM_SOCKETS, gemStory.recalculate(event.getNewMMOItem().getUpgradeLevel()));
             //RFG//MMOItems.log("  \u00a7a* \u00a77History Final\u00a7a --------");
             //RFG//gemStory.log();
 
@@ -141,7 +185,7 @@ public class RFGKeepGems implements Listener {
             //RFG//MMOItems.log("\u00a7c *\u00a7e*\u00a77 All gemstones were lost -  \u00a7cno data");
 
             // ALl were lost
-            lostGems.addAll(gems.getGemstones()); }
+            lostGems.addAll(oldGemstoneData.getGemstones()); }
 
         // Config option enabled? Build the lost gem MMOItems!
         if (ReforgeOptions.dropRestoredGems) {
@@ -149,10 +193,32 @@ public class RFGKeepGems implements Listener {
 
                 // Get MMOItem
                 MMOItem restoredGem = event.getOldMMOItem().extractGemstone(lost);
-                if (restoredGem == null) { continue; }
+                if (restoredGem == null) {
 
-                // Success? Add that gem there
-                event.getReforger().addReforgingOutput(restoredGem.newBuilder().build());
+                    // Mention the loss
+                    MMOItems.print(null, "$bGemstone $r{0} {1} $bno longer exists, it was$f deleted$b from $u{2}$b's {3}$b. ", "RevID", lost.getMMOItemType(), lost.getMMOItemID(), event.getPlayer() == null ? "null" : event.getPlayer().getName(), SilentNumbers.getItemName(event.getReforger().getStack(), false));
+                    continue; }
+
+                // Reforge gemstone if it can be reforged
+                MMOItemReforger gemReforge = new MMOItemReforger(restoredGem.newBuilder().build());
+                if (gemReforge.canReforge()) {
+
+                    // Reforge
+                    gemReforge.setPlayer(event.getPlayer());
+                    gemReforge.reforge(MMOItems.plugin.getLanguage().gemRevisionOptions);
+
+                    // Gems should not be dropping stuff but whatever
+                    event.getReforger().getReforgingOutput().addAll(gemReforge.getReforgingOutput());
+
+                    // Success, Add that reforged gem
+                    event.getReforger().addReforgingOutput(gemReforge.getResult());
+
+                    // Cant reforge (uuuuuh) just add I guess
+                } else {
+
+                    // Success? Add that gem (without reforging) there
+                    event.getReforger().addReforgingOutput(restoredGem.newBuilder().build());
+                }
             } }
     }
 }

@@ -13,7 +13,7 @@ And then add MMOItems-API as dependency
 <dependency>
     <groupId>net.Indyuce</groupId>
     <artifactId>MMOItems-API</artifactId>
-    <version>6.9.1-SNAPSHOT</version>
+    <version>6.9.2-SNAPSHOT</version>
     <scope>provided</scope>
 </dependency>
 ```

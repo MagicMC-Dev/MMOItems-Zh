@@ -116,7 +116,8 @@ public class CraftingStationView extends PluginInventory {
                         inv.setItem(layout.getQueueSlots().get(j - queueOffset),
                                 ConfigItems.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(j), j + 1).build());
             }
-        }.runTaskTimerAsynchronously(MMOItems.plugin, 0, 20);
+        }.runTaskTimer(MMOItems.plugin, 0, 20);
+
         if (station.getItemOptions().hasFill())
             for (int j = 0; j < layout.getSize(); j++)
                 if (inv.getItem(j) == null || inv.getItem(j).getType() == Material.AIR)

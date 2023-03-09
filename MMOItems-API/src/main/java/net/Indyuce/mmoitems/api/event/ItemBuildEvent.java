@@ -4,6 +4,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * @deprecated Will be removed in the future. SCRIPTS must replace these
+ *         because there are  no events which can support both sync and async
+ */
+@Deprecated
 public class ItemBuildEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 

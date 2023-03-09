@@ -287,6 +287,7 @@ public class PlayerData {
         if (setBonuses != null) {
             if (MMOItems.plugin.hasPermissions()) {
                 final Permission perms = MMOItems.plugin.getVault().getPermissions();
+                permissions.addAll(setBonuses.getPermissions());
                 for (String perm : setBonuses.getPermissions())
                     if (!perms.has(getPlayer(), perm))
                         perms.playerAdd(getPlayer(), perm);

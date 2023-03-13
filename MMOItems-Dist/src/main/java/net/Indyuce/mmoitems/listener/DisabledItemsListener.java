@@ -36,7 +36,7 @@ public class DisabledItemsListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void rightClickEffects(PlayerInteractEvent event) {
         if (!event.hasItem())
             return;
@@ -45,7 +45,7 @@ public class DisabledItemsListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void meleeAttacks(PlayerAttackEvent event) {
         if (!(event.getAttack() instanceof MeleeAttackMetadata))
             return;
@@ -55,7 +55,7 @@ public class DisabledItemsListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void specialToolAbilities(BlockBreakEvent event) {
         final Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE)
@@ -66,7 +66,7 @@ public class DisabledItemsListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void rightClickWeaponInteractions(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         if (!(event.getRightClicked() instanceof LivingEntity))
@@ -77,7 +77,7 @@ public class DisabledItemsListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void gemStonesAndItemStacks(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR)
@@ -88,7 +88,7 @@ public class DisabledItemsListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void handleCustomBows(EntityShootBowEvent event) {
         if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
             return;
@@ -98,7 +98,7 @@ public class DisabledItemsListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
         if (shouldCancel(item))

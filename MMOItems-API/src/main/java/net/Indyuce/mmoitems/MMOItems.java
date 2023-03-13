@@ -254,7 +254,6 @@ public class MMOItems extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
         // Support for early plugin disabling
         if (!hasLoadedSuccessfully)
             return;
@@ -269,6 +268,9 @@ public class MMOItems extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers())
             if (player.getOpenInventory() != null && player.getOpenInventory().getTopInventory().getHolder() instanceof PluginInventory)
                 player.closeInventory();
+
+        // WorldGen
+        this.worldGenManager.unload();
     }
 
     public String getPrefix() {

@@ -4,6 +4,8 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.block.WorldGenTemplate;
+import net.Indyuce.mmoitems.listener.WorldGenerationListener;
+import net.Indyuce.mmoitems.tasks.CustomBlocksPopulateTask;
 import net.Indyuce.mmoitems.util.Pair;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -11,10 +13,10 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Blocking;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +25,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
-public class WorldGenManager implements Listener, Reloadable {
+public class WorldGenManager implements Reloadable {
     private final Map<String, WorldGenTemplate> templates = new HashMap<>();
 
     /*
@@ -37,6 +39,9 @@ public class WorldGenManager implements Listener, Reloadable {
     private static final BlockFace[] faces = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST, BlockFace.DOWN, BlockFace.UP};
     private static final Random random = new Random();
 
+    private WorldGenerationListener listener;
+    private CustomBlocksPopulateTask task;
+
     public WorldGenManager() {
         /*
          * load the worldGenManager even if world gen is not enabled so that if
@@ -44,9 +49,6 @@ public class WorldGenManager implements Listener, Reloadable {
          * MI could not find corresponding gen template in config
          */
         reload();
-
-        if (MMOItems.plugin.getLanguage().worldGenEnabled)
-            Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
     }
 
     public WorldGenTemplate getOrThrow(String id) {
@@ -65,18 +67,17 @@ public class WorldGenManager implements Listener, Reloadable {
         assigned.put(block, template);
     }
 
-    @EventHandler
-    public void onChunkLoad(ChunkLoadEvent e) {
-        if (e.isNewChunk())
-            return;
-
-        if (e.isAsynchronous())
-            generate(e);
-        else
-            Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> generate(e));
+    public void populate(@NotNull ChunkLoadEvent e) {
+        Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
+            preprocess(e);
+            if (task != null && task.isRunning())
+                return;
+            task = new CustomBlocksPopulateTask(this);
+            task.start();
+        });
     }
 
-    private void generate(ChunkLoadEvent e) {
+    private @Blocking void preprocess(ChunkLoadEvent e) {
         assigned.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().canGenerateInWorld(e.getWorld()))
@@ -102,34 +103,20 @@ public class WorldGenManager implements Listener, Reloadable {
                         }
                     }
                 });
-
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (modificationsQueue.isEmpty()) {
-                    this.cancel();
-                    return;
-                }
-                Pair<Location, CustomBlock> pair = modificationsQueue.poll();
-
-                if (Bukkit.isPrimaryThread())
-                    setBlockData(pair.getKey().getBlock(), pair.getValue());
-                else
-                    Bukkit.getScheduler().runTask(MMOItems.plugin, () -> setBlockData(pair.getKey().getBlock(), pair.getValue()));
-            }
-        }.runTaskTimer(MMOItems.plugin, 0, 5);
     }
 
-
-    private void setBlockData(Block fModify, CustomBlock block) {
-        fModify.setType(block.getState().getType(), false);
-        fModify.setBlockData(block.getState().getBlockData(), false);
+    public Queue<Pair<Location, CustomBlock>> getModificationsQueue() {
+        return modificationsQueue;
     }
 
     public void reload() {
+        // Listener
+        if (listener != null)
+            HandlerList.unregisterAll(listener);
+
         assigned.clear();
         templates.clear();
+        modificationsQueue.clear();
 
         FileConfiguration config = new ConfigFile("gen-templates").getConfig();
         for (String key : config.getKeys(false)) {
@@ -140,5 +127,16 @@ public class WorldGenManager implements Listener, Reloadable {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred when loading gen template '" + key + "': " + exception.getMessage());
             }
         }
+
+        // Listeners
+        if (MMOItems.plugin.getLanguage().worldGenEnabled)
+            Bukkit.getPluginManager().registerEvents(listener = new WorldGenerationListener(this), MMOItems.plugin);
+    }
+
+    public void unload() {
+        if (listener != null)
+            HandlerList.unregisterAll(listener);
+        if (task != null)
+            task.stop();
     }
 }

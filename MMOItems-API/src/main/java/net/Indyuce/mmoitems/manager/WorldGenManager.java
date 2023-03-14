@@ -4,25 +4,17 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.block.CustomBlock;
 import net.Indyuce.mmoitems.api.block.WorldGenTemplate;
+import net.Indyuce.mmoitems.api.world.MMOBlockPopulator;
 import net.Indyuce.mmoitems.listener.WorldGenerationListener;
-import net.Indyuce.mmoitems.tasks.CustomBlocksPopulateTask;
-import net.Indyuce.mmoitems.util.Pair;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 public class WorldGenManager implements Reloadable {
@@ -34,13 +26,8 @@ public class WorldGenManager implements Reloadable {
      * world.
      */
     private final Map<CustomBlock, WorldGenTemplate> assigned = new HashMap<>();
-    private final Queue<Pair<Location, CustomBlock>> modificationsQueue = new ConcurrentLinkedQueue<>();
-
-    private static final BlockFace[] faces = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST, BlockFace.DOWN, BlockFace.UP};
-    private static final Random random = new Random();
 
     private WorldGenerationListener listener;
-    private CustomBlocksPopulateTask task;
 
     public WorldGenManager() {
         /*
@@ -67,48 +54,6 @@ public class WorldGenManager implements Reloadable {
         assigned.put(block, template);
     }
 
-    public void populate(@NotNull ChunkLoadEvent e) {
-        Bukkit.getScheduler().runTaskAsynchronously(MMOItems.plugin, () -> {
-            preprocess(e);
-            if (task != null && task.isRunning())
-                return;
-            task = new CustomBlocksPopulateTask(this);
-            task.start();
-        });
-    }
-
-    private @Blocking void preprocess(ChunkLoadEvent e) {
-        assigned.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().canGenerateInWorld(e.getWorld()))
-                .forEach(entry -> {
-                    final CustomBlock block = entry.getKey();
-                    final WorldGenTemplate template = entry.getValue();
-                    if (random.nextDouble() > template.getChunkChance())
-                        return;
-
-                    for (int i = 0; i < template.getVeinCount(); i++) {
-                        int y = random.nextInt(template.getMaxDepth() - template.getMinDepth() + 1) + template.getMinDepth();
-                        Location generatePoint = e.getChunk().getBlock(random.nextInt(16), y, random.nextInt(16)).getLocation();
-
-                        if (!template.canGenerate(generatePoint) || generatePoint.getWorld() == null)
-                            continue;
-                        Block modify = generatePoint.getWorld().getBlockAt(generatePoint);
-
-                        for (int j = 0; j < template.getVeinSize(); j++) {
-                            if (template.canReplace(modify.getType()))
-                                this.modificationsQueue.add(Pair.of(modify.getLocation(), block));
-                            BlockFace nextFace = faces[random.nextInt(faces.length)];
-                            modify = modify.getRelative(nextFace);
-                        }
-                    }
-                });
-    }
-
-    public Queue<Pair<Location, CustomBlock>> getModificationsQueue() {
-        return modificationsQueue;
-    }
-
     public void reload() {
         // Listener
         if (listener != null)
@@ -116,7 +61,6 @@ public class WorldGenManager implements Reloadable {
 
         assigned.clear();
         templates.clear();
-        modificationsQueue.clear();
 
         FileConfiguration config = new ConfigFile("gen-templates").getConfig();
         for (String key : config.getKeys(false)) {
@@ -129,14 +73,22 @@ public class WorldGenManager implements Reloadable {
         }
 
         // Listeners
-        if (MMOItems.plugin.getLanguage().worldGenEnabled)
-            Bukkit.getPluginManager().registerEvents(listener = new WorldGenerationListener(this), MMOItems.plugin);
+        if (MMOItems.plugin.getLanguage().worldGenEnabled) {
+            listener = new WorldGenerationListener(this);
+            Bukkit.getPluginManager().registerEvents(listener, MMOItems.plugin);
+        }
     }
 
     public void unload() {
         if (listener != null)
             HandlerList.unregisterAll(listener);
-        if (task != null)
-            task.stop();
+    }
+
+    public MMOBlockPopulator populator(@NotNull World world) {
+        return new MMOBlockPopulator(world, this);
+    }
+
+    public Map<CustomBlock, WorldGenTemplate> assigned() {
+        return assigned;
     }
 }

@@ -168,7 +168,7 @@ public class MMOItems extends JavaPlugin {
         dropTableManager = new DropTableManager();
         worldGenManager = new WorldGenManager();
         blockManager = new BlockManager();
-       statManager.reload(false);
+        statManager.reload(false);
 
 
         PluginUtils.hookDependencyIfPresent("Vault", u -> vaultSupport = new VaultSupport());

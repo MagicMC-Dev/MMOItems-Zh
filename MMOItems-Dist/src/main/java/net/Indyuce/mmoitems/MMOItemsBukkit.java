@@ -22,6 +22,7 @@ public class MMOItemsBukkit {
         Bukkit.getPluginManager().registerEvents(new DurabilityListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new DisableInteractions(), plugin);
         Bukkit.getPluginManager().registerEvents(new GuiListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new BiomeChangeListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), plugin);
         if (Bukkit.getPluginManager().getPlugin("PhatLoots") != null)
             Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), plugin);

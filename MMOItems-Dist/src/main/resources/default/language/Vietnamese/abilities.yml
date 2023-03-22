@@ -1,0 +1,23 @@
+cast-mode:
+  cast: Thực hiện
+  shoot-bow: Bắn cung
+  shoot-trident: Ném đinh ba
+  sneak: Shift
+  shift-left-click: Shift + chuột trái
+  arrow-tick: Arrow Tick
+  timer: Thời gian
+  death: Khi chết
+  trident-land: Đinh ba chạm đất
+  arrow-land: Mũi tên chạm đất
+  trident-tick: Đinh ba trúng
+  kill-entity: Giết thực thể
+  right-click: Chuột phải
+  attack: Tấn công
+  arrow-hit: Mũi tên bắn trúng
+  login: Đăng nhập
+  api: Api
+  damaged: Bị tấn công
+  left-click: Chuột trái
+  trident-hit: Trúng đinh ba
+  damaged-by-entity: Bị tấn công bởi thực thể
+  shift-right-click: Shift + chuột phải 

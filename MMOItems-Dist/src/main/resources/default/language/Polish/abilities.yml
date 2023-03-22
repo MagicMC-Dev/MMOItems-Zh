@@ -1,0 +1,23 @@
+cast-mode:
+  cast: Rzuć
+  shoot-bow: Strzał
+  shoot-trident: Rzut
+  sneak: Kucnięcie
+  shift-left-click: Kucnięcie + Lewy Przycisk
+  arrow-tick: Trafienia Strzałą
+  timer: Czas
+  death: Śmierć
+  trident-land: Trójząb na Ziemi
+  arrow-land: Strzała na Ziemi
+  trident-tick: Uderzenie Trójzębu
+  kill-entity: Przy zabójstwie
+  right-click: Prawy Przycisk
+  attack: Atak
+  arrow-hit: Trafienia Strzałą
+  login: Zaloguj
+  api: Api
+  damaged: Otrzymane Obrażenie
+  left-click: Lewy przycisk
+  trident-hit: Uderzenie Trójzębu
+  damaged-by-entity: Uszkodzenie przez jednostkę
+  shift-right-click: Kucnięcie + Prawy Przycisk

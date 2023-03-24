@@ -1,0 +1,41 @@
+condition:
+  profession:
+    positive: '&a✔ Debes ser nivel #level# en #profession#'
+    negative: '&c✖ Debes ser nivel #level# en #profession#'
+  mana:
+    positive: '&a✔ Necesitas #mana# Maná'
+    negative: '&c✖ Necesitas #mana# Maná'
+  money:
+    positive: '&a✔ Necesitas $#money#'
+    negative: '&c✖ Necesitas $#money#'
+  level:
+    positive: '&a✔ Debes ser nivel #level#'
+    negative: '&c✖ Debes ser nivel #level#'
+  stellium:
+    positive: '&a✔ Necesitas #stellium# de Stellium'
+    negative: '&c✖ Necesitas #stellium# de Stellium'
+  stamina:
+    positive: '&a✔ Necesitas #stamina# de Energía'
+    negative: '&c✖ Necesitas #stamina# de Energía'
+  permission:
+    positive: '&a✔ #display#'
+    negative: '&c✖ #display#'
+  placeholder:
+    positive: '&a✔ #display#'
+    negative: '&c✖ #display#'
+  attribute:
+    positive: '&a✔ Necesitas #points# puntos de #attribute#'
+    negative: '&c✖ Necesitas #points# puntos de #attribute#'
+  class:
+    positive: '&a✔ Clase requerida: #class#'
+    negative: '&c✖ Clase requerida: #class#'
+  food:
+    positive: '&a✔ Necesitas #food# de Comida'
+    negative: '&c✖ Necesitas #food# de Comida'
+ingredient:
+  mmoitem:
+    positive: '&8✔ &7#amount# #level##item#'
+    negative: '&c✖ &7#amount# #level##item#'
+  vanilla:
+    positive: '&8✔ &7#amount# #item#'
+    negative: '&c✖ &7#amount# #item#'

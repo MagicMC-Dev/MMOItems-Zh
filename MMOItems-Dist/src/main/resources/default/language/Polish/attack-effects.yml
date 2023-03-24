@@ -1,0 +1,15 @@
+staff-spirit:
+  nether-spirit: '&7■ Duch Netheru'
+  void-spirit: '&7■ Duch Pustki'
+  mana-spirit: '&7■ Duch Many'
+  lightning-spirit: '&7■ Duch Błyskawicy'
+  xray-spirit: '&7■ Duch X-Ray'
+  thunder-spirit: '&7■ Duch Grzmotu'
+  sunfire-spirit: '&7■ Duch Słonecznego Ognia'
+lute-attack:
+  wave: '&3 &7■ Melodia Fali'
+  circular: '&3 &7■ Okrągła Melodia'
+  slash: '&3 &7■ Przebijająca Melodia'
+  simple: '&3 &7■ Prosta Melodia'
+  brute: '&3 &7■ Brutalna Melodia'
+  heavy: '&3 &7■ Ciężka Melodia'

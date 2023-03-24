@@ -1,0 +1,15 @@
+staff-spirit:
+  nether-spirit: '&3 &7■ Hiệu ứng địa ngục'
+  void-spirit: '&3 &7■ Hiệu ứng không trung'
+  mana-spirit: '&3 &7■ Hiệu ứng mana'
+  lightning-spirit: '&3 &7■ Hiệu ứng ánh sáng'
+  xray-spirit: '&3 &7■ Hiệu ứng X-Ray'
+  thunder-spirit: '&3 &7■ Hiệu ứng sấm sét'
+  sunfire-spirit: '&3 &7■ Hiệu ứng tia lửa'
+lute-attack:
+  wave: '&3 &7■ Hiệu ứng sóng'
+  circular: '&3 &7■ Hiệu ứng vòng tròn'
+  slash: '&3 &7■ Hiệu ứng chém'
+  simple: '&3 &7■ Hiệu ứng bình thường'
+  brute: '&3 &7■ Hiệu ứng bạo lực'
+  heavy: '&3 &7■ Hiệu ứng nặng nề'

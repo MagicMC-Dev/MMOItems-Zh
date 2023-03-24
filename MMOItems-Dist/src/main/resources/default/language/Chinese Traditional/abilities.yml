@@ -1,0 +1,23 @@
+cast-mode:
+  cast: 投擲
+  shoot-bow: 射箭時
+  shoot-trident: 投擲三叉戟時
+  sneak: 蹲下
+  shift-left-click: Shift+左鍵使用
+  arrow-tick: 箭矢擊中
+  timer: 定時
+  death: 死亡時
+  trident-land: 三叉戟掉落時
+  arrow-land: 箭掉落時
+  trident-tick: 三叉戟擊中
+  kill-entity: 殺死實體
+  right-click: 右鍵使用
+  attack: 發動攻擊時
+  arrow-hit: 擊中時
+  login: 登入時
+  api: API
+  damaged: 受到傷害時
+  left-click: 左鍵使用
+  trident-hit: 三叉戟擊中時
+  damaged-by-entity: 受到實體傷害時
+  shift-right-click: Shift+右鍵使用

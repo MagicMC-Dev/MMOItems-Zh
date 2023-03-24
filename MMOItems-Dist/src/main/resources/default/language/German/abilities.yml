@@ -1,0 +1,23 @@
+cast-mode:
+  cast: Cast
+  shoot-bow: Shoot Bow
+  shoot-trident: Shoot Trident
+  sneak: Sneak
+  shift-left-click: Shift Left Click
+  arrow-tick: Arrow Tick
+  timer: Timer
+  death: Death
+  trident-land: Trident Land
+  arrow-land: Arrow Land
+  trident-tick: Trident Tick
+  kill-entity: Kill Entity
+  right-click: Right Click
+  attack: Attack
+  arrow-hit: Arrow Hit
+  login: Login
+  api: Api
+  damaged: Damaged
+  left-click: Left Click
+  trident-hit: Trident Hit
+  damaged-by-entity: Damaged By Entity
+  shift-right-click: Shift Right Click

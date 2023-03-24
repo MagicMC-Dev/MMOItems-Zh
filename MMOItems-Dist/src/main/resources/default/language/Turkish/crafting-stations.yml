@@ -1,0 +1,41 @@
+condition:
+  profession:
+    positive: '&a✔#profession#''da #level# Seviye Olmanız Gerekiyor'
+    negative: '&c✖ #profession#''da #level# Seviye Olmanız Gerekiyor'
+  mana:
+    positive: '&a✔ #mana# Mana Gerekli'
+    negative: '&c✖ #mana# Mana Gerekli'
+  money:
+    positive: '&a✔ #money#$ Gerekli'
+    negative: '&c✖ #money#$ Gerekli'
+  level:
+    positive: '&a✔ #level# Seviye Gerekli'
+    negative: '&c✖ #level# Seviye Gerekli'
+  stellium:
+    positive: '&a✔ #stellium# Stelyum Gerekli'
+    negative: '&c✖ #stellium# Stelyum Gerekli'
+  stamina:
+    positive: '&a✔ #stamina# Dayanıklılık Gerekli'
+    negative: '&c✖ #stamina# Dayanıklılık Gerekli'
+  permission:
+    positive: '&a✔ #display#'
+    negative: '&c✖ #display#'
+  placeholder:
+    positive: '&a✔ #display#'
+    negative: '&c✖ #display#'
+  attribute:
+    positive: '&a✔ Gereken #points# #attribute#'
+    negative: '&c✖ Gereken #points# #attribute#'
+  class:
+    positive: '&a✔ Gereken Sınıf: #class#'
+    negative: '&c✖ Gereken Sınıf: #class#'
+  food:
+    positive: '&a✔ #food# Yemeği Gerekli'
+    negative: '&c✖ #food# Yemeği Gerekli'
+ingredient:
+  mmoitem:
+    positive: '&8✔ &7#amount# #level##item#'
+    negative: '&c✖ &7#amount# #level##item#'
+  vanilla:
+    positive: '&8✔ &7#amount# #item#'
+    negative: '&c✖ &7#amount# #item#'

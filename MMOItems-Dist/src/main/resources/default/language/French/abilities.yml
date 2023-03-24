@@ -1,0 +1,23 @@
+cast-mode:
+  cast: Lancé de sort
+  shoot-bow: Tir à l'Arc
+  shoot-trident: Tir de Trident
+  sneak: Accroupissement
+  shift-left-click: Maj. Clic gauche
+  arrow-tick: Tick de Flèche
+  timer: Délai
+  death: Mort
+  trident-land: Arrivée du trident
+  arrow-land: Arrivée de la flèche
+  trident-tick: Tick de Trident
+  kill-entity: Entité Tuée
+  right-click: Clic droit
+  attack: Attaque
+  arrow-hit: Flèche touchée
+  login: Se connecter
+  api: Api
+  damaged: Endommagé
+  left-click: Clic gauche
+  trident-hit: Coup de Trident
+  damaged-by-entity: Endommagé par l'entité
+  shift-right-click: Maj clic droit

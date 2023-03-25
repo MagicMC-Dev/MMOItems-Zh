@@ -46,7 +46,7 @@ public class ItemSkin extends UseItem {
         if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
             //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that TYPE is compatible: ");
             final List<String> acceptedTypes = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList();
-            if (acceptedTypes.stream().noneMatch(s -> s.equalsIgnoreCase(targetType.getId()))) {
+            if (acceptedTypes.size() > 0 && acceptedTypes.stream().noneMatch(s -> s.equalsIgnoreCase(targetType.getId()))) {
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
                 Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
                         .send(player);
@@ -60,7 +60,7 @@ public class ItemSkin extends UseItem {
             final List<String> acceptedIDs = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList();
             final String targetId = target.getString("MMOITEMS_ITEM_ID");
 
-            if (acceptedIDs.stream()
+            if (acceptedIDs.size() > 0 && acceptedIDs.stream()
                     .noneMatch(s -> s.equalsIgnoreCase(targetId))) {
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
                 Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
@@ -74,7 +74,7 @@ public class ItemSkin extends UseItem {
             //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that MATERIAL is compatible: ");
             List<String> acceptedMaterials = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
 
-            if (acceptedMaterials.stream()
+            if (acceptedMaterials.size() > 0 && acceptedMaterials.stream()
                     .noneMatch(s -> s.equalsIgnoreCase(target.getItem().getType().name()))) {
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
                 Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))

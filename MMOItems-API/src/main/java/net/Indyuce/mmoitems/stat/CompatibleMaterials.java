@@ -18,6 +18,7 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CompatibleMaterials extends ItemStat<StringListData, StringListData> {
+
     public CompatibleMaterials() {
         super("COMPATIBLE_MATERIALS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible Materials",
                 new String[]{"The item materials this skin is", "compatible with."}, new String[]{"skin"});
@@ -45,7 +47,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.COMPATIBLE_TYPES).enable("Write in the chat the name of the material you want to add.");
+            new StatEdition(inv, ItemStats.COMPATIBLE_MATERIALS).enable("Write in the chat the name of the material you want to add.");
 
         if (event.getAction() != InventoryAction.PICKUP_HALF || !inv.getEditedSection().contains("compatible-materials"))
             return;
@@ -64,7 +66,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         final Player player = inv.getPlayer();
         // Check if material exists
-        if (Arrays.stream(VersionMaterial.values()).noneMatch(versionMaterial -> versionMaterial.name().equalsIgnoreCase(message))) {
+        if (Arrays.stream(Material.values()).noneMatch(versionMaterial -> versionMaterial.name().equalsIgnoreCase(message))) {
             player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid material name.");
             return;
         }
@@ -99,8 +101,8 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
         // Copy Array, for lore
-        List<String> compatibleTypes = new ArrayList<>(data.getList());
-        item.getLore().insert("compatible-materials", compatibleTypes);
+        List<String> compatibleMaterials = new ArrayList<>(data.getList());
+        item.getLore().insert("compatible-materials", compatibleMaterials);
 
         // Add data
         item.addItemTag(getAppliedNBT(data));

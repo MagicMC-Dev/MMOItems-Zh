@@ -44,22 +44,22 @@ public class ItemSkin extends UseItem {
 
 		//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Applying onto " + MMOUtils.getDisplayName(target.getItem()));
 
+		// Types compatibility check
 		if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
 			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that TYPE is compatible: ");
-
 			List<String> acceptedTypes = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList();
-
 			for (String type : acceptedTypes) {
 				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7e >\u00a7f " + type);
 
 				if (type.equalsIgnoreCase(targetType.getId())) {
 					//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7a Matched");
-					compatible = true; break; }
+					compatible = true;
+					break;
+				}
 			}
 
 			if (!compatible && acceptedTypes.size() > 0) {
 				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
-
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
 						.send(player);
@@ -67,6 +67,7 @@ public class ItemSkin extends UseItem {
 			}
 		}
 
+		// IDs compatibility check
 		if (getMMOItem().hasData(ItemStats.COMPATIBLE_IDS)) {
 			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that ID is compatible: ");
 
@@ -83,6 +84,29 @@ public class ItemSkin extends UseItem {
 			if (!compatible && acceptedIDs.size() > 0) {
 				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
 
+				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+						.send(player);
+				return new ApplyResult(ResultType.NONE);
+			}
+		}
+
+		// Material compatibility check
+		if (getMMOItem().hasData(ItemStats.COMPATIBLE_MATERIALS)) {
+			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that MATERIAL is compatible: ");
+
+			List<String> acceptedMaterials = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
+
+			for (String material : acceptedMaterials) {
+				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a76 >\u00a7f " + material);
+
+				if (material.equalsIgnoreCase(target.getItem().getType().name())) {
+					//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7a Matched");
+					compatible = true;break; }
+			}
+
+			if (!compatible && acceptedMaterials.size() > 0) {
+				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
 				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
 				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
 						.send(player);

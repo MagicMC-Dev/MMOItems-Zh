@@ -5,7 +5,7 @@
     <parent>
         <artifactId>MMOItems</artifactId>
         <groupId>net.Indyuce</groupId>
-        <version>${revision}</version>
+        <version>6.9.3-SNAPSHOT</version>
     </parent>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOItems-API</artifactId>
-            <version>${revision}</version>
+            <version>6.9.3-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
@@ -52,7 +52,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <finalName>MMOItems-${revision}</finalName>
+                    <finalName>MMOItems-${project.version}</finalName>
                     <outputDirectory>../target/</outputDirectory>
                 </configuration>
             </plugin>

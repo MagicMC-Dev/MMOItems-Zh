@@ -88,7 +88,7 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
 	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
 
 		// Generate fresh from the template
-		MMOItem mmo = template.newBuilder(player).build();
+		MMOItem mmo = template.newBuilder(player, true).build();
 
 		// Build it for display, obviously
 		ItemStack item = mmo.newBuilder().build(true);

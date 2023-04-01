@@ -11,7 +11,7 @@ import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
+import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
@@ -265,7 +265,7 @@ public class MMOItemUIFilter implements UIFilter {
             if (dataments.endsWith("}")) { dataments = dataments.substring(0, dataments.length()-1); } }
 
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
-        MMOItem m = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(argument), data);
+        MMOItem m = new MMOItemBuilder(MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(argument), data), 0, null, true).build();
 
         // Find upgrade?
         if (!dataments.isEmpty()) {
@@ -287,11 +287,8 @@ public class MMOItemUIFilter implements UIFilter {
             }
         }
 
-        //noinspection ConstantConditions
-        ItemStackBuilder builder = m.newBuilder();
-
         // Build display NBT and roll
-        return builder.buildNBT(true).toItem();
+        return m.newBuilder().buildNBT(true).toItem();
     }
 
     @NotNull

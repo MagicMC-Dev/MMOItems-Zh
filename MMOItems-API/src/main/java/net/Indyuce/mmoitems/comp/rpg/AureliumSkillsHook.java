@@ -32,7 +32,6 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
     private final Map<Stats, ItemStat> statExtra = new HashMap<>();
 
-
     public AureliumSkillsHook() {
         aSkills = (AureliumSkills) Bukkit.getPluginManager().getPlugin("AureliumSkills");
 

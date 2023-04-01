@@ -47,6 +47,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -83,7 +85,7 @@ public class MMOItems extends JavaPlugin {
     private SetManager setManager;
 
     private VaultSupport vaultSupport;
-    private RPGHandler rpgPlugin;
+    private final List<RPGHandler> rpgPlugins = new ArrayList<>();
 
     /**
      * Startup issues usually prevent the plugin from loading and just
@@ -152,7 +154,7 @@ public class MMOItems extends JavaPlugin {
         });
         PluginUtils.hookDependencyIfPresent("MMOInventory", unused -> new MMOInventorySupport());
 
-        findRpgPlugin();
+        findRpgPlugins();
 
         /*
          * After tiers, sets and upgrade templates are loaded, MI template data
@@ -293,8 +295,19 @@ public class MMOItems extends JavaPlugin {
         return setManager;
     }
 
+    @Deprecated
     public RPGHandler getRPG() {
-        return rpgPlugin;
+        return getMainRPG();
+    }
+
+    @Nullable
+    public RPGHandler getMainRPG() {
+        Validate.isTrue(!rpgPlugins.isEmpty(), "No RPG plugin was found");
+        return rpgPlugins.get(0);
+    }
+
+    public List<RPGHandler> getRPGs() {
+        return rpgPlugins;
     }
 
     /**
@@ -306,21 +319,38 @@ public class MMOItems extends JavaPlugin {
      * provider in the main plugin config. If it can't be found, it will look for RPG
      * plugins in the installed plugin list.
      */
-    public void findRpgPlugin() {
-        if (rpgPlugin != null) return;
+    public void findRpgPlugins() {
+        Validate.isTrue(rpgPlugins.isEmpty(), "RPG hooks have already been computed");
 
-        // Preferred rpg provider
-        String preferred = plugin.getConfig().getString("preferred-rpg-provider", null);
-        if (preferred != null && setRPG(RPGHandler.PluginEnum.valueOf(preferred.toUpperCase())))
-            return;
+        // Default hook
+        rpgPlugins.add(new DefaultHook());
+
+        // Find preferred provider
+        final @NotNull String preferredName = plugin.getConfig().getString("preferred-rpg-provider");
 
         // Look through installed plugins
-        for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values())
-            if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null && setRPG(pluginEnum))
-                return;
+        for (RPGHandler.PluginEnum enumPlugin : RPGHandler.PluginEnum.values())
+            if (Bukkit.getPluginManager().getPlugin(enumPlugin.getName()) != null)
+                try {
+                    final RPGHandler handler = enumPlugin.load();
+                    rpgPlugins.add(handler);
+                    getLogger().log(Level.INFO, "Hooked onto " + enumPlugin.getName());
 
-        // Just use the default
-        setRPG(new DefaultHook());
+                    // Register as main RPG plugin
+                    if (preferredName.equalsIgnoreCase(enumPlugin.name())) {
+                        Collections.swap(rpgPlugins, 0, rpgPlugins.size() - 1);
+                        getLogger().log(Level.INFO, "Now using " + enumPlugin.getName() + " as RPG core plugin");
+                    }
+
+                } catch (Exception exception) {
+                    MMOItems.plugin.getLogger().log(Level.WARNING, "Could not initialize RPG plugin compatibility with " + enumPlugin.getName() + ":");
+                    exception.printStackTrace();
+                }
+
+        // Register listener for preferred provider
+        final @NotNull RPGHandler preferred = rpgPlugins.get(0);
+        if (rpgPlugins.get(0) instanceof Listener)
+            Bukkit.getPluginManager().registerEvents((Listener) preferred, this);
     }
 
     /**
@@ -330,38 +360,19 @@ public class MMOItems extends JavaPlugin {
      *
      * @param handler Your RPGHandler instance
      */
-    public void setRPG(RPGHandler handler) {
+    public void setRPG(@NotNull RPGHandler handler) {
         Validate.notNull(handler, "RPGHandler cannot be null");
 
-        // Unregister events from current RPGPlugin instance
-        if (rpgPlugin != null && rpgPlugin instanceof Listener && isEnabled())
-            HandlerList.unregisterAll((Listener) rpgPlugin);
+        // Unregister old events
+        if (getMainRPG() instanceof Listener && isEnabled())
+            HandlerList.unregisterAll((Plugin) getMainRPG());
 
-        rpgPlugin = handler;
+        rpgPlugins.add(0, handler);
         getLogger().log(Level.INFO, "Now using " + handler.getClass().getSimpleName() + " as RPG provider");
 
         // Register new events
         if (handler instanceof Listener && isEnabled())
             Bukkit.getPluginManager().registerEvents((Listener) handler, this);
-    }
-
-    /**
-     * @param potentialPlugin Some plugin that the user wants compatibility with
-     * @return If it worked
-     */
-    public boolean setRPG(RPGHandler.PluginEnum potentialPlugin) {
-
-        try {
-            Validate.notNull(Bukkit.getPluginManager().getPlugin(potentialPlugin.getName()), "Plugin is not installed");
-            setRPG(potentialPlugin.load());
-            return true;
-
-            // Some loading issue
-        } catch (Exception exception) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "Could not initialize RPG plugin compatibility with " + potentialPlugin.getName() + ":");
-            exception.printStackTrace();
-            return false;
-        }
     }
 
     public PluginUpdateManager getUpdates() {

@@ -1,4 +1,3 @@
-
 # DO NOT TOUCH
 config-version: 8
 
@@ -378,6 +377,10 @@ lootsplosion:
 # When Upgrading meets Gems, one must decide if
 # gems' stats will increase as well.
 gem-upgrade-default: 'NEVER'
+
+# This option allows you to disable the ability to
+# use MMOItems that have been removed from your config.
+disable-removed-items: true
 
 # When I was a kid, I saw the Mona Lisa in my school art book...
 # The fist time I saw her, with her hands on her knee... how do I say this...

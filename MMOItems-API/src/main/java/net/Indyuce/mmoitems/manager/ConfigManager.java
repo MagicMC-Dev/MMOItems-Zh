@@ -120,6 +120,7 @@ public class ConfigManager implements Reloadable {
             if (!messages.getConfig().contains(path))
                 messages.getConfig().set(path, message.getDefault());
 
+            message.setCurrent(messages.getConfig().getString(path));
         }
         messages.save();
 

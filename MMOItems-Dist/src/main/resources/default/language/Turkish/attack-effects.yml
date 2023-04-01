@@ -1,0 +1,15 @@
+staff-spirit:
+  nether-spirit: '&3 &7■ Nether Ruhu'
+  void-spirit: '&3 &7■ Hiçlik Ruhu'
+  mana-spirit: '&3 &7■ Mana Ruhu'
+  lightning-spirit: '&3 &7■ Yıldırım Ruhu'
+  xray-spirit: '&3 &7■ X-Ray Ruhu'
+  thunder-spirit: '&3 &7■ Tufan Ruhu'
+  sunfire-spirit: '&3 &7■ Günateşi Ruhu'
+lute-attack:
+  wave: '&3 &7■ Dalgalı Melodi'
+  circular: '&3 &7■ Dairesel Melodi'
+  slash: '&3 &7■ Kesikli Melodi'
+  simple: '&3 &7■ Basit Melodi'
+  brute: '&3 &7■ Vahşi Melodi'
+  heavy: '&3 &7■ Ağır Melodi'

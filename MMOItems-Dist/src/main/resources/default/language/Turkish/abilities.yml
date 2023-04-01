@@ -1,0 +1,23 @@
+cast-mode:
+  cast: Atış
+  shoot-bow: Ok Fırlatma
+  shoot-trident: Mızrak Fırlatma
+  sneak: Eğilme
+  shift-left-click: Shift + Sol Tıkla
+  arrow-tick: Ok Tick
+  timer: Zaman
+  death: Ölüm
+  trident-land: Mızrak Düşmesi
+  arrow-land: Ok Düşmesi
+  trident-tick: Mızrak Tick
+  kill-entity: Varlık Öldürme
+  right-click: Sağ Tıkla
+  attack: Saldırı
+  arrow-hit: Okla Vurma
+  login: Giriş
+  api: Api
+  damaged: Hasar Alma
+  left-click: Sol Tıkla
+  trident-hit: Mızrakla Vurma
+  damaged-by-entity: Varlık Tarafından Hasar Alma
+  shift-right-click: Shift + Sağ Tıkla

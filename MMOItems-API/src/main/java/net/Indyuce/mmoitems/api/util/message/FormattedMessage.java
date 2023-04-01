@@ -39,6 +39,7 @@ public class FormattedMessage {
         this.actionBar = actionBar;
     }
 
+    @NotNull
     public FormattedMessage format(ChatColor prefix, String... toReplace) {
 
         // Compatibility with #send(Player)

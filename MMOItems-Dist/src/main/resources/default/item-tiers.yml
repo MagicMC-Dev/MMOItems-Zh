@@ -47,8 +47,9 @@ UNCOMMON:
         # an item hint (looks like a hologram).
         hint: true
         
-        # Item glow color. List (line 400+):
-        # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Color.html
+        # Item glow color. 
+        # https://htmlcolorcodes.com/bukkit-color-codes/
+        # BLACK DARK_BLUE DARK_GREEN DARK_AQUA DARK_RED DARK_PURPLE GOLD GRAY DARK_GRAY BLUE GREEN AQUA RED LIGHT_PURPLE YELLOW WHITE
         color: 'GRAY'
     
     generation:

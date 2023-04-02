@@ -18,19 +18,23 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
-    public CompatibleTypes() {
-        super("COMPATIBLE_TYPES", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible Types",
-                new String[]{"The item types this skin is", "compatible with."}, new String[]{"skin"});
+public class CompatibleMaterials extends ItemStat<StringListData, StringListData> {
+
+    public CompatibleMaterials() {
+        super("COMPATIBLE_MATERIALS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible Materials",
+                new String[]{"The item materials this skin is", "compatible with."}, new String[]{"skin"});
     }
 
     @Override
@@ -43,29 +47,36 @@ public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.COMPATIBLE_TYPES).enable("Write in the chat the name of the type you want to add.");
+            new StatEdition(inv, ItemStats.COMPATIBLE_MATERIALS).enable("Write in the chat the name of the material you want to add.");
 
-        if (event.getAction() != InventoryAction.PICKUP_HALF || !inv.getEditedSection().contains("compatible-types"))
+        if (event.getAction() != InventoryAction.PICKUP_HALF || !inv.getEditedSection().contains("compatible-materials"))
             return;
-        List<String> lore = inv.getEditedSection().getStringList("compatible-types");
+        List<String> lore = inv.getEditedSection().getStringList("compatible-materials");
         if (lore.size() < 1)
             return;
 
         String last = lore.get(lore.size() - 1);
         lore.remove(last);
-        inv.getEditedSection().set("compatible-types", lore);
+        inv.getEditedSection().set("compatible-materials", lore);
         inv.registerTemplateEdition();
         inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
     }
 
     @Override
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-        List<String> lore = inv.getEditedSection().contains("compatible-types") ? inv.getEditedSection().getStringList("compatible-types")
+        final Player player = inv.getPlayer();
+        // Check if material exists
+        if (Arrays.stream(Material.values()).noneMatch(versionMaterial -> versionMaterial.name().equalsIgnoreCase(message))) {
+            player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid material name.");
+            return;
+        }
+
+        List<String> lore = inv.getEditedSection().contains("compatible-materials") ? inv.getEditedSection().getStringList("compatible-materials")
                 : new ArrayList<>();
         lore.add(message.toUpperCase());
-        inv.getEditedSection().set("compatible-types", lore);
+        inv.getEditedSection().set("compatible-materials", lore);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Compatible Types successfully added.");
+        player.sendMessage(MMOItems.plugin.getPrefix() + "Compatible Materials successfully added.");
     }
 
     @Override
@@ -74,11 +85,11 @@ public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
             lore.add(ChatColor.GRAY + "Current Value:");
             statData.get().getList().forEach(str -> lore.add(ChatColor.GRAY + str));
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
+            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any material.");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a new type.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last type.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a new material.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last material.");
     }
 
     @NotNull
@@ -90,8 +101,8 @@ public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {
         // Copy Array, for lore
-        List<String> compatibleTypes = new ArrayList<>(data.getList());
-        item.getLore().insert("compatible-types", compatibleTypes);
+        List<String> compatibleMaterials = new ArrayList<>(data.getList());
+        item.getLore().insert("compatible-materials", compatibleMaterials);
 
         // Add data
         item.addItemTag(getAppliedNBT(data));

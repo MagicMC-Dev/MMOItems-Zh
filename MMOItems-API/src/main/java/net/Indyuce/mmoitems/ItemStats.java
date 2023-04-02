@@ -158,6 +158,7 @@ public class ItemStats {
             REMOVE_ON_CRAFT = new BooleanStat("REMOVE_ON_CRAFT", Material.GLASS_BOTTLE, "Remove on Craft", new String[]{"If the item should be completely", "removed when used in a recipe,", "or if it should become an", "empty bottle or bucket."}, new String[]{"all"}, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.MILK_BUCKET, Material.LAVA_BUCKET, Material.WATER_BUCKET),
             COMPATIBLE_TYPES = new CompatibleTypes(),
             COMPATIBLE_IDS = new CompatibleIds(),
+            COMPATIBLE_MATERIALS = new CompatibleMaterials(),
             GEM_SOCKETS = new GemSockets(),
             RANDOM_UNSOCKET = new RandomUnsocket(),
     //todo CAN_UNSOCKET = new CanUnsocket(),

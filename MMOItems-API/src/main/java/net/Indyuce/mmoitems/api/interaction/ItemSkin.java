@@ -5,12 +5,12 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.data.SkullTextureData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -25,245 +25,240 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class ItemSkin extends UseItem {
-	public ItemSkin(Player player, NBTItem item) {
-		super(player, item);
-	}
+    public ItemSkin(Player player, NBTItem item) {
+        super(player, item);
+    }
 
-	public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
-		if (targetType == Type.SKIN)
-			return new ApplyResult(ResultType.NONE);
+    public ApplyResult applyOntoItem(NBTItem target, Type targetType) {
+        if (targetType == Type.SKIN)
+            return new ApplyResult(ResultType.NONE);
 
-		if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && target.getBoolean("MMOITEMS_HAS_SKIN")) {
-			player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-			Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
-					.send(player);
-			return new ApplyResult(ResultType.NONE);
-		}
+        if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && target.getBoolean("MMOITEMS_HAS_SKIN")) {
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+            Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+                    .send(player);
+            return new ApplyResult(ResultType.NONE);
+        }
 
-		boolean compatible = false;
+        //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Applying onto " + MMOUtils.getDisplayName(target.getItem()));
 
-		//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Applying onto " + MMOUtils.getDisplayName(target.getItem()));
+        // Types compatibility check
+        if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
+            //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that TYPE is compatible: ");
+            final List<String> acceptedTypes = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList();
+            if (acceptedTypes.size() > 0 && acceptedTypes.stream().noneMatch(s -> s.equalsIgnoreCase(targetType.getId()))) {
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+                Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+                        .send(player);
+                return new ApplyResult(ResultType.NONE);
+            }
+        }
 
-		if (getMMOItem().hasData(ItemStats.COMPATIBLE_TYPES)) {
-			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that TYPE is compatible: ");
+        // IDs compatibility check
+        if (getMMOItem().hasData(ItemStats.COMPATIBLE_IDS)) {
+            //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that ID is compatible: ");
+            final List<String> acceptedIDs = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList();
+            final String targetId = target.getString("MMOITEMS_ITEM_ID");
 
-			List<String> acceptedTypes = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_TYPES)).getList();
+            if (acceptedIDs.size() > 0 && acceptedIDs.stream()
+                    .noneMatch(s -> s.equalsIgnoreCase(targetId))) {
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+                Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+                        .send(player);
+                return new ApplyResult(ResultType.NONE);
+            }
+        }
 
-			for (String type : acceptedTypes) {
-				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7e >\u00a7f " + type);
+        // Material compatibility check
+        if (getMMOItem().hasData(ItemStats.COMPATIBLE_MATERIALS)) {
+            //SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that MATERIAL is compatible: ");
+            List<String> acceptedMaterials = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
 
-				if (type.equalsIgnoreCase(targetType.getId())) {
-					//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7a Matched");
-					compatible = true; break; }
-			}
+            if (acceptedMaterials.size() > 0 && acceptedMaterials.stream()
+                    .noneMatch(s -> s.equalsIgnoreCase(target.getItem().getType().name()))) {
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+                Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+                        .send(player);
+                return new ApplyResult(ResultType.NONE);
+            }
+        }
 
-			if (!compatible && acceptedTypes.size() > 0) {
-				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
+        // check for success rate
+        double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
+        if (successRate != 0)
+            if (RANDOM.nextDouble() < 1 - successRate / 100) {
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+                Message.SKIN_BROKE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
+                        .send(player);
+                return new ApplyResult(ResultType.FAILURE);
+            }
 
-				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
-						.send(player);
-				return new ApplyResult(ResultType.NONE);
-			}
-		}
+        // Apply skin
+        ItemStack item = applySkin(target, getMMOItem());
 
-		if (getMMOItem().hasData(ItemStats.COMPATIBLE_IDS)) {
-			//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a77 Testing that ID is compatible: ");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
+        Message.SKIN_APPLIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
 
-			List<String> acceptedIDs = ((StringListData) getMMOItem().getData(ItemStats.COMPATIBLE_IDS)).getList();
+        return new ApplyResult(item);
+    }
 
-			for (String id : acceptedIDs) {
-				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a76 >\u00a7f " + id);
+    public static final String HAS_SKIN_TAG = "MMOITEMS_HAS_SKIN";
 
-				if (id.equalsIgnoreCase(target.getString("MMOITEMS_ITEM_ID"))) {
-					//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7a Matched");
-					compatible = true;break; }
-			}
+    /**
+     * When applying a skin to an item, the skin item ID is saved
+     * in the target item so that if deskined, it can be retrieved
+     * and given back to the player.
+     */
+    public static final String SKIN_ID_TAG = "MMOITEMS_SKIN_ID";
 
-			if (!compatible && acceptedIDs.size() > 0) {
-				//SKIN//MMOItems.log("\u00a78SKIN \u00a7eCPT\u00a7c Incompatible");
+    /**
+     * Applies the skin information from a skin consumable onto any item.
+     *
+     * @param target      Target item that the skin has been <b>successfully</b> applied to
+     * @param skinItemMMO Skin consumable
+     * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
+     */
+    @NotNull
+    public static ItemStack applySkin(@NotNull NBTItem target, @NotNull VolatileMMOItem skinItemMMO) {
+        final NBTItem skinItemNBT = skinItemMMO.getNBT();
 
-				player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-				Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
-						.send(player);
-				return new ApplyResult(ResultType.NONE);
-			}
-		}
+        target.addTag(new ItemTag(HAS_SKIN_TAG, true));
+        target.addTag(new ItemTag(SKIN_ID_TAG, skinItemNBT.getString("MMOITEMS_ITEM_ID")));
+        if (skinItemNBT.getInteger("CustomModelData") != 0)
+            target.addTag(new ItemTag("CustomModelData", skinItemNBT.getInteger("CustomModelData")));
 
-		// check for success rate
-		double successRate = getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
-		if (successRate != 0)
-			if (RANDOM.nextDouble() < 1 - successRate / 100) {
-				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-				Message.SKIN_BROKE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
-						.send(player);
-				return new ApplyResult(ResultType.FAILURE);
-			}
+        if (!skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty())
+            target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES")));
 
-		// Apply skin
-		ItemStack item = applySkin(target, getMMOItem());
+        ItemStack item = target.toItem();
+        if (item.getType() != skinItemNBT.getItem().getType())
+            item.setType(skinItemNBT.getItem().getType());
 
-		player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 2);
-		Message.SKIN_APPLIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
+        ItemMeta meta = item.getItemMeta();
+        ItemMeta skinMeta = skinItemNBT.getItem().getItemMeta();
+        if (skinMeta != null && meta != null) {
 
-		return new ApplyResult(item);
-	}
+            // TODO factorize with a ItemSkinStat stat interface
+            if (skinMeta.isUnbreakable()) {
+                meta.setUnbreakable(true);
+                if (meta instanceof Damageable && skinMeta instanceof Damageable)
+                    ((Damageable) meta).setDamage(((Damageable) skinMeta).getDamage());
+            }
 
-	public static final String HAS_SKIN_TAG = "MMOITEMS_HAS_SKIN";
+            if (skinMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
+                ((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
 
-	/**
-	 * When applying a skin to an item, the skin item ID is saved
-	 * in the target item so that if deskined, it can be retrieved
-	 * and given back to the player.
-	 *
-	 *
-	 */
-	public static final String SKIN_ID_TAG = "MMOITEMS_SKIN_ID";
+            if (skinItemMMO.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
+                    && skinItemNBT.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
+                try {
+                    Field profileField = meta.getClass().getDeclaredField("profile");
+                    profileField.setAccessible(true);
+                    profileField.set(meta,
+                            ((SkullTextureData) skinItemMMO.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
+                } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+                    MMOItems.plugin.getLogger().warning("Could not read skull texture");
+                }
+            }
 
-	/**
-	 * Applies the skin information from a skin consumable onto any item.
-	 *
-	 * @param target      Target item that the skin has been <b>successfully</b> applied to
-	 * @param skinItemMMO Skin consumable
-	 * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
-	 */
-	@NotNull
-	public static ItemStack applySkin(@NotNull NBTItem target, @NotNull VolatileMMOItem skinItemMMO) {
-		final NBTItem skinItemNBT = skinItemMMO.getNBT();
+            item.setItemMeta(meta);
+        }
 
-		target.addTag(new ItemTag(HAS_SKIN_TAG, true));
-		target.addTag(new ItemTag(SKIN_ID_TAG, skinItemNBT.getString("MMOITEMS_ITEM_ID")));
-		if (skinItemNBT.getInteger("CustomModelData") != 0)
-			target.addTag(new ItemTag("CustomModelData", skinItemNBT.getInteger("CustomModelData")));
+        return item;
+    }
 
-		if (!skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty())
-			target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES")));
+    /**
+     * Copies a skin from one item to another
+     *
+     * @param target          Target item that you are copying the skin onto
+     * @param originalItemNBT Item with a skin already, as NBT. Operation will fail
+     *                        if it doesnt have a skin.
+     * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
+     * @author Gunging
+     */
+    @Nullable
+    public static ItemStack applySkin(@NotNull NBTItem target, @NotNull NBTItem originalItemNBT) {
 
-		ItemStack item = target.toItem();
-		if (item.getType() != skinItemNBT.getItem().getType())
-			item.setType(skinItemNBT.getItem().getType());
+        // No skin no service
+        if (!originalItemNBT.getBoolean(HAS_SKIN_TAG)) {
+            return null;
+        }
 
-		ItemMeta meta = item.getItemMeta();
-		ItemMeta skinMeta = skinItemNBT.getItem().getItemMeta();
-		if (skinMeta != null && meta != null) {
+        // Copy over data
+        target.addTag(new ItemTag(HAS_SKIN_TAG, true));
+        target.addTag(new ItemTag(SKIN_ID_TAG, originalItemNBT.getString("MMOITEMS_ITEM_ID")));
+        if (originalItemNBT.getInteger("CustomModelData") != 0) {
+            target.addTag(new ItemTag("CustomModelData", originalItemNBT.getInteger("CustomModelData")));
+        }
+        if (!originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
+            target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES")));
+        }
 
-			// TODO factorize with a ItemSkinStat stat interface
-			if (skinMeta.isUnbreakable()) {
-				meta.setUnbreakable(true);
-				if (meta instanceof Damageable && skinMeta instanceof Damageable)
-					((Damageable) meta).setDamage(((Damageable) skinMeta).getDamage());
-			}
+        // ItemMeta values copy-over
+        ItemStack item = target.toItem();
+        if (item.getType() != originalItemNBT.getItem().getType()) {
+            item.setType(originalItemNBT.getItem().getType());
+        }
 
-			if(skinMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
-				((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
+        ItemMeta meta = item.getItemMeta();
+        ItemMeta originalMeta = originalItemNBT.getItem().getItemMeta();
+        if (originalMeta != null && meta != null) {
 
-			if (skinItemMMO.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
-					&& skinItemNBT.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-				try {
-					Field profileField = meta.getClass().getDeclaredField("profile");
-					profileField.setAccessible(true);
-					profileField.set(meta,
-							((SkullTextureData) skinItemMMO.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
-				} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-					MMOItems.plugin.getLogger().warning("Could not read skull texture");
-				}
-			}
+            if (originalMeta.isUnbreakable()) {
+                meta.setUnbreakable(true);
+                if (meta instanceof Damageable && originalMeta instanceof Damageable)
+                    ((Damageable) meta).setDamage(((Damageable) originalMeta).getDamage());
+            }
 
-			item.setItemMeta(meta);
-		}
+            if (originalMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
+                ((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) originalMeta).getColor());
 
-		return item;
-	}
+            VolatileMMOItem originalVolatile = new VolatileMMOItem(originalItemNBT);
+            if (originalVolatile.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
+                    && originalItemNBT.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
 
-	/**
-	 * Copies a skin from one item to another
-	 *
-	 * @param target Target item that you are copying the skin onto
-	 *
-	 * @param originalItemNBT Item with a skin already, as NBT. Operation will fail
-	 *                        if it doesnt have a skin.
-	 *
-	 * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
-	 *
-	 * @author Gunging
-	 */
-	@Nullable public static ItemStack applySkin(@NotNull NBTItem target, @NotNull NBTItem originalItemNBT) {
+                try {
+                    Field profileField = meta.getClass().getDeclaredField("profile");
+                    profileField.setAccessible(true);
+                    profileField.set(meta,
+                            ((SkullTextureData) originalVolatile.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
+                } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+                    MMOItems.plugin.getLogger().warning("Could not read skull texture");
+                }
+            }
 
-		// No skin no service
-		if (!originalItemNBT.getBoolean(HAS_SKIN_TAG)) { return null; }
+            item.setItemMeta(meta);
+        }
 
-		// Copy over data
-		target.addTag(new ItemTag(HAS_SKIN_TAG, true));
-		target.addTag(new ItemTag(SKIN_ID_TAG, originalItemNBT.getString("MMOITEMS_ITEM_ID")));
-		if (originalItemNBT.getInteger("CustomModelData") != 0) {
-			target.addTag(new ItemTag("CustomModelData", originalItemNBT.getInteger("CustomModelData"))); }
-		if (!originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
-			target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES"))); }
+        return item;
+    }
 
-		// ItemMeta values copy-over
-		ItemStack item = target.toItem();
-		if (item.getType() != originalItemNBT.getItem().getType()) { item.setType(originalItemNBT.getItem().getType()); }
+    public static class ApplyResult {
+        private final ResultType type;
+        private final ItemStack result;
 
-		ItemMeta meta = item.getItemMeta();
-		ItemMeta originalMeta = originalItemNBT.getItem().getItemMeta();
-		if (originalMeta != null && meta != null) {
+        public ApplyResult(ResultType type) {
+            this(null, type);
+        }
 
-			if (originalMeta.isUnbreakable()) {
-				meta.setUnbreakable(true);
-				if (meta instanceof Damageable && originalMeta instanceof Damageable)
-					((Damageable) meta).setDamage(((Damageable) originalMeta).getDamage());
-			}
+        public ApplyResult(ItemStack result) {
+            this(result, ResultType.SUCCESS);
+        }
 
-			if(originalMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
-				((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) originalMeta).getColor());
+        public ApplyResult(ItemStack result, ResultType type) {
+            this.type = type;
+            this.result = result;
+        }
 
-			VolatileMMOItem originalVolatile = new VolatileMMOItem(originalItemNBT);
-			if (originalVolatile.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
-					&& originalItemNBT.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
+        public ResultType getType() {
+            return type;
+        }
 
-				try {
-					Field profileField = meta.getClass().getDeclaredField("profile");
-					profileField.setAccessible(true);
-					profileField.set(meta,
-							((SkullTextureData) originalVolatile.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
-				} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-					MMOItems.plugin.getLogger().warning("Could not read skull texture");
-				}
-			}
+        public ItemStack getResult() {
+            return result;
+        }
+    }
 
-			item.setItemMeta(meta);
-		}
-
-		return item;
-	}
-
-	public static class ApplyResult {
-		private final ResultType type;
-		private final ItemStack result;
-
-		public ApplyResult(ResultType type) {
-			this(null, type);
-		}
-
-		public ApplyResult(ItemStack result) {
-			this(result, ResultType.SUCCESS);
-		}
-
-		public ApplyResult(ItemStack result, ResultType type) {
-			this.type = type;
-			this.result = result;
-		}
-
-		public ResultType getType() {
-			return type;
-		}
-
-		public ItemStack getResult() {
-			return result;
-		}
-	}
-
-	public enum ResultType {
-		FAILURE, NONE, SUCCESS
-	}
+    public enum ResultType {
+        FAILURE, NONE, SUCCESS
+    }
 }

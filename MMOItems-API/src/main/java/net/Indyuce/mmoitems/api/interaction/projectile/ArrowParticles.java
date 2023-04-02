@@ -25,6 +25,6 @@ public class ArrowParticles extends BukkitRunnable {
             return;
         }
 
-        particleInfo.display(arrow.getLocation().add(0, .25, 0));
+        particleInfo.display(arrow.getLocation().add(0, 0, 0));
     }
 }

@@ -16,6 +16,7 @@ import net.Indyuce.mmoitems.api.crafting.recipe.Recipe;
 import net.Indyuce.mmoitems.api.event.PlayerUseCraftingStationEvent;
 import net.Indyuce.mmoitems.api.item.util.ConfigItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
+import net.Indyuce.mmoitems.comp.eco.MoneyCondition;
 import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Bukkit;
@@ -221,6 +222,13 @@ public class CraftingStationView extends PluginInventory {
                 // Give ingredients back
                 for (Ingredient ingredient : recipeInfo.getRecipe().getIngredients())
                     new SmartGive(player).give(ingredient.generateItemStack(playerData.getRPG()));
+
+                // Give money back
+                recipe.getConditions()
+                        .stream()
+                        .filter(condition -> condition instanceof MoneyCondition)
+                        .map(condition -> (MoneyCondition) condition)
+                        .forEach(condition -> MMOItems.plugin.getVault().getEconomy().depositPlayer(player, condition.getAmount()));
             }
 
             updateData();

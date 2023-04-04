@@ -31,4 +31,8 @@ public class MoneyCondition extends Condition {
 	public void whenCrafting(PlayerData data) {
 		MMOItems.plugin.getVault().getEconomy().withdrawPlayer(data.getPlayer(), amount);
 	}
+
+	public double getAmount() {
+		return amount;
+	}
 }

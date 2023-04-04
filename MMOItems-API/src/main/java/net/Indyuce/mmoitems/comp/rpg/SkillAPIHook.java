@@ -2,58 +2,16 @@ package net.Indyuce.mmoitems.comp.rpg;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.event.PlayerLevelUpEvent;
-import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.player.EquipmentSlot;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.damage.AttackHandler;
-import io.lumine.mythic.lib.damage.AttackMetadata;
-import io.lumine.mythic.lib.damage.DamageMetadata;
-import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class SkillAPIHook implements RPGHandler, Listener, AttackHandler {
-    private final Map<Integer, AttackMetadata> damageInfo = new HashMap<>();
-
-    public SkillAPIHook() {
-        MythicLib.plugin.getDamage().registerHandler(this);
-    }
+public class SkillAPIHook implements RPGHandler, Listener {
 
     @Override
     public RPGPlayer getInfo(net.Indyuce.mmoitems.api.player.PlayerData data) {
         return new SkillAPIPlayer(data);
-    }
-
-    @Override
-    @Nullable
-    public AttackMetadata getAttack(EntityDamageEvent event) {
-        return damageInfo.get(event.getEntity().getEntityId());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void a(SkillDamageEvent event) {
-        if (!(event.getDamager() instanceof Player))
-            return;
-
-        DamageMetadata damageMeta = new DamageMetadata(event.getDamage(), DamageType.SKILL);
-        AttackMetadata attackMeta = new AttackMetadata(damageMeta, event.getTarget(), MMOPlayerData.get(event.getDamager().getUniqueId()).getStatMap().cache(EquipmentSlot.MAIN_HAND));
-        damageInfo.put(event.getTarget().getEntityId(), attackMeta);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void c(EntityDamageByEntityEvent event) {
-        damageInfo.remove(event.getEntity().getEntityId());
     }
 
     @EventHandler

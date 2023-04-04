@@ -61,12 +61,11 @@ public class MMOUtils {
      * They are a piece of text stored as an NBTTag for instance. Items can
      * interact (in a certain way) only if the corresponding reference match.
      * <p>
-     * A null reference is considered just like a non-null reference.
-     * Any item can interact with an item with the universal reference 'all'
+     * Any item can interact with an item with the universal reference 'all'.
+     * A null/empty reference is considered like the universal reference.
      * <p>
-     * TODO
      * This is a simple symmetrical computation. Used for:
-     * - for item upgrading
+     * - for item upgrading TODO
      * - item repairing
      *
      * @param ref1      First reference
@@ -74,11 +73,7 @@ public class MMOUtils {
      * @return If items can interact
      */
     public static boolean checkReference(@Nullable String ref1, @Nullable String ref2) {
-        if (ref1 == null)
-            return ref2 == null || ref2.equals(UNIVERSAL_REFERENCE);
-        if (ref2 == null)
-            return ref1 == null || ref1.equals(UNIVERSAL_REFERENCE);
-        return ref1.equals(UNIVERSAL_REFERENCE) || ref2.equals(UNIVERSAL_REFERENCE) || ref1.equals(ref2);
+        return ref1 == null || ref1.isEmpty() || ref2 == null || ref2.isEmpty() || ref1.equals(UNIVERSAL_REFERENCE) || ref2.equals(UNIVERSAL_REFERENCE) || ref1.equals(ref2);
     }
 
     /**

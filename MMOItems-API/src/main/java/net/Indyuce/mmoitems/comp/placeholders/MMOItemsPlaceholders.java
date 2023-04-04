@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.comp.placeholders;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -59,8 +60,8 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 		}
 
 		if (identifier.startsWith("stat_")) {
-			final String stat = identifier.substring(5).toUpperCase();
-			return StatManager.format(stat, MMOPlayerData.get(player).getStatMap().getStat(stat));
+			final String stat = UtilityMethods.enumName(identifier.substring(5));
+			return StatManager.format(stat, MMOPlayerData.get(player));
 		}
 
 		if (identifier.startsWith("ability_cd_"))

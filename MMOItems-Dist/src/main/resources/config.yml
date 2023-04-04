@@ -15,6 +15,23 @@ iterate-whole-inventory: false
 # When this is set to true, skins can only be applied to an item ONCE. 
 locked-skins: true
 
+# Since 6.9.3 dev builds, MMOItems supports the use of multiple
+# RPG core plugins at the same time. However, MMOItems needs one
+# specific plugin to hook onto level, class, etc.
+#
+# Available plugins:
+# - MMOCORE (level, class, mana, stamina)
+# - HEROES (level, class, mana, stamina)
+# - SKILLAPI or PROSKILLAPI (level, class, mana)
+# - RPGPLAYERLEVELING (level, mana, power)
+# - RACESANDCLASSES (level, class, mana)
+# - BATTLELEVELS (level)
+# - MCMMO (power level)
+# - MCRPG (power level)
+# - SKILLS or SKILLSPRO (class, level, mana)
+# - AURELIUM_SKILLS (power level, mana)
+preferred-rpg-provider: MMOCORE
+
 # By default, all player inventories will be updated every
 # 10 ticks which corresponds to 2 inventory updates a second.
 inventory-update-delay: 10
@@ -103,11 +120,11 @@ soulbound:
     damage:
         base: 1
         per-lvl: 1
-        
+
     # Whether or not soulbound items should be
     # kept when a player dies.
     keep-on-death: true
-    
+
     # Whether or not soulbound item can be
     # dropped by the player
     can-drop: true
@@ -194,7 +211,7 @@ action-bar-display:
     item-break: false
 
 recipes:
-    
+
     # Enables the vanilla recipe book for MMOItems recipes
     use-recipe-book: true
 
@@ -381,6 +398,3 @@ gem-upgrade-default: 'NEVER'
 # This option allows you to disable the ability to
 # use MMOItems that have been removed from your config.
 disable-removed-items: true
-
-# When I was a kid, I saw the Mona Lisa in my school art book...
-# The fist time I saw her, with her hands on her knee... how do I say this...

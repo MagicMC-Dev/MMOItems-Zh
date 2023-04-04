@@ -7,6 +7,7 @@ import com.archyx.aureliumskills.data.PlayerDataLoadEvent;
 import com.archyx.aureliumskills.skills.Skill;
 import com.archyx.aureliumskills.skills.Skills;
 import com.archyx.aureliumskills.stats.Stats;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.MMOItems;
@@ -22,21 +23,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class AureliumSkillsHook implements RPGHandler, Listener {
     private final AureliumSkills aSkills;
 
-    private static final ItemStat WISDOM = new DoubleStat("WISDOM", Material.BOOK,
-            "Additional Wisdom",
-            new String[]{"Additional wisdom (AureliumSkills)"},
-            new String[]{"!miscellaneous", "!block", "all"});
+    private final Map<Stats, ItemStat> statExtra = new HashMap<>();
 
     public AureliumSkillsHook() {
         aSkills = (AureliumSkills) Bukkit.getPluginManager().getPlugin("AureliumSkills");
 
-        // Register wisdom for the max mana stat
-        MMOItems.plugin.getStats().register(WISDOM);
+        for (Stats stat : Stats.values()) {
+            final String statName = UtilityMethods.caseOnWords(stat.name().toLowerCase());
+            final ItemStat miStat = new DoubleStat(stat.name(), Material.BOOK,
+                    "Additional " + statName,
+                    new String[]{"Additional " + statName + " (AureliumSkills)"},
+                    new String[]{"!miscellaneous", "!block", "all"});
+
+            MMOItems.plugin.getStats().register(miStat);
+        }
 
         // Register stat for required professions
         for (Skills skill : Skills.values())
@@ -50,9 +57,11 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
             PlayerData.get(player).getInventory().scheduleUpdate();
     }
 
+    private static final String MODIFIER_KEY = "mmoitems";
+
     @Override
     public void refreshStats(PlayerData data) {
-        AureliumAPI.addStatModifier(data.getPlayer(), "mmoitems", Stats.WISDOM, data.getStats().getStat(WISDOM));
+        statExtra.forEach((stat, miStat) -> AureliumAPI.addStatModifier(data.getPlayer(), MODIFIER_KEY, stat, data.getStats().getStat(miStat)));
     }
 
     @Override

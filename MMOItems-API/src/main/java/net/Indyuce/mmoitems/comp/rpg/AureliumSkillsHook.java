@@ -148,8 +148,8 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
         @Override
         public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 
-            int skillLevel = player instanceof AureliumSkillsPlayer ? ((AureliumSkillsPlayer) player).info.getSkillLevel(skill) : 0;
-            int required = item.getInteger("MMOITEMS_REQUIRED_" + skill.name());
+            final int skillLevel = AureliumAPI.getSkillLevel(player.getPlayer(), skill);
+            final int required = item.getInteger("MMOITEMS_REQUIRED_" + skill.name());
 
             if (skillLevel < required && !player.getPlayer().hasPermission("mmoitems.bypass.level")) {
                 if (message) {

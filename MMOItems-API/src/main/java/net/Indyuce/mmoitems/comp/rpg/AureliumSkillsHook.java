@@ -37,11 +37,12 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
         for (Stats stat : Stats.values()) {
             final String statName = UtilityMethods.caseOnWords(stat.name().toLowerCase());
-            final ItemStat miStat = new DoubleStat(stat.name(), Material.BOOK,
+            final ItemStat miStat = new DoubleStat("ADDITIONAL_" + stat.name(), Material.BOOK,
                     "Additional " + statName,
                     new String[]{"Additional " + statName + " (AureliumSkills)"},
                     new String[]{"!miscellaneous", "!block", "all"});
 
+            statExtra.put(stat, miStat);
             MMOItems.plugin.getStats().register(miStat);
         }
 
@@ -57,11 +58,18 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
             PlayerData.get(player).getInventory().scheduleUpdate();
     }
 
-    private static final String MODIFIER_KEY = "mmoitems";
+    /**
+     * AureliumSkills stores modifiers using ONE hash map for every stat
+     * unlike MythicLib which has several stat instances. Therefore, a
+     * valid key for a stat modifier is "mmoitems_<stat_name>".
+     * <p>
+     * Be careful, ASkills permanently stores modifiers unlike ML
+     */
+    private static final String MODIFIER_KEY_PREFIX = "mmoitems_";
 
     @Override
     public void refreshStats(PlayerData data) {
-        statExtra.forEach((stat, miStat) -> AureliumAPI.addStatModifier(data.getPlayer(), MODIFIER_KEY, stat, data.getStats().getStat(miStat)));
+        statExtra.forEach((stat, miStat) -> AureliumAPI.addStatModifier(data.getPlayer(), MODIFIER_KEY_PREFIX + stat.name(), stat, data.getStats().getStat(miStat)));
     }
 
     @Override
@@ -132,7 +140,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
         public RequiredProfessionStat(Skills skill) {
             super(skill.name(), VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), skill.getDisplayName(Locale.getDefault()),
-                    new String[]{"Amount of " + skill.getDisplayName(Locale.getDefault()) + " levels the", "player needs to use the item."});
+                    new String[]{"Amount of " + skill.getDisplayName(Locale.getDefault()) + " levels the", "player needs to use the item.", "(AureliumSkills)"});
 
             this.skill = aSkills.getSkillRegistry().getSkill(skill.name());
         }

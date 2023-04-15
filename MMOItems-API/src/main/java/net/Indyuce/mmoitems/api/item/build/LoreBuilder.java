@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.api.item.build;
 
+import bsh.EvalError;
 import com.google.common.collect.Lists;
 import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.parser.client.eval.DoubleEvaluator;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -154,13 +154,12 @@ public class LoreBuilder {
         for (String string : lore) {
             index++;
             String match = StringUtils.substringBetween(string, "MATH%", "%");
-            if (match == null)
-                continue;
+            if (match == null) continue;
 
             String result;
             try {
-                result = MythicLib.plugin.getMMOConfig().decimals.format(new DoubleEvaluator().evaluate(match));
-            } catch (RuntimeException ignored) {
+                result = MythicLib.plugin.getMMOConfig().decimals.format((double) MythicLib.plugin.getInterpreter().eval(match));
+            } catch (Exception ignored) {
                 result = "<InvalidFormula>";
             }
             lore.set(index, string.replaceAll("MATH\\%[^%]*\\%", result));

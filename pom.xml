@@ -5,7 +5,7 @@
     <groupId>net.Indyuce</groupId>
     <artifactId>MMOItems</artifactId>
     <packaging>pom</packaging>
-    <version>6.9.3-SNAPSHOT</version>
+    <version>6.9.4-SNAPSHOT</version>
 
     <modules>
         <module>MMOItems-API</module>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicLib-dist</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
+            <version>1.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- Jetbrains Annotations -->

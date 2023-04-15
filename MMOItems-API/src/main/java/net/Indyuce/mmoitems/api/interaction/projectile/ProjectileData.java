@@ -74,10 +74,8 @@ public class ProjectileData {
     }
 
     public void applyPotionEffects(LivingEntity target) {
-        if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS")) {
-            for (ArrowPotionEffectArrayItem entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), ArrowPotionEffectArrayItem[].class)) {
+        if (sourceItem.hasTag("MMOITEMS_ARROW_POTION_EFFECTS"))
+            for (ArrowPotionEffectArrayItem entry : MythicLib.plugin.getJson().parse(sourceItem.getString("MMOITEMS_ARROW_POTION_EFFECTS"), ArrowPotionEffectArrayItem[].class))
                 target.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(entry.type), entry.duration, entry.level).toEffect());
-            }
-        }
     }
 }

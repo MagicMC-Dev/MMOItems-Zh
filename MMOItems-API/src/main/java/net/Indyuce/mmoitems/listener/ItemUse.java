@@ -24,7 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Arrow;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -272,7 +272,7 @@ public class ItemUse implements Listener {
      */
     @EventHandler
     public void handleCustomBows(EntityShootBowEvent event) {
-        if (!(event.getProjectile() instanceof Arrow) || !(event.getEntity() instanceof Player))
+        if (!(event.getProjectile() instanceof AbstractArrow) || !(event.getEntity() instanceof Player))
             return;
 
         final NBTItem item = NBTItem.get(event.getBow());
@@ -291,7 +291,7 @@ public class ItemUse implements Listener {
             final EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
             MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event.getForce());
 
-            final Arrow arrow = (Arrow) event.getProjectile();
+            final AbstractArrow arrow = (AbstractArrow) event.getProjectile();
             if (item.getStat("ARROW_VELOCITY") > 0)
                 arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
         }

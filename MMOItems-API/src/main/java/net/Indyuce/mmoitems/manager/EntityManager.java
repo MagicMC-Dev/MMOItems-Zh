@@ -9,11 +9,9 @@ import net.Indyuce.mmoitems.api.interaction.projectile.ArrowParticles;
 import net.Indyuce.mmoitems.api.interaction.projectile.EntityData;
 import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,8 +61,8 @@ public class EntityManager implements Listener {
          * arrow particles. Currently projectiles are only arrows so there is no
          * problem with other projectiles like snowballs etc.
          */
-        if (entity instanceof Arrow && sourceItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
-            new ArrowParticles((Arrow) entity, sourceItem);
+        if (entity instanceof AbstractArrow && sourceItem.hasTag("MMOITEMS_ARROW_PARTICLES"))
+            new ArrowParticles((AbstractArrow) entity, sourceItem);
 
         projectiles.put(entity.getEntityId(), projectileData);
     }
@@ -100,11 +99,13 @@ public class EntityManager implements Listener {
      * This event is called on LOWEST and only edits the custom bow base damage.
      * It does NOT take into account the base damage passed in Bow#getDamage()
      * and fully overrides any change.
+     *
+     * This applies to tridents, arrows, spectral arrows etc.
      * <p>
      * Event order: ProjectileHit -> EntityDamage / EntityDeathEvent
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void customBowDamage(EntityDamageByEntityEvent event) {
+    public void customProjectileDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Projectile) || !(event.getEntity() instanceof LivingEntity) || event.getEntity().hasMetadata("NPC"))
             return;
 
@@ -113,11 +114,11 @@ public class EntityManager implements Listener {
         if (data == null)
             return;
 
-        // Calculate custom base bow damage
+        // Calculate custom base damage
         double baseDamage = data.getDamage();
 
         // Apply power vanilla enchant
-        if (projectile instanceof Arrow && data.getSourceItem().getItem().hasItemMeta()
+        if (projectile instanceof AbstractArrow && data.getSourceItem().getItem().hasItemMeta()
                 && data.getSourceItem().getItem().getItemMeta().getEnchants().containsKey(Enchantment.ARROW_DAMAGE))
             baseDamage *= 1.25 + (.25 * data.getSourceItem().getItem().getItemMeta().getEnchantLevel(Enchantment.ARROW_DAMAGE));
 
@@ -130,7 +131,7 @@ public class EntityManager implements Listener {
             return;
 
         final ProjectileAttackMetadata projAttack = (ProjectileAttackMetadata) event.getAttack();
-        final ProjectileData data = projectiles.get(projAttack.getProjectile().getEntityId());
+        final @Nullable ProjectileData data = projectiles.get(projAttack.getProjectile().getEntityId());
         if (data == null)
             return;
 

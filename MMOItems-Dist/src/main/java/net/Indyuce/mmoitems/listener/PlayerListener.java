@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.event.armorequip.ArmorEquipEvent;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.DeathItemsHandler;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
@@ -28,12 +28,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class PlayerListener implements Listener {
-    private final Map<Player, List<ItemStack>> deathItems = new HashMap<>();
 
     /**
-     * Careful, MMOCore and MMOMana runs on LOWEST
+     * MythicLib runs of LOWEST
+     * MMOCore and MMOInventory runs on LOW
      */
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void loadPlayerData(PlayerJoinEvent event) {
         MMOItems.plugin.getRecipes().refreshRecipeBook(event.getPlayer());
         PlayerData.load(event.getPlayer());
@@ -60,59 +60,40 @@ public class PlayerListener implements Listener {
 
     /**
      * Prevent players from dropping items which are bound to them with a
-     * soulbound. Items are cached inside a map waiting for the player to
+     * Soulbound. Items are cached inside a map waiting for the player to
      * respawn. If he does not respawn the items are dropped on the ground, this
      * way there don't get lost
      */
     @EventHandler(priority = EventPriority.HIGH)
-    public void onDeathForSoulbound(PlayerDeathEvent event) {
-        if (event.getKeepInventory() || !MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
-            return;
+    public void keepItemsOnDeath(PlayerDeathEvent event) {
+        if (event.getKeepInventory()) return;
 
-        Player player = event.getEntity();
-        SoulboundInfo soulboundInfo = new SoulboundInfo(player);
+        final Player player = event.getEntity();
+        final DeathItemsHandler soulboundInfo = new DeathItemsHandler(player);
 
-        Iterator<ItemStack> iterator = event.getDrops().iterator();
+        final Iterator<ItemStack> iterator = event.getDrops().iterator();
         while (iterator.hasNext()) {
-            ItemStack item = iterator.next();
-            NBTItem nbt = NBTItem.get(item);
-
-            if (nbt.hasTag("MMOITEMS_DISABLE_DEATH_DROP") && nbt.getBoolean("MMOITEMS_DISABLE_DEATH_DROP")) {
-                iterator.remove();
-                if (!deathItems.containsKey(player))
-                    deathItems.put(player, new ArrayList<>());
-
-                deathItems.get(player).add(item);
-            }
+            final ItemStack item = iterator.next();
+            final NBTItem nbt = NBTItem.get(item);
 
             /*
-             * not a perfect check but it's very sufficient and so we avoid
+             * Not a perfect check but it's very sufficient and so we avoid
              * using a JsonParser followed by map checkups in the SoulboundData
              * constructor
              */
-            else if (nbt.hasTag("MMOITEMS_SOULBOUND") && nbt.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString())) {
+            if ((MMOItems.plugin.getLanguage().keepSoulboundOnDeath && nbt.getBoolean("MMOITEMS_DISABLE_DEATH_DROP"))
+                    || (nbt.hasTag("MMOITEMS_SOULBOUND") && nbt.getString("MMOITEMS_SOULBOUND").contains(player.getUniqueId().toString()))) {
                 iterator.remove();
-                soulboundInfo.add(item);
+                soulboundInfo.registerItem(item);
             }
         }
 
-        if (soulboundInfo.hasItems())
-            soulboundInfo.setup();
+        soulboundInfo.registerIfNecessary();
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-
-        if (MMOItems.plugin.getLanguage().keepSoulboundOnDeath)
-            SoulboundInfo.read(player);
-
-        if (deathItems.containsKey(player)) {
-            Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-                player.getInventory().addItem(deathItems.get(player).toArray(new ItemStack[0]));
-                deathItems.remove(player);
-            }, 10);
-        }
+        DeathItemsHandler.readAndRemove(event.getPlayer());
     }
 
     @EventHandler
@@ -161,7 +142,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     * method NEEDS some improvement in the future
+     *         method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler
@@ -175,7 +156,7 @@ public class PlayerListener implements Listener {
      * player cast abilities or attacks with not the correct stats
      *
      * @deprecated This does cost some performance and that update
-     * method NEEDS some improvement in the future
+     *         method NEEDS some improvement in the future
      */
     @Deprecated
     @EventHandler

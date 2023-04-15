@@ -5,7 +5,7 @@ import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackMessage;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import io.lumine.mythic.lib.version.SpigotPlugin;
 import net.Indyuce.mmoitems.api.ItemTier;
-import net.Indyuce.mmoitems.api.SoulboundInfo;
+import net.Indyuce.mmoitems.api.DeathItemsHandler;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -263,8 +263,8 @@ public class MMOItems extends JavaPlugin {
         // Save player data
         PlayerData.getLoaded().forEach(data -> data.save(false));
 
-        // Drop abandonned soulbound items
-        SoulboundInfo.getAbandonnedInfo().forEach(SoulboundInfo::dropItems);
+        // Drop abandoned items
+        DeathItemsHandler.getActive().forEach(info -> info.giveItems(true));
 
         // Close inventories
         for (Player player : Bukkit.getOnlinePlayers())

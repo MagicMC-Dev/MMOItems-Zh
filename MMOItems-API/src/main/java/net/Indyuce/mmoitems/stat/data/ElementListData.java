@@ -41,7 +41,13 @@ public class ElementListData implements Mergeable {
     @Override
     public StatData cloneData() {
         ElementListData ret = new ElementListData();
-        stats.forEach((key, value) -> ret.stats.put(key, value));
+        for (Map.Entry<Pair<Element, ElementStatType>, Double> entry : stats.entrySet()) {
+            Pair<Element, ElementStatType> key = entry.getKey();
+            Double value = entry.getValue();
+            if (value != 0) {
+                ret.stats.put(key, value);
+            }
+        }
         return ret;
     }
 

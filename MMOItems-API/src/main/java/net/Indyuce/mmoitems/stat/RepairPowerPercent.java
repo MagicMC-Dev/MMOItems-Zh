@@ -37,7 +37,7 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
 
         // Check repair reference
         final Player player = playerData.getPlayer();
-        final @Nullable String repairType1 = target.getString(REPAIR_TYPE_TAG);
+        final @Nullable String repairType1 = consumable.getNBTItem().getString(REPAIR_TYPE_TAG);
         final @Nullable String repairType2 = target.getString(REPAIR_TYPE_TAG);
         if (!MMOUtils.checkReference(repairType1, repairType2)) {
             Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);

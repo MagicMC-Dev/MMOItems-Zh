@@ -117,9 +117,10 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onArmorEquip(ArmorEquipEvent event) {
-        Player player = event.getPlayer();
-        NBTItem item = NBTItem.get(event.getNewArmorPiece());
-        if (!PlayerData.get(player).getRPG().canUse(item, true))
+        if (event.getNewArmorPiece() == null)
+            return;
+
+        if (!PlayerData.get(event.getPlayer()).getRPG().canUse(NBTItem.get(event.getNewArmorPiece()), true))
             event.setCancelled(true);
     }
 

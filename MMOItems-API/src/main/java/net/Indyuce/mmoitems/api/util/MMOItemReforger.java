@@ -373,30 +373,8 @@ public class MMOItemReforger {
 
         this.player = player;
 
-        /*
-         * This chunk will determine the level the item was, and
-         * regenerate a new one based on that level ~ the "Item Level" which
-         *
-         *
-         * which I honestly don't know how to use I've just been
-         * copying and pasting this around, leaving this code untouched
-         * since I first started polishing the RevID workings.
-         *
-         *                      - gunging
-         */
-        int iLevel = MMOItemReforger.defaultItemLevel;
-
         // What level with the regenerated item will be hmmmm.....
-        generationItemLevel =
-
-                // No default level specified?
-                (iLevel == -32767) ?
-
-                        // Does the item have level?
-                        (getOldMMOItem().hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue() : 0)
-
-                        // Default level was specified, use that.
-                        : iLevel;
+        generationItemLevel = (getOldMMOItem().hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue() : 0);
 
         // Identify tier.
         ItemTier tier =
@@ -455,12 +433,10 @@ public class MMOItemReforger {
     }
 
     //region Config Values
-    public static int defaultItemLevel = -32767;
     public static boolean keepTiersWhenReroll = true;
     public static boolean gemstonesRevIDWhenUnsocket = false;
 
     public static void reload() {
-        defaultItemLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -32767);
         keepTiersWhenReroll = MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers");
         gemstonesRevIDWhenUnsocket = MMOItems.plugin.getConfig().getBoolean("item-revision.regenerate-gems-when-unsocketed", false);
     }

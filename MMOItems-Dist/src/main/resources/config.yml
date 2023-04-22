@@ -269,13 +269,6 @@ disable-vanilla-recipes: []
 # Options for the Item Revision System
 item-revision:
 
-    # This is the value to set the Item Level to when
-    # items are updated by the revision system.
-    # This can be set to -1 to use the items previous level.
-    # Please note, that this value has no effect if
-    # ´reroll-when-updated´ is set to true.
-    default-item-level: -1
-
     # Unsocketing gems picks them up with the stats they had
     # when first put into the item, disable this option to
     # force them to be regenerated.

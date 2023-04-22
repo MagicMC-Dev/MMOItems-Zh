@@ -11,10 +11,7 @@ import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import org.apache.commons.codec.binary.Base64;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -33,9 +30,16 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class MMOUtils {
-
     public MMOUtils() {
         throw new IllegalArgumentException("This class cannot be instantiated.");
+    }
+
+    public static boolean isColorable(Particle particle) {
+        return particle.getDataType() == Particle.DustOptions.class;
+    }
+
+    public static boolean isNonEmpty(@Nullable String str) {
+        return str != null && !str.isEmpty();
     }
 
     /**

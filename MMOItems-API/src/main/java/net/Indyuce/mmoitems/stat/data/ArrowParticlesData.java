@@ -73,6 +73,11 @@ public class ArrowParticlesData implements StatData, RandomStatData<ArrowParticl
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
 	public String toString() {
 		JsonObject object = new JsonObject();
 		object.addProperty("Particle", particle.name());

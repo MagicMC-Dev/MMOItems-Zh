@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import org.apache.commons.lang.Validate;
 
 import com.google.gson.JsonArray;
 
@@ -13,12 +12,11 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.bouncycastle.util.StringList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StringListData implements StatData, RandomStatData<StringListData>, Mergeable<StringListData> {
-	@NotNull private List<String> list;
+	@NotNull private final List<String> list;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -80,34 +78,12 @@ public class StringListData implements StatData, RandomStatData<StringListData>,
 
 	/**
 	 * @param str Entry to remove
-	 *
 	 * @return If the value was actually removed. If it wasn't there
-	 * 		   in the first place, this will return false.
-	 *
+	 * in the first place, this will return false.
 	 * @deprecated Deprecated
 	 */
 	@Deprecated
 	public boolean remove(@Nullable String str) {
-
-		if (!list.contains(str)) { return false; }
-
-		if (removeGuarantee) {
-
-			// Remove that sh
-			return list.remove(str);
-		} else {
-
-			// OK
-			try {
-				return list.remove(str);
-
-			} catch (UnsupportedOperationException ignored) {
-
-				list = new ArrayList<>(list);
-				removeGuarantee = true;
-				return list.remove(str);
-			}
-		}
+		return list.remove(str);
 	}
-	boolean removeGuarantee = false;
 }

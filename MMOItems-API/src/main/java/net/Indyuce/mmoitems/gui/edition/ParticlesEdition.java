@@ -6,7 +6,6 @@ import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.particle.api.ParticleType;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -103,7 +102,7 @@ public class ParticlesEdition extends EditionInventory {
 			}
 		}
 
-		if (ParticleData.isColorable(particle)) {
+		if (MMOUtils.isColorable(particle)) {
 			int red = getEditedSection().getInt("item-particles.color.red");
 			int green = getEditedSection().getInt("item-particles.color.green");
 			int blue = getEditedSection().getInt("item-particles.color.blue");

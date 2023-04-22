@@ -33,10 +33,9 @@ public class ItemSkin extends UseItem {
         if (targetType == Type.SKIN)
             return new ApplyResult(ResultType.NONE);
 
-        if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && target.getBoolean("MMOITEMS_HAS_SKIN")) {
+        if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && MMOUtils.isNonEmpty(target.getString(ItemSkin.SKIN_ID_TAG))) {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-            Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem()))
-                    .send(player);
+            Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(target.getItem())).send(player);
             return new ApplyResult(ResultType.NONE);
         }
 
@@ -102,8 +101,6 @@ public class ItemSkin extends UseItem {
         return new ApplyResult(item);
     }
 
-    public static final String HAS_SKIN_TAG = "MMOITEMS_HAS_SKIN";
-
     /**
      * When applying a skin to an item, the skin item ID is saved
      * in the target item so that if deskined, it can be retrieved
@@ -113,118 +110,67 @@ public class ItemSkin extends UseItem {
 
     /**
      * Applies the skin information from a skin consumable onto any item.
+     * <p>
+     * This methods also works if the provided VolatileMMOItem matches an item
+     * that already has a skin information stored inside of it, in which case it
+     * will fetch the value of the {@link #SKIN_ID_TAG} nbttag.
      *
-     * @param target      Target item that the skin has been <b>successfully</b> applied to
-     * @param skinItemMMO Skin consumable
+     * @param target  Target item that the skin has been <b>successfully</b> applied to
+     * @param volSkin Skin consumable
      * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
+     * @deprecated Badly implemented. This handles individual stats and should use some SkinStat interface
      */
+    @Deprecated
     @NotNull
-    public static ItemStack applySkin(@NotNull NBTItem target, @NotNull VolatileMMOItem skinItemMMO) {
-        final NBTItem skinItemNBT = skinItemMMO.getNBT();
+    public static ItemStack applySkin(@NotNull NBTItem target, @NotNull VolatileMMOItem volSkin) {
+        final NBTItem nbtSkin = volSkin.getNBT();
 
-        target.addTag(new ItemTag(HAS_SKIN_TAG, true));
-        target.addTag(new ItemTag(SKIN_ID_TAG, skinItemNBT.getString("MMOITEMS_ITEM_ID")));
-        if (skinItemNBT.getInteger("CustomModelData") != 0)
-            target.addTag(new ItemTag("CustomModelData", skinItemNBT.getInteger("CustomModelData")));
+        // Apply skin ID to new item
+        @Nullable String appliedSkinId = volSkin.getNBT().getString(SKIN_ID_TAG);
+        appliedSkinId = MMOUtils.isNonEmpty(appliedSkinId) ? appliedSkinId : nbtSkin.getString("MMOITEMS_ITEM_ID");
+        target.addTag(new ItemTag(SKIN_ID_TAG, appliedSkinId));
 
-        if (!skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty())
-            target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", skinItemNBT.getString("MMOITEMS_ITEM_PARTICLES")));
+        // Custom model data
+        if (nbtSkin.getInteger("CustomModelData") != 0)
+            target.addTag(new ItemTag("CustomModelData", nbtSkin.getInteger("CustomModelData")));
 
-        ItemStack item = target.toItem();
-        if (item.getType() != skinItemNBT.getItem().getType())
-            item.setType(skinItemNBT.getItem().getType());
+        // Particles
+        if (!nbtSkin.getString("MMOITEMS_ITEM_PARTICLES").isEmpty())
+            target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", nbtSkin.getString("MMOITEMS_ITEM_PARTICLES")));
 
-        ItemMeta meta = item.getItemMeta();
-        ItemMeta skinMeta = skinItemNBT.getItem().getItemMeta();
+        final ItemStack item = target.toItem();
+        if (item.getType() != nbtSkin.getItem().getType())
+            item.setType(nbtSkin.getItem().getType());
+
+        final ItemMeta meta = item.getItemMeta();
+        final ItemMeta skinMeta = nbtSkin.getItem().getItemMeta();
         if (skinMeta != null && meta != null) {
 
-            // TODO factorize with a ItemSkinStat stat interface
+            // TODO SkinStat interface
+
+            // Unbreakable & durability
             if (skinMeta.isUnbreakable()) {
                 meta.setUnbreakable(true);
                 if (meta instanceof Damageable && skinMeta instanceof Damageable)
                     ((Damageable) meta).setDamage(((Damageable) skinMeta).getDamage());
             }
 
+            // Leather armor
             if (skinMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
                 ((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) skinMeta).getColor());
 
-            if (skinItemMMO.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
-                    && skinItemNBT.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
+            // Skull texture
+            if (volSkin.hasData(ItemStats.SKULL_TEXTURE)
+                    && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
+                    && nbtSkin.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial())
                 try {
-                    Field profileField = meta.getClass().getDeclaredField("profile");
+                    final Field profileField = meta.getClass().getDeclaredField("profile");
                     profileField.setAccessible(true);
                     profileField.set(meta,
-                            ((SkullTextureData) skinItemMMO.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
+                            ((SkullTextureData) volSkin.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
                 } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
                     MMOItems.plugin.getLogger().warning("Could not read skull texture");
                 }
-            }
-
-            item.setItemMeta(meta);
-        }
-
-        return item;
-    }
-
-    /**
-     * Copies a skin from one item to another
-     *
-     * @param target          Target item that you are copying the skin onto
-     * @param originalItemNBT Item with a skin already, as NBT. Operation will fail
-     *                        if it doesnt have a skin.
-     * @return Built ItemStack from the target NBT but with the skin data contained in the skin consumable
-     * @author Gunging
-     */
-    @Nullable
-    public static ItemStack applySkin(@NotNull NBTItem target, @NotNull NBTItem originalItemNBT) {
-
-        // No skin no service
-        if (!originalItemNBT.getBoolean(HAS_SKIN_TAG)) {
-            return null;
-        }
-
-        // Copy over data
-        target.addTag(new ItemTag(HAS_SKIN_TAG, true));
-        target.addTag(new ItemTag(SKIN_ID_TAG, originalItemNBT.getString("MMOITEMS_ITEM_ID")));
-        if (originalItemNBT.getInteger("CustomModelData") != 0) {
-            target.addTag(new ItemTag("CustomModelData", originalItemNBT.getInteger("CustomModelData")));
-        }
-        if (!originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
-            target.addTag(new ItemTag("MMOITEMS_ITEM_PARTICLES", originalItemNBT.getString("MMOITEMS_ITEM_PARTICLES")));
-        }
-
-        // ItemMeta values copy-over
-        ItemStack item = target.toItem();
-        if (item.getType() != originalItemNBT.getItem().getType()) {
-            item.setType(originalItemNBT.getItem().getType());
-        }
-
-        ItemMeta meta = item.getItemMeta();
-        ItemMeta originalMeta = originalItemNBT.getItem().getItemMeta();
-        if (originalMeta != null && meta != null) {
-
-            if (originalMeta.isUnbreakable()) {
-                meta.setUnbreakable(true);
-                if (meta instanceof Damageable && originalMeta instanceof Damageable)
-                    ((Damageable) meta).setDamage(((Damageable) originalMeta).getDamage());
-            }
-
-            if (originalMeta instanceof LeatherArmorMeta && meta instanceof LeatherArmorMeta)
-                ((LeatherArmorMeta) meta).setColor(((LeatherArmorMeta) originalMeta).getColor());
-
-            VolatileMMOItem originalVolatile = new VolatileMMOItem(originalItemNBT);
-            if (originalVolatile.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == VersionMaterial.PLAYER_HEAD.toMaterial()
-                    && originalItemNBT.getItem().getType() == VersionMaterial.PLAYER_HEAD.toMaterial()) {
-
-                try {
-                    Field profileField = meta.getClass().getDeclaredField("profile");
-                    profileField.setAccessible(true);
-                    profileField.set(meta,
-                            ((SkullTextureData) originalVolatile.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
-                } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-                    MMOItems.plugin.getLogger().warning("Could not read skull texture");
-                }
-            }
 
             item.setItemMeta(meta);
         }

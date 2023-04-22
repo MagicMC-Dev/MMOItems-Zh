@@ -48,7 +48,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 		int amount = config.getInt("amount");
 		double offset = config.getDouble("offset");
 
-		return ParticleData.isColorable(particle)
+		return MMOUtils.isColorable(particle)
 				? new ArrowParticlesData(particle, amount, offset, config.getInt("color.red"), config.getInt("color.green"),
 						config.getInt("color.blue"))
 				: new ArrowParticlesData(particle, amount, offset, config.getDouble("speed"));
@@ -105,7 +105,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 				 double offset = json.get("Offset").getAsDouble();
 
 				 // Ist it colorable'
-				 if (ParticleData.isColorable(particle)) {
+				 if (MMOUtils.isColorable(particle)) {
 
 					 // Return as colourable
 					 return new ArrowParticlesData(particle, amount, offset, json.get("Red").getAsInt(), json.get("Green").getAsInt(), json.get("Blue").getAsInt());
@@ -187,7 +187,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 			lore.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + cast.getOffset());
 			lore.add("");
 
-			if (ParticleData.isColorable(cast.getParticle()))
+			if (MMOUtils.isColorable(cast.getParticle()))
 				lore.add(ChatColor.translateAlternateColorCodes('&',
 						"&7* Color: &c&l" + cast.getRed() + "&7 - &a&l" + cast.getGreen() + "&7 - &9&l" + cast.getBlue()));
 			else

@@ -129,8 +129,8 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
     public void merge(GemSocketsData data) {
 
         // Combine both actual gems, and empty slots
-        emptySlots.addAll(((GemSocketsData) data).emptySlots);
-        gems.addAll(((GemSocketsData) data).getGemstones());
+        emptySlots.addAll(data.emptySlots);
+        gems.addAll(data.gems);
     }
 
     @Override

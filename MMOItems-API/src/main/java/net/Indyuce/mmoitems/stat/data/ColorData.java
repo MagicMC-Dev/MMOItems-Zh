@@ -46,6 +46,11 @@ public class ColorData implements StatData, RandomStatData<ColorData> {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
 	public String toString() {
 		return "{Red=" + red + ",Green=" + green + ",Blue=" + blue + "}";
 	}

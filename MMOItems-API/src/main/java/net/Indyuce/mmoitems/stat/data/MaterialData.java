@@ -29,6 +29,11 @@ public class MaterialData implements StatData, RandomStatData<MaterialData> {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
 	public MaterialData randomize(MMOItemBuilder builder) {
 		return this;
 	}

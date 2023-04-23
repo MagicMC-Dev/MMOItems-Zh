@@ -6,12 +6,12 @@ import net.Indyuce.mmoitems.api.item.mmoitem.ReadMMOItem;
 import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
-import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,23 +31,22 @@ public class ItemLevel extends ItemStat<NumericStatFormula, DoubleData> implemen
 	@Nullable
 	@Override
 	public NumericStatFormula whenInitialized(Object object) {
-		// not supported
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		// not supported
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		// not supported
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
-		// not supported
+		throw new NotImplementedException();
 	}
 
 	@NotNull

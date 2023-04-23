@@ -28,18 +28,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * A class to manage modification of items with reference to what they used to be
- * (and apparently also used to automatically apply SoulBounds):
+ * A class to manage modification of items with reference to what
+ * they used to be. Updating/reforging refers to changing the base
+ * stats of a MMOItem instance to what the template currently has,
+ * usually keeping gem stones and upgrade level. This won't reroll
+ * RNG stats unless the specific option is toggled on.
  *
- * <p><code><b>updating</b></code> refers to changing the base stats
- * of a MMOItem instance to what the template currently has, usually
- * keeping gem stones and upgrade level. This wont reroll RNG stats.</p>
- *
- * <p><code><b>reforging</b></code> same thing as updating, but rerolling
- * the RNG stats - basically transferring the data specified by the
- * {@link ReforgeOptions} into a new item of the same Type-ID</p>
- *
- * @author Gunging
+ * @author Gunging, Jules
  */
 public class MMOItemReforger {
 
@@ -135,7 +130,7 @@ public class MMOItemReforger {
 
     /**
      * @return The meta of {@link #getStack()} but without that
-     *         pesky {@link Nullable} annotation.
+     * pesky {@link Nullable} annotation.
      */
     @NotNull
     @Deprecated
@@ -183,8 +178,8 @@ public class MMOItemReforger {
 
     /**
      * @return The MMOItem being updated. For safety, it should be cloned,
-     *         in case any plugin decides to make changes in it... though
-     *         this should be entirely for <b>reading purposes only</b>.
+     * in case any plugin decides to make changes in it... though
+     * this should be entirely for <b>reading purposes only</b>.
      */
     @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @NotNull
@@ -222,7 +217,7 @@ public class MMOItemReforger {
 
     /**
      * @return The Updated version of the MMOItem, with
-     *         its revised stats.
+     * its revised stats.
      */
     @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @NotNull
@@ -241,7 +236,7 @@ public class MMOItemReforger {
     /**
      * @return If this is a loaded template. That's all required.
      * @deprecated Ambigous method, not finding a corresponding item
-     *         template isn't the only fail factor.
+     * template isn't the only fail factor.
      */
     @Deprecated
     public boolean canReforge() {
@@ -330,7 +325,7 @@ public class MMOItemReforger {
 
     /**
      * @return The item level modifying the values of RandomStatData
-     *         upon creating a new MMOItem from the template.
+     * upon creating a new MMOItem from the template.
      */
     public int getGenerationItemLevel() {
         return generationItemLevel;
@@ -361,42 +356,18 @@ public class MMOItemReforger {
     public boolean reforge(@NotNull ReforgeOptions options, @Nullable RPGPlayer player) {
 
         // Throw fail
-        if (!hasTemplate())
-            return false;
+        if (!hasTemplate()) return false;
 
         // Prepare everything properly
         oldMMOItem = new LiveMMOItem(getNBTItem());
 
         // Not blacklisted right!?
-        if (options.isBlacklisted(getOldMMOItem().getId()))
-            return false;
+        if (options.isBlacklisted(getOldMMOItem().getId())) return false;
 
         this.player = player;
 
-        /*
-         * This chunk will determine the level the item was, and
-         * regenerate a new one based on that level ~ the "Item Level" which
-         *
-         *
-         * which I honestly don't know how to use I've just been
-         * copying and pasting this around, leaving this code untouched
-         * since I first started polishing the RevID workings.
-         *
-         *                      - gunging
-         */
-        int iLevel = MMOItemReforger.defaultItemLevel;
-
         // What level with the regenerated item will be hmmmm.....
-        generationItemLevel =
-
-                // No default level specified?
-                (iLevel == -32767) ?
-
-                        // Does the item have level?
-                        (getOldMMOItem().hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue() : 0)
-
-                        // Default level was specified, use that.
-                        : iLevel;
+        generationItemLevel = (getOldMMOItem().hasData(ItemStats.ITEM_LEVEL) ? (int) ((DoubleData) getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue() : 0);
 
         // Identify tier.
         ItemTier tier =
@@ -420,8 +391,7 @@ public class MMOItemReforger {
         Bukkit.getPluginManager().callEvent(mmoREV);
 
         // Cancelled? it ends there
-        if (mmoREV.isCancelled())
-            return false;
+        if (mmoREV.isCancelled()) return false;
 
         // Properly recalculate all based on histories
         for (StatHistory hist : getFreshMMOItem().getStatHistories())
@@ -455,12 +425,10 @@ public class MMOItemReforger {
     }
 
     //region Config Values
-    public static int defaultItemLevel = -32767;
     public static boolean keepTiersWhenReroll = true;
     public static boolean gemstonesRevIDWhenUnsocket = false;
 
     public static void reload() {
-        defaultItemLevel = MMOItems.plugin.getConfig().getInt("item-revision.default-item-level", -32767);
         keepTiersWhenReroll = MMOItems.plugin.getConfig().getBoolean("item-revision.keep-tiers");
         gemstonesRevIDWhenUnsocket = MMOItems.plugin.getConfig().getBoolean("item-revision.regenerate-gems-when-unsocketed", false);
     }

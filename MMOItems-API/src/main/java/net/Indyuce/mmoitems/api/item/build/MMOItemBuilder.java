@@ -175,40 +175,22 @@ public class MMOItemBuilder {
      * with strictly higher priority. If there are none, adds modifier and
      * clears less priority modifiers
      *
-     * @param modifier Name modifier which needs to be added
-     * @param mod      UUID of storage into the Stat History of name
+     * @param modifier   Name modifier which needs to be added
+     * @param modifierId UUID of storage into the Stat History of name
      */
-    public void addModifier(@NotNull NameModifier modifier, @NotNull UUID mod) {
+    public void addModifier(@NotNull NameModifier modifier, @NotNull UUID modifierId) {
 
-        // Might overwrite a modifier yes
-        ArrayList<UUID> removedObs = new ArrayList<>();
-        for (UUID cUID : nameModifiers.keySet()) {
-
-            // Remove obs?
-            NameModifier obs = nameModifiers.get(cUID);
-
-            // Are they the same type?
+        // Might overwrite a modifier
+        final Iterator<NameModifier> ite = nameModifiers.values().iterator();
+        while (ite.hasNext()) {
+            final NameModifier obs = ite.next();
             if (obs.getType() == modifier.getType()) {
-
-                // Choose greater priority
-                if (obs.getPriority() > modifier.getPriority()) {
-
-                    // Keep old one
-                    return;
-
-                } else if (obs.getPriority() < modifier.getPriority()) {
-
-                    // Remove old one and add new one
-                    removedObs.add(cUID);
-                }
+                if (obs.getPriority() > modifier.getPriority()) return;
+                else if (obs.getPriority() < modifier.getPriority()) ite.remove();
             }
         }
 
-        // Remove
-        for (UUID ro : removedObs) {
-            nameModifiers.remove(ro);
-        }
-        nameModifiers.put(mod, modifier);
+        nameModifiers.put(modifierId, modifier);
     }
 
     /**

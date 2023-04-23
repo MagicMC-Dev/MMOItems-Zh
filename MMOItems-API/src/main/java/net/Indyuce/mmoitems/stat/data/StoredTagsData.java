@@ -2,13 +2,10 @@ package net.Indyuce.mmoitems.stat.data;
 
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
-import net.Indyuce.mmoitems.api.interaction.ItemSkin;
 import net.Indyuce.mmoitems.api.item.build.ItemStackBuilder;
 import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,50 +14,33 @@ import java.util.List;
 public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
 	private final List<ItemTag> tags = new ArrayList<>();
 
-	private static final List<String> ignoreList = Arrays.asList("Unbreakable", "BlockEntityTag", "display", "Enchantments", "HideFlags", "Damage",
+	private static final List<String> IGNORED_TAGS = Arrays.asList(
+			"Unbreakable", "BlockEntityTag", "display", "Enchantments", "HideFlags", "Damage",
 			"AttributeModifiers", "SkullOwner", "CanDestroy", "PickupDelay", "Age");
+
+	@Deprecated
+	private static final List<String> SAVED_MMOITEMS_TAGS = Arrays.asList(
+			"MMOITEMS_SKIN_ID");
 
 	@Deprecated
 	public StoredTagsData(ItemStack stack) {
 		this(NBTItem.get(stack));
 	}
+
 	public StoredTagsData(List<ItemTag> tgs) { tags.addAll(tgs); }
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof StoredTagsData)) { return false; }
-
-		if (((StoredTagsData) obj).getTags().size() != getTags().size()) { return false; }
-
-		for (ItemTag tag : ((StoredTagsData) obj).getTags()) {
-
-			if (tag == null) { continue; }
-
-			boolean unmatched = true;
-			for (ItemTag tg : getTags()) {
-				if (tag.equals(tg)) { unmatched = false; break; } }
-			if (unmatched) { return false; } }
-		return true;
-	}
 
 	public StoredTagsData(NBTItem nbt) {
 		for (String tag : nbt.getTags()) {
 
 			// Usually ignore mmoitems
-			if (tag.startsWith("MMOITEMS_")) {
+			if (tag.startsWith("MMOITEMS_") && !SAVED_MMOITEMS_TAGS.contains(tag))
 
-				// Do not delete the skin tags (save them here)
-				if (!ItemSkin.HAS_SKIN_TAG.equals(tag) && !ItemSkin.SKIN_ID_TAG.equals(tag)) {
-
-					// Not either of the skin tags, skip this.
-					// Must be handled by its respective stat.
-					continue;
-				}
-			}
+				// Must be handled by its respective stat.
+				continue;
 
 			// Any vanilla or MMOItem tag should be ignored as those are
 			// automatically handled. Same for the History stat ones.
-			if (ignoreList.contains(tag) || tag.startsWith(ItemStackBuilder.history_keyword))
+			if (IGNORED_TAGS.contains(tag) || tag.startsWith(ItemStackBuilder.history_keyword))
 				continue;
 
 			// As more methods are added we can add more types here
@@ -133,5 +113,22 @@ public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
 	@Override
 	public boolean isEmpty() {
 		return tags.isEmpty();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof StoredTagsData)) { return false; }
+
+		if (((StoredTagsData) obj).getTags().size() != getTags().size()) { return false; }
+
+		for (ItemTag tag : ((StoredTagsData) obj).getTags()) {
+
+			if (tag == null) { continue; }
+
+			boolean unmatched = true;
+			for (ItemTag tg : getTags()) {
+				if (tag.equals(tg)) { unmatched = false; break; } }
+			if (unmatched) { return false; } }
+		return true;
 	}
 }

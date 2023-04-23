@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.api;
 
 import io.lumine.mythic.lib.MythicLib;
+import io.lumine.mythic.lib.UtilityMethods;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import net.Indyuce.mmoitems.MMOItems;
@@ -298,10 +299,9 @@ public class Type {
      */
     @Nullable
     public static Type get(@Nullable String id) {
-        if (id == null) {
-            return null;
-        }
-        String format = id.toUpperCase().replace("-", "_").replace(" ", "_");
+        if (id == null) return null;
+
+        String format = UtilityMethods.enumName(id);
         return MMOItems.plugin.getTypes().has(format) ? MMOItems.plugin.getTypes().get(format) : null;
     }
 

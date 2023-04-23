@@ -1,17 +1,12 @@
 package net.Indyuce.mmoitems.listener.reforging;
 
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.event.MMOItemReforgeEvent;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
-import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Prevent previous RNG rolls of base stats
@@ -21,64 +16,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RFGKeepRNG implements Listener {
 
-    @EventHandler
-    public void onReforge(MMOItemReforgeEvent event) {
-        // Rerolling stats? Nevermind
-        if (event.getOptions().shouldReRoll()) {
-//            event.setCancelled(true);
-            //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping new item (Complete RNG Reroll)");
-            return;
-        }
-
-        //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping old RNG Rolls");
-
-        /*
-         * Proceed to go through all stats
-         */
-        event.getOldMMOItem()
-                .getStats()
-                .stream()
-                // Skip if it cant merge
-                .filter(stat -> stat.getClearStatData() instanceof Mergeable)
-                /*
-                 * These stats are exempt from this 'keeping' operation.
-                 * Probably because there is a ReforgeOption specifically
-                 * designed for them that keeps them separately
-                 */
-                .filter(stat -> !(ItemStats.LORE.equals(stat) ||
-                        ItemStats.NAME.equals(stat) ||
-                        ItemStats.UPGRADE.equals(stat) ||
-                        ItemStats.ENCHANTS.equals(stat) ||
-                        ItemStats.SOULBOUND.equals(stat) ||
-                        ItemStats.GEM_SOCKETS.equals(stat)))
-                .forEach(stat -> {
-                    // Stat history in the old item
-                    StatHistory hist = StatHistory.from(event.getOldMMOItem(), stat);
-
-                    // Alr what the template say, this roll too rare to be kept?
-                    RandomStatData source = event.getReforger().getTemplate().getBaseItemData().get(stat);
-
-                    /*
-                     * Decide if this data is too far from RNG to
-                     * preserve its rolls, even if it should be
-                     * preserving the rolls.
-                     */
-                    StatData keptData = shouldReRollRegardless(stat, source, hist.getOriginalData(), event.getReforger().getGenerationItemLevel());
-
-                    // Old roll is ridiculously low probability under the new parameters. Forget.
-                    if (keptData == null)
-                        return;
-
-                    // Fetch History from the new item
-                    StatHistory clear = StatHistory.from(event.getNewMMOItem(), stat);
-
-                    // Replace original data of the new one with the roll from the old one
-                    clear.setOriginalData(keptData);
-                });
-    }
 
     /**
-     * @return The item is supposedly being updated, but that doesnt mean all its stats must remain the same.
+     * The item is supposedly being updated, but that doesnt mean all its stats must remain the same.
      * <p>
      * In contrast to reforging, in which it is expected its RNG to be rerolled, updating should not do it
      * except in the most dire scenarios:
@@ -91,14 +31,41 @@ public class RFGKeepRNG implements Listener {
      * + There is a new stat: The original data is null so this method cannot be called, will roll the
      * new stat to actually add it for the first time.
      */
-    @Nullable StatData shouldReRollRegardless(@NotNull ItemStat stat, @NotNull RandomStatData source, @NotNull StatData original, int determinedItemLevel) {
-        // Not Mergeable, impossible to keep
-        if (!(source instanceof UpdatableRandomStatData))
-            //RFG// MMOItems.log("§8Reforge §3RNG§7 Stat\u00a7f " + stat.getId() + "\u00a77 is not updatable!");
-            return null;
+    @EventHandler
+    public void onReforge(MMOItemReforgeEvent event) {
+        // Rerolling stats? Nevermind
+        if (event.getOptions().shouldReRoll())
+//            event.setCancelled(true);
+            //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping new item (Complete RNG Reroll)");
+            return;
 
-        // Just pass on
-        return ((UpdatableRandomStatData) source).reroll(stat, original, determinedItemLevel);
+        //RFG// MMOItems.log("§8Reforge §4EFG§7 Keeping old RNG Rolls");
+
+        event.getOldMMOItem().getStats()
+                .forEach(stat -> {
+
+                    // Check if stat can be transferred over new item
+                    final RandomStatData source = event.getReforger().getTemplate().getBaseItemData().get(stat);
+                    if (source == null || !(source instanceof UpdatableRandomStatData))
+                        return;
+
+                    /*
+                     * Decide if this data is too far from RNG to
+                     * preserve its rolls, even if it should be
+                     * preserving the rolls.
+                     */
+                    final StatHistory hist = StatHistory.from(event.getOldMMOItem(), stat);
+                    final StatData keptData = ((UpdatableRandomStatData) source).reroll(stat, hist.getOriginalData(), event.getReforger().getGenerationItemLevel());
+
+                    // Old roll is ridiculously low probability under the new parameters. Forget.
+                    if (keptData == null)
+                        return;
+
+                    // Fetch History from the new item
+                    final StatHistory clear = StatHistory.from(event.getNewMMOItem(), stat);
+
+                    // Replace original data of the new one with the roll from the old one
+                    clear.setOriginalData(keptData);
+                });
     }
-
 }

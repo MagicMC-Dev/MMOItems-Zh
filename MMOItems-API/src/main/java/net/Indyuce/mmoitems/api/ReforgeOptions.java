@@ -119,7 +119,8 @@ public class ReforgeOptions {
     }
 
     /**
-     * Keeps the display name of the item.
+     * If the item should be rerolled when updated. In the contrary,
+     * the previous RNG will be transferred onto the newest item.
      */
     public boolean shouldReRoll() {
         return reRoll;

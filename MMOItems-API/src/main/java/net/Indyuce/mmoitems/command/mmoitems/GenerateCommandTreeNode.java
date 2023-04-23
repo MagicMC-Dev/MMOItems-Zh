@@ -49,29 +49,29 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
             Validate.notNull(give, "You cannot use -gimme");
 
             final RPGPlayer rpgPlayer = PlayerData.get(target).getRPG();
-            final int itemLevel = handler.hasArgument("level") ? Integer.parseInt(handler.getValue("level"))
+            final int itemLevel = handler.hasArgument("level:") ? Integer.parseInt(handler.getValue("level"))
                     : (handler.hasArgument("matchlevel") ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : 1 + random.nextInt(100));
-            final @Nullable ItemTier itemTier = handler.hasArgument("tierset") ? null : handler.hasArgument("tier")
+            final @Nullable ItemTier itemTier = handler.hasArgument("tierset") ? null : handler.hasArgument("tier:")
                     ? MMOItems.plugin.getTiers().getOrThrow(handler.getValue("tier").toUpperCase().replace("-", "_"))
                     : MMOItems.plugin.getTemplates().rollTier();
 
             final TemplateExplorer builder = new TemplateExplorer();
             if (handler.hasArgument("matchclass"))
                 builder.applyFilter(new ClassFilter(rpgPlayer));
-            if (handler.hasArgument("class"))
+            if (handler.hasArgument("class:"))
                 builder.applyFilter(new ClassFilter(handler.getValue("class").replace("-", " ").replace("_", " ")));
             String type = null;
-            if (handler.hasArgument("tierset")) {
+            if (handler.hasArgument("tierset:")) {
                 String format = UtilityMethods.enumName(handler.getValue("tierset"));
                 Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Could not find tier with ID '" + format + "'");
                 builder.applyFilter(new TierFilter(format));
             }
-            if (handler.hasArgument("type")) {
+            if (handler.hasArgument("type:")) {
                 type = handler.getValue("type");
                 Validate.isTrue(Type.isValid(type), "Could not find type with ID '" + type + "'");
                 builder.applyFilter(new TypeFilter(Type.get(type)));
             }
-            if (handler.hasArgument("id")) {
+            if (handler.hasArgument("id:")) {
                 Validate.isTrue(type != null, "You have to specify a type if using the id option!");
                 builder.applyFilter(new IDFilter(handler.getValue("id")));
             }

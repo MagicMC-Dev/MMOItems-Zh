@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -119,7 +120,7 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
 		object.addProperty("Particle", getParticle().name());
 		object.addProperty("Type", getType().name());
 
-		if (isColorable(particle)) {
+		if (MMOUtils.isColorable(particle)) {
 			JsonObject color = new JsonObject();
 			color.addProperty("Red", getColor().getRed());
 			color.addProperty("Green", getColor().getGreen());
@@ -133,11 +134,10 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
 		return object;
 	}
 
-	// TODO Allow Note to be colored and allow BLOCK_DUST/ITEM_DUST to pick a block/item.
-    public static boolean isColorable(Particle particle) {
-        // || particle == Particle.NOTE
-        return particle == Particle.REDSTONE || particle == Particle.SPELL_MOB || particle == Particle.SPELL_MOB_AMBIENT;
-    }
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 
 	@Override
 	public ParticleData randomize(MMOItemBuilder builder) {

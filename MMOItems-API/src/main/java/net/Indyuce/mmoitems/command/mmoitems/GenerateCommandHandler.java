@@ -13,7 +13,7 @@ public class GenerateCommandHandler {
 
     public boolean hasArgument(String key) {
         for (String argument : arguments)
-            if (argument.startsWith("-" + key + ":"))
+            if (argument.startsWith("-" + key))
                 return true;
         return false;
     }

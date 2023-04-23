@@ -80,7 +80,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 		if (particle != null) {
 			ConfigurationSection section = getEditedSection().getConfigurationSection("arrow-particles");
-			if (ParticleData.isColorable(particle)) {
+			if (MMOUtils.isColorable(particle)) {
 				int red = section.getInt("color.red");
 				int green = section.getInt("color.green");
 				int blue = section.getInt("color.blue");

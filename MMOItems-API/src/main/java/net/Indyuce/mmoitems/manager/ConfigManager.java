@@ -42,7 +42,7 @@ public class ConfigManager implements Reloadable {
     private final Map<PotionEffectType, String> potionNames = new HashMap<>();
 
     // Cached config options
-    public boolean replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate, opStatsEnabled;
+    public boolean replaceMushroomDrops, worldGenEnabled, upgradeRequirementsCheck, keepSoulboundOnDeath, rerollOnItemUpdate, opStatsEnabled, disableRemovedItems;
     public String abilitySplitter;
     public double soulboundBaseDamage, soulboundPerLvlDamage, levelSpread;
     public NumericStatFormula defaultItemCapacity;
@@ -174,6 +174,7 @@ public class ConfigManager implements Reloadable {
         keepSoulboundOnDeath = MMOItems.plugin.getConfig().getBoolean("soulbound.keep-on-death");
         rerollOnItemUpdate = MMOItems.plugin.getConfig().getBoolean("item-revision.reroll-when-updated");
         levelSpread = MMOItems.plugin.getConfig().getDouble("item-level-spread");
+        disableRemovedItems = MMOItems.plugin.getConfig().getBoolean("disable-removed-items");
 
         opStatsEnabled = MMOItems.plugin.getConfig().getBoolean("op-item-stats.enabled");
         opStats.clear();

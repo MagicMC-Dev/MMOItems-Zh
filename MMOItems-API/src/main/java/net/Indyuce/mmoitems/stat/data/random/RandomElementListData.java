@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class RandomElementListData implements RandomStatData<ElementListData>, UpdatableRandomStatData {
+public class RandomElementListData implements RandomStatData<ElementListData>, UpdatableRandomStatData<ElementListData> {
     private final Map<Pair<Element, ElementStatType>, NumericStatFormula> stats = new LinkedHashMap<>();
 
     public RandomElementListData(ConfigurationSection config) {
@@ -58,7 +58,7 @@ public class RandomElementListData implements RandomStatData<ElementListData>, U
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel) {
+    public ElementListData reroll(@NotNull ItemStat stat, @NotNull ElementListData original, int determinedItemLevel) {
 
         // Start brand new
         ElementListData elements = new ElementListData();
@@ -80,6 +80,6 @@ public class RandomElementListData implements RandomStatData<ElementListData>, U
             }
 
         // THats it
-        return (T) elements;
+        return elements;
     }
 }

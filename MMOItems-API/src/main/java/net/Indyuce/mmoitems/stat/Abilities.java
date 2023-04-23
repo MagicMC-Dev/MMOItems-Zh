@@ -64,9 +64,9 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
 			for (String modifier : ability.getModifiers()) {
 				item.getLore().registerPlaceholder("ability_" + ability.getAbility().getHandler().getId().toLowerCase() + "_" + modifier,
-						MythicLib.plugin.getMMOConfig().decimal.format(ability.getModifier(modifier)));
+						MythicLib.plugin.getMMOConfig().decimals.format(ability.getModifier(modifier)));
 				abilityLore.add(modifierFormat.replace("{modifier}", ability.getAbility().getModifierName(modifier)).replace("{value}",
-						MythicLib.plugin.getMMOConfig().decimal.format(ability.getModifier(modifier))));
+						MythicLib.plugin.getMMOConfig().decimals.format(ability.getModifier(modifier))));
 			}
 
 			if (splitter)

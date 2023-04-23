@@ -5,8 +5,6 @@ import net.Indyuce.mmoitems.api.item.build.MMOItemBuilder;
 import net.Indyuce.mmoitems.stat.data.DoubleData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import net.Indyuce.mmoitems.stat.data.random.UpdatableRandomStatData;
-import net.Indyuce.mmoitems.stat.data.type.Mergeable;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,7 +18,7 @@ import java.util.Random;
  *
  * @author indyuce
  */
-public class NumericStatFormula implements RandomStatData<DoubleData>, UpdatableRandomStatData {
+public class NumericStatFormula implements RandomStatData<DoubleData>, UpdatableRandomStatData<DoubleData> {
 	private final double base, scale, spread, maxSpread;
 
 	private static final Random RANDOM = new Random();
@@ -155,34 +153,23 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 
 	/**
 	 * @param levelScalingFactor Level to scale the scale with
-	 * @param random Result of <code>RANDOM.nextGaussian()</code> or whatever other
-	 *               value that you actually want to pass.
-	 *
+	 * @param random             Result of <code>RANDOM.nextGaussian()</code> or whatever other
+	 *                           value that you actually want to pass.
 	 * @return The calculated value
 	 */
 	public double calculate(double levelScalingFactor, double random) {
 
-		if (useRelativeSpread) {
-			//SPRD//if (spread > 0) MMOItems.log("\u00a7c༺\u00a77 Using \u00a7eRelative\u00a77 spread formula: \u00a76μ=" + (base + scale * levelScalingFactor) + "\u00a77, \u00a73σ=" + (spread * (base + scale * levelScalingFactor) + "\u00a7b=" + spread + "×" + (base + scale * levelScalingFactor)) + " \u00a7c@" + random + "\u00a7e = " + (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread)));
-			return (base + scale * levelScalingFactor) * (1 + Math.min(Math.max(random * spread, -maxSpread), maxSpread));
-		}
-
 		// The mean, the center of the distribution
-		double actualBase = base + (scale * levelScalingFactor);
+		final double actualBase = base + (scale * levelScalingFactor);
 
 		/*
-		 * This is one pick from a gaussian distribution
-		 * at mean 0, and standard deviation 1, multiplied
-		 * by the spread chosen.
+		 * This is one pick from a gaussian distribution at mean 0, and
+		 * standard deviation 1, multiplied by the spread chosen.
+		 * Does it exceed the max spread (positive or negative)? Not anymore!
 		 */
-		double flatSpread = random * spread;
+		final double spreadCoef = Math.min(Math.max(random * spread, -maxSpread), maxSpread);
 
-		// Does it exceed the max spread (positive or negative)? Not anymore!
-		flatSpread = Math.min(Math.max(flatSpread, -maxSpread), maxSpread);
-
-		// That's it
-		//SPRD//if (spread > 0) MMOItems.log("\u00a7c༺\u00a77 Using \u00a7aAdditive\u00a77 spread formula, \u00a76μ=" + (base + scale * levelScalingFactor) + "\u00a77, \u00a73σ=" + (spread)  + " \u00a7c@" + random + "\u00a7e = " + (actualBase + gaussSpread));
-		return actualBase + flatSpread;
+		return useRelativeSpread ? actualBase * (1 + spreadCoef) : actualBase + spreadCoef;
 	}
 
 	@Override
@@ -235,43 +222,27 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 	@NotNull
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends StatData> T reroll(@NotNull ItemStat stat, @NotNull T original, int determinedItemLevel) {
-		//UPGRD//MMOItems.log("\u00a7a +\u00a77 Valid for Double Data procedure\u00a78 {Original:\u00a77 " + ((DoubleData) original).getValue() + "\u00a78}");
+	public DoubleData reroll(@NotNull ItemStat stat, @NotNull DoubleData original, int determinedItemLevel) {
 
-		// Very well, chance checking is only available for NumericStatFormula class so
-		double scaledBase = getBase() + (getScale() * determinedItemLevel);
-
-		// Determine current
-		double current = ((DoubleData) original).getValue();
-
-		// What was the shift?
-		double shift = current - scaledBase;
-
-		// How many standard deviations away?
-		double sD = Math.abs(shift / getSpread());
-		if (useRelativeSpread) { sD = Math.abs(shift / (getSpread() * scaledBase)); }
-		//UPGRD//MMOItems.log("\u00a7b *\u00a77 Base: \u00a73" + base);
-		//UPGRD//MMOItems.log("\u00a7b *\u00a77 Curr: \u00a73" + current);
-		//UPGRD//MMOItems.log("\u00a7b *\u00a77 Shft: \u00a73" + shift);
-		//UPGRD//MMOItems.log("\u00a7b *\u00a77 SDev: \u00a73" + sD);
+		// Very well, chance checking is only available for NumericStatFormula class
+		final double expectedValue = getBase() + (getScale() * determinedItemLevel);
+		final double previousValue = original.getValue();
+		final double shift = previousValue - expectedValue;
+		final double shiftSD = useRelativeSpread ? Math.abs(shift / (getSpread() * expectedValue)) : Math.abs(shift / getSpread());
+		final double maxSD = getMaxSpread() / getSpread();
 
 		// Greater than max spread? Or heck, 0.1% Chance or less wth
-		if (sD > getMaxSpread() || sD > 3.5) {
-			//UPGRD//MMOItems.log("\u00a7c -\u00a77 Ridiculous Range --- reroll");
+		if (shiftSD > maxSD || shiftSD > 3.5) {
 
-			// Adapt within reason
-			double reasonableShift = getSpread() * Math.min(2, getMaxSpread());
-			if (shift < 0) { reasonableShift *= -1;}
-
-			// That's the data we'll use
-			return (T) new DoubleData(reasonableShift + scaledBase);
+			// Just fully reroll value
+			return new DoubleData(calculate(determinedItemLevel));
 
 			// Data arguably fine tbh, just use previous
 		} else {
 			//UPGRD//MMOItems.log("\u00a7a +\u00a77 Acceptable Range --- kept");
 
 			// Just clone I guess
-			return (T) ((Mergeable) original).cloneData(); }
+			return original.cloneData(); }
 	}
 
 	public enum FormulaSaveOption {

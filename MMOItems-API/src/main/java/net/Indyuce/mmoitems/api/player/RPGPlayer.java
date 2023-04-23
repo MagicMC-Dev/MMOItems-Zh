@@ -4,16 +4,17 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Interface class between RPG core plugins like Heroes, MythicCore, SkillAPI
- * and MMOItems
+ * Interface class between RPG core plugins like
+ * Heroes, MythicCore, SkillAPI, MMOCore and MMOItems
  *
- * @author indyuce
+ * @author Jules
  */
 public abstract class RPGPlayer {
     private final PlayerData playerData;
@@ -106,7 +107,9 @@ public abstract class RPGPlayer {
      *                     if it fails (returning true even if it is not met).
      * @see ItemRestriction#isDynamic()
      */
-    public boolean canUse(NBTItem item, boolean message, boolean allowDynamic) {
+    public boolean canUse(@NotNull NBTItem item, boolean message, boolean allowDynamic) {
+
+        // Unidentification
         if (item.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
             if (message) {
                 Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(player.getPlayer());
@@ -115,13 +118,13 @@ public abstract class RPGPlayer {
             return false;
         }
 
-        //REQ//MMOItems. Log("Checking REQS");
-        for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats())
-            if (!condition.isDynamic() || !allowDynamic)
-                if (!condition.canUse(this, item, message))
-                    return false;
+        // Item has been disabled
+        if (MMOItems.plugin.getLanguage().disableRemovedItems && MMOUtils.hasBeenRemoved(item)) return false;
 
-        //REQ//MMOItems. Log(" \u00a7a> Success use");
+        // Stat-based requirements
+        for (ItemRestriction condition : MMOItems.plugin.getStats().getItemRestrictionStats())
+            if (!condition.isDynamic() || !allowDynamic) if (!condition.canUse(this, item, message)) return false;
+
         return true;
     }
 }

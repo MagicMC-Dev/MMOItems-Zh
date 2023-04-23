@@ -38,6 +38,21 @@ public class MMOUtils {
         return particle.getDataType() == Particle.DustOptions.class;
     }
 
+    /**
+     * Should cancel interaction if one of the two cases:
+     * - the item type no longer exists
+     * - no template with the given (type, id) pair can be found
+     *
+     * @param item Target item
+     * @return If the item USED to exist, but no longer does
+     */
+    public static boolean hasBeenRemoved(@NotNull NBTItem item) {
+        if (!item.hasType()) return false;
+
+        final @Nullable String type = item.getType();
+        return MMOUtils.isNonEmpty(type) && (!Type.isValid(type) || !MMOItems.plugin.getTemplates().hasTemplate(Type.get(type), item.getString("MMOITEMS_ITEM_ID")));
+    }
+
     public static boolean isNonEmpty(@Nullable String str) {
         return str != null && !str.isEmpty();
     }

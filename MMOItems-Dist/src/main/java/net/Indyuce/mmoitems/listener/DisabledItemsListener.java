@@ -6,6 +6,7 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.damage.MeleeAttackMetadata;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -21,6 +22,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * mmoitems
@@ -41,7 +44,7 @@ public class DisabledItemsListener implements Listener {
         if (!event.hasItem())
             return;
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
-        if (this.shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
 
@@ -51,7 +54,7 @@ public class DisabledItemsListener implements Listener {
             return;
         ItemStack weaponUsed = event.getPlayer().getInventory().getItem(((MeleeAttackMetadata) event.getAttack()).getHand().toBukkit());
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(weaponUsed);
-        if (this.shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
 
@@ -62,7 +65,7 @@ public class DisabledItemsListener implements Listener {
             return;
 
         final NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
-        if (this.shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
 
@@ -73,7 +76,7 @@ public class DisabledItemsListener implements Listener {
             return;
 
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
-        if (this.shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
 
@@ -84,7 +87,7 @@ public class DisabledItemsListener implements Listener {
             return;
 
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCursor());
-        if (this.shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
 
@@ -94,21 +97,14 @@ public class DisabledItemsListener implements Listener {
             return;
 
         final NBTItem item = NBTItem.get(event.getBow());
-        if (shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
         NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
-        if (shouldCancel(item))
+        if (MMOUtils.hasBeenRemoved(item))
             event.setCancelled(true);
     }
-
-    private boolean shouldCancel(NBTItem item) {
-        if (!item.hasType() || !plugin.getConfig().getBoolean("disable-removed-items", true))
-            return false;
-        return !Type.isValid(item.getType());
-    }
-
 }

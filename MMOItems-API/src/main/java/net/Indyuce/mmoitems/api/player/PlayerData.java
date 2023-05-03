@@ -452,7 +452,7 @@ public class PlayerData {
         if (!data.containsKey(player)) {
             PlayerData playerData = new PlayerData(MMOPlayerData.get(player));
             data.put(player, playerData);
-            playerData.updateInventory();
+            playerData.getInventory().scheduleUpdate();
             return playerData;
         }
 

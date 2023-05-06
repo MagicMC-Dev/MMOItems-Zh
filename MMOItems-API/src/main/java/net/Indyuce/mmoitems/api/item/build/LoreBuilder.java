@@ -158,7 +158,7 @@ public class LoreBuilder {
 
             String result;
             try {
-                result = MythicLib.plugin.getMMOConfig().decimals.format((double) MythicLib.plugin.getInterpreter().eval(match));
+                result = MythicLib.plugin.getMMOConfig().decimals.format((double) MythicLib.plugin.getFormulaParser().eval(match));
             } catch (Exception ignored) {
                 result = "<InvalidFormula>";
             }

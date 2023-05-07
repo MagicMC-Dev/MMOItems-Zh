@@ -83,7 +83,6 @@ public class MMOItems extends JavaPlugin {
     private BlockManager blockManager;
     private TierManager tierManager;
     private SetManager setManager;
-
     private VaultSupport vaultSupport;
     private final List<RPGHandler> rpgPlugins = new ArrayList<>();
 
@@ -103,6 +102,8 @@ public class MMOItems extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        getLogger().log(Level.INFO, "Plugin file is called '" + getFile().getName() + "'");
+
         PluginUtils.isDependencyPresent("WorldEdit", u -> {
             try {
                 new WorldEditSupport();

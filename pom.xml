@@ -16,7 +16,6 @@
     <description>A great item solution for your RPG server!!</description>
 
     <properties>
-        <revision>6.9.2-SNAPSHOT</revision>
         <downloadSources>false</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

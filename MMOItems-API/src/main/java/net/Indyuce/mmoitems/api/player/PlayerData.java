@@ -5,13 +5,14 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.damage.AttackMetadata;
+import io.lumine.mythic.lib.data.SynchronizedDataHolder;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.player.modifier.ModifierSource;
 import io.lumine.mythic.lib.player.skill.PassiveSkill;
 import io.lumine.mythic.lib.skill.trigger.TriggerMetadata;
+import io.lumine.mythic.lib.util.Closeable;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemSet;
 import net.Indyuce.mmoitems.api.ItemSet.SetBonuses;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus;
@@ -28,7 +29,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class PlayerData {
+public class PlayerData extends SynchronizedDataHolder implements Closeable {
     @NotNull
     private final MMOPlayerData mmoData;
 
@@ -59,44 +59,17 @@ public class PlayerData {
     private final PlayerStats stats;
     private final Set<String> permissions = new HashSet<>();
 
-    private static final Map<UUID, PlayerData> data = new HashMap<>();
+    public PlayerData(@NotNull MMOPlayerData mmoData) {
+        super(mmoData);
 
-    private PlayerData(@NotNull MMOPlayerData mmoData) {
         this.mmoData = mmoData;
         rpgPlayer = MMOItems.plugin.getMainRPG().getInfo(this);
         stats = new PlayerStats(this);
-
-        load(new ConfigFile("/userdata", getUniqueId().toString()).getConfig());
     }
 
-    private void load(FileConfiguration config) {
-        if (config.contains("crafting-queue"))
-            craftingStatus.load(this, config.getConfigurationSection("crafting-queue"));
-
-        if (MMOItems.plugin.hasPermissions() && config.contains("permissions-from-items")) {
-            final Permission perms = MMOItems.plugin.getVault().getPermissions();
-            config.getStringList("permissions-from-items").forEach(perm -> {
-                if (perms.has(getPlayer(), perm))
-                    perms.playerRemove(getPlayer(), perm);
-            });
-        }
-    }
-
-    public void save(boolean clearForMap) {
-
-        // Empty map if required
-        if (clearForMap)
-            data.remove(getUniqueId());
-
-        // Cancel runnables
+    @Override
+    public void close() {
         cancelRunnables();
-
-        // Save data in config
-        final ConfigFile config = new ConfigFile("/userdata", getUniqueId().toString());
-        config.getConfig().createSection("crafting-queue");
-        config.getConfig().set("permissions-from-items", new ArrayList<>(permissions));
-        craftingStatus.save(config.getConfig().getConfigurationSection("crafting-queue"));
-        config.save();
     }
 
     public MMOPlayerData getMMOPlayerData() {
@@ -132,7 +105,7 @@ public class PlayerData {
 
     /**
      * @return If the player hands are full i.e if the player is holding
-     * two items in their hands, one being two handed
+     *         two items in their hands, one being two handed
      */
     public boolean isEncumbered() {
 
@@ -260,7 +233,7 @@ public class PlayerData {
         // Calculate the player's item set
         final Map<ItemSet, Integer> itemSetCount = new HashMap<>();
         for (EquippedItem equipped : inventory.getEquipped()) {
-            final String tag =  equipped.getCached().getNBT().getString("MMOITEMS_ITEM_SET");
+            final String tag = equipped.getCached().getNBT().getString("MMOITEMS_ITEM_SET");
             final @Nullable ItemSet itemSet = MMOItems.plugin.getSets().get(tag);
             if (itemSet == null)
                 continue;
@@ -346,6 +319,10 @@ public class PlayerData {
         return permanentEffects.containsKey(type) ? permanentEffects.get(type).getAmplifier() : -1;
     }
 
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
     public Collection<PotionEffect> getPermanentPotionEffects() {
         return permanentEffects.values();
     }
@@ -424,49 +401,18 @@ public class PlayerData {
      * @return If player data is loaded for a player UUID
      */
     public static boolean has(UUID uuid) {
-        return data.containsKey(uuid);
+        return MMOItems.plugin.getPlayerDataManager().isLoaded(uuid);
     }
 
     @NotNull
     public static PlayerData get(UUID uuid) {
-        return Objects.requireNonNull(data.get(uuid), "Player data not loaded");
+        return MMOItems.plugin.getPlayerDataManager().get(uuid);
     }
 
-    /**
-     * Called when the corresponding MMOPlayerData has already been initialized.
-     */
-    public static @NotNull PlayerData load(@NotNull Player player) {
-        return load(player.getUniqueId());
-    }
-
-    /**
-     * Called when the corresponding MMOPlayerData has already been initialized.
-     */
-    public static PlayerData load(@NotNull UUID player) {
-
-        /*
-         * Double check they are online, for some reason even if this is fired
-         * from the join event the player can be offline if they left in the
-         * same tick or something.
-         */
-        if (!data.containsKey(player)) {
-            PlayerData playerData = new PlayerData(MMOPlayerData.get(player));
-            data.put(player, playerData);
-            playerData.getInventory().scheduleUpdate();
-            return playerData;
-        }
-
-        /*
-         * Update the cached RPGPlayer in case of any major change in the player
-         * data of other rpg plugins
-         */
-        PlayerData playerData = data.get(player);
-        playerData.rpgPlayer = MMOItems.plugin.getMainRPG().getInfo(playerData);
-        return playerData;
-    }
-
+    @Deprecated
+    @NotNull
     public static Collection<PlayerData> getLoaded() {
-        return data.values();
+        return MMOItems.plugin.getPlayerDataManager().getLoaded();
     }
 
     public enum CooldownType {

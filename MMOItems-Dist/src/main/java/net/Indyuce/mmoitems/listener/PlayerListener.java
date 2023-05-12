@@ -11,7 +11,6 @@ import net.Indyuce.mmoitems.api.interaction.util.InteractItem;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.DeathDowngrading;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -20,29 +19,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Iterator;
 
 public class PlayerListener implements Listener {
-
-    /**
-     * MythicLib runs of LOWEST
-     * MMOCore and MMOInventory runs on LOW
-     */
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void loadPlayerData(PlayerJoinEvent event) {
-        MMOItems.plugin.getRecipes().refreshRecipeBook(event.getPlayer());
-        PlayerData.load(event.getPlayer());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void savePlayerData(PlayerQuitEvent event) {
-        PlayerData.get(event.getPlayer()).save(true);
-    }
 
     /**
      * If the player dies, its time to roll the death-downgrade stat!

@@ -37,6 +37,7 @@ import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
 import net.Indyuce.mmoitems.manager.*;
+import net.Indyuce.mmoitems.manager.data.PlayerDataManager;
 import net.Indyuce.mmoitems.util.PluginUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -44,6 +45,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -76,6 +78,7 @@ public class MMOItems extends JavaPlugin {
     private final List<EnchantPlugin<? extends Enchantment>> enchantPlugins = new ArrayList<>();
     private final StatManager statManager = new StatManager();
 
+    private PlayerDataManager playerDataManager;
     private DropTableManager dropTableManager;
     private WorldGenManager worldGenManager;
     private UpgradeManager upgradeManager;
@@ -239,7 +242,8 @@ public class MMOItems extends JavaPlugin {
 		}*/
 
         // Compatibility with /reload
-        Bukkit.getScheduler().runTask(this, () -> Bukkit.getOnlinePlayers().forEach(PlayerData::load));
+        playerDataManager = new PlayerDataManager();
+        playerDataManager.initialize(true, EventPriority.NORMAL, EventPriority.HIGHEST);
 
         // Amount and bukkit recipes
         getLogger().log(Level.INFO, "Loading recipes, please wait...");
@@ -261,7 +265,7 @@ public class MMOItems extends JavaPlugin {
             return;
 
         // Save player data
-        PlayerData.getLoaded().forEach(data -> data.save(false));
+        playerDataManager.saveAll(false);
 
         // Drop abandoned items
         DeathItemsHandler.getActive().forEach(info -> info.giveItems(true));
@@ -433,6 +437,10 @@ public class MMOItems extends JavaPlugin {
     public void registerEnchantPlugin(EnchantPlugin enchantPlugin) {
         Validate.notNull(enchantPlugin, "Enchant plugin cannot be null");
         enchantPlugins.add(enchantPlugin);
+    }
+
+    public PlayerDataManager getPlayerDataManager() {
+        return playerDataManager;
     }
 
     public StatManager getStats() {

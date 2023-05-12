@@ -75,7 +75,7 @@ public abstract class Ingredient<C extends PlayerIngredient> {
 	 * @return The ItemStack to display to the player
 	 */
 	@NotNull
-	public abstract ItemStack generateItemStack(@NotNull RPGPlayer player);
+	public abstract ItemStack generateItemStack(@NotNull RPGPlayer player, boolean forDisplay);
 
 	public CheckedIngredient evaluateIngredient(@NotNull IngredientInventory inv) {
 		return inv.findMatching(this);

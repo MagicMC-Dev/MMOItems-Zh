@@ -85,13 +85,13 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
 
 	@NotNull
 	@Override
-	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+	public ItemStack generateItemStack(@NotNull RPGPlayer player, boolean forDisplay) {
 
 		// Generate fresh from the template
-		MMOItem mmo = template.newBuilder(player, true).build();
+		MMOItem mmo = template.newBuilder(player, forDisplay).build();
 
 		// Build it for display, obviously
-		ItemStack item = mmo.newBuilder().build(true);
+		ItemStack item = mmo.newBuilder().build(forDisplay);
 
 		// Set level lma0
 		int lvl = SilentNumbers.floor(level.getAsDouble(0));

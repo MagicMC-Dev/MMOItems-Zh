@@ -52,7 +52,7 @@ public class MythicItemIngredient extends Ingredient<MythicItemPlayerIngredient>
 
     @NotNull
     @Override
-    public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+    public ItemStack generateItemStack(@NotNull RPGPlayer player, boolean forDisplay) {
         return BukkitAdapter.adapt(mythicitem.generateItemStack(getAmount()));
     }
 

@@ -140,7 +140,7 @@ public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
 
 	@NotNull
 	@Override
-	public ItemStack generateItemStack(@NotNull RPGPlayer player) {
+	public ItemStack generateItemStack(@NotNull RPGPlayer player, boolean forDisplay) {
 
 		// Stack
 		ItemStack stack = filter.getItemStack(null);

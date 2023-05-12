@@ -54,7 +54,7 @@ public class CraftingStationPreview extends PluginInventory {
 			if (ing.getIngredient().getAmount() > 64) {
 
 				// Generate new item for display
-				ItemStack sample = ing.getIngredient().generateItemStack(playerData.getRPG());
+				ItemStack sample = ing.getIngredient().generateItemStack(playerData.getRPG(), true);
 				sample.setAmount(64);
 
 				/*
@@ -90,7 +90,7 @@ public class CraftingStationPreview extends PluginInventory {
 			// Not greater than 64, just put it like that.
 			} else {
 
-				ingredients.add(ing.getIngredient().generateItemStack(playerData.getRPG()));
+				ingredients.add(ing.getIngredient().generateItemStack(playerData.getRPG(), true));
 			}
 		}
 

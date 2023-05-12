@@ -221,7 +221,7 @@ public class CraftingStationView extends PluginInventory {
 
                 // Give ingredients back
                 for (Ingredient ingredient : recipeInfo.getRecipe().getIngredients())
-                    new SmartGive(player).give(ingredient.generateItemStack(playerData.getRPG()));
+                    new SmartGive(player).give(ingredient.generateItemStack(playerData.getRPG(), false));
 
                 // Give money back
                 recipe.getConditions()

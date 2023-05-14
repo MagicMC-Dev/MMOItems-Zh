@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.comp.mmocore;
 
+import io.lumine.mythic.lib.api.event.SynchronizedDataLoadEvent;
 import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmocore.MMOCore;
-import net.Indyuce.mmocore.api.event.AsyncPlayerDataLoadEvent;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmocore.api.event.PlayerResourceUpdateEvent;
@@ -84,9 +84,10 @@ public class MMOCoreHook implements RPGHandler, Listener {
      * Fixes https://gitlab.com/phoenix-dvpmt/mmocore/-/issues/545
      */
     @EventHandler
-    public void updateInventoryOnLoad(AsyncPlayerDataLoadEvent event) {
-        if (PlayerData.has(event.getPlayer()))
-            PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
+    public void updateInventoryOnLoad(SynchronizedDataLoadEvent event) {
+        if (event.getManager().getOwningPlugin().equals(MMOCore.plugin))
+            if (PlayerData.has(event.getHolder().getPlayer()))
+                PlayerData.get(event.getHolder().getPlayer()).getInventory().scheduleUpdate();
     }
 
     public static class MMOCoreRPGPlayer extends RPGPlayer {

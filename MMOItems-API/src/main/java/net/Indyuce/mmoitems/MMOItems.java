@@ -243,7 +243,7 @@ public class MMOItems extends JavaPlugin {
 
         // Compatibility with /reload
         playerDataManager = new PlayerDataManager();
-        playerDataManager.initialize(true, EventPriority.NORMAL, EventPriority.HIGHEST);
+        playerDataManager.initialize(EventPriority.NORMAL, EventPriority.HIGHEST);
 
         // Amount and bukkit recipes
         getLogger().log(Level.INFO, "Loading recipes, please wait...");

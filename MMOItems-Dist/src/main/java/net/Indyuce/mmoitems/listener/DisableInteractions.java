@@ -22,6 +22,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -31,6 +32,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class DisableInteractions implements Listener {
 
+    @EventHandler(ignoreCancelled = true)
+    public void itemDropping(PlayerDropItemEvent event){
+        ItemStack itemStack = event.getItemDrop().getItemStack();
+
+        if (isDisabled(NBTItem.get(itemStack),"drop")){
+            event.setCancelled(true);
+        }
+
+    }
     @EventHandler
     public void anvilInteractions(InventoryClickEvent event) {
         Inventory inv = event.getClickedInventory();

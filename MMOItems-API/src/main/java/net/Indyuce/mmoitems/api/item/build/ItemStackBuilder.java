@@ -11,8 +11,6 @@ import net.Indyuce.mmoitems.api.event.GenerateLoreEvent;
 import net.Indyuce.mmoitems.api.event.ItemBuildEvent;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.DisplayName;
-import net.Indyuce.mmoitems.stat.Enchants;
 import net.Indyuce.mmoitems.stat.data.MaterialData;
 import net.Indyuce.mmoitems.stat.data.StringListData;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
@@ -135,16 +133,24 @@ public class ItemStackBuilder {
          * the basis for when an item is 'old'
          */
         if (!builtMMOItem.hasData(ItemStats.ENCHANTS)) {
-            builtMMOItem.setData(ItemStats.ENCHANTS, ItemStats.ENCHANTS.getClearStatData());
-        }
+            builtMMOItem.setData(ItemStats.ENCHANTS, ItemStats.ENCHANTS.getClearStatData()); }
         //GEM// else {MMOItems.log("\u00a73 -?- \u00a77Apparently found enchantment data \u00a7b" + (mmoitem.getData(ItemStats.ENCHANTS) == null ? "null" : ((EnchantListData) mmoitem.getData(ItemStats.ENCHANTS)).getEnchants().size())); }
+
+        /*
+         * Similar to how enchantments are saved because they can be modified
+         * through non-MMOItems supported sources, the name can be changed in
+         * an anvil, so the very original name must be saved.
+         */
+        if (!builtMMOItem.hasData(ItemStats.NAME)) {
+            builtMMOItem.setData(ItemStats.NAME, ItemStats.NAME.getClearStatData()); }
+        if (builtMMOItem.getStatHistory(ItemStats.NAME) == null) {
+            StatHistory.from(builtMMOItem, ItemStats.NAME); }
 
         // For every stat within this item
         for (ItemStat stat : builtMMOItem.getStats())
 
             // Attempt to add
             try {
-
                 //GEM//MMOItems.log("\u00a7e -+- \u00a77Applying \u00a76" + stat.getNBTPath());
 
                 // Does the item have any stat history regarding thay?
@@ -157,11 +163,11 @@ public class ItemStackBuilder {
                     //GEM//s.log();
 
                     // Recalculate
-                    //HSY//MMOItems.log(" \u00a73-\u00a7a- \u00a77ItemStack Building Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
+                    //GEM//MMOItems.log(" \u00a73-\u00a7a- \u00a77ItemStack Building Recalculation \u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-\u00a73-\u00a7a-");
                     builtMMOItem.setData(stat, s.recalculate(l));
 
                     // Add to NBT, if the gemstones were not purged
-                    if ((!s.isClear() || stat instanceof Enchants || stat instanceof DisplayName)) {
+                    if (!s.isClear()) {
 
                         //GEM//MMOItems.log("\u00a7a -+- \u00a77Recording History");
                         addItemTag(new ItemTag(history_keyword + stat.getId(), s.toNBTString()));

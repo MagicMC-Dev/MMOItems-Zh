@@ -183,6 +183,8 @@ public class ItemStats {
     SKULL_TEXTURE = new SkullTextureStat(),
             DYE_COLOR = new DyeColor(),
             HIDE_DYE = new HideDye(),
+            TRIM_MATERIAL = new TrimMaterialStat(),
+            TRIM_PATTERN = new TrimPatternStat(),
             POTION_EFFECTS = new PotionEffects(),
             POTION_COLOR = new PotionColor(),
             SHIELD_PATTERN = new ShieldPatternStat(),

@@ -6,12 +6,14 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
+import net.Indyuce.mmoitems.util.StatChoice;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -30,28 +32,27 @@ public abstract class ChooseStat extends StringStat {
      * Contains the list of different options the player may choose from.
      * <b>Make sure its is always initialized and with at least 1 element</b>
      */
-    private final ArrayList<String> choices = new ArrayList<>();
-
-    /**
-     * Definitions of what each choosing type does, for display in lore.
-     */
-    private final HashMap<String, String> hints = new HashMap<>();
+    private final List<StatChoice> choices = new ArrayList<>();
 
     public ChooseStat(String id, Material mat, String name, String[] lore, String[] types, Material... materials) {
         super(id, mat, name, lore, types, materials);
     }
 
-    public void addChoices(String... choices) {
+    public void addChoices(StatChoice... choices) {
         this.choices.addAll(Arrays.asList(choices));
     }
 
-    public void setHint(String choice, String desc) {
-        hints.put(choice, desc);
+    @Nullable
+    public StatChoice getChoice(String id) {
+        for (StatChoice choice : choices)
+            if (choice.getId().equals(id))
+                return choice;
+        return null;
     }
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-        Validate.isTrue(choices.size() > 0, "\u00a77Invalid Chooseable Item Stat " + ChatColor.GOLD + getId() + "\u00a77' - \u00a7cNo options to choose from.");
+        Validate.isTrue(choices.size() > 0, "Invalid choice-based stat '" + getId() + ": no options to choose from.");
 
         // If removing, reset to default
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -66,25 +67,19 @@ public abstract class ChooseStat extends StringStat {
         } else {
 
             // Get current
-            String current = inv.getEditedSection().getString(getPath());
+            StatChoice current = getChoice(inv.getEditedSection().getString(getPath()));
 
             // Included?
-            int currentIndex = 0;
-            if (current != null && choices.contains(current)) {
-                currentIndex = choices.indexOf(current);
-            }
+            int currentIndex = current != null ? Math.max(0, choices.indexOf(current)) : 0;
 
             // Increase and Cap
-            currentIndex++;
-            if (currentIndex >= choices.size()) {
-                currentIndex = 0;
-            }
+            if (++currentIndex >= choices.size()) currentIndex = 0;
 
             // Get
             current = choices.get(currentIndex);
 
             // Edits into persistent files
-            inv.getEditedSection().set(getPath(), current);
+            inv.getEditedSection().set(getPath(), current.getId());
             inv.registerTemplateEdition();
 
             // Sends a message
@@ -94,44 +89,24 @@ public abstract class ChooseStat extends StringStat {
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<StringData> statData) {
-        Validate.isTrue(choices.size() > 0, "\u00a77Invalid Chooseable Item Stat " + ChatColor.GOLD + getId() + "\u00a77' - \u00a7cNo options to choose from.");
+        Validate.isTrue(choices.size() > 0, "Invalid choice-based stat '" + getId() + ": no options to choose from.");
 
         // To display current choosing, gets the very first element
-        String def = choices.get(0);
+        StatChoice def = statData.isPresent() ? getChoice(statData.get().toString()) : choices.get(0);
+        lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN : ChatColor.RED) + def);
 
-        // Does this item have any specified value for this?
-        if (statData.isPresent()) {
-
-            // Put in current
-            def = statData.get().toString();
-
-            // Display the value of the current stat data
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + def);
-
-        } else {
-
-            // Mention that it currently has no value
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + def);
-        }
-
-        // Get Definition
-        if (hints.containsKey(def))
-            for (String definition : SilentNumbers.chop(hints.get(def), 50, "")) {
-                lore.add(ChatColor.GRAY + "   " + definition);
-            }
+        // Display Definition
+        for (String definition : SilentNumbers.chop(def.getHint(), 50, ""))
+            lore.add(ChatColor.GRAY + " " + definition);
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to return to default value.");
         lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to cycle through the available options:");
-        for (String str : choices) {
+        for (StatChoice existing : choices) {
 
             // Is it the one?
-            String pick = ChatColor.GOLD.toString();
-            if (str.equals(def)) {
-                pick = ChatColor.RED.toString() + ChatColor.BOLD.toString();
-            }
-
-            lore.add(pick + "  " + AltChar.smallListDash + " \u00a77" + str);
+            String pick = existing.equals(def) ? ChatColor.RED.toString() + ChatColor.BOLD : ChatColor.GOLD.toString();
+            lore.add(pick + "  " + AltChar.smallListDash + " " + ChatColor.GRAY + existing.getId());
         }
     }
 }

@@ -9,6 +9,7 @@ import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.type.ChooseStat;
 import net.Indyuce.mmoitems.stat.type.GemStoneStat;
 import net.Indyuce.mmoitems.stat.type.ItemRestriction;
+import net.Indyuce.mmoitems.util.StatChoice;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -21,112 +22,123 @@ import java.util.ArrayList;
  * @author Gunging
  */
 public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneStat {
-    public static final String
-            NORMAL = "UNRESTRICTED",
-            DRY = "DRY",
-            WET = "WET",
-            DAMP = "DAMP",
-            LAVA = "LAVA",
-            MOLTEN = "MOLTEN",
-            LIQUID = "LIQUID",
-            SUBMERGED = "SUBMERGED";
+    public static final StatChoice
+            NORMAL = new StatChoice("NORMAL", "No liquids dependency"),
+            DRY = new StatChoice("DRY", "The item does not work if the player is touching a liquid block."),
+            WET = new StatChoice("WET", "The only works if the player is touching water (rain does not count)."),
+            DAMP = new StatChoice("DAMP", "The only works if the player is completely submerged in water."),
+            LAVA = new StatChoice("LAVA", "The only works if the player is touching lava."),
+            MOLTEN = new StatChoice("MOLTEN", "The only works if the player is completely submerged in lava."),
+            LIQUID = new StatChoice("LIQUID", "The only works if the player is touching any liquid."),
+            SUBMERGED = new StatChoice("SUBMERGED", "The only works if the player is completely submerged in any liquid.");
 
     public Amphibian() {
         super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[]{"May this item only be used in specific", "environments regarding liquids?"}, new String[]{"!block", "all"});
 
         addChoices(NORMAL, DRY, WET, DAMP, LAVA, MOLTEN, LIQUID, SUBMERGED);
-
-        // Put definitions
-        setHint(NORMAL, "No liquids dependency");
-        setHint(DRY, "The item does not work if the player is touching a liquid block.");
-        setHint(WET, "The only works if the player is touching water (rain does not count).");
-        setHint(DAMP, "The only works if the player is completely submerged in water.");
-        setHint(LAVA, "The only works if the player is touching lava.");
-        setHint(MOLTEN, "The only works if the player is completely submerged in lava.");
-        setHint(LIQUID, "The only works if the player is touching any liquid.");
-        setHint(SUBMERGED, "The only works if the player is completely submerged in any liquid.");
     }
 
     @NotNull
-    @Override public StringData getClearStatData() { return new StringData(NORMAL); }
+    @Override
+    public StringData getClearStatData() {
+        return new StringData(NORMAL.getId());
+    }
 
     @Override
     public boolean canUse(RPGPlayer player, NBTItem item, boolean message) {
 
         // bruh
-        if (!item.hasTag(getNBTPath())) { return true; }
+        if (!item.hasTag(getNBTPath())) {
+            return true;
+        }
 
         // Find the relevant tags
         ArrayList<ItemTag> relevantTags = new ArrayList<>();
-        if (item.hasTag(getNBTPath())) { relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), item, SupportedNBTTagValues.STRING)); }
+        if (item.hasTag(getNBTPath())) {
+            relevantTags.add(ItemTag.getTagAtPath(getNBTPath(), item, SupportedNBTTagValues.STRING));
+        }
 
         // Generate data
-        StringData data = (StringData) getLoadedNBT(relevantTags);
+        String data = getLoadedNBT(relevantTags).toString();
 
         // Well...
         if (data != null) {
             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a77 Checking Amphibian: \u00a7f" + item.getType() + " \u00a7b" + data.toString());
 
             // Switch
-            switch (data.toString()) {
-                case NORMAL:
+            switch (data) {
+                case "NORMAL":
                 default:
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a>\u00a77 Normal \u00a7aSucceed");
                     return true;
-                case DRY:
+                case "DRY":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (b.isLiquid()) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
-                        return false; } }
+                            return false;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
                     return true;
-                case WET:
+                case "WET":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (b.getType().equals(Material.WATER)) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
-                            return true; } }
+                            return true;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
                     return false;
-                case DAMP:
+                case "DAMP":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (!b.getType().equals(Material.WATER)) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
-                            return false; } }
+                            return false;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
                     return true;
-                case LAVA:
+                case "LAVA":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (b.getType().equals(Material.LAVA)) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
-                            return true; } }
+                            return true;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
                     return false;
-                case MOLTEN:
+                case "MOLTEN":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (!b.getType().equals(Material.LAVA)) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
-                            return false; } }
+                            return false;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
                     return true;
-                case LIQUID:
+                case "LIQUID":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (b.isLiquid()) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
-                        return true; } }
+                            return true;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
                     return false;
-                case SUBMERGED:
+                case "SUBMERGED":
                     for (Block b : blocksTouchedByPlayer(player.getPlayer())) {
                         //BKK//MMOItems. Log(" \u00a77>\u00a77>\u00a73>\u00a77 Examining \u00a7f" + b.getType().toString());
                         if (!b.isLiquid()) {
                             //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7cFail");
-                        return false; } }
+                            return false;
+                        }
+                    }
                     //BKK//MMOItems. Log(" \u00a7a>\u00a73>\u00a7a> \u00a7aSucceed");
                     return true;
             }
@@ -135,7 +147,9 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
     }
 
     @Override
-    public boolean isDynamic() { return true; }
+    public boolean isDynamic() {
+        return true;
+    }
 
     // Yes
     ArrayList<Block> blocksTouchedByPlayer(@NotNull Player p) {
@@ -152,9 +166,9 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
                 for (double dz = box.getMinZ(); dz <= box.getMaxZ(); dz += Math.min(1, Math.max(box.getWidthZ() - (dz - box.getMinZ()), 0.001))) {
 
                     // Exclusion
-                    int dxI =SilentNumbers.floor(dx);
-                    int dyI =SilentNumbers.floor(dy);
-                    int dzI =SilentNumbers.floor(dz);
+                    int dxI = SilentNumbers.floor(dx);
+                    int dyI = SilentNumbers.floor(dy);
+                    int dzI = SilentNumbers.floor(dz);
 
                     //BKK//MMOItems. Log("  \u00a77at \u00a76" + dxI + " " + dyI + " " + dzI + "\u00a78 (" + dx + " " + dy + " " + dz + ")");
 

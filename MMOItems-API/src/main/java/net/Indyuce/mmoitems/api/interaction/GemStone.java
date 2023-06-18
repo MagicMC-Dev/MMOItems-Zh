@@ -163,19 +163,16 @@ public class GemStone extends UseItem {
          * Get the item's level, important for the GemScalingStat
          */
         Integer levelIdentified = null;
-        String scaling = GemUpgradeScaling.defaultValue;
-        if (gemMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)) {
-            scaling = gemMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString();
-        }
+        final String scaling = gemMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING) ? gemMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString() : GemUpgradeScaling.defaultValue;
         //UPGRD//MMOItems.log("Scaling Identified: \u00a73" + scaling);
         switch (scaling) {
-            case GemUpgradeScaling.HISTORIC:
+            case "HISTORIC":
                 levelIdentified = 0;
                 break;
-            case GemUpgradeScaling.SUBSEQUENT:
+            case "SUBSEQUENT":
                 levelIdentified = targetMMO.getUpgradeLevel();
                 break;
-            case GemUpgradeScaling.NEVER:
+            case "NEVER":
             default:
                 break;
         }

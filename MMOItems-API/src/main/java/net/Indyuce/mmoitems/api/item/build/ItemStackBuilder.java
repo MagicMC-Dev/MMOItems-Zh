@@ -93,10 +93,12 @@ public class ItemStackBuilder {
      * of a specific material (like the Shield Pattern stat which checks if
      * the item is a shield)
      */
+    @NotNull
     public ItemStack getItemStack() {
         return item;
     }
 
+    @NotNull
     public ItemMeta getMeta() {
         return meta;
     }

@@ -6,12 +6,12 @@ Things can you CANNOT do:
 - Issue a refund on PayPal without our explicit permission, as this is a digital good.
 - Redistribute, sell or give an official/modified version of the plugin (with or without any type of counterpart) to anyone else.
 - Modify and compile the project source code to bypass an anti-piracy protection.
-- Download, compile, decompile or use the plugin on a production server without purchasing a license.
+- Download, compile, decompile or use the plugin on any server without purchasing a license.
 
 Things can you CAN do when purchasing the plugin:
 - Download and decompile the plugin file.
 - Fork and modify the project source code to meet your production server's needs.
-- Use it on ONE production server or network (= proxy-connected servers) at a time.
+- Use it on ONE production server or network (= proxy-connected servers) and one private test server at a time.
 
 You may propose a merge request, under the terms that you grant full rights to us using any pushed code.
 

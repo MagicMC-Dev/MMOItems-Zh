@@ -34,7 +34,7 @@ public class MMOUtils {
         throw new IllegalArgumentException("This class cannot be instantiated.");
     }
 
-    public static boolean isColorable(Particle particle) {
+    public static boolean isColorable(@NotNull Particle particle) {
         return particle.getDataType() == Particle.DustOptions.class;
     }
 

@@ -45,7 +45,7 @@ public class ShulkerMissile extends SkillHandler<VectorSkillResult> implements L
 
     @Override
     public void whenCast(VectorSkillResult result, SkillMetadata skillMeta) {
-        double duration = skillMeta.getModifier("duration");
+        double duration = skillMeta.getParameter("duration");
 
         Player caster = skillMeta.getCaster().getPlayer();
 
@@ -64,7 +64,7 @@ public class ShulkerMissile extends SkillHandler<VectorSkillResult> implements L
                         EntityType.SHULKER_BULLET);
                 shulkerBullet.setShooter(caster);
 
-                MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(skillMeta.getCaster(), new DamageMetadata(skillMeta.getModifier("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getModifier("effect-duration"), null));
+                MMOItems.plugin.getEntities().registerCustomEntity(shulkerBullet, new ShulkerMissileEntityData(skillMeta.getCaster(), new DamageMetadata(skillMeta.getParameter("damage"), DamageType.SKILL, DamageType.MAGIC, DamageType.PROJECTILE), skillMeta.getParameter("effect-duration"), null));
 
                 new BukkitRunnable() {
                     double ti = 0;

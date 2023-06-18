@@ -240,7 +240,7 @@ public class PluginUpdateManager {
 
 				// Apply old modifier name
 				for (String mod : skill.getHandler().getModifiers())
-					config.set("modifier." + mod + ".name", Objects.requireNonNullElse(abilities.getString("modifier." + mod), skill.getModifierName(mod)));
+					config.set("modifier." + mod + ".name", Objects.requireNonNullElse(abilities.getString("modifier." + mod), skill.getParameterName(mod)));
 
 				configFile.save();
 			}

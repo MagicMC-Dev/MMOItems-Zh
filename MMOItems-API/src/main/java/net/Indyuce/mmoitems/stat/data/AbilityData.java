@@ -108,13 +108,13 @@ public class AbilityData extends Skill {
             return false;
 
         // Check for mana cost
-        if (hasModifier("mana") && rpgPlayer.getMana() < getModifier("mana")) {
+        if (hasModifier("mana") && rpgPlayer.getMana() < getParameter("mana")) {
             Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player);
             return false;
         }
 
         // Check for stamina cost
-        if (hasModifier("stamina") && rpgPlayer.getStamina() < getModifier("stamina")) {
+        if (hasModifier("stamina") && rpgPlayer.getStamina() < getParameter("stamina")) {
             Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player);
             return false;
         }
@@ -128,13 +128,13 @@ public class AbilityData extends Skill {
         RPGPlayer rpgPlayer = playerData.getRPG();
 
         // Apply mana cost
-        if (hasModifier("mana")) rpgPlayer.giveMana(-meta.getModifier("mana"));
+        if (hasModifier("mana")) rpgPlayer.giveMana(-meta.getParameter("mana"));
 
         // Apply stamina cost
-        if (hasModifier("stamina")) rpgPlayer.giveStamina(-meta.getModifier("stamina"));
+        if (hasModifier("stamina")) rpgPlayer.giveStamina(-meta.getParameter("stamina"));
 
         // Apply cooldown
-        double cooldown = meta.getModifier("cooldown") * (1 - Math.min(.8, meta.getCaster().getStat("COOLDOWN_REDUCTION") / 100));
+        double cooldown = meta.getParameter("cooldown") * (1 - Math.min(.8, meta.getCaster().getStat("COOLDOWN_REDUCTION") / 100));
         if (cooldown > 0) meta.getCaster().getData().getCooldownMap().applyCooldown(this, cooldown);
     }
 
@@ -144,7 +144,7 @@ public class AbilityData extends Skill {
     }
 
     @Override
-    public double getModifier(String path) {
+    public double getParameter(String path) {
         return modifiers.getOrDefault(path, ability.getDefaultModifier(path));
     }
 
@@ -154,7 +154,7 @@ public class AbilityData extends Skill {
         object.addProperty("CastMode", getTrigger().name());
 
         JsonObject modifiers = new JsonObject();
-        this.modifiers.keySet().forEach(modifier -> modifiers.addProperty(modifier, getModifier(modifier)));
+        this.modifiers.keySet().forEach(modifier -> modifiers.addProperty(modifier, getParameter(modifier)));
         object.add("Modifiers", modifiers);
 
         return object;

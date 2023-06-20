@@ -14,6 +14,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * @deprecated Merge with other Hide- stats
+ */
+@Deprecated
 public class HidePotionEffects extends BooleanStat {
 	public HidePotionEffects() {
 		super("HIDE_POTION_EFFECTS", Material.POTION, "Hide Potion Effects", new String[] { "Hides potion effects & 'No Effects'", "from your item lore." }, new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
@@ -21,7 +25,7 @@ public class HidePotionEffects extends BooleanStat {
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull BooleanData data) {
-		if (((BooleanData) data).isEnabled())
+		if (data.isEnabled())
 			item.getMeta().addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 	}
 

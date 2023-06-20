@@ -185,6 +185,7 @@ public class ItemStats {
             HIDE_DYE = new HideDye(),
             TRIM_MATERIAL = new TrimMaterialStat(),
             TRIM_PATTERN = new TrimPatternStat(),
+            HIDE_ARMOR_TRIM = new HideTrim(),
             POTION_EFFECTS = new PotionEffects(),
             POTION_COLOR = new PotionColor(),
             SHIELD_PATTERN = new ShieldPatternStat(),

@@ -15,6 +15,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * @deprecated Merge with other Hide- stats
+ */
+@Deprecated
 public class HideDye extends BooleanStat {
 	public HideDye() {
 		super("HIDE_DYE", Material.CYAN_DYE, "Hide Dyed", new String[] { "Enable to hide the 'Dyed' tag from the item." }, new String[] { "all" },

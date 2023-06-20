@@ -14,6 +14,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * @deprecated Merge with other Hide- stats
+ */
+@Deprecated
 public class HideEnchants extends BooleanStat {
 	public HideEnchants() {
 		super("HIDE_ENCHANTS", Material.BOOK, "Hide Enchantments", new String[] { "Enable to completely hide your item", "enchants. You can still see the glowing effect." }, new String[] { "all" });

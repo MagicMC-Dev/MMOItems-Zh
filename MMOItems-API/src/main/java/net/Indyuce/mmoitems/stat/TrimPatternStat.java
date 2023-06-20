@@ -24,7 +24,10 @@ public class TrimPatternStat extends ChooseStat implements GemStoneStat {
     public TrimPatternStat() {
         super("TRIM_PATTERN", Material.LEATHER_CHESTPLATE, "Trim Pattern", new String[]{"Pattern of trimmed armor."}, new String[]{"armor"});
 
-        if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) disable();
+        if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) {
+            disable();
+            return;
+        }
 
         for (TrimPattern mat : Registry.TRIM_PATTERN)
             addChoices(new StatChoice(mat.getKey().getKey()));

@@ -17,8 +17,6 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
 /**
  * @author Jules
  */
@@ -26,7 +24,10 @@ public class TrimMaterialStat extends ChooseStat implements GemStoneStat {
     public TrimMaterialStat() {
         super("TRIM_MATERIAL", Material.LEATHER_CHESTPLATE, "Trim Material", new String[]{"Material to trim your armor with."}, new String[]{"armor"});
 
-        if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) disable();
+        if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) {
+            disable();
+            return;
+        }
 
         for (TrimMaterial mat : Registry.TRIM_MATERIAL)
             addChoices(new StatChoice(mat.getKey().getKey()));

@@ -5,7 +5,6 @@ import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.util.CustomProjectile;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -15,26 +14,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Crossbow extends UntargetedWeapon {
+    private boolean consumesArrow;
+
     public Crossbow(Player player, NBTItem item) {
         super(player, item, UntargetedWeaponType.RIGHT_CLICK);
     }
 
     @Override
     public boolean canAttack(EquipmentSlot slot) {
-        return player.getGameMode() == GameMode.CREATIVE || getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1);
+        consumesArrow = !getNBTItem().getBoolean("MMOITEMS_DISABLE_ARROW_CONSUMPTION");
+        return player.getGameMode() == GameMode.CREATIVE || !consumesArrow || getPlayer().getInventory().containsAtLeast(new ItemStack(Material.ARROW), 1);
     }
 
     @Override
     public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
 
         // Consume arrow
-        if (getPlayer().getGameMode() != GameMode.CREATIVE)
+        if (getPlayer().getGameMode() != GameMode.CREATIVE && consumesArrow)
             getPlayer().getInventory().removeItem(new ItemStack(Material.ARROW));
 
         final Arrow arrow = getPlayer().launchProjectile(Arrow.class);
         arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * requireNonZero(stats.getStat("ARROW_VELOCITY"), 1)));
         getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
-        getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
+        getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_HIT, 1, .5f);
 
         // Register custom projectile
         MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, 1);

@@ -32,7 +32,7 @@ public class Crossbow extends UntargetedWeapon {
             getPlayer().getInventory().removeItem(new ItemStack(Material.ARROW));
 
         final Arrow arrow = getPlayer().launchProjectile(Arrow.class);
-        arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * requireNonZero(getNBTItem().getStat(ItemStats.ARROW_VELOCITY.getId()), 1)));
+        arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * requireNonZero(stats.getStat("ARROW_VELOCITY"), 1)));
         getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 1);
 

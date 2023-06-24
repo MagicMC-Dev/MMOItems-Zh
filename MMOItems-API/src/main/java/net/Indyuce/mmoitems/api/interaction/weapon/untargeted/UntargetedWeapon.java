@@ -29,7 +29,6 @@ public abstract class UntargetedWeapon extends Weapon {
      *         checks and player stat snapshots.
      */
     public void handleTargetFreeAttack(EquipmentSlot slot) {
-
         if (!canAttack(slot))
             return;
 

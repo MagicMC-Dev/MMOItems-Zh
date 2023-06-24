@@ -81,6 +81,6 @@ public class MMOItemsAPI {
         modifiers.forEach((mod, value) -> castable.setModifier(mod, value));
 
         PlayerMetadata caster = MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND);
-        return castable.cast(new TriggerMetadata(caster, attackMeta, target));
+        return castable.cast(new TriggerMetadata(caster, target, attackMeta));
     }
 }

@@ -343,7 +343,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     @Deprecated
     public void cast(@Nullable AttackMetadata attack, @Nullable LivingEntity target, @NotNull AbilityData ability) {
         PlayerMetadata caster = getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
-        ability.cast(new TriggerMetadata(caster, attack, target));
+        ability.cast(new TriggerMetadata(caster, target, attack));
     }
 
     public boolean isOnCooldown(CooldownType type) {

@@ -33,7 +33,7 @@ public class Staff extends UntargetedWeapon {
     public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
 
         double attackDamage = requireNonZero(stats.getStat("ATTACK_DAMAGE"), 1);
-        double range = requireNonZero(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
+        double range = requireNonZero(stats.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
 
         StaffSpirit spirit = StaffSpirit.get(getNBTItem());
         if (spirit != null) {

@@ -12,6 +12,7 @@ import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.TypeSet;
 import net.Indyuce.mmoitems.api.event.item.SpecialWeaponAttackEvent;
 import net.Indyuce.mmoitems.api.interaction.*;
+import net.Indyuce.mmoitems.api.interaction.projectile.ProjectileData;
 import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
@@ -289,11 +290,13 @@ public class ItemUse implements Listener {
             // Have to get hand manually because 1.15 and below does not have event.getHand()
             final ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
             final EquipmentSlot bowSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
-            MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event.getForce());
-
+            final ProjectileData projData = MMOItems.plugin.getEntities().registerCustomProjectile(item, playerData.getStats().newTemporary(bowSlot), event.getProjectile(), event.getForce());
             final AbstractArrow arrow = (AbstractArrow) event.getProjectile();
-            if (item.getStat("ARROW_VELOCITY") > 0)
-                arrow.setVelocity(arrow.getVelocity().multiply(item.getStat("ARROW_VELOCITY")));
+
+            // Apply arrow velocity
+            final double arrowVelocity = projData.getShooter().getStat("ARROW_VELOCITY");
+            if (arrowVelocity > 0)
+                arrow.setVelocity(arrow.getVelocity().multiply(arrowVelocity));
         }
     }
 

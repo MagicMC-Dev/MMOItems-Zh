@@ -51,7 +51,8 @@ public class EntityManager implements Listener {
      * @param damageMultiplicator The damage coefficient. For bows, this is basically the pull force.
      *                            For tridents or anything else this is always set to 1
      */
-    public void registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, double damageMultiplicator) {
+    @NotNull
+    public ProjectileData registerCustomProjectile(@NotNull NBTItem sourceItem, @NotNull PlayerMetadata attacker, @NotNull Entity entity, double damageMultiplicator) {
 
         // Initialize projectile data
         final ProjectileData projectileData = new ProjectileData(attacker, sourceItem, damageMultiplicator);
@@ -65,6 +66,7 @@ public class EntityManager implements Listener {
             new ArrowParticles((AbstractArrow) entity, sourceItem);
 
         projectiles.put(entity.getEntityId(), projectileData);
+        return projectileData;
     }
 
     public void registerCustomEntity(Entity entity, EntityData data) {

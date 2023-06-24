@@ -26,11 +26,11 @@ public class Musket extends UntargetedWeapon {
 
     @Override
     public void applyAttackEffect(PlayerMetadata stats, EquipmentSlot slot) {
-        final double range = requireNonZero(getNBTItem().getStat(ItemStats.RANGE.getId()), MMOItems.plugin.getConfig().getDouble("default.range"));
-        final double recoil = requireNonZero(getNBTItem().getStat(ItemStats.RECOIL.getId()), MMOItems.plugin.getConfig().getDouble("default.recoil"));
+        final double range = requireNonZero(stats.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
+        final double recoil = requireNonZero(stats.getStat("RECOIL"), MMOItems.plugin.getConfig().getDouble("default.recoil"));
 
         // knockback
-        final double knockback = getNBTItem().getStat(ItemStats.KNOCKBACK.getId());
+        final double knockback = stats.getStat("KNOCKBACK");
         if (knockback > 0)
             getPlayer().setVelocity(getPlayer().getVelocity()
                     .add(getPlayer().getEyeLocation().getDirection().setY(0).normalize().multiply(-1 * knockback).setY(-.2)));

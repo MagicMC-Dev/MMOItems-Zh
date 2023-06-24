@@ -7,7 +7,6 @@ import net.Indyuce.mmoitems.stat.data.ProjectileParticlesData;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 public interface LuteAttackHandler {

@@ -6,6 +6,8 @@ import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.util.CustomProjectile;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.CustomSound;
+import net.Indyuce.mmoitems.listener.CustomSoundListener;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -36,7 +38,9 @@ public class Crossbow extends UntargetedWeapon {
         final Arrow arrow = getPlayer().launchProjectile(Arrow.class);
         arrow.setVelocity(getPlayer().getEyeLocation().getDirection().multiply(3 * requireNonZero(stats.getStat("ARROW_VELOCITY"), 1)));
         getPlayer().setVelocity(getPlayer().getVelocity().setX(0).setZ(0));
-        getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ARROW_HIT, 1, .5f);
+
+        // Play custom sound
+        CustomSoundListener.playSound(getNBTItem().getItem(), CustomSound.ON_CROSSBOW, player, Sound.ENTITY_ARROW_SHOOT);
 
         // Register custom projectile
         MMOItems.plugin.getEntities().registerCustomProjectile(getNBTItem(), stats, arrow, 1);

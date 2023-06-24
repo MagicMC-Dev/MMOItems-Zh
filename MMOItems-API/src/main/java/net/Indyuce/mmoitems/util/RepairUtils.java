@@ -1,6 +1,7 @@
 package net.Indyuce.mmoitems.util;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
+import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.event.item.RepairItemEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.player.PlayerData;
@@ -52,10 +53,10 @@ public class RepairUtils {
         meta.setDamage(Math.max(0, meta.getDamage() - repairAmount));
         target.getItem().setItemMeta(meta);
         Message.REPAIRED_ITEM.format(ChatColor.YELLOW,
-                "#item#", MMOUtils.getDisplayName(target.getItem()),
-                "#amount#", String.valueOf(repairAmount))
+                        "#item#", MMOUtils.getDisplayName(target.getItem()),
+                        "#amount#", String.valueOf(repairAmount))
                 .send(player);
-        CustomSoundListener.playConsumableSound(consumable.getItem(), player);
+        CustomSoundListener.playSound(consumable.getItem(), CustomSound.ON_CONSUME, player);
         return true;
     }
 }

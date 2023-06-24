@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SoundsEdition extends EditionInventory {
-	public static final Map<Integer, String> correspondingSlot = new HashMap<>();
+	public static final Map<Integer, String> CORRESPONDING_SLOT = new HashMap<>();
 
 	static {
 		for (CustomSound sound : CustomSound.values())
-			correspondingSlot.put(sound.getSlot(), sound.getName().replace(" ", "-").toLowerCase());
+			CORRESPONDING_SLOT.put(sound.getSlot(), sound.name().replace("_", "-").toLowerCase());
 	}
 
 	public SoundsEdition(Player player, MMOItemTemplate template) {
@@ -37,7 +37,6 @@ public class SoundsEdition extends EditionInventory {
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 54, "Custom Sounds: " + template.getId());
-		int[] slots = { 19, 22, 25, 28, 31, 34, 37, 40, 43 };
 		int n = 0;
 
 		for (CustomSound sound : CustomSound.values()) {
@@ -66,7 +65,7 @@ public class SoundsEdition extends EditionInventory {
 			soundEventMeta.setLore(eventLore);
 			soundEvent.setItemMeta(soundEventMeta);
 
-			inv.setItem(slots[n], soundEvent);
+			inv.setItem(sound.getSlot(), soundEvent);
 			n += 1;
 		}
 
@@ -83,14 +82,14 @@ public class SoundsEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
-		if (correspondingSlot.containsKey(event.getSlot())) {
+		if (CORRESPONDING_SLOT.containsKey(event.getSlot())) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.CUSTOM_SOUNDS, correspondingSlot.get(event.getSlot())).enable("Write in the chat the custom sound you want to add.",
+				new StatEdition(this, ItemStats.CUSTOM_SOUNDS, CORRESPONDING_SLOT.get(event.getSlot())).enable("Write in the chat the custom sound you want to add.",
 						ChatColor.AQUA + "Format: [SOUND NAME] [VOLUME] [PITCH]",
 						ChatColor.AQUA + "Example: entity.generic.drink 1 1");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
-				String soundPath = correspondingSlot.get(event.getSlot());
+				String soundPath = CORRESPONDING_SLOT.get(event.getSlot());
 				getEditedSection().set("sounds." + soundPath, null);
 
 				// clear sound config section

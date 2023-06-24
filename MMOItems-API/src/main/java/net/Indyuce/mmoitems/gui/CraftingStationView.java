@@ -4,6 +4,7 @@ import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.SmartGive;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.crafting.CraftingStation;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue;
 import net.Indyuce.mmoitems.api.crafting.CraftingStatus.CraftingQueue.CraftingInfo;
@@ -194,7 +195,7 @@ public class CraftingStationView extends PluginInventory {
                 recipe.whenClaimed().forEach(trigger -> trigger.whenCrafting(playerData));
 
                 // Play sounds
-                CustomSoundListener.stationCrafting(result, player);
+                CustomSoundListener.playSound(result, CustomSound.ON_CRAFT, player);
                 if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT))
                     player.playSound(player.getLocation(), station.getSound(), 1, 1);
 

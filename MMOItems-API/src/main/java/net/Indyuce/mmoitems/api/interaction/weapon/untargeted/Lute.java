@@ -7,7 +7,6 @@ import io.lumine.mythic.lib.comp.interaction.InteractionType;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
 import io.lumine.mythic.lib.version.VersionSound;
-import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.util.SoundReader;
 import net.Indyuce.mmoitems.stat.LuteAttackEffectStat.LuteAttackEffect;
@@ -41,6 +40,7 @@ public class Lute extends UntargetedWeapon {
         final Vector weight = new Vector(0, -.003 * stats.getStat("NOTE_WEIGHT"), 0);
 
         final @Nullable LuteAttackEffect effect = LuteAttackEffect.get(getNBTItem());
+        @Deprecated
         final SoundReader sound = new SoundReader(getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VersionSound.BLOCK_NOTE_BLOCK_BELL.toSound());
         final @NotNull ProjectileParticlesData projParticle = getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES") ?
                 new ProjectileParticlesData(getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES")) : ProjectileParticlesData.DEFAULT;

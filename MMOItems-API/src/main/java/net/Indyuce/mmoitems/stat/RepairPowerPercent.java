@@ -2,6 +2,7 @@ package net.Indyuce.mmoitems.stat;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.interaction.util.DurabilityItem;
@@ -58,7 +59,7 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
                 Message.REPAIRED_ITEM
                         .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(target.getItem()), "#amount#", String.valueOf(repairAmount))
                         .send(player);
-                CustomSoundListener.playConsumableSound(consumable.getItem(), player);
+                CustomSoundListener.playSound(consumable.getItem(), CustomSound.ON_CONSUME, player);
             }
             return true;
         }

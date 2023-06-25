@@ -145,7 +145,6 @@ public class StatManager {
         ItemStat<?, ?> stat = stats.getOrDefault(id, null);
         if (stat == null) {
             stat = numeric.stream().filter(doubleStat -> doubleStat.getId().equals(id)).findFirst().orElse(null);
-            if (stat != null) System.out.println("Found numeric for " + stat);
         }
         return stat;
     }

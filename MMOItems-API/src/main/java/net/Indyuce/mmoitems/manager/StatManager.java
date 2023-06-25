@@ -12,6 +12,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -27,10 +28,10 @@ public class StatManager {
      * the first time to make their access easier. Check the classes
      * individually to understand better
      */
-    private final Set<DoubleStat> numeric = new HashSet<>();
-    private final Set<ItemRestriction> itemRestriction = new HashSet<>();
-    private final Set<ConsumableItemInteraction> consumableActions = new HashSet<>();
-    private final Set<PlayerConsumable> playerConsumables = new HashSet<>();
+    private final List<DoubleStat> numeric = new ArrayList<>();
+    private final List<ItemRestriction> itemRestriction = new ArrayList<>();
+    private final List<ConsumableItemInteraction> consumableActions = new ArrayList<>();
+    private final List<PlayerConsumable> playerConsumables = new ArrayList<>();
 
     /**
      * Load default stats using java reflection, get all public static final
@@ -51,13 +52,13 @@ public class StatManager {
 
     /**
      * @see FictiveNumericStat
-     * @deprecated
+     * @deprecated Needs refactor
      */
     @Deprecated
     public void reload(boolean cleanFirst) {
+
         // Clean fictive numeric stats before
-        if (cleanFirst)
-            numeric.removeIf(stat -> stat instanceof FictiveNumericStat);
+        if (cleanFirst) numeric.removeIf(stat -> stat instanceof FictiveNumericStat);
 
         // Register elemental stats
         loadElements();
@@ -68,66 +69,70 @@ public class StatManager {
 
     /**
      * Load custom stats
+     *
+     * @deprecated Needs refactor
      */
+    @Deprecated
     public void loadCustom() {
         ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
         ConfigFile config = new ConfigFile("custom-stats");
         ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
         Validate.notNull(section, "Custom stats section is null");
-        section.getKeys(true)
-                .stream()
-                .filter(section::isConfigurationSection)
-                .map(section::getConfigurationSection)
-                .filter(Objects::nonNull)
-                .forEach(this::registerCustomStat);
+        section.getKeys(true).stream().filter(section::isConfigurationSection).map(section::getConfigurationSection).filter(Objects::nonNull).forEach(this::registerCustomStat);
     }
 
     /**
      * Register all MythicLib elements as stats
+     *
+     * @deprecated Needs refactor
      */
+    @Deprecated
     public void loadElements() {
-        for (ElementStatType type : ElementStatType.values()) {
-            for (Element element : MythicLib.plugin.getElements().getAll()) {
+        for (ElementStatType type : ElementStatType.values())
+            for (Element element : MythicLib.plugin.getElements().getAll())
                 numeric.add(new FictiveNumericStat(element, type));
-            }
-        }
     }
 
+    @NotNull
     public Collection<ItemStat<?, ?>> getAll() {
         return stats.values();
     }
 
     /**
      * @return Collection of all numeric stats like atk damage, crit strike
-     * chance, max mana... which can be applied on a gem stone. This is
-     * used when applying gem stones to quickly access all the stats
-     * which needs to be applied
+     *         chance, max mana... which can be applied on a gem stone. This is
+     *         used when applying gem stones to quickly access all the stats
+     *         which needs to be applied
      */
-    public Set<DoubleStat> getNumericStats() {
+    @NotNull
+    public List<DoubleStat> getNumericStats() {
         return numeric;
     }
 
     /**
      * @return Collection of all stats which constitute an item restriction:
-     * required level, required class, soulbound..
+     *         required level, required class, soulbound..
      */
-    public Set<ItemRestriction> getItemRestrictionStats() {
+    @NotNull
+    public List<ItemRestriction> getItemRestrictionStats() {
         return itemRestriction;
     }
 
     /**
      * @return Collection of all stats implementing a consumable action like
-     * deconstructing, identifying...
+     *         deconstructing, identifying...
      */
-    public Set<ConsumableItemInteraction> getConsumableActions() {
+    @NotNull
+    public List<ConsumableItemInteraction> getConsumableActions() {
         return consumableActions;
     }
 
     /**
      * @return Collection of all stats implementing self consumable like
-     * restore health, mana, hunger...
+     *         restore health, mana, hunger...
      */
-    public Set<PlayerConsumable> getPlayerConsumables() {
+    @NotNull
+    public List<PlayerConsumable> getPlayerConsumables() {
         return playerConsumables;
     }
 
@@ -135,23 +140,19 @@ public class StatManager {
         return stats.containsKey(id);
     }
 
+    @Nullable
     public ItemStat<?, ?> get(String id) {
         ItemStat<?, ?> stat = stats.getOrDefault(id, null);
-        if (stat == null)
-            stat = numeric.stream()
-                    .filter(doubleStat -> doubleStat.getId().equals(id))
-                    .findFirst()
-                    .orElse(null);
+        if (stat == null) {
+            stat = numeric.stream().filter(doubleStat -> doubleStat.getId().equals(id)).findFirst().orElse(null);
+            if (stat != null) System.out.println("Found numeric for " + stat);
+        }
         return stat;
     }
 
     /**
-     * Registers a stat in MMOItems
-     *
-     * @param id   Useless.
-     * @param stat The stat instance
      * @deprecated Stat IDs are now stored in the stat instance directly.
-     * Please use StatManager#register(ItemStat) instead
+     *         Please use StatManager#register(ItemStat) instead
      */
     @Deprecated
     @SuppressWarnings("unused")
@@ -166,23 +167,16 @@ public class StatManager {
      *
      * @param stat The stat to register
      */
-    public void register(ItemStat<?, ?> stat) {
-        if (!stat.isEnabled())
-            return;
+    public void register(@NotNull ItemStat<?, ?> stat) {
+        if (!stat.isEnabled()) return;
 
         stats.put(stat.getId(), stat);
 
         if (stat instanceof DoubleStat && !(stat instanceof GemStoneStat) && stat.isCompatible(Type.GEM_STONE))
             numeric.add((DoubleStat) stat);
-
-        if (stat instanceof ItemRestriction)
-            itemRestriction.add((ItemRestriction) stat);
-
-        if (stat instanceof ConsumableItemInteraction)
-            consumableActions.add((ConsumableItemInteraction) stat);
-
-        if (stat instanceof PlayerConsumable)
-            playerConsumables.add((PlayerConsumable) stat);
+        if (stat instanceof ItemRestriction) itemRestriction.add((ItemRestriction) stat);
+        if (stat instanceof ConsumableItemInteraction) consumableActions.add((ConsumableItemInteraction) stat);
+        if (stat instanceof PlayerConsumable) playerConsumables.add((PlayerConsumable) stat);
 
         /*
          * Cache stat for every type which may have this stat. Really important
@@ -192,11 +186,7 @@ public class StatManager {
          * take it into account
          */
         if (MMOItems.plugin.getTypes() != null)
-            MMOItems.plugin.getTypes()
-                    .getAll()
-                    .stream()
-                    .filter(stat::isCompatible)
-                    .forEach(type -> type.getAvailableStats().add(stat));
+            MMOItems.plugin.getTypes().getAll().stream().filter(stat::isCompatible).forEach(type -> type.getAvailableStats().add(stat));
     }
 
     private void registerCustomStat(@NotNull ConfigurationSection section) {
@@ -229,10 +219,8 @@ public class StatManager {
 
         // Lore
         String[] lore = new String[0];
-        if (section.isList("lore"))
-            lore = section.getStringList("lore").toArray(new String[]{});
-        else if (section.isString("lore"))
-            lore = new String[]{section.getString("lore")};
+        if (section.isList("lore")) lore = section.getStringList("lore").toArray(new String[]{});
+        else if (section.isString("lore")) lore = new String[]{section.getString("lore")};
 
         // Create a new stat instance
         try {

@@ -70,7 +70,7 @@ public class ItemStats {
             PARRY_RATING = new DoubleStat("PARRY_RATING", Material.BUCKET, "Parry Rating", new String[]{"The chance to parry an attack.", "Parrying negates the damage", "and knocks the attacker back."}, new String[]{"!miscellaneous", "!block", "all"}),
             PARRY_COOLDOWN_REDUCTION = new DoubleStat("PARRY_COOLDOWN_REDUCTION", Material.BUCKET, "Parry Cooldown Reduction", new String[]{"Reduces the parrying cooldown (%)."}, new String[]{"!miscellaneous", "!block", "all"}),
             COOLDOWN_REDUCTION = new DoubleStat("COOLDOWN_REDUCTION", Material.BOOK, "Cooldown Reduction", new String[]{"Reduces cooldowns of item and player skills (%)."}),
-            RANGE = new DoubleStat("RANGE", Material.STICK, "Range", new String[]{"The range of your item attacks."}, new String[]{"staff", "whip", "wand", "musket"}),
+            RANGE = new DoubleStat("RANGE", Material.STICK, "Range", new String[]{"The range of your item attacks."}, new String[]{"staff", "whip", "wand", "musket", "gem_stone"}),
             MANA_COST = new ManaCost(),
             STAMINA_COST = new DoubleStat("STAMINA_COST", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "Stamina Cost", new String[]{"Stamina spent by your weapon to be used."}, new String[]{"piercing", "slashing", "blunt", "range"}),
             ARROW_VELOCITY = new DoubleStat("ARROW_VELOCITY", Material.ARROW, "Arrow Velocity", new String[]{"Determines how far your", "weapon can shoot.", "Default: 1.0"}, new String[]{"gem_stone", "bow", "crossbow"}),
@@ -101,9 +101,9 @@ public class ItemStats {
     UNBREAKABLE = new Unbreakable(),
             TIER = new ItemTierStat(),
             SET = new ItemSetStat(),
-            ARMOR = new DoubleStat("ARMOR", VersionMaterial.GOLDEN_CHESTPLATE.toMaterial(), "Armor", new String[] { "The armor given to the holder." }),
-            ARMOR_TOUGHNESS = new DoubleStat("ARMOR_TOUGHNESS", Material.DIAMOND_CHESTPLATE, "Armor Toughness", new String[] { "Armor toughness reduces damage taken." }),
-            MAX_HEALTH = new DoubleStat("MAX_HEALTH", Material.GOLDEN_APPLE, "Max Health", new String[] { "The amount of health your", "item gives to the holder." }),
+            ARMOR = new DoubleStat("ARMOR", VersionMaterial.GOLDEN_CHESTPLATE.toMaterial(), "Armor", new String[]{"The armor given to the holder."}),
+            ARMOR_TOUGHNESS = new DoubleStat("ARMOR_TOUGHNESS", Material.DIAMOND_CHESTPLATE, "Armor Toughness", new String[]{"Armor toughness reduces damage taken."}),
+            MAX_HEALTH = new DoubleStat("MAX_HEALTH", Material.GOLDEN_APPLE, "Max Health", new String[]{"The amount of health your", "item gives to the holder."}),
             UNSTACKABLE = new Unstackable(),
             MAX_MANA = new DoubleStat("MAX_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Max Mana", new String[]{"Adds mana to your max mana bar."}),
             KNOCKBACK_RESISTANCE = new KnockbackResistance(),
@@ -130,8 +130,8 @@ public class ItemStats {
             SOULBINDING_CHANCE = new SoulbindingChance(),
             SOULBOUND_BREAK_CHANCE = new SoulbindingBreakChance(),
             SOULBOUND_LEVEL = new SoulboundLevel(),
-          //  AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
-            ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "Item Cooldown", new String[]{"This cooldown applies for consumables", "as well as for item commands."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
+    //  AUTO_SOULBIND = new BooleanStat("AUTO_SOULBIND", VersionMaterial.ENDER_EYE.toMaterial(), "Auto-Soulbind", new String[]{"Automatically soulbinds this item to", "a player when he acquires it."}, new String[]{"!consumable", "all"}),
+    ITEM_COOLDOWN = new DoubleStat("ITEM_COOLDOWN", Material.COOKED_CHICKEN, "Item Cooldown", new String[]{"This cooldown applies for consumables", "as well as for item commands."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
             COOLDOWN_REFERENCE = new StringStat("COOLDOWN_REFERENCE", Material.CHICKEN, "Cooldown Reference", new String[]{"Two items with the same cooldown reference", "will share their cooldowns. This is useful", "for health or mana pots for example."}, new String[]{"!armor", "!gem_stone", "!block", "all"}),
             VANILLA_EATING_ANIMATION = new VanillaEatingAnimation(),
             GEM_COLOR = new GemColor(),
@@ -168,16 +168,16 @@ public class ItemStats {
             REPAIR_TYPE = new RepairReference(),
             INEDIBLE = new BooleanStat("INEDIBLE", Material.POISONOUS_POTATO, "Inedible", new String[]{"Players won't be able to right-click this consumable.", "", "No effects of it will take place."}, new String[]{"consumable"}),
             DISABLE_RIGHT_CLICK_CONSUME = new DisableStat("RIGHT_CLICK_CONSUME", Material.BAKED_POTATO, "Infinite Consume", new String[]{"consumable"}, "Players will be able to right-click this consumable", "and benefit from its effects, but it won't be consumed."),
-            KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket"}),
-            RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Recoil", new String[]{"Corresponds to the shooting innacuracy."}, new String[]{"musket"}),
+            KNOCKBACK = new DoubleStat("KNOCKBACK", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Knockback", new String[]{"Using this musket will knock", "the user back if positive."}, new String[]{"musket", "gem_stone"}),
+            RECOIL = new DoubleStat("RECOIL", VersionMaterial.IRON_HORSE_ARMOR.toMaterial(), "Recoil", new String[]{"Corresponds to the shooting innacuracy."}, new String[]{"musket", "gem_stone"}),
             HANDWORN = new BooleanStat("HANDWORN", Material.STRING, "Handworn", new String[]{"This item ignores two-handedness.", "", "Basically for a ring or a glove that you", " can wear and still have your hand free", " to carry a two-handed weapon."}, new String[]{"catalyst"}),
             AMPHIBIAN = new Amphibian(),
 
     // Abilities & Upgrading
     ABILITIES = new Abilities(),
             UPGRADE = new UpgradeStat(),
-            DOWNGRADE_ON_BREAK = new BooleanStat("BREAK_DOWNGRADE", Material.DAMAGED_ANVIL, "Downgrade when Broken", new String[]{"If this item's durability reaches 0,", "it will be fully repaired but also", "downgraded by one level.", "", "&cIt will only break if it cannot be", "&cdowngraded further", "", "Requires to define an &6Upgrade Template", "Required to define &6Custom Durability"}, new String[] { "piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "consumable", "accessory" }),
-            DOWNGRADE_ON_DEATH = new BooleanStat("DEATH_DOWNGRADE", Material.DAMAGED_ANVIL, "Downgrade on Death", new String[]{"If the wearer of this item dies, it may", "downgrade (based on &6Death Downgrade", "&6Chance &7stat)", "", "Required to define an &6Upgrade Template", "Requires keep-inventory gamerule. "}, new String[] { "piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "consumable", "accessory" }),
+            DOWNGRADE_ON_BREAK = new BooleanStat("BREAK_DOWNGRADE", Material.DAMAGED_ANVIL, "Downgrade when Broken", new String[]{"If this item's durability reaches 0,", "it will be fully repaired but also", "downgraded by one level.", "", "&cIt will only break if it cannot be", "&cdowngraded further", "", "Requires to define an &6Upgrade Template", "Required to define &6Custom Durability"}, new String[]{"piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "consumable", "accessory"}),
+            DOWNGRADE_ON_DEATH = new BooleanStat("DEATH_DOWNGRADE", Material.DAMAGED_ANVIL, "Downgrade on Death", new String[]{"If the wearer of this item dies, it may", "downgrade (based on &6Death Downgrade", "&6Chance &7stat)", "", "Required to define an &6Upgrade Template", "Requires keep-inventory gamerule. "}, new String[]{"piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "consumable", "accessory"}),
             DOWNGRADE_ON_DEATH_CHANCE = new DoubleStat("DEATH_DOWNGRADE_CHANCE", Material.SKELETON_SKULL, "Death Downgrade Chance", new String[]{"Probability that an item with &cDowngrade ", "&con Death&7 will be downgraded when the", "player dies. ", "", "Exceeding 100% will for sure downgrade", "one item, and roll again to downgrade", "another (with the excess probability).", "&6The same item wont be downgraded twice."}, new String[]{"!miscellaneous", "!block", "all"}, false),
 
     // Unique Item Stats
@@ -203,6 +203,7 @@ public class ItemStats {
      * @deprecated Item damage is now {@link ItemDamage} and
      *         custom durability is now {@link CustomDurability}
      */
-    @Deprecated public static final ItemStat DURABILITY = ITEM_DAMAGE;
+    @Deprecated
+    public static final ItemStat DURABILITY = ITEM_DAMAGE;
 
 }

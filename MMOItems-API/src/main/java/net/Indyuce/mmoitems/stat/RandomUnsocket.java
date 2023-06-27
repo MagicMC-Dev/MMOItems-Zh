@@ -4,8 +4,8 @@ import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
+import net.Indyuce.mmoitems.api.event.item.UnsocketGemStoneEvent;
 import net.Indyuce.mmoitems.api.interaction.Consumable;
 import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -18,7 +18,9 @@ import net.Indyuce.mmoitems.stat.data.GemstoneData;
 import net.Indyuce.mmoitems.stat.type.ConsumableItemInteraction;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.StatHistory;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.util.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -82,6 +84,11 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
         DoubleData unsocket = (DoubleData) consumable.getMMOItem().getData(ItemStats.RANDOM_UNSOCKET);
         int s = 1;  if (unsocket != null) { s = SilentNumbers.floor(unsocket.getValue()); }
         //GEM//for (String str : SilentNumbers.transcribeList(mmoGemStones, (lam) -> "\u00a73Found \u00a77 " + ((MMOItem) lam).getType().getId() + " " + ((MMOItem) lam).getId() )) { MMOItems.log(str); };
+
+        // Remove when call event successfully
+        UnsocketGemStoneEvent unsocketGemStoneEvent = new UnsocketGemStoneEvent(playerData, consumableVol, mmo);
+        Bukkit.getServer().getPluginManager().callEvent(unsocketGemStoneEvent);
+        if (unsocketGemStoneEvent.isCancelled()) return false;
 
         // Drop gemstones to the ground :0
         ArrayList<ItemStack> items2Drop = new ArrayList<>();

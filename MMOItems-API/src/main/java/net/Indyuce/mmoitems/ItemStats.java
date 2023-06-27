@@ -50,8 +50,9 @@ public class ItemStats {
             DISABLE_ENCHANTING = new DisableStat("ENCHANTING", VersionMaterial.ENCHANTING_TABLE.toMaterial(), "Disable Enchanting", new String[]{"!block", "all"}, "Players can't enchant this item."),
             DISABLE_REPAIRING = new DisableStat("REPAIRING", Material.ANVIL, "Disable Repairing", new String[]{"!block", "all"}, "Players can't use this item in anvils."),
             DISABLE_ARROW_SHOOTING = new DisableStat("ARROW_SHOOTING", Material.ARROW, "Disable Arrow Shooting", new Material[]{Material.ARROW}, "Players can't shoot this", "item using a bow."),
+            DISABLE_ATTACK_PASSIVE = new DisableStat("ATTACK_PASSIVE", Material.BARRIER, "Disable Attack Passive", new String[]{"piercing", "slashing", "blunt"}, "Disables the blunt/slashing/piercing", "passive effects on attacks."),
+            DISABLE_DROP = new DisableStat("DROPING", Material.LAVA_BUCKET, "Disable Item Dropping", new String[]{"all"}, "Disables the dropping of this item!"),
             DISABLE_ARROW_CONSUMPTION = new DisableStat("ARROW_CONSUMPTION", Material.ARROW, "Disable Arrow Consumption", new String[]{"crossbow"}, "Disable arrow requirement and consumption."),
-            DISABLE_ATTACK_PASSIVE = new DisableStat("ATTACK_PASSIVE", Material.BARRIER, "Disable Attack Passive", new String[]{"piercing", "slashing", "blunt"}, "Disable blunt/slashing/piercing", "passive attack effects."),
 
     // RPG Stats
     REQUIRED_LEVEL = new RequiredLevel(),
@@ -205,5 +206,4 @@ public class ItemStats {
      */
     @Deprecated
     public static final ItemStat DURABILITY = ITEM_DAMAGE;
-
 }

@@ -4,6 +4,10 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * @deprecated Not used anymore
+ */
+@Deprecated
 public class CraftMMOItemEvent extends PlayerDataEvent {
 	private static final HandlerList handlers = new HandlerList();
 

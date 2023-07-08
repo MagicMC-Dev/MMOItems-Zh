@@ -1,5 +1,6 @@
 package net.Indyuce.mmoitems.listener;
 
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
@@ -24,7 +25,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -131,7 +131,8 @@ public class ItemListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     private void inventoryMove(InventoryClickEvent event) {
-        if (event.getInventory().getType() != InventoryType.CRAFTING || !(event.getWhoClicked() instanceof Player)) return;
+        if (event.getInventory().getType() != InventoryType.CRAFTING || !(event.getWhoClicked() instanceof Player))
+            return;
         ItemStack newItem = modifyItem(event.getCurrentItem(), (Player) event.getWhoClicked(), ReforgeReason.CLICK);
         if (newItem != null) event.setCurrentItem(newItem);
     }
@@ -143,10 +144,12 @@ public class ItemListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void playerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+        if (!MythicLib.plugin.hasProfiles()) updateInventory(event.getPlayer());
+    }
 
+    public static void updateInventory(Player player) {
         ItemStack newItem = modifyItem(player.getEquipment().getHelmet(), player, ReforgeReason.JOIN);
         if (newItem != null) player.getEquipment().setHelmet(newItem);
         newItem = modifyItem(player.getEquipment().getChestplate(), player, ReforgeReason.JOIN);
@@ -166,7 +169,7 @@ public class ItemListener implements Listener {
     }
 
     @Nullable
-    private ItemStack modifyItem(@Nullable ItemStack stack, @NotNull Player player, @NotNull ReforgeReason reason) {
+    private static ItemStack modifyItem(@Nullable ItemStack stack, @NotNull Player player, @NotNull ReforgeReason reason) {
 
         // Sleep on metaless stacks
         if (stack == null || !stack.hasItemMeta())
@@ -186,7 +189,7 @@ public class ItemListener implements Listener {
             return null;
 
         // Greater RevID in template? Go ahead, update!
-        int templateRevision =mod. getTemplate().getRevisionId();
+        int templateRevision = mod.getTemplate().getRevisionId();
         int mmoitemRevision = (mod.getNBTItem().hasTag(ItemStats.REVISION_ID.getNBTPath()) ? mod.getNBTItem().getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1);
         if (templateRevision <= mmoitemRevision)
             return null;

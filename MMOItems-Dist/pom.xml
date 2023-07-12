@@ -19,6 +19,7 @@
 
     <!-- Dependencies -->
     <dependencies>
+
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -26,11 +27,21 @@
             <version>1.18-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
         <!-- MMOItems API -->
         <dependency>
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOItems-API</artifactId>
             <version>6.9.5-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Profile API -->
+        <dependency>
+            <groupId>fr.phoenixdevt</groupId>
+            <artifactId>Profile-API</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
     </dependencies>

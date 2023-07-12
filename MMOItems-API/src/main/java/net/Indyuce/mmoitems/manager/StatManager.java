@@ -167,10 +167,19 @@ public class StatManager {
      * @param stat The stat to register
      */
     public void register(@NotNull ItemStat<?, ?> stat) {
+
+        // Skip disabled stats.
         if (!stat.isEnabled()) return;
+
+        // Safe check, this can happen with numerous extra RPG plugins
+        if (stats.containsKey(stat.getId())) {
+            MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register stat '" + stat.getId() + "' as a stat with the same ID already exists.");
+            return;
+        }
 
         stats.put(stat.getId(), stat);
 
+        // Custom registries
         if (stat instanceof DoubleStat && !(stat instanceof GemStoneStat) && stat.isCompatible(Type.GEM_STONE))
             numeric.add((DoubleStat) stat);
         if (stat instanceof ItemRestriction) itemRestriction.add((ItemRestriction) stat);

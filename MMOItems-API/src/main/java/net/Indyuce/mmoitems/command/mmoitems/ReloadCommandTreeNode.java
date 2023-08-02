@@ -49,7 +49,7 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
     public void reloadSkills(CommandSender sender) {
         MythicLib.plugin.getSkills().initialize(true);
         MMOItems.plugin.getSkills().initialize(true);
-        sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded " + MMOItems.plugin.getSkills().getAll().size() + " skills.");
+        sender.sendMessage(MMOItems.plugin.getPrefix() + "重新加载成功 " + MMOItems.plugin.getSkills().getAll().size() + " skills.");
     }
 
     public void reloadMain(CommandSender sender) {
@@ -68,13 +68,13 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
         sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " "
                 + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
+                + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " 物品类型");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
+                + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " 物品等级");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
+                + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " 物品套装");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getUpgrades().getAll().size() + ChatColor.GRAY + " Upgrade Templates");
+                + MMOItems.plugin.getUpgrades().getAll().size() + ChatColor.GRAY + " 升级模板");
 
         // This one is not implementing Reloadable
         NumericStatFormula.reload();
@@ -83,21 +83,21 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
 
     public void reloadRecipes(CommandSender sender) {
         MMOItems.plugin.getRecipes().reload();
-        sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
+        sender.sendMessage(MMOItems.plugin.getPrefix() + "成功重新加载配方");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
                 + (MMOItems.plugin.getRecipes().getBukkitRecipes().size()
                 + MMOItems.plugin.getRecipes().getBooklessRecipes().size()
                 + MMOItems.plugin.getRecipes().getCustomRecipes().size())
-                + ChatColor.GRAY + " Recipes");
+                + ChatColor.GRAY + " 配方");
     }
 
     public void reloadStations(CommandSender sender) {
         MMOItems.plugin.getLayouts().reload();
         MMOItems.plugin.getCrafting().reload();
-        sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
+        sender.sendMessage(MMOItems.plugin.getPrefix() + "成功重新加载制作站..");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getCrafting().getAll().size() + ChatColor.GRAY + " Crafting Stations");
+                + MMOItems.plugin.getCrafting().getAll().size() + ChatColor.GRAY + " 制作站");
         sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED
-                + MMOItems.plugin.getCrafting().countRecipes() + ChatColor.GRAY + " Recipes");
+                + MMOItems.plugin.getCrafting().countRecipes() + ChatColor.GRAY + " 配方");
     }
 }

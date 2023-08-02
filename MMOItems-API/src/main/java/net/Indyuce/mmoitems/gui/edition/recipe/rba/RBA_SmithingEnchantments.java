@@ -25,8 +25,8 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
      */
     public RBA_SmithingEnchantments(@NotNull RecipeMakerGUI inv) { super(inv); }
 
-    @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ENCHANTING_TABLE).name("\u00a7aEnchantment Transfer").lore(SilentNumbers.chop(
-            "What will happen to the enchantments of the ingredients? Will enchanted ingredients produce an enchanted output item?"
+    @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ENCHANTING_TABLE).name("\u00a7a附魔转移").lore(SilentNumbers.chop(
+            "材料的附魔会发生什么变化？附魔材料会产生附魔输出物品吗？"
             , 65, "\u00a77")).build();
 
     @NotNull @Override public ItemStack getChooseableButton() { return chooseableButton; }
@@ -41,17 +41,17 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
 
         switch (sct) {
             case EVEN:
-                return "For each enchantment, will take the average of that enchantment's level across the ingredients.";
+                return "对于每个附魔, 将取该附魔在配方中的平均等级";
             case NONE:
-                return "Will ignore the enchantments of any ingredients.";
+                return "会无视任何材料的附魔";
             case MAXIMUM:
-                return "Output will have the best enchantment from each ingredient";
+                return "输出将具有每种材料的最佳附魔";
             case MINIMUM:
-                return "Output will have worst enchantment from each ingredient with that enchantment.";
+                return "具有该附魔的每种材料的输出将具有最差的附魔";
             case ADDITIVE:
-                return "The enchantments of all ingredients will add together.";
+                return "所有材料的附魔都会叠加在一起";
 
-            default: return "Unknown behaviour. Add description in net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_SmithingEnchantments";
+            default: return "未知行为. 在 net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_SmithingEnchantments 中添加行为";
         }
     }
 }

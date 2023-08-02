@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class PickaxePower extends DoubleStat {
 	public PickaxePower() {
-		super("PICKAXE_POWER", Material.IRON_PICKAXE, "Pickaxe Power",
-				new String[] { "The breaking strength of the", "item when mining custom blocks." }, new String[] { "tool" });
+		super("PICKAXE_POWER", Material.IRON_PICKAXE, "挖掘等级",
+				new String[] { "挖掘自定义方块时的挖掘速度。" }, new String[] { "tool" });
 	}
 
 	@Override
@@ -29,8 +29,8 @@ public class PickaxePower extends DoubleStat {
 	}
 	@Override
 	public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull DoubleData currentData, @NotNull NumericStatFormula templateData) throws IllegalArgumentException {
-		Validate.isTrue(currentData instanceof DoubleData, "Current Data is not Double Data");
-		Validate.isTrue(templateData instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+		Validate.isTrue(currentData instanceof DoubleData, "当前数据不是双精度数据");
+		Validate.isTrue(templateData instanceof NumericStatFormula, "模板数据不是数字统计公式");
 
 		// Get Value
 		double techMinimum = ((NumericStatFormula) templateData).calculate(0, -2.5);

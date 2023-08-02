@@ -22,7 +22,7 @@ public class SetTagCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "This command is only for players.");
+			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
 			return CommandResult.FAILURE;
 		}
 
@@ -30,11 +30,11 @@ public class SetTagCommandTreeNode extends CommandTreeNode {
 			Player player = (Player) sender;
 			player.getInventory().setItemInMainHand(MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand())
 					.addTag(new ItemTag(args[2].toUpperCase().replace("-", "_"), args[3].replace("%%", " "))).toItem());
-			player.sendMessage("Successfully set tag.");
+			player.sendMessage("设置标签成功");
 			return CommandResult.SUCCESS;
 
 		} catch (Exception exception) {
-			sender.sendMessage("Couldn't set tag.");
+			sender.sendMessage("无法设置标签");
 			return CommandResult.FAILURE;
 		}
 	}

@@ -52,7 +52,7 @@ public abstract class ChooseStat extends StringStat {
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-        Validate.isTrue(choices.size() > 0, "Invalid choice-based stat '" + getId() + ": no options to choose from.");
+        Validate.isTrue(choices.size() > 0, "基于选择的统计数据无效 '" + getId() + ": 没有可供选择的选项");
 
         // If removing, reset to default
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -62,7 +62,7 @@ public abstract class ChooseStat extends StringStat {
             inv.registerTemplateEdition();
 
             // Mention that it was removed
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + getName() + ".");
 
         } else {
 
@@ -83,25 +83,25 @@ public abstract class ChooseStat extends StringStat {
             inv.registerTemplateEdition();
 
             // Sends a message
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + current + ChatColor.GRAY + ".");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功更改为  " + current + ChatColor.GRAY + "。");
         }
     }
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<StringData> statData) {
-        Validate.isTrue(choices.size() > 0, "Invalid choice-based stat '" + getId() + ": no options to choose from.");
+        Validate.isTrue(choices.size() > 0, "基于选择的统计数据无效 '" + getId() + ": 没有可供选择的选项");
 
         // To display current choosing, gets the very first element
         StatChoice def = statData.isPresent() ? getChoice(statData.get().toString()) : choices.get(0);
-        lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN : ChatColor.RED) + def);
+        lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN : ChatColor.RED) + def);
 
         // Display Definition
         for (String definition : SilentNumbers.chop(def.getHint(), 50, ""))
             lore.add(ChatColor.GRAY + " " + definition);
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to return to default value.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to cycle through the available options:");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可返回默认值");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可循环显示可用选项: ");
         for (StatChoice existing : choices) {
 
             // Is it the one?

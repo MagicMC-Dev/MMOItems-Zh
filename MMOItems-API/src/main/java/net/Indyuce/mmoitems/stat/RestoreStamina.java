@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RestoreStamina extends DoubleStat implements PlayerConsumable {
     public RestoreStamina() {
-        super("RESTORE_STAMINA", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "Restore Stamina", new String[]{"The amount of stamina/power", "your consumable restores."}, new String[]{"consumable"});
+        super("RESTORE_STAMINA", VersionMaterial.LIGHT_GRAY_DYE.toMaterial(), "恢复体力", new String[]{"您的消耗品恢复的耐力/力量量"}, new String[]{"consumable"});
     }
 
     @Override

@@ -22,7 +22,7 @@ public class HelpCommandTreeNode extends CommandTreeNode {
 			return CommandResult.SUCCESS;
 
 		} catch (NumberFormatException exception) {
-			sender.sendMessage(ChatColor.RED + args[1] + " is not a valid number.");
+			sender.sendMessage(ChatColor.RED + args[1] + " 不是有效数字");
 			return CommandResult.FAILURE;
 		}
 	}

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class ManaCost extends DoubleStat implements ItemRestriction, PlayerConsumable {
 
     public ManaCost() {
-        super("MANA_COST", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Mana Cost", new String[]{"Mana spent by your weapon to be used."}, new String[]{"piercing", "slashing", "blunt", "range"});
+        super("MANA_COST", VersionMaterial.LAPIS_LAZULI.toMaterial(), "法力消耗", new String[]{"使用武器时将消耗你的法力"}, new String[]{"piercing", "slashing", "blunt", "range"});
     }
 
 

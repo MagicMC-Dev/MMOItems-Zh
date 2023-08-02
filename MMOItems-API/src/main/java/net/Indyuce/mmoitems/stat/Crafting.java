@@ -33,8 +33,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 	public Crafting() {
-		super("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "Crafting",
-				new String[] { "The crafting recipes of your item.", "Changing a recipe requires &o/mi reload recipes&7." }, new String[] { "all" });
+		super("CRAFTING", VersionMaterial.CRAFTING_TABLE.toMaterial(), "制作",
+				new String[] { "你的物品的制作配方改变配方需要 &o/mi reload recipes&7" }, new String[] { "all" });
 	}
 
 	@Override
@@ -46,15 +46,15 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 			inv.getEditedSection().set("crafting", null);
 			inv.registerTemplateEdition();
 			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + "Crafting recipes successfully removed. Make sure you reload active recipes using "
+					.sendMessage(MMOItems.plugin.getPrefix() + "制作配方已成功删除确保使用以下命令重新加载有效配方"
 							+ ChatColor.RED + "/mi reload recipes" + ChatColor.GRAY + ".");
 		}
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData<StatData>> statData) {
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the crafting edition menu.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all crafting recipes.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可访问制作菜单");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除所有制作配方");
 	}
 
 	/**

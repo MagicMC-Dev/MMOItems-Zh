@@ -30,13 +30,13 @@ public class GiveAllCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		try {
-			Validate.isTrue(args.length > 4, "Usage: /mi giveall <type> <item-id> <min-max> <unidentified-chance>");
+			Validate.isTrue(args.length > 4, "用法: /mi giveall <type> <item-id> <min-max> <unidentified-chance>");
 
 			// item
 			Type type = MMOItems.plugin.getTypes().getOrThrow(args[1]);
 			ItemStack item = new MMOItemDropItem(type, args[2], 1, Double.parseDouble(args[4]) / 100, new RandomAmount(args[3])).getItem(null);
-			Validate.isTrue(item != null && item.getType() != Material.AIR, "Couldn't find/generate the item called '" + args[1].toUpperCase()
-					+ "'. Check your console for potential item generation issues.");
+			Validate.isTrue(item != null && item.getType() != Material.AIR, "无法 找到/生成 名为 '" + args[1].toUpperCase()
+					+ "' 的物品 . 检查您的控制台是否存在潜在的物品生成问题");
 
 			for (Player target : Bukkit.getOnlinePlayers())
 				new SmartGive(target).give(item);

@@ -44,20 +44,20 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PermanentEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public PermanentEffects() {
-		super("PERM_EFFECTS", Material.POTION, "Permanent Effects", new String[] { "The potion effects your", "item grants to the holder." },
+		super("PERM_EFFECTS", Material.POTION, "药水效果", new String[] { "药水会影响你的物品授予持有者的效果。" },
 				new String[] { "!miscellaneous", "!block", "all" });
 	}
 
 	@Override
 	public RandomPotionEffectListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		RandomPotionEffectListData effects = new RandomPotionEffectListData();
 
 		for (String effect : config.getKeys(false)) {
 			PotionEffectType type = PotionEffectType.getByName(effect.toUpperCase().replace("-", "_").replace(" ", "_"));
-			Validate.notNull(type, "Could not find potion effect type named '" + effect + "'");
+			Validate.notNull(type, "找不到名为的药水效果类型 '" + effect + "'");
 			effects.add(new RandomPotionEffectData(type, new NumericStatFormula(config.get(effect))));
 		}
 
@@ -67,8 +67,8 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
-					ChatColor.AQUA + "Format: {Effect Name} {Amplifier Numeric Formula}");
+			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中写下你想要添加的永久药水效果。",
+					ChatColor.AQUA + "格式: {效果名称} {放大器数值公式}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("perm-effects")) {
@@ -78,7 +78,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 				if (set.size() <= 1)
 					inv.getEditedSection().set("perm-effects", null);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last.substring(0, 1).toUpperCase()
 						+ last.substring(1).toLowerCase() + ".");
 			}
 		}
@@ -87,11 +87,11 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
-		Validate.isTrue(split.length >= 2, "Use this format: {Effect Name} {Effect Amplifier Numeric Formula}. Example: 'speed 1 0.3' "
-				+ "stands for Speed 1, plus 0.3 level per item level (rounded up to lower int)");
+		Validate.isTrue(split.length >= 2, "使用这种格式: {效果名称} {效果放大器数值公式}. 例子: 'speed 1 0.3' "
+				+ "代表 Speed 1,每个物品级别加上 0.3 级别 (向上舍入到较低的整数) ");
 
 		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_"));
-		Validate.notNull(effect, split[0] + " is not a valid potion effect. All potion effects can be found here: "
+		Validate.notNull(effect, split[0] + " 不是有效的药水效果。所有药水效果都可以在这里找到: "
 				+ "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
 		NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
@@ -104,18 +104,18 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
 		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
+			lore.add(ChatColor.GRAY + "当前值:");
 			RandomPotionEffectListData data = statData.get();
 			for (RandomPotionEffectData effect : data.getEffects())
 				lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().replace("_", " ").toLowerCase())
 						+ " " + effect.getAmplifier().toString());
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add an effect.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果。");
 	}
 
 	@NotNull

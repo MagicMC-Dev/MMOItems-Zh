@@ -29,13 +29,13 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 	private static final int max = 15;
 
 	public Commands() {
-		super("COMMANDS", VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial(), "Commands",
-				new String[] { "The commands your item", "performs when right clicked." }, new String[] { "!armor", "!block", "!gem_stone", "all" });
+		super("COMMANDS", VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial(), "命令",
+				new String[] { "右键单击物品时执行的命令" }, new String[] { "!armor", "!block", "!gem_stone", "all" });
 	}
 
 	@Override
 	public CommandListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		CommandListData list = new CommandListData();
@@ -60,7 +60,7 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 			if (inv.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= max) {
 				// max command number = 8
 				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your item has reached the " + max + " commands limit.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "物品已达到最大 " + max + " 命令限制");
 				return;
 			}
 
@@ -102,15 +102,15 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 		inv.getEditedSection().set("commands." + path + ".console", console ? console : null);
 		inv.getEditedSection().set("commands." + path + ".op", op ? op : null);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "命令注册成功");
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<CommandListData> statData) {
-		lore.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED
+		lore.add(ChatColor.GRAY + "当前命令: " + ChatColor.RED
 				+ (statData.isPresent() ? ((CommandListData) statData.get()).getCommands().size() : "0"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to edit item commands.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可编辑物品命令");
 	}
 
 	@Override

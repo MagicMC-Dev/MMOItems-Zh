@@ -81,13 +81,13 @@ public class MMOItemTemplateTag extends SimpleTag {
 
 			MapTag map = attribute.contextAsType(1, MapTag.class);
 			if (map == null) {
-				attribute.echoError("Invalid MapTag input");
+				attribute.echoError("地图标签输入无效");
 				return null;
 			}
 
 			ObjectTag playerTag = map.getObject("player");
 			if (playerTag != null && !(playerTag instanceof PlayerTag)) {
-				attribute.echoError("Bad player input type");
+				attribute.echoError("错误的玩家输入类型");
 				return null;
 			}
 
@@ -97,7 +97,7 @@ public class MMOItemTemplateTag extends SimpleTag {
 			if (levelTag != null) try {
 				level = Integer.parseInt(levelTag.toString());
 			} catch (IllegalArgumentException exception) {
-				attribute.echoError("Bad level input: " + levelTag + " is not a valid integer");
+				attribute.echoError("错误的等级输入: " + levelTag + " 不是有效整数");
 				return null;
 			}
 

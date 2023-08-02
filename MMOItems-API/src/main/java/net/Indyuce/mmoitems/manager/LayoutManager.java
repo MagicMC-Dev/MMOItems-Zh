@@ -20,7 +20,7 @@ public class LayoutManager implements Reloadable {
 				Layout layout = new Layout(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file));
 				layouts.put(layout.getId(), layout);
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load layout '" + file.getName() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载布局 '" + file.getName() + "': " + exception.getMessage());
 			}
 	}
 

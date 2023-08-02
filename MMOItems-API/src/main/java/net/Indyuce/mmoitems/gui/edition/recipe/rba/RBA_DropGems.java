@@ -26,8 +26,8 @@ public class RBA_DropGems extends RBA_BooleanButton {
     public static final String SMITH_GEMS = "drop-gems";
     @NotNull @Override public String getBooleanConfigPath() { return SMITH_GEMS; }
 
-    @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.EMERALD).name("\u00a7aDrop Gemstones").lore(SilentNumbers.chop(
-            "Usually, gemstones that dont fit the new item are lost. Enable this to make them drop (and be recovered) instead."
+    @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.EMERALD).name("\u00a7a掉落宝石").lore(SilentNumbers.chop(
+            "通常, 不适合新物品的宝石会丢失, 启用此选项可以使它们掉落 (并被恢复) "
             , 65, "\u00a77")).build(), SilentNumbers.toArrayList(""));
     @NotNull @Override public ItemStack getBooleanButton() { return booleanButton; }
 }

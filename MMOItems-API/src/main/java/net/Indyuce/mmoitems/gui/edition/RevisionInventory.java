@@ -41,7 +41,7 @@ public class RevisionInventory extends EditionInventory {
 
     static ItemStack revisionID;
 
-    static final String REVISION = "\u00a76Revision ID";
+    static final String REVISION = "\u00a76修改 ID";
 
     public RevisionInventory(@NotNull Player player, @NotNull MMOItemTemplate template) {
         super(player, template);
@@ -49,44 +49,44 @@ public class RevisionInventory extends EditionInventory {
         // If null
         if (revisionID == null) {
 
-            name = ItemFactory.of(Material.NAME_TAG).name("\u00a73Name").lore(SilentNumbers.chop(
-                    "The display name of the old item will be transferred to the new one"
+            name = ItemFactory.of(Material.NAME_TAG).name("\u00a73名称").lore(SilentNumbers.chop(
+                    "旧物品的显示名称将转移到新物品"
                     , 40, "\u00a77")).build();
 
-            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7dLore").lore(SilentNumbers.chop(
-                    "Specifically keeps lore lines that begin with the color code \u00a7n&7"
+            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7d标注").lore(SilentNumbers.chop(
+                    "特别保留以 \u00a7n&7 颜色代码开头的标注行"
                     , 40, "\u00a77")).build();
 
-            enchantments = ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7bEnchantments").lore(SilentNumbers.chop(
-                    "This keeps specifically enchantments that are not accounted for in upgrades nor gem stones (presumably added by the player)."
+            enchantments = ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7b附魔").lore(SilentNumbers.chop(
+                    "这保留了升级中未考虑的特殊结界或宝石 (可能是由玩家添加的 ) "
                     , 40, "\u00a77")).build();
 
-            upgrades = ItemFactory.of(Material.NETHER_STAR).name("\u00a7aUpgrades").lore(SilentNumbers.chop(
-                    "Will this item retain the upgrade level after updating? Only the Upgrade Level is kept (as long as it does not exceed the new max)."
+            upgrades = ItemFactory.of(Material.NETHER_STAR).name("\u00a7a升级").lore(SilentNumbers.chop(
+                    "更新后该物品会保留升级等级吗？仅保留升级级别 (只要不超过新的最大值 ) "
                     , 40, "\u00a77")).build();
 
-            gemstones = ItemFactory.of(Material.EMERALD).name("\u00a7eGem Stones").lore(SilentNumbers.chop(
-                    "Will the item retain its gem stones when updating? (Note that this allows gemstone overflow - will keep ALL old gemstones even if you reduced the gem sockets)"
+            gemstones = ItemFactory.of(Material.EMERALD).name("\u00a7e宝石").lore(SilentNumbers.chop(
+                    "更新时该物品会保留其宝石吗？  (请注意, 这会允许宝石溢出 -即使您减少了宝石插槽, 也会保留所有旧宝石 ) "
                     , 40, "\u00a77")).build();
 
-            soulbind = ItemFactory.of(Material.ENDER_EYE).name("\u00a7cSoulbind").lore(SilentNumbers.chop(
-                    "If the old item is soulbound, updating will transfer the soulbind to the new item."
+            soulbind = ItemFactory.of(Material.ENDER_EYE).name("\u00a7c灵魂绑定").lore(SilentNumbers.chop(
+                    "如果旧物品是灵魂绑定的, 更新会将灵魂绑定转移到新物品上"
                     , 40, "\u00a77")).build();
 
-            external = ItemFactory.of(Material.SPRUCE_SIGN).name("\u00a79External SH").lore(SilentNumbers.chop(
-                    "Data registered onto the item's StatHistory by external plugins (like GemStones but not removable)"
+            external = ItemFactory.of(Material.SPRUCE_SIGN).name("\u00a79外部SH").lore(SilentNumbers.chop(
+                    "通过外部插件 (如 GemStones 但不可删除 ) 注册到物品的 StatHistory 上的数据"
                     , 40, "\u00a77")).build();
 
 
             // Fill stack
             revisionID = ItemFactory.of(Material.ITEM_FRAME).name(REVISION).lore(SilentNumbers.chop(
-                    "The updater is always active, increasing this number will update all instances of this MMOItem without further action."
+                    "更新程序始终处于活动状态, 增加此数字将更新此 MMOItem 的所有实例, 而无需采取进一步操作"
                     , 40, "\u00a77")).build();
         }
     }
 
     @NotNull @Override public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "Revision Manager");
+        Inventory inv = Bukkit.createInventory(this, 54, "修改管理器");
 
         // Place corresponding item stacks in there
         for (int i = 0; i < inv.getSize(); i++) {
@@ -139,13 +139,13 @@ public class RevisionInventory extends EditionInventory {
                 if (enable != null) {
 
                     // Add mentioning if enabled
-                    inv.setItem(i, addLore(which, "", "\u00a78Enabled (in config)? \u00a76" + enable.toString()));
+                    inv.setItem(i, addLore(which, "", "\u00a78已启用 (在配置中 ) ? \u00a76" + enable.toString()));
 
                 // If ID is enabled
                 } else if (id != null) {
 
                     // Add mentioning if enabled
-                    inv.setItem(i, addLore(which, "", "\u00a78Current Value: \u00a76" + id));
+                    inv.setItem(i, addLore(which, "", "\u00a78当前值: \u00a76" + id));
 
                 // Neither enable nor ID are defined
                 } else {
@@ -196,7 +196,7 @@ public class RevisionInventory extends EditionInventory {
             registerTemplateEdition();
 
             // Update ig
-            event.setCurrentItem(addLore(revisionID.clone(), "", "\u00a78Current Value: \u00a76" + id));
+            event.setCurrentItem(addLore(revisionID.clone(), "", "\u00a78当前值: \u00a76" + id));
         }
     }
 

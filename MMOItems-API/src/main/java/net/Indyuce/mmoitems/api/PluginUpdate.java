@@ -13,8 +13,8 @@ public class PluginUpdate {
 	private final List<String> description;
 
 	public PluginUpdate(int id, String[] description, Consumer<CommandSender> handler) {
-		Validate.notNull(handler, "Update handler must not be null");
-		Validate.notNull(description, "Update description must not be null");
+		Validate.notNull(handler, "更新处理程序不得为空");
+		Validate.notNull(description, "更新描述不能为空");
 
 		this.id = id;
 		this.handler = handler;

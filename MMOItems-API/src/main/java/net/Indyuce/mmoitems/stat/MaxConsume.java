@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MaxConsume extends DoubleStat {
     public MaxConsume() {
-        super("MAX_CONSUME", Material.BLAZE_POWDER, "Max Consume", new String[]{"Max amount of usage before", "item disappears."}, new String[]{"consumable"});
+        super("MAX_CONSUME", Material.BLAZE_POWDER, "最大消耗", new String[]{"物品消失前的最大使用次数"}, new String[]{"consumable"});
     }
 
     @Override

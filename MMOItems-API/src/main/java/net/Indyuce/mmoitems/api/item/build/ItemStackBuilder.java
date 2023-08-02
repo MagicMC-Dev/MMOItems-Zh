@@ -182,7 +182,7 @@ public class ItemStackBuilder {
                     MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(builtMMOItem.getType(), builtMMOItem.getId());
                     if (template == null) {
                         throw new IllegalArgumentException(
-                                "MMOItem $r" + builtMMOItem.getType().getId() + " " + builtMMOItem.getId() + "$b doesn't exist.");
+                                "MMOItem $r" + builtMMOItem.getType().getId() + " " + builtMMOItem.getId() + "$b 不存在。");
                     }
 
                     // Make necessary lore changes
@@ -198,7 +198,7 @@ public class ItemStackBuilder {
             } catch (IllegalArgumentException | NullPointerException exception) {
 
                 // That
-                MMOItems.print(Level.WARNING, "An error occurred while trying to generate item '$f{0}$b' with stat '$f{1}$b': {2}",
+                MMOItems.print(Level.WARNING, "在尝试用状态 '$f{1}$b' 生成物品 '$f{0}$b' 时发生错误:  {2}",
                         "ItemStackBuilder", builtMMOItem.getId(), stat.getId(), exception.getMessage());
             }
 

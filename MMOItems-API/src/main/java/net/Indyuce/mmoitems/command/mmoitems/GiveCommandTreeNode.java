@@ -47,11 +47,11 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		try {
-			Validate.isTrue(args.length > 3 || sender instanceof Player, "Please specify a player.");
+			Validate.isTrue(args.length > 3 || sender instanceof Player, "请指定一名玩家");
 
 			// target
 			Player target = args.length > 3 ? Bukkit.getPlayer(args[3]) : (Player) sender;
-			Validate.notNull(target, "Could not find player called '" + args[args.length > 3 ? 3 : 2] + "'.");
+			Validate.notNull(target, "找不到名为 '" + args[args.length > 3 ? 3 : 2] + "' 的玩家");
 
 			// item
 			Type type = MMOItems.plugin.getTypes().getOrThrow(args[1].toUpperCase().replace("-", "_"));
@@ -79,7 +79,7 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 
 			// set amount
 			Validate.isTrue(item != null && item.getType() != Material.AIR,
-					"Couldn't find/generate the item called '" + template.getId() + "'. Check your console for potential item generation issues.");
+					"无法找到/生成名为 '" + template.getId() + "' 的物品,检查您的控制台是否存在潜在的物品生成问题");
 			item.setAmount(amount.getRandomAmount());
 
 			// message
@@ -87,9 +87,9 @@ public class GiveCommandTreeNode extends CommandTreeNode {
 				Message.RECEIVED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item), "#amount#",
 						(item.getAmount() > 1 ? " x" + item.getAmount() : "")).send(target);
 				if (!sender.equals(target))
-					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "Successfully gave " + ChatColor.GOLD
-							+ MMOUtils.getDisplayName(item) + (item.getAmount() > 1 ? " x" + item.getAmount() : "") + ChatColor.YELLOW + " to "
-							+ ChatColor.GOLD + target.getName() + ChatColor.YELLOW + ".");
+					sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.YELLOW + "成功给予 " + ChatColor.GOLD
+							+ MMOUtils.getDisplayName(item) + (item.getAmount() > 1 ? " x" + item.getAmount() : "") + ChatColor.YELLOW + " 到 "
+							+ ChatColor.GOLD + target.getName() + ChatColor.YELLOW);
 			}
 
 			// item

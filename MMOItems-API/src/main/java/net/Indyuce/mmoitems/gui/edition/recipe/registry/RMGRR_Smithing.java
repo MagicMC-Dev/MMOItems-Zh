@@ -29,7 +29,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
     @NotNull @Override public String getRecipeTypeName() { return "Smithing"; }
     @NotNull @Override public String getRecipeConfigPath() { return "smithing"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.SMITHING_TABLE), FFPMMOItems.get().getExampleFormat() + "Smithing Recipe");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.SMITHING_TABLE), FFPMMOItems.get().getExampleFormat() + "锻造配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
@@ -46,7 +46,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
         // Read some values
         ConfigurationSection recipeSection = RecipeMakerGUI.getSection(recipeTypeSection, recipeName);
         NamespacedKey nk = namespace.getValue();
-        if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace")); }
+        if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法 (空) 命名空间")); }
 
         //region Identify the input
 
@@ -57,7 +57,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
         // All right lets read them
         ProvidedUIFilter itemPoof = RecipeMakerGUI.readIngredientFrom(inputSplit[0], ffp);
         ProvidedUIFilter ingotPoof = RecipeMakerGUI.readIngredientFrom(inputSplit[1], ffp);
-        if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Smithing recipe containing AIR, $fignored$b.")); }
+        if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有 AIR 的锻造配方, $fignored$b。")); }
 
         // Make ingredients
         MythicRecipeIngredient itemIngredient = new MythicRecipeIngredient(itemPoof);

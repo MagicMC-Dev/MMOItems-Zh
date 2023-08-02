@@ -32,8 +32,8 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
      * only keep the highest levels of the two and not sum the two values
      */
     public RequiredLevel() {
-        super("REQUIRED_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Required Level",
-                new String[]{"The level your item needs", "in order to be used."}, new String[]{"!block", "all"});
+        super("REQUIRED_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "所需等级",
+                new String[]{"您的物品需要使用的级别。"}, new String[]{"!block", "all"});
     }
 
     @Override

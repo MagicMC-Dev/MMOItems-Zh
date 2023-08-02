@@ -33,14 +33,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 	public GemSockets() {
-		super("GEM_SOCKETS", Material.EMERALD, "Gem Sockets", new String[] { "The amount of gem", "sockets your weapon has." },
+		super("GEM_SOCKETS", Material.EMERALD, "宝石插槽", new String[] { "你的武器拥有的宝石插槽数量。" },
 				new String[] { "piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "accessory", "!gem_stone" });
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public GemSocketsData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
 		return new GemSocketsData((List<String>) object);
 	}
 
@@ -125,9 +125,9 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 			try {
 				// Interpret as Json Object
 				JsonObject object = new JsonParser().parse((String) gTag.getValue()).getAsJsonObject();
-				GemSocketsData sockets = new GemSocketsData(object.getAsJsonArray("EmptySlots"));
+				GemSocketsData sockets = new GemSocketsData(object.getAsJsonArray("空槽位"));
 
-				JsonArray array = object.getAsJsonArray("Gemstones");
+				JsonArray array = object.getAsJsonArray("宝石");
 				array.forEach(element -> sockets.add(new GemstoneData(element.getAsJsonObject())));
 
 				// Return built
@@ -147,7 +147,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.GEM_SOCKETS).enable("Write in the chat the COLOR of the gem socket you want to add.");
+			new StatEdition(inv, ItemStats.GEM_SOCKETS).enable("在聊天中写下您要添加的宝石插槽的颜色");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains(getPath())) {
@@ -159,7 +159,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 				lore.remove(last);
 				inv.getEditedSection().set("" + getPath(), lore);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + ChatColor.GRAY + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除 '" + last + ChatColor.GRAY + "'.");
 			}
 		}
 	}
@@ -170,23 +170,23 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 		lore.add(message);
 		inv.getEditedSection().set("" + getPath(), lore);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + message + " successfully added.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + message + " 添加成功");
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<GemSocketsData> statData) {
 
 		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
+			lore.add(ChatColor.GRAY + "当前值: ");
 			GemSocketsData data = statData.get();
-			data.getEmptySlots().forEach(socket -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + socket + " Gem Socket"));
+			data.getEmptySlots().forEach(socket -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + socket + " 宝石插槽"));
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "No Sockets");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "无插槽");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a gem socket.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the socket.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加宝石插槽。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除插槽。");
 	}
 
 	@NotNull

@@ -44,13 +44,13 @@ public class CraftingManager implements Reloadable {
 	public CraftingManager() {
 
 		// Conditions
-		registerCondition("level", LevelCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires Level #level#", "&c" + AltChar.cross + " Requires Level #level#"));
+		registerCondition("level", LevelCondition::new, new ConditionalDisplay("&a" + AltChar.check + " 需要等级 #level#", "&c" + AltChar.cross + " 需要等级 #level#"));
 		registerCondition("permission", PermissionCondition::new, new ConditionalDisplay("&a" + AltChar.check + " #display#", "&c" + AltChar.cross + " #display#"));
 		registerCondition("placeholder", PlaceholderCondition::new, new ConditionalDisplay("&a" + AltChar.check + " #display#", "&c" + AltChar.cross + " #display#"));
-		registerCondition("mana", ManaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #mana# Mana", "&c" + AltChar.cross + " Requires #mana# Mana"));
-		registerCondition("stamina", StaminaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #stamina# Stamina", "&c" + AltChar.cross + " Requires #stamina# Stamina"));
-		registerCondition("food", FoodCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Requires #food# Food", "&c" + AltChar.cross + " Requires #food# Food"));
-		registerCondition("class", ClassCondition::new, new ConditionalDisplay("&a" + AltChar.check + " Required Class: #class#", "&c" + AltChar.cross + " Required Class: #class#"));
+		registerCondition("mana", ManaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " 需要 #mana# 法力", "&c" + AltChar.cross + " 需要 #mana# 法力"));
+		registerCondition("stamina", StaminaCondition::new, new ConditionalDisplay("&a" + AltChar.check + " 需要 #stamina# 耐力", "&c" + AltChar.cross + " 需要 #stamina# Stami耐力na"));
+		registerCondition("food", FoodCondition::new, new ConditionalDisplay("&a" + AltChar.check + " 需要 #food# Food", "&c" + AltChar.cross + " 需要 #food# 食物"));
+		registerCondition("class", ClassCondition::new, new ConditionalDisplay("&a" + AltChar.check + " 需要 Class: #class#", "&c" + AltChar.cross + " 需要 Class: #class#"));
 
 		// Triggers
 		registerTrigger("command", CommandTrigger::new);
@@ -104,7 +104,7 @@ public class CraftingManager implements Reloadable {
 				CraftingStation station = new CraftingStation(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file));
 				stations.put(station.getId(), station);
 			} catch (IllegalArgumentException|NullPointerException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load station '" + file.getName() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载工作站 '" + file.getName() + "': " + exception.getMessage());
 			}
 
 		for (CraftingStation station : stations.values())
@@ -112,7 +112,7 @@ public class CraftingManager implements Reloadable {
 				station.postLoad();
 			} catch (IllegalArgumentException exception) {
 				MMOItems.plugin.getLogger().log(Level.WARNING,
-						"Could not post-load station '" + station.getId() + "': " + exception.getMessage());
+						"无法加载工作站 '" + station.getId() + "': " + exception.getMessage());
 			}
 	}
 
@@ -147,7 +147,7 @@ public class CraftingManager implements Reloadable {
 			if (ingredient.getId().equals(key))
 				return ingredient.load(config);
 
-		throw new IllegalArgumentException("Could not match ingredient");
+		throw new IllegalArgumentException("无法匹配材料");
 	}
 
     /**
@@ -163,7 +163,7 @@ public class CraftingManager implements Reloadable {
 
     @NotNull
     public LoadedCraftingObject<Condition> getConditionInfo(String key) {
-        return Objects.requireNonNull(conditions.get(key), "Could not match condition");
+        return Objects.requireNonNull(conditions.get(key), "无法匹配条件");
     }
 
     /**
@@ -179,7 +179,7 @@ public class CraftingManager implements Reloadable {
 
     @NotNull
     public LoadedCraftingObject<Trigger> getTriggerInfo(String key) {
-        return Objects.requireNonNull(triggers.get(key), "Could not match trigger");
+        return Objects.requireNonNull(triggers.get(key), "无法匹配触发器");
     }
 
 	public List<IngredientType> getIngredients() {
@@ -219,7 +219,7 @@ public class CraftingManager implements Reloadable {
 	 * @since 6.7 A conditional display is required for all conditions
 	 */
 	public void registerCondition(String id, Function<MMOLineConfig, Condition> function, @NotNull ConditionalDisplay display) {
-		LoadedCraftingObject<Condition> obj = new LoadedCraftingObject<>(id, function, Objects.requireNonNull(display, "Conditional display cannot be null"));
+		LoadedCraftingObject<Condition> obj = new LoadedCraftingObject<>(id, function, Objects.requireNonNull(display, "条件显示不能为空"));
 		conditions.put(obj.getId(), obj);
 	}
 

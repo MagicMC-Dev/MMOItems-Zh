@@ -33,21 +33,21 @@ import java.util.Optional;
 public class CompatibleMaterials extends ItemStat<StringListData, StringListData> {
 
     public CompatibleMaterials() {
-        super("COMPATIBLE_MATERIALS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible Materials",
-                new String[]{"The item materials this skin is", "compatible with."}, new String[]{"skin"});
+        super("COMPATIBLE_MATERIALS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "兼容材料",
+                new String[]{"该皮肤兼容的物品材料"}, new String[]{"skin"});
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public StringListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+        Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
         return new StringListData((List<String>) object);
     }
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.COMPATIBLE_MATERIALS).enable("Write in the chat the name of the material you want to add.");
+            new StatEdition(inv, ItemStats.COMPATIBLE_MATERIALS).enable("在聊天中写下您要添加的材料的名称");
 
         if (event.getAction() != InventoryAction.PICKUP_HALF || !inv.getEditedSection().contains("compatible-materials"))
             return;
@@ -59,7 +59,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
         lore.remove(last);
         inv.getEditedSection().set("compatible-materials", lore);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除 '" + last + "'");
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
         final Player player = inv.getPlayer();
         // Check if material exists
         if (Arrays.stream(Material.values()).noneMatch(versionMaterial -> versionMaterial.name().equalsIgnoreCase(message))) {
-            player.sendMessage(MMOItems.plugin.getPrefix() + "Invalid material name.");
+            player.sendMessage(MMOItems.plugin.getPrefix() + "材料名称无效");
             return;
         }
 
@@ -76,20 +76,20 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
         lore.add(message.toUpperCase());
         inv.getEditedSection().set("compatible-materials", lore);
         inv.registerTemplateEdition();
-        player.sendMessage(MMOItems.plugin.getPrefix() + "Compatible Materials successfully added.");
+        player.sendMessage(MMOItems.plugin.getPrefix() + "已成功添加兼容材质");
     }
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
         if (statData.isPresent()) {
-            lore.add(ChatColor.GRAY + "Current Value:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             statData.get().getList().forEach(str -> lore.add(ChatColor.GRAY + str));
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any material.");
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + " 与任何材料兼容");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a new material.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last material.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加新材料");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个材料");
     }
 
     @NotNull

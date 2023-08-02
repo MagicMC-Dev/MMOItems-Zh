@@ -38,10 +38,10 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
     @NotNull public abstract String getDoubleConfigPath();
 
     @NotNull public final String[] amountLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Write in the chat a number, ex $e2.5$b.")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下一个整数,例如 $e2.5$b")};
 
     @NotNull public final String[] integerLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Write in the chat an integer number, ex $e8$b.")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下一个整数,例如 $e8$b")};
 
     @Override public boolean runPrimary() {
 
@@ -67,7 +67,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
 
             // Parse Integer
             Integer asInteger = SilentNumbers.IntegerParse(message);
-            if (asInteger == null) { throw new IllegalArgumentException("Expected integer number instead of $u" + message); }
+            if (asInteger == null) { throw new IllegalArgumentException("输入的的整数而不是 $u" + message); }
 
             // ...
             number = Double.valueOf(asInteger);
@@ -75,7 +75,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
 
             // Parse Double
             number = SilentNumbers.DoubleParse(message);
-            if (number == null) { throw new IllegalArgumentException("Expected a number instead of $u" + message); }
+            if (number == null) { throw new IllegalArgumentException("输入的是一个数字而不是 $u" + message); }
         }
 
         // Out of range?
@@ -84,7 +84,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
             // Out of range?
             if (!getRange().inRange(number)) {
 
-                throw new IllegalArgumentException("Number $r" + number + "$b is out of range. Expected " + getRange().toStringColored());
+                throw new IllegalArgumentException("数字 $r" + number + "$b 超出范围, 预计 " + getRange().toStringColored());
             } }
 
         // Set value
@@ -138,8 +138,8 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
         // Copy and send
         return RecipeMakerGUI.addLore(getDoubleButton().clone(),
                 SilentNumbers.toArrayList(
-                        "", "\u00a77Current Value: " + getValue(), "",
-                        ChatColor.YELLOW + AltChar.listDash + " Right click to reset \u00a78(to\u00a74 " + getDefaultValue() + "\u00a78)\u00a7e.",
-                        ChatColor.YELLOW + AltChar.listDash + " Left click to toggle this option." ));
+                        "", "\u00a77当前值: " + getValue(), "",
+                        ChatColor.YELLOW + AltChar.listDash + "右键单击重置\u00a78(至\u00a74" + getDefaultValue() + "\u00a78)\u00a7e.",
+                        ChatColor.YELLOW + AltChar.listDash + "左键单击可切换此选项" ));
     }
 }

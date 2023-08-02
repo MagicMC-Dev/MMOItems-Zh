@@ -21,7 +21,7 @@ gem-stone-broke: 'Your gem stone &6#gem#&c broke while trying to apply it onto &
 repaired-item: '修復 #amount# x #item#'
 skin-applied: '已成功將皮膚應用至 &6#item#&e!'
 skin-removed: '已成功將皮膚由 &6#item#&e 移除！'
-skin-broke: '此皮膚在應用至 &6#item#&c 時失敗。'
+skin-broke: '此皮膚在應用至 &6#item#&c 時失敗'
 skin-rejected: '已有皮膚應用於 &6#item#&c！'
 skin-incompatible: '無法將此皮膚應用至 &6#item#&c！'
 random-unsocket-gem-too-old: '寶石與您的物品緊密結合. 無法移除.'

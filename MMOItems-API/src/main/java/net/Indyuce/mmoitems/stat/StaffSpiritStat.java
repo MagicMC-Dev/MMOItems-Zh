@@ -16,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class StaffSpiritStat extends StringStat {
     public StaffSpiritStat() {
-        super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toMaterial(), "Staff Spirit",
-                new String[]{"Spirit changes the texture", "of the magic attack.", "&9Tip: /mi list spirit"}, new String[]{"staff", "wand"});
+        super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toMaterial(), "灵魂权杖",
+                new String[]{"灵魂改变魔法攻击的材质。", "&9Tip: /mi list spirit"}, new String[]{"staff", "wand"});
     }
 
     @Override
@@ -26,9 +26,9 @@ public class StaffSpiritStat extends StringStat {
             StaffSpirit spirit = StaffSpirit.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
             inv.getEditedSection().set("staff-spirit", spirit.name());
             inv.registerTemplateEdition();
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Staff Spirit successfully changed to " + spirit.getName() + ".");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "灵魂权杖成功变更为" + spirit.getName() + ".");
         } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(exception.getMessage() + " (See all Staff Spirits here: /mi list spirit).");
+            throw new IllegalArgumentException(exception.getMessage() + " (在这里查看灵魂权杖: /mi list spirit).");
         }
     }
 
@@ -40,13 +40,13 @@ public class StaffSpiritStat extends StringStat {
     }
 
     public enum StaffSpirit {
-        NETHER_SPIRIT("Shoots fire beams.", new NetherSpirit()),
-        VOID_SPIRIT("Shoots shulker missiles.", new VoidSpirit()),
-        MANA_SPIRIT("Summons mana bolts.", new ManaSpirit()),
-        LIGHTNING_SPIRIT("Summons lightning bolts.", new LightningSpirit()),
-        XRAY_SPIRIT("Fires piercing & powerful X-rays.", new XRaySpirit()),
-        THUNDER_SPIRIT("Fires AoE damaging thunder strikes.", new ThunderSpirit()),
-        SUNFIRE_SPIRIT("Fires AoE damaging fire comets.", new SunfireSpirit()),
+        NETHER_SPIRIT("发射火焰光束。", new NetherSpirit()),
+        VOID_SPIRIT("发射潜影贝导弹。", new VoidSpirit()),
+        MANA_SPIRIT("召唤法力螺栓。", new ManaSpirit()),
+        LIGHTNING_SPIRIT("召唤闪电。", new LightningSpirit()),
+        XRAY_SPIRIT("穿透火焰和强大的 X 射线。", new XRaySpirit()),
+        THUNDER_SPIRIT("发射 AoE 伤害性雷击。", new ThunderSpirit()),
+        SUNFIRE_SPIRIT("发射 AoE 伤害火焰流星。", new SunfireSpirit()),
         // CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a
         // targeted cursed projectile."), new CursedSpirit()),
         ;

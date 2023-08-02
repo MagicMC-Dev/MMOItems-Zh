@@ -16,14 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemTierStat extends StringStat implements GemStoneStat {
 	public ItemTierStat() {
-		super("TIER", Material.DIAMOND, "Item Tier", new String[] { "The tier defines how rare your item is", "and what item is dropped when your",
-				"item is deconstructed.", "&9Tiers can be configured in the tiers.yml file" }, new String[] { "all" });
+		super("TIER", Material.DIAMOND, "稀有程度", new String[] { "该等级定义了您的物品的稀有程度", "以及物品被分解时会掉落的物品。", "&9Tiers可以在tiers.yml文件中配置" }, new String[] { "all" });
 	}
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		String path = data.toString().toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getTiers().has(path), "Could not find item tier with ID '" + path + "'");
+		Validate.isTrue(MMOItems.plugin.getTiers().has(path), "找不到 ID 为 '" + path + "' 的稀有程度");
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(path);
 		item.addItemTag(new ItemTag("MMOITEMS_TIER", path));
@@ -33,10 +32,10 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String format = message.toUpperCase().replace(" ", "_").replace("-", "_");
-		Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Couldn't find the tier called '" + format + "'.");
+		Validate.isTrue(MMOItems.plugin.getTiers().has(format), "找不到名为 '" + format + "' 的稀有程度");
 
 		inv.getEditedSection().set("tier", format);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + format + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "等级已成功更改为" + format + "。");
 	}
 }

@@ -26,7 +26,7 @@ public class GetMMOItemObjective extends Objective {
 		config.validate("type", "id", "npc");
 
 		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type " + format);
+		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "找不到物品类型 " + format);
 		type = MMOItems.plugin.getTypes().get(format);
 
 		id = config.getString("id");

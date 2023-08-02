@@ -45,7 +45,7 @@ public class RestoreData implements StatData, Mergeable {
 
     @Override
     public void merge(StatData data) {
-        Validate.isTrue(data instanceof RestoreData, "Cannot merge two different stat data types");
+        Validate.isTrue(data instanceof RestoreData, "无法合并两种不同的统计数据类型");
         health += ((RestoreData) data).health;
         food += ((RestoreData) data).food;
         saturation += ((RestoreData) data).saturation;

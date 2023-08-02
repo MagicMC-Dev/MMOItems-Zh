@@ -23,17 +23,17 @@ import java.util.ArrayList;
  */
 public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneStat {
     public static final StatChoice
-            NORMAL = new StatChoice("NORMAL", "No liquids dependency"),
-            DRY = new StatChoice("DRY", "The item does not work if the player is touching a liquid block."),
-            WET = new StatChoice("WET", "The only works if the player is touching water (rain does not count)."),
-            DAMP = new StatChoice("DAMP", "The only works if the player is completely submerged in water."),
-            LAVA = new StatChoice("LAVA", "The only works if the player is touching lava."),
-            MOLTEN = new StatChoice("MOLTEN", "The only works if the player is completely submerged in lava."),
-            LIQUID = new StatChoice("LIQUID", "The only works if the player is touching any liquid."),
-            SUBMERGED = new StatChoice("SUBMERGED", "The only works if the player is completely submerged in any liquid.");
+            NORMAL = new StatChoice("NORMAL", "无液体依赖性"),
+            DRY = new StatChoice("DRY", "如果玩家接触液体方块, 则该物品不起作用"),
+            WET = new StatChoice("WET", "仅当玩家接触水时才有效 (雨不算在内 ) "),
+            DAMP = new StatChoice("DAMP", "只有当玩家完全浸没在水中时才有效"),
+            LAVA = new StatChoice("LAVA", "仅当玩家接触熔岩时才有效"),
+            MOLTEN = new StatChoice("MOLTEN", "只有当玩家完全淹没在熔岩中时, 它才有效"),
+            LIQUID = new StatChoice("LIQUID", "仅当玩家接触任何液体时才有效"),
+            SUBMERGED = new StatChoice("SUBMERGED", "仅当玩家完全浸没在任何液体中时才有效");
 
     public Amphibian() {
-        super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[]{"May this item only be used in specific", "environments regarding liquids?"}, new String[]{"!block", "all"});
+        super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[]{"此物品可能仅用于特定", "关于液体的环境？"}, new String[]{"!block", "all"});
 
         addChoices(NORMAL, DRY, WET, DAMP, LAVA, MOLTEN, LIQUID, SUBMERGED);
     }

@@ -18,13 +18,13 @@ import net.Indyuce.mmoitems.particle.VortexParticles;
 import net.Indyuce.mmoitems.stat.data.ParticleData;
 
 public enum ParticleType {
-	OFFSET(OffsetParticles::new, false, 5, "Some particles randomly spawning around your body.", new StringValue("amount", 5), new StringValue("vertical-offset", .5), new StringValue("horizontal-offset", .3), new StringValue("speed", 0), new StringValue("height", 1)),
-	FIREFLIES(FirefliesParticles::new, true, 1, "Particles dashing around you at the same height.", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("radius", 1.3), new StringValue("height", 1)),
-	VORTEX(VortexParticles::new, true, 1, "Particles flying around you in a cone shape.", new StringValue("radius", 1.5), new StringValue("height", 2.4), new StringValue("speed", 0), new StringValue("y-speed", 1), new StringValue("rotation-speed", 1), new StringValue("amount", 3)),
-	GALAXY(GalaxyParticles::new, true, 1, "Particles flying around you in spiral arms.", new StringValue("height", 1), new StringValue("speed", 1), new StringValue("y-coord", 0), new StringValue("rotation-speed", 1), new StringValue("amount", 6)),
-	DOUBLE_RINGS(DoubleRingsParticles::new, true, 1, "Particles drawing two rings around you.", new StringValue("radius", .8), new StringValue("y-offset", .4), new StringValue("height", 1), new StringValue("speed", 0), new StringValue("rotation-speed", 1)),
-	HELIX(HelixParticles::new, true, 1, "Particles drawing a sphere around you.", new StringValue("radius", .8), new StringValue("height", .6), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("amount", 4), new StringValue("speed", 0)),
-	AURA(AuraParticles::new, true, 1, "Particles dashing around you (height can differ).", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("y-offset", .7), new StringValue("radius", 1.3), new StringValue("height", 1));
+	OFFSET(OffsetParticles::new, false, 5, "一些粒子在你的身体周围随机生成。", new StringValue("amount", 5), new StringValue("vertical-offset", .5), new StringValue("horizontal-offset", .3), new StringValue("speed", 0), new StringValue("height", 1)),
+	FIREFLIES(FirefliesParticles::new, true, 1, "粒子以相同的高度在你周围冲撞。", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("radius", 1.3), new StringValue("height", 1)),
+	VORTEX(VortexParticles::new, true, 1, "粒子以圆锥形围绕您飞行。", new StringValue("radius", 1.5), new StringValue("height", 2.4), new StringValue("speed", 0), new StringValue("y-speed", 1), new StringValue("rotation-speed", 1), new StringValue("amount", 3)),
+	GALAXY(GalaxyParticles::new, true, 1, "粒子以旋涡的形式在你周围飞行。", new StringValue("height", 1), new StringValue("speed", 1), new StringValue("y-coord", 0), new StringValue("rotation-speed", 1), new StringValue("amount", 6)),
+	DOUBLE_RINGS(DoubleRingsParticles::new, true, 1, "粒子在你周围画出两个圆环。", new StringValue("radius", .8), new StringValue("y-offset", .4), new StringValue("height", 1), new StringValue("speed", 0), new StringValue("rotation-speed", 1)),
+	HELIX(HelixParticles::new, true, 1, "粒子在你周围画出一个球体。", new StringValue("radius", .8), new StringValue("height", .6), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("amount", 4), new StringValue("speed", 0)),
+	AURA(AuraParticles::new, true, 1, "粒子在您周围飞驰（高度可能不同）。", new StringValue("amount", 3), new StringValue("speed", 0), new StringValue("rotation-speed", 1), new StringValue("y-speed", 1), new StringValue("y-offset", .7), new StringValue("radius", 1.3), new StringValue("height", 1));
 
 	private final BiFunction<ParticleData, PlayerData, ParticleRunnable> func;
 	private final boolean override;

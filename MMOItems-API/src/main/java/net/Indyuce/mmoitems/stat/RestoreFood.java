@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RestoreFood extends DoubleStat implements PlayerConsumable {
     public RestoreFood() {
-        super("RESTORE_FOOD", VersionMaterial.PORKCHOP.toMaterial(), "Food Restoration", new String[]{"Food units given when consumed."}, new String[]{"consumable"});
+        super("RESTORE_FOOD", VersionMaterial.PORKCHOP.toMaterial(), "食品修复", new String[]{"食用时给出的食物单位."}, new String[]{"consumable"});
     }
 
     @Override

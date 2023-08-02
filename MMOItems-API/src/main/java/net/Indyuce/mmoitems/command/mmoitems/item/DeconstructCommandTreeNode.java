@@ -22,7 +22,7 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "This command is only for players.");
+			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
 			return CommandResult.FAILURE;
 		}
 
@@ -31,13 +31,13 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(stack);
 		String tag = item.getString("MMOITEMS_TIER");
 		if (tag.equals("")) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding has no tier.");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "您持有的物品没有等级");
 			return CommandResult.FAILURE;
 		}
 
 		ItemTier tier = MMOItems.plugin.getTiers().get(tag);
 		if (tier == null) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item tier no longer exists.");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "该物品等级不存在");
 			return CommandResult.FAILURE;
 		}
 
@@ -45,7 +45,7 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 		List<ItemStack> loot = tier.getDeconstructedLoot(data);
 		if (loot.isEmpty()) {
 			sender.sendMessage(
-					MMOItems.plugin.getPrefix() + "There we no items to be yielded from the deconstruction.");
+					MMOItems.plugin.getPrefix() + "没有从分解中产生任何物品");
 			return CommandResult.FAILURE;
 		}
 
@@ -54,7 +54,7 @@ public class DeconstructCommandTreeNode extends CommandTreeNode {
 		for (ItemStack drop : player.getInventory().addItem(loot.toArray(new ItemStack[0])).values())
 			player.getWorld().dropItem(player.getLocation(), drop);
 
-		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully deconstructed the item you are holding.");
+		sender.sendMessage(MMOItems.plugin.getPrefix() + "成功分解了你持有的物品");
 		return CommandResult.SUCCESS;
 	}
 }

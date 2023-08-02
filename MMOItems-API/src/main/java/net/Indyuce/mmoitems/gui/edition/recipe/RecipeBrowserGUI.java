@@ -39,8 +39,8 @@ public class RecipeBrowserGUI extends EditionInventory {
     /*
      * Item Stacks used in this inven
      */
-    @NotNull final ItemStack nextPage = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "Next Page").build();
-    @NotNull final ItemStack prevPage = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "Previous Page").build();
+    @NotNull final ItemStack nextPage = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "下一页").build();
+    @NotNull final ItemStack prevPage = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "上一页").build();
     @NotNull final ItemStack noRecipe = ItemFactory.of(Material.LIGHT_GRAY_STAINED_GLASS_PANE).name("").build();
 
     int currentPage;
@@ -64,7 +64,7 @@ public class RecipeBrowserGUI extends EditionInventory {
     @Override
     public Inventory getInventory() {
         // Create and prepare
-        Inventory inv = Bukkit.createInventory(this, 54, "Choose Recipe Type");
+        Inventory inv = Bukkit.createInventory(this, 54, "选择配方类型");
 
         // Put buttons
         addEditionInventoryItems(inv, true);

@@ -33,7 +33,7 @@ public class ParticlesEdition extends EditionInventory {
 
     @Override
     public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "Particles E.: " + template.getId());
+        Inventory inv = Bukkit.createInventory(this, 54, "粒子 E.: " + template.getId());
         int[] slots = {37, 38, 39, 40, 41, 42, 43};
         int n = 0;
 
@@ -45,20 +45,20 @@ public class ParticlesEdition extends EditionInventory {
 
         ItemStack particleTypeItem = VersionMaterial.PINK_STAINED_GLASS.toItem();
         ItemMeta particleTypeItemMeta = particleTypeItem.getItemMeta();
-        particleTypeItemMeta.setDisplayName(ChatColor.GREEN + "Particle Pattern");
+        particleTypeItemMeta.setDisplayName(ChatColor.GREEN + "粒子模式");
         List<String> particleTypeItemLore = new ArrayList<>();
-        particleTypeItemLore.add(ChatColor.GRAY + "The particle pattern defines how");
-        particleTypeItemLore.add(ChatColor.GRAY + "particles behave, what pattern they follow");
-        particleTypeItemLore.add(ChatColor.GRAY + "when displayed or what shape they form.");
+        particleTypeItemLore.add(ChatColor.GRAY + "粒子模式定义了粒子的行");
+        particleTypeItemLore.add(ChatColor.GRAY + "为方式,它们显示时遵循");
+        particleTypeItemLore.add(ChatColor.GRAY + "的模式或它们形成的形状");
         particleTypeItemLore.add("");
-        particleTypeItemLore.add(ChatColor.GRAY + "Current Value: "
-                + (particleType == null ? ChatColor.RED + "No type selected." : ChatColor.GOLD + particleType.getDefaultName()));
+        particleTypeItemLore.add(ChatColor.GRAY + "当前值: "
+                + (particleType == null ? ChatColor.RED + "未选择类型" : ChatColor.GOLD + particleType.getDefaultName()));
         if (particleType != null) {
             particleTypeItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + particleType.getDescription());
         }
         particleTypeItemLore.add("");
-        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to change this value.");
+        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可更改此值");
         particleTypeItemMeta.setLore(particleTypeItemLore);
         particleTypeItem.setItemMeta(particleTypeItemMeta);
 
@@ -69,11 +69,11 @@ public class ParticlesEdition extends EditionInventory {
                 ItemMeta modifierItemMeta = modifierItem.getItemMeta();
                 modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
                 List<String> modifierItemLore = new ArrayList<>();
-                modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is a pattern modifier.");
-                modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "Changing this value will slightly");
-                modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "customize the particle pattern.");
+                modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个模式编辑器");
+                modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "更改此值将稍微自定");
+                modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "粒子图案");
                 modifierItemLore.add("");
-                modifierItemLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD
+                modifierItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD
                         + (psection.contains(modifier) ? psection.getDouble(modifier) : particleType.getModifier(modifier)));
                 modifierItemMeta.setLore(modifierItemLore);
                 modifierItem.setItemMeta(modifierItemMeta);
@@ -92,16 +92,16 @@ public class ParticlesEdition extends EditionInventory {
 
         ItemStack particleItem = new ItemStack(Material.BLAZE_POWDER);
         ItemMeta particleItemMeta = particleItem.getItemMeta();
-        particleItemMeta.setDisplayName(ChatColor.GREEN + "Particle");
+        particleItemMeta.setDisplayName(ChatColor.GREEN + "粒子");
         List<String> particleItemLore = new ArrayList<>();
-        particleItemLore.add(ChatColor.GRAY + "Defines what particle is used");
-        particleItemLore.add(ChatColor.GRAY + "in the particle effect.");
+        particleItemLore.add(ChatColor.GRAY + "定义粒子效果");
+        particleItemLore.add(ChatColor.GRAY + "中使用的粒子");
         particleItemLore.add("");
-        particleItemLore.add(ChatColor.GRAY + "Current Value: " + (particle == null ? ChatColor.RED + "No particle selected."
+        particleItemLore.add(ChatColor.GRAY + "当前值: " + (particle == null ? ChatColor.RED + "未选择粒子"
                 : ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
         particleItemLore.add("");
-        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to change this value.");
+        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可更改此值");
         particleItemMeta.setLore(particleItemLore);
         particleItem.setItemMeta(particleItemMeta);
 
@@ -112,16 +112,16 @@ public class ParticlesEdition extends EditionInventory {
 
             ItemStack colorItem = VersionMaterial.RED_DYE.toItem();
             ItemMeta colorItemMeta = colorItem.getItemMeta();
-            colorItemMeta.setDisplayName(ChatColor.GREEN + "Particle Color");
+            colorItemMeta.setDisplayName(ChatColor.GREEN + "颗粒颜色");
             List<String> colorItemLore = new ArrayList<>();
-            colorItemLore.add(ChatColor.GRAY + "The RGB color of your particle.");
+            colorItemLore.add(ChatColor.GRAY + "粒子的 RGB 颜色");
             colorItemLore.add("");
-            colorItemLore.add(ChatColor.GRAY + "Current Value (R-G-B):");
+            colorItemLore.add(ChatColor.GRAY + "当前值 (R-G-B ) : ");
             colorItemLore.add("" + ChatColor.RED + ChatColor.BOLD + red + ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green
                     + ChatColor.GRAY + " - " + ChatColor.BLUE + ChatColor.BOLD + blue);
             colorItemLore.add("");
-            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to change this value.");
+            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可更改此值");
             colorItemMeta.setLore(colorItemLore);
             colorItem.setItemMeta(colorItemMeta);
 
@@ -130,7 +130,7 @@ public class ParticlesEdition extends EditionInventory {
 
         ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
         ItemMeta glassMeta = glass.getItemMeta();
-        glassMeta.setDisplayName(ChatColor.RED + "- No Modifier -");
+        glassMeta.setDisplayName(ChatColor.RED + "- 未编辑 -");
         glass.setItemMeta(glassMeta);
 
         while (n < slots.length)
@@ -151,38 +151,38 @@ public class ParticlesEdition extends EditionInventory {
         if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
             return;
 
-        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle")) {
+        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "粒子")) {
             if (event.getAction() == InventoryAction.PICKUP_ALL)
-                new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle").enable("Write in the chat the particle you want.");
+                new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle").enable("在聊天中写下您想要的粒子");
 
             if (event.getAction() == InventoryAction.PICKUP_HALF) {
                 if (getEditedSection().contains("item-particles.particle")) {
                     getEditedSection().set("item-particles.particle", null);
                     registerTemplateEdition();
-                    player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
+                    player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置粒子");
                 }
             }
         }
 
-        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Color")) {
+        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "粒子颜色")) {
             if (event.getAction() == InventoryAction.PICKUP_ALL)
-                new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-color").enable("Write in the chat the RGB color you want.",
-                        ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
+                new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-color").enable("在聊天中写下您想要的 RGB 颜色",
+                        ChatColor.AQUA + "格式: [RED] [GREEN] [BLUE]");
 
             if (event.getAction() == InventoryAction.PICKUP_HALF) {
                 if (getEditedSection().contains("item-particles.color")) {
                     getEditedSection().set("item-particles.color", null);
                     registerTemplateEdition();
-                    player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
+                    player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置粒子颜色");
                 }
             }
         }
 
-        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Pattern")) {
+        if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "粒子图案")) {
             if (event.getAction() == InventoryAction.PICKUP_ALL) {
-                new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-type").enable("Write in the chat the particle type you want.");
+                new StatEdition(this, ItemStats.ITEM_PARTICLES, "particle-type").enable("在聊天中写下您想要的粒子类型");
                 player.sendMessage("");
-                player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "Available Particles Patterns");
+                player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "可用的粒子模式");
                 for (ParticleType type : ParticleType.values())
                     player.sendMessage("* " + ChatColor.GREEN + type.name());
             }
@@ -197,7 +197,7 @@ public class ParticlesEdition extends EditionInventory {
                             getEditedSection().set("item-particles." + key, null);
 
                     registerTemplateEdition();
-                    player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle pattern.");
+                    player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置粒子图案");
                 }
             }
         }
@@ -207,13 +207,13 @@ public class ParticlesEdition extends EditionInventory {
             return;
 
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(this, ItemStats.ITEM_PARTICLES, tag).enable("Write in the chat the value you want.");
+            new StatEdition(this, ItemStats.ITEM_PARTICLES, tag).enable("在聊天中写下您想要的值");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             if (getEditedSection().contains("item-particles." + tag)) {
                 getEditedSection().set("item-particles." + tag, null);
                 registerTemplateEdition();
-                player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset " + ChatColor.GOLD + tag + ChatColor.GRAY + ".");
+                player.sendMessage(MMOItems.plugin.getPrefix() + "重置成功" + ChatColor.GOLD + tag + ChatColor.GRAY + ".");
             }
         }
     }

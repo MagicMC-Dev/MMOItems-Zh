@@ -111,7 +111,7 @@ public class StatHistory {
         //noinspection ConstantConditions
         if (originalData == null) {
             setOriginalData(getItemStat().getClearStatData());
-            MMOItems.print(null, "Stat History for $e{0}$b in $u{1} {2}$b had null original data.", null, getItemStat().getId(), getMMOItem().getType().toString(), getMMOItem().getId());
+            MMOItems.print(null, "$u{1} {2}$b 中 $e{0}$b 的统计历史记录的原始数据为空。", null, getItemStat().getId(), getMMOItem().getType().toString(), getMMOItem().getId());
         }
         return originalData;
     }
@@ -310,7 +310,7 @@ public class StatHistory {
 
         // That is Mergeable right...
         //UPGRD//MMOItems.log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
-        Validate.isTrue(ofStat.getClearStatData() instanceof Mergeable, "Non-Mergeable stat data wont have a Stat History; they cannot be modified dynamically in the first place.");
+        Validate.isTrue(ofStat.getClearStatData() instanceof Mergeable, "不可合并的统计数据不会有统计历史记录；它们一开始就不能动态修改。");
 
         // Get original data
         StatData original = ofItem.getData(ofStat);
@@ -920,8 +920,8 @@ public class StatHistory {
 
             // Feedbacc
             FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-            ffp.activatePrefix(true, "Stat History");
-            ffp.log(FriendlyFeedbackCategory.ERROR, "Could not get stat history: $f{0}$b at $f{1}", e.getMessage(), e.getStackTrace()[0].toString());
+            ffp.activatePrefix(true, "统计历史");
+            ffp.log(FriendlyFeedbackCategory.ERROR, "无法获取统计历史记录：$f{0}$b at $f{1}", e.getMessage(), e.getStackTrace()[0].toString());
             ffp.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
             return null;
         }
@@ -1027,29 +1027,29 @@ public class StatHistory {
 
         if (getOriginalData() instanceof StringListData) {
 
-            MMOItems.print(null, "\u00a7a++ Original", null);
+            MMOItems.print(null, "\u00a7a++ 初始", null);
             for (String str : ((StringListData) getOriginalData()).getList()) { MMOItems.print(null, "\u00a7a ++\u00a77 " + str, null); }
 
-            MMOItems.print(null, "\u00a7e++ Gemstones", null);
+            MMOItems.print(null, "\u00a7e++ 宝石", null);
             for (UUID ui : getAllGemstones()) { StatData sd = getGemstoneData(ui); if (!(sd instanceof StringListData)) { continue; } for (String str : ((StringListData) sd).getList()) { MMOItems.print(null, "\u00a7e ++\u00a77 " + str, null); } }
 
             MMOItems.print(null, "\u00a7c++ ExSH", null);
             for (StatData sd : getExternalData()) { if (!(sd instanceof StringListData)) { continue; } for (String str : ((StringListData) sd).getList()) { MMOItems.print(null, "\u00a7e ++\u00a77 " + str, null); } }
 
-            MMOItems.print(null, "\u00a7d++ Modifiers", null);
+            MMOItems.print(null, "\u00a7d++ 修改器", null);
             for (UUID ui : getAllModifiers()) { StatData sd = getModifiersBonus(ui); if (!(sd instanceof StringListData)) { continue; } for (String str : ((StringListData) sd).getList()) { MMOItems.print(null, "\u00a7d ++\u00a77 " + str, null); } }
         } else {
 
-            MMOItems.print(null, "\u00a7a-- Original", null);
+            MMOItems.print(null, "\u00a7a-- 初始", null);
             MMOItems.print(null, "\u00a7a ++\u00a77 " + getOriginalData(), null);
 
-            MMOItems.print(null, "\u00a7e-- Gemstones", null);
+            MMOItems.print(null, "\u00a7e-- 宝石", null);
             for (UUID ui : getAllGemstones()) { StatData sd = getGemstoneData(ui); if (sd == null) { continue; } MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null);}
 
             MMOItems.print(null, "\u00a7c-- ExSH", null);
             for (StatData sd : getExternalData()) { if (sd == null) { continue; } MMOItems.print(null, "\u00a7e ++\u00a77 " + sd, null); }
 
-            MMOItems.print(null, "\u00a7d-- Modifiers", null);
+            MMOItems.print(null, "\u00a7d-- 修改器", null);
             for (UUID ui : getAllModifiers()) { StatData sd = getModifiersBonus(ui); if (sd == null) { continue; } MMOItems.print(null, "\u00a7d ++\u00a77 " + sd, null);}
         }
     }

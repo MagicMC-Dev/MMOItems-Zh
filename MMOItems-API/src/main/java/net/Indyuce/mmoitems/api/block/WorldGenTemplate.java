@@ -25,7 +25,7 @@ public class WorldGenTemplate {
     private final boolean slimeChunk;
 
     public WorldGenTemplate(ConfigurationSection config) {
-        Validate.notNull(config, "Could not read gen template config");
+        Validate.notNull(config, "无法读取生成模板配置");
 
         id = config.getName().toLowerCase().replace(" ", "-").replace("_", "-");
         config.getStringList("replace").forEach(str -> replaceable.add(Material.valueOf(str.toUpperCase().replace("-", "_").replace(" ", "_"))));
@@ -51,7 +51,7 @@ public class WorldGenTemplate {
         veinSize = config.getInt("vein-size");
         veinCount = config.getInt("vein-count");
 
-        Validate.isTrue(veinSize > 0 && veinCount > 0, "Vein size and count must be at least 1");
+        Validate.isTrue(veinSize > 0 && veinCount > 0, "静脉大小和数量必须至少为 1");
     }
 
     public String getId() {

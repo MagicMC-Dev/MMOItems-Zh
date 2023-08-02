@@ -35,13 +35,13 @@ import java.util.Optional;
 
 public class Elements extends ItemStat<RandomElementListData, ElementListData> implements Previewable<RandomElementListData, ElementListData> {
     public Elements() {
-        super("ELEMENT", Material.SLIME_BALL, "Elements", new String[]{"The elements of your item."},
+        super("ELEMENT", Material.SLIME_BALL, "Elements", new String[]{"您的物品的元素"},
                 new String[]{"slashing", "piercing", "blunt", "catalyst", "range", "tool", "armor", "gem_stone"});
     }
 
     @Override
     public RandomElementListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+        Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
         return new RandomElementListData((ConfigurationSection) object);
     }
 
@@ -54,7 +54,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
             if (inv.getEditedSection().contains("element")) {
                 inv.getEditedSection().set("element", null);
                 inv.registerTemplateEdition();
-                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Elements successfully removed.");
+                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "元素已成功删除");
             }
     }
 
@@ -84,16 +84,16 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
     public void whenDisplayed(List<String> lore, Optional<RandomElementListData> statData) {
 
         if (statData.isPresent()) {
-            lore.add(ChatColor.GRAY + "Current Value:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             RandomElementListData data = statData.get();
             data.getKeys().forEach(key -> lore.add(ChatColor.GRAY + "* " + key.getKey().getName() + " " + key.getValue().getName() + ": " + ChatColor.RED + data.getStat(key.getKey(), key.getValue())));
 
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the elements edition menu.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all the elements.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可访问元素编辑菜单");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除所有元素");
     }
 
     @NotNull
@@ -180,8 +180,8 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
     @Override
     public void whenPreviewed(@NotNull ItemStackBuilder item, @NotNull ElementListData currentData, @NotNull RandomElementListData templateData) throws IllegalArgumentException {
-        Validate.isTrue(currentData instanceof ElementListData, "Current Data is not ElementListData");
-        Validate.isTrue(templateData instanceof RandomElementListData, "Template Data is not RandomElementListData");
+        Validate.isTrue(currentData instanceof ElementListData, "当前数据不是 ElementListData");
+        Validate.isTrue(templateData instanceof RandomElementListData, "模板数据不是 RandomElementListData");
 
         // Examine every element stat possible
         for (Element element : Element.values())

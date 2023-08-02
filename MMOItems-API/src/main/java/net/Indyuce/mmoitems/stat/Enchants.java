@@ -43,20 +43,20 @@ import java.util.*;
 
 public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> implements Upgradable {
     public Enchants() {
-        super("ENCHANTS", Material.ENCHANTED_BOOK, "Enchantments", new String[]{"The item enchants."}, new String[]{"all"});
+        super("ENCHANTS", Material.ENCHANTED_BOOK, "附魔", new String[]{"物品附魔"}, new String[]{"all"});
     }
 
     @Override
     public RandomEnchantListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+        Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
         return new RandomEnchantListData((ConfigurationSection) object);
     }
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.ENCHANTS).enable("Write in the chat the enchant you want to add.",
-                    ChatColor.AQUA + "Format: {Enchant Name} {Enchant Level Numeric Formula}");
+            new StatEdition(inv, ItemStats.ENCHANTS).enable("在聊天中写下您要添加的附魔。",
+                    ChatColor.AQUA + "格式: {附魔名称} {附魔等级数值公式}");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             if (inv.getEditedSection().contains("enchants")) {
@@ -66,7 +66,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
                 if (set.size() <= 1)
                     inv.getEditedSection().set("enchants", null);
                 inv.registerTemplateEdition();
-                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
+                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last.substring(0, 1).toUpperCase()
                         + last.substring(1).toLowerCase().replace("_", " ") + ".");
             }
         }
@@ -79,12 +79,12 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
     @Override
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         String[] split = message.split(" ");
-        Validate.isTrue(split.length >= 2, "Use this format: {Enchant Name} {Enchant Level Numeric Formula}. Example: 'sharpness 5 0.3' "
-                + "stands for Sharpness 5, plus 0.3 level per item level (rounded up to lower integer)");
+        Validate.isTrue(split.length >= 2, "使用这种格式: {Enchant Name} {Enchant Level Numeric Formula}. 示例: 'sharpness 5 0.3' "
+                + "代表 Sharpness 5, 每个物品级别加上 0.3 级别 (向上舍入到较小的整数) ");
 
         Enchantment enchant = getEnchant(split[0]);
         Validate.notNull(enchant, split[0]
-                + " is not a valid enchantment! All enchants can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
+                + " 不是有效的附魔! 所有附魔都可以在这里找到: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
 
         NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
         formula.fillConfigurationSection(inv.getEditedSection(), "enchants." + enchant.getKey().getKey());
@@ -96,17 +96,17 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
     public void whenDisplayed(List<String> lore, Optional<RandomEnchantListData> statData) {
 
         if (statData.isPresent()) {
-            lore.add(ChatColor.GRAY + "Current Value:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             RandomEnchantListData data = (RandomEnchantListData) statData.get();
             data.getEnchants().forEach(enchant -> lore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(enchant.getKey().getKey().replace("_", " "))
                     + " " + data.getLevel(enchant).toString()));
 
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add an enchant.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last enchant.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加附魔。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个附魔。");
     }
 
     @NotNull
@@ -536,14 +536,14 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
         public static EnchantUpgradeInfo GetFrom(@Nullable Object obj) throws IllegalArgumentException {
 
             // Shall not be null
-            Validate.notNull(obj, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation list must not be null"));
+            Validate.notNull(obj, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "升级操作列表不能为空"));
 
             // Does the string exist?
             if (!(obj instanceof List)) {
 
                 // Throw exception
                 throw new IllegalArgumentException(
-                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Expected a list of strings instead of $i{0}", obj.toString()));
+                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "需要字符串列表而不是 $i{0}", obj.toString()));
             }
 
             ArrayList<String> strlst = new ArrayList<>();
@@ -561,19 +561,19 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
                     failure = true;
 
                     // Append info
-                    unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid list entry $i{0}$b;", obj.toString()));
+                    unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "列表条目 $i{0}$b 无效;", obj.toString()));
                 }
             }
             if (failure) {
                 // Throw exception
                 throw new IllegalArgumentException(
-                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not read enchantment list:") + unreadableStatements.toString());
+                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "无法读取附魔列表: ") + unreadableStatements.toString());
             }
 
             // No empty lists
             if (strlst.isEmpty()) {
                 throw new IllegalArgumentException(
-                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation list is empty"));
+                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "升级操作列表为空"));
             }
 
             // Create ret
@@ -614,7 +614,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
                         failure = true;
                     }
                     if (ench == null) {
-                        unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid Enchantment $i{0}$b.", enchStr));
+                        unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "无效附魔 $i{0}$b", enchStr));
                         failure = true;
                     }
 
@@ -629,14 +629,14 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
 
                     // Nope
                     failure = true;
-                    unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid list entry $i{0}$b. List entries are of the format 'esharpness +1$b'.", str));
+                    unreadableStatements.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " 列表条目 $i{0}$b 无效, 列表条目的格式为'esharpness +1$b'", str));
                 }
 
             }
             if (failure) {
                 // Throw exception
                 throw new IllegalArgumentException(
-                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not read enchantment list:") + unreadableStatements.toString());
+                        FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "无法读取附魔列表: ") + unreadableStatements.toString());
             }
 
             // Success

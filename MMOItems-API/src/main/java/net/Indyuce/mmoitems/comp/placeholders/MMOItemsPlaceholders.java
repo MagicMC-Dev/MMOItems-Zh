@@ -69,7 +69,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 
 		if(identifier.startsWith("type_")) {
 			String t = identifier.substring(5, identifier.lastIndexOf("_")).toUpperCase();
-			if(!MMOItems.plugin.getTypes().has(t)) return "Invalid type";
+			if(!MMOItems.plugin.getTypes().has(t)) return "无效类型";
 			Type type = Type.get(t);
 			String pholder = identifier.substring(6 + t.length()).toLowerCase();
 			if ("total".equals(pholder))
@@ -85,7 +85,7 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 
 		if(identifier.startsWith("tier_")) {
 			String t = identifier.substring(5).toUpperCase();
-			if(!MMOItems.plugin.getTiers().has(t)) return "Invalid tier";
+			if(!MMOItems.plugin.getTiers().has(t)) return "无效等级";
 			return MMOItems.plugin.getTiers().get(t).getName();
 		}
 

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CustomDurability extends DoubleStat implements InternalStat {
 	public CustomDurability() {
-		super("DURABILITY", Material.SHEARS, "Custom Durability", new String[0], new String[]{"!block", "all"});
+		super("DURABILITY", Material.SHEARS, "自定义耐久性", new String[0], new String[]{"!block", "all"});
 	}
 
 	@Override

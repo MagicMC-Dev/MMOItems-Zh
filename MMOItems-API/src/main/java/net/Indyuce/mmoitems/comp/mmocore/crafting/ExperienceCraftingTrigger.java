@@ -22,7 +22,7 @@ public class ExperienceCraftingTrigger extends Trigger {
 
 		String id = config.getString("profession").toLowerCase().replace("_", "-");
 		if (!id.equalsIgnoreCase("main")) {
-			Validate.isTrue(MMOCore.plugin.professionManager.has(id), "Could not find profession " + id);
+			Validate.isTrue(MMOCore.plugin.professionManager.has(id), "找不到职业 " + id);
 			profession = MMOCore.plugin.professionManager.get(id);
 		} else
 			profession = null;

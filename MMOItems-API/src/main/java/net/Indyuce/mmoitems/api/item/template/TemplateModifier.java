@@ -43,7 +43,7 @@ public class TemplateModifier {
 	 *            The configuration section to load the modifier from
 	 */
 	public TemplateModifier(TemplateManager manager, ConfigurationSection config) {
-		Validate.notNull(config, "Could not read config");
+		Validate.notNull(config, "无法读取配置");
 		id = config.getName().toLowerCase().replace("_", "-");
 
 		/*
@@ -51,9 +51,9 @@ public class TemplateModifier {
 		 * modifiers were loaded and that the constructor can use them
 		 */
 		if (!config.contains("stats")) {
-			Validate.notNull(manager, "Cannot create a private modifier outside an item template");
+			Validate.notNull(manager, "无法在物品模板之外创建私有修改器");
 
-			Validate.isTrue(manager.hasModifier(id), "Could not find public modifier with ID '" + id + "'");
+			Validate.isTrue(manager.hasModifier(id), "找不到 ID 为 '" + id + "' 的公共修改器");
 			TemplateModifier parent = manager.getModifier(id);
 
 			chance = Math.max(Math.min(config.getDouble("chance", parent.chance), 1), 0);
@@ -67,15 +67,15 @@ public class TemplateModifier {
 		this.chance = Math.max(Math.min(config.getDouble("chance", 1), 1), 0);
 		this.weight = config.getDouble("weight");
 
-		Validate.isTrue(chance > 0, "Chance must be greater than 0 otherwise useless");
+		Validate.isTrue(chance > 0, "几率必须大于0否则无用");
 		this.nameModifier = config.contains("suffix") ? new NameModifier(ModifierType.SUFFIX, config.get("suffix"))
 				: config.contains("prefix") ? new NameModifier(ModifierType.PREFIX, config.get("prefix")) : null;
 
-		Validate.notNull(config.getConfigurationSection("stats"), "Could not find base item data");
+		Validate.notNull(config.getConfigurationSection("stats"), "找不到基础物品数据");
 		for (String key : config.getConfigurationSection("stats").getKeys(false))
 			try {
 				String id = key.toUpperCase().replace("-", "_");
-				Validate.isTrue(MMOItems.plugin.getStats().has(id), "Could not find stat with ID '" + id + "'");
+				Validate.isTrue(MMOItems.plugin.getStats().has(id), "找不到 ID 为 '" + id + "' 的统计数据");
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				data.put(stat, stat.whenInitialized(config.get("stats." + key)));
@@ -83,7 +83,7 @@ public class TemplateModifier {
 
 				if (!exception.getMessage().isEmpty()) {
 					MMOItems.plugin.getLogger().log(Level.INFO,
-							"An error occurred while trying to load item gen modifier " + id + ": " + exception.getMessage()); }
+							"尝试加载物品生成修改器时发生错误" + id + ": " + exception.getMessage()); }
 			}
 	}
 

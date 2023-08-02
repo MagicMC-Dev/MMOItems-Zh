@@ -14,11 +14,11 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
-		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Abilities "
+		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " 能力 "
 				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
-		sender.sendMessage(ChatColor.WHITE + "Here are all the abilities you can bind to items.");
-		sender.sendMessage(ChatColor.WHITE + "The values inside brackets are " + ChatColor.UNDERLINE + "modifiers" + ChatColor.WHITE
-				+ " which allow you to change the ability values (cooldown, damage...)");
+		sender.sendMessage(ChatColor.WHITE + "以下是您可以绑定到物品的所有能力");
+		sender.sendMessage(ChatColor.WHITE + "括号内的值为 " + ChatColor.UNDERLINE + " 修改器 " + ChatColor.WHITE
+				+ " 它允许你改变能力值 (冷却时间、伤害…… ) ");
 		for (RegisteredSkill ability : MMOItems.plugin.getSkills().getAll()) {
 			String modFormat = ChatColor.GRAY + String.join(ChatColor.WHITE + ", " + ChatColor.GRAY, ability.getHandler().getModifiers());
 			modFormat = ChatColor.WHITE + "(" + modFormat + ChatColor.WHITE + ")";

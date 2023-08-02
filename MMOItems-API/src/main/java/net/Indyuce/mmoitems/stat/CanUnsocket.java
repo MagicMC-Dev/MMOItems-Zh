@@ -31,8 +31,8 @@ import java.util.List;
  */
 public class CanUnsocket extends BooleanStat implements ConsumableItemInteraction {
     public CanUnsocket() {
-        super("CAN_UNSOCKET", Material.PAPER, "Can Unsocket?",
-                new String[] { "This item, when used on another item, if", "that other item has Gem Stones", "may be used to remove those Gems." },
+        super("CAN_UNSOCKET", Material.PAPER, "能否提取宝石",
+                new String[] { "该物品在用于其他物品时, 如果该其他物品具有宝石, 则可用于移除这些宝石" },
                 new String[] { "consumable" });
     }
 

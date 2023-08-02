@@ -45,7 +45,7 @@ public class TierManager implements Reloadable{
 			} catch (IllegalArgumentException exception) {
 
 				// Log error
-				ffp.log(FriendlyFeedbackCategory.ERROR, "Cannot register tier '$u{0}$b';$f {1}", tierName, exception.getMessage());
+				ffp.log(FriendlyFeedbackCategory.ERROR, "无法注册层  '$u{0}$b' ;$f {1}", tierName, exception.getMessage());
 			}
 		}
 
@@ -90,7 +90,7 @@ public class TierManager implements Reloadable{
 	@NotNull public ItemTier getOrThrow(@Nullable String id) throws IllegalArgumentException {
 
 		// Well, is it loaded?
-		Validate.isTrue(tiers.containsKey(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find tier with ID '$r{0}$b'", id));
+		Validate.isTrue(tiers.containsKey(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "找不到 ID 为 '$r{0}$b' 的层", id));
 
 		// Well its guaranteed to not be null.
 		return tiers.get(id);

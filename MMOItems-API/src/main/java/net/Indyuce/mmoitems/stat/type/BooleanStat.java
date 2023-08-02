@@ -39,7 +39,7 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 		if (object instanceof Number)
 			return new RandomBooleanData(Double.parseDouble(object.toString()));
 
-		throw new IllegalArgumentException("Must specify a number (chance) or true/false");
+		throw new IllegalArgumentException("必须指定一个数字 (机率) 或 是/否");
 	}
 
 	@Override
@@ -81,19 +81,19 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 		}
 
 		else if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, this).enable("Write in the chat the probability you want (a percentage)");
+			new StatEdition(inv, this).enable("在聊天中写下您想要的概率 (百分比) ");
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 
 		double probability = MMOUtils.parseDouble(message);
-		Validate.isTrue(probability >= 0 && probability <= 100, "Chance must be between 0 and 100");
+		Validate.isTrue(probability >= 0 && probability <= 100, "几率必须介于 0 到 100 之间");
 
 		inv.getEditedSection().set(getPath(), probability / 100);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + ChatColor.GREEN
-				+ MythicLib.plugin.getMMOConfig().decimal.format(probability) + "% Chance" + ChatColor.GRAY + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功更改为 " + ChatColor.GREEN
+				+ MythicLib.plugin.getMMOConfig().decimal.format(probability) + "% 几率" + ChatColor.GRAY + "");
 	}
 
 	@Override
@@ -138,15 +138,15 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 
 		if (statData.isPresent()) {
 			final double chance = statData.get().getChance();
-			lore.add(ChatColor.GRAY + "Current Value: " + (chance >= 1 ? ChatColor.GREEN + "True"
+			lore.add(ChatColor.GRAY + "当前值: " + (chance >= 1 ? ChatColor.GREEN + "是"
 					: chance <= 0 ? ChatColor.RED + "False" : ChatColor.GREEN + MythicLib.plugin.getMMOConfig().decimal.format(chance * 100) + "% Chance"));
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "False");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "否");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to switch this value.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to choose a probability to have this option.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可切换该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击选择有此选项的概率");
 	}
 
 	@NotNull

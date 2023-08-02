@@ -35,7 +35,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
     @NotNull @Override public String getRecipeConfigPath() { return "shaped"; }
     @NotNull @Override public String getRecipeTypeName() { return "Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.CRAFTING_TABLE), FFPMMOItems.get().getExampleFormat() + "Shaped Recipe");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.CRAFTING_TABLE), FFPMMOItems.get().getExampleFormat() + "形状配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
@@ -50,11 +50,11 @@ public class RMGRR_Shaped implements RecipeRegistry {
         ConfigurationSection recipeSection = RecipeMakerGUI.moveInput(recipeTypeSection, recipeName);
 
         NamespacedKey nk = namespace.getValue();
-        if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace")); }
+        if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法 (空) 命名空间")); }
 
         // Identify the input
         ShapedRecipe input = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shaped recipe containing only AIR, $fignored$b.")); }
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含 AIR 的成型配方, $fignored$b。")); }
 
         // Read the options and output
         ShapedRecipe output = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
@@ -150,7 +150,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
             }
 
             // Size not 3? BRUH
-            if (positions.length != 3) { throw new IllegalArgumentException("Invalid crafting table row $u" + updatedRow + "$b ($fNot exactly 3 ingredients wide$b)."); }
+            if (positions.length != 3) { throw new IllegalArgumentException("工作表行 $u 无效" + updatedRow + "$b ($f不完全是3种成分$b) 。"); }
 
             // Identify
             ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);

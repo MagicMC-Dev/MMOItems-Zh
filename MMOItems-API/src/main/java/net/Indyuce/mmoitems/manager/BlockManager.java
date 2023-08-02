@@ -118,7 +118,7 @@ public class BlockManager implements Reloadable {
 							eastIds.contains(id), southIds.contains(id), northIds.contains(id));
 					register(new CustomBlock(state, mmoitem));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load custom block '" + id + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载自定义方块 '" + id + "': " + exception.getMessage());
 				}
 		}
 	}

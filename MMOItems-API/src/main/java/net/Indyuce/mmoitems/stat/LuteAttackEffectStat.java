@@ -22,8 +22,8 @@ import java.util.Objects;
 
 public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 	public LuteAttackEffectStat() {
-		super("LUTE_ATTACK_EFFECT", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "Lute Attack Effect",
-				new String[] { "Changes how your lute behaves", "when right clicked.", "&9Tip: /mi list lute" }, new String[] { "lute" });
+		super("LUTE_ATTACK_EFFECT", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "琴攻击效果",
+				new String[] { "更改右键单击时琴的行为方式。", "&9Tip: /mi list lute" }, new String[] { "lute" });
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("lute-attack-effect", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功解除了琴攻击效果。");
 		} else
-			new StatEdition(inv, this).enable("Write in the chat the text you want.");
+			new StatEdition(inv, this).enable("在聊天中写下您想要的文字。");
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 		LuteAttackEffect effect = LuteAttackEffect.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
 		inv.getEditedSection().set("lute-attack-effect", effect.name());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + effect.getName() + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "琴攻击效果成功变更为" + effect.getName() + ".");
 	}
 
 	@Override

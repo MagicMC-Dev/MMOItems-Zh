@@ -37,14 +37,14 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 
 		if (config.contains("type")) {
 			String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-			Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type with ID '" + format + "'");
+			Validate.isTrue(MMOItems.plugin.getTypes().has(format), "找不到ID为 '" + format + "' 的物品类型");
 			type = MMOItems.plugin.getTypes().get(format);
 		} else
 			type = null;
 
 		if (config.contains("tierset")) {
 			String format = UtilityMethods.enumName(config.getString("tierset"));
-			Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Could not find item tier");
+			Validate.isTrue(MMOItems.plugin.getTiers().has(format), "找不到物品等级");
 			tier = MMOItems.plugin.getTiers().get(format);
 		} else
 			tier = null;

@@ -60,9 +60,9 @@ public class StringStat extends ItemStat<StringData, StringData> {
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             inv.getEditedSection().set(getPath(), null);
             inv.registerTemplateEdition();
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ".");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + getName() + "");
         } else
-            new StatEdition(inv, this).enable("Write in the chat the text you want.");
+            new StatEdition(inv, this).enable("在聊天中写下您想要的文字。");
     }
 
     @Override
@@ -70,7 +70,7 @@ public class StringStat extends ItemStat<StringData, StringData> {
         inv.getEditedSection().set(getPath(), message);
         inv.registerTemplateEdition();
         inv.getPlayer().sendMessage(
-                MMOItems.plugin.getPrefix() + getName() + " successfully changed to '" + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + "'.");
+                MMOItems.plugin.getPrefix() + getName() + "成功更改为 '" + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + "'.");
     }
 
     @Override
@@ -120,14 +120,14 @@ public class StringStat extends ItemStat<StringData, StringData> {
         if (statData.isPresent()) {
             String value = MythicLib.plugin.parseColors(statData.get().toString());
             value = value.length() > 40 ? value.substring(0, 40) + "..." : value;
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + value);
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.GREEN + value);
 
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
     }
 
     @NotNull

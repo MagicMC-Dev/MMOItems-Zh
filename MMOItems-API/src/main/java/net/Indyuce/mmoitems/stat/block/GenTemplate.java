@@ -5,6 +5,6 @@ import org.bukkit.Material;
 
 public class GenTemplate extends StringStat {
     public GenTemplate() {
-        super("GEN_TEMPLATE", Material.PAPER, "Gen Template", new String[] { "Can be set to any template", "from gen-templates.yml." }, new String[] { "block" });
+        super("GEN_TEMPLATE", Material.PAPER, "生成模板", new String[] { "可以设置为 gen-templates.yml 中的任何模板。" }, new String[] { "block" });
     }
 }

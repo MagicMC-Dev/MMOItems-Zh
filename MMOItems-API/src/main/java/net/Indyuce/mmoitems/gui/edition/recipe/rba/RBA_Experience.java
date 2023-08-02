@@ -34,8 +34,8 @@ public class RBA_Experience extends RBA_DoubleButton {
     public static final double DEFAULT = 0.35;
     @Override public double getDefaultValue() { return DEFAULT; }
 
-    @NotNull final ItemStack doubleButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7aExperience").lore(SilentNumbers.chop(
-            "This recipe gives experience when crafted, how much?"
+    @NotNull final ItemStack doubleButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7a经验").lore(SilentNumbers.chop(
+            "这个配方在制作时会提供经验, 设置数量"
             , 65, "\u00a77")).build(), SilentNumbers.toArrayList(""));
     @NotNull @Override public ItemStack getDoubleButton() { return doubleButton; }
 }

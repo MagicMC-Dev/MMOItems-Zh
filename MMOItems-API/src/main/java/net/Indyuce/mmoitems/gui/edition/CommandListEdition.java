@@ -31,7 +31,7 @@ public class CommandListEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "Command List");
+		Inventory inv = Bukkit.createInventory(this, 54, "命令列表");
 		int n = 0;
 
 		if (getEditedSection().contains("commands"))
@@ -44,14 +44,14 @@ public class CommandListEdition extends EditionInventory {
 
 				ItemStack item = new ItemStack(VersionMaterial.COMPARATOR.toMaterial());
 				ItemMeta itemMeta = item.getItemMeta();
-				itemMeta.setDisplayName(format == null || format.equals("") ? ChatColor.RED + "No Format" : ChatColor.GREEN + format);
+				itemMeta.setDisplayName(format == null || format.equals("") ? ChatColor.RED + "无格式" : ChatColor.GREEN + format);
 				List<String> itemLore = new ArrayList<>();
 				itemLore.add("");
-				itemLore.add(ChatColor.GRAY + "Command Delay: " + ChatColor.RED + delay);
-				itemLore.add(ChatColor.GRAY + "Sent by Console: " + ChatColor.RED + console);
-				itemLore.add(ChatColor.GRAY + "Sent w/ OP perms: " + ChatColor.RED + op);
+				itemLore.add(ChatColor.GRAY + "命令延迟: " + ChatColor.RED + delay);
+				itemLore.add(ChatColor.GRAY + "由控制台发送: " + ChatColor.RED + console);
+				itemLore.add(ChatColor.GRAY + "发送时带有 OP 权限: " + ChatColor.RED + op);
 				itemLore.add("");
-				itemLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove.");
+				itemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击即可删除");
 				itemMeta.setLore(itemLore);
 				item.setItemMeta(itemMeta);
 
@@ -60,12 +60,12 @@ public class CommandListEdition extends EditionInventory {
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(ChatColor.RED + "- No Command -");
+		glassMeta.setDisplayName(ChatColor.RED + "- 无命令 -");
 		glass.setItemMeta(glassMeta);
 
 		ItemStack add = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
 		ItemMeta addMeta = add.getItemMeta();
-		addMeta.setDisplayName(ChatColor.GREEN + "Register a command...");
+		addMeta.setDisplayName(ChatColor.GREEN + "创建一个命令...");
 		add.setItemMeta(addMeta);
 
 		inv.setItem(40, add);
@@ -84,10 +84,10 @@ public class CommandListEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Register a command...")) {
-			new StatEdition(this, ItemStats.COMMANDS).enable("Write in the chat the command you want to add.", "", "To add a delay, use " + ChatColor.RED + "-d:<delay>",
-					"To make the command cast itself w/ console, use " + ChatColor.RED + "-c", "To make the command cast w/ OP perms, use " + ChatColor.RED + "-op", "",
-					ChatColor.YELLOW + "Ex: -d:10.3 -op bc Hello, this is a test command.");
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "创建命令...")) {
+			new StatEdition(this, ItemStats.COMMANDS).enable("在聊天中写下您要添加的命令", "", "要添加延迟, 请使用" + ChatColor.RED + "-d:<delay>",
+					"要使命令通过控制台自行转换, 请使用" + ChatColor.RED + "-c", "要使命令具有 OP 权限, 请使用" + ChatColor.RED + "-op", "",
+					ChatColor.YELLOW + "例如: -d:10.3 -op bc Hello, 这是一个测试命令");
 			return;
 		}
 
@@ -99,8 +99,8 @@ public class CommandListEdition extends EditionInventory {
 			if (getEditedSection().contains("commands") && getEditedSection().getConfigurationSection("commands").contains(tag)) {
 				getEditedSection().set("commands." + tag, null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
-						+ " (Internal ID)" + ChatColor.GRAY + ".");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
+						+ "(内部ID)" + ChatColor.GRAY + ".");
 			}
 		}
 	}

@@ -34,13 +34,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPatternData> {
 	public ShieldPatternStat() {
-		super("SHIELD_PATTERN", Material.SHIELD, "Shield Pattern", new String[] { "The color & patterns", "of your shield." },
+		super("SHIELD_PATTERN", Material.SHIELD, "盾牌图案", new String[] { "盾牌的颜色和图案。" },
 				new String[] { "all" }, Material.SHIELD);
 	}
 
 	@Override
 	public ShieldPatternData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		ShieldPatternData shieldPattern = new ShieldPatternData(
@@ -82,18 +82,18 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("在聊天中写下你盾牌的颜色。");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 			inv.getEditedSection().set("shield-pattern.color", null);
 
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the shield color.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功重置盾牌颜色。");
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("Write in the chat the pattern you want to add.",
-					ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("在聊天中写下您要添加的模式。",
+					ChatColor.AQUA + "格式: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT && inv.getEditedSection().contains("shield-pattern")) {
 			Set<String> set = inv.getEditedSection().getConfigurationSection("shield-pattern").getKeys(false);
@@ -103,7 +103,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 
 			inv.getEditedSection().set("shield-pattern." + last, null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除最后一个图案。");
 		}
 	}
 
@@ -113,13 +113,13 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 
 		if (editedStatData == 1) {
 			String[] split = message.split(" ");
-			Validate.isTrue(split.length == 2, message + " is not a valid [PATTERN_TYPE] [DYE_COLOR].");
+			Validate.isTrue(split.length == 2, message + "不是有效的 [PATTERN_TYPE] [DYE_COLOR]。");
 
 			PatternType patternType = PatternType.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
 			DyeColor dyeColor = DyeColor.valueOf(split[1].toUpperCase().replace("-", "_").replace(" ", "_"));
 
 			int availableKey = getNextAvailableKey(inv.getEditedSection().getConfigurationSection("shield-pattern"));
-			Validate.isTrue(availableKey >= 0, "You can have more than 100 shield patterns on a single item.");
+			Validate.isTrue(availableKey >= 0, "单个物品上可以有 100 多个盾牌图案。");
 
 			inv.getEditedSection().set("shield-pattern." + availableKey + ".pattern", patternType.name());
 			inv.getEditedSection().set("shield-pattern." + availableKey + ".color", dyeColor.name());
@@ -132,16 +132,16 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 		DyeColor color = DyeColor.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
 		inv.getEditedSection().set("shield-pattern.color", color.name());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "盾牌颜色更改成功。");
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<ShieldPatternData> statData) {
 
 		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
+			lore.add(ChatColor.GRAY + "当前值:");
 			ShieldPatternData data =  statData.get();
-			lore.add(ChatColor.GRAY + "* Base Color: "
+			lore.add(ChatColor.GRAY + "* 基础颜色: "
 					+ (data.getBaseColor() != null
 							? ChatColor.GREEN + MMOUtils.caseOnWords(data.getBaseColor().name().toLowerCase().replace("_", " "))
 							: ChatColor.RED + "None"));
@@ -149,13 +149,13 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 					+ " - " + ChatColor.GREEN + pattern.getColor().name()));
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left Click to change the shield color.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Shift Left Click to reset the shield color.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right Click to add a pattern.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Drop to remove the last pattern.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改盾牌颜色。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左移单击可重置盾牌颜色。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以添加图案。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "放下以删除最后一个图案。");
 	}
 
 	@Override

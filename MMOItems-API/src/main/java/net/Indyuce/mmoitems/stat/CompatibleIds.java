@@ -29,21 +29,21 @@ import java.util.Optional;
 
 public class CompatibleIds extends ItemStat<StringListData, StringListData> {
     public CompatibleIds() {
-        super("COMPATIBLE_IDS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "Compatible IDs",
-                new String[]{"The item ids this skin is", "compatible with."}, new String[]{"skin"});
+        super("COMPATIBLE_IDS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "兼容ID",
+                new String[]{"该皮肤兼容的物品 ID"}, new String[]{"skin"});
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public StringListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+        Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
         return new StringListData((List<String>) object);
     }
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.COMPATIBLE_IDS).enable("Write in the chat the item id you want to add.");
+            new StatEdition(inv, ItemStats.COMPATIBLE_IDS).enable("在聊天中写下您要添加的物品 ID");
 
         if (event.getAction() != InventoryAction.PICKUP_HALF || !inv.getEditedSection().contains("compatible-ids"))
             return;
@@ -55,7 +55,7 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
         lore.remove(last);
         inv.getEditedSection().set("compatible-ids", lore);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除 '" + last + "'");
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
         lore.add(message.toUpperCase());
         inv.getEditedSection().set("compatible-ids", lore);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Compatible IDs successfully added.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功添加兼容 ID");
     }
 
     @Override
@@ -74,11 +74,11 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
             lore.add(ChatColor.GRAY + "Current Value:");
             statData.get().getList().forEach(str -> lore.add(ChatColor.GRAY + str));
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + " 与任何物品兼容");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a new id.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last id.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加新 ID");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个 ID");
     }
 
     @NotNull

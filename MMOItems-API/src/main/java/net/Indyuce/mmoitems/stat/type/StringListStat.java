@@ -34,7 +34,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
     @Override
     @SuppressWarnings("unchecked")
     public StringListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+        Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
         return new StringListData((List<String>) object);
     }
 
@@ -159,7 +159,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, this).enable("Write in the chat the line you want to add.");
+            new StatEdition(inv, this).enable("在聊天中写下您要添加的行。");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains(getPath())) {
             List<String> list = inv.getEditedSection().getStringList(getPath());
@@ -171,7 +171,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
             inv.getEditedSection().set(getPath(), list.isEmpty() ? null : list);
             inv.registerTemplateEdition();
             inv.getPlayer()
-                    .sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
+                    .sendMessage(MMOItems.plugin.getPrefix() + "成功删除 '" + MythicLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
         }
     }
 
@@ -181,7 +181,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
         list.add(message);
         inv.getEditedSection().set(getPath(), list);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + " Stat successfully added.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "统计添加成功。");
     }
 
     @Override
@@ -230,16 +230,16 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
     @Override
     public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
         if (statData.isPresent()) {
-            lore.add(ChatColor.GRAY + "Current Value:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             StringListData data = statData.get();
             data.getList().forEach(element -> lore.add(ChatColor.GRAY + MythicLib.plugin.parseColors(element)));
 
         } else
-            lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+            lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a permission.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last permission.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加权限。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限。");
     }
 
     @NotNull

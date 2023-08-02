@@ -14,6 +14,6 @@ import org.bukkit.Material;
  */
 public class RequirePowerToBreak extends BooleanStat {
     public RequirePowerToBreak() {
-        super("REQUIRE_POWER_TO_BREAK", Material.BEDROCK, "Require Power to Break", new String[]{"When enabled, the block will NOT break", "if the player doesn't have enough pickaxe", "power, unlike vanilla block behaviour."}, new String[]{"block"});
+        super("REQUIRE_POWER_TO_BREAK", Material.BEDROCK, "需要力量才能打破", new String[]{"启用后，如果玩家没有足够的挖掘等级，则方块不会破裂，这与普通方块行为不同。"}, new String[]{"block"});
     }
 }

@@ -169,7 +169,7 @@ public class ItemSkin extends UseItem {
                     profileField.set(meta,
                             ((SkullTextureData) volSkin.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
                 } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-                    MMOItems.plugin.getLogger().warning("Could not read skull texture");
+                    MMOItems.plugin.getLogger().warning("无法读取头颅纹理");
                 }
 
             item.setItemMeta(meta);

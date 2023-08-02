@@ -47,7 +47,7 @@ public class StatEdition implements Edition {
 		inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
 		for (String line : message)
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', line));
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "输入 'cancle' 以中止编辑。");
 
 		/*
 		 * Anvil text input feature. enables players to use an anvil to input
@@ -60,7 +60,7 @@ public class StatEdition implements Edition {
 
 		// Default chat edition feature
 		new ChatEdition(this);
-		inv.getPlayer().sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Item Edition", "See chat.", 10, 40, 10);
+		inv.getPlayer().sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "物品版本", "请看聊天栏。", 10, 40, 10);
 	}
 
 	@Override

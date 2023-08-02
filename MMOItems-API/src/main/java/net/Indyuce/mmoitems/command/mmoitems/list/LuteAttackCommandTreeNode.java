@@ -13,7 +13,7 @@ public class LuteAttackCommandTreeNode extends CommandTreeNode {
     @Override
     public CommandResult execute(CommandSender sender, String[] args) {
         sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE
-                + " Lute Attack Effects " + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
+                + " 鲁特琴攻击效果" + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
         for (LuteAttackEffect lae : LuteAttackEffect.values())
             sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + lae.name());
         return CommandResult.SUCCESS;

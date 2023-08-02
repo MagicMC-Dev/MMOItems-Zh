@@ -23,11 +23,11 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
 		config.validate("type", "id");
 
 		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "Could not find item type with ID '" + format + "'");
+		Validate.isTrue(MMOItems.plugin.getTypes().has(format), "找不到ID为 '" + format + "' 的物品类型");
 		Type type = MMOItems.plugin.getTypes().get(format);
 
 		String id = config.getString("id").replace("-", "_").toUpperCase();
-		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
+		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "找不到ID为 '" + id + "' 的MMO物品");
 		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
 	}
 

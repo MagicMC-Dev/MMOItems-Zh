@@ -59,8 +59,8 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
         // Done
         return true; }
 
-    @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.KNOWLEDGE_BOOK).name("\u00a7cHide from Crafting Book").lore(SilentNumbers.chop(
-            "Even if the crafting book is enabled, this recipe wont be automatically unlocked by players."
+    @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.KNOWLEDGE_BOOK).name("\u00a7c隐藏配方").lore(SilentNumbers.chop(
+            "即使启用了制作书, 该配方也不会被玩家自动解锁"
             , 65, "\u00a77")).build(), SilentNumbers.toArrayList(""));
 
     @NotNull @Override public ItemStack getBooleanButton() { return booleanButton; }
@@ -68,13 +68,13 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
     @NotNull @Override public ItemStack getButton() {
 
         // Dictate the correct one
-        String input = isEnabled() ? "\u00a7cNO\u00a78, it's hidden." : "\u00a7aYES\u00a78, it's shown.";
+        String input = isEnabled() ? "\u00a7cNO\u00a78, 它被隐藏了." : "\u00a7aYES\u00a78, 它显示了.";
 
         // Copy and send
         return RecipeMakerGUI.addLore(getBooleanButton().clone(),
                 SilentNumbers.toArrayList(
-                "", "\u00a77Currently in Book? " + input, "",
-                        ChatColor.YELLOW + AltChar.listDash + " Right click to generate recipe unlock book.",
-                        ChatColor.YELLOW + AltChar.listDash + " Left click to toggle this option." ));
+                "", "\u00a77在合成表中? " + input, "",
+                        ChatColor.YELLOW + AltChar.listDash + "右键生成配方解锁书",
+                        ChatColor.YELLOW + AltChar.listDash + "左键单击可切换此选项" ));
     }
 }

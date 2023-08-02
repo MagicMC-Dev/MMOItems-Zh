@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class Soulbound extends ItemStat<RandomStatData<SoulboundData>, SoulboundData> implements InternalStat, ItemRestriction {
 	public Soulbound() {
-		super("SOULBOUND", VersionMaterial.ENDER_EYE.toMaterial(), "Soulbound", new String[0], new String[] { "all" });
+		super("SOULBOUND", VersionMaterial.ENDER_EYE.toMaterial(), "灵魂绑定", new String[0], new String[] { "all" });
 	}
 
 	@Nullable

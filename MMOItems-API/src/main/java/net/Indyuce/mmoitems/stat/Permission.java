@@ -33,21 +33,21 @@ import java.util.Optional;
 
 public class Permission extends StringListStat implements ItemRestriction {
 	public Permission() {
-		super("PERMISSION", VersionMaterial.OAK_SIGN.toMaterial(), "Permission",
-				new String[] { "The permission needed to use this item." }, new String[] { "!block", "all" });
+		super("PERMISSION", VersionMaterial.OAK_SIGN.toMaterial(), "权限",
+				new String[] { "使用该物品所需的权限。" }, new String[] { "!block", "all" });
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public StringListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
 		return new StringListData((List<String>) object);
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERMISSION).enable("Write in the chat the permission you want your item to require.");
+			new StatEdition(inv, ItemStats.PERMISSION).enable("在聊天中写下您希望您的物品需要的权限。");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("permission")) {
@@ -59,19 +59,19 @@ public class Permission extends StringListStat implements ItemRestriction {
 				requiredPerms.remove(last);
 				inv.getEditedSection().set("permission", requiredPerms.size() == 0 ? null : requiredPerms);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last + ".");
 			}
 		}
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		Validate.isTrue(!message.contains("|"), "Your perm node must not contain any | symbol.");
+		Validate.isTrue(!message.contains("|"), "您的权限节点不得包含任何 | symbol字符");
 		List<String> lore = inv.getEditedSection().contains("permission") ? inv.getEditedSection().getStringList("permission") : new ArrayList<>();
 		lore.add(message);
 		inv.getEditedSection().set("permission", lore);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "权限添加成功。");
 	}
 
 	@Override
@@ -83,11 +83,11 @@ public class Permission extends StringListStat implements ItemRestriction {
 			data.getList().forEach(el -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + el));
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a compatible permission.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last permission.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加兼容权限。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限。");
 	}
 
 	@NotNull

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 @Deprecated
 public class HidePotionEffects extends BooleanStat {
 	public HidePotionEffects() {
-		super("HIDE_POTION_EFFECTS", Material.POTION, "Hide Potion Effects", new String[] { "Hides potion effects & 'No Effects'", "from your item lore." }, new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
+		super("HIDE_POTION_EFFECTS", Material.POTION, "隐藏药水效果", new String[] { "隐藏物品标注中的药水效果和“无效果”。" }, new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override

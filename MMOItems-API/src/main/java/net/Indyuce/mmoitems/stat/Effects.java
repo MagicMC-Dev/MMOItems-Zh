@@ -38,21 +38,21 @@ import java.util.*;
 
 public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> implements PlayerConsumable {
     public Effects() {
-        super("EFFECTS", Material.POTION, "Effects", new String[]{"The potion effects your", "consumable item grants."},
+        super("EFFECTS", Material.POTION, "效果", new String[]{"药水会影响你的消耗品的效果"},
                 new String[]{"consumable"});
     }
 
     @Override
     public RandomPotionEffectListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+        Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
         return new RandomPotionEffectListData((ConfigurationSection) object);
     }
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.EFFECTS).enable("Write in the chat the permanent potion effect you want to add.",
-                    ChatColor.AQUA + "Format: {Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}", ChatColor.DARK_RED + "Note: " + ChatColor.RED + "The '|' lines are literal.");
+            new StatEdition(inv, ItemStats.EFFECTS).enable("在聊天中写下你想要添加的永久药水效果",
+                    ChatColor.AQUA + "格式: {药水效果名称}|{持续时间数值公式}|{增幅数值公式}", ChatColor.DARK_RED + "Note: " + ChatColor.RED + " '|' 行是字面意思");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             if (inv.getEditedSection().contains("effects")) {
@@ -62,8 +62,8 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
                 if (set.size() <= 1)
                     inv.getEditedSection().set("effects", null);
                 inv.registerTemplateEdition();
-                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last.substring(0, 1).toUpperCase()
-                        + last.substring(1).toLowerCase() + ChatColor.GRAY + ".");
+                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last.substring(0, 1).toUpperCase()
+                        + last.substring(1).toLowerCase() + ChatColor.GRAY);
             }
         }
     }
@@ -71,10 +71,10 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
     @Override
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         String[] split = message.split("\\|");
-        Validate.isTrue(split.length > 1, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Use this format: $e{Potion Effect Name}|{Duration Numeric Formula}|{Amplifier Numeric Formula}$b."));
+        Validate.isTrue(split.length > 1, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "使用此格式: $e{药水效果名称}|{持续时间数值公式}|{增幅数值公式}$b"));
 
         PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_").replace(" ", "_").toUpperCase());
-        Validate.notNull(effect, split[0] + FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " is not a valid potion effect. All potion effects can be found here:$e https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"));
+        Validate.notNull(effect, split[0] + FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " 不是有效的药水效果, 所有药水效果都可以在这里找到:$e https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"));
 
         NumericStatFormula duration = new NumericStatFormula(split[1]);
         NumericStatFormula amplifier = split.length > 2 ? new NumericStatFormula(split[2]) : new NumericStatFormula(1, 0, 0, 0);
@@ -82,21 +82,21 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
         duration.fillConfigurationSection(inv.getEditedSection(), "effects." + effect.getName() + ".duration");
         amplifier.fillConfigurationSection(inv.getEditedSection(), "effects." + effect.getName() + ".amplifier");
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + " successfully added.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + effect.getName() + " " + amplifier + "添加成功");
     }
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<RandomPotionEffectListData> statData) {
         statData.ifPresentOrElse(randomPotionEffectListData -> {
-            lore.add(ChatColor.GRAY + "Current Value:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             for (RandomPotionEffectData effect : randomPotionEffectListData.getEffects())
                 lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + MMOUtils.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
-                        + ChatColor.GRAY + " Level: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " Duration: " + ChatColor.GREEN
+                        + ChatColor.GRAY + " 等级: " + ChatColor.GREEN + effect.getAmplifier() + ChatColor.GRAY + " 持续时间: " + ChatColor.GREEN
                         + effect.getDuration());
-        }, () -> lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None"));
+        }, () -> lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None"));
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add an effect.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last effect.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果");
     }
 
     @NotNull

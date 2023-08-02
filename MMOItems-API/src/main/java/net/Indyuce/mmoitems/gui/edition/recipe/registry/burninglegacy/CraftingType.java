@@ -9,13 +9,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public enum CraftingType {
-	SHAPED(21, "The C. Table Recipe (Shaped) for this item", VersionMaterial.CRAFTING_TABLE, null),
-	SHAPELESS(22, "The C. Table Recipe (Shapeless) for this item", VersionMaterial.CRAFTING_TABLE, null),
-	FURNACE(23, "The Furnace Recipe for this item", Material.FURNACE, RecipeManager.BurningRecipeType.FURNACE),
-	BLAST(29, "The Blast Furnace Recipe for this item", VersionMaterial.BLAST_FURNACE, RecipeManager.BurningRecipeType.BLAST, 1, 14),
-	SMOKER(30, "The Smoker Recipe for this item", VersionMaterial.SMOKER, RecipeManager.BurningRecipeType.SMOKER, 1, 14),
-	CAMPFIRE(32, "The Campfire Recipe for this item", VersionMaterial.CAMPFIRE, RecipeManager.BurningRecipeType.CAMPFIRE, 1, 14),
-	SMITHING(33, "The Smithing Recipe for this item", VersionMaterial.SMITHING_TABLE, null, 1, 15);
+	SHAPED(21, "该物品的 C. 表配方 (形状) ", VersionMaterial.CRAFTING_TABLE, null),
+	SHAPELESS(22, "该物品的 C. Table 配方 (无形) ", VersionMaterial.CRAFTING_TABLE, null),
+	FURNACE(23, "该物品的熔炉配方", Material.FURNACE, RecipeManager.BurningRecipeType.FURNACE),
+	BLAST(29, "该物品的高炉配方", VersionMaterial.BLAST_FURNACE, RecipeManager.BurningRecipeType.BLAST, 1, 14),
+	SMOKER(30, "该物品的烟熏炉配方", VersionMaterial.SMOKER, RecipeManager.BurningRecipeType.SMOKER, 1, 14),
+	CAMPFIRE(32, "该物品的篝火配方", VersionMaterial.CAMPFIRE, RecipeManager.BurningRecipeType.CAMPFIRE, 1, 14),
+	SMITHING(33, "该物品的锻造台配方", VersionMaterial.SMITHING_TABLE, null, 1, 15);
 
 	private final int slot;
 	private final String lore;

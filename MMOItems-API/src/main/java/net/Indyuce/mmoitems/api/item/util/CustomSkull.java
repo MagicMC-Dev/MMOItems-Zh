@@ -42,7 +42,7 @@ public class CustomSkull extends ConfigItem {
             profileField.setAccessible(true);
             profileField.set(meta, gameProfile);
         } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load skull texture");
+            MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载头颅纹理");
         }
 
         if (hasLore())

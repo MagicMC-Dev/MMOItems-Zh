@@ -25,21 +25,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class NBTTags extends StringListStat {
 	public NBTTags() {
-		super("CUSTOM_NBT", Material.NAME_TAG, "NBT Tags", new String[] { "Custom NBT Tags." }, new String[] { "all" });
+		super("CUSTOM_NBT", Material.NAME_TAG, "NBT 标签", new String[] { "自定义 NBT 标签。" }, new String[] { "all" });
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public StringListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
 		return new StringListData((List<String>) object);
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.",
-					ChatColor.AQUA + "Format: {Tag Name} {Tag Value}");
+			new StatEdition(inv, ItemStats.NBT_TAGS).enable("在聊天中写下您要添加的NBT标签。",
+					ChatColor.AQUA + "格式: {标签名称} {标签值}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("custom-nbt")) {
@@ -51,36 +51,36 @@ public class NBTTags extends StringListStat {
 				nbtTags.remove(last);
 				inv.getEditedSection().set("custom-nbt", nbtTags);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + last + "'.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除 '" + last + "'.");
 			}
 		}
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		Validate.isTrue(message.split(" ").length > 1, "Use this format: {Tag Name} {Tag Value}");
+		Validate.isTrue(message.split(" ").length > 1, "使用这种格式: {标签名称} {标签值}");
 		List<String> customNbt = inv.getEditedSection().contains("custom-nbt") ? inv.getEditedSection().getStringList("custom-nbt")
 				: new ArrayList<>();
 		customNbt.add(message);
 
 		inv.getEditedSection().set("custom-nbt", customNbt);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat successfully added.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat 已成功添加。");
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
+			lore.add(ChatColor.GRAY + "当前值:");
 			StringListData data = statData.get();
 			data.getList().forEach(str -> lore.add(ChatColor.GRAY + str));
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a tag.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last tag.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加标签。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个标签。");
 	}
 
 	static String extraneousTag = "EXTMI_";

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RestoreHealth extends DoubleStat implements PlayerConsumable {
     public RestoreHealth() {
-        super("RESTORE_HEALTH", VersionMaterial.RED_DYE.toMaterial(), "Health Restoration", new String[]{"Health given when consumed."}, new String[]{"consumable"});
+        super("RESTORE_HEALTH", VersionMaterial.RED_DYE.toMaterial(), "生命恢复", new String[]{"食用时给予生命恢复"}, new String[]{"consumable"});
     }
 
 

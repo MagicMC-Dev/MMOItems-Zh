@@ -41,14 +41,14 @@ public class SkillManager {
      */
     @NotNull
     public RegisteredSkill getSkillOrThrow(String id) {
-        return Objects.requireNonNull(skills.get(id), "Could not find skill with ID '" + id + "'");
+        return Objects.requireNonNull(skills.get(id), "找不到 ID 为 '" + id + "' 的技能");
     }
 
     /**
      * @param skill Skill to load
      */
     public void registerSkill(RegisteredSkill skill) {
-        skills.put(Objects.requireNonNull(skill, "Skill cannot be null").getHandler().getId(), skill);
+        skills.put(Objects.requireNonNull(skill, "技能不能为空").getHandler().getId(), skill);
     }
 
     /**
@@ -100,7 +100,7 @@ public class SkillManager {
 
                 // Should not happen
             } catch (IOException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not save default ability configs: " + exception.getMessage());
+                MMOItems.plugin.getLogger().log(Level.WARNING, "无法保存默认技能配置s: " + exception.getMessage());
             }
         }
 
@@ -123,7 +123,7 @@ public class SkillManager {
 
                 // Fail
             } catch (RuntimeException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load skill '" + handler.getId() + "': " + exception.getMessage());
+                MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载技能 '" + handler.getId() + "': " + exception.getMessage());
             }
         }
     }

@@ -27,43 +27,43 @@ import java.util.Optional;
 
 public class PotionColor extends ItemStat<ColorData, ColorData> {
 	public PotionColor() {
-		super("POTION_COLOR", Material.POTION, "Potion Color",
-				new String[] { "The color of your potion.", "(Doesn't impact the effects)." }, new String[] { "all" }, Material.POTION,
+		super("POTION_COLOR", Material.POTION, "药水颜色",
+				new String[] { "你的药水的颜色。", " (不影响效果) 。" }, new String[] { "all" }, Material.POTION,
 				Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
 	@Override
 	public ColorData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof String, "Must specify a string");
+		Validate.isTrue(object instanceof String, "必须指定一个字符串");
 		return new ColorData((String) object);
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.POTION_COLOR).enable("Write in the chat the RGB color you want.",
-					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
+			new StatEdition(inv, ItemStats.POTION_COLOR).enable("在聊天中写下您想要的 RGB 颜色。",
+					ChatColor.AQUA + "格式: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("potion-color", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功移除药水颜色。");
 		}
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
-		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
+		Validate.isTrue(split.length == 3, "使用这种格式: {Red} {Green} {Blue}. 例子: '75 0 130' 代表紫色.");
 
 		for (String str : split) {
 			int k = Integer.parseInt(str);
-			Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
+			Validate.isTrue(k >= 0 && k < 256, "颜色必须介于 0 到 255 之间");
 		}
 
 		inv.getEditedSection().set("potion-color", message);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + message + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "药水颜色成功更改为" + message + ".");
 	}
 
 	@Override
@@ -88,8 +88,8 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
 		lore.add(statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "Uncolored");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the potion color.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除药水颜色。");
 	}
 
 	@NotNull

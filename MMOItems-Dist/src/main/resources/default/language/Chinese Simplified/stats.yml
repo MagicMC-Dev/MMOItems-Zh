@@ -102,7 +102,7 @@ soulbound-level: '&3 &7■ 灵魂绑定等级 &e{value}'
 #Tools
 autosmelt: '&3 &7■ &f自动熔炼'
 bouncing-crack: '&3 &7■ &f范围破坏'
-pickaxe-power: '&3 &7■ &f挖掘强度: &a{value}'
+pickaxe-power: '&3 &7■ &f挖掘等级: &a{value}'
 durability: '&7耐久: {current} / {max}'
 #General
 item-type: '&c{type}'

@@ -347,7 +347,7 @@ public class MMOItem implements ItemReference {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	@NotNull public UpgradeTemplate getUpgradeTemplate() {
-		Validate.isTrue(hasUpgradeTemplate(), "Item has no upgrade information");
+		Validate.isTrue(hasUpgradeTemplate(), "物品没有升级信息");
 
 		// All Right
 		UpgradeData data = (UpgradeData) getData(ItemStats.UPGRADE);

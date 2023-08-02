@@ -38,7 +38,7 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 	 * @param object Object to read data from.
 	 */
 	public NumericStatFormula(Object object) {
-		Validate.notNull(object, "Config must not be null");
+		Validate.notNull(object, "配置不能为空");
 
 		if (object instanceof String) {
 			String[] split = object.toString().split(" ");
@@ -64,12 +64,12 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 			spread = config.getDouble("spread");
 			maxSpread = config.getDouble("max-spread", .3);
 
-			Validate.isTrue(spread >= 0, "Spread must be positive");
-			Validate.isTrue(maxSpread >= 0, "Max spread must be positive");
+			Validate.isTrue(spread >= 0, "价差必须为正");
+			Validate.isTrue(maxSpread >= 0, "最大点差必须为正数");
 			return;
 		}
 
-		throw new IllegalArgumentException("Must specify a config section, a string or a number");
+		throw new IllegalArgumentException("必须指定配置部分、字符串或数字");
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
 	 */
 	public void fillConfigurationSection(ConfigurationSection config, String path, FormulaSaveOption option) {
 		if (path == null)
-			throw new NullPointerException("Path was empty");
+			throw new NullPointerException("路径为空");
 
 		if (scale == 0 && spread == 0 && maxSpread == 0)
 			config.set(path, base == 0 && option == FormulaSaveOption.DELETE_IF_ZERO ? null : base);

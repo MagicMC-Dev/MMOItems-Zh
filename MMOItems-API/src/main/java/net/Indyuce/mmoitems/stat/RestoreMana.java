@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RestoreMana extends DoubleStat implements PlayerConsumable {
     public RestoreMana() {
-        super("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Restore Mana", new String[]{"The amount of mana", "your consumable restores."}, new String[]{"consumable"});
+        super("RESTORE_MANA", VersionMaterial.LAPIS_LAZULI.toMaterial(), "法力恢复", new String[]{"你的消耗品恢复的法力值"}, new String[]{"consumable"});
     }
 
     @Override

@@ -23,13 +23,13 @@ import java.util.Optional;
 
 public class Lore extends StringListStat implements GemStoneStat {
     public Lore() {
-        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"The item lore."}, new String[]{"all"});
+        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"物品标注"}, new String[]{"all"});
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public StringListData whenInitialized(Object object) {
-        Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+        Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
         return new StringListData((List<String>) object);
     }
 
@@ -43,7 +43,7 @@ public class Lore extends StringListStat implements GemStoneStat {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.LORE).enable("Write in the chat the lore line you want to add.");
+            new StatEdition(inv, ItemStats.LORE).enable("在聊天中写下您要添加的标注行。");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("lore")) {
             List<String> lore = inv.getEditedSection().getStringList("lore");
@@ -55,7 +55,7 @@ public class Lore extends StringListStat implements GemStoneStat {
             inv.getEditedSection().set("lore", lore.isEmpty() ? null : lore);
             inv.registerTemplateEdition();
             inv.getPlayer()
-                    .sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
+                    .sendMessage(MMOItems.plugin.getPrefix() + "成功删除 '" + MythicLib.plugin.parseColors(last) + ChatColor.GRAY + "'.");
         }
     }
 
@@ -65,22 +65,22 @@ public class Lore extends StringListStat implements GemStoneStat {
         lore.add(message);
         inv.getEditedSection().set("lore", lore);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore successfully added.");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "标注添加成功。");
     }
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
         statData.ifPresentOrElse(stringListData -> {
-            lore.add(ChatColor.GRAY + "Current Value:");
+            lore.add(ChatColor.GRAY + "当前值:");
             lore.addAll(MythicLib.plugin.parseColors(stringListData.getList()
                     .stream()
                     .map(s -> ChatColor.GRAY + s)
                     .toList()));
-        }, () -> lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None"));
+        }, () -> lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None"));
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a line.");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last line.");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加一条线。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一行。");
     }
 
     /*

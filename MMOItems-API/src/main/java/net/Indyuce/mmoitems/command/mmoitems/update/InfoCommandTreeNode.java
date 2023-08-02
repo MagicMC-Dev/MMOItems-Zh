@@ -25,28 +25,28 @@ public class InfoCommandTreeNode extends CommandTreeNode {
 		try {
 			id = Integer.parseInt(args[2]);
 		} catch (NumberFormatException exception) {
-			sender.sendMessage(ChatColor.RED + "Please specify a valid number.");
+			sender.sendMessage(ChatColor.RED + "请指定一个有效的数字");
 			return CommandResult.FAILURE;
 		}
 
 		if (!MMOItems.plugin.getUpdates().has(id)) {
-			sender.sendMessage(ChatColor.RED + "Could not find any config update with ID " + id);
+			sender.sendMessage(ChatColor.RED + "找不到任何带 ID 的配置更新" + id);
 			return CommandResult.FAILURE;
 		}
 
 		PluginUpdate update = MMOItems.plugin.getUpdates().get(id);
 
-		sender.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Config Update n" + update.getId());
+		sender.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "配置更新" + update.getId());
 		if (update.hasDescription()) {
 			sender.sendMessage("");
-			sender.sendMessage(ChatColor.DARK_GRAY + "Description:");
+			sender.sendMessage(ChatColor.DARK_GRAY + "描述:");
 			for (String line : update.getDescription())
 				sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.translateAlternateColorCodes('&', line));
 		}
 
 		sender.sendMessage("");
-		sender.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GOLD + "/mi update apply " + update.getId() + ChatColor.YELLOW
-				+ " to apply this config update.");
+		sender.sendMessage(ChatColor.YELLOW + "使用 " + ChatColor.GOLD + "/mi update apply " + update.getId() + ChatColor.YELLOW
+				+ " 应用此配置更新");
 		return CommandResult.SUCCESS;
 	}
 }

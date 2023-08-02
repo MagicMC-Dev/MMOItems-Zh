@@ -10,7 +10,7 @@ public class UpdateItemCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "This command is only for players.");
+			sender.sendMessage(ChatColor.RED + "此命令仅适用于玩家");
 			return true;
 		}
 

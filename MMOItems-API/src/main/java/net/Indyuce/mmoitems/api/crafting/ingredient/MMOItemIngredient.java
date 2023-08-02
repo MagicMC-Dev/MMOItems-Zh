@@ -125,7 +125,7 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
 			name = MMOUtils.caseOnWords(((MaterialData) template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " "));
 
 			// Ultra rare case to avoid a NPE
-		else name = "Unrecognized Item";
+		else name = "无法识别的物品";
 
 		// Append upgrade level
 		if (SilentNumbers.floor(level.getAsDouble(0)) != 0)

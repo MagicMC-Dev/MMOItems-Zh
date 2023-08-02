@@ -50,7 +50,7 @@ public class MMOItemsAPI {
      * @return Skill with the specified identifier like 'FIREBOLT'
      */
     public RegisteredSkill getSkillById(String id) {
-        return Objects.requireNonNull(MMOItems.plugin.getSkills().getSkill(id), "Could not find skill with ID '" + id + "'");
+        return Objects.requireNonNull(MMOItems.plugin.getSkills().getSkill(id), "找不到 ID 为 '" + id + "' 的技能");
     }
 
     public PlayerData getPlayerData(Player player) {

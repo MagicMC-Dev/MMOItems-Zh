@@ -79,7 +79,7 @@ public class MMOItemReforger {
     public MMOItemReforger(@NotNull NBTItem nbtItem) {
         this.nbtItem = nbtItem;
 
-        Validate.isTrue(nbtItem.getItem().getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
+        Validate.isTrue(nbtItem.getItem().getItemMeta() != null, "ItemStack没有ItemMeta, 无法重新锻造。");
 
         // Try and find corresponding item template.
         template = nbtItem.hasType() ? MMOItems.plugin.getTemplates().getTemplate(nbtItem) : null;
@@ -203,7 +203,7 @@ public class MMOItemReforger {
     @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @NotNull
     public MMOItemTemplate getTemplate() {
-        return Objects.requireNonNull(template, "No item template was found");
+        return Objects.requireNonNull(template, "未找到物品模板");
     }
 
     /**

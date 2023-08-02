@@ -17,9 +17,9 @@ public class QueueItemDisplay extends ConfigItem {
     private static final String[] chars = {"s", "m", "h", "d"};
 
     public QueueItemDisplay() {
-        super("QUEUE_ITEM_DISPLAY", Material.BARRIER, "&6&lQueue&f #name#", "{ready}&7&oThis item was successfully crafted.",
-                "{queue}&7&oThis item is in the crafting queue.", "{queue}", "{queue}&7Time Left: &c#left#", "", "{ready}&eClick to claim!",
-                "{queue}&eClick to cancel.");
+        super("QUEUE_ITEM_DISPLAY", Material.BARRIER, "&6&l队列&f #name#", "{ready}&7&o该物品已成功制作。",
+                "{queue}&7&o该物品位于制作队列中。", "{queue}", "{queue}&7剩余时间: &c#left#", "", "{ready}&e点击领取!",
+                "{queue}&e单击以取消。");
     }
 
     public ItemBuilder newBuilder(CraftingInfo crafting, int position) {

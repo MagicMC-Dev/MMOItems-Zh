@@ -34,13 +34,13 @@ import java.util.Optional;
 
 public class CustomSounds extends ItemStat<SoundListData, SoundListData> implements GemStoneStat, PlayerConsumable {
 	public CustomSounds() {
-		super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[]{"The custom sounds your item will use."},
+		super("SOUNDS", Material.JUKEBOX, "自定义声音", new String[]{"您的物品将使用的自定义声音"},
 				new String[]{"all"});
 	}
 
 	@Override
 	public SoundListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
 		ConfigurationSection config = (ConfigurationSection) object;
 
 		SoundListData sounds = new SoundListData();
@@ -63,7 +63,7 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 			if (inv.getEditedSection().contains("sounds")) {
 				inv.getEditedSection().set("sounds", null);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "自定义声音已成功删除");
 			}
 	}
 
@@ -71,7 +71,7 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String soundsPath = (String) info[0];
 		String[] split = message.split(" ");
-		Validate.isTrue(split.length == 3, message + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
+		Validate.isTrue(split.length == 3, message + " 不是有效的 [SOUND NAME] [VOLUME] [PITCH].");
 
 		String soundName = split[0].replace("-", "_");
 		double volume = MMOUtils.parseDouble(split[1]);
@@ -83,14 +83,14 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundsPath.replace(".", " ")) + ChatColor.GRAY
-				+ " successfully changed to '" + soundName + "'.");
+				+ " 成功更改为 '" + soundName + "'.");
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<SoundListData> statData) {
 
 		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
+			lore.add(ChatColor.GRAY + " 当前值: ");
 			SoundListData data = (SoundListData) statData.get();
 			data.mapData()
 					.forEach((sound,
@@ -98,11 +98,11 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 									+ MMOUtils.caseOnWords(sound.getName().toLowerCase().replace("-", " ").replace("_", " ")) + ChatColor.GRAY + ": "
 									+ ChatColor.RED + soundData.getVolume() + " " + soundData.getPitch()));
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to access the sounds edition menu.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove all custom sounds.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可访问声音编辑菜单");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除所有自定义声音");
 	}
 
 	@Override

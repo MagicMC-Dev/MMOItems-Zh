@@ -24,8 +24,8 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
      */
     public RBA_SmithingUpgrades(@NotNull RecipeMakerGUI inv) { super(inv); }
 
-    @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ANVIL).name("\u00a7aUpgrades Transfer").lore(SilentNumbers.chop(
-            "What will happen to the upgrades of the ingredients? Will upgraded ingredients produce an upgraded output item?"
+    @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ANVIL).name("\u00a7a升级转移").lore(SilentNumbers.chop(
+            "材料升级后会发生什么变化？升级后的材料会产生升级后的输出物品吗？"
             , 65, "\u00a77")).build();
 
     @NotNull @Override public ItemStack getChooseableButton() { return chooseableButton; }
@@ -40,17 +40,17 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
 
         switch (sct) {
             case EVEN:
-                return "Will take the average of the upgrade levels of the combined items.";
+                return "将取组合物品升级级别的平均值";
             case NONE:
-                return "Will ignore the upgrade levels of any ingredients.";
+                return "将忽略任何材料的升级级别";
             case MAXIMUM:
-                return "Output will have the upgrade level of the most upgraded ingredient.";
+                return "输出将具有最高升级材料的升级等级";
             case MINIMUM:
-                return "Output will have the upgrade level of the least-upgraded upgradeable ingredient.";
+                return "输出将具有升级最少的可升级材料的升级级别";
             case ADDITIVE:
-                return "The upgrade levels of the ingredients will be added, and the result will be the crafted item's level.";
+                return "材料的升级等级将被添加, 结果将是制作物品的等级";
 
-            default: return "Unknown behaviour. Add description in net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_SmithingUpgrades";
+            default: return "未知的行为,在 net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_SmithingUpgrades 中添加";
         }
     }
 

@@ -31,7 +31,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class MMOUtils {
     public MMOUtils() {
-        throw new IllegalArgumentException("This class cannot be instantiated.");
+        throw new IllegalArgumentException("无法实例化此类");
     }
 
     public static boolean isColorable(@NotNull Particle particle) {
@@ -119,7 +119,7 @@ public class MMOUtils {
 
     @NotNull
     public static Color toRGB(ChatColor color) {
-        return Objects.requireNonNull(COLOR_MAPPINGS.get(color), "Not a color");
+        return Objects.requireNonNull(COLOR_MAPPINGS.get(color), "不是一个颜色");
     }
 
     public static int getPickaxePower(Player player) {
@@ -159,7 +159,7 @@ public class MMOUtils {
     @NotNull
     public static TriggerType backwardsCompatibleTriggerType(@NotNull String name) throws IllegalArgumentException {
         if (name == null)
-            throw new IllegalArgumentException("Trigger cannot be null");
+            throw new IllegalArgumentException("触发器不能为空");
 
         switch (name) {
             case "ON_HIT":
@@ -251,7 +251,7 @@ public class MMOUtils {
         try {
             return Double.parseDouble(format);
         } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Could not read number from '" + format + "'");
+            throw new IllegalArgumentException("无法从 '" + format + "' 读取数字");
         }
     }
 
@@ -420,7 +420,7 @@ public class MMOUtils {
      * @return Roman display of given int
      */
     public static String intToRoman(int input) {
-        if (input < 1 || input > 3999) throw new IllegalArgumentException("Input must be between 1 and 3999");
+        if (input < 1 || input > 3999) throw new IllegalArgumentException("输入必须介于 1 和 3999 之间");
 
         StringBuilder format = new StringBuilder();
 

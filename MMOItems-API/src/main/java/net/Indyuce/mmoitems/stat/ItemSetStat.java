@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class ItemSetStat extends StringStat implements GemStoneStat {
     public ItemSetStat() {
-        super("SET", Material.LEATHER_CHESTPLATE, "Item Set",
-                new String[]{"Item sets can give to the player extra", "bonuses that depend on how many items", "from the same set your wear."},
+        super("SET", Material.LEATHER_CHESTPLATE, "物品套装",
+                new String[]{"物品套装可以为玩家提供额外的奖励", "具体取决于你佩戴的同一套装中的物品数量"},
                 new String[]{"!gem_stone", "!consumable", "!material", "!block", "!miscellaneous", "all"});
     }
 
@@ -28,7 +28,7 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent e) {
         super.whenClicked(inv, e);
         if (e.getAction() != InventoryAction.PICKUP_HALF) {
-            inv.getPlayer().sendMessage(ChatColor.GREEN + "Available Item Sets:");
+            inv.getPlayer().sendMessage(ChatColor.GREEN + "可用的物品套装: ");
             StringBuilder builder = new StringBuilder();
             for (ItemSet set : MMOItems.plugin.getSets().getAll())
                 builder.append(ChatColor.GREEN).append(set.getId()).append(ChatColor.GRAY)
@@ -57,7 +57,7 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
     @Override
     public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData data) {
         ItemSet set = MMOItems.plugin.getSets().get(data.toString());
-        Validate.notNull(set, "Could not find item set with ID '%s'".formatted(data));
+        Validate.notNull(set, "找不到 ID 为 '%s' 的物品套装".formatted(data));
 
         // Make Array
         ArrayList<ItemTag> ret = new ArrayList<>();
@@ -78,7 +78,7 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
     @Override
     public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
         ItemSet set = MMOItems.plugin.getSets().get(message);
-        Validate.notNull(set, "Couldn't find the set named '%s'.".formatted(message));
+        Validate.notNull(set, "找不到名为 '%s' 的套装".formatted(message));
         super.whenInput(inv, message, info);
     }
 }

@@ -27,8 +27,8 @@ import java.util.Optional;
  */
 public class StoredTags extends ItemStat<RandomStatData<StoredTagsData>, StoredTagsData> implements InternalStat, GemStoneStat {
 	public StoredTags() {
-		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toMaterial(), "Stored Tags",
-				new String[] { "You found a secret dev easter egg", "introduced during the 2020 epidemic!" }, new String[] { "all" });
+		super("STORED_TAGS", VersionMaterial.OAK_SIGN.toMaterial(), "存储标签",
+				new String[] { "您发现了 2020 年疫情期间推出的秘密开发者复活节彩蛋！" }, new String[] { "all" });
 	}
 
 	@Nullable

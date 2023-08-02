@@ -27,12 +27,12 @@ import java.util.Optional;
  */
 public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchantMap>, AdvancedEnchantMap> implements InternalStat {
     public AdvancedEnchantsStat() {
-        super("ADVANCED_ENCHANTS", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Advanced Enchants", new String[]{"The AEnchants of this item. Format:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
+        super("ADVANCED_ENCHANTS", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "Advanced Enchants", new String[]{"该物品的附魔,模板:", "\u00a7e[internal_name] [level]"}, new String[]{"!miscellaneous", "!block", "all"});
     }
 
     @Override
     public RandomStatData whenInitialized(Object object) {
-        throw new RuntimeException("Not supported");
+        throw new RuntimeException("不支持");
     }
 
     @Override

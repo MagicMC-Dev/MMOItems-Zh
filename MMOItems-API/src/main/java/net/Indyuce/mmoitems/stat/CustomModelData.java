@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class CustomModelData extends DoubleStat implements GemStoneStat {
 	public CustomModelData() {
-		super("CUSTOM_MODEL_DATA", Material.PAINTING, "Custom Model Data", new String[] { "Your 1.14+ model data." }, new String[] { "!block", "all" });
+		super("CUSTOM_MODEL_DATA", Material.PAINTING, "自定义模型", new String[] { "您的 1.14+ 模型数据" }, new String[] { "!block", "all" });
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class ElementListData implements Mergeable {
 
     @Override
     public void merge(StatData data) {
-        Validate.isTrue(data instanceof ElementListData, "Cannot merge two different stat data types");
+        Validate.isTrue(data instanceof ElementListData, "无法合并两种不同的统计数据类型");
         ElementListData extra = (ElementListData) data;
         //Includes old values if any, fixes stacking of element double values I believe - Kilo
         extra.stats.forEach((key, value) -> stats.put(key, value + stats.getOrDefault(key,0.0)));

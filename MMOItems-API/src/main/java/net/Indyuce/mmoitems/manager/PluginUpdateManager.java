@@ -29,7 +29,7 @@ public class PluginUpdateManager {
 
 	public PluginUpdateManager() {
 		register(new PluginUpdate(1,
-				new String[]{"Applies a fix for skull textures values in 4.7.1.", "Texture values data storage changed in 4.7.1 due to the UUID change."},
+				new String[]{"应用 4.7.1 中头颅纹理值的修复。", "由于 UUID 更改, 纹理值数据存储在 4.7.1 中发生了更改。"},
 				sender -> {
 
 					for (Type type : MMOItems.plugin.getTypes().getAll()) {
@@ -47,7 +47,7 @@ public class PluginUpdateManager {
 				}));
 
 		register(new PluginUpdate(3,
-				new String[]{"5.3.2: converts all your crafting station recipes to the newest config format.", "&cWarning, running this update will get rid of your # config file comments."},
+				new String[]{"5.3.2: 将所有制作站配方转换为最新的配置格式。", "&c警告, 运行此更新将删除您的配置文件注释。"},
 				sender -> {
 
 					for (File file : new File(MMOItems.plugin.getDataFolder() + "/crafting-stations").listFiles()) {
@@ -75,7 +75,7 @@ public class PluginUpdateManager {
 											newest.add(format + "}");
 										} else {
 											MMOItems.plugin.getLogger().log(Level.INFO,
-													"Config Update 3: Could not match ingredient from '" + ingredient + "' from recipe '" + key + "', added it anyway.");
+													"Config Update 3: 无法匹配配方 '" + key + "' 中的成分 '" + ingredient + "', 无论如何添加了它.");
 											newest.add(ingredient);
 										}
 									}
@@ -100,7 +100,7 @@ public class PluginUpdateManager {
 											newest.add("exp{profession=" + split[1] + ",amount=" + split[2] + "}");
 										else {
 											MMOItems.plugin.getLogger().log(Level.INFO,
-													"Config Update 3: Could not match condition from '" + condition + "' from recipe '" + key + "', added it anyway.");
+													"Config Update 3: 无法匹配配方 '" + key + "' 中的成分 '" + condition + "', 无论如何添加了它.");
 											newest.add(condition);
 										}
 									}
@@ -108,27 +108,27 @@ public class PluginUpdateManager {
 									config.set("recipes." + key + ".conditions", newest);
 								} catch (Exception exception) {
 									MMOItems.plugin.getLogger().log(Level.INFO,
-											"Config Update 3: Could not convert recipe with key '" + key + "': " + exception.getMessage());
+											"Config Update 3: 无法使用密钥转换配方 '" + key + "': " + exception.getMessage());
 								}
 
 							try {
 								config.save(file);
 							} catch (IOException exception) {
 								MMOItems.plugin.getLogger().log(Level.INFO,
-										"Config Update 3: Could not save config '" + file.getName() + "': " + exception.getMessage());
+										"Config Update 3: 无法保存配置 '" + file.getName() + "': " + exception.getMessage());
 							}
 						}
 					}
 				}));
 
 		register(new PluginUpdate(2,
-				new String[]{"Enables the item updater for every item.", "&cNot recommended unless you know what you are doing.", "&e(No longer available)"},
+				new String[]{"为每个物品启用物品更新程序。", "&c除非您知道自己在做什么, 否则不推荐。", "&e(不再可用)"},
 				sender -> {
-					sender.sendMessage(ChatColor.RED + "This command is no longer available.");
-					sender.sendMessage(ChatColor.RED + "Please refer to the Revision System on the wiki.");
+					sender.sendMessage(ChatColor.RED + "该命令不再可用。");
+					sender.sendMessage(ChatColor.RED + "请参阅 wiki 上的修订系统。");
 				}));
 
-		register(new PluginUpdate(5, new String[]{"Transition to trigger types in 6.6.3", "Only scans through item configs"}, sender -> {
+		register(new PluginUpdate(5, new String[]{"过渡到 6.6.3 中的触发器类型", "仅扫描物品配置"}, sender -> {
 
 			for (Type type : MMOItems.plugin.getTypes().getAll()) {
 				ConfigFile config = type.getConfigFile();
@@ -149,7 +149,7 @@ public class PluginUpdateManager {
 		}));
 
 		register(new PluginUpdate(4,
-				new String[]{"Transforms all your current MMOItems into item templates and fixes some stat formats which have been changed.", "&cIt is REALLY important to save a backup before using this config update!"},
+				new String[]{"将您当前的所有 MMOItems 转换为物品模板并修复一些已更改的统计格式。", "&c在使用此配置更新之前保存备份非常重要！"},
 				sender -> {
 
 					// fixes stat formats
@@ -228,7 +228,7 @@ public class PluginUpdateManager {
 				}));
 
 
-		register(new PluginUpdate(6, new String[]{"MMOItems 6.7 introduced individual config files for skills. This update reads your previous language folder and applies it to the new individual config files.", "This can also be used to apply an old plugin translation"}, sender -> {
+		register(new PluginUpdate(6, new String[]{"MMOItems 6.7 引入了技能的单独配置文件。此更新会读取您以前的语言文件夹并将其应用到新的单独配置文件。", "这也可以用于应用旧的插件翻译"}, sender -> {
 			FileConfiguration abilities = new ConfigFile("/language", "abilities").getConfig();
 
 			for (RegisteredSkill skill : MMOItems.plugin.getSkills().getAll()) {
@@ -245,13 +245,13 @@ public class PluginUpdateManager {
 				configFile.save();
 			}
 
-			sender.sendMessage("Config updates successfully applied, reloading skills..");
+			sender.sendMessage("配置更新已成功应用, 正在重新加载技能..");
 			MMOItems.plugin.getSkills().initialize(true);
 		}));
 
-        register(new PluginUpdate(7, new String[]{"MI 6.7 introduced a 'timer' skill modifier for all skills.",
-                "This update registers that modifier in every of your skills.",
-                "Has to be ran after &6/mi update apply 6&7."}, sender -> {
+        register(new PluginUpdate(7, new String[]{"MI 6.7 为所有技能引入了 '计时器' 技能修正。",
+                "此更新会在您的每项技能中注册该修改器。",
+                "必须在 &6/mi update apply 6&7后运行。"}, sender -> {
 
             for (SkillHandler<?> handler : MythicLib.plugin.getSkills().getHandlers()) {
                 ConfigFile config = new ConfigFile("/skill", handler.getLowerCaseId());
@@ -260,7 +260,7 @@ public class PluginUpdateManager {
                 config.save();
             }
 
-            sender.sendMessage("Config updates successfully applied, reloading skills..");
+            sender.sendMessage("配置更新已成功应用, 正在重新加载技能..");
             MMOItems.plugin.getSkills().initialize(true);
         }));
 	}

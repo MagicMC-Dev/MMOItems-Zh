@@ -37,7 +37,7 @@ public class RepairUtils {
      */
     public static boolean repairVanillaItem(@NotNull PlayerData playerData, @NotNull NBTItem target, @NotNull Consumable consumable, int repairAmount) {
         final Player player = playerData.getPlayer();
-        if (target.getBoolean("Unbreakable")
+        if (target.getBoolean("牢不可破")
                 || !target.getItem().hasItemMeta()
                 || !(target.getItem().getItemMeta() instanceof Damageable)
                 || ((Damageable) target.getItem().getItemMeta()).getDamage() <= 0)

@@ -38,8 +38,8 @@ public class RBA_AmountOutput extends RecipeButtonAction {
 
         // Get item
         button = RecipeMakerGUI.rename(ItemFactory.of(resultItem.getType()).lore(SilentNumbers.chop(
-                "The amount of items produced every time the player crafts."
-                , 65, "\u00a77")).build(), "\u00a7cChoose Output Amount");
+                "玩家每次制作时产生的物品数量"
+                , 65, "\u00a77")).build(), "\u00a7c选择输出数量");
 
 
         // Update CMD ~ The stupid warning for 'ItemMEta might be false' is so annoying bruh
@@ -54,8 +54,8 @@ public class RBA_AmountOutput extends RecipeButtonAction {
     }
 
     @NotNull public final String[] amountLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Write in the chat the amount of output of this recipe."),
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "It must be an integer number, ex $e4$b.")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下这个配方的产量"),
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "它必须是整数, 例如 $e4$b.")};
 
     /**
      * When the player clicks the display item, it means they want to change
@@ -86,9 +86,9 @@ public class RBA_AmountOutput extends RecipeButtonAction {
 
         // Parse
         Integer val = SilentNumbers.IntegerParse(message);
-        if (val == null) { throw new IllegalArgumentException("Expected an integer number instead of $u" + message); }
-        if (val > 64) { throw new IllegalArgumentException("Max stack size is $e64$b, Minecraft doesnt support $u" + message); }
-        if (val <= 0) { throw new IllegalArgumentException("Min output stack size is $e0$b, you specified $u" + message); }
+        if (val == null) { throw new IllegalArgumentException("需要一个整数而不是 $u" + message); }
+        if (val > 64) { throw new IllegalArgumentException("最大堆栈大小为 $e64$b, Minecraft 不支持 $u" + message); }
+        if (val <= 0) { throw new IllegalArgumentException("最小输出堆栈大小为 $e0$b, 您指定了 $u" + message); }
 
         // Set value
         getInv().getNameSection().set(AMOUNT_INGREDIENTS, val);
@@ -142,8 +142,8 @@ public class RBA_AmountOutput extends RecipeButtonAction {
 
         // That's it
         return RecipeMakerGUI.addLore(ret, SilentNumbers.toArrayList( "",
-                ChatColor.YELLOW + AltChar.listDash + " Right click to reset to 1.",
-                ChatColor.YELLOW + AltChar.listDash + " Left click to edit amount." ));
+                ChatColor.YELLOW + AltChar.listDash + "右键单击重置为 1",
+                ChatColor.YELLOW + AltChar.listDash + "左键单击可编辑金额" ));
     }
 
     public static final String AMOUNT_INGREDIENTS = "amount";

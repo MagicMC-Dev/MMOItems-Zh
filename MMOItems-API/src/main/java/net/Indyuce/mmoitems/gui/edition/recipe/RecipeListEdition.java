@@ -29,7 +29,7 @@ public class RecipeListEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "Crafting Recipes: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "制作配方: " + template.getId());
 
 		for (CraftingType ctype : CraftingType.values())
 			if (ctype.shouldAdd()) {
@@ -40,11 +40,11 @@ public class RecipeListEdition extends EditionInventory {
 				List<String> eventLore = new ArrayList<>();
 				eventLore.add(ChatColor.GRAY + ctype.getLore());
 				eventLore.add("");
-				eventLore.add(getEditedSection().contains("crafting." + ctype.name().toLowerCase()) ? ChatColor.GREEN + "Found one or more recipe(s)."
-						: ChatColor.RED + "No recipes found.");
+				eventLore.add(getEditedSection().contains("crafting." + ctype.name().toLowerCase()) ? ChatColor.GREEN + "找到一个或多个配方。"
+						: ChatColor.RED + "没有找到配方。");
 				eventLore.add("");
-				eventLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this recipe.");
-				eventLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove recipe.");
+				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此配方。");
+				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除配方。");
 				craftingEventItem.setLore(eventLore);
 				craftingEvent.setItemMeta(craftingEventItem);
 
@@ -72,17 +72,17 @@ public class RecipeListEdition extends EditionInventory {
 			if (corresponding == CraftingType.SHAPELESS || corresponding == CraftingType.SHAPED)
 				new RecipeEdition(player, template, corresponding == CraftingType.SHAPELESS).open(getPreviousPage());
 			else if (corresponding == CraftingType.SMITHING)
-				new StatEdition(this, ItemStats.CRAFTING, "smithing").enable("Write in the chat the items required to craft this.",
-						"Format: '[ITEM] [ITEM]'", "[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
+				new StatEdition(this, ItemStats.CRAFTING, "smithing").enable("在聊天中写下制作此物品所需的物品。",
+						"格式: '[物品][物品]'", "'[物品] = [材料]' 或 '[材料]:[耐久]' 或 '[类型].[ID]'");
 			else
 				new StatEdition(this, ItemStats.CRAFTING, "item", corresponding.name().toLowerCase()).enable(
-						"Write in the chat the item, tickspeed and exp you want.", "Format: '[ITEM] [TICKS] [EXP]'",
-						"[ITEM] = '[MATERIAL]' or '[MATERIAL]:[DURABILITY]' or '[TYPE].[ID]'");
+						"在聊天中写下您想要的物品、Ticl速度和经验值。", "格式: '[物品] [TICKS] [EXP]'",
+						"'[物品] = [材料]' 或 '[材料]:[耐用久]' 或 '[类型].[ID]'");
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("crafting." + corresponding.name().toLowerCase())) {
 			getEditedSection().set("crafting." + corresponding.name().toLowerCase(), null);
-			player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + corresponding.getName() + " recipe.");
+			player.sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + corresponding.getName() + " recipe.");
 
 			if (getEditedSection().getConfigurationSection("crafting").getKeys(false).size() == 0)
 				getEditedSection().set("crafting", null);

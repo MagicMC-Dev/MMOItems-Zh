@@ -12,7 +12,7 @@ public class MoneyCondition extends Condition {
 	public MoneyCondition(MMOLineConfig config) {
 		super("money");
 
-		Validate.isTrue(MMOItems.plugin.hasEconomy(), "No economy plugin found");
+		Validate.isTrue(MMOItems.plugin.hasEconomy(), "未找到经济插件");
 		config.validateKeys("amount");
 		amount = config.getDouble("amount");
 	}

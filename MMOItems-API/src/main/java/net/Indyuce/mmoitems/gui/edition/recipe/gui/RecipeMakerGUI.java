@@ -75,7 +75,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
         this.recipeRegistry = recipeRegistry;
 
         // Create Inventory
-        myInventory = Bukkit.createInventory(this, 54, "Edit " + getRecipeRegistry().getRecipeTypeName() + " Recipe");
+        myInventory = Bukkit.createInventory(this, 54, "编辑 " + getRecipeRegistry().getRecipeTypeName() + " 配方");
 
         // Update old formats
         moveInput();
@@ -92,17 +92,17 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
     // Button Bar Buttons
     @NotNull
-    final ItemStack nextButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7eMore Options \u00a7c»").build();
+    final ItemStack nextButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7e更多选项 \u00a7c»").build();
     @NotNull
-    final ItemStack prevButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7c« \u00a7eMore Options").build();
+    final ItemStack prevButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7c« \u00a7e更多选项").build();
     @NotNull
     public final ItemStack noButton = ItemFactory.of(Material.IRON_BARS).name("\u00a78---").build();
 
     // Ingredient-Related Buttons
     @NotNull
-    public final ItemStack emptySlot = ItemFactory.of(Material.BARRIER).name("\u00a77No Item").build();
+    public final ItemStack emptySlot = ItemFactory.of(Material.BARRIER).name("\u00a77无物品").build();
     @NotNull
-    public final ItemStack airSlot = ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a77No Item").build();
+    public final ItemStack airSlot = ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a77无物品").build();
 
     @NotNull
     final Inventory myInventory;
@@ -406,11 +406,11 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
     @NotNull
     public final String[] recipeLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Write in the chat the item you want, follow any format:"),
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Vanilla: $e[MATERIAL] [AMOUNT] $bex $eDIAMOND 2.."),
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下您想要的物品, 遵循任何格式:"),
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "原版: $e[MATERIAL] [AMOUNT] $bex $eDIAMOND 2.."),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "MMOItem: $e[TYPE].[ID] [AMOUNT] $bex $eSWORD.CUTLASS 1.."),
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Other: $e[KEY] [ARG] [DAT] [AMOUNT]$b (check wiki)"),
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "\u00a78Amount is in the range format, $e[min]..[max]\u00a78, assumed to be $r1..\u00a78 if unspecified.")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "其他: $e[KEY] [ARG] [DAT] [AMOUNT]$b (查看wiki)"),
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "\u00a78金额采用范围格式, $e[min]..[max]\u00a78, 如果未指定将为 $r1..\u00a78")};
 
     /**
      * @return The protocols to edit the ConfigurationSection based on the user input.
@@ -675,31 +675,31 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      */
     public static void tripleDebug(@NotNull ConfigurationSection section) {
 
-        MMOItems.print(null, "\u00a7d-\u00a77 Section \u00a75" + section.getCurrentPath(), null);
+        MMOItems.print(null, "\u00a7d-\u00a77 部分 \u00a75" + section.getCurrentPath(), null);
         for (String key : section.getKeys(false)) {
             MMOItems.print(null, "\u00a7d +\u00a77 " + key, null);
 
-            MMOItems.print(null, "\u00a7d-\u00a7e-\u00a77 As List \u00a75" + section.getCurrentPath() + "." + key + "\u00a77 {\u00a7d" + section.getStringList(key).size() + "\u00a77}", null);
+            MMOItems.print(null, "\u00a7d-\u00a7e-\u00a77 作为列表 \u00a75" + section.getCurrentPath() + "." + key + "\u00a77 {\u00a7d" + section.getStringList(key).size() + "\u00a77}", null);
             for (String listKey : section.getStringList(key)) {
                 MMOItems.print(null, "\u00a7d +\u00a7e-\u00a77" + listKey, null);
             }
 
             ConfigurationSection asSection = getSection(section, key);
-            MMOItems.print(null, "\u00a78--\u00a7d-\u00a77 Section \u00a75" + asSection.getCurrentPath(), null);
+            MMOItems.print(null, "\u00a78--\u00a7d-\u00a77 部分\u00a75" + asSection.getCurrentPath(), null);
             for (String asKey : asSection.getKeys(false)) {
                 MMOItems.print(null, "\u00a78--\u00a7d +\u00a77 " + asKey, null);
 
-                MMOItems.print(null, "\u00a78--\u00a7d-\u00a7e-\u00a77 As List \u00a75" + asSection.getCurrentPath() + "." + asKey + "\u00a77 {\u00a7d" + asSection.getStringList(asKey).size() + "\u00a77}", null);
+                MMOItems.print(null, "\u00a78--\u00a7d-\u00a7e-\u00a77 作为列表 \u00a75" + asSection.getCurrentPath() + "." + asKey + "\u00a77 {\u00a7d" + asSection.getStringList(asKey).size() + "\u00a77}", null);
                 for (String listKey : asSection.getStringList(asKey)) {
                     MMOItems.print(null, "\u00a78--\u00a7d +\u00a7e-\u00a77" + listKey, null);
                 }
 
                 ConfigurationSection asESection = getSection(asSection, asKey);
-                MMOItems.print(null, "\u00a70--\u00a78--\u00a7d-\u00a77 Section \u00a75" + asESection.getCurrentPath(), null);
+                MMOItems.print(null, "\u00a70--\u00a78--\u00a7d-\u00a77 部分 \u00a75" + asESection.getCurrentPath(), null);
                 for (String asEKey : asESection.getKeys(false)) {
                     MMOItems.print(null, "\u00a70--\u00a78--\u00a7d +\u00a77 " + asEKey, null);
 
-                    MMOItems.print(null, "\u00a70--\u00a78--\u00a7d-\u00a7e-\u00a77 As List \u00a75" + asESection.getCurrentPath() + "." + asEKey + "\u00a77 {\u00a7d" + asESection.getStringList(asEKey).size() + "\u00a77}", null);
+                    MMOItems.print(null, "\u00a70--\u00a78--\u00a7d-\u00a7e-\u00a77 作为列表 \u00a75" + asESection.getCurrentPath() + "." + asEKey + "\u00a77 {\u00a7d" + asESection.getStringList(asEKey).size() + "\u00a77}", null);
                     for (String listKey : asESection.getStringList(asEKey)) {
                         MMOItems.print(null, "\u00a70--\u00a78--\u00a7d +\u00a7e-\u00a77" + listKey, null);
                     }
@@ -859,7 +859,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
             // We snooze if its AIR or such
             if (!asMaterial.isItem()) {
-                throw new IllegalArgumentException("Invalid Ingredient $u" + str + "$b ($fNot an Item$b).");
+                throw new IllegalArgumentException("无效材料 $u" + str + "$b ($f非物品$b)");
             }
 
             // All right create filter and go
@@ -878,7 +878,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 ffp.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
 
                 // Ew
-                throw new IllegalArgumentException("Invalid Ingredient $u" + str);
+                throw new IllegalArgumentException("无效材料 $u" + str);
             }
         }
 
@@ -914,7 +914,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                     ffp.sendAllTo(MMOItems.getConsole());
 
                     // Ew
-                    throw new IllegalArgumentException("Invalid Ingredient $u" + str);
+                    throw new IllegalArgumentException("无效材料 $u" + str);
                 }
             }
         }
@@ -936,7 +936,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
             ffp.sendAllTo(MMOItems.getConsole());
 
             // Ew
-            throw new IllegalArgumentException("Invalid Ingredient $u" + str);
+            throw new IllegalArgumentException("无效材料t $u" + str);
         }
     }
     //endregion

@@ -62,7 +62,7 @@ public abstract class EditionInventory extends PluginInventory {
 
         // For logging back to the player
         ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-        ffp.activatePrefix(true, "Edition");
+        ffp.activatePrefix(true, "编辑");
 
         // For building the Inventory
         this.template = template;
@@ -84,8 +84,8 @@ public abstract class EditionInventory extends PluginInventory {
      */
     public ConfigurationSection getEditedSection() {
         ConfigurationSection config = configFile.getConfig().getConfigurationSection(template.getId());
-        Validate.notNull(config, "Could not find config section associated to the template '" + template.getType().getId() + "." + template.getId()
-                + "': make sure the config section name is in capital letters");
+        Validate.notNull(config, "找不到与模板关联的配置部分'" + template.getType().getId() + "." + template.getId()
+                + "': 确保配置节名称为大写字母");
         return config.getConfigurationSection(editedModifier == null ? "base" : "modifiers." + editedModifier.getId() + ".stats");
     }
 
@@ -152,20 +152,20 @@ public abstract class EditionInventory extends PluginInventory {
         ItemStack get = new ItemStack(Material.CHEST);
         ItemMeta getMeta = get.getItemMeta();
         getMeta.addItemFlags(ItemFlag.values());
-        getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + " Get the Item! " + AltChar.fourEdgedClub);
+        getMeta.setDisplayName(ChatColor.GREEN + AltChar.fourEdgedClub + "获取物品!" + AltChar.fourEdgedClub);
         List<String> getLore = new ArrayList<>();
         getLore.add(ChatColor.GRAY + "");
-        getLore.add(ChatColor.GRAY + "You may also use /mi give " + template.getType().getId() + " " + template.getId());
+        getLore.add(ChatColor.GRAY + "您也可以使用 /mi give" + template.getType().getId() + " " + template.getId());
         getLore.add(ChatColor.GRAY + "");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Left click to get the item.");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + " Right click to reroll its stats.");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "左键点击获取物品");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "右键单击以重新滚动其统计数据");
         getMeta.setLore(getLore);
         get.setItemMeta(getMeta);
 
         if (displayBack) {
             ItemStack back = new ItemStack(Material.BARRIER);
             ItemMeta backMeta = back.getItemMeta();
-            backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " Back");
+            backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " 返回");
             back.setItemMeta(backMeta);
 
             inv.setItem(6, back);

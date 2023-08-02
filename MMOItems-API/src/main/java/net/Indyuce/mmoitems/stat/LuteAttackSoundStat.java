@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LuteAttackSoundStat extends StringStat implements GemStoneStat {
 	public LuteAttackSoundStat() {
-		super("LUTE_ATTACK_SOUND", VersionMaterial.GOLDEN_HORSE_ARMOR.toMaterial(), "Lute Attack Sound", new String[] { "The sound played when", "basic attacking with this lute." }, new String[] { "lute" });
+		super("LUTE_ATTACK_SOUND", VersionMaterial.GOLDEN_HORSE_ARMOR.toMaterial(), "琴攻击声", new String[] { "用这把琴进行普通攻击时发出的声音。" }, new String[] { "lute" });
 	}
 
 	@Override

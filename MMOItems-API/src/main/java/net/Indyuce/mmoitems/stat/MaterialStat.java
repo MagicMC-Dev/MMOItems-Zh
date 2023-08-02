@@ -29,18 +29,18 @@ import java.util.Optional;
 
 public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 	public MaterialStat() {
-		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "Material", new String[] { "Your item material." }, new String[] { "all" });
+		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "材质", new String[] { "你的物品材质" }, new String[] { "all" });
 	}
 
 	@Override
 	public MaterialData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof String, "Must specify material name as string");
+		Validate.isTrue(object instanceof String, "必须将材质名称指定为字符串");
 		return new MaterialData(Material.valueOf(((String) object).toUpperCase().replace("-", "_").replace(" ", "_")));
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new StatEdition(inv, ItemStats.MATERIAL).enable("Write in the chat the material you want.");
+		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中写下您想要的材质。");
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 		if (material.isPresent()) {
 			inv.getEditedSection().set("material", material.get().name());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + material.get().name() + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "材质成功更改为 " + material.get().name() + ".");
 		} else
-			inv.getPlayer().spigot().sendMessage(new ComponentBuilder("Invalid material! (Click for a list of valid materials)").color(ChatColor.RED)
+			inv.getPlayer().spigot().sendMessage(new ComponentBuilder("无效材质！  (点击查看有效材质清单) ").color(ChatColor.RED)
 					.event(new ClickEvent(Action.OPEN_URL, "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html")).create());
 	}
 
@@ -70,14 +70,14 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<MaterialData> statData) {
-		lore.add(ChatColor.GRAY + "Current Value: "
+		lore.add(ChatColor.GRAY + "当前值: "
 				+ (statData.isPresent()
 						? ChatColor.GREEN + MMOUtils.caseOnWords(statData.get().getMaterial().name().toLowerCase().replace("_", " "))
 						: ChatColor.RED + "None"));
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to change this value.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
 	}
 
 	@NotNull

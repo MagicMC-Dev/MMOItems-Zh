@@ -35,8 +35,7 @@ import scala.math.Numeric;
  */
 public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> implements GemStoneStat {
 	public RevisionID() {
-		super("REVISION_ID", Material.ITEM_FRAME, "Revision ID", new String[] { "The Revision ID is used to determine",
-		"if an item is outdated or not. You", "should increase this whenever", "you make changes to your item!", "", "\u00a76The updater is smart and will apply", "\u00a76changes to the base stats of the item,", "\u00a76keeping gemstones intact (for example)."},
+		super("REVISION_ID", Material.ITEM_FRAME, "修改 ID", new String[] { "修改 ID 用于确定物品是否过时每当你对物品进行修改时, 都应该增加这个编号！", "\n \u00a76 更新器很聪明, 它会将更改应用到物品的基本属性上, 保持宝石不变 (例如) ."},
 				new String[] { "all" });
 	}
 
@@ -45,7 +44,7 @@ public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> impleme
 		if (object instanceof Integer)
 			return new NumericStatFormula((Integer) object, 0, 0, 0);
 
-		throw new IllegalArgumentException("Must specify a whole number");
+		throw new IllegalArgumentException("必须指定一个整数");
 	}
 
 	@Override
@@ -90,13 +89,13 @@ public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> impleme
 	public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
 		if (statData.isPresent()) {
 			NumericStatFormula data = (NumericStatFormula) statData.get();
-			lore.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + ((int) data.getBase()));
+			lore.add(ChatColor.GRAY + "当前修改 ID: " + ChatColor.GREEN + ((int) data.getBase()));
 		} else
-			lore.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + "1");
+			lore.add(ChatColor.GRAY + "当前修改 ID: " + ChatColor.GREEN + "1");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to increase this value.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to decrease this value.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可增加该值。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可减小该值。");
 	}
 
 	@NotNull

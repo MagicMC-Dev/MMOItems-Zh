@@ -56,7 +56,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 	 */
 	public MMOItemTemplate(Type type, ConfigurationSection config) {
 		super(config);
-		Validate.notNull(config, "Could not load template config");
+		Validate.notNull(config, "无法加载模板配置");
 
 		this.type = type;
 		this.id = config.getName().toUpperCase().replace("-", "_").replace(" ", "_");
@@ -83,14 +83,14 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load modifier '$f{0}$b': {1}", key, exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "C无法加载修改器 '$f{0}$b': {1}", key, exception.getMessage());
 				}
 
-		Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Could not find base item data"));
+		Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"找不到基础物品数据"));
 		for (String key : config.getConfigurationSection("base").getKeys(false))
 			try {
 				String id = key.toUpperCase().replace("-", "_");
-				Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"Could not find stat with ID '$i{0}$b'", id));
+				Validate.isTrue(MMOItems.plugin.getStats().has(id), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"找不到 ID 为 '$i{0}$b' 的统计数据", id));
 
 				ItemStat stat = MMOItems.plugin.getStats().get(id);
 				RandomStatData data = stat.whenInitialized(config.get("base." + key));
@@ -102,7 +102,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 				if (!exception.getMessage().isEmpty()) {
 
 					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", key, exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "无法加载基本项数据 '$f{0}$b' : {1}", key, exception.getMessage());
 				}
 			}
 

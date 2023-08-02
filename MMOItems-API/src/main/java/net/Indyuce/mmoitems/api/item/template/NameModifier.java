@@ -18,7 +18,7 @@ public class NameModifier {
 	 *            The object to load the modifier from
 	 */
 	public NameModifier(ModifierType type, Object object) {
-		Validate.notNull(object, "Object cannot be null");
+		Validate.notNull(object, "对象不能为空");
 		this.type = type;
 
 		if (object instanceof String) {
@@ -29,22 +29,22 @@ public class NameModifier {
 
 		if (object instanceof ConfigurationSection) {
 			ConfigurationSection config = (ConfigurationSection) object;
-			Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " format cannot be null");
+			Validate.isTrue(config.contains("format"), MMOUtils.caseOnWords(type.name().toLowerCase()) + " 格式不能为空");
 			format = config.get("format").toString();
 			priority = config.getInt("priority");
 			return;
 		}
 
-		throw new IllegalArgumentException("Must specify a string or a config section");
+		throw new IllegalArgumentException("必须指定字符串或配置部分");
 	}
 
 	public NameModifier(ModifierType type, String format, int priority) {
-		Validate.notNull(format, "Format cannot be null");
+		Validate.notNull(format, "格式不能为空");
 		this.type = type;
 		this.format = format;
 		this.priority = priority;
 
-		Validate.notNull(type, "Type cannot be null");
+		Validate.notNull(type, "类型不能为空");
 	}
 
 	public String getFormat() {

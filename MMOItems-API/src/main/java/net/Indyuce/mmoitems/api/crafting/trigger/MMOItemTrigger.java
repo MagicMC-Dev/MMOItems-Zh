@@ -22,7 +22,7 @@ public class MMOItemTrigger extends Trigger {
 
 		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
 		String id = config.getString("id").replace("-", "_").toUpperCase();
-		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "Could not find MMOItem with ID '" + id + "'");
+		Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, id), "找不到 ID 为: '" + id + "' 的 MMOitem 物品。");
 
 		template = MMOItems.plugin.getTemplates().getTemplate(type, id);
 		amount = config.contains("amount") ? Math.max(1, config.getInt("amount")) : 1;

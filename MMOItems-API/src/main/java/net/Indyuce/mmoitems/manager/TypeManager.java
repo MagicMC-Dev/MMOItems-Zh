@@ -29,7 +29,7 @@ public class TypeManager implements Reloadable {
 				if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof Type)
 					register((Type) field.get(null));
 			} catch (Exception exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't register type called '" + field.getName() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "无法注册类型: '" + field.getName() + "': " + exception.getMessage());
 			}
 
 		/*
@@ -45,7 +45,7 @@ public class TypeManager implements Reloadable {
 				try {
 					register(new Type(this, config.getConfig().getConfigurationSection(id)));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register type '" + id + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.WARNING, "无法注册类型: '" + id + "': " + exception.getMessage());
 				}
 
 		for (Iterator<Type> iterator = map.values().iterator(); iterator.hasNext();) {
@@ -54,7 +54,7 @@ public class TypeManager implements Reloadable {
 			try {
 				type.load(config.getConfig().getConfigurationSection(type.getId()));
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register type '" + type.getId() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "无法注册类型: '" + type.getId() + "': " + exception.getMessage());
 				iterator.remove();
 				continue;
 			}
@@ -89,7 +89,7 @@ public class TypeManager implements Reloadable {
 	}
 
 	@NotNull public Type getOrThrow(@Nullable String id) {
-		Validate.isTrue(map.containsKey(id), "Could not find item type with ID '" + id + "'");
+		Validate.isTrue(map.containsKey(id), "找不到 ID 为 '" + id + "' 的项目类型");
 		return map.get(id);
 	}
 

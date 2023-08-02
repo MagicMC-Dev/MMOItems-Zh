@@ -1,25 +1,25 @@
 # DO NOT TOUCH
 config-version: 8
 
-# Notifies players with the 'mmoitems.update-notify' perm node when
-# they join the server if a new update is available for download.
-# Requires /reload when changed.
+# 在以下情况下使用 'mmoitems.update-notify 'perm 节点通知玩家
+# 如果有新的更新可供下载, 他们就会加入服务器。
+# 更改时需要 /reload。
 update-notify: true
 
-# Enable/disable the plugin iterating over the whole player inventory
-# instead of just the players armor and held items.
-# This option is required for the Ornament item type, however
-# it CAN cause lag and/or take a lot of memory.
+# 启用/禁用迭代整个玩家库存的插件
+# 而不仅仅是玩家的盔甲和持有的物品。
+# 但是, 对于装饰品物品类型来说, 此选项是必需的
+# 它可能会导致延迟和/或占用大量内存。
 iterate-whole-inventory: false
 
 # When this is set to true, skins can only be applied to an item ONCE. 
 locked-skins: true
 
-# Since 6.9.3 dev builds, MMOItems supports the use of multiple
-# RPG core plugins at the same time. However, MMOItems needs one
-# specific plugin to hook onto level, class, etc.
+# 自 6.9.3 dev 版本开始, MMOItems 支持使用多个
+# 同时使用 RPG 核心插件。然而, MMOItems 需要一个
+# 用于挂钩关卡、类等的特定插件。
 #
-# Available plugins:
+# 可用插件: 
 # - MMOCORE (level, class, mana, stamina)
 # - HEROES (level, class, mana, stamina)
 # - SKILLAPI or PROSKILLAPI (level, class, mana)
@@ -32,39 +32,39 @@ locked-skins: true
 # - AURELIUM_SKILLS (power level, mana)
 preferred-rpg-provider: MMOCORE
 
-# By default, all player inventories will be updated every
-# 10 ticks which corresponds to 2 inventory updates a second.
+# 默认情况下, 所有玩家库存都会更新
+# 10 个刻度对应每秒 2 次库存更新。
 inventory-update-delay: 10
 
-# When generating an item, the item level
-# must match approximately the player level
-# otherwise the player cannot use items/get useless items.
+# 生成物品时, 物品等级
+# 必须与玩家等级大致匹配
+# 否则玩家无法使用物品/获得无用的物品。
 #
-# The item level is always somewhere in the
-# interval [playerLevel - spread, playerLevel + spread]
+# 物品等级总是在某处
+# 间隔 [玩家等级 -分布, 玩家等级 + 分布]
 item-level-spread: 2
 
-# There is currently a client-side Minecraft issue
-# where left clicking a
+# 目前存在客户端 Minecraft 问题
+# 左键单击a
 fix-left-click-interact: false
 
-# When an item is generated with no tier,
-# this is the capacity formula it will use.
+# 当生成的物品没有等级时, 
+# 这是它将使用的容量公式。
 default-item-capacity:
     base: 3
     scale: 0
     spread: 0
     max-spread: 0
 
-# Changes the default value for some stats. This mainly
-# accounts for untargeted weapons like staffs, muskets...
+# 更改某些统计数据的默认值。这主要是
+# 考虑非目标武器, 如法杖、步枪...
 default:
     attack-speed: 0.67
     range: 16
     blunt-rating: 33
     recoil: 0.1
 
-# Restart server when changing this option
+# 更改此选项时重新启动服务器
 dropped-items:
 
     # Items glow based on their tier
@@ -73,10 +73,10 @@ dropped-items:
     # Display item name over the dropped item
     hints: true
 
-# Some item stats like 'Commands' or NBTTags can be abused to become op.
-# You can bind a specific permissions to these stats to limit their edition.
-# You need a perm plugin that supports Vault for that option to work.
-# The corresponding permission is "mmoitems.edit.op".
+# 某些物品统计数据 (例如 '命令 '或 NBTTag) 可能会被滥用以成为操作。
+# 你可以给这些统计数据绑定特定的权限来限制它们的版本。
+# 您需要一个支持 Vault 的烫发插件才能使该选项发挥作用。
+# 对应的权限为 'mmoitems.edit.op '。
 op-item-stats:
     enabled: false
     stats:
@@ -85,17 +85,17 @@ op-item-stats:
 
 item-upgrading:
 
-    # Display name suffix for upgraded items.
+    # 显示升级物品的名称后缀。
     name-suffix: ' &8(&e+#lvl#&8)'
 
-    # Whether to display in Item Name or Lore
-    # Disable if item renaming is available to players.
-    # If set to 'false', remember to include
-    # %upgrade_level% in your item lore.
+    # 是否显示在物品名称或背景知识中
+    # 如果玩家可以使用物品重命名, 则禁用。
+    # 如果设置为 'false ', 请记住包含
+    # %upgrade_level% 在你的物品传说中。
     display-in-name: true
 
-    # Whether or not to display which
-    # stats are changed in the lore.
+    # 是否显示哪个
+    # 传说中的统计数据发生了变化。
     display-stat-changes: false
     stat-change-suffix: ' &8(<p>#stat#&8)'
     stat-change-positive: '&a'

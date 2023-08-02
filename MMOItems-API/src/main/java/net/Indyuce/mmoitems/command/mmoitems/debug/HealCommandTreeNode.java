@@ -16,7 +16,7 @@ public class HealCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "This command is only for players.");
+			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
 			return CommandResult.FAILURE;
 		}
 

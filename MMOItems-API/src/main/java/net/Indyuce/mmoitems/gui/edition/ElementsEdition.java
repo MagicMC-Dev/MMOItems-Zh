@@ -42,19 +42,19 @@ public class ElementsEdition extends EditionInventory {
 
     @Override
     public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "Elements: " + template.getId());
+        Inventory inv = Bukkit.createInventory(this, 54, "要素: " + template.getId());
 
         final Optional<RandomElementListData> statData = getEventualStatData(ItemStats.ELEMENTS);
 
         ItemStack prevPage = new ItemStack(Material.ARROW);
         ItemMeta prevPageMeta = prevPage.getItemMeta();
-        prevPageMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
+        prevPageMeta.setDisplayName(ChatColor.GREEN + "上一页");
         prevPage.setItemMeta(prevPageMeta);
         inv.setItem(25, prevPage);
 
         ItemStack nextPage = new ItemStack(Material.ARROW);
         ItemMeta nextPageMeta = nextPage.getItemMeta();
-        nextPageMeta.setDisplayName(ChatColor.GREEN + "Next Page");
+        nextPageMeta.setDisplayName(ChatColor.GREEN + "下一页");
         nextPage.setItemMeta(nextPageMeta);
         inv.setItem(43, nextPage);
 
@@ -73,13 +73,13 @@ public class ElementsEdition extends EditionInventory {
                 ItemMeta statMeta = statItem.getItemMeta();
                 statMeta.setDisplayName(ChatColor.GREEN + element.getName() + " " + statType.getName());
                 List<String> statLore = new ArrayList<>();
-                statLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN +
+                statLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GREEN +
                         (statData.isPresent() && statData.get().hasStat(element, statType)
                                 ? statData.get().getStat(element, statType)
                                 : "---"));
                 statLore.add("");
-                statLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-                statLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this value.");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
                 statMeta.setLore(statLore);
                 statItem.setItemMeta(statMeta);
 
@@ -103,13 +103,13 @@ public class ElementsEdition extends EditionInventory {
         if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
             return;
 
-        if (page > 1 && item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
+        if (page > 1 && item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "上一页")) {
             page--;
             open();
             return;
         }
 
-        if (page < maxPage && item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
+        if (page < maxPage && item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "下一页")) {
             page++;
             open();
             return;
@@ -122,7 +122,7 @@ public class ElementsEdition extends EditionInventory {
         final String elementPath = edited.getValue().getConcatenatedConfigPath(edited.getKey());
 
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("Write in the value you want.");
+            new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("写上你想要的值");
 
         else if (event.getAction() == InventoryAction.PICKUP_HALF) {
             getEditedSection().set("element." + elementPath, null);
@@ -137,7 +137,7 @@ public class ElementsEdition extends EditionInventory {
             }
 
             registerTemplateEdition();
-            player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + edited.getKey().getName() + " " + edited.getValue().getName() + ChatColor.GRAY + " successfully removed.");
+            player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + edited.getKey().getName() + " " + edited.getValue().getName() + ChatColor.GRAY + " 成功删除");
         }
     }
 }

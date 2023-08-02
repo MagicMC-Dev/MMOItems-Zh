@@ -29,8 +29,8 @@ public class MMOItemsRewardTypes extends BSRewardType {
 		if (object != null || !(object instanceof List<?>))
 			return true;
 
-		ClassManager.manager.getBugFinder().severe("Couldn't load the MMOItems reward type" + itemName
-				+ ". The reward object needs to be a list of types & IDs (format: [ITEM_TYPE].[ITEM_ID]).");
+		ClassManager.manager.getBugFinder().severe("无法加载 MMOItems 奖励类型 " + itemName
+				+ " 奖励对象需要是类型和 ID 的列表 (格式: [ITEM_TYPE].[ITEM_ID] ) ");
 		return false;
 	}
 
@@ -54,7 +54,7 @@ public class MMOItemsRewardTypes extends BSRewardType {
 						.values())
 					player.getWorld().dropItem(player.getLocation(), drop);
 			} catch (Exception e) {
-				ClassManager.manager.getBugFinder().severe("Couldn't load the MMOItems reward type" + item + ". Format: [ITEM_TYPE].[ITEM_ID]).");
+				ClassManager.manager.getBugFinder().severe("无法加载 MMOItems 奖励类型 " + item + ". 格式: [ITEM_TYPE].[ITEM_ID])");
 			}
 	}
 

@@ -26,9 +26,9 @@ public class CreateCommandTreeNode extends CommandTreeNode {
 
 		if (!Type.isValid(args[1])) {
 			sender.sendMessage(
-					MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
-					+ " to see all the available item types.");
+					MMOItems.plugin.getPrefix() + ChatColor.RED + "没有名为 " + args[1].toUpperCase().replace("-", "_") + "的物品类型");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "输入 " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
+					+ " 查看所有可用的物品类型");
 			return CommandResult.FAILURE;
 		}
 
@@ -36,7 +36,7 @@ public class CreateCommandTreeNode extends CommandTreeNode {
 		String name = args[2].toUpperCase().replace("-", "_");
 		ConfigFile config = type.getConfigFile();
 		if (config.getConfig().contains(name)) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is already an item called " + name + ".");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "已经有一个物品叫做 " + name + "。");
 			return CommandResult.FAILURE;
 		}
 
@@ -46,7 +46,7 @@ public class CreateCommandTreeNode extends CommandTreeNode {
 
 		if (sender instanceof Player)
 			new ItemEdition((Player) sender, MMOItems.plugin.getTemplates().getTemplate(type, name)).open();
-		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully created " + name + "!");
+		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "您已成功创建 " + name + "。");
 		return CommandResult.SUCCESS;
 	}
 }

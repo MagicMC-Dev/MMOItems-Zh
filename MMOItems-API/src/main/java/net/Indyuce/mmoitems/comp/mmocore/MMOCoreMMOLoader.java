@@ -29,19 +29,19 @@ import java.util.Optional;
 
 public class MMOCoreMMOLoader extends MMOLoader {
 
-    private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", Material.BREAD, "Health Regeneration", new String[]{"Amount of health pts regenerated every second."});
-    private static final ItemStat MAX_HEALTH_REGENERATION = new DoubleStat("MAX_HEALTH_REGENERATION", Material.BREAD, "Max Health Regeneration", new String[]{"Percentage of max health regenerated every second."});
-    private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Mana Regeneration", new String[]{"Amount of mana pts regenerated every second."});
-    private static final ItemStat MAX_MANA_REGENERATION = new DoubleStat("MAX_MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "Max Mana Regeneration", new String[]{"Percentage of max mana regenerated every second."});
-    private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Stamina Regeneration", new String[]{"Amount of stamina pts regenerated every second."});
-    private static final ItemStat MAX_STAMINA_REGENERATION = new DoubleStat("MAX_STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Max Stamina Regeneration", new String[]{"Percentage of max stamina regenerated every second."});
+    private static final ItemStat HEALTH_REGENERATION = new DoubleStat("HEALTH_REGENERATION", Material.BREAD, "健康再生", new String[]{"每秒恢复的生命值数量"});
+    private static final ItemStat MAX_HEALTH_REGENERATION = new DoubleStat("MAX_HEALTH_REGENERATION", Material.BREAD, "最大生命值恢复", new String[]{"每秒恢复最大生命值的百分比"});
+    private static final ItemStat MANA_REGENERATION = new DoubleStat("MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "法力恢复", new String[]{"每秒恢复的法力值数量"});
+    private static final ItemStat MAX_MANA_REGENERATION = new DoubleStat("MAX_MANA_REGENERATION", VersionMaterial.LAPIS_LAZULI.toMaterial(), "最大法力恢复", new String[]{"每秒恢复的最大法力百分比"});
+    private static final ItemStat STAMINA_REGENERATION = new DoubleStat("STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "体力恢复", new String[]{"每秒恢复的耐力点数"});
+    private static final ItemStat MAX_STAMINA_REGENERATION = new DoubleStat("MAX_STAMINA_REGENERATION", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "最大耐力恢复", new String[]{"每秒恢复最大耐力的百分比"});
 
-    private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Max Stamina",
-            new String[]{"Adds stamina to your max stamina bar."});
-    private static final ItemStat MAX_STELLIUM = new DoubleStat("MAX_STELLIUM", VersionMaterial.ENDER_EYE.toMaterial(), "Max Stellium",
-            new String[]{"Additional maximum stellium."});
+    private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "最大耐力",
+            new String[]{"为您的最大耐力条添加耐力"});
+    private static final ItemStat MAX_STELLIUM = new DoubleStat("MAX_STELLIUM", VersionMaterial.ENDER_EYE.toMaterial(), "最大星星",
+            new String[]{"额外的最大星星"});
     private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(),
-            "Additional Experience", new String[]{"Additional MMOCore main class experience in %."});
+            "额外经验", new String[]{"额外的 MMOCore 主职业经验 (% ) "});
 
     /*
      * Called when MMOItems loads
@@ -65,17 +65,17 @@ public class MMOCoreMMOLoader extends MMOLoader {
 
         // Register extra conditions for MMOItems crafting.
         MMOItems.plugin.getCrafting().registerCondition("profession", ProfessionCondition::new,
-                new ConditionalDisplay(
-                        "&a" + AltChar.check + " Requires #level# in #profession#",
-                        "&c" + AltChar.cross + " Requires #level# in #profession#"));
+                new ConditionalDisplay( 
+                        "&a" + AltChar.check + " 需要 #profession# 中的 #level#",
+                        "&c" + AltChar.cross + " 需要 #profession# 中的 #level#"));
         MMOItems.plugin.getCrafting().registerCondition("stellium", StelliumCondition::new,
                 new ConditionalDisplay(
-                        "&a" + AltChar.check + " Requires #stellium# Stellium",
-                        "&c" + AltChar.cross + " Requires #stellium# Stellium"));
+                        "&a" + AltChar.check + " 需要 #stellium# Stellium",
+                        "&c" + AltChar.cross + " 需要 #stellium# Stellium"));
         MMOItems.plugin.getCrafting().registerCondition("attribute", AttributeCondition::new,
                 new ConditionalDisplay(
-                        "&a" + AltChar.check + " Requires #points# #attribute#",
-                        "&c" + AltChar.cross + " Requires #points# #attribute#"));
+                        "&a" + AltChar.check + " 需要 #points# #attribute#",
+                        "&c" + AltChar.cross + " 需要 #points# #attribute#"));
         MMOItems.plugin.getCrafting().registerTrigger("exp", ExperienceCraftingTrigger::new);
     }
 

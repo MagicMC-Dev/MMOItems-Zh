@@ -43,7 +43,7 @@ public class StatManager {
                 if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof ItemStat)
                     register((ItemStat<?, ?>) field.get(null));
             } catch (IllegalArgumentException | IllegalAccessException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, String.format("Couldn't register stat called '%s'", field.getName()), exception.getMessage());
+                MMOItems.plugin.getLogger().log(Level.WARNING, String.format("无法注册名为 '%s' 的统计数据", field.getName()), exception.getMessage());
             }
 
         // Custom stats
@@ -77,7 +77,7 @@ public class StatManager {
         ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
         ConfigFile config = new ConfigFile("custom-stats");
         ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
-        Validate.notNull(section, "Custom stats section is null");
+        Validate.notNull(section, "自定义统计部分为空");
         section.getKeys(true).stream().filter(section::isConfigurationSection).map(section::getConfigurationSection).filter(Objects::nonNull).forEach(this::registerCustomStat);
     }
 
@@ -173,7 +173,7 @@ public class StatManager {
 
         // Safe check, this can happen with numerous extra RPG plugins
         if (stats.containsKey(stat.getId())) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "Could not register stat '" + stat.getId() + "' as a stat with the same ID already exists.");
+            MMOItems.plugin.getLogger().log(Level.WARNING, "无法注册统计 '" + stat.getId() + "' 因为具有相同 ID 的统计数据已存在。");
             return;
         }
 
@@ -201,9 +201,9 @@ public class StatManager {
         final String name = section.getString("name");
         final String type = section.getString("type");
 
-        Validate.notNull(section, "Cannot register a custom stat from a null section");
-        Validate.notNull(name, "Cannot register a custom stat without a name");
-        Validate.notNull(type, "Cannot register a custom stat without a type");
+        Validate.notNull(section, "无法从空部分注册自定义统计信息");
+        Validate.notNull(name, "无法注册没有名称的自定义统计信息");
+        Validate.notNull(type, "无法注册没有类型的自定义统计信息");
 
         Class<? extends ItemStat<?, ?>> statClass;
         switch (type.toLowerCase()) {
@@ -220,7 +220,7 @@ public class StatManager {
                 statClass = StringListStat.class;
                 break;
             default:
-                throw new RuntimeException("Cannot register a custom stat of type " + type);
+                throw new RuntimeException("无法注册类型的自定义统计信息 " + type);
         }
 
         final String statId = String.format("custom_%s", name.replace(" ", "_")).toUpperCase();
@@ -237,7 +237,7 @@ public class StatManager {
             register(stat);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
-            throw new RuntimeException("Unable to create a custom stat of type " + type, e);
+            throw new RuntimeException("无法创建类型的自定义统计数据 " + type, e);
         }
     }
 }

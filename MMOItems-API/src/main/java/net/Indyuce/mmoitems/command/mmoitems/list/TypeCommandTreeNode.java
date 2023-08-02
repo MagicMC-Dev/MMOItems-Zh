@@ -14,8 +14,8 @@ public class TypeCommandTreeNode extends CommandTreeNode {
 
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
-		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Item Types "
-				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + ChatColor.LIGHT_PURPLE + " Item Types " + ChatColor.DARK_GRAY + ""
+		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " 物品类型 "
+				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + ChatColor.LIGHT_PURPLE + " 物品类型 " + ChatColor.DARK_GRAY + ""
 				+ ChatColor.STRIKETHROUGH + "]-----------------");
 		for (Type type : MMOItems.plugin.getTypes().getAll())
 			sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + type.getName() + " (" + type.getId() + ")");

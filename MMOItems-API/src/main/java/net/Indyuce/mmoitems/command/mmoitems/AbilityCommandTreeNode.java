@@ -41,21 +41,21 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		if (args.length < 3 && !(sender instanceof Player)) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a player to use this command.");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "请指定一个玩家来使用此命令");
 			return CommandResult.FAILURE;
 		}
 
 		// target
 		Player target = args.length > 2 ? Bukkit.getPlayer(args[2]) : (Player) sender;
 		if (target == null) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find player called " + args[2] + ".");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "找不到名为 " + args[2] + " 的玩家");
 			return CommandResult.FAILURE;
 		}
 
 		// ability
 		String key = args[1].toUpperCase().replace("-", "_");
 		if (!MMOItems.plugin.getSkills().hasSkill(key)) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find ability " + key + ".");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "找不到名为 " + key + " 的能力");
 			return CommandResult.FAILURE;
 		}
 
@@ -68,7 +68,7 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
 			try {
 				ability.setModifier(name, Double.parseDouble(value));
 			} catch (Exception e) {
-				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Wrong format: {" + name + " " + value + "}");
+				sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "格式错误: {" + name + " " + value + "}");
 				return CommandResult.FAILURE;
 			}
 		}

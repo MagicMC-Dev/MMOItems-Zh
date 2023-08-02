@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @Deprecated
 public class HideDye extends BooleanStat {
 	public HideDye() {
-		super("HIDE_DYE", Material.CYAN_DYE, "Hide Dyed", new String[] { "Enable to hide the 'Dyed' tag from the item." }, new String[] { "all" },
+		super("HIDE_DYE", Material.CYAN_DYE, "皮革染色", new String[] { "启用以隐藏项目中的 '染色' 标签。" }, new String[] { "all" },
 			Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 
 		try {

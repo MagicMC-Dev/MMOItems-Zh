@@ -37,7 +37,7 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapedInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "Recipe Editor: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "配方编辑: " + template.getId());
 
 		if (!getEditedSection().contains("crafting.shaped.1")) {
 			getEditedSection().set("crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
@@ -68,11 +68,11 @@ public class RecipeEdition extends EditionInventory {
 			}
 			ItemMeta elementMeta = element.getItemMeta();
 			if (element.getType() == Material.BARRIER)
-				elementMeta.setDisplayName(ChatColor.RED + "Empty");
+				elementMeta.setDisplayName(ChatColor.RED + "空");
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
-			elementLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this ingredient.");
-			elementLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this ingredient.");
+			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分。");
+			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分。");
 			elementMeta.setLore(elementLore);
 			element.setItemMeta(elementMeta);
 
@@ -84,7 +84,7 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapelessInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "Recipe Editor: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "配方编辑: " + template.getId());
 		if (!getEditedSection().contains("crafting.shapeless.1")) {
 			getEditedSection().set("crafting.shapeless.1", Arrays.asList("AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR", "AIR"));
 			registerTemplateEdition();
@@ -105,18 +105,18 @@ public class RecipeEdition extends EditionInventory {
 				}
 				ItemMeta elementMeta = element.getItemMeta();
 				if (element.getType() == Material.BARRIER)
-					elementMeta.setDisplayName(ChatColor.RED + "Empty");
+					elementMeta.setDisplayName(ChatColor.RED + "空");
 				List<String> elementLore = new ArrayList<>();
 				elementLore.add("");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this ingredient.");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove this ingredient.");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分。");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分。");
 				elementMeta.setLore(elementLore);
 				element.setItemMeta(elementMeta);
 
 				inv.setItem(slot, element);
 			}
 		else
-			MMOItems.plugin.getLogger().warning("Couldn't load shapeless recipe for '" + template.getId() + "'!");
+			MMOItems.plugin.getLogger().warning("无法加载 '" + template.getId() + "'的无形配方!");
 
 		addEditionInventoryItems(inv, true);
 		return inv;
@@ -140,7 +140,7 @@ public class RecipeEdition extends EditionInventory {
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			if (slotToInt(event.getRawSlot()) >= 0)
 				new StatEdition(this, ItemStats.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot()))
-						.enable("Write in the chat the item you want.", "Format: '[MATERIAL]' or '[TYPE].[ID]'");
+						.enable("在聊天中写下您想要的物品。", "格式:  '[材料]' 或 '[类型].[ID]' ");
 
 		} else if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (shapeless)

@@ -37,21 +37,21 @@ import org.jetbrains.annotations.Nullable;
 
 public class RequiredClass extends StringListStat implements ItemRestriction, GemStoneStat {
 	public RequiredClass() {
-		super("REQUIRED_CLASS", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Required Class",
-				new String[] { "The class you need to", "profess to use your item." }, new String[] { "!block", "all" });
+		super("REQUIRED_CLASS", VersionMaterial.WRITABLE_BOOK.toMaterial(), "所需 Class",
+				new String[] { "需要太职业才能使用物品" }, new String[] { "!block", "all" });
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public StringListData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof List<?>, "Must specify a string list");
+		Validate.isTrue(object instanceof List<?>, "必须指定一个字符串列表");
 		return new StringListData((List<String>) object);
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, this).enable("Write in the chat the class you want your item to support.");
+			new StatEdition(inv, this).enable("在聊天中写下您希望物品支持的类别。");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().getKeys(false).contains("required-class")) {
@@ -63,7 +63,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 				supportedClasses.remove(last);
 				inv.getEditedSection().set(getPath(), supportedClasses.size() == 0 ? null : supportedClasses);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + last + ".");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last + ".");
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 		lore.add(message);
 		inv.getEditedSection().set(getPath(), lore);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "所需类已成功添加。");
 	}
 
 	@Override
@@ -115,16 +115,16 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
 
 		if (statData.isPresent()) {
-			lore.add(ChatColor.GRAY + "Current Value:");
+			lore.add(ChatColor.GRAY + "Cu当前值:");
 			StringListData data = (StringListData) statData.get();
 			data.getList().forEach(el -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + el));
 
 		} else
-			lore.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to add a class.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the last class.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加班级。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一类。");
 	}
 
 	@NotNull

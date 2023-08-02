@@ -24,7 +24,7 @@ public class IdentifyCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "This command is only for players.");
+			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
 			return CommandResult.FAILURE;
 		}
 
@@ -32,7 +32,7 @@ public class IdentifyCommandTreeNode extends CommandTreeNode {
 		NBTItem item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
 		String tag = item.getString("MMOITEMS_UNIDENTIFIED_ITEM");
 		if (tag.equals("")) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding is already identified.");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "您持有的物品已被识别");
 			return CommandResult.FAILURE;
 		}
 
@@ -41,7 +41,7 @@ public class IdentifyCommandTreeNode extends CommandTreeNode {
 		identifiedItem.setAmount(amount);
 
 		player.getInventory().setItemInMainHand(identifiedItem);
-		sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully identified the item you are holding.");
+		sender.sendMessage(MMOItems.plugin.getPrefix() + "成功识别出您所持有的物品");
 		return CommandResult.SUCCESS;
 	}
 

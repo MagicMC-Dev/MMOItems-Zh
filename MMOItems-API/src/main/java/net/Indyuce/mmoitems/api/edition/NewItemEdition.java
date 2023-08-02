@@ -27,8 +27,8 @@ public class NewItemEdition implements Edition {
 		inv.getPlayer().closeInventory();
 
 		inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Write in the chat, the id of the new item.");
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "在聊天中写下新物品的 ID。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "输入 'cancel' 以中止编辑。");
 
 		/*
 		 * anvil text input feature. enables players to use an anvil to input
@@ -43,7 +43,7 @@ public class NewItemEdition implements Edition {
 		 * default chat edition feature
 		 */
 		new ChatEdition(this);
-		inv.getPlayer().sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Item Creation", "See chat.", 10, 40, 10);
+		inv.getPlayer().sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "物品创建", "请看聊天栏。", 10, 40, 10);
 	}
 
 	@Override

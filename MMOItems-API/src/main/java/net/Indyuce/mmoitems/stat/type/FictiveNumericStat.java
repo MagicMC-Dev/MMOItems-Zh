@@ -29,43 +29,43 @@ import java.util.Optional;
 @Deprecated
 public class FictiveNumericStat extends DoubleStat implements InternalStat {
     public FictiveNumericStat(Element el, ElementStatType type) {
-        super(type.getConcatenatedTagPath(el), Material.BARRIER, "Fictive Stat", new String[0]);
+        super(type.getConcatenatedTagPath(el), Material.BARRIER, "虚拟统计", new String[0]);
     }
 
     @Override
     public NumericStatFormula whenInitialized(Object object) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 
     @NotNull
     @Override
     public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData data) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 
     @Override
     public void whenLoaded(@NotNull ReadMMOItem mmoitem) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 
     @Nullable
     @Override
     public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> storedTags) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 
     @Override
     public void whenDisplayed(List<String> lore, Optional<NumericStatFormula> statData) {
-        throw new RuntimeException("Fictive item stat");
+        throw new RuntimeException("虚构物品统计");
     }
 }

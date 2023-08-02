@@ -35,34 +35,34 @@ public class DenizenHook {
 		 */
 		TagManager.registerTagHandler("mmoitem_template", attribute -> {
 			if (!attribute.hasContext(1)) {
-				attribute.echoError("Please provide an item type and ID.");
+				attribute.echoError("请提供物品类型和 ID");
 				return null;
 			}
 
 			MapTag map = attribute.contextAsType(1, MapTag.class);
 			if (map == null) {
-				attribute.echoError("Invalid MapTag input");
+				attribute.echoError("地图标签输入无效");
 				return null;
 			}
 
 			ObjectTag type = map.getObject("type");
 			ObjectTag id = map.getObject("id");
 			if (type == null || id == null) {
-				attribute.echoError("Invalid MapTag input - missing 'type' or 'id'");
+				attribute.echoError("输入的地图标签无效 - 缺少 'type' 或 'id'");
 				return null;
 			}
 
 			String typeName = type.toString().replace("-", "_").toUpperCase();
 			Type parsedType = MMOItems.plugin.getTypes().get(typeName);
 			if (parsedType == null) {
-				attribute.echoError("Invalid type - cannot find type with name '" + typeName + "'");
+				attribute.echoError("类型无效 - 找不到名称为 '" + typeName + "' 的类型");
 				return null;
 			}
 
 			// Format ID and return item
 			String formattedId = id.toString().replace("-", "_").toUpperCase();
 			if (!MMOItems.plugin.getTemplates().hasTemplate(parsedType, formattedId)) {
-				attribute.echoError("Invalid template ID - cannot find template with name '" + formattedId + "'");
+				attribute.echoError("模板 ID 无效 - 找不到名称为 '" + formattedId + "' 的模板");
 				return null;
 			}
 

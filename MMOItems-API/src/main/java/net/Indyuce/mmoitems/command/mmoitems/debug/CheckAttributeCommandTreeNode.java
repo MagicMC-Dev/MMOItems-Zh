@@ -26,7 +26,7 @@ public class CheckAttributeCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "This command is only for players.");
+			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
 			return CommandResult.FAILURE;
 		}
 
@@ -44,7 +44,7 @@ public class CheckAttributeCommandTreeNode extends CommandTreeNode {
 				sender.sendMessage(
 						mod.getName() + " " + DECIMAL_FORMAT.format(mod.getAmount()) + " " + mod.getOperation() + " " + mod.getSlot());
 		} catch (IllegalArgumentException exception) {
-			player.sendMessage("Couldn't find attribute.");
+			player.sendMessage("找不到属性");
 		}
 		return CommandResult.SUCCESS;
 	}

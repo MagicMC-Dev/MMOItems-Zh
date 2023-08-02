@@ -31,50 +31,50 @@ import org.jetbrains.annotations.Nullable;
 
 public class DyeColor extends ItemStat<ColorData, ColorData> {
 	public DyeColor() {
-		super("DYE_COLOR", VersionMaterial.RED_DYE.toMaterial(), "Dye Color",
-				new String[] { "The color of your item", "(for dyeable items).", "In RGB." }, new String[] { "all" }, Material.LEATHER_HELMET,
+		super("DYE_COLOR", VersionMaterial.RED_DYE.toMaterial(), "染料颜色",
+				new String[] { "您物品的颜色 (对于可染色物品 ) ,在RGB 中" }, new String[] { "all" }, Material.LEATHER_HELMET,
 				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 	}
 
 	@Override
 	public ColorData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof String, "Must specify a string");
+		Validate.isTrue(object instanceof String, "必须指定一个字符串");
 		return new ColorData((String) object);
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.DYE_COLOR).enable("Write in the chat the RGB color you want.",
-					ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
+			new StatEdition(inv, ItemStats.DYE_COLOR).enable("在聊天中写下您想要的 RGB 颜色",
+					ChatColor.AQUA + "格式: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("dye-color", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Dye Color.");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除染料颜色");
 		}
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
-		Validate.isTrue(split.length == 3, "Use this format: {Red} {Green} {Blue}.");
+		Validate.isTrue(split.length == 3, "格式: {Red} {Green} {Blue}.");
 		for (String str : split) {
 			int k = Integer.parseInt(str);
-			Validate.isTrue(k >= 0 && k < 256, "Color must be between 0 and 255");
+			Validate.isTrue(k >= 0 && k < 256, "颜色必须介于 0 到 255 之间");
 		}
 
 		inv.getEditedSection().set("dye-color", message);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Dye Color successfully changed to " + message + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "染料颜色成功更改为 " + message);
 	}
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<ColorData> statData) {
-		lore.add(ChatColor.GRAY + "Current Value: " + (statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "None"));
+		lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "None"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Click to change this value.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to remove the dye color.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除染料颜色");
 	}
 
 	@NotNull

@@ -34,9 +34,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+    - name: Install depends
+      run: mvn install
 # Maven 打包 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn package
 # 将打包好的 Jar 包 放到 staging 文件夹
     - run: mkdir staging && cp target/*.jar staging
 # 设置 jobs Maven pom 版本环境变量

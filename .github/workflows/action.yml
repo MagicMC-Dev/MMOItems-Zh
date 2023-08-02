@@ -1,34 +1,48 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
-
-name: Maven Package
-
+# This is a basic workflow to help you get started with Actions
+name: MMOitem Builder
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+        - ZH_cn
+  pull_request:
+    branches:
+        - ZH_cn
 
 jobs:
   build:
-
+#	配置权限
+    permissions: write-all
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
+# 下载代码
     - uses: actions/checkout@v3
     - name: Set up JDK 11
+# 安装 JDK
       uses: actions/setup-java@v3
       with:
         java-version: '11'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
+        cache: maven
+# Maven 打包 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+# 将打包好的 Jar 包 放到 staging 文件夹
+    - run: mkdir staging && cp target/*.jar staging
+# 设置 jobs Maven pom 版本环境变量
+    - name: Set Release version env variable
+      run: |
+        echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+    - name: "Build & test"
+      run: |
+        echo "done!"
+# 上传文件并发布 Release
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "${{ env.RELEASE_VERSION }}"
+        prerelease: false
+        title: "Release ${{ env.RELEASE_VERSION }}"
+        files: |
+          staging/*.jar

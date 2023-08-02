@@ -174,14 +174,6 @@
             <version>5.1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Profile API -->
-        <!-- <dependency>
-            <groupId>fr.phoenixdevt</groupId>
-            <artifactId>Profile-API</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency> -->
         <!-- WordGuard -->
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>

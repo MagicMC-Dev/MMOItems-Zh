@@ -33,7 +33,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: maven
+        server-id: phoenixdevt-releases
     - name: Install depends
       run: mvn install
 # Maven 打包 

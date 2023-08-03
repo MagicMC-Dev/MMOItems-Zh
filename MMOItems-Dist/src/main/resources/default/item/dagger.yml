@@ -1,7 +1,9 @@
+﻿# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 STEEL_DAGGER:
   base:
     material: IRON_SWORD
-    name: '&fSteel Dagger'
+    name: §f钢制匕首
     attack-damage:
       base: 4.75
       spread: 0.017
@@ -43,7 +45,7 @@ DRACULA_DAGGER:
       base: 7.5
       spread: 0.02
       max-spread: 0.06
-    name: '&fDracula''s Dagger'
+    name: §f德古拉的匕首
     attack-speed:
       base: 1.65
       spread: 0.01
@@ -60,9 +62,9 @@ DRACULA_DAGGER:
         drain: 3.0
         cooldown: 4.0
     lore:
-    - '&7Every 4sec, hitting an'
-    - '&7enemy &cdrains&7 his health,'
-    - '&7healing you for &c1.5 heart&7.'
+    - §7每过4s，在命中敌人时
+    - §7§c将会消耗§7他的生命值,
+    - §7以恢复你的§c1.5格的生命值§7.
     enchants:
       unbreaking: 10
     hide-enchants: true
@@ -72,8 +74,8 @@ VERY_SHARP_DAGGER:
     tier: RARE
     max-durability: 1800.0
     will-break: true
-    name: §7§l§oVery Sharp Dagger
-    displayed-type: §cSharp Dagger
+    name: §7§l§o锐利的匕首
+    displayed-type: §c锋利的匕首
     required-level: 12.0
     required-class:
       - Assassin
@@ -109,14 +111,14 @@ VERY_SHARP_DAGGER:
       spread: 0.3
       max-spread: 0.6
     lore:
-      - §f§oExtremely sharp due to a very long
-      - §f§oprocess of refining.
+      - §f§o这把匕首经过了非常漫长的精炼
+      - §f§o使它十分锐利
 POISONOUS_DAGGER:
   base:
     material: WOODEN_SWORD
-    name: §2§l§oPoisonous Dagger
+    name: §2§l§o充满剧毒的匕首
     lore:
-      - §7Who knows what infected it...
+      - §7不知道是什么让这把匕首充满了剧毒...
     max-durability: 4500.0
     attack-damage:
       base: 22.0
@@ -173,10 +175,9 @@ POISONOUS_DAGGER:
 SNEAKY_DAGGER:
   base:
     material: STONE_SWORD
-    name: §8§lSneaky Dagger
+    name: §8§l神秘的匕首
     lore:
-      - §7This dagger is very sneaky.
-      - §8§oWhat dagger?
+      - §7这把匕首十分神秘。
     tier: UNCOMMON
     attack-damage: 5.0
     attack-speed: 2.2

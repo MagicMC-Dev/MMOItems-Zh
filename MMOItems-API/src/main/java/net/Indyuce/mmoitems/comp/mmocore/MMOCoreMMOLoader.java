@@ -38,8 +38,8 @@ public class MMOCoreMMOLoader extends MMOLoader {
 
     private static final ItemStat MAX_STAMINA = new DoubleStat("MAX_STAMINA", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "最大耐力",
             new String[]{"为您的最大耐力条添加耐力"});
-    private static final ItemStat MAX_STELLIUM = new DoubleStat("MAX_STELLIUM", VersionMaterial.ENDER_EYE.toMaterial(), "最大星星",
-            new String[]{"额外的最大星星"});
+    private static final ItemStat MAX_STELLIUM = new DoubleStat("MAX_STELLIUM", VersionMaterial.ENDER_EYE.toMaterial(), "最大星光",
+            new String[]{"额外的最大星光"});
     private static final ItemStat ADDITIONAL_EXPERIENCE = new DoubleStat("ADDITIONAL_EXPERIENCE", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(),
             "额外经验", new String[]{"额外的 MMOCore 主职业经验 (% ) "});
 
@@ -70,8 +70,8 @@ public class MMOCoreMMOLoader extends MMOLoader {
                         "&c" + AltChar.cross + " 需要 #profession# 中的 #level#"));
         MMOItems.plugin.getCrafting().registerCondition("stellium", StelliumCondition::new,
                 new ConditionalDisplay(
-                        "&a" + AltChar.check + " 需要 #stellium# Stellium",
-                        "&c" + AltChar.cross + " 需要 #stellium# Stellium"));
+                        "&a" + AltChar.check + " 需要 #stellium# 星光",
+                        "&c" + AltChar.cross + " 需要 #stellium# 星光"));
         MMOItems.plugin.getCrafting().registerCondition("attribute", AttributeCondition::new,
                 new ConditionalDisplay(
                         "&a" + AltChar.check + " 需要 #points# #attribute#",

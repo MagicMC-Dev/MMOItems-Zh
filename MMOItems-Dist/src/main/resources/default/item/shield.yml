@@ -1,7 +1,9 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 PALADIN_SHIELD:
   base:
     material: SHIELD
-    name: §e§lShield of the Sun
+    name: §e§l烈日之盾
     tier: MAGICAL
     two-handed: false
     armor: 6.0
@@ -63,10 +65,10 @@ MAGICAL_SHIELD:
       '2':
         pattern: BORDER
         color: YELLOW
-    name: '&fMagical Shield'
+    name: '&f魔盾'
     lore:
-      - '&7A rudimentary shield to'
-      - '&7carry your gem stones.'
+      - '&7镶嵌宝石？'
+      - '&7它可能不够格。'
     block-rating: 5.0
     block-power:
       base: 6.0
@@ -78,7 +80,7 @@ ABSORBING_SHIELD:
     required-level: 15.0
     shield-pattern:
       color: BLUE
-    name: '&9Absorbing Shield'
+    name: '&9同化之盾'
     unbreakable: true
     damage-reduction:
       base: 55.0
@@ -91,10 +93,10 @@ ABSORBING_SHIELD:
 OBSIDIAN_SHIELD:
   base:
     material: SHIELD
-    name: §8Obsidian Shield
+    name: §8黑曜石盾
     lore:
-      - §cThis shield is even stronger than
-      - §cdiamond.
+      - §c这面盾甚至比钻石还坚韧。
+      - §c和你比也一样。
     crafting:
       shaped:
         '1':
@@ -143,9 +145,9 @@ SUPREME_SHIELD:
       max-spread: 0.2
     required-class:
       - Warrior
-    name: §9§l§oSupreme Shield
+    name: §9§l§o至尊之盾
     lore:
-      - §7The mightiest of all §eshields§7.
+      - §7最强力的§e盾牌§7。
     movement-speed: -0.03
     shield-pattern:
       color: PURPLE

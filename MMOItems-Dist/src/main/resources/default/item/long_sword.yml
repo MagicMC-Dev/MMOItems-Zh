@@ -1,11 +1,13 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 DUAL_LONGSWORD:
   base:
     material: WOODEN_SWORD
     max-durability: 8400.0
-    name: §f§l§oDual Lon§8§l§ogsword
+    name: §f§l§o决斗 长§8§l§o剑
     lore:
-      - §eShall light save you!
-      - §8And darkness consume you...
+      - §e让辉光守护你!
+      - §8让黑暗吞噬你...
     tier: EPIC
     required-level: 45.0
     required-class:

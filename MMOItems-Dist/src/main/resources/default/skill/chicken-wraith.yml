@@ -1,26 +1,28 @@
-name: Chicken Wraith
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 鸡你魔灵
 modifier:
   duration:
-    name: Duration
+    name: 持续时间
     default-value: 2.5
   damage:
-    name: Damage
+    name: 伤害
     default-value: 2.0
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0.0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0.0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 10.0
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0
   inaccuracy:
-    name: Inaccuracy
+    name: 错误
     default-value: 10.0
   force:
-    name: Force
+    name: 效力
     default-value: 1.0

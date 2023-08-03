@@ -1,17 +1,19 @@
-name: Vampirism
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 吸引
 modifier:
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0.0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0.0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 8.0
   drain:
-    name: Drain
+    name: 消耗
     default-value: 10.0
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0

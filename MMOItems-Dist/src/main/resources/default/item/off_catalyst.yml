@@ -1,10 +1,11 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 SCOPE:
   base:
     material: DIAMOND
-    name: ยง7Accuracy Scope
+    name: ยง7定位镜
     lore:
-      - ยง3Hold it in the offhand to increase
-      - ยง3ranged damage!
+      - §3放在副手来提升§3远程伤害。
     critical-strike-power:
       base: 10.0
       scale: 0.05
@@ -30,9 +31,9 @@ SCOPE:
 QUICKCASTER_CATALYST:
   base:
     material: PRISMARINE_CRYSTALS
-    name: §b§l§oQuickcaster's Catalyst
+    name: §b§l§o速咒人的催化剂
     lore:
-      - §dVery useful for beginner mages.
+      - §d对新手法师非常有用。
     handworn: true
     magic-damage: 10.0
     cooldown-reduction: 25.0
@@ -49,13 +50,13 @@ CHARM_OF_LEVITATION:
     enchants:
       luck_of_the_sea: 1.0
     hide-enchants: true
-    name: §9Charm of Levitation
+    name: §9悬浮符咒
     handworn: true
     lore:
-      - §bEveryone needs a quick fly!
-      - §9But you probably took it for the particles!
-      - §cShown as "charm". Needs to be held offhand.
-      - §aAdds +10 Stellium!
+      - §b如果你想飞，就用我们的产品吧。
+      - §9不同于地摊货，我们的符咒有粒子。
+      - §c显示为“符咒”。需要放在副手。
+      - §a添加十余种星云般的粒子阵。
     ability:
       ability1:
         type: MAGICAL_PATH
@@ -68,6 +69,5 @@ CHARM_OF_LEVITATION:
       particle: END_ROD
     displayed-type: Charm
     disable-crafting: true
-    max-stellium: 10.0
     tier: RARE
     unstackable: true

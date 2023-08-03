@@ -1,7 +1,9 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 OAK_WAND:
   base:
     material: STICK
-    name: '&f<wood> Wand'
+    name: '&f橡木法杖'
     required-level: 1.0
     range: 20.0
     attack-damage:
@@ -58,10 +60,10 @@ BLAZE_WAND:
     gem-sockets:
       - Nether
       - Nether
-    name: '&c&lBlaze Wand'
+    name: '&c&l烈焰法杖'
     disable-crafting: true
     lore:
-      - §eAh yeah, that's hot.
+      - §e像女冒险家一样热辣。
     crafting:
       shaped:
         '1':
@@ -125,8 +127,8 @@ COSMOS_WAND:
         mode: RIGHT_CLICK
         cooldown: 8.0
     lore:
-      - §b§l§o"The stars are yours!"
-    name: §5§lCosmic Wand
+      - §b§l§o“整个宇宙将为你闪烁。”——《三体》
+    name: §5§l宇宙法杖
     upgrade:
       max: 10
       template: weapon-default
@@ -144,7 +146,7 @@ COSMOS_WAND:
 SPELLCASTER_WAND:
   base:
     material: STICK
-    name: §dSpellcaster Wand
+    name: §d魔咒师的法杖
     required-level: 1.0
     required-class:
       - Mage
@@ -179,4 +181,4 @@ SPELLCASTER_WAND:
     mana-cost: 3.0
     set: SPELLCASTER
     lore:
-      - §7§o"You're a wizard, Harry."
+      - §7§o“你是个巫师，哈利。”

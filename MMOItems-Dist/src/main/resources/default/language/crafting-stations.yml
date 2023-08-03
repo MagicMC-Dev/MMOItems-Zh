@@ -1,22 +1,22 @@
 condition:
   profession:
-    positive: '&a✔ Requires #level# in #profession#'
-    negative: '&c✖ Requires #level# in #profession#'
+    positive: '&a✔ 需要 #level#级 工作 #profession#'
+    negative: '&c✖ 需要 #level#级 工作 #profession#'
   mana:
-    positive: '&a✔ Requires #mana# Mana'
-    negative: '&c✖ Requires #mana# Mana'
+    positive: '&a✔ 需要 #mana# 法力值'
+    negative: '&c✖ 需要 #mana# 法力值'
   money:
-    positive: '&a✔ Requires $#money#'
-    negative: '&c✖ Requires $#money#'
+    positive: '&a✔ 需要金钱 $#money#'
+    negative: '&c✖ 需要金钱 $#money#'
   level:
-    positive: '&a✔ Requires Level #level#'
-    negative: '&c✖ Requires Level #level#'
+    positive: '&a✔ 需要等级 #level#'
+    negative: '&c✖ 需要等级 #level#'
   stellium:
-    positive: '&a✔ Requires #stellium# Stellium'
-    negative: '&c✖ Requires #stellium# Stellium'
+    positive: '&a✔ 需要 #stellium# 星光'
+    negative: '&c✖ 需要 #stellium# 星光'
   stamina:
-    positive: '&a✔ Requires #stamina# Stamina'
-    negative: '&c✖ Requires #stamina# Stamina'
+    positive: '&a✔ 需要 #stamina# 耐力'
+    negative: '&c✖ 需要 #stamina# 耐力'
   permission:
     positive: '&a✔ #display#'
     negative: '&c✖ #display#'
@@ -24,14 +24,14 @@ condition:
     positive: '&a✔ #display#'
     negative: '&c✖ #display#'
   attribute:
-    positive: '&a✔ Requires #points# #attribute#'
-    negative: '&c✖ Requires #points# #attribute#'
+    positive: '&a✔ 需要 #points# #attribute#'
+    negative: '&c✖ 需要 #points# #attribute#'
   class:
-    positive: '&a✔ Required Class: #class#'
-    negative: '&c✖ Required Class: #class#'
+    positive: '&a✔ 需要职业: #class#'
+    negative: '&c✖ 需要职业: #class#'
   food:
-    positive: '&a✔ Requires #food# Food'
-    negative: '&c✖ Requires #food# Food'
+    positive: '&a✔ 需要 #food# 饥饿值'
+    negative: '&c✖ 需要 #food# 饥饿值'
 ingredient:
   mmoitem:
     positive: '&8✔ &7#amount# #level##item#'

@@ -1,3 +1,5 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 #Weapon Stats
 attack-damage: '&3 &7➸ 攻击伤害: &f{value}'
 attack-speed: '&3 &7➸ 攻击速度: &f{value}'
@@ -102,7 +104,7 @@ soulbound-level: '&3 &7■ 灵魂绑定等级 &e{value}'
 #Tools
 autosmelt: '&3 &7■ &f自动熔炼'
 bouncing-crack: '&3 &7■ &f范围破坏'
-pickaxe-power: '&3 &7■ &f挖掘等级: &a{value}'
+pickaxe-power: '&3 &7■ &f挖掘强度: &a{value}'
 durability: '&7耐久: {current} / {max}'
 #General
 item-type: '&c{type}'

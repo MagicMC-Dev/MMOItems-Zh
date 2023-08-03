@@ -1,23 +1,25 @@
-name: Arcane Hail
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 神秘冰雹
 modifier:
   duration:
-    name: Duration
+    name: 持续时间
     default-value: 4.0
   damage:
-    name: Damage
+    name: 伤害
     default-value: 3.0
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0.0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0.0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 10.0
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0
   radius:
-    name: Radius
+    name: 半径
     default-value: 3.0

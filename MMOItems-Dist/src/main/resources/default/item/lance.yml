@@ -1,3 +1,5 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 FIRE_GREATLANCE:
   base:
     material: BLAZE_ROD
@@ -7,7 +9,7 @@ FIRE_GREATLANCE:
       spread: 0.01
       max-spread: 0.03
     attack-speed: 1.1
-    name: '&fFire Greatlance'
+    name: '&f火焰长矛'
     ability:
       on-hit:
         type: LIFE_ENDER
@@ -15,10 +17,9 @@ FIRE_GREATLANCE:
         damage: 10.0
         cooldown: 30.0
     lore:
-    - '&7Every 40s in combat, casts'
-    - '&7a devastating &6fire comet'
-    - '&7that wipes out any life form'
-    - '&7nearby whenever it lands.'
+    - '&7在战斗中，每 40s 将生成一次'
+    - '&7毁灭性的 &6火焰彗星 &7砸向地面'
+    - '&7同时将对附近敌人造成剧烈伤害'
     item-particles:
       type: DOUBLE_RINGS
       particle: FLAME

@@ -1,4 +1,5 @@
-
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 # Name which will be displayed
 # when opening the station
 name: 'Mythical Forge (#page#/#max#)'
@@ -29,10 +30,10 @@ items:
         material: AIR
     no-recipe:
         material: GRAY_STAINED_GLASS_PANE
-        name: '&aNo Recipe'
+        name: '&a没有配方'
     no-queue-item:
         material: GRAY_STAINED_GLASS_PANE
-        name: '&aNo Item in Queue'
+        name: '&a没有物品在队列'
 
 # Station recipes
 recipes:

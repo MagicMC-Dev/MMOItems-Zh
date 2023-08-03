@@ -1,8 +1,11 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 SKILLED_SWORD:
   base:
     material: GOLDEN_SWORD
-    name: §fSkilled Sword
+    name: §f大师之剑
     tier: EPIC
+    required-dexterity: 20.0
     dodge-rating: 15.0
     parry-rating: 40.0
     parry-cooldown-reduction: 30.0
@@ -17,8 +20,7 @@ SKILLED_SWORD:
       spread: 0.1
       max-spread: 0.2
     lore:
-      - §6Only for the masters.
-    required-dexterity: 14.0
+      - '§6“无他，唯手熟尔。”'
     required-level: 14.0
     ability:
       ability1:

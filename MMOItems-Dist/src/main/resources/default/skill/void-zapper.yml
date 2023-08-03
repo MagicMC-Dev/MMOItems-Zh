@@ -1,29 +1,31 @@
-name: Void Zapper
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 虚空微波
 modifier:
   damage:
-    name: Damage
+    name: 伤害
     default-value: 5
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 10
   length:
-    name: Length
+    name: 长度
     default-value: 30
   knockback:
-    name: Knockback
+    name: 击退
     default-value: 1
   extra:
-    name: Extra Damage
+    name: 额外伤害
     default-value: 30
   max:
-    name: Max Bounces
+    name: 最大弹回
     default-value: 6
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0

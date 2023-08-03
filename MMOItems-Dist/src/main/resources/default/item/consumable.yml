@@ -1,30 +1,32 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 SANDWITCH:
   base:
     material: BREAD
-    name: '&cSand&6witch'
+    name: '&c&6三明治'
     effects:
       POISON:
         duration: 10
         amplifier: 2
     lore:
-      - '&7Are you really that hungry?!'
+      - '&7你真有那么饿吗？'
     item-cooldown: 15
     restore-food: 5.0
 A_BIG_CARROT:
   base:
     material: CARROT
     lore:
-      - '&7&oThere will always be carrot left'
+      - '&7&o总有被扔掉的胡萝卜。'
     disable-right-click-consume: true
     vanilla-eating: true
     restore-food: 1.0
 ROCK:
   base:
     material: COBBLESTONE
-    name: '&fRock'
+    name: '&f石块'
     lore:
-      - '&7Use it to sharpen your weapons,'
-      - '&7or &ndamage&7 your enemies.'
+      - '&7要么用它研磨你的武器，'
+      - '&7要么用它&n砸向&7你的敌人。'
     tier: TRASH
     item-cooldown: 3
     repair: 3.0
@@ -37,7 +39,7 @@ ROCK:
 SCROLL_OF_IDENTIFICATION:
   base:
     material: PAPER
-    name: '&fScroll of Identification'
+    name: '&f鉴定卷轴'
     tier: UNCOMMON
     can-identify: true
     crafting:
@@ -52,14 +54,14 @@ ITEM_CRUSHER:
     material: IRON_AXE
     required-level: 3.0
     can-deconstruct: true
-    name: '&f&lItem Crusher'
+    name: '&f&l物品粉碎机'
 RECALL_POTION:
   base:
     material: POTION
     hide-potion-effects: true
-    name: '&9Recall Potion'
+    name: '&9回归药剂'
     lore:
-      - '&7Brings you back home.'
+      - '&7用它带你回家。'
     potion-color: 100 100 255
     commands:
       '1':
@@ -78,7 +80,7 @@ FIREBALL_SCROLL:
         damage: 5.0
         cooldown: 0.0
         ignite: 3.0
-    name: '&cFireball Scroll I'
+    name: '&c火球卷轴I'
 FIREBALL_SCROLL_II:
   base:
     material: PAPER
@@ -92,7 +94,7 @@ FIREBALL_SCROLL_II:
         damage: 10.0
         cooldown: 0.0
         ignite: 5.0
-    name: '&cFireball Scroll II'
+    name: '&c火球卷轴II'
 FIREBALL_SCROLL_III:
   base:
     material: PAPER
@@ -106,12 +108,12 @@ FIREBALL_SCROLL_III:
         damage: 15.0
         cooldown: 0.0
         ignite: 7.0
-    name: '&cFireball Scroll III'
+    name: '&c火球卷轴III'
 APPLE_OF_DISCORD:
   base:
     material: GOLDEN_APPLE
     durability: 1.0
-    name: '&6[ Apple of Discord ]'
+    name: '&6金光闪闪苹果'
     required-level: 4.0
     item-cooldown: 50.0
     effects:
@@ -130,15 +132,15 @@ APPLE_OF_DISCORD:
 SHARP_FLINT:
   base:
     material: FLINT
-    name: '&fSharp Flint'
+    name: '&f锋利的燧石'
     tier: COMMON
     repair: 20.0
 DEATH_STEW:
   base:
     material: MUSHROOM_STEW
-    name: '&fDeath Soup'
+    name: '&f引魂汤'
     lore:
-      - '&8&oDon''t you dare drinking that...'
+      - '&8&o你不敢喝这个······'
     tier: UNIQUE
     effects:
       HARM:
@@ -147,12 +149,12 @@ DEATH_STEW:
 KARTOFFELSALAT:
   base:
     material: RABBIT_STEW
-    name: '&9Kartoffelsalat'
+    name: '&9土豆沙拉'
     tier: COMMON
     restore-stamina: 10.0
     item-cooldown: 30.0
     lore:
-      - '&7Very punchy, yet hard to finish.'
+      - '&7很有分量，也很难吃完。'
     restore-food: 3.0
     restore-saturation: 10.0
 LARGE_HEALTH_POTION:
@@ -161,7 +163,7 @@ LARGE_HEALTH_POTION:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTFlN2ViMmU0NjFlOTZlNjMxY2JhMGMwY2RhYTU0NDg4MDYzMDJlZGFlOTFiNjFkYWZjMjgxYWU1ODRkOCJ9fX0=
       uuid: 701aa558-c1b0-4eb7-81e4-79b1af25283c
-    name: '&fLarge Health Potion'
+    name: '&f强效治疗药水'
     item-cooldown: 10.0
     sounds:
       on-consume: entity.generic.drink
@@ -172,7 +174,7 @@ LARGE_MANA_POTION:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2FmNmRjNjdjZTc1YjcyMjJhYzM5ZTA1MzZlMDkwNzI0OWY4NTUxNmVmZDEzODViZWM5MGJlMzNkZDUzZGUwNyJ9fX0=
       uuid: 0b4b6108-eb50-4a35-ae8b-53d5c2ad2a84
-    name: '&fLarge Mana Potion'
+    name: '&f强效魔法药水'
     restore-mana:
       base: 35.0
       spread: 0.042
@@ -186,10 +188,10 @@ TACO:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTQ5ZDNkODg5Y2ZmNjU1YzYyMjgzNDE4NDU1MjA1YjAzYWU3N2ZmYjdlZTE4ZGQwM2FjMGE0ZmZiODk1NjE1YiJ9fX0=
       uuid: c8113aeb-0b63-4654-9e8f-54416fd2fde8
-    name: '&fTaco'
+    name: '&f塔可'
     item-cooldown: 2.0
     lore:
-      - '&7&oA hot & tasty taco!'
+      - '&7&o美味的热塔可！'
     restore-health: 3.0
     restore-food: 8.0
     restore-saturation: 10.0
@@ -201,9 +203,9 @@ BURGER:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTUwMzkxYjEzODNkOWVmOWU2ZTdiZjVmODJkMWNmODgyZDgxZTJiMDA0ZGUzNjlmNzI5ZWRhMDRiMmVhNjNkMyJ9fX0=
       uuid: 076dd3bf-0d76-497b-9745-40ed9402a311
     restore-stamina: 30.0
-    name: '&fTasty Burger'
+    name: '&f美味蟹堡'
     lore:
-      - '&7&oMmmmh, yummy!'
+      - '&7&o嗯，美味！'
     restore-health: 4.0
     restore-food: 10.0
     restore-saturation: 9.0
@@ -213,7 +215,7 @@ WEIRD_CANDY_BAG:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODdmNTA0Y2RiZjViMjExMjFiODIxODUyOGRjZTU2NzUwNWQ0NTY3ZDdlNzJjZDQzYTQ2M2NkNTFjODAxM2E2In19fQ==
       uuid: efdf121e-209f-49a2-9c56-d0bf058f33ae
-    name: '&9Weird Candy Bag'
+    name: '&9奇怪的糖果袋'
     item-cooldown: 3.0
     effects:
       CONFUSION:
@@ -226,10 +228,9 @@ SUSHI_ROLL:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVlYzc2NDBlNDMyNDBjODE2N2IxNjc3ZWFiZmZhYWQ5ZjYyODA2Y2NiZTI2NzMyNGM5N2NlYjcyOWQzMDNhIn19fQ==
       uuid: b7c55ea2-d4cc-467e-85c7-dd8052c1675b
-    name: '&fSushi Roll'
+    name: '&f寿司卷'
     lore:
-      - '&7&oSushis are leggit the'
-      - '&7&obest food on Earth.'
+      - '&7&o地球上最美味的食物之一。'
     item-cooldown: 0.5
     effects:
       SPEED:
@@ -241,42 +242,42 @@ SUSHI_ROLL:
 SOULBINDER1:
   base:
     material: ENDER_EYE
-    name: '&fApprentice Soulbinder'
+    name: '&f初级粘合剂'
     disable-interaction: true
     soulbound-level: 1.0
     soulbinding-chance: 70.0
 SOULCRUSHER1:
   base:
     material: ENDER_PEARL
-    name: '&fNovice Soulcrusher'
+    name: '&f初级粉碎机'
     disable-interaction: true
     soulbound-level: 1.0
     soulbound-break-chance: 30.0
 SOULBINDER2:
   base:
     material: ENDER_EYE
-    name: '&fIntermediate Soulbinder'
+    name: '&f中级粘合剂'
     disable-interaction: true
     soulbound-level: 2.0
     soulbinding-chance: 80.0
 SOULCRUSHER2:
   base:
     material: ENDER_PEARL
-    name: '&fIntermediate Soulcrusher'
+    name: '&f中级粉碎机'
     disable-interaction: true
     soulbound-level: 2.0
     soulbound-break-chance: 40.0
 SOULBINDER3:
   base:
     material: ENDER_EYE
-    name: '&fArcane Soulbinder'
+    name: '&f神秘粘合剂'
     disable-interaction: true
     soulbound-level: 3.0
     soulbinding-chance: 90.0
 SOULCRUSHER3:
   base:
     material: ENDER_PEARL
-    name: '&fArcane Soulcrusher'
+    name: '&f神秘粉碎机'
     disable-interaction: true
     soulbound-level: 3.0
     soulbound-break-chance: 50.0
@@ -293,7 +294,7 @@ SANTA_COOKIE:
     material: COOKIE
     name: '&cS&fa&cn&ft&ca''&fs &cC&fo&co&fk&ci&fe'
     lore:
-      - '&7&oWhere are the darn cookies!'
+      - '&7&o讨厌的饼干到底在哪里？'
     sounds:
       on-consume: entity.player.burp
     item-cooldown: 2.0
@@ -311,14 +312,15 @@ ENDER_NOTE:
         mode: RIGHT_CLICK
         cooldown: 180
         range: 150.0
-    name: '&5Ender Tome'
+    name: '&5末影典籍'
     item-cooldown: 180
     sounds:
       on-consume: entity.enderman.teleport
     lore:
-      - '&7Teleports you &5miles&7 away.'
+      - '&7传送你到五至七米外。'
     effects:
       HARM:
+
         duration: 1
         amplifier: 2
 THROW_COAL:
@@ -330,14 +332,14 @@ THROW_COAL:
         cooldown: 3.0
         damage: 3.0
         mode: RIGHT_CLICK
-    name: '&fThrowable Coal'
+    name: '&f煤块'
     lore:
-      - '&fChuck them at your friends'
+      - '&f可以投掷，把它扔给你的朋友。'
     item-cooldown: 3.0
 EGGNOG:
   base:
     material: EGG
-    name: '&6Eggnog'
+    name: '&6蛋奶酒'
     disable-interaction: true
     item-cooldown: 3.0
     commands:
@@ -345,8 +347,8 @@ EGGNOG:
         format: me Mmmmmh!
         cooldown: 3.0
     lore:
-      - '&eEarned during X-Mas 2018!'
-      - '&e&oA fresh & cold eggnog!'
+      - '&e2023年圣诞节期间获得'
+      - '&e&o一杯清新的凉蛋奶酒！'
     crafting:
       shapeless:
         '1':
@@ -365,13 +367,13 @@ EGGNOG:
 MANGO:
   base:
     material: PLAYER_HEAD
-    name: '&fMango'
+    name: '&f芒果'
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk1MzM4OGNjZDZmZjY0ZmMxOTUwZGQ0Y2VjNGFkZWFhMzQ4YWFhYmNjNTMyODI4ZTcxNDRmNTA5ZjIzYyJ9fX0=
       uuid: 1c6aa7d0-582e-4111-8376-74a2a2f74a58
     tier: COMMON
     lore:
-      - '&7&oSweet and sour, hmm. Perfect combination'
+      - '&7&o酸酸甜甜，完美结合。'
     effects:
       REGENERATION:
         duration: 20
@@ -382,10 +384,9 @@ MANGO:
 RECALL_STAR:
   base:
     material: NETHER_STAR
-    name: §f§lRecall Star
+    name: §f§l召回之星
     lore:
-      - §aExecuted §2/spawn§a when right-clicked.
-      - §bOtherwise, you could §9identify§b items with it.
+      - §b此外，你可以用它来§9识别§b物品。§c（物品翻译不完全，请等待二次更新）
     max-consume: 5.0
     can-identify: true
     tier: EPIC
@@ -399,8 +400,8 @@ GEM_REMOVER:
   base:
     material: SHEARS
     lore:
-      - §7Removes a random gem applied on any item.
-    name: §6Gem Remover
+      - §7移除应用于任何物品上的随机宝石。
+    name: §6宝石去除器
     disable-interaction: true
     random-unsocket: 1.0
     inedible: true
@@ -408,8 +409,8 @@ SKIN_REMOVER:
   base:
     material: SHEARS
     lore:
-    - §7Removes a skin applied on any item.
-    name: §6Skin Remover
+    - §7移除任何应用于物品的皮肤。
+    name: §6皮肤移除器
     disable-interaction: true
     can-deskin: true
     inedible: true

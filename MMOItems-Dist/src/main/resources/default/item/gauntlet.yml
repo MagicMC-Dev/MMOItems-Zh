@@ -1,11 +1,12 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 FIGHTING_GAUNTLETS:
   base:
     material: IRON_HORSE_ARMOR
     lore:
-      - §7Tired of breaking your bones when
-      - §7doing hand-to-hand combat?
-      - §eThis is your solution!
-    name: §eFighting gauntlets
+      - §7当你厌倦挥舞剑时，
+      - §e这是个好主意！
+    name: §e拳击手套
     attack-damage:
       base: 3.0
       scale: 0.15

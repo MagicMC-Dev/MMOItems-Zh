@@ -1,8 +1,10 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 THUNDER_BLESSING:
   base:
     material: BIRCH_SAPLING
     disable-interaction: true
-    name: §bThunder's Blessing
+    name: §b闪电赐福
     attack-damage: 3.0
     weapon-damage: 10.0
     skill-damage: 50.0
@@ -10,6 +12,6 @@ THUNDER_BLESSING:
     perm-effects:
       SPEED: 1.0
     lore:
-      - §bThis talisman, when held in offhand,
-      - §ballows the user to greatly increase
-      - §bhis skill damage. §3It also gives Speed I.
+      - §b放在副手时
+      - §b极大地提升冒险家的
+      - §b技能伤害。§3还会给你闪电般的速度。

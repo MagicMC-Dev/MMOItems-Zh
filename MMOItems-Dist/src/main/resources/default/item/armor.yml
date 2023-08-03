@@ -1,3 +1,5 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 DRAGON_HELMET:
   base:
     material: DIAMOND_HELMET
@@ -23,12 +25,12 @@ DRAGON_HELMET:
           scale: 0.0
           spread: 0.07
           max-spread: 0.2
-    name: §5§lDragon Helmet
+    name: §5§l龙之冠
     enchants:
       fire_protection: 4.0
     lore:
-      - §c§oThis powerful armor is taken from
-      - §c§odragon scales.
+      - §c§o诞生于龙鳞之上的强大盔甲
+      - §7可装备品红色，黑色宝石
     required-level: 12.0
     block-rating:
       base: 4.0
@@ -64,12 +66,12 @@ DRAGON_CHESTPLATE:
           scale: 0.0
           spread: 0.07
           max-spread: 0.2
-    name: §5§lDragon Chestplate
+    name: §5§l龙之甲
     enchants:
       fire_protection: 4.0
     lore:
-      - §c§oThis powerful armor is taken from
-      - §c§odragon scales.
+      - §c§o诞生于龙鳞之上的强大盔甲
+      - §7可装备品红色，黑色宝石
     required-level: 12.0
     block-rating:
       base: 5.0
@@ -105,12 +107,12 @@ DRAGON_LEGGINGS:
           scale: 0.0
           spread: 0.07
           max-spread: 0.2
-    name: §5§lDragon Leggings
+    name: §5§l龙之护腿
     enchants:
       fire_protection: 4.0
     lore:
-      - §c§oThis powerful armor is taken from
-      - §c§odragon scales.
+      - §c§o诞生于龙鳞之上的强大盔甲
+      - §7可装备品红色，黑色宝石    
     required-level: 12.0
     block-rating:
       base: 4.5
@@ -146,12 +148,12 @@ DRAGON_BOOTS:
           scale: 0.0
           spread: 0.07
           max-spread: 0.2
-    name: §5§lDragon Boots
+    name: §5§l龙之靴
     enchants:
       fire_protection: 4.0
     lore:
-      - §c§oThis powerful armor is taken from
-      - §c§odragon scales.
+      - §c§o诞生于龙鳞之上的强大盔甲
+      - §7可装备品红色，黑色宝石   
     required-level: 12.0
     block-rating:
       base: 4.0
@@ -165,9 +167,10 @@ DRAGON_BOOTS:
 SPELLCASTER_HELMET:
   base:
     material: LEATHER_HELMET
-    name: §dSpellcaster Helmet
+    name: §d魔法帽
     lore:
-      - §d§lSuits very well for mages!
+      - §d§l非常适合法师!
+      - §7可装备玛吉宝石
     required-class:
       - Mage
     required-level: 1.0
@@ -198,9 +201,10 @@ SPELLCASTER_HELMET:
 SPELLCASTER_CHESTPLATE:
   base:
     material: LEATHER_CHESTPLATE
-    name: §dSpellcaster Chestplate
+    name: §d施法袍
     lore:
-      - §d§lSuits very well for mages!
+      - §d§l非常适合法师!
+      - §7可装备玛吉宝石
     required-class:
       - Mage
     required-level: 1.0
@@ -231,9 +235,10 @@ SPELLCASTER_CHESTPLATE:
 SPELLCASTER_LEGGINGS:
   base:
     material: LEATHER_LEGGINGS
-    name: §dSpellcaster Leggings
+    name: §d施法护腿
     lore:
-      - §d§lSuits very well for mages!
+      - §d§l非常适合法师!
+      - §7可装备玛吉宝石
     required-class:
       - Mage
     required-level: 1.0
@@ -264,9 +269,10 @@ SPELLCASTER_LEGGINGS:
 SPELLCASTER_BOOTS:
   base:
     material: LEATHER_BOOTS
-    name: §dSpellcaster Boots
+    name: §d魔法靴
     lore:
-      - §d§lSuits very well for mages!
+      - §d§l非常适合法师!
+      - §7可装备玛吉宝石
     required-class:
       - Mage
     required-level: 1.0
@@ -299,14 +305,14 @@ OMNIELEMENTAL_HELMET:
     material: LEATHER_HELMET
     required-level: 15.0
     lore:
-      - §bDon't limit yourself to one element.
-      - §cIt will be downgraded on death or
-      - §cupon breaking.
-      - §9Gives Night Vision when worn.
+      - §b不要局限你的能力.
+      - §c他会在死亡或者破碎时降级
+      - §9佩戴时获得夜视效果.
+      - §7可装备霓虹宝石
     enchants:
-      luck_of_the_sea: 1.0
+      luck_of_the_sea: 1.0                                                          
     hide-enchants: true
-    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lH§6§le§e§ll§a§lm§2§le§3§lt
+    name: §c§l全§6§l能§e§l元§a§l素§2§l头§3§l盔§f§l—§c§l—§6§l弱§e§l者§a§l渴§2§l望§3§l。
     armor-toughness: 2.5
     armor: 4.5
     max-durability: 1950.0
@@ -346,14 +352,14 @@ OMNIELEMENTAL_CHESTPLATE:
     material: LEATHER_CHESTPLATE
     required-level: 15.0
     lore:
-      - §bDon't limit yourself to one element.
-      - §cIt will be downgraded on death or
-      - §cupon breaking.
-      - §9Gives Resistance I when worn.
+      - §b不要局限你的能力.
+      - §c他会在死亡或者破碎时降级
+      - §9佩戴时获得夜视效果.
+      - §7可装备霓虹宝石
     enchants:
       luck_of_the_sea: 1.0
     hide-enchants: true
-    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lC§6§lh§e§le§a§ls§2§lt§3§lp§9§ll§b§la§f§lt§e§le
+    name: §9§l全§b§l能§f§l元§e§l素§a§l胸§6§l甲§f§l—§c§l—§6§l弱§e§l者§a§l努§2§l力§3§l。
     armor-toughness: 2.5
     armor: 9.5
     max-durability: 3900.0
@@ -393,14 +399,14 @@ OMNIELEMENTAL_LEGGINGS:
     material: LEATHER_LEGGINGS
     required-level: 15.0
     lore:
-      - §bDon't limit yourself to one element.
-      - §cIt will be downgraded on death or
-      - §cupon breaking.
-      - §9Gives Speed I when worn.
+      - §b不要局限你的能力.
+      - §c他会在死亡或者破碎时降级
+      - §9佩戴时获得夜视效果.
+      - §7可装备霓虹宝石
     enchants:
       luck_of_the_sea: 1.0
     hide-enchants: true
-    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lL§6§le§e§lg§a§lg§2§li§3§ln§b§lg§f§ls
+    name: §c§l全§6§l能§e§l元§a§l素§2§l护§3§l腿§f§l—§c§l—§6§l弱§e§l者§a§l力§2§l量§3§l。
     armor-toughness: 2.5
     armor: 7.0
     max-durability: 3000.0
@@ -440,14 +446,14 @@ OMNIELEMENTAL_BOOTS:
     material: LEATHER_BOOTS
     required-level: 15.0
     lore:
-      - §bDon't limit yourself to one element.
-      - §cIt will be downgraded on death or
-      - §cupon breaking.
-      - §9Gives Jump Boost I when worn.
+      - §b不要局限你的能力.
+      - §c他会在死亡或者破碎时降级
+      - §9佩戴时获得夜视效果.
+      - §7可装备霓虹宝石
     enchants:
       luck_of_the_sea: 1.0
     hide-enchants: true
-    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §c§lB§6§lo§e§lo§a§lt§2§ls
+    name: §9§l全§b§l能§f§l元§e§l素§a§l靴§f§l—§c§l—§6§l弱§e§l者§a§l被§2§l嘲§3§l笑。
     armor-toughness: 2.5
     armor: 3.0
     max-durability: 2150.0
@@ -519,7 +525,7 @@ HELMET_OF_THE_SEA:
       max-spread: 0.25
     tier: RARE
     dye-color: 120 120 255
-    name: §9Helmet of the Ocean
+    name: §9海洋头盔
     hide-dye: true
     element:
       water:
@@ -533,8 +539,8 @@ HELMET_OF_THE_SEA:
       NIGHT_VISION: 1.0
       WATER_BREATHING: 1.0
     lore:
-      - §3Will only work when §9§lUNDERWATER§3.
-      - §3Gives §9Night Vision §3and §9Water Breathing§3.
+      - §3只有当你处于§9§l水中§3时效果会被触发.
+      - §3给予 §9夜视 §3，§9水下呼吸§3效果.
 UNDEADSLAYER_HELMET:
   base:
     material: NETHERITE_HELMET
@@ -545,11 +551,11 @@ MOON_BOOTS:
   base:
     material: DIAMOND_BOOTS
     lore:
-      - §bMoon boots will simulate being on the moon!
-      - §7Gives §3Jump Boost II§7 when worn.
-      - §cWill only work in "the end" biome.
+      - §b月球靴将模拟在月球上!
+      - §7给与 §3跳跃提升 II§7 效果.
+      - §c它只会在 "末地" 区域触发效果.
     max-durability: 2650.0
-    name: §b§lMoon Boots
+    name: §b§l月球靴
     tier: UNIQUE
     armor-toughness: 1.5
     armor: 3.0
@@ -562,7 +568,7 @@ CONTROL_DEVICES:
   base:
     material: LEATHER_HELMET
     max-durability: 15000.0
-    name: §d§lControl Devices
+    name: §d§l「控制设备」
     dye-color: 255 102 204
     ability: { }
     set: PSYCHIC
@@ -575,7 +581,7 @@ CONTROL_DEVICES:
     required-class:
       - Mage
     lore:
-      - §7To keep your powers in check...
+      - §7能够控制你的力量···
     armor-toughness: 2.0
     armor: 7.0
     tier: MAGICAL
@@ -586,7 +592,7 @@ UNDEAD_SLAYER_HELMET:
     required-level: 80.0
     undead-damage: 15.0
     set: UNDEADSLAYER
-    name: §cUndead Slayer Helmet
+    name: §c亡灵头盔
     max-durability: 17500.0
     physical-damage: 5.0
     armor: 8.0
@@ -601,7 +607,7 @@ UNDEAD_SLAYER_HELMET:
       thunder:
         defense: 25.0
     lore:
-      - §cThey'll fear you.
+      - §c他们正在看着你.
     damage-reduction: 5.0
     physical-damage-reduction: 8.0
     magic-damage-reduction: 20.0
@@ -615,7 +621,7 @@ UNDEAD_SLAYER_CHESTPLATE:
     required-level: 80.0
     undead-damage: 15.0
     set: UNDEADSLAYER
-    name: §cUndead Slayer Chestplate
+    name: §c亡灵胸甲
     max-durability: 19800.0
     physical-damage: 5.0
     armor: 11.0
@@ -631,7 +637,7 @@ UNDEAD_SLAYER_CHESTPLATE:
       thunder:
         defense: 50.0
     lore:
-      - §cThey'll fear you.
+      - §c在你的身边···
     damage-reduction: 10.0
     physical-damage-reduction: 15.0
     magic-damage-reduction: 50.0
@@ -644,7 +650,7 @@ UNDEAD_SLAYER_LEGGINGS:
     material: NETHERITE_LEGGINGS
     undead-damage: 15.0
     set: UNDEADSLAYER
-    name: §cUndead Slayer Leggings
+    name: §c亡灵护腿
     max-durability: 18800.0
     physical-damage: 5.0
     armor: 10.0
@@ -659,7 +665,7 @@ UNDEAD_SLAYER_LEGGINGS:
       thunder:
         defense: 30.0
     lore:
-      - §cThey'll fear you.
+      - §c正在你的身边···
     damage-reduction: 8.0
     physical-damage-reduction: 10.0
     magic-damage-reduction: 30.0
@@ -673,7 +679,7 @@ UNDEAD_SLAYER_BOOTS:
     required-level: 80.0
     undead-damage: 15.0
     set: UNDEADSLAYER
-    name: §cUndead Slayer Boots
+    name: §c亡灵靴
     max-durability: 15500.0
     physical-damage: 5.0
     armor: 8.0
@@ -688,7 +694,7 @@ UNDEAD_SLAYER_BOOTS:
       thunder:
         defense: 25.0
     lore:
-      - §cThey'll fear you.
+      - §c他们想要你···
     damage-reduction: 5.0
     physical-damage-reduction: 8.0
     magic-damage-reduction: 20.0
@@ -699,7 +705,7 @@ UNDEAD_SLAYER_BOOTS:
 MYTHRIL_CHAINMAIL:
   base:
     material: CHAINMAIL_CHESTPLATE
-    name: '&b--] &fMythril Chainmail &b[--'
+    name: '&b--] &f秘银链甲 &b[--'
     block-power:
       base: 60.0
       spread: 0.048
@@ -734,7 +740,7 @@ STEEL_HELMET:
     name: '&fSteel Helm'
     armor: 2.5
     lore:
-      - '&7Slightly better than an iron helmet.'
+      - '&7比铁盔稍微好一点.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
@@ -765,10 +771,10 @@ STEEL_CHESTPLATE:
       spread: 0.0625
       max-spread: 0.1875
     required-level: 3.0
-    name: '&fSteel Chestplate'
+    name: '&f钢铁胸甲'
     armor: 6.5
     lore:
-      - '&7Slightly better than an iron chestplate.'
+      - '&7比铁胸甲好一点*--.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
@@ -795,10 +801,10 @@ STEEL_LEGGINGS:
       spread: 0.0625
       max-spread: 0.1875
     required-level: 3.0
-    name: '&fSteel Leggings'
+    name: '&f钢铁护腿'
     armor: 5.5
     lore:
-      - '&7Slightly better than iron leggings.'
+      - '&7比铁护腿好一点.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
@@ -825,10 +831,10 @@ STEEL_BOOTS:
       spread: 0.0625
       max-spread: 0.1875
     required-level: 3.0
-    name: '&fSteel Boots'
+    name: '&f钢靴'
     armor: 2.5
     lore:
-      - '&7Slightly better than iron boots.'
+      - '&7比铁靴好一点.'
     tier: COMMON
     knockback-resistance:
       base: 0.02
@@ -850,7 +856,7 @@ STEEL_BOOTS:
 CURSED_WITHER_SKULL:
   base:
     material: WITHER_SKELETON_SKULL
-    name: '&7Cursed Wither Skull'
+    name: '&7诅咒之颅'
     required-level: 30.0
     tier: UNIQUE
     gem-sockets:
@@ -861,8 +867,8 @@ CURSED_WITHER_SKULL:
     perm-effects:
       ABSORPTION: 1
     lore:
-      - '&7Grants a permanent &62'
-      - '&6hearts &7absorption shield.'
+      - '&7授予永久 &62'
+      - '&6生命&7吸收护盾.'
     durability: 1.0
     element:
       thunder:
@@ -880,7 +886,7 @@ HUGE_MOTHRON_WINGS:
     material: ELYTRA
     max-durability: 5.0
     two-handed: false
-    name: '&eHuge Mothron Wings'
+    name: '&e巨型蛾怪之翼'
     tier: RARE
     unbreakable: true
     movement-speed: -0.03
@@ -888,7 +894,7 @@ HUGE_MOTHRON_WINGS:
 ARCANE_HELM:
   base:
     material: LEATHER_HELMET
-    name: '&5Arcane Helm'
+    name: '&5奥术头盔'
     tier: RARE
     required-level: 4.0
     max-mana: 10.0
@@ -902,7 +908,7 @@ ARCANE_HELM:
 ARCANE_CHESTPLATE:
   base:
     material: LEATHER_CHESTPLATE
-    name: '&5Arcane Tunic'
+    name: '&5奥术外套'
     tier: RARE
     required-level: 4.0
     max-mana: 10.0
@@ -919,14 +925,14 @@ ARCANE_CHESTPLATE:
       type: GALAXY
       particle: SPELL_WITCH
     lore:
-      - '&2Enemies trying to attack you'
-      - '&2will be violently inflicted a wither'
-      - '&2effect for a short period of time.'
+      - '&2试图攻击你的敌人'
+      - '&2将受到猛烈地枯萎'
+      - '&2效果短期内有效.'
     set: ARCANE
 ARCANE_LEGGINGS:
   base:
     material: LEATHER_LEGGINGS
-    name: '&5Arcane Leggings'
+    name: '&5奥术护腿'
     tier: RARE
     required-level: 4.0
     max-mana: 10.0
@@ -943,7 +949,7 @@ ARCANE_LEGGINGS:
 ARCANE_BOOTS:
   base:
     material: LEATHER_BOOTS
-    name: '&5Arcane Boots'
+    name: '&5奥术靴'
     tier: RARE
     required-level: 4.0
     max-mana: 10.0
@@ -954,8 +960,8 @@ ARCANE_BOOTS:
       type: GALAXY
       particle: SPELL_WITCH
     lore:
-      - '&2Greatly increases your'
-      - '&2fall damage reduction.'
+      - '&2大大增加你的'
+      - '&2坠落伤害抗性.'
     fall-damage-reduction:
       base: 45.0
       spread: 0.033
@@ -965,10 +971,10 @@ GINGERBREAD_HELM:
   base:
     material: LEATHER_HELMET
     dye-color: 255 150 100
-    name: '&cGingerbread Helmet'
+    name: '&c姜饼头盔'
     required-level: 2.0
     lore:
-      - '&eEarned during X-Mas 2018!'
+      - '&e2023 年圣诞节期间获得!'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -984,10 +990,10 @@ GINGERBREAD_TUNIC:
   base:
     material: LEATHER_CHESTPLATE
     dye-color: 255 130 130
-    name: '&cGingerbread Tunic'
+    name: '&c姜饼外衣'
     required-level: 2.0
     lore:
-      - '&eEarned during X-Mas 2018!'
+      - '&e在 2023 年圣诞节期间获得！'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -1003,10 +1009,10 @@ GINGERBREAD_LEGGINGS:
   base:
     material: LEATHER_LEGGINGS
     dye-color: 255 140 120
-    name: '&cGingerbread Leggings'
+    name: '&c姜饼护腿'
     required-level: 2.0
     lore:
-      - '&eEarned during X-Mas 2018!'
+      - '&e在 2023 年圣诞节期间获得！'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -1022,10 +1028,10 @@ GINGERBREAD_BOOTS:
   base:
     material: LEATHER_BOOTS
     dye-color: 255 150 150
-    name: '&cGingerbread Boots'
+    name: '&c姜饼靴'
     required-level: 2.0
     lore:
-      - '&eEarned during X-Mas 2018!'
+      - '&e在 2023 年圣诞节期间获得！'
     set: GINGERBREAD
     parry-rating: 5.0
     max-health: 2.0
@@ -1043,7 +1049,7 @@ DEAD_PHARAOH_HELMET:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGU1NWRmOTc5YWI3OTc0OWY4YjU1MWI0MjM5YTQ2OWFhNzY5ZDliNDYwNTBhYWJkOWY2ZDFjZWU1M2VkMzYifX19
       uuid: 852deb36-af4a-412f-ac76-2b06dc123ed2
-    name: '&cDead Pharaoh Helmet'
+    name: '&c残败法老之盔'
     disable-interaction: true
     item-particles:
       type: FIREFLIES
@@ -1052,9 +1058,8 @@ DEAD_PHARAOH_HELMET:
     armor: 4.0
     undead-damage: 30.0
     lore:
-      - '&7This powerful forgotten helmet'
-      - '&7will greatly increase your power'
-      - '&7against undead creatures.'
+      - '&7这个强大的被遗忘的头盔'
+      - '&7它会大大增加你的力量以对抗亡灵生物'
     required-level: 9.0
 MOSSY_SKELETON_SKULL:
   base:
@@ -1062,7 +1067,7 @@ MOSSY_SKELETON_SKULL:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWE2MzE0ZWFjMzQ0MTZjZTEwYWIyMmMyZTFjNGRjYjQ3MmEzZmViOThkNGUwNGQzZmJiYjg1YTlhNDcxYjE4In19fQ
       uuid: f455a085-3f09-43ac-8be1-175204d1a6ad
-    name: '&8Mossy Skeleton Skull'
+    name: '&8苔藓骷颅'
     required-level: 6.0
     armor: 3.5
     knockback-resistance: 0.1
@@ -1074,7 +1079,7 @@ SKELETON_CROWN:
     skull-texture:
       value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM3OGQyMTAyZGI3NWYxYjM3NDRhNWU3ZTliYWNjZjg4ZmRhNGNjNDk3OWViYzBhODFiN2Q5ZWI1NzIxYzAifX19
       uuid: ccb901e7-0919-463d-9bdd-ee9acae8e0e2
-    name: '&eSkeleton Crown'
+    name: '&e骷髅王冠'
     required-level: 9.0
     armor: 3.0
     movement-speed: 0.01
@@ -1085,15 +1090,15 @@ SKELETON_CROWN:
         damage: 3.0
         cooldown: 9.0
     lore:
-      - '&7Every 9 seconds, summons a'
-      - '&cdeadly meteor&7 at your attacker,'
-      - '&7dealing &c4&7 damage while briefly'
-      - '&7knocking them away.'
+      - '&7每 9s, 生成一只'
+      - '&c死亡流行&7 在你所攻击的对象上,'
+      - '&7造成 &c4&7 短暂伤害'
+      - '&7并击退该对象.'
     disable-interaction: true
 WYVERN_CAP:
   base:
     material: GOLDEN_HELMET
-    name: '&fWyvern Cap'
+    name: '&f双足飞龙盔'
     required-level: 10.0
     hide-enchants: false
     enchants:
@@ -1103,7 +1108,7 @@ WYVERN_CAP:
     perm-effects:
       JUMP: 2
     lore:
-      - '&7Grants permanent jump boost II'
+      - '&7给与跳跃提升 II'
     crafting:
       shaped:
         '1':
@@ -1117,7 +1122,7 @@ WYVERN_CAP:
 TRAVEL_BOOTS:
   base:
     material: LEATHER_BOOTS
-    name: §fTravel boots
+    name: §f旅行靴
     movement-speed: 0.005
     dye-color: 187 118 126
     will-break: true
@@ -1128,7 +1133,7 @@ SHADOWVEIL:
   base:
     material: LEATHER_HELMET
     dye-color: 0 0 0
-    name: '&cDark Veil'
+    name: '&c暗黑面纱'
     tier: RARE
     unbreakable: true
     max-durability: 1000.0
@@ -1145,7 +1150,7 @@ SHADOWVEIL:
         duration: 5.0
         cooldown: 20.0
     lore:
-      - '&7&oObtained from the depths of bedrock'
+      - '&7&o自基岩深处而来'
     max-health: 10.0
     armor: 3.0
     armor-toughness: 2.0
@@ -1153,8 +1158,8 @@ SHADOWROBE:
   base:
     material: LEATHER_CHESTPLATE
     lore:
-      - '&7&oObtained from the depths of bedrock'
-    name: '&cShadow Robe'
+      - '&7&o自基岩深处而来'
+    name: '&c暗影长袍'
     max-durability: 1000.0
     disable-repairing: true
     disable-enchanting: true
@@ -1180,8 +1185,8 @@ SHADOWLEGGINGS:
   base:
     material: LEATHER_LEGGINGS
     lore:
-      - '&7&oObtained from the depths of bedrock'
-    name: '&cShadow Leggings'
+      - '&7&o自基岩深处而来'
+    name: '&c阴暗护腿'
     enchants:
       unbreaking: 3
       protection: 4
@@ -1197,9 +1202,9 @@ SHADOWLEGGINGS:
 SHADOWBOOTS:
   base:
     material: LEATHER_BOOTS
-    name: '&cShadow Boots'
+    name: '&c阴影护腿'
     lore:
-      - '&7&oObtained from the depths of bedrock'
+      - '&7&o自基岩深处而来'
     enchants:
       unbreaking: 3
       protection: 4

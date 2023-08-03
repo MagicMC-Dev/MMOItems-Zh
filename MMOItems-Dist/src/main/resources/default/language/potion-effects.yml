@@ -1,33 +1,33 @@
-speed: Speed
-slow: Slow
-fast-digging: Fast Digging
-slow-digging: Slow Digging
-increase-damage: Increase Damage
-heal: Heal
-harm: Harm
-jump: Jump
-confusion: Confusion
-regeneration: Regeneration
-damage-resistance: Damage Resistance
-fire-resistance: Fire Resistance
-water-breathing: Water Breathing
-invisibility: Invisibility
-blindness: Blindness
-night-vision: Night Vision
-hunger: Hunger
-weakness: Weakness
-poison: Poison
-wither: Wither
-health-boost: Health Boost
-absorption: Absorption
-saturation: Saturation
-glowing: Glowing
-levitation: Levitation
-luck: Luck
-unluck: Unluck
-slow-falling: Slow Falling
-conduit-power: Conduit Power
-dolphins-grace: Dolphins Grace
-bad-omen: Bad Omen
-hero-of-the-village: Hero Of The Village
-darkness: Darkness
+speed: 速度
+slow: 缓慢
+fast-digging: 急迫
+slow-digging: 挖掘疲劳
+increase-damage: 力量
+heal: 生命恢复
+harm: 瞬间伤害
+jump: 跳跃提升
+confusion: 反胃
+regeneration: 生命恢复
+damage-resistance: 抗性提升
+fire-resistance: 防火
+water-breathing: 水下呼吸
+invisibility: 隐身
+blindness: 失明
+night-vision: 夜视
+hunger: 饥饿
+weakness: 虚弱
+poison: 中毒
+wither: 凋零
+health-boost: 生命提升
+absorption: 伤害吸收
+saturation: 饱和
+glowing: 发光
+levitation: 飘浮
+luck: 幸运
+unluck: 霉运
+slow-falling: 缓降
+conduit-power: 潮涌能量
+dolphins-grace: 海豚的恩惠
+bad-omen: 不祥之兆
+hero-of-the-village: 村庄英雄
+darkness: 黑暗

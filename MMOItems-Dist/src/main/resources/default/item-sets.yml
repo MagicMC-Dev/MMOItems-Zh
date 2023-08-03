@@ -1,20 +1,19 @@
-# Item sets let you create links betweens the different items you create.
-# By wearing multiple items from the same set, the player will benefit from
-# set bonuses which incites him to use items from the same type.
-# This is a very powerful system for RPG items.
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+# 物品套装允许你在不同的物品之间创建链接。
+# 穿戴相同套装的多个物品，玩家将从套装奖励中受益，鼓励他使用同类型的物品。
+# 这是一个非常强大的RPG物品系统。
 #
-# You can also use potion effects as set bonuses, e.g
-# - "potion-speed: 2" gives permanent Speed II
-# - "potion-increase_damage: 3" gives permanent Strength III
+# 你还可以使用药水效果作为套装奖励，例如：
+# - "potion-speed: 2" 给予永久速度 II
+# - "potion-increase_damage: 3" 给予永久力量 III
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
 #
-# You may also add abilities as full set bonuses. The ability ID
-# must start with 'ability-' but it is only used as reference.
-# You can configure the ability cast mode, type & modifiers as usual.
-
+# 你也可以添加完整套装的能力作为奖励。能力ID必须以 'ability-' 开头，但仅用作参考。
+# 你可以像通常一样配置能力的施法模式、类型和修饰符。
 
 ARCANE:
-    name: '&2Arcane Set'
+    name: '&2神秘套装'
     bonuses:
         '3':
             magic-damage: 20
@@ -22,36 +21,36 @@ ARCANE:
             max-mana: 30
             potion-speed: 1
     lore-tag:
-    - '&7Arcane Set Bonus:'
-    - '&8[3] +20% Magic Damage'
-    - '&8[4] 30 Max Mana'
-    - '&8[4] Permanent Speed I'
+    - '&7神秘套装奖励:'
+    - '&8[3] +20% 魔法伤害'
+    - '&8[4] 最大法力值增加 30'
+    - '&8[4] 永久速度 I'
 
 STEEL:
-    name: '&8Steel Set'
+    name: '&8钢铁套装'
     bonuses:
         '3':
             damage-reduction: 5
         '4':
             damage-reduction: 5
     lore-tag:
-    - '&7Steel Set Bonus:'
-    - '&8[3] +5% Damage Reduction'
-    - '&8[4] +10% Damage Reduction'
+    - '&7钢铁套装奖励:'
+    - '&8[3] +5% 伤害减免'
+    - '&8[4] +10% 伤害减免'
 
 GINGERBREAD:
-    name: '&cGingerbread Set'
+    name: '&c姜饼套装'
     bonuses:
         '4':
             damage-reduction: 6
             potion-jump: 3
     lore-tag:
-    - '&7Gingerbread Set Bonus:'
-    - '&8[4] +5% Damage Reduction'
-    - '&8[4] Permanent Jump III'
+    - '&7姜饼套装奖励:'
+    - '&8[4] +5% 伤害减免'
+    - '&8[4] 永久跳跃 III'
 
 DRAGON:
-    name: '&5Dragon Set'
+    name: '&5龙之套装'
     bonuses:
         '4':
             ability-1:
@@ -62,13 +61,10 @@ DRAGON:
                 radius: 5
                 mode: WHEN_HIT
     lore-tag:
-        - '&3Full Dragon Set Bonus:'
-        - '&7When an enemy attacks you, a &bmagical'
-        - '&bshield&7 appears on you, protecting'
-        - '&7you from &c60%&7 of all damage for'
-        - '&c5s&7. &7&o10s cooldown.'
+        - '&3完整的龙之套装奖励:'
+        - '&7当敌人攻击你时，会在你身上产生一个&b魔法护盾&7，保护你免受&c60%&7的所有伤害，持续&c5秒&7。&7&o10秒冷却。'
 PSYCHIC:
-    name: '&dPsychic'
+    name: '&d灵能套装'
     bonuses:
         '2':
             ability-1:
@@ -83,27 +79,24 @@ PSYCHIC:
                 range: 60
                 mode: SHIFT_RIGHT_CLICK
     lore-tag:
-        - '&dPsychic:'
-        - '&7When equipping &dControl Devices&7 and'
-        - '&7holding &fThin Transparent Gloves&7, you'
-        - '&7can use telekinesy on an entity with'
-        - '&7&3right-click&7 and teleport to the block'
-        - '&7you are facing with &3shift-right-click&7.'
-        - '&8&oGood grief...'
+        - '&d灵能套装:'
+        - '&7当装备&d控制装置&7并持有&f薄透明手套&7时，'
+        - '&7你可以使用&3右键点击&7对实体使用灵能，'
+        - '&7并使用&3Shift + 右键点击&7传送到你所面对的方块。'
+        - '&8&o这真是令人震惊...'
 UNDEADSLAYER:
-    name: '&4&l&k||| &4> &c&lUndead Slayer Set'
+    name: '&4&l&k||| &4> &c&l亡灵猎手套装'
     bonuses:
         '4':
             pve-damage: 10
         '5':
             undead-damage: 15
     lore-tag:
-        - '&4&l&k||| &4> &c&lUndead Slayer Set'
-        - '&7The full &carmor set&7 gives you &c+10%&7 PvE damage.'
-        - '&7Using the &cundead slayer&7 weapon gives an additional'
-        - '&c+15% &7undead damage.'
+        - '&4&l&k||| &4> &c&l亡灵猎手套装'
+        - '&7完整的&c盔甲套装&7使你的&PvE伤害增加&c+10%&7。'
+        - '&7使用&c亡灵猎手&7武器将额外获得&c+15%&7亡灵伤害。'
 SPELLCASTER:
-    name: '&dSpellcaster Set'
+    name: '&d魔法师套装'
     bonuses:
         '3':
             max-mana: 10
@@ -112,14 +105,14 @@ SPELLCASTER:
         '5' :
             potion-speed: 1
     lore-tag:
-        - '&dSpellcaster Set Bonus:'
-        - '&3[3] +10 Max Mana'
-        - '&3[4] +25% Magic Damage'
-        - '&3If you hold the Spellcaster Wand&7,'
-        - '&7&bPermanent Speed I&7.'
+        - '&d魔法师套装奖励:'
+        - '&3[3] 最大法力值增加 10'
+        - '&3[4] +25% 魔法伤害'
+        - '&3如果你持有魔法师魔杖，'
+        - '&7永久获得&b速度 I&7。'
 
 OMNIELEMENTAL:
-    name: '&eOmnielemental Set'
+    name: '&e万元素套装'
     bonuses:
         '4':
             water-defense: 100
@@ -133,14 +126,14 @@ OMNIELEMENTAL:
             lightness-defense: 100
             darkness-defense: 100
     lore-tag:
-        - '&eOmnielemental Set Bonus:'
-        - '&7[4] Protects you from &cFire&7, &3Water&7, Wind and &2Earth.'
-        - '&7[5] Protects you from &bIce&7 and &eThunder&7 aswell.'
-        - '&7[6] Protects you from &fLightness&7 and &8Darkness&7.'
+        - '&e万元素套装奖励:'
+        - '&7[4] 保护你免受&c火&7、&3水&7、风和&2土&7伤害。'
+        - '&7[5] 同样保护你免受&b冰&7和&e雷电&7伤害。'
+        - '&7[6] 同样保护你免受&f轻盈&7和&8黑暗&7伤害。'
 
-# Not used by default
+# 默认情况下未使用
 HATRED:
-    name: '&cHatred Set'
+    name: '&c憎恨套装'
     bonuses:
         '2':
             damage-reduction: 6
@@ -149,6 +142,6 @@ HATRED:
                 cooldown: 30
                 mode: ATTACK
     lore-tag:
-        - '&7Hatred Set Bonus:'
-        - '&8[2] -6% Damage Taken'
-        - '&8[2] Summons a devastating fire meteor on hit.'
+        - '&7憎恨套装奖励:'
+        - '&8[2] -6% 受到的伤害'
+        - '&8[2] 每次攻击召唤一个毁灭性的火球。'

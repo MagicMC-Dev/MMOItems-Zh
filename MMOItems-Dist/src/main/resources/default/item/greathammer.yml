@@ -1,16 +1,17 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 UNRELIABLE_HAMMER:
   base:
     material: DIAMOND_AXE
-    name: §3Unreliable Greathammer
+    name: §3不可思议的重锤
     required-level: 10.0
     tier: UNCOMMON
     lore:
-      - §7This hammer has very randomized stats
-      - §7it may have §cvery low durability§7 or
-      - §7a §cvery high§7 one! It'll §cbreak§7 if it
-      - §7reaches zero.
-      - §7If it is upgraded, it will §cdowngrade§7
-      - §7instead.
+      - §7这把重锤拥有随机的属性
+      - §7他可能时§非常低的耐久§7亦或是
+      - §7§c非常高§7的! 他将会在达到0时§c损毁§7
+      - §如果他被升级, 他将会§c降级§7
+      - §7同理可得其他特性。
     max-durability:
       base: 150.0
       spread: 0.8

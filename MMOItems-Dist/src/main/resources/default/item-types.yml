@@ -1,198 +1,198 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+# 默认物品类型。它们不能被删除。
+# 它们可以作为“父类”用于创建新的物品类型，
+# 新类型的行为与另一个物品类型完全相同。
+# 父类会在 /language/item_type.yml 下生成自己的配置文件。
 
-# Default item types. These cannot be removed. They
-# may be used as 'parents' to create new item types
-# which will behave just like another item type. Parents
-# generate their own config file at /language/item_type.yml
+# 每个物品类型都有其未鉴定物品的模板。
+# 如果你不像默认的 SWORD 物品类型一样指定一个模板，
+# 它将使用默认（未翻译）的英文模板。
 
-# Every item type has its template for unidentified items.
-# If you don't specify one like the default SWORD item type,
-# it will use the default (not translated) english one.
-
-# Used as reference when using /mmoitems commands
+# 在使用 /mmoitems 命令时用作参考
 SWORD:
 
-    # The display parameter is used to display the item in both
-    # the item brower and the recipe list when shifting a
-    # workbench. You can use durability for custom textures.
-    # In 1.14, durability is replaced by CustomModelData.
+    # 显示参数用于在物品浏览器和制作台中的配方列表中显示物品。
+    # 您可以使用 durability 来设置自定义纹理。
+    # 在 1.14 版本中，durability 被 CustomModelData 替代。
     display: IRON_SWORD:0
     
-    # Name displayed in the item lore.
-    name: 'Sword'
+    # 物品lore中显示的名称。
+    name: '剑'
     
-    # Template of an unidentified item.
+    # 未鉴定物品的模板。
     unident-item:
-        name: '&f#prefix#Unidentified Sword'
+        name: '&f#prefix#未知的剑'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 DAGGER:
     display: STONE_SWORD
-    name: 'Dagger'
+    name: '匕首'
     unident-item:
-        name: '&f#prefix#Unidentified Dagger'
+        name: '&f#prefix#未知的匕首'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 SPEAR:
     display: TRIDENT
-    name: 'Spear'
+    name: '长枪'
     unident-item:
-        name: '&f#prefix#Unidentified Spear'
+        name: '&f#prefix#未知的长枪'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 HAMMER:
     display: IRON_AXE
-    name: 'Hammer'
+    name: '锥子'
     unident-item:
         name: '&f#prefix#Unidentified Hammer'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 GAUNTLET:
     display: IRON_HORSE_ARMOR
-    name: 'Gauntlet'
+    name: '拳套'
     unident-item:
         name: '&f#prefix#Unidentified Gauntlet'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 WHIP:
     display: LEAD
-    name: 'Whip'
+    name: '长鞭'
     unident-item:
         name: '&f#prefix#Unidentified Whip'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 STAFF:
     display: DIAMOND_HOE
-    name: 'Staff'
+    name: '法器'
     unident-item:
         name: '&f#prefix#Unidentified Staff'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 BOW:
     display: BOW
-    name: 'Bow'
+    name: '弓箭'
     unident-item:
         name: '&f#prefix#Unidentified Bow'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 CROSSBOW:
     display: WOODEN_PICKAXE
-    name: 'Crossbow'
+    name: '弩'
     unident-item:
         name: '&f#prefix#Unidentified Crossbow'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 MUSKET:
     display: IRON_HORSE_ARMOR
-    name: 'Musket'
+    name: '火枪'
     unident-item:
         name: '&f#prefix#Unidentified Musket'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 LUTE:
     display: NAME_TAG
-    name: 'Lute'
+    name: '鲁特诗琴'
     unident-item:
         name: '&f#prefix#Unidentified Lute'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 # Applies stats in both hands
 CATALYST:
     display: PRISMARINE_SHARD
-    name: 'Catalyst'
+    name: '催化剂'
     unident-item:
         name: '&f#prefix#Unidentified Catalyst'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 # Applies stats in offhand only
 OFF_CATALYST:
     display: PRISMARINE_CRYSTALS
-    name: 'Catalyst (Offhand)'
+    name: '催化剂 (副手)'
     unident-item:
         name: '&f#prefix#Unidentified Catalyst'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 # Applies stats in mainhand only
 MAIN_CATALYST:
     display: PRISMARINE_CRYSTALS
-    name: 'Catalyst (Mainhand)'
+    name: '催化剂 (主手)'
     unident-item:
         name: '&f#prefix#Unidentified Catalyst'
         lore:
@@ -205,357 +205,357 @@ MAIN_CATALYST:
 
 ORNAMENT:
     display: GOLD_NUGGET
-    name: 'Ornament'
+    name: '装饰'
     unident-item:
         name: '&f#prefix#Unidentified Ornament'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 ACCESSORY:
     display: DIAMOND
-    name: 'Accessory'
+    name: '材料'
     unident-item:
         name: '&f#prefix#Unidentified Accessory'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 ARMOR:
     display: IRON_CHESTPLATE
-    name: 'Armor'
+    name: '盔甲'
     unident-item:
         name: '&f#prefix#Unidentified Armor'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 TOOL:
     display: IRON_PICKAXE
-    name: 'Tool'
+    name: '工具'
     unident-item:
         name: '&f#prefix#Unidentified Tool'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 CONSUMABLE:
     display: APPLE
-    name: 'Consumable'
+    name: '消耗品'
     unident-item:
         name: '&f#prefix#Unidentified Consumable'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 MISCELLANEOUS:
     display: WATER_BUCKET
-    name: 'Miscellaneous'
+    name: '随机'
     unident-item:
         name: '&f#prefix#Unidentified Misc Item'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 SKIN:
     display: LEATHER
-    name: 'Skin'
+    name: '皮肤'
     unident-item:
         name: '&f#prefix#Unidentified Skin Item'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 GEM_STONE:
     display: EMERALD
-    name: 'Gem Stone'
+    name: '宝石原石'
     unident-item:
         name: '&f#prefix#Unidentified Gem'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 BLOCK:
     display: STONE:0
-    name: 'Block'
+    name: '方块'
     unident-item:
         name: '&f#prefix#Unidentified Block'
         lore:
-            - '&7This item is unidentified. I must'
-            - '&7find a way to identify it!'
+            - '&7未知的物品'
+            - '&7找个方法来解锁吧！!'
             - '{tier}'
-            - '{tier}&8Item Info:'
-            - '{range}&8- &7Lvl Range: &e#range#'
-            - '{tier}&8- &7Item Tier: #prefix##tier#'
+            - '{tier}&8物品信息:'
+            - '{range}&8- &7等级范围: &e#range#'
+            - '{tier}&8- &7物品等级: #prefix##tier#'
 
 
 # Default subtypes
 GREATSWORD:
     display: DIAMOND_SWORD
-    name: 'Greatsword'
+    name: '大剑'
     parent: 'SWORD'
     unident-item:
         name: '&f#prefix#Unidentified Greatsword'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 LONG_SWORD:
     display: STONE_SWORD
-    name: 'Long Sword'
+    name: '长剑'
     parent: 'SWORD'
     unident-item:
         name: '&f#prefix#Unidentified Long Sword'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 KATANA:
     display: IRON_SWORD
-    name: 'Katana'
+    name: '武士刀'
     parent: 'SWORD'
     unident-item:
         name: '&f#prefix#Unidentified Katana'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 THRUSTING_SWORD:
     display: GOLDEN_SWORD
-    name: 'Thrusting Sword'
+    name: '强力剑'
     parent: 'DAGGER'
     unident-item:
         name: '&f#prefix#Unidentified Thrusting Dagger'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 AXE:
     display: STONE_AXE
-    name: 'Axe'
+    name: '斧'
     parent: 'SWORD'
     unident-item:
         name: '&f#prefix#Unidentified Axe'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 GREATAXE:
     display: DIAMOND_AXE
-    name: 'Greataxe'
+    name: '重斧'
     parent: 'SWORD'
     unident-item:
         name: '&f#prefix#Unidentified Greataxe'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 HALBERD:
     display: IRON_AXE
-    name: 'Halberd'
+    name: '戟'
     parent: 'SWORD'
     unident-item:
         name: '&f#prefix#Unidentified Halberd'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 LANCE:
     display: STICK
-    name: 'Lance'
+    name: '矛'
     parent: 'SPEAR'
     unident-item:
         name: '&f#prefix#Unidentified Lance'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 GREATHAMMER:
     display: DIAMOND_AXE
-    name: 'Greathammer'
+    name: '重锤'
     parent: 'HAMMER'
     unident-item:
         name: '&f#prefix#Unidentified Greathammer'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 GREATSTAFF:
     display: DIAMOND_HOE
-    name: 'Greatstaff'
+    name: '撬棍'
     parent: 'HAMMER'
     unident-item:
         name: '&f#prefix#Unidentified Greatstaff'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 STAVE:
     display: IRON_HOE
-    name: 'Stave'
+    name: '棍棒'
     parent: 'HAMMER'
     unident-item:
         name: '&f#prefix#Unidentified Stave'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 TOME:
     display: BOOK
-    name: 'Tome'
+    name: '卷轴'
     parent: 'CATALYST'
     unident-item:
         name: '&f#prefix#Unidentified Tome'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 TALISMAN:
     display: TOTEM_OF_UNDYING
-    name: 'Talisman'
+    name: '护身符'
     parent: 'CATALYST'
     unident-item:
         name: '&f#prefix#Unidentified Talisman'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
  
 WAND:
     display: STICK
-    name: 'Wand'
+    name: '杖'
     parent: 'STAFF'
     unident-item:
         name: '&f#prefix#Unidentified Wand'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
 
 GREATBOW:
     display: BOW
-    name: 'Greatbow'
+    name: '强弓'
     parent: 'BOW'
     unident-item:
         name: '&f#prefix#Unidentified Greatbow'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 SHIELD:
     display: SHIELD
-    name: 'Shield'
+    name: '盾'
     parent: CATALYST
     unident-item:
         name: '&f#prefix#Unidentified Shield'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'
     
 MATERIAL:
     display: PAPER
-    name: 'Material'
+    name: '材料'
     parent: 'MISCELLANEOUS'
     unident-item:
         name: '&f#prefix#Unidentified Material'
         lore:
-        - '&7This item is unidentified. I must'
-        - '&7find a way to identify it!'
+        - '&7未知的物品'
+        - '&7找个方法来解锁吧！!'
         - '{tier}'
-        - '{tier}&8Item Info:'
-        - '{range}&8- &7Lvl Range: &e#range#'
-        - '{tier}&8- &7Item Tier: #prefix##tier#'
+        - '{tier}&8物品信息:'
+        - '{range}&8- &7等级范围: &e#range#'
+        - '{tier}&8- &7物品等级: #prefix##tier#'

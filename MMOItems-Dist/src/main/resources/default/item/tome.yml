@@ -1,12 +1,14 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 AMPLIFICATION_TOME:
   base:
     material: ENCHANTED_BOOK
-    name: '&9Amplification Tome'
+    name: '&9充能卷轴'
     required-level: 9.0
     lore:
-    - '&7It emits a strong magical aura.'
-    - '&7Hold it to &5greatly enhance'
-    - '&7your magical powers.'
+    - '&7产生一个强大的光环。'
+    - '&7拿起它以&5极大地增强'
+    - '&7你的法力。'
     magic-damage:
       base: 85.0
       spread: 0.02
@@ -15,12 +17,12 @@ WYVERN_FEATHER:
   base:
     material: FEATHER
     disable-crafting: true
-    name: '&fWyvern Feather'
+    name: '&f龙羽'
     fall-damage-reduction: 65.0
 WYVERN_SOUL:
   base:
     material: ENDER_EYE
-    name: '&fWyvern Soul'
+    name: '&f龙魂'
     disable-interaction: true
     disable-crafting: true
     enchants:
@@ -32,7 +34,7 @@ TOME_OF_ACCURACY:
   base:
     material: ENCHANTED_BOOK
     disable-repairing: true
-    name: '&eTome of Accuracy'
+    name: '&e精准卷轴'
     critical-strike-power:
       base: 27.5
       spread: 0.03
@@ -42,12 +44,12 @@ TOME_OF_ACCURACY:
       spread: 0.08
       max-spread: 0.25
     lore:
-    - '&7Increases your critical power.'
+    - '&7增加暴击率，让您刀刀致命。'
 NAUGHTY_SPELL_BOOK:
   base:
     material: ENCHANTED_BOOK
     disable-repairing: true
-    name: '&8Naughty Spell Book'
+    name: '&8调皮法书'
     required-level: 20.0
     ability:
       right-click:
@@ -56,9 +58,9 @@ NAUGHTY_SPELL_BOOK:
         cooldown: 30.0
         damage: 6.0
     lore:
-    - '&7Right click to cast a &5cursed beam&7.'
-    - '&7This magic projectile deals &57'
-    - '&5damage &7to the first enemy it hits.'
+    - '&7右键召唤一束&5诅咒光线&7.'
+    - '&7诅咒光线对击中的第一个敌人造成&57'
+    - '&5伤害&7。'
 CELESTIAL_TOME:
   base:
     material: BOOK
@@ -66,10 +68,10 @@ CELESTIAL_TOME:
       luck_of_the_sea: 1.0
     disable-interaction: true
     lore:
-      - §f§oFrom the angels themselves!
-      - §bThe gods shall not let others take
-      - §bthis from you. It can't drop on death.
-    name: §b§lCelestial Tome
+      - §f§o由天使所著。
+      - §b这部卷轴受上帝庇佑，别人无法
+      - §b带走。死亡时不会掉落。
+    name: §b§l天国卷轴
     tier: EPIC
     ability:
       ability1:
@@ -82,8 +84,8 @@ CELESTIAL_TOME:
 OMNIELEMENTAL_TOME:
   base:
     material: BOOK
-    name: §c§lO§6§lm§e§ln§a§li§2§lE§3§ll§9§le§b§lm§f§le§e§ln§a§lt§6§la§c§ll §6§lT§e§lo§a§lm§2§le
-    required-level: 30.0
+    name: §c§l全§6§l能§e§l元§a§l素§2§l卷§3§l轴§9§l—§b§l—§f§l弱§e§l者§a§l会§6§l站§c§l起§6§l来
+    required-level: 30.0 
     tier: VERY_RARE
     magic-damage:
       base: 30.0
@@ -100,7 +102,7 @@ OMNIELEMENTAL_TOME:
       water:
         damage: 25.0
     lore:
-      - §7Chaos is the source of all creation.
+      - §7混乱创生一切。
     ability:
       ability1:
         type: SWIFTNESS

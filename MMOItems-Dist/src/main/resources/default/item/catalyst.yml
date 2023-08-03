@@ -1,10 +1,12 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 NATURES_GIFT:
   base:
     material: OAK_SAPLING
     disable-crafting: true
-    name: '&9Magical Catalyst'
+    name: '&9魔力催化剂'
     lore:
-      - '&7No one knows where it was found.'
+      - '&7没人知道它是从哪里被发现的.'
     magic-damage:
       base: 15.0
       spread: 0.084
@@ -19,13 +21,13 @@ NATURES_GIFT:
 LUCKY_CHARM:
   base:
     material: RABBIT_FOOT
-    name: '&fLucky Charm'
+    name: '&f幸运护身符'
     tier: NORMAL
     critical-strike-chance: 2.5
 WARRIOR_AMULET:
   base:
     material: GRAY_DYE
-    name: '&fWarrior Amulet'
+    name: '&f狂战士护身符'
     disable-crafting: true
     hide-enchants: true
     enchants:
@@ -37,7 +39,7 @@ FORGOTTEN_IDOL:
     enchants:
       unbreaking: 1
     hide-enchants: true
-    name: '&eForgotten Idol'
+    name: '&e被遗忘的幻想'
     required-level: 19.0
     weapon-damage:
       base: 35.0
@@ -49,7 +51,7 @@ FIRE_TOTEM:
     hide-enchants: true
     enchants:
       unbreaking: 1
-    name: '&fFire Totem'
+    name: '&f火焰图腾'
     tier: RARE
     fire-damage-reduction:
       base: 85.0
@@ -60,13 +62,13 @@ FIRE_TOTEM:
 ENCHANTED_SHULKER_SHELL:
   base:
     material: SHULKER_SHELL
-    name: §dEnchanted Shulker Shell
+    name: §d附魔潜影贝壳
     enchants:
       luck_of_the_sea: 1.0
     hide-enchants: true
     lore:
-      - §5§oThe power of shulkers is in your hands!
-      - §bComponent of the Cosmos Wand.
+      - §5§o潜影贝的力量正在你的手中!
+      - §b宇宙魔杖的组成部分.
     disable-crafting: true
     ability:
       ability1:
@@ -86,10 +88,10 @@ PERFECT_ENDER_PEARL:
   base:
     material: ENDER_PEARL
     disable-interaction: true
-    name: §5§lPerfect Ender Pearl
+    name: §5§l完美末影珍珠
     lore:
-      - §5§oExtracted from the essence of endermen.
-      - §bComponent of the Cosmos Wand.
+      - §5§o从末影人的精华中提取。
+      - §b宇宙魔杖的组成部分。
     tier: RARE
     ability:
       ability1:
@@ -108,7 +110,7 @@ PERFECT_ENDER_PEARL:
 POWER_CRYSTAL:
   base:
     material: PRISMARINE_SHARD
-    name: §9§lPower Crystal
+    name: §9§l功率晶体
     tier: RARE
     handworn: true
     fire-damage-reduction: 100.0
@@ -135,15 +137,13 @@ POWER_CRYSTAL:
 LUCK_CHARM:
   base:
     material: GOLD_NUGGET
-    name: §e§lLuck Charm
+    name: §e§l幸运护身符
     lore:
-      - §7Gives §2Luck III§7, §e+50%§7 Enchanting skill EXP
-      - §7and §e+25%§7 experience dropped on mobs
-      - §7when held.
-      - §cWon't drop on death and can't be stacked!
+      - §7在手持时给予 §2幸运 III§7, §e+50%§7 附魔经验
+      - §7同时 §e+25%§7 怪物掉落经验
+      - §c不会在死亡时掉落，不能堆叠!
     perm-effects:
       LUCK: 3.0
-    additional-experience: 25.0
     tier: MAGICAL
     required-level: 5.0
     required-class:
@@ -152,7 +152,6 @@ LUCK_CHARM:
     disable-smelting: true
     disable-interaction: true
     handworn: true
-    additional-experience-enchanting: 50.0
     crafting:
       shaped:
         '1':
@@ -164,7 +163,7 @@ LUCK_CHARM:
 THIN_TRANSPARENT_GLOVES:
   base:
     material: LEATHER
-    name: §7Thin Transparent Gloves
+    name: §7透明薄手套
     set: PSYCHIC
     required-class:
       - Mage
@@ -174,12 +173,11 @@ THIN_TRANSPARENT_GLOVES:
 ICE_GOLEM_HEART:
   base:
     material: PRISMARINE_SHARD
-    name: §bIce Golem Heart
+    name: §b冰傀儡之心
     lore:
-      - §7Discontent falls. Hope rises.
-      - §cProtects you from lava when held.
-      - §2You can use two-handed weapons
-      - §2with it!
+      - §7不满情绪降临，希望升起。
+      - §c手持时保护以免受熔岩的伤害。
+      - §2你可以和它一起使用双手武器
     magic-damage: 15.0
     amphibian: LAVA
     perm-effects:

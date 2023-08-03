@@ -1,23 +1,25 @@
-name: Shulker Missile
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 潜影贝漂浮物
 modifier:
   duration:
-    name: Duration
+    name: 持续时间
     default-value: 5.0
   damage:
-    name: Damage
+    name: 伤害
     default-value: 5.0
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0.0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0.0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 12.0
   effect-duration:
-    name: Effect Duration
+    name: 效果持续时间
     default-value: 5.0
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0

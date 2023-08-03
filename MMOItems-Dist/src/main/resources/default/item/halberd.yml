@@ -1,10 +1,11 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 DOUBLE_OR_NOTHING:
   base:
     material: IRON_AXE
     lore:
-    - '&7&oA very powerful yet hard'
-    - '&7&oto manipulate weapon...'
-    - '&7&oBe very careful!'
+    - §7§o这是一件强大又难操作的武器...
+    - §7§o请对他小心!
     critical-strike-power:
       base: 850.0
       spread: 0.02
@@ -25,7 +26,7 @@ DOUBLE_OR_NOTHING:
     enchants:
       unbreaking: 5
     hide-enchants: true
-    name: '&b&l&o"Double or Nothing"'
+    name: §b§l§o翻倍机会（要么双倍获得要么一无所有）
     gem-sockets:
     - Red
     - Uncolored
@@ -42,10 +43,10 @@ DOUBLE_OR_NOTHING:
 BRAVE_HALBERD:
   base:
     material: IRON_AXE
-    name: §eBrave's Halberd
+    name: §e勇者的戟
     lore:
-      - §7§oNo one knows his true name...
-      - §7§oBut he was so §e§obrave§7§o!
+      - §7§o没有人知道他真正的名字...
+      - §7§o但是他是如此的§e§o英勇§7§o!
     attack-damage:
       base: 14.0
       scale: 0.1

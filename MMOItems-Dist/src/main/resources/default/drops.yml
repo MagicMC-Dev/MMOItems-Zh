@@ -1,26 +1,23 @@
-# You can create as many subtables as you
-# want for each monster/block/mythic mob.
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+# 你可以为每个怪物/方块/神话生物创建任意数量的子表格。
 # 
-# 'coef' is the subtable coefficient. If a subtable has coef=1 and
-# another subtable has coef=3, then the first subtable has 1 (his coefficient)
-# chance out of 4 (sum of all subtable coefficients) to be selected.
-# The higher the coefficient is, the higher the chance to be the selected subtable.
+# 'coef' 是子表格的系数。如果一个子表格的 coef=1，另一个子表格的 coef=3，那么第一个子表格被选中的几率是 1（他的系数），
+# 总共的几率是 4（所有子表格系数之和）。系数越高，被选中的几率越大。
 #
-# When a drop table is read, a random subtable is chosen
-# among all subtables. It then reads the subtable items.
+# 当读取掉落表时，会从所有子表格中随机选择一个子表格。然后读取子表格中的物品。
 #
-# The subtable names do not matter, just make sure every
-# subtable in a drop table has a different name.
+# 子表格的名称无关紧要，只需确保每个掉落表中的子表格名称不同即可。
 #
-# Subtable Item Format: [chance to drop],[min amount]-[max amount],[unidentification chance]
-#                    or [chance to drop],[amount],[unidentification chance]
-# '50,1-3,10' means:
-#       - 50% chance of dropping
-#       - 1 to 3 items will drop
-#       - 10% chance of being unidentified (for each item)
+# 子表格中的物品格式: [掉落几率],[最小数量]-[最大数量],[未鉴定几率]
+# 或 [掉落几率],[数量],[未鉴定几率]
+# '50,1-3,10' 表示:
+#       - 有 50% 的几率掉落
+#       - 将掉落 1 到 3 个物品
+#       - 每个物品有 10% 的几率是未鉴定的
 
-# Blocks Drop Tables
-# Read when a block is mined/broken by a player.
+# 方块掉落表
+# 当玩家挖掘/破坏方块时读取。
 blocks:
     DIAMOND_ORE:
         rare-diamond:
@@ -30,8 +27,8 @@ blocks:
                 MATERIAL:
                     RARE_DIAMOND: 100,2-3,0
 
-# Custom Blocks Drop Tables
-# Read when a custom block is mined/broken by a player.
+# 自定义方块掉落表
+# 当玩家挖掘/破坏自定义方块时读取。
 customblocks:
     1:
         more-rare-diamond:
@@ -41,8 +38,8 @@ customblocks:
                 MATERIAL:
                     RARE_DIAMOND: 100,2-3,0
 
-# Monsters Drop Tables
-# Read when any monster dies.
+# 怪物掉落表
+# 当任何怪物死亡时读取。
 monsters:
     BLAZE:
         fire-essence-table:

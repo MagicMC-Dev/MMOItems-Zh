@@ -1,26 +1,28 @@
-name: Item Bomb
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 物品炸弹
 modifier:
   damage:
-    name: Damage
+    name: 伤害
     default-value: 7.0
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0.0
   slow-duration:
-    name: Slow Duration
+    name: 缓慢持续时间
     default-value: 4.0
   slow-amplifier:
-    name: Slow Amplifier
+    name: 缓慢增幅
     default-value: 1.0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0.0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 15.0
   radius:
-    name: Radius
+    name: 半径
     default-value: 6.0
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0

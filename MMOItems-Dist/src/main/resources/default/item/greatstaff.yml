@@ -1,7 +1,9 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 STIFF_GREATSTAFF:
   base:
     material: STICK
-    name: '&fStiff Greatstaff'
+    name: §f撬棍
     attack-damage:
       base: 11.0
       spread: 0.03
@@ -14,7 +16,7 @@ STIFF_GREATSTAFF:
         mode: ATTACK
         cooldown: 15.0
     lore:
-    - '&7So heavy it &cstuns&7 enemies on hit.'
+    - §7它是如此的沉重以至于被它击中的敌人会§c昏迷§7。
     disable-crafting: true
     disable-smelting: true
     block-rating: 5.0

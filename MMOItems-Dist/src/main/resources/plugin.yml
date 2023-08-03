@@ -1,47 +1,50 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 name: MMOItems
-version: ${project.version}
+version: 6.9.5-SNAPSHOT
 main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce
-description: ${project.description}
+description: A great item solution for your RPG server!!
 depend: [MythicLib]
 softdepend: [WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MMOProfiles,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen,AureliumSkills]
 api-version: 1.13
 commands:
     mmoitems:
-        description: MMOItems main command.
+        description: MMOItems主命令。
         aliases: [mi]
     updateitem:
-        description: Update the item you are holding.
-        aliases: [upitem,itemup]
+        description: 更新手持物品。
+        aliases: [upitem, itemup]
         permission: mmoitems.update
+
 permissions:
     mmoitems.admin:
-        description: Access to admin commands.
+        description: 访问管理员命令。
         default: op
     mmoitems.update:
-        description: Access to /updateitem.
+        description: 访问 /updateitem 命令。
         default: op
     mmoitems.edit.op:
-        description: Ability to edit op stats like commands.
+        description: 允许编辑 op 属性，如 commands。
         default: false
     mmoitems.bypass.item:
-        description: Bypasses item permission restriction.
+        description: 绕过物品权限限制。
         default: false
     mmoitems.bypass.ability:
-        description: Bypasses ability permission restriction.
+        description: 绕过技能权限限制。
         default: false
     mmoitems.bypass.class:
-        description: Bypasses item class restriction.
+        description: 绕过物品类别限制。
         default: false
     mmoitems.bypass.soulbound:
-        description: Bypasses soulbound restriction.
+        description: 绕过绑定限制。
         default: false
     mmoitems.bypass.level:
-        description: Bypasses item level restriction.
+        description: 绕过物品等级限制。
         default: false
     mmoitems.update-notify:
-        description: Receive a notification when a new update is available.
+        description: 接收新版本更新时的通知。
         default: op
     mmoitems.soulbound:
-        description: Allows to use /soulbound.
+        description: 允许使用 /soulbound 命令。
         default: op

@@ -1,7 +1,9 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 COMPOSITE_BOW:
   base:
     material: BOW
-    name: '&fComposite Bow'
+    name: '&f复合弓'
     critical-strike-chance: 30.0
     attack-damage:
       base: 7
@@ -54,7 +56,7 @@ HELL_BOW:
       - Red
       - Red
       - Green
-    name: '&cHell Bow'
+    name: '&c地狱火箭'
     pve-damage:
       base: 25.0
       spread: 0.06
@@ -69,7 +71,7 @@ MARKING_BOW:
     material: BOW
     enchants:
       unbreaking: 3
-    name: '&8Marking Bow'
+    name: '&8记号弓'
     attack-damage: 7.0
     arrow-particles:
       particle: SMOKE_NORMAL
@@ -84,17 +86,17 @@ MARKING_BOW:
     damage-reduction: -5.0
     required-level: 10.0
     lore:
-      - '&7Shoot an entity to &cmark &7it. The'
-      - '&7next attack against this entity'
-      - '&7will deal &c60%&7 extra damage.'
+      - '&7射向实体以&c标记&7。'
+      - '&7而下次对它的攻击会造成'
+      - '&7&c60%&7额外伤害。'
 NETHERITE_BOW:
   base:
     material: BOW
     max-durability: 8500.0
-    name: §c§lDark Netherite Bow
+    name: §c§l暗下界合金弓
     lore:
-      - §6§o"Bows made of metal can't work."
-      - §8§oBut it's a video game!
+      - §6§o"金属打造的弓？别扯淡了。"
+      - §8§o但别忘了，这里是我的世界。
     attack-damage: 25.0
     arrow-velocity: 1.5
     pvp-damage:
@@ -137,9 +139,9 @@ NETHERITE_BOW:
 PRECISION_BOW:
   base:
     material: BOW
-    name: §7§lPrecision Bow
+    name: §7§l精准弓
     lore:
-      - §7The precision bow shoots much farther.
+      - §7射的比你远。
     critical-strike-chance:
       base: 15.0
       scale: 0.05

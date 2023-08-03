@@ -1,13 +1,15 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 EXECUTIONER_AXE:
   base:
     material: IRON_AXE
-    name: §cExecutioner's Axe
+    name: §c刽子手
     disable-enchanting: true
     disable-repairing: true
     disable-interaction: true
     lore:
-      - §7An axe that only serves for
-      - §7fighting, and it can't be §cenchanted§7.
+      - §7为战斗而生的利斧，
+      - §7不能被§c附魔§7。
     attack-damage:
       base: 17.0
       scale: 0.1
@@ -44,7 +46,7 @@ EXECUTIONER_AXE:
 UNDEAD_SLAYER:
   base:
     material: NETHERITE_AXE
-    name: §4§l§k||| §c§lUndead Slayer §4§l§k|||
+    name: §4§l§k||| §c§l屠尸者 §4§l§k|||
     undead-damage: 350.0
     attack-damage: 7.0
     required-level: 15.0
@@ -64,8 +66,8 @@ UNDEAD_SLAYER:
       - Red
       - Red
     lore:
-      - §cFor those who aren't afraid of
-      - §cdealing with the underworld.
+      - §c想要用上它，你最好
+      - §c别怕墓地里的丧尸。
     ability:
       ability1:
         type: CURSED_BEAM
@@ -82,7 +84,7 @@ UNDEAD_SLAYER:
 BUTCHER_AXE:
   base:
     material: IRON_AXE
-    name: '&cButcher&f''s Axe'
+    name: '&c屠夫&f的斧子'
     tier: UNCOMMON
     critical-strike-chance: 5.0
     critical-strike-power: 248.0
@@ -121,7 +123,7 @@ BONE_CRACKER:
     armor-toughness: 2.0
     gem-sockets:
       - Uncolored
-    name: '&fBone Cracker'
+    name: '&f碎骨者'
     attack-damage:
       base: 11.0
       spread: 0.027
@@ -146,13 +148,13 @@ SKULL_BREAKER:
       base: 0.35
       spread: 0.042
       max-spread: 0.13
-    name: '&f&lSKULL BREAKER'
+    name: '&f&l碎颅者'
     tier: COMMON
     two-handed: true
     movement-speed: -0.02
     lore:
-      - '&7Its large blade &cslow&7 its targets'
-      - '&7when smashing it on their skull.'
+      - '&7给目标&c减缓速度&7，'
+      - '&7然后砸向他们的头骨。'
     required-level: 9.0
     required-class:
       - Brute
@@ -161,7 +163,7 @@ SILVER_AXE:
   base:
     material: IRON_AXE
     custom-model-data: 1.0
-    name: '&fSilver Axe'
+    name: '&f银斧'
     attack-damage:
       base: 9.5
       spread: 0.017
@@ -181,10 +183,10 @@ SILVER_AXE:
         cooldown: 20.0
         mode: SHIFT_RIGHT_CLICK
     lore:
-      - '&7Every &c20 &7seconds, shift and'
-      - '&7right-click to perform a devastating'
-      - '&7circular slash, dealing &c6 &7damage'
-      - '&7and knocking back nearby targets.'
+      - '&7每隔&c20&7秒，可以在潜行时'
+      - '&7右键来造成圆周范围内的强力劈'
+      - '&7砍，造成&c6&7伤害并击退附近'
+      - '&7的目标。'
     crafting:
       shaped:
         '2':
@@ -198,11 +200,11 @@ SILVER_AXE:
 THE_UNBREAKABLE:
   base:
     material: IRON_AXE
-    name: The Unbreakable
+    name: 不朽
     unbreakable: true
     attack-damage: 12.0
     lore:
-      - '&7&oCannot be enchanted nor reforged'
+      - '&7&o无法附魔或重铸。'
     attack-speed: 0.9
     two-handed: true
     disable-repairing: true

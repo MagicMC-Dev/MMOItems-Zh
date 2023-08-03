@@ -1,10 +1,12 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 WIND_WHIP:
   base:
     material: LEAD
-    name: ยง7Wind Whip
+    name: ยง7驭风长鞭
     lore:
-      - ยง7Imagine a whip. Make it invisible.
-      - ยง8That's absurd, but here's a wind whip.
+      - ยง7请你开始想象，你握着一条隐形的长鞭。
+      - ยง8一把风鞭，听上去很疯狂，但现在它就在你手里。
     attack-damage:
       base: 11.0
       scale: 0.1

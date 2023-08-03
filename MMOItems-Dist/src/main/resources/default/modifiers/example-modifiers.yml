@@ -1,15 +1,17 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 sharp:
     chance: 0.3
-    prefix: '&fSharp'
+    prefix: '&f锋利的'
     stats:
         attack-damage: 3
         lore:
-        - '&7Much sharper!'
+        - '&7更锋利辣!'
 
 fiery:
     chance: 0.1
     prefix:
-        format: '&cFiery'
+        format: '&c炽热的'
         priority: 1
     stats:
         ability:
@@ -28,7 +30,7 @@ lucky:
 
 # Gives more man mana
 arcane:
-    suffix: '&fof the Arcane'
+    suffix: '&f更多魔法值'
     stats:
         max-mana:
             base: 6
@@ -37,7 +39,7 @@ arcane:
             max-spread: .3
 
 ancient:
-    prefix: '&fAncient'
+    prefix: '&f古老的'
     stats:
         magic-damage:
             base: 7
@@ -46,7 +48,7 @@ ancient:
             max-spread: .9
 
 accuracy:
-    suffix: 'of Accuracy'
+    prefix: '精准的'
     stats:
         critical-strike-chance:
             base: 9
@@ -58,14 +60,14 @@ accuracy:
             max-spread: .3
 
 swiftness:
-    suffix: 'of Swiftness'
+    prefix: '迅速的'
     stats:
         perm-effects:
             speed: 1
 
 # Modifier that makes weapons two-handed but more damage and crit power
 heavy:
-    prefix: '&fHeavy'
+    prefix: '&f沉重的'
     stats:
         two-handed: true
         attack-damage:
@@ -88,7 +90,7 @@ blazing:
 
 # Love u terraria!
 impending-doom:
-    suffix: '&fof Impending Doom'
+    suffix: '&f威迫死亡'
     stats:
         magic-damage:
             base: 7

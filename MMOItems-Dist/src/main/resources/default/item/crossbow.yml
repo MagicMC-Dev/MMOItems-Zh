@@ -1,11 +1,13 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 MEDIEVAL_CROSSBOW:
   base:
     material: WOODEN_PICKAXE
-    name: §6§lMedieval Crossbow
+    name: §6§l中世纪弩
     lore:
-      - §6Like in the old times.
-      - §eFor more realism, it also poisons
-      - §eand makes a different sound!
+      - §6古典暴力美学。
+      - §e造成中毒，并发
+      - §e出诡异的声音。
     tier: UNCOMMON
     weapon-damage:
       base: 15.0
@@ -35,13 +37,13 @@ MEDIEVAL_CROSSBOW:
 HANDGUN:
   base:
     material: IRON_HORSE_ARMOR
-    name: §7Hand Gun
+    name: §7手枪
     attack-damage: 30.0
     required-biomes:
       - plains
     lore:
-      - §cFor security reasons, this gun
-      - §cis only usable in §3plains§c.
+      - §c安全起见，只能
+      - §c在§3平地§c使用。
     attack-speed: 1.4
     arrow-velocity: 4.0
     required-level: 20.0

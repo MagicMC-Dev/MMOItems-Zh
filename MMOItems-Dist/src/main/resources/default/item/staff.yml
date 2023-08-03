@@ -1,7 +1,9 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 EARTH_STAFF:
   base:
     material: JUNGLE_SAPLING
-    name: '&fEarth Staff'
+    name: '&f大地法器'
     enchants:
       unbreaking: 1
     hide-enchants: true
@@ -44,8 +46,8 @@ EARTH_STAFF:
         amplifier: 4.0
         duration: 2.0
     lore:
-    - '&7An extremely powerful weapon.'
-    - '&7Use it &f&nwisely&7.'
+    - '&7强大的武器'
+    - '&7请&f&n明智&7使用。'
     tier: VERY_RARE
     disable-crafting: true
     disable-smelting: true
@@ -54,7 +56,7 @@ EARTH_STAFF:
 LIGHTNING_STAFF:
   base:
     material: STICK
-    name: '&f&lLightning Staff'
+    name: '&f&l闪电法器'
     required-level: 3.0
     attack-damage:
       base: 10.0
@@ -92,13 +94,13 @@ BONE_STAFF:
       spread: 0.07
       max-spread: 0.2
     lore: []
-    name: '&fBone Staff'
+    name: '&f骨骼法器'
 MANA_STAFF:
   base:
     material: DIAMOND_HOE
-    name: §b§lMana Staff
+    name: §b§l神力法器
     lore:
-      - §b§oThis staff uses pure ambiant mana.
+      - §b§o吸收日月精华。
     tier: RARE
     required-level: 15.0
     critical-strike-chance:
@@ -148,7 +150,7 @@ MANA_STAFF:
 VOID_STAFF:
   base:
     material: NETHERITE_HOE
-    name: §5§lVoid Staff
+    name: §5§l虚空法器
     attack-damage: 25.0
     attack-speed: 1.5
     required-level: 40.0
@@ -177,4 +179,4 @@ VOID_STAFF:
         duration: 4.0
         cooldown: 7.0
     lore:
-      - §7Think of all the places this can go.
+      - §7好好想想它的能力所至。

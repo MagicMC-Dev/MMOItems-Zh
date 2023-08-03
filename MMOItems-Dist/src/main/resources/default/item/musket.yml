@@ -1,10 +1,12 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 MAKESHIFT_MUSKET:
   base:
     material: IRON_HORSE_ARMOR
-    name: §fMakeshift Musket
+    name: §f临时火枪
     lore:
-      - §7A decent musket that doesn't require ammo.
-      - §eGreat for hunting mobs.
+      - §7无需弹药。
+      - §e适合猎杀动物。
     crafting:
       shaped:
         '1':
@@ -44,10 +46,10 @@ MAKESHIFT_MUSKET:
 SNIPER_RIFLE:
   base:
     material: DIAMOND_HORSE_ARMOR
-    name: §b§lSniper Rifle
+    name: §b§l狙击步枪
     max-durability: 6000.0
     lore:
-      - §bWhen you need a lot of precision.
+      - §b帝国军工。精准，经典。
     disable-interaction: true
     range: 160.0
     attack-damage:

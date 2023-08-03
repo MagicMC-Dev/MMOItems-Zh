@@ -1,20 +1,22 @@
-name: Regen Ally
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+name: 生成助手
 modifier:
   duration:
-    name: Duration
+    name: 持续时间
     default-value: 3.0
   mana:
-    name: Mana
+    name: 魔法
     default-value: 0.0
   stamina:
-    name: Stamina
+    name: 体力
     default-value: 0.0
   heal:
-    name: Heal
+    name: 治疗
     default-value: 7.0
   cooldown:
-    name: Cooldown
+    name: 冷却
     default-value: 10.0
   timer:
-    name: Timer
+    name: 计时
     default-value: 0.0

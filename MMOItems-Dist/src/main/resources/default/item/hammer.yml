@@ -1,3 +1,5 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 SANTAMMER:
   base:
     material: IRON_AXE
@@ -8,8 +10,8 @@ SANTAMMER:
         red: 50
         green: 255
         blue: 50
-    name: '&7S&fa&7n&ft&fa&7m&fm&7e&fr'
-    attack-damage: 9.7
+    name: '&7桑&f甘&7纳&f&f重&7锤&f&7&f'
+    attack-damage: 9.7 
     attack-speed: 0.6
     enchants:
       unbreaking: 3
@@ -21,16 +23,16 @@ SANTAMMER:
         mode: ATTACK
         cooldown: 15.0
     lore:
-    - '&eEarned during X-Mas 2018!'
+    - '&e可在2023年圣诞节期间获取'
 THOR_HAMMER:
   base:
     material: IRON_AXE
     max-durability: 80000.0
-    name: §b§lThor's Hammer
+    name: §b§l姆乔尔尼尔
     lore:
-      - §bUse the power of the storm!
-      - §ePlays a custom sound when attacking!
-      - §aWill not drop on death!
+      - §b利用风暴的力量!
+      - §e攻击时播放声音!
+      - §a不会被摔死!
     element:
       thunder:
         damage: 150.0
@@ -67,18 +69,16 @@ THOR_HAMMER:
         mode: RIGHT_CLICK
         damage: 100.0
         cooldown: 12.0
-    additional-experience: 15.0
     unbreakable: true
     disable-death-drop: true
 HEAVY_HAMMER:
   base:
     material: IRON_AXE
-    name: §7§lHeavy Hammer
+    name: §7§l沉重锤
     max-durability: 3650.0
     lore:
-      - §fA very heavy hammer.
-      - §7You almost can't move, but it's
-      - §7worth it!
+      - §f一把非常沉重的锤子.
+      - §7你几乎不能移动,但是值得
     perm-effects:
       SLOW: 4.0
     attack-damage:

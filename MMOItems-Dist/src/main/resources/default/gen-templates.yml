@@ -1,27 +1,28 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 basic-template:
 
-    # A list of materials this template can replace.
+    # 这个模板可以替换的一组方块。
     replace: [STONE]
     
-    # The chance for a chunk to be chosen for world gen.
-    # (0.7 = 70% chance)
+    # 被选中进行世界生成的区块的几率。
+    # (0.7 = 70% 的几率)
     chunk-chance: 0.7
     
-    # The depth range of the generation. This example
-    # allows the blocks to generate between Y coord 10 and 24
+    # 生成的深度范围。此示例允许方块在 Y 坐标 10 和 24 之间生成。
     depth: 10=24
     
-    # How many blocks to generate in each vein.
-    # (Note this is a maximum value and smaller veins can appear)
+    # 每个矿脉中生成的方块数。
+    # （请注意这是最大值，可能会出现更小的矿脉）
     vein-size: 5
     
-    # The amount of veins to generate per chunk.
+    # 每个区块中要生成的矿脉数量。
     vein-count: 2
 
 slime-chunks-only:
     replace: [STONE]
     
-    # Use this option to only enable this template in slime chunks
+    # 使用此选项仅在史莱姆区块中启用此模板
     slime-chunk: true
     
     chunk-chance: 0.6
@@ -29,7 +30,7 @@ slime-chunks-only:
     vein-size: 1
     vein-count: 4
 
-# Example use of the 'biome' option
+# 使用 'biome' 选项的示例
 moutain-template:
     replace: [EMERALD_ORE]
     chunk-chance: 0.7
@@ -37,14 +38,14 @@ moutain-template:
     vein-size: 6
     vein-count: 2
     
-    # Spawns in mountain biomes
-    # If you use '!mountains', the blocks will spawn everywhere but in mountain biomes.
-    # No ! -> biome whitelist
-    # Using ! -> biome blacklist
+    # 生成在山脉生物群系中
+    # 如果使用 '!mountains'，方块将在除山脉生物群系之外的所有地方生成。
+    # 没有 ! -> 生物群系白名单
+    # 使用 ! -> 生物群系黑名单
     biomes:
-    - moutains
+    - mountains
 
-# Example use of the 'world' option
+# 使用 'world' 选项的示例
 nether-template:
     replace: [NETHER_QUARTZ_ORE]
     chunk-chance: 0.7
@@ -52,7 +53,7 @@ nether-template:
     vein-size: 6
     vein-count: 2
     
-    # Provide world list here. White/blacklist based
-    # on !is still a thing for the world list
+    # 在这里提供世界列表。基于白名单/黑名单。
+    # 对于世界列表，仍然可以使用 ! 来实现黑名单。
     worlds:
     - world_nether

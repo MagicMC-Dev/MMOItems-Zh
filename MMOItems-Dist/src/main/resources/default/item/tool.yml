@@ -1,27 +1,29 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 STEEL_PICKAXE:
   base:
     material: IRON_PICKAXE
-    name: '&fSteel Pickaxe'
+    name: '&f钢镐'
     max-durability: 1000
     tier: COMMON
     lore:
-    - '&7A much more durable iron pick.'
+    - '&7RTC重工，比铁镐更耐用。'
     will-break: true
     unbreakable: true
 STEEL_SHOVEL:
   base:
     material: IRON_SHOVEL
-    name: '&fSteel Shovel'
+    name: '&f钢铲'
     max-durability: 1000
     tier: COMMON
     lore:
-    - '&7A much more durable iron spade.'
+    - '&7RTC重工，比铁锹更耐用。'
     will-break: true
     unbreakable: true
 CRACK_PICKAXE:
   base:
     material: DIAMOND_PICKAXE
-    name: §7§lCrack Pickaxe
+    name: §7§l爆裂镐
     enchants:
       fortune: 2.0
       efficiency: 1.0
@@ -32,14 +34,14 @@ CRACK_PICKAXE:
     pickaxe-power: 4.0
     bouncing-crack: true
     lore:
-      - §cWill break adjacent blocks!
+      - §c试验型号，破坏附近的方块。
 AUTOSMELT_PICKAXE:
   base:
     material: NETHERITE_PICKAXE
-    name: §cAutosmelt pickaxe
+    name: §c自动冶炼钻头
     lore:
-      - §7Will §csmelt§7 ores, like it
-      - §7implies. Works with enchantments.
+      - §7顾名思义，自动§c冶炼§7矿石。
+      - §7能够在附魔下工作。
     attack-damage: 7.5
     attack-speed: 1.6
     tier: UNCOMMON
@@ -59,8 +61,8 @@ UNBREAKABLE_SHEARS:
     enchants:
       silk_touch: 1.0
     lore:
-      - §7If you're tired to craft new shears,
-      - §7try out this one! It can also
-      - §7pick up §9glass§7 or §2grass§7!
+      - §7一遍遍做剪刀不胜其烦？
+      - §7试试我们的新技术吧！
+      - §7能够采集§9草§7和§2玻璃§7。
     tier: UNCOMMON
     required-level: 5.0

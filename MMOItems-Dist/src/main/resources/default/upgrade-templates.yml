@@ -1,15 +1,14 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+# 模板 ID，仅用作参考。这是您需要在编辑界面中输入的文本，
+# 以设置特定物品的升级选项。
 
-# Template ID, only used as reference. This is the
-# text you need to enter in the edition GUI in order
-# to setup item upgrading for a specific item.
 weapon-default:
 
-    # Every time the item is upgraded, its attack damage
-    # is increased by 3% (relative to the current value)
+    # 每次物品升级时，其攻击伤害增加 3%（相对于当前值）
     attack-damage: 3%
     
-    # Every time it is upgraded, it gets +2% aboslute 
-    # critical strike chance (independant of current val.)
+    # 每次物品升级时，其绝对暴击率增加 2%（独立于当前值）
     critical-strike-chance: 2
     
     pve-damage: 1%

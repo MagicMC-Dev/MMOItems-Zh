@@ -1,7 +1,9 @@
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 HARDENED_STEEL_CLAYMORE:
   base:
     material: IRON_SWORD
-    name: '&fHardened Steel Claymore'
+    name: §f钢制大剑
     required-level: 13.0
     tier: RARE
     required-class:
@@ -42,7 +44,7 @@ HARDENED_STEEL_CLAYMORE:
 CANDY_CANE_SWORD:
   base:
     material: WOODEN_SWORD
-    name: '&fC&ca&fn&cd&fy &cC&fa&cn&fe &cS&fw&co&fr&cd'
+    name: §f糖§c果§f姜§c饼§f手§c杖§f剑 
     attack-damage: 8.0
     unbreakable: true
     attack-speed:
@@ -50,10 +52,9 @@ CANDY_CANE_SWORD:
       spread: 0.02
       max-spread: 0.06
     lore:
-      - '&7This sword embodies the christmas spirit.'
-      - '&7Hit a monster to release it!'
-      - ''
-      - '&eEarned during X-Mas 2018!'
+      - §7这把剑体现了圣诞节的精神.
+      - §7攻击怪物并使它飞翔!
+      - §e2023年圣诞节期间获得!
     critical-strike-chance: 20.0
     critical-strike-power: 60.0
     ability:
@@ -66,7 +67,7 @@ MOLTEN_BLADE:
     material: GOLDEN_SWORD
     enchants:
       knockback: 2
-    name: '&cMolten Blade'
+    name: §c熔化刀片
     attack-speed: 1.3
     attack-damage: 11.0
     crafting:
@@ -81,18 +82,17 @@ MOLTEN_BLADE:
         mode: ATTACK
         cooldown: 13.0
     lore:
-      - '&7Every 13s, your next melee'
-      - '&7attack summons a devastating'
-      - '&cmagma fissure&7 that dashes to'
-      - '&7your target, &cigniting &7it and'
-      - '&7dealing &cdamage&7 upon landing.'
+      - §7每过 13s, 你的下一次攻击将
+      - §7生成一颗毁灭性的§c烈焰缝隙
+      - §7它将会猛烈冲击你的敌人，
+      - §7并§c点燃§7他们，§7造成§c伤害§7
     magic-damage: 30.0
     unbreakable: true
     two-handed: true
 TWO_HANDED_STEEL_SWORD:
   base:
     material: IRON_SWORD
-    name: '&fTwo Handed Steel Sword'
+    name: §f双手钢剑
     enchants:
       sharpness: 4
       knockback: 1
@@ -130,8 +130,8 @@ TWO_HANDED_STEEL_SWORD:
         cooldown: 8.0
         damage: 4.0
     lore:
-      - '&7Right click to &c&nsmash&7 nearby'
-      - '&7enemies for &c4&7 damage.'
+      - §7右键以§c§n打碎§7附近的敌人
+      - §7造成§c4点§7伤害
     hide-enchants: true
 EARTHLY_GREATSWORD:
   base:
@@ -154,7 +154,7 @@ EARTHLY_GREATSWORD:
     required-class:
       - Warrior
     tier: EPIC
-    name: §2Earthly Greatsword
+    name: §2大地巨剑
     gem-sockets:
       - Green
     element:
@@ -165,8 +165,8 @@ EARTHLY_GREATSWORD:
       SLOW: 1.0
     two-handed: true
     lore:
-      - §7Grants §cslowness I§7 when held.
-      - §7Needs to be §ctwo-handed§7.
+      - §7当你手持该武器时获得§c缓慢 I§7效果.
+      - §7需要§c双持§7.
     ability:
       ability1:
         type: CIRCULAR_SLASH

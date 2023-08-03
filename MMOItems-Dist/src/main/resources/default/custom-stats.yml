@@ -1,22 +1,23 @@
-# Add as many custom stats as you want below
+# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
+# 在下方添加任意数量的自定义属性
 # -
-# For each custom stat you add, you must also add a corresponding
-# entry in the lore-format.yml and stats.yml files
+# 对于每个自定义属性，你还必须在 lore-format.yml 和 stats.yml 文件中添加相应的条目
 custom-stats:
 
-  # The key doesn't really matter, although it must be unique
-  # The lore for each stat can be defined in language/stats.yml
+  # 键（key）实际上并不重要，但必须是唯一的
+  # 每个属性的描述可以在 language/stats.yml 中定义
   1:
-    # The name will be used in the edition GUI and also for the stat id
-    # Format: "MyLuck" will be replaced with "custom-myluck"
+    # 名称将用于编辑界面以及属性ID
+    # 格式："MyLuck" 将被替换为 "custom-myluck"
     name: "MyLuck"
 
-    # Allowed stats type:
-    # - double (numbers)
-    # - text (Will not work as placeholder. You have get this value from ntb tag of the item with your custom plugin)
+    # 允许的属性类型：
+    # - double（数字）
+    # - text（不会作为占位符工作。你必须通过你的自定义插件从物品的ntb标签中获取此值）
     type: "double"
 
-    # The lore must be a list of strings
+    # 属性的描述必须是一个字符串列表
     lore:
-      - "This is a test line #1"
-      - "This is a test line #2"
+      - "这是测试行 #1"
+      - "这是测试行 #2"

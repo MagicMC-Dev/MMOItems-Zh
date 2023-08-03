@@ -1,7 +1,9 @@
+﻿# 禁止倒卖 汉化作者 INSide_734
+# QQ: 3217962725
 BARBARIAN_AXE:
   base:
     material: NETHERITE_AXE
-    name: §c§lBarbarian's Greataxe
+    name: §c§l野蛮人的巨斧
     attack-damage:
       base: 42.0
       scale: 0.1
@@ -45,6 +47,6 @@ BARBARIAN_AXE:
       - Red
     physical-damage: 30.0
     lore:
-      - §7It's time to §cRAGE§7!
+      - §7是时候§c愤怒了§7!
     disable-interaction: true
     max-durability: 19800.0

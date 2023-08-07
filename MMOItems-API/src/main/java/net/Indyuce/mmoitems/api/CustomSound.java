@@ -7,16 +7,16 @@ import net.Indyuce.mmoitems.util.MMOUtils;
 import io.lumine.mythic.lib.version.VersionMaterial;
 
 public enum CustomSound {
-    ON_ATTACK(Material.IRON_SWORD, 19, "Plays when attacking an entity."),
-    ON_RIGHT_CLICK(Material.STONE_HOE, 22, "Plays when item is right-clicked."),
-    ON_BLOCK_BREAK(Material.COBBLESTONE, 25, "Plays when a block is broken with the item."),
-    ON_PICKUP(Material.IRON_INGOT, 28, "Plays when you pickup the item from the ground."),
-    ON_LEFT_CLICK(Material.STONE_AXE, 31, "Plays when item is left-clicked."),
-    ON_CRAFT(VersionMaterial.CRAFTING_TABLE.toMaterial(), 34, "Plays when item is crafted in a crafting inventory", "or when smelted from someting in a furnace."),
-    ON_CONSUME(Material.APPLE, 37, "Plays when item has been consumed.", "(After eating/drinking animation)"),
-    ON_ITEM_BREAK(Material.FLINT, 40, "Plays when the item breaks."),
-    ON_CROSSBOW(Material.ARROW, 38, "Plays when a crossbow shoots an arrow."),
-    ON_PLACED(Material.STONE, 43, "Plays when the block is placed.");
+    ON_ATTACK(Material.IRON_SWORD, 19, "攻击实体时播放。"),
+    ON_RIGHT_CLICK(Material.STONE_HOE, 22, "右键单击物品时播放。"),
+    ON_BLOCK_BREAK(Material.COBBLESTONE, 25, "当方块被物品破坏时播放。"),
+    ON_PICKUP(Material.IRON_INGOT, 28, "当您从地上捡起物品时播放。"),
+    ON_LEFT_CLICK(Material.STONE_AXE, 31, "左键单击物品时播放。"),
+    ON_CRAFT(VersionMaterial.CRAFTING_TABLE.toMaterial(), 34, "在制作物品栏中制作物品时播放", "或者在熔炉中从某些东西中熔炼出来时。"),
+    ON_CONSUME(Material.APPLE, 37, "物品被消耗后播放。", " (吃/喝后播放) "),
+    ON_ITEM_BREAK(Material.FLINT, 40, "当物品损坏时播放。"),
+    ON_CROSSBOW(Material.ARROW, 38, "当弩射出箭时播放。"),
+    ON_PLACED(Material.STONE, 43, "放置方块时播放。");
 
     private final ItemStack item;
     private final String[] lore;

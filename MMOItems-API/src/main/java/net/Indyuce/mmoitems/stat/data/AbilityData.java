@@ -46,12 +46,12 @@ public class AbilityData extends Skill {
     }
 
     public AbilityData(@NotNull ConfigurationSection config) {
-        super(MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(config.getString("mode"), "能力缺失模式"))));
+        super(MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(config.getString("mode"), "技能缺失模式"))));
 
-        Validate.isTrue(config.contains("type"), "能力缺失类型");
+        Validate.isTrue(config.contains("type"), "技能缺失类型");
 
         String abilityFormat = UtilityMethods.enumName(config.getString("type"));
-        Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "找不到名为 '" + abilityFormat + "' 的能力");
+        Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "找不到名为 '" + abilityFormat + "' 的技能");
         ability = MMOItems.plugin.getSkills().getSkill(abilityFormat);
 
         for (String key : config.getKeys(false))

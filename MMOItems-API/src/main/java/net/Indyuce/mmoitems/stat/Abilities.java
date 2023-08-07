@@ -34,8 +34,8 @@ import java.util.Optional;
 
 public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> {
 	public Abilities() {
-		super("ABILITY", Material.BLAZE_POWDER, "物品能力",
-				new String[] { "让你的物品施展惊人的能力", "杀死怪物或增强自己" }, new String[] { "!block", "all" });
+		super("ABILITY", Material.BLAZE_POWDER, "物品技能",
+				new String[] { "让你的物品施展惊人的技能", "杀死怪物或增强自己" }, new String[] { "!block", "all" });
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
 		if (edited.equals("ability")) {
 			Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(format),
-					"不是有效的能力！您可以使用 /mi list ability 检查能力列表");
+					"不是有效的技能！您可以使用 /mi list ability 检查技能列表");
 			RegisteredSkill ability = MMOItems.plugin.getSkills().getSkill(format);
 
 			inv.getEditedSection().set("ability." + configKey, null);
@@ -143,10 +143,10 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomAbilityListData> statData) {
-		lore.add(ChatColor.GRAY + "当前能力: " + ChatColor.GOLD
+		lore.add(ChatColor.GRAY + "当前技能: " + ChatColor.GOLD
 				+ (statData.isPresent() ? ((RandomAbilityListData) statData.get()).getAbilities().size() : 0));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以编辑物品能力");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以编辑物品技能");
 	}
 
 	@NotNull

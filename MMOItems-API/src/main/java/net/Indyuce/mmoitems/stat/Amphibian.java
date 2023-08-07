@@ -33,7 +33,7 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
             SUBMERGED = new StatChoice("SUBMERGED", "仅当玩家完全浸没在任何液体中时才有效");
 
     public Amphibian() {
-        super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[]{"此物品可能仅用于特定", "关于液体的环境？"}, new String[]{"!block", "all"});
+        super("AMPHIBIAN", Material.WATER_BUCKET, "Amphibian", new String[]{"此物品可能仅用于特定", "关于液体的环境"}, new String[]{"!block", "all"});
 
         addChoices(NORMAL, DRY, WET, DAMP, LAVA, MOLTEN, LIQUID, SUBMERGED);
     }

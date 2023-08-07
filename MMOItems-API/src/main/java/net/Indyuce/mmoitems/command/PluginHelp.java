@@ -70,7 +70,7 @@ public class PluginHelp {
 		GIVEALL("mi giveall <type> <item> <min-max> <unident-chance>", "给予服务器上的所有在线玩家物品"),
 		BROWSE("mi browse (type)", "允许您浏览您创建的所有物品."),
 		GENERATE("mi generate <player> (extra-args)", "生成一个随机物品\\n使用 /mi 生成以查看所有可用参数"),
-		ABILITY("mi ability <ability> (player) (mod1) (val1) (mod2) (val2)...", "强制玩家施放能力"),
+		ABILITY("mi ability <ability> (player) (mod1) (val1) (mod2) (val2)...", "强制玩家施放技能"),
 		DROP("mi drop <type> <item-id> <world-name> <x> <y> <z>...",
 				"&a/mi drop <type> <item-id> <world-name> <x> <y> <z> <drop-chance> <[min]-[max]> <unidentified-chance>\\n&f将物品扔到目标位置"),
 		HEAL("mi heal", "治愈你并消除负面药水效果"),

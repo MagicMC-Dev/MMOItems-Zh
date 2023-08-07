@@ -71,7 +71,7 @@ public class ItemBrowser extends PluginInventory {
             int n = 0;
 
             // Create inventory
-            Inventory inv = Bukkit.createInventory(this, 54, "物品浏览器");
+            Inventory inv = Bukkit.createInventory(this, 54, "物品浏览器 (QQ: 3217962725)");
 
             // Fetch the list of types
             List<Type> types = new ArrayList<>(MMOItems.plugin.getTypes().getAll());
@@ -90,7 +90,7 @@ public class ItemBrowser extends PluginInventory {
                 AdventureUtils.setDisplayName(meta, "&a%s&8 (点击浏览) ".formatted(currentType.getName()));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                lore.add("&7&o %s &7&o物品在这个类别中".formatted(items < 1 ? "&c&o无" : "&6&o%d"));
+                lore.add("&7当前有%s %s &7%s 个物品.".formatted(items == 1 ? "该类型有" : "此类型有", items < 1 ? "&c没" : "&6%d".formatted(items), items == 1 ? " " : " "));
                 AdventureUtils.setLore(meta, lore);
                 item.setItemMeta(meta);
 

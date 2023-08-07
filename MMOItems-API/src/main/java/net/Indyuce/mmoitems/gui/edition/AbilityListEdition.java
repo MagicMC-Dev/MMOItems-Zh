@@ -34,7 +34,7 @@ public class AbilityListEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "能力列表");
+		Inventory inv = Bukkit.createInventory(this, 54, "技能列表");
 		int n = 0;
 
 		if (getEditedSection().contains("ability"))
@@ -54,7 +54,7 @@ public class AbilityListEdition extends EditionInventory {
 
 				ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 				ItemMeta abilityItemMeta = abilityItem.getItemMeta();
-				abilityItemMeta.setDisplayName(ability != null ? ChatColor.GREEN + ability.getName() : ChatColor.RED + "! 未选择任何能力 !");
+				abilityItemMeta.setDisplayName(ability != null ? ChatColor.GREEN + ability.getName() : ChatColor.RED + "! 未选择任何技能 !");
 				List<String> abilityItemLore = new ArrayList<>();
 				abilityItemLore.add("");
 				abilityItemLore.add(
@@ -89,12 +89,12 @@ public class AbilityListEdition extends EditionInventory {
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(ChatColor.RED + "- 无能力 -");
+		glassMeta.setDisplayName(ChatColor.RED + "- 无技能 -");
 		glass.setItemMeta(glassMeta);
 
 		ItemStack add = new ItemStack(VersionMaterial.WRITABLE_BOOK.toMaterial());
 		ItemMeta addMeta = add.getItemMeta();
-		addMeta.setDisplayName(ChatColor.GREEN + "添加能力...");
+		addMeta.setDisplayName(ChatColor.GREEN + "添加技能...");
 		add.setItemMeta(addMeta);
 
 		inv.setItem(40, add);
@@ -113,7 +113,7 @@ public class AbilityListEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "添加能力...")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "添加技能...")) {
 			if (!getEditedSection().contains("ability")) {
 				getEditedSection().createSection("ability.ability1");
 				registerTemplateEdition();
@@ -121,7 +121,7 @@ public class AbilityListEdition extends EditionInventory {
 			}
 
 			if (getEditedSection().getConfigurationSection("ability").getKeys(false).size() > 6) {
-				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "您已达到每件物品 7 个能力的限制");
+				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "您已达到每件物品 7 个技能的限制");
 				return;
 			}
 

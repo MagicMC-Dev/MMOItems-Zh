@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TrimPatternStat extends ChooseStat implements GemStoneStat {
     public TrimPatternStat() {
-        super("TRIM_PATTERN", Material.LEATHER_CHESTPLATE, "修剪图案", new String[]{"修剪过的盔甲图案。"}, new String[]{"armor"});
+        super("TRIM_PATTERN", Material.LEATHER_CHESTPLATE, "修剪图案", new String[]{"修剪过的盔甲图案"}, new String[]{"armor"});
 
         if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) {
             disable();

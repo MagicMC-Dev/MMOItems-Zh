@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class StaffSpiritStat extends StringStat {
     public StaffSpiritStat() {
         super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toMaterial(), "灵魂权杖",
-                new String[]{"灵魂改变魔法攻击的材质。", "&9Tip: /mi list spirit"}, new String[]{"staff", "wand"});
+                new String[]{"灵魂改变魔法攻击的材质", "&9Tip: /mi list spirit"}, new String[]{"staff", "wand"});
     }
 
     @Override
@@ -40,13 +40,13 @@ public class StaffSpiritStat extends StringStat {
     }
 
     public enum StaffSpirit {
-        NETHER_SPIRIT("发射火焰光束。", new NetherSpirit()),
-        VOID_SPIRIT("发射潜影贝导弹。", new VoidSpirit()),
-        MANA_SPIRIT("召唤法力螺栓。", new ManaSpirit()),
-        LIGHTNING_SPIRIT("召唤闪电。", new LightningSpirit()),
-        XRAY_SPIRIT("穿透火焰和强大的 X 射线。", new XRaySpirit()),
-        THUNDER_SPIRIT("发射 AoE 伤害性雷击。", new ThunderSpirit()),
-        SUNFIRE_SPIRIT("发射 AoE 伤害火焰流星。", new SunfireSpirit()),
+        NETHER_SPIRIT("发射火焰光束", new NetherSpirit()),
+        VOID_SPIRIT("发射潜影贝导弹", new VoidSpirit()),
+        MANA_SPIRIT("召唤法力螺栓", new ManaSpirit()),
+        LIGHTNING_SPIRIT("召唤闪电", new LightningSpirit()),
+        XRAY_SPIRIT("穿透火焰和强大的 X 射线", new XRaySpirit()),
+        THUNDER_SPIRIT("发射 AoE 伤害性雷击", new ThunderSpirit()),
+        SUNFIRE_SPIRIT("发射 AoE 伤害火焰流星", new SunfireSpirit()),
         // CURSED_SPIRIT(ChatColor.DARK_PURPLE, "Cursed Spirit", "Fires a
         // targeted cursed projectile."), new CursedSpirit()),
         ;

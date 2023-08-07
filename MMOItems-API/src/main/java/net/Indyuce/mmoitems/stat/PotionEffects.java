@@ -35,7 +35,7 @@ import java.util.Set;
 
 public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public PotionEffects() {
-		super("POTION_EFFECT", Material.POTION, "药水效果", new String[] { "你的药水的效果。", " (可能对颜色有影响) 。", "不支持尖箭头。" },
+		super("POTION_EFFECT", Material.POTION, "药水效果", new String[] { "你的药水的效果", " (可能对颜色有影响) ", "不支持尖箭头" },
 				new String[] { "all" }, Material.POTION, Material.SPLASH_POTION, Material.LINGERING_POTION);
 	}
 
@@ -48,7 +48,7 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.POTION_EFFECTS).enable("在聊天中写下你想要添加的药水效果。",
+			new StatEdition(inv, ItemStats.POTION_EFFECTS).enable("在聊天中写下你想要添加的药水效果",
 					ChatColor.AQUA + "格式: {效果名称} {持续时间} {等级}",
 					ChatColor.AQUA + "其他格式: {效果名称}|{持续时间数值公式}|{增幅数值公式}");
 
@@ -121,8 +121,8 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果");
 	}
 
 	@NotNull

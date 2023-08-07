@@ -34,7 +34,7 @@ import java.util.Optional;
 public class Permission extends StringListStat implements ItemRestriction {
 	public Permission() {
 		super("PERMISSION", VersionMaterial.OAK_SIGN.toMaterial(), "权限",
-				new String[] { "使用该物品所需的权限。" }, new String[] { "!block", "all" });
+				new String[] { "使用该物品所需的权限" }, new String[] { "!block", "all" });
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERMISSION).enable("在聊天中写下您希望您的物品需要的权限。");
+			new StatEdition(inv, ItemStats.PERMISSION).enable("在聊天中写下您希望您的物品需要的权限");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("permission")) {
@@ -71,7 +71,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 		lore.add(message);
 		inv.getEditedSection().set("permission", lore);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "权限添加成功。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "权限添加成功");
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class Permission extends StringListStat implements ItemRestriction {
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加兼容权限。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加兼容权限");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限");
 	}
 
 	@NotNull

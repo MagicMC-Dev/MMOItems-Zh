@@ -83,7 +83,7 @@ public abstract class ChooseStat extends StringStat {
             inv.registerTemplateEdition();
 
             // Sends a message
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功更改为  " + current + ChatColor.GRAY + "。");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功更改为  " + current + ChatColor.GRAY + "");
         }
     }
 

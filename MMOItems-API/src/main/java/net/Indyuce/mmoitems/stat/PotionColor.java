@@ -28,7 +28,7 @@ import java.util.Optional;
 public class PotionColor extends ItemStat<ColorData, ColorData> {
 	public PotionColor() {
 		super("POTION_COLOR", Material.POTION, "药水颜色",
-				new String[] { "你的药水的颜色。", " (不影响效果) 。" }, new String[] { "all" }, Material.POTION,
+				new String[] { "你的药水的颜色", " (不影响效果) " }, new String[] { "all" }, Material.POTION,
 				Material.SPLASH_POTION, Material.LINGERING_POTION, Material.TIPPED_ARROW);
 	}
 
@@ -41,13 +41,13 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.POTION_COLOR).enable("在聊天中写下您想要的 RGB 颜色。",
+			new StatEdition(inv, ItemStats.POTION_COLOR).enable("在聊天中写下您想要的 RGB 颜色",
 					ChatColor.AQUA + "格式: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("potion-color", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功移除药水颜色。");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功移除药水颜色");
 		}
 	}
 
@@ -89,7 +89,7 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除药水颜色。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除药水颜色");
 	}
 
 	@NotNull

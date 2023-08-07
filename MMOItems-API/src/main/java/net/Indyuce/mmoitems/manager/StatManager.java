@@ -173,7 +173,7 @@ public class StatManager {
 
         // Safe check, this can happen with numerous extra RPG plugins
         if (stats.containsKey(stat.getId())) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "无法注册统计 '" + stat.getId() + "' 因为具有相同 ID 的统计数据已存在。");
+            MMOItems.plugin.getLogger().log(Level.WARNING, "无法注册统计 '" + stat.getId() + "' 因为具有相同 ID 的统计数据已存在");
             return;
         }
 

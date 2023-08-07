@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class ItemTypeRestriction extends ItemStat<StringListData, StringListData> {
 	public ItemTypeRestriction() {
 		super("ITEM_TYPE_RESTRICTION", Material.EMERALD, "物品类型限制",
-				new String[] { "此选项定义了可以应用您的宝石的物品类型。" }, new String[] { "gem_stone" });
+				new String[] { "此选项定义了可以应用您的宝石的物品类型" }, new String[] { "gem_stone" });
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.ITEM_TYPE_RESTRICTION).enable("在聊天中写下您希望宝石支持的物品类型。",
+			new StatEdition(inv, ItemStats.ITEM_TYPE_RESTRICTION).enable("在聊天中写下您希望宝石支持的物品类型",
 					"支持的格式: WEAPON 或 BLUNT, PIERCING, SLASHING, OFFHAND, EXTRA.");
 
 		// if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
@@ -116,11 +116,11 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
 			StringListData data = (StringListData) statData.get();
 			data.getList().forEach(el -> lore.add(ChatColor.GRAY + "* " + ChatColor.GREEN + el));
 		} else
-			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "与任何类型兼容。");
+			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "与任何类型兼容");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可添加支持的物品类型/集。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个元素。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可添加支持的物品类型/集");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个元素");
 	}
 
 	@Override public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringListData data) {

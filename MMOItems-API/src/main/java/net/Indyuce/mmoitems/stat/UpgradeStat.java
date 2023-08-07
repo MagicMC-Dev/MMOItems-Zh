@@ -86,7 +86,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("upgrade")) {
 			inv.getEditedSection().set("upgrade", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功重置升级设置。");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功重置升级设置");
 		}
 	}
 
@@ -173,7 +173,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<UpgradeData> statData) {
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击设置升级。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击设置升级");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
 	}
 

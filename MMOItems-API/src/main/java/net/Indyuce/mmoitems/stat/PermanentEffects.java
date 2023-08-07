@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PermanentEffects extends ItemStat<RandomPotionEffectListData, PotionEffectListData> {
 	public PermanentEffects() {
-		super("PERM_EFFECTS", Material.POTION, "药水效果", new String[] { "药水会影响你的物品授予持有者的效果。" },
+		super("PERM_EFFECTS", Material.POTION, "药水效果", new String[] { "药水会影响你的物品授予持有者的效果" },
 				new String[] { "!miscellaneous", "!block", "all" });
 	}
 
@@ -67,7 +67,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中写下你想要添加的永久药水效果。",
+			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中写下你想要添加的永久药水效果",
 					ChatColor.AQUA + "格式: {效果名称} {放大器数值公式}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -91,7 +91,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 				+ "代表 Speed 1,每个物品级别加上 0.3 级别 (向上舍入到较低的整数) ");
 
 		PotionEffectType effect = PotionEffectType.getByName(split[0].replace("-", "_"));
-		Validate.notNull(effect, split[0] + " 不是有效的药水效果。所有药水效果都可以在这里找到: "
+		Validate.notNull(effect, split[0] + " 不是有效的药水效果所有药水效果都可以在这里找到: "
 				+ "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html");
 
 		NumericStatFormula formula = new NumericStatFormula(message.substring(message.indexOf(" ") + 1));
@@ -114,8 +114,8 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果");
 	}
 
 	@NotNull

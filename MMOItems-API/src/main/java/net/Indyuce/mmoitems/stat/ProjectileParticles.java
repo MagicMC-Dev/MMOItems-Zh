@@ -58,9 +58,9 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
         if (event.getAction() == InventoryAction.PICKUP_HALF) {
             inv.getEditedSection().set("projectile-particles", null);
             inv.registerTemplateEdition();
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除粒子。");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除粒子");
         } else
-            new StatEdition(inv, this).enable("在聊天中写下您想要的粒子以及颜色 (如果适用) 。",
+            new StatEdition(inv, this).enable("在聊天中写下您想要的粒子以及颜色 (如果适用) ",
                     ChatColor.AQUA + "格式: {粒子} {颜色}",
                     "所有粒子都可以在这里找到: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html");
     }
@@ -88,7 +88,7 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
             lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
     }
 
@@ -99,8 +99,8 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
         if (ProjectileParticlesData.isColorable(particle)) {
             Validate.isTrue(msg.length <= 4, "提供了太多参数");
             if (particle.equals(Particle.NOTE)) {
-                Validate.isTrue(msg.length == 2, "您必须为此粒子提供颜色。\n"
-                        + MMOItems.plugin.getPrefix() + "注意粒子颜色仅采用 1 到 24 之间的单个值。\n"
+                Validate.isTrue(msg.length == 2, "您必须为此粒子提供颜色\n"
+                        + MMOItems.plugin.getPrefix() + "注意粒子颜色仅采用 1 到 24 之间的单个值\n"
                         + MMOItems.plugin.getPrefix() + ChatColor.AQUA + "格式: {粒子} {颜色}");
                 int red = Math.min(24, Math.max(1, Integer.parseInt(msg[1])));
                 inv.getEditedSection().set("projectile-particles.particle", particle.name());
@@ -111,7 +111,7 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
                 inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子成功设置为 "
                         + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + " 有颜色 " + red);
             } else {
-                Validate.isTrue(msg.length == 4, "您必须为此粒子提供颜色。\n"
+                Validate.isTrue(msg.length == 4, "您必须为此粒子提供颜色\n"
                         + MMOItems.plugin.getPrefix() + ChatColor.AQUA + "格式: {粒子} {R G B}");
                 int red = msg[1] != null ? Math.min(255, Math.max(0, Integer.parseInt(msg[1]))) : 0;
                 int green = msg[2] != null ? Math.min(255, Math.max(0, Integer.parseInt(msg[2]))) : 0;

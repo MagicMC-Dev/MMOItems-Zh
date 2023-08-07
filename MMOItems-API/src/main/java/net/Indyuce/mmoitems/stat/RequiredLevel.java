@@ -33,7 +33,7 @@ public class RequiredLevel extends DoubleStat implements ItemRestriction {
      */
     public RequiredLevel() {
         super("REQUIRED_LEVEL", VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), "所需等级",
-                new String[]{"您的物品需要使用的级别。"}, new String[]{"!block", "all"});
+                new String[]{"您的物品需要使用的级别"}, new String[]{"!block", "all"});
     }
 
     @Override

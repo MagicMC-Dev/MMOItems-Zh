@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 	public GemSockets() {
-		super("GEM_SOCKETS", Material.EMERALD, "宝石插槽", new String[] { "你的武器拥有的宝石插槽数量。" },
+		super("GEM_SOCKETS", Material.EMERALD, "宝石插槽", new String[] { "你的武器拥有的宝石插槽数量" },
 				new String[] { "piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "accessory", "!gem_stone" });
 	}
 
@@ -185,8 +185,8 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "无插槽");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加宝石插槽。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除插槽。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加宝石插槽");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除插槽");
 	}
 
 	@NotNull

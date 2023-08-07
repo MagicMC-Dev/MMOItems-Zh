@@ -30,7 +30,7 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 
 	public SoulbindingChance() {
 		super("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "灵魂绑定机会",
-				new String[] { "定义你的物品将另一个物品链接到你的灵魂的机会, 以防止其他玩家使用它。" },
+				new String[] { "定义你的物品将另一个物品链接到你的灵魂的机会, 以防止其他玩家使用它" },
 				new String[] { "consumable" });
 	}
 

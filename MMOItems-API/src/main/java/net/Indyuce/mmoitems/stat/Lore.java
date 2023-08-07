@@ -43,7 +43,7 @@ public class Lore extends StringListStat implements GemStoneStat {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.LORE).enable("在聊天中写下您要添加的标注行。");
+            new StatEdition(inv, ItemStats.LORE).enable("在聊天中写下您要添加的标注行");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("lore")) {
             List<String> lore = inv.getEditedSection().getStringList("lore");
@@ -65,7 +65,7 @@ public class Lore extends StringListStat implements GemStoneStat {
         lore.add(message);
         inv.getEditedSection().set("lore", lore);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "标注添加成功。");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "标注添加成功");
     }
 
     @Override
@@ -79,8 +79,8 @@ public class Lore extends StringListStat implements GemStoneStat {
         }, () -> lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None"));
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加一条线。");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一行。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加一条线");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一行");
     }
 
     /*

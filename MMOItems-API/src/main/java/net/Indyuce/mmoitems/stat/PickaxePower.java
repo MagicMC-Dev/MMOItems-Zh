@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class PickaxePower extends DoubleStat {
 	public PickaxePower() {
 		super("PICKAXE_POWER", Material.IRON_PICKAXE, "挖掘等级",
-				new String[] { "挖掘自定义方块时的挖掘速度。" }, new String[] { "tool" });
+				new String[] { "挖掘自定义方块时的挖掘速度" }, new String[] { "tool" });
 	}
 
 	@Override

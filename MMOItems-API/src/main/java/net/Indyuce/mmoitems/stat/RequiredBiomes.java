@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class RequiredBiomes extends StringListStat implements ItemRestriction, GemStoneStat {
     public RequiredBiomes() {
-        super("REQUIRED_BIOMES",  Material.JUNGLE_SAPLING, "所需生物群落", new String[] { "玩家必须位于该生物群落或该物品内才能激活。" }, new String[] { "!block", "all" });
+        super("REQUIRED_BIOMES",  Material.JUNGLE_SAPLING, "所需生物群落", new String[] { "玩家必须位于该生物群落或该物品内才能激活" }, new String[] { "!block", "all" });
     }
 
     @Override

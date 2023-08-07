@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NBTTags extends StringListStat {
 	public NBTTags() {
-		super("CUSTOM_NBT", Material.NAME_TAG, "NBT 标签", new String[] { "自定义 NBT 标签。" }, new String[] { "all" });
+		super("CUSTOM_NBT", Material.NAME_TAG, "NBT 标签", new String[] { "自定义 NBT 标签" }, new String[] { "all" });
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class NBTTags extends StringListStat {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.NBT_TAGS).enable("在聊天中写下您要添加的NBT标签。",
+			new StatEdition(inv, ItemStats.NBT_TAGS).enable("在聊天中写下您要添加的NBT标签",
 					ChatColor.AQUA + "格式: {标签名称} {标签值}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
@@ -65,7 +65,7 @@ public class NBTTags extends StringListStat {
 
 		inv.getEditedSection().set("custom-nbt", customNbt);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat 已成功添加。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat 已成功添加");
 	}
 
 	@Override
@@ -79,8 +79,8 @@ public class NBTTags extends StringListStat {
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加标签。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个标签。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加标签");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个标签");
 	}
 
 	static String extraneousTag = "EXTMI_";

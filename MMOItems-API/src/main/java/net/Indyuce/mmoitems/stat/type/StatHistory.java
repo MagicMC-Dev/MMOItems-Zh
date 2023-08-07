@@ -111,7 +111,7 @@ public class StatHistory {
         //noinspection ConstantConditions
         if (originalData == null) {
             setOriginalData(getItemStat().getClearStatData());
-            MMOItems.print(null, "$u{1} {2}$b 中 $e{0}$b 的统计历史记录的原始数据为空。", null, getItemStat().getId(), getMMOItem().getType().toString(), getMMOItem().getId());
+            MMOItems.print(null, "$u{1} {2}$b 中 $e{0}$b 的统计历史记录的原始数据为空", null, getItemStat().getId(), getMMOItem().getType().toString(), getMMOItem().getId());
         }
         return originalData;
     }
@@ -310,7 +310,7 @@ public class StatHistory {
 
         // That is Mergeable right...
         //UPGRD//MMOItems.log("\u00a7aCreated Hisotry of \u00a76" + ofStat.getNBTPath() + "\u00a7a of this \u00a7c" + ofItem.getType().getName() + " " + ofItem.getId());
-        Validate.isTrue(ofStat.getClearStatData() instanceof Mergeable, "不可合并的统计数据不会有统计历史记录；它们一开始就不能动态修改。");
+        Validate.isTrue(ofStat.getClearStatData() instanceof Mergeable, "不可合并的统计数据不会有统计历史记录；它们一开始就不能动态修改");
 
         // Get original data
         StatData original = ofItem.getData(ofStat);

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
 		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "授予的权限",
-				new String[] { "物品将授予的权限列表。" }, new String[] { "all" });
+				new String[] { "物品将授予的权限列表" }, new String[] { "all" });
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.GRANTED_PERMISSIONS).enable("在聊天中写下您要添加的权限。");
+			new StatEdition(inv, ItemStats.GRANTED_PERMISSIONS).enable("在聊天中写下您要添加的权限");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains(getPath())) {
 			List<String> permissions = inv.getEditedSection().getStringList(getPath());
@@ -67,7 +67,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 		permissions.add(message);
 		inv.getEditedSection().set(getPath(), permissions);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "权限添加成功。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "权限添加成功");
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加权限。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加权限");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限");
 	}
 }

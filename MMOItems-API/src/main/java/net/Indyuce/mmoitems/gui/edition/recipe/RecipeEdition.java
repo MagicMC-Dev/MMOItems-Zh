@@ -71,8 +71,8 @@ public class RecipeEdition extends EditionInventory {
 				elementMeta.setDisplayName(ChatColor.RED + "空");
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
-			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分。");
-			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分。");
+			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分");
+			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分");
 			elementMeta.setLore(elementLore);
 			element.setItemMeta(elementMeta);
 
@@ -108,8 +108,8 @@ public class RecipeEdition extends EditionInventory {
 					elementMeta.setDisplayName(ChatColor.RED + "空");
 				List<String> elementLore = new ArrayList<>();
 				elementLore.add("");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分。");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分。");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分");
 				elementMeta.setLore(elementLore);
 				element.setItemMeta(elementMeta);
 
@@ -140,7 +140,7 @@ public class RecipeEdition extends EditionInventory {
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			if (slotToInt(event.getRawSlot()) >= 0)
 				new StatEdition(this, ItemStats.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot()))
-						.enable("在聊天中写下您想要的物品。", "格式:  '[材料]' 或 '[类型].[ID]' ");
+						.enable("在聊天中写下您想要的物品", "格式:  '[材料]' 或 '[类型].[ID]' ");
 
 		} else if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (shapeless)

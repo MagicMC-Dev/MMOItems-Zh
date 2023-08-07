@@ -77,8 +77,8 @@ public class CustomBlockListener implements Listener {
             if (blockId > 160 || blockId < 1 || blockId == 54) // checks if block is a custom block
                 return;
             if (MMOItems.plugin.getCustomBlocks().getBlock(blockId) == null) {
-                MMOItems.plugin.getLogger().log(Level.SEVERE, "无法加载自定义块'" + blockId + "': " + "块未注册。");
-                MMOItems.plugin.getLogger().log(Level.SEVERE, "尝试重新加载插件来解决问题。");
+                MMOItems.plugin.getLogger().log(Level.SEVERE, "无法加载自定义块'" + blockId + "': " + "块未注册");
+                MMOItems.plugin.getLogger().log(Level.SEVERE, "尝试重新加载插件来解决问题");
                 event.setCancelled(true);
                 return;
             }

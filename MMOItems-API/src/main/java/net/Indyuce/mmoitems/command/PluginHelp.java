@@ -60,8 +60,8 @@ public class PluginHelp {
 		OPTIONAL("()" + ChatColor.WHITE + " = 可选"),
 		REQUIRED("<>" + ChatColor.WHITE + " = 必填"),
 		MULTIPLE_ARGS("..." + ChatColor.WHITE + " = 多个参数"),
-		HOVER_COMMAND(ChatColor.WHITE + "将鼠标悬停在命令上可查看其描述。"),
-		TAB_INFO(ChatColor.WHITE + "键入命令时按 [tab] 即可自动完成。"),
+		HOVER_COMMAND(ChatColor.WHITE + "将鼠标悬停在命令上可查看其描述"),
+		TAB_INFO(ChatColor.WHITE + "键入命令时按 [tab] 即可自动完成"),
 		SPACE(""),
 
 		HELP("mi help <page>", "显示帮助页面"),

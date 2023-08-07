@@ -23,7 +23,7 @@ import java.util.Objects;
 public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 	public LuteAttackEffectStat() {
 		super("LUTE_ATTACK_EFFECT", VersionMaterial.DIAMOND_HORSE_ARMOR.toMaterial(), "琴攻击效果",
-				new String[] { "更改右键单击时琴的行为方式。", "&9Tip: /mi list lute" }, new String[] { "lute" });
+				new String[] { "更改右键单击时琴的行为方式", "&9Tip: /mi list lute" }, new String[] { "lute" });
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("lute-attack-effect", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功解除了琴攻击效果。");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功解除了琴攻击效果");
 		} else
-			new StatEdition(inv, this).enable("在聊天中写下您想要的文字。");
+			new StatEdition(inv, this).enable("在聊天中写下您想要的文字");
 	}
 
 	@Override

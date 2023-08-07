@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemTierStat extends StringStat implements GemStoneStat {
 	public ItemTierStat() {
-		super("TIER", Material.DIAMOND, "稀有程度", new String[] { "该等级定义了您的物品的稀有程度", "以及物品被分解时会掉落的物品。", "&9Tiers可以在tiers.yml文件中配置" }, new String[] { "all" });
+		super("TIER", Material.DIAMOND, "稀有程度", new String[] { "该等级定义了您的物品的稀有程度", "以及物品被分解时会掉落的物品", "&9Tiers可以在tiers.yml文件中配置" }, new String[] { "all" });
 	}
 
 	@Override
@@ -36,6 +36,6 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
 
 		inv.getEditedSection().set("tier", format);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "等级已成功更改为" + format + "。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "等级已成功更改为" + format + "");
 	}
 }

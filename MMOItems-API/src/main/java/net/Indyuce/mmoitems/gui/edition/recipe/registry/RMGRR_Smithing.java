@@ -57,7 +57,7 @@ public class RMGRR_Smithing implements RecipeRegistry {
         // All right lets read them
         ProvidedUIFilter itemPoof = RecipeMakerGUI.readIngredientFrom(inputSplit[0], ffp);
         ProvidedUIFilter ingotPoof = RecipeMakerGUI.readIngredientFrom(inputSplit[1], ffp);
-        if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有 AIR 的锻造配方, $fignored$b。")); }
+        if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有 AIR 的锻造配方, $fignored$b")); }
 
         // Make ingredients
         MythicRecipeIngredient itemIngredient = new MythicRecipeIngredient(itemPoof);

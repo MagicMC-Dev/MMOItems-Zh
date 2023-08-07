@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LoreFormat extends StringStat implements GemStoneStat {
 	public LoreFormat() {
-		super("LORE_FORMAT", Material.MAP, "标注格式", new String[] { "标注格式决定了每个统计数据的去向。", "&9格式可以在", "&9lore-formats文件夹中配置" },
+		super("LORE_FORMAT", Material.MAP, "标注格式", new String[] { "标注格式决定了每个统计数据的去向", "&9格式可以在", "&9lore-formats文件夹中配置" },
 				new String[] { "all" });
 	}
 
@@ -34,6 +34,6 @@ public class LoreFormat extends StringStat implements GemStoneStat {
 
 		inv.getEditedSection().set(getPath(), message);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "标注格式成功更改为" + message + "。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "标注格式成功更改为" + message + "");
 	}
 }

@@ -159,7 +159,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, this).enable("在聊天中写下您要添加的行。");
+            new StatEdition(inv, this).enable("在聊天中写下您要添加的行");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains(getPath())) {
             List<String> list = inv.getEditedSection().getStringList(getPath());
@@ -181,7 +181,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
         list.add(message);
         inv.getEditedSection().set(getPath(), list);
         inv.registerTemplateEdition();
-        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "统计添加成功。");
+        inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "统计添加成功");
     }
 
     @Override
@@ -238,8 +238,8 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
             lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加权限。");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限。");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加权限");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限");
     }
 
     @NotNull

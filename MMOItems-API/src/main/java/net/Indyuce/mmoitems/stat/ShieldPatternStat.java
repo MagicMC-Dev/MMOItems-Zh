@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPatternData> {
 	public ShieldPatternStat() {
-		super("SHIELD_PATTERN", Material.SHIELD, "盾牌图案", new String[] { "盾牌的颜色和图案。" },
+		super("SHIELD_PATTERN", Material.SHIELD, "盾牌图案", new String[] { "盾牌的颜色和图案" },
 				new String[] { "all" }, Material.SHIELD);
 	}
 
@@ -82,17 +82,17 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("在聊天中写下你盾牌的颜色。");
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("在聊天中写下你盾牌的颜色");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 			inv.getEditedSection().set("shield-pattern.color", null);
 
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功重置盾牌颜色。");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功重置盾牌颜色");
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("在聊天中写下您要添加的模式。",
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("在聊天中写下您要添加的模式",
 					ChatColor.AQUA + "格式: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT && inv.getEditedSection().contains("shield-pattern")) {
@@ -103,7 +103,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 
 			inv.getEditedSection().set("shield-pattern." + last, null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除最后一个图案。");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除最后一个图案");
 		}
 	}
 
@@ -113,13 +113,13 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 
 		if (editedStatData == 1) {
 			String[] split = message.split(" ");
-			Validate.isTrue(split.length == 2, message + "不是有效的 [PATTERN_TYPE] [DYE_COLOR]。");
+			Validate.isTrue(split.length == 2, message + "不是有效的 [PATTERN_TYPE] [DYE_COLOR]");
 
 			PatternType patternType = PatternType.valueOf(split[0].toUpperCase().replace("-", "_").replace(" ", "_"));
 			DyeColor dyeColor = DyeColor.valueOf(split[1].toUpperCase().replace("-", "_").replace(" ", "_"));
 
 			int availableKey = getNextAvailableKey(inv.getEditedSection().getConfigurationSection("shield-pattern"));
-			Validate.isTrue(availableKey >= 0, "单个物品上可以有 100 多个盾牌图案。");
+			Validate.isTrue(availableKey >= 0, "单个物品上可以有 100 多个盾牌图案");
 
 			inv.getEditedSection().set("shield-pattern." + availableKey + ".pattern", patternType.name());
 			inv.getEditedSection().set("shield-pattern." + availableKey + ".color", dyeColor.name());
@@ -132,7 +132,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 		DyeColor color = DyeColor.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
 		inv.getEditedSection().set("shield-pattern.color", color.name());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "盾牌颜色更改成功。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "盾牌颜色更改成功");
 	}
 
 	@Override
@@ -152,10 +152,10 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改盾牌颜色。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左移单击可重置盾牌颜色。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以添加图案。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "放下以删除最后一个图案。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改盾牌颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左移单击可重置盾牌颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以添加图案");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "放下以删除最后一个图案");
 	}
 
 	@Override

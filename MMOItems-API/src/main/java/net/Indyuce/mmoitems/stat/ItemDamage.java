@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class ItemDamage extends DoubleStat implements GemStoneStat {
 	public ItemDamage() {
 		super("ITEM_DAMAGE", Material.FISHING_ROD, "物品损坏",
-				new String[]{"默认物品损坏。这不会影响物品的最大耐久。"}, new String[]{"!block", "all"});
+				new String[]{"默认物品损坏这不会影响物品的最大耐久"}, new String[]{"!block", "all"});
 	}
 
 	@Override

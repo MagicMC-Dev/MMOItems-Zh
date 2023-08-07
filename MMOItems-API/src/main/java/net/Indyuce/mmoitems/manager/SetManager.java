@@ -25,7 +25,7 @@ public class SetManager implements Reloadable {
             try {
                 final ConfigurationSection section = config.getConfig().getConfigurationSection(id);
                 if (section == null)
-                    throw new IllegalStateException("套装 '%s' 不是有效的配置节。".formatted(id));
+                    throw new IllegalStateException("套装 '%s' 不是有效的配置节".formatted(id));
                 itemSets.put(id, new ItemSet(section));
             } catch (IllegalArgumentException exception) {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载套装 '%s': %s".formatted(id, exception.getMessage()));

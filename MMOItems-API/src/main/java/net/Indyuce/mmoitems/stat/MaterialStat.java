@@ -40,7 +40,7 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中写下您想要的材质。");
+		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中写下您想要的材质");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 						: ChatColor.RED + "None"));
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
 	}
 

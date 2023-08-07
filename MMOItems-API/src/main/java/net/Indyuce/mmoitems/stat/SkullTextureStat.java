@@ -32,7 +32,7 @@ import java.util.UUID;
 public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureData> {
 	public SkullTextureStat() {
 		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理",
-				new String[] { "头部纹理&nvalue&7。", "可以在头颅数据库中找到。" }, new String[] { "all" },
+				new String[] { "头部纹理&nvalue&7", "可以在头颅数据库中找到" }, new String[] { "all" },
 				VersionMaterial.PLAYER_HEAD.toMaterial());
 	}
 
@@ -45,7 +45,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 		Validate.notNull(value, "无法加载头骨纹理值");
 
 		String format = config.getString("uuid");
-		Validate.notNull(format, "找不到头骨纹理 UUID: 重新输入您的头骨纹理值, 系统将随机选择一个。");
+		Validate.notNull(format, "找不到头骨纹理 UUID: 重新输入您的头骨纹理值, 系统将随机选择一个");
 
 		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), null));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
@@ -56,7 +56,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 	public void whenDisplayed(List<String> lore, Optional<SkullTextureData> statData) {
 		lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + "提供纹理值" : ChatColor.RED + "None"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
 	}
 
@@ -96,7 +96,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + getName() + ".");
 		} else
-			new StatEdition(inv, this).enable("在聊天中写下您想要的文字。");
+			new StatEdition(inv, this).enable("在聊天中写下您想要的文字");
 	}
 
 	@Override

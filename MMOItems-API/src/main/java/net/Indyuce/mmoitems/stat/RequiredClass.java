@@ -51,7 +51,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, this).enable("在聊天中写下您希望物品支持的类别。");
+			new StatEdition(inv, this).enable("在聊天中写下您希望物品支持的类别");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().getKeys(false).contains("required-class")) {
@@ -75,7 +75,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 		lore.add(message);
 		inv.getEditedSection().set(getPath(), lore);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "所需类已成功添加。");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "所需类已成功添加");
 	}
 
 	@Override
@@ -123,8 +123,8 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加班级。");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一类。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加班级");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一类");
 	}
 
 	@NotNull

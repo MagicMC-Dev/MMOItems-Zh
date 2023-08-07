@@ -342,7 +342,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.GREEN + "---");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值。");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
 	}
 

@@ -31,7 +31,7 @@ import java.util.Optional;
 
 public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 	public ItemParticles() {
-		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toMaterial(), "物品粒子", new String[] { "持有/佩戴物品时显示的粒子。", "", ChatColor.BLUE + "wiki 上提供了教程。" }, new String[] { "all", "!block" });
+		super("ITEM_PARTICLES", VersionMaterial.PINK_STAINED_GLASS.toMaterial(), "物品粒子", new String[] { "持有/佩戴物品时显示的粒子", "", ChatColor.BLUE + "wiki 上提供了教程" }, new String[] { "all", "!block" });
 	}
 
 	@Override

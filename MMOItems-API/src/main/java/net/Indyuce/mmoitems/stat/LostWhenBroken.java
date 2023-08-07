@@ -11,6 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class LostWhenBroken extends BooleanStat {
 	public LostWhenBroken() {
-		super("WILL_BREAK", Material.SHEARS, "破碎时丢失?", new String[] { "如果设置为 true，一旦耐久", "度达到 0，该物品就会丢失。" }, new String[] { "!block", "all" });
+		super("WILL_BREAK", Material.SHEARS, "破碎时丢失?", new String[] { "如果设置为 true，一旦耐久", "度达到 0，该物品就会丢失" }, new String[] { "!block", "all" });
 	}
 }

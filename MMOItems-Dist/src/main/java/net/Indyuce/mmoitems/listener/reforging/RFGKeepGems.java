@@ -196,7 +196,7 @@ public class RFGKeepGems implements Listener {
                 if (restoredGem == null) {
 
                     // Mention the loss
-                    MMOItems.print(null, "宝石 $r{0} {1} $b 已不存在, 它已从 $u{2}$b 的 {3}$b 中删除。 ", "RevID", lost.getMMOItemType(), lost.getMMOItemID(), event.getPlayer() == null ? "null" : event.getPlayer().getName(), SilentNumbers.getItemName(event.getReforger().getStack(), false));
+                    MMOItems.print(null, "宝石 $r{0} {1} $b 已不存在, 它已从 $u{2}$b 的 {3}$b 中删除 ", "RevID", lost.getMMOItemType(), lost.getMMOItemID(), event.getPlayer() == null ? "null" : event.getPlayer().getName(), SilentNumbers.getItemName(event.getReforger().getStack(), false));
                     continue; }
 
                 // Reforge gemstone if it can be reforged

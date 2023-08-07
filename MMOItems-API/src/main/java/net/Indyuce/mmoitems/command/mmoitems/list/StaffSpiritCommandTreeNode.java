@@ -13,7 +13,7 @@ public class StaffSpiritCommandTreeNode extends CommandTreeNode {
 
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
-		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + "员工精神"
+		sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + "魔法权杖"
 				+ ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
 		for (StaffSpirit ss : StaffSpirit.values()) {
 			String lore = ss.hasLore() ? " " + ChatColor.WHITE + ">> " + ChatColor.GRAY + "" + ChatColor.ITALIC + ss.getDefaultLore() : "";

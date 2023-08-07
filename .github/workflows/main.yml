@@ -13,11 +13,9 @@ on:
       tags:
         description: 'Test scenario tags'
   push:
-    branches:
-        - ZH_cn
+    branches: [ "Zh_cn" ]
   pull_request:
-    branches:
-        - ZH_cn
+    branches: [ "Zh_cn" ]
 
 jobs:
   build:

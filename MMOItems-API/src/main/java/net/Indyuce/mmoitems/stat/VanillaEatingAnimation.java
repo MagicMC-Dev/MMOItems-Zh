@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VanillaEatingAnimation extends BooleanStat {
 	public VanillaEatingAnimation() {
-		super("VANILLA_EATING", Material.COOKED_BEEF, "Vanilla Eating Animation", new String[] { "When enabled, players have to wait", "for the vanilla eating animation", "in order to eat the consumable.", "", "Only works on items that", "can normally be eaten."}, new String[] { "consumable" });
+		super("VANILLA_EATING", Material.COOKED_BEEF, "原版吃动画", new String[] { "启用后，玩家必须等待原版吃动画才能吃消", "耗品。仅适用于通常可以食用的物品。"}, new String[] { "consumable" });
 	}
 
 	@Override

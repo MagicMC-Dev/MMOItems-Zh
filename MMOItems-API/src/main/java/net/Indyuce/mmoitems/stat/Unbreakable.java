@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class Unbreakable extends BooleanStat {
 	public Unbreakable() {
-		super("UNBREAKABLE", Material.ANVIL, "牢不可破", new String[] { "如果设置为 true，则无限耐久。" }, new String[] { "all" });
+		super("UNBREAKABLE", Material.ANVIL, "牢不可破", new String[] { "如果设置为 true 则无限耐久。" }, new String[] { "all" });
 	}
 
 	@Override

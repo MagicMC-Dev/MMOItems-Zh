@@ -35,7 +35,7 @@ import java.util.Optional;
 
 public class Elements extends ItemStat<RandomElementListData, ElementListData> implements Previewable<RandomElementListData, ElementListData> {
     public Elements() {
-        super("ELEMENT", Material.SLIME_BALL, "Elements", new String[]{"您的物品的元素"},
+        super("ELEMENT", Material.SLIME_BALL, "元素", new String[]{"您的物品的元素"},
                 new String[]{"slashing", "piercing", "blunt", "catalyst", "range", "tool", "armor", "gem_stone"});
     }
 

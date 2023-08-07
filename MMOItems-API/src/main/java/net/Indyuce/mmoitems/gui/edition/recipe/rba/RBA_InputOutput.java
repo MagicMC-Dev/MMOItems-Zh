@@ -65,7 +65,7 @@ public class RBA_InputOutput extends RecipeButtonAction {
     @Override public void secondaryProcessInput(@NotNull String message, Object... info) throws IllegalArgumentException { }
 
     @NotNull final ItemStack button = RecipeMakerGUI.addLore(ItemFactory.of(Material.CRAFTING_TABLE).name("\u00a7c切换到输出模式").lore(SilentNumbers.chop(
-            "输入是配方的材料, 但是 (就像制作蛋糕时的牛奶桶一样) 这些材料可能不会完全消耗在这种情况下, 请使用输出模式来指定材料将变成什么"
+            "INPUT 是配方的材料, 但是 (就像制作蛋糕时的牛奶桶一样) 这些材料可能不会完全消耗在这种情况下, 请使用 OUTPUT 模式来指定材料将变成什么"
             , 63, "\u00a77")).build(), SilentNumbers.toArrayList(""));
 
     @NotNull

@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class Unstackable extends BooleanStat {
 	public Unstackable() {
-		super("UNSTACKABLE", Material.CHEST_MINECART, "Unstackable",
-				new String[] { "This will make the item unable", "to be stacked with itself." }, new String[] { "all" });
+		super("UNSTACKABLE", Material.CHEST_MINECART, "不可堆叠",
+				new String[] { "这将使该物品无法与自身堆叠。" }, new String[] { "all" });
 	}
 
 	@Override

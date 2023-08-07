@@ -70,17 +70,17 @@ public class ItemSet {
                             // particle effect
                             if (key.startsWith("particle-")) {
                                 final ConfigurationSection section = config.getConfigurationSection("bonuses.%d.%s".formatted(j, key));
-                                Validate.notNull(section, "粒子效果 '%s '不是有效的配置部分。".formatted(key));
+                                Validate.notNull(section, "粒子效果 '%s' 不是有效的配置部分。".formatted(key));
                                 bonuses.addParticle(new ParticleData(section));
                                 continue;
                             }
 
                             // stat
                             ItemStat<?, ?> stat = MMOItems.plugin.getStats().get(format);
-                            Validate.notNull(stat, "找不到名为 '%s '的统计数据".formatted(format));
+                            Validate.notNull(stat, "找不到名为 '%s' 的统计数据".formatted(format));
                             bonuses.addStat(stat, config.getDouble("bonuses.%d.%s".formatted(j, key)));
                         } catch (IllegalArgumentException exception) {
-                            throw new IllegalArgumentException("无法加载设置的奖金 '%s ': %s".formatted(key, exception.getMessage()));
+                            throw new IllegalArgumentException("无法加载设置的奖金 '%s': %s".formatted(key, exception.getMessage()));
                         }
                     }
 

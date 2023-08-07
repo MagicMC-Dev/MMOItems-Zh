@@ -49,7 +49,7 @@ public class PlaceholderCondition extends GenericCondition {
                     throw new RuntimeException("比较器无法识别");
             }
         } catch (RuntimeException exception) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "无法计算占位符条件表达式b " + exception.getMessage());
+            MMOItems.plugin.getLogger().log(Level.WARNING, "无法计算占位符条件表达式 " + exception.getMessage());
             return false;
         }
     }

@@ -16,7 +16,7 @@ public class PlaceholderCondition extends GenericCondition {
 
         config.validateKeys("placeholder");
         String[] array = config.getString("placeholder").split("~");
-        Validate.isTrue(array.length == 3, "请务必使用两次~");
+        Validate.isTrue(array.length == 3, "Please use exactly twice ~");
         expression1 = array[0];
         comparator = array[1];
         expression2 = array[2];
@@ -46,10 +46,10 @@ public class PlaceholderCondition extends GenericCondition {
                 case "equals":
                     return unparsed1.equals(unparsed2);
                 default:
-                    throw new RuntimeException("比较器无法识别");
+                    throw new RuntimeException("Comparator not recognized");
             }
         } catch (RuntimeException exception) {
-            MMOItems.plugin.getLogger().log(Level.WARNING, "无法计算占位符条件表达式 " + exception.getMessage());
+            MMOItems.plugin.getLogger().log(Level.WARNING, "Could not evaluate placeholder condition expression: " + exception.getMessage());
             return false;
         }
     }

@@ -125,7 +125,7 @@ public class NoClipItem implements Listener {
 				profileField.setAccessible(true);
 				profileField.set(newItemMeta, oldProfile);
 			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "无法在 NoClipItem 类中的 stripItemData 方法上设置头骨纹理。请报告此问题！");
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not set skull texture on stripItemData method in the NoClipItem class. Please report this issue!");
 			}
 		}
 

@@ -19,7 +19,7 @@ public class ProfessionCondition extends Condition {
         level = config.getInt("level");
 
         String id = config.getString("profession").toLowerCase().replace("_", "-");
-        Validate.isTrue(MMOCore.plugin.professionManager.has(id), "找不到职业" + id);
+        Validate.isTrue(MMOCore.plugin.professionManager.has(id), "Could not find profession " + id);
         profession = MMOCore.plugin.professionManager.get(id);
     }
 

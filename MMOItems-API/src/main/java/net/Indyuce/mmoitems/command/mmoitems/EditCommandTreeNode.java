@@ -23,22 +23,22 @@ public class EditCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
+			sender.sendMessage(ChatColor.RED + "This command is only for players.");
 			return CommandResult.FAILURE;
 		}
 
 		if (!Type.isValid(args[1])) {
 			sender.sendMessage(
-					MMOItems.plugin.getPrefix() + ChatColor.RED + "没有名为 " + args[1].toUpperCase().replace("-", "_") + " 的物品类型");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "输入 " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
-					+ " 查看所有可用的物品类型");
+					MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED
+					+ " to see all the available item types.");
 			return CommandResult.FAILURE;
 		}
 
 		Type type = Type.get(args[1]);
 		String id = args[2].toUpperCase().replace("-", "_");
 		if (!MMOItems.plugin.getTemplates().hasTemplate(type, id)) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "找不到名为 '" + id + "' 的模板");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Could not find a template called '" + id + "'.");
 			return CommandResult.FAILURE;
 		}
 

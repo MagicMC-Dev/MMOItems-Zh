@@ -55,7 +55,7 @@ public class MMOItemUIFilter implements UIFilter {
 
             // Notify
             FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.FAILURE,
-                    "物品 $r{0}$b $f不是一个MMO物品$b. ", SilentNumbers.getItemName(item));
+                    "Item $r{0}$b is $fnot a MMOItem$b. ", SilentNumbers.getItemName(item));
 
             // Fail
             return false;
@@ -75,7 +75,7 @@ public class MMOItemUIFilter implements UIFilter {
 
             // Notify
             FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.FAILURE,
-                    "MMOItem $r{0} {1}$b 与预期的 $r{2} {3}$b 不一致。{3}$b $f不匹配。",
+                    "MMOItem $r{0} {1}$b is not the expected $r{2} {3}$b. $fNo Match. ",
                     mmo.getType().getId(), mmo.getId(), argument, data);
 
             // Fail
@@ -98,7 +98,7 @@ public class MMOItemUIFilter implements UIFilter {
 
                     // Notify
                     FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.FAILURE,
-                            "MMOItem $r{0} {1}$b 级别为 $u{2}$b, 而预期级别为 $r{3}$b。$f不匹配。",
+                            "MMOItem $r{0} {1}$b is of level $u{2}$b though $r{3}$b was expected. $fNo Match. ",
                             mmo.getType().getId(), mmo.getId(), String.valueOf(identifiedLvl), upgradeReq.toString());
 
                     // Fail
@@ -109,7 +109,7 @@ public class MMOItemUIFilter implements UIFilter {
 
         // Notify
         FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.SUCCESS,
-                "成功检测到 $r{0} {1} $s。", mmo.getType().getId(), mmo.getId());
+                "Detected $r{0} {1} $sSuccessfully. ", mmo.getType().getId(), mmo.getId());
 
         return true;
     }
@@ -128,7 +128,7 @@ public class MMOItemUIFilter implements UIFilter {
 
             // Error
             FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.ERROR,
-                    "$f无效的 MMOItem 类型 $r{0}$f。", argument);
+                    "$fInvalid MMOItem Type $r{0}$f. ", argument);
             
             return false;
         }
@@ -145,14 +145,14 @@ public class MMOItemUIFilter implements UIFilter {
 
             // Error
             FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.ERROR,
-                    "$f无效的 MMOItem $r{0} {1}$f: $b 类型 $e{0}$b 没有此类 MMOItem。", argument, data);
+                    "$fInvalid MMOItem $r{0} {1}$f: $bNo such MMOItem for Type $e{0}$b. ", argument, data);
 
             return false;
         }
 
         // Error
         FriendlyFeedbackProvider.log(ffp, FriendlyFeedbackCategory.SUCCESS,
-                "有效的 MMOitem $r{0} {1}$b $s。", argument, data);
+                "Valid MMOItem $r{0} {1}$b. $snice. ", argument, data);
         return true;
     }
 
@@ -296,7 +296,7 @@ public class MMOItemUIFilter implements UIFilter {
     public ArrayList<String> getDescription(@NotNull String argument, @NotNull String data) {
 
         // Check validity
-        if (!isValid(argument, data, null)) { return SilentNumbers.toArrayList("该 MMOItem 为 $finvalid$b。"); }
+        if (!isValid(argument, data, null)) { return SilentNumbers.toArrayList("This MMOItem is $finvalid$b."); }
         argument = argument.replace(" ", "_").replace("-", "_").toUpperCase();
         data = data.replace(" ", "_").replace("-", "_").toUpperCase();
         return SilentNumbers.toArrayList(SilentNumbers.getItemName(MMOItems.plugin.getItem(argument, data)));

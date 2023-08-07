@@ -90,7 +90,7 @@ public class ItemBrowser extends PluginInventory {
                 AdventureUtils.setDisplayName(meta, "&a%s&8 (点击浏览) ".formatted(currentType.getName()));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                lore.add("&7&o %s %s &7&o物品在这个类别中".formatted(items < 1 ? "&c&o无" : "&6&o%d"));
+                lore.add("&7&o %s &7&o物品在这个类别中".formatted(items < 1 ? "&c&o无" : "&6&o%d"));
                 AdventureUtils.setLore(meta, lore);
                 item.setItemMeta(meta);
 

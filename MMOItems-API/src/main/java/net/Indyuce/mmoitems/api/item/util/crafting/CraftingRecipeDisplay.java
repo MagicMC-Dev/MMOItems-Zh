@@ -21,9 +21,9 @@ import java.util.*;
 
 public class CraftingRecipeDisplay extends ConfigItem {
     public CraftingRecipeDisplay() {
-        super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&l合成&f #name#", "{conditions}", "{conditions}&8状态:", "{crafting_time}",
-                "{crafting_time}&7制作时间: &c#crafting-time#&7s", "", "&8材料:", "#ingredients#", "", "&e左键单击进行制作!",
-                "&e右键单击预览!");
+        super("CRAFTING_RECIPE_DISPLAY", Material.BARRIER, "&a&lCraft&f #name#", "{conditions}", "{conditions}&8Conditions:", "{crafting_time}",
+                "{crafting_time}&7Crafting Time: &c#crafting-time#&7s", "", "&8Ingredients:", "#ingredients#", "", "&eLeft-Click to craft!",
+                "&eRight-Click to preview!");
     }
 
     public ItemBuilder newBuilder(CheckedRecipe recipe) {

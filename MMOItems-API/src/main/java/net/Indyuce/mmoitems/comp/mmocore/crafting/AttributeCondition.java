@@ -19,7 +19,7 @@ public class AttributeCondition extends Condition {
         points = config.getInt("points");
 
         String id = config.getString("attribute").toLowerCase().replace("_", "-");
-        Validate.isTrue(MMOCore.plugin.attributeManager.has(id), "找不到属性 " + id);
+        Validate.isTrue(MMOCore.plugin.attributeManager.has(id), "Could not find attribute " + id);
         attribute = MMOCore.plugin.attributeManager.get(id);
     }
 

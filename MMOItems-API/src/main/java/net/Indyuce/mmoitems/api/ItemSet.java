@@ -32,14 +32,14 @@ public class ItemSet {
         this.loreTag = config.getStringList("lore-tag");
         this.name = config.getString("name");
 
-        Validate.isTrue(config.isConfigurationSection("bonuses"), "找不到物品套装奖励");
+        Validate.isTrue(config.isConfigurationSection("bonuses"), "Could not find item set bonuses");
 
         for (int j = 2; j <= itemLimit; j++)
             if (config.getConfigurationSection("bonuses").contains(String.valueOf(j))) {
                 final String bonusesKey = "bonuses.%d".formatted(j);
                 final SetBonuses bonuses = new SetBonuses();
                 final ConfigurationSection bonusesSection = config.getConfigurationSection(bonusesKey);
-                Validate.notNull(bonusesSection, "项集 '%s' 不是有效的配置节。".formatted(id));
+                Validate.notNull(bonusesSection, "Item set '%s' is not a valid configuration section.".formatted(id));
 
                 // Add permissions
                 for (String perm : bonusesSection.getStringList("granted-permissions"))
@@ -53,7 +53,7 @@ public class ItemSet {
                             // ability
                             if (key.startsWith("ability-")) {
                                 final ConfigurationSection section = config.getConfigurationSection("%s.%s".formatted(bonusesKey, key));
-                                Validate.notNull(section, "能力 '%s' 不是有效的配置部分。".formatted(key));
+                                Validate.notNull(section, "Ability '%s' is not a valid configuration section.".formatted(key));
                                 bonuses.addAbility(new AbilityData(section));
                                 continue;
                             }
@@ -61,7 +61,7 @@ public class ItemSet {
                             // potion effect
                             if (key.startsWith("potion-")) {
                                 PotionEffectType potionEffectType = PotionEffectType.getByName(format.substring("potion-".length()));
-                                Validate.notNull(potionEffectType, "无法从 '%s' 加载药水效果类型".formatted(format));
+                                Validate.notNull(potionEffectType, "Could not load potion effect type from '%s'".formatted(format));
                                 bonuses.addPotionEffect(new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType),
                                         config.getInt("%s.%s".formatted(bonusesKey, key)) - 1, true, false));
                                 continue;
@@ -70,17 +70,17 @@ public class ItemSet {
                             // particle effect
                             if (key.startsWith("particle-")) {
                                 final ConfigurationSection section = config.getConfigurationSection("bonuses.%d.%s".formatted(j, key));
-                                Validate.notNull(section, "粒子效果 '%s' 不是有效的配置部分。".formatted(key));
+                                Validate.notNull(section, "Particle effect '%s' is not a valid configuration section.".formatted(key));
                                 bonuses.addParticle(new ParticleData(section));
                                 continue;
                             }
 
                             // stat
                             ItemStat<?, ?> stat = MMOItems.plugin.getStats().get(format);
-                            Validate.notNull(stat, "找不到名为 '%s' 的统计数据".formatted(format));
+                            Validate.notNull(stat, "Could not find stat called '%s'".formatted(format));
                             bonuses.addStat(stat, config.getDouble("bonuses.%d.%s".formatted(j, key)));
                         } catch (IllegalArgumentException exception) {
-                            throw new IllegalArgumentException("无法加载设置的奖金 '%s': %s".formatted(key, exception.getMessage()));
+                            throw new IllegalArgumentException("Could not load set bonus '%s': %s".formatted(key, exception.getMessage()));
                         }
                     }
 

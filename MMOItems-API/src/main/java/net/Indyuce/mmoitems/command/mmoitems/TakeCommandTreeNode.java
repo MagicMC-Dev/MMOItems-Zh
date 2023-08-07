@@ -39,7 +39,7 @@ public class TakeCommandTreeNode extends CommandTreeNode {
             final Type type = MMOItems.plugin.getTypes().getOrThrow(args[1].toUpperCase().replace("-", "_"));
             final String id = args[2].toUpperCase().replace("-", "_");
             final Player target = Bukkit.getPlayer(args[3]);
-            Validate.notNull(target, "找不到名为 '" + args[3] + "' 的玩家");
+            Validate.notNull(target, "Could not find player called '" + args[3] + "'.");
 
             int amountLeft = Integer.parseInt(args[4]);
             for (int i = 0; i < target.getInventory().getSize() && amountLeft > 0; i++) {

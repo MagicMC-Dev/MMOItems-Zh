@@ -29,8 +29,8 @@ public class RevIDActionCommandTreeNode extends CommandTreeNode {
 		if (args.length < 3) return CommandResult.THROW_USAGE;
 
 		if (!Type.isValid(args[2]) && !args[2].equalsIgnoreCase("all")) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "没有名为 " + args[2].toUpperCase().replace("-", "_") + " 的物品类型");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "输入 " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " 查看所有可用的物品类型");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[2].toUpperCase().replace("-", "_") + ".");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type" + ChatColor.RED + " to see all the available item types.");
 			return CommandResult.FAILURE;
 		}
 
@@ -47,7 +47,7 @@ public class RevIDActionCommandTreeNode extends CommandTreeNode {
 			}
 		}
 
-		if(failed > 0) sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "找不到 " + failed + " 物品的配置部分");
+		if(failed > 0) sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find ConfigurationSection for " + failed + " of the specified items.");
 		else sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "Successfully " + cmdType + "d Rev IDs" + (type != null ? " for " + type.getName() : "") + "!");
 		return CommandResult.SUCCESS;
 	}

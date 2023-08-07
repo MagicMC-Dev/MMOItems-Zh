@@ -31,7 +31,7 @@ public class AnvilGUI extends PlayerInputHandler implements Listener {
 
 		ItemStack paper = new ItemStack(Material.PAPER);
 		ItemMeta paperMeta = paper.getItemMeta();
-		paperMeta.setDisplayName("输入文本..");
+		paperMeta.setDisplayName("Input text..");
 		paper.setItemMeta(paperMeta);
 
 		MythicLib.plugin.getVersion().getWrapper().handleInventoryCloseEvent(getPlayer());

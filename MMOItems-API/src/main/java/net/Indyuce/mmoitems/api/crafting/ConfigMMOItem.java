@@ -20,9 +20,9 @@ public class ConfigMMOItem {
 	private ItemStack preview;
 
 	public ConfigMMOItem(ConfigurationSection config) {
-		Validate.notNull(config, "无法读取 MMOItem 配置");
+		Validate.notNull(config, "Could not read MMOItem config");
 
-		Validate.isTrue(config.contains("type") && config.contains("id"), "配置必须包含类型和 ID");
+		Validate.isTrue(config.contains("type") && config.contains("id"), "Config must contain type and ID");
 		Type type = MMOItems.plugin.getTypes().getOrThrow(config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
 		template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, config.getString("id"));
 
@@ -30,7 +30,7 @@ public class ConfigMMOItem {
 	}
 
 	public ConfigMMOItem(MMOItemTemplate template, int amount) {
-		Validate.notNull(template, "无法注册配方输出");
+		Validate.notNull(template, "Could not register recipe output");
 
 		this.template = template;
 		this.amount = Math.max(1, amount);

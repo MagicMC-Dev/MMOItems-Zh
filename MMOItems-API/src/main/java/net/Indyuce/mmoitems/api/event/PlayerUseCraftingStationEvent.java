@@ -105,7 +105,7 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	 * interaction is either INTERACT_WITH_RECIPE or INSTANT_RECIPE
 	 */
 	public CheckedRecipe getRecipeInfo() {
-		Validate.notNull(action == StationAction.INSTANT_RECIPE || action == StationAction.INTERACT_WITH_RECIPE, "没有提供配方信息" + action.name());
+		Validate.notNull(action == StationAction.INSTANT_RECIPE || action == StationAction.INTERACT_WITH_RECIPE, "No recipe info is provided with " + action.name());
 		return recipeInfo;
 	}
 
@@ -118,7 +118,7 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
 	 * is either INSTANT_RECIPE or CRAFTING_QUEUE
 	 */
 	public ItemStack getResult() {
-		Validate.notNull(action == StationAction.INSTANT_RECIPE || action == StationAction.CRAFTING_QUEUE, "没有提供结果项" + action.name());
+		Validate.notNull(action == StationAction.INSTANT_RECIPE || action == StationAction.CRAFTING_QUEUE, "No result item is provided with " + action.name());
 		return result;
 	}
 

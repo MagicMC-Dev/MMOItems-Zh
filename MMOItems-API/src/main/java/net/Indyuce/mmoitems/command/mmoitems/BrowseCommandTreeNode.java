@@ -20,7 +20,7 @@ public class BrowseCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "此命令仅适用于玩家");
+			sender.sendMessage(ChatColor.RED + "This command is only for players.");
 			return CommandResult.FAILURE;
 		}
 
@@ -30,7 +30,7 @@ public class BrowseCommandTreeNode extends CommandTreeNode {
 		}
 
 		if (!Type.isValid(args[1])) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "请指定有效的物品类型");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a valid item type.");
 			return CommandResult.FAILURE;
 		}
 

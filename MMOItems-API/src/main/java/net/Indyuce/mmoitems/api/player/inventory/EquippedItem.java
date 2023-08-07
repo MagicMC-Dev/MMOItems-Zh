@@ -41,11 +41,11 @@ public abstract class EquippedItem {
     }
 
     public VolatileMMOItem getCached() {
-        return Objects.requireNonNull(cached, "物品尚未缓存");
+        return Objects.requireNonNull(cached, "Item not cached yet");
     }
 
     public void cacheItem() {
-        Validate.isTrue(cached == null, "MMOItem 已被缓存");
+        Validate.isTrue(cached == null, "MMOItem has already been cached");
         cached = new VolatileMMOItem(item);
     }
 

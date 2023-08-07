@@ -18,8 +18,8 @@ import java.util.*;
 
 public class UpgradingRecipeDisplay extends ConfigItem {
 	public UpgradingRecipeDisplay() {
-		super("UPGRADING_RECIPE_DISPLAY", Material.BARRIER, "&e&l升级&f #name#", "{conditions}", "{conditions}&8状态:", "", "&8材料:",
-				"#ingredients#", "", "&e左键单击进行制作!", "&e右键单击预览!");
+		super("UPGRADING_RECIPE_DISPLAY", Material.BARRIER, "&e&lUpgrade&f #name#", "{conditions}", "{conditions}&8Conditions:", "", "&8Ingredients:",
+				"#ingredients#", "", "&eLeft-Click to craft!", "&eRight-Click to preview!");
 	}
 
 	public ItemBuilder newBuilder(CheckedRecipe recipe) {

@@ -147,7 +147,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
 
             // Any errors yo?
             FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-            ffp.activatePrefix(true, "配方: " + getOutputItem().getType().getId() + " " + getOutputItem().getId());
+            ffp.activatePrefix(true, "Recipe of " + getOutputItem().getType().getId() + " " + getOutputItem().getId());
 
             /*
              * First we must get the material of the base, a dummy

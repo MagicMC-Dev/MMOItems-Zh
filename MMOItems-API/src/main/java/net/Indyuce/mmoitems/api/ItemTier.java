@@ -151,8 +151,8 @@ public class ItemTier {
         private final String name, prefix;
         private final int range;
 
-        public static final String DEFAULT_NAME = "不明物品";
-        public static final String DEFAULT_PREFIX = "未知";
+        public static final String DEFAULT_NAME = "Unidentified Item";
+        public static final String DEFAULT_PREFIX = "Unknown";
         public static final UnidentificationInfo DEFAULT = new UnidentificationInfo(UnidentificationInfo.DEFAULT_NAME, UnidentificationInfo.DEFAULT_PREFIX, 0);
 
         public UnidentificationInfo(@NotNull ConfigurationSection config) {

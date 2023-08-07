@@ -21,7 +21,7 @@ public class MythicMobsSkillTrigger extends Trigger {
         config.validate("id");
         String id = config.getString("id");
         Optional<Skill> opt = MythicBukkit.inst().getSkillManager().getSkill(id);
-        Validate.isTrue(opt.isPresent(), "找不到MM技能" + id);
+        Validate.isTrue(opt.isPresent(), "Could not find MM skill " + id);
         skill = opt.get();
     }
 

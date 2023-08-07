@@ -51,7 +51,7 @@ public class CraftingStation extends PostLoadObject {
                 registerRecipe(loadRecipe(config.getConfigurationSection("recipes." + key)));
             } catch (IllegalArgumentException exception) {
                 MMOItems.plugin.getLogger().log(Level.INFO,
-                        "注册配方时出现问题 '" + key + "' 来自制作站 '" + id + "': " + exception.getMessage());
+                        "An issue occurred registering recipe '" + key + "' from crafting station '" + id + "': " + exception.getMessage());
             }
 
         itemOptions = new StationItemOptions(config.getConfigurationSection("items"));
@@ -61,9 +61,9 @@ public class CraftingStation extends PostLoadObject {
     public CraftingStation(String id, String name, Layout layout, Sound sound, StationItemOptions itemOptions, int maxQueueSize, CraftingStation parent) {
         super(null);
 
-        Validate.notNull(id, "制作站 ID 不能为空");
-        Validate.notNull(name, "制作站名称不能为空");
-        Validate.notNull(sound, "制作站声音不能为空");
+        Validate.notNull(id, "Crafting station ID must not be null");
+        Validate.notNull(name, "Crafting station name must not be null");
+        Validate.notNull(sound, "Crafting station sound must not be null");
 
         this.id = id.toLowerCase().replace("_", "-").replace(" ", "-");
         this.name = name;
@@ -173,8 +173,8 @@ public class CraftingStation extends PostLoadObject {
     protected void whenPostLoaded(ConfigurationSection config) {
         if (config.contains("parent")) {
             String id = config.getString("parent").toLowerCase().replace(" ", "-").replace("_", "-");
-            Validate.isTrue(!id.equals(this.id), "站不能将自身用作父站");
-            Validate.isTrue(MMOItems.plugin.getCrafting().hasStation(id), "找不到带有 ID 的父站 '" + id + "'");
+            Validate.isTrue(!id.equals(this.id), "Station cannot use itself as parent");
+            Validate.isTrue(MMOItems.plugin.getCrafting().hasStation(id), "Could not find parent station with ID '" + id + "'");
             parent = MMOItems.plugin.getCrafting().getStation(id);
         }
     }

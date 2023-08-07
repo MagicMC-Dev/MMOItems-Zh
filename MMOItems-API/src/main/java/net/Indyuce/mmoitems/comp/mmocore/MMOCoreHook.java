@@ -50,8 +50,8 @@ public class MMOCoreHook implements RPGHandler, Listener {
             // Adds profession specific Additional Experience stats.
             MMOItems.plugin.getStats().register(new DoubleStat((StatType.ADDITIONAL_EXPERIENCE.name() + '_' + profession.getId())
                     .replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
-                    VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "额外经验 (MMOCore)"
-                    , new String[]{"附加MMOCore职业 " + profession.getName() + " 经验 %."}, new String[]{"!block", "all"}));
+                    VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), profession.getName() + ' ' + "Additional Experience (MMOCore)"
+                    , new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."}, new String[]{"!block", "all"}));
             MMOItems.plugin.getStats().register(new RequiredProfession(profession));
         }
     }

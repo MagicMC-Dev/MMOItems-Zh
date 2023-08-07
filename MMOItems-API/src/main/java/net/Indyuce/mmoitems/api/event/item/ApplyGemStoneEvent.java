@@ -45,7 +45,7 @@ public class ApplyGemStoneEvent extends PlayerDataEvent {
     }
 
     public void setResult(GemStone.ResultType result) {
-        Validate.notNull(result, "结果不能为空");
+        Validate.notNull(result, "Result cannot be null");
         this.result = result;
     }
 

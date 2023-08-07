@@ -23,6 +23,6 @@ public class GenerateCommandHandler {
             if (argument.startsWith("-" + key + ":"))
                 return argument.substring(key.length() + 2);
 
-        throw new IllegalArgumentException("命令没有参数 '" + key + "'");
+        throw new IllegalArgumentException("Command has no argument '" + key + "'");
     }
 }

@@ -14,7 +14,7 @@ public class ListCommandTreeNode extends CommandTreeNode {
 
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
-		sender.sendMessage(ChatColor.LIGHT_PURPLE + "可用的配置更新");
+		sender.sendMessage(ChatColor.LIGHT_PURPLE + "Available Config Updates");
 		for (PluginUpdate update : MMOItems.plugin.getUpdates().getAll())
 			sender.sendMessage(ChatColor.DARK_GRAY + "- Update " + update.getId());
 		return CommandResult.SUCCESS;

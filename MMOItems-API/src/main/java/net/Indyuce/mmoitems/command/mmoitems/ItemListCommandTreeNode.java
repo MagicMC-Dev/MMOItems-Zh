@@ -25,15 +25,15 @@ public class ItemListCommandTreeNode extends CommandTreeNode {
 
 		if (!Type.isValid(args[1])) {
 			sender.sendMessage(
-					MMOItems.plugin.getPrefix() + ChatColor.RED + "没有名为 " + args[1].toUpperCase().replace("-", "_") + " 的物品类型");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "输入 " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY
-					+ " 查看所有可用的物品类型");
+					MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_"));
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY
+					+ "to see all the available item types.");
 			return CommandResult.FAILURE;
 		}
 
 		Type type = Type.get(args[1]);
 		sender.sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
-		sender.sendMessage(ChatColor.GREEN + "列表中所有的物品在 " + type.getId().toLowerCase() + ".yml:");
+		sender.sendMessage(ChatColor.GREEN + "List of all items in " + type.getId().toLowerCase() + ".yml:");
 		FileConfiguration config = type.getConfigFile().getConfig();
 
 		if (sender instanceof Player)
@@ -43,7 +43,7 @@ public class ItemListCommandTreeNode extends CommandTreeNode {
 						: "";
 				MythicLib.plugin.getVersion().getWrapper().sendJson((Player) sender,
 						"{\"text\":\"* " + ChatColor.GREEN + s + nameFormat + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit "
-								+ type.getId() + " " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"点击编辑 "
+								+ type.getId() + " " + s + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit "
 								+ (nameFormat.equals("") ? s : MythicLib.plugin.parseColors(config.getString(s + ".name"))) + ChatColor.WHITE
 								+ ".\",\"color\":\"white\"}}}");
 			}

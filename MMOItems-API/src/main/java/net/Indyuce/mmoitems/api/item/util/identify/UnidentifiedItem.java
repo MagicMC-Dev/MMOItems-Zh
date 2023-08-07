@@ -26,8 +26,8 @@ public class UnidentifiedItem extends ConfigItem {
         super("unidentified", type.getItem().getType());
 
         setName("#prefix#Unidentified " + type.getName());
-        setLore(Arrays.asList("&7该物品未识别, 我必须找到一种方法来识别它!", "{tier}", "{tier}&8物品信息:",
-                "{range}&8- &7等级范围: &e#range#", "{tier}&8- &7物品等级: #prefix##tier#"));
+        setLore(Arrays.asList("&7This item is unidentified. I must", "&7find a way to identify it!", "{tier}", "{tier}&8Item Info:",
+                "{range}&8- &7Lvl Range: &e#range#", "{tier}&8- &7Item Tier: #prefix##tier#"));
     }
 
     public ItemBuilder newBuilder(NBTItem item) {

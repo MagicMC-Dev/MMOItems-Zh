@@ -17,7 +17,7 @@ public class AllItemsCommandTreeNode extends CommandTreeNode {
 	@Override
 	public CommandResult execute(CommandSender sender, String[] args) {
 		sender.sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
-		sender.sendMessage(ChatColor.GREEN + "所有 MMO 物品列表:");
+		sender.sendMessage(ChatColor.GREEN + "List of all MMOItems:");
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
 			for (String s : config.getKeys(false))

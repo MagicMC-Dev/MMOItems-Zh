@@ -29,7 +29,7 @@ public class MythicItemIngredient extends Ingredient<MythicItemPlayerIngredient>
 
         config.validate("item");
         Optional<MythicItem> mmitem = MythicBukkit.inst().getItemManager().getItem(config.getString("item"));
-        Validate.isTrue(mmitem.isPresent(), "找不到ID为 '" + config.getString("item") + "' 的MMOitem物品");
+        Validate.isTrue(mmitem.isPresent(), "Could not find MM Item with ID '" + config.getString("item") + "'");
 
         display = config.contains("display") ? config.getString("display") : mmitem.get().getDisplayName();
         mythicitem = mmitem.get();

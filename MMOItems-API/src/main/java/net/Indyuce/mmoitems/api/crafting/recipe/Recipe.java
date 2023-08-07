@@ -55,7 +55,7 @@ public abstract class Recipe {
 				Ingredient ingredient = MMOItems.plugin.getCrafting().getIngredient(new MMOLineConfig(format));
 				ingredients.add(ingredient);
 			} catch (IllegalArgumentException exception) {
-				throw new IllegalArgumentException("无法加载材料 '" + format + "': " + exception.getMessage());
+				throw new IllegalArgumentException("Could not load ingredient '" + format + "': " + exception.getMessage());
 			}
 
         // Load conditions
@@ -64,11 +64,11 @@ public abstract class Recipe {
 				Condition condition = MMOItems.plugin.getCrafting().getCondition(new MMOLineConfig(format));
 				conditions.add(condition);
 			} catch (IllegalArgumentException exception) {
-				throw new IllegalArgumentException("无法加载条件 '" + format + "': " + exception.getMessage());
+				throw new IllegalArgumentException("Could not load condition '" + format + "': " + exception.getMessage());
 			}
 
 		if (conditions.isEmpty() && ingredients.isEmpty()) {
-			throw new IllegalArgumentException("没有设定条件或成分。");
+			throw new IllegalArgumentException("No conditions or ingredients set.");
 		}
 
         // Load triggers
@@ -81,15 +81,15 @@ public abstract class Recipe {
         for (String format : stringList)
             try {
                 Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(format));
-                Validate.notNull(trigger, "无法匹配触发器");
+                Validate.notNull(trigger, "Could not match trigger");
 				collection.add(trigger);
             } catch (IllegalArgumentException exception) {
-                throw new IllegalArgumentException("无法加载 " + triggerType + " 触发器 '" + format + "': " + exception.getMessage());
+                throw new IllegalArgumentException("Could not load " + triggerType + " trigger '" + format + "': " + exception.getMessage());
             }
     }
 
 	private Recipe(String id) {
-		Validate.notNull(id, "配方 ID 不能为空");
+		Validate.notNull(id, "Recipe ID must not be null");
 
 		this.id = id;
 	}

@@ -20,14 +20,14 @@ public class InfoCommandTreeNode extends CommandTreeNode {
     public CommandResult execute(CommandSender sender, String[] args) {
         Player player = args.length > 2 ? Bukkit.getPlayer(args[2]) : (sender instanceof Player ? (Player) sender : null);
         if (player == null) {
-            sender.sendMessage(ChatColor.RED + "找不到目标玩家");
+            sender.sendMessage(ChatColor.RED + "Couldn't find target player.");
             return CommandResult.FAILURE;
         }
 
         RPGPlayer rpg = PlayerData.get(player).getRPG();
-        sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " 玩家信息 "
+        sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "-----------------[" + ChatColor.LIGHT_PURPLE + " Player Information "
                 + ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-----------------");
-        sender.sendMessage(ChatColor.WHITE + "相关信息" + ChatColor.LIGHT_PURPLE + player.getName());
+        sender.sendMessage(ChatColor.WHITE + "Information about " + ChatColor.LIGHT_PURPLE + player.getName());
         sender.sendMessage("");
         sender.sendMessage(ChatColor.WHITE + "Player Class: " + ChatColor.LIGHT_PURPLE + rpg.getClassName());
         sender.sendMessage(ChatColor.WHITE + "Player Level: " + ChatColor.LIGHT_PURPLE + rpg.getLevel());

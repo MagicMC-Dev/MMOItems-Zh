@@ -60,7 +60,7 @@ public class ProjectileData {
      * @return Damage of custom bow
      */
     public double getDamage() {
-        Validate.isTrue(isCustomWeapon(), "不是自定义弓");
+        Validate.isTrue(isCustomWeapon(), "Not a custom bow");
         return shooter.getStat("ATTACK_DAMAGE") * damageMultiplier;
     }
 
@@ -69,7 +69,7 @@ public class ProjectileData {
      */
     @Deprecated
     public void setDamage(double damage) {
-        Validate.isTrue(isCustomWeapon(), "不是自定义弓");
+        Validate.isTrue(isCustomWeapon(), "Not a custom bow");
         shooter.setStat("ATTACK_DAMAGE", damage);
     }
 

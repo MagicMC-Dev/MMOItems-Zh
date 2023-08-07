@@ -35,8 +35,8 @@ public class ConfigItem {
     }
 
     public ConfigItem(String id, Material material, String name, String... lore) {
-        Validate.notNull(id, "ID 不能为空");
-        Validate.notNull(material, "材质不能为空");
+        Validate.notNull(id, "ID cannot be null");
+        Validate.notNull(material, "Material cannot be null");
 
         this.id = id;
         this.icon = new ItemStack(material);
@@ -48,10 +48,10 @@ public class ConfigItem {
      * used as util to load an item stack from a config
      */
     public ConfigItem(ConfigurationSection config) {
-        Validate.notNull(config, "配置不能为空");
+        Validate.notNull(config, "Config cannot be null");
         id = config.getName();
 
-        Validate.isTrue(config.contains("material"), "找不到材质");
+        Validate.isTrue(config.contains("material"), "Could not find material");
 
         icon = MMOUtils.readIcon(config.getString("material"));
 
@@ -71,7 +71,7 @@ public class ConfigItem {
     }
 
     public void update(ConfigurationSection config) {
-        Validate.notNull(config, "配置不能为空");
+        Validate.notNull(config, "Config cannot be null");
 
         setName(config.getString("name", ""));
         setLore(config.contains("lore") ? config.getStringList("lore") : new ArrayList<>());

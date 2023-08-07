@@ -19,14 +19,14 @@ public class CraftingStatus {
     private final Map<String, CraftingQueue> queues = new HashMap<>();
 
     public void load(PlayerData data, ConfigurationSection config) {
-        String name = data.isOnline() ? data.getPlayer().getName() : "未知玩家";
+        String name = data.isOnline() ? data.getPlayer().getName() : "Unknown Player";
 
         for (String stationId : config.getKeys(false)) {
             if (!MMOItems.plugin.getCrafting().hasStation(stationId)) {
                 MMOItems.plugin.getLogger().log(Level.WARNING,
-                        "尝试加载 '的制作站配方数据时发生错误 '" + name + "': "
-                                + "找不到带有 ID 的制作站 '" + stationId
-                                + "', 确保在玩家注销之前备份该玩家数据文件。");
+                        "An error occurred while trying to load crafting station recipe data of '" + name + "': "
+                                + "could not find crafting station with ID '" + stationId
+                                + "', make sure you backup that player data file before the user logs off.");
                 continue;
             }
 
@@ -38,16 +38,16 @@ public class CraftingStatus {
                 String recipeId = config.getString(stationId + "." + recipeConfigId + ".recipe");
                 if (recipeId == null || !station.hasRecipe(recipeId)) {
                     MMOItems.plugin.getLogger().log(Level.WARNING,
-                            "尝试加载 '" + name + "' 的制作站配方数据时发生错误: "
-                                    + "找不到带有 ID 的配方'" + recipeId
-                                    + "', 确保在玩家注销之前备份该玩家数据文件.");
+                            "An error occurred while trying to load crafting station recipe data of '" + name + "': "
+                                    + "could not find recipe with ID '" + recipeId
+                                    + "', make sure you backup that player data file before the user logs off.");
                     continue;
                 }
 
                 Recipe recipe = station.getRecipe(recipeId);
                 if (!(recipe instanceof CraftingRecipe)) {
-                    MMOItems.plugin.getLogger().log(Level.WARNING, "尝试加载 '"
-                            + name + "' 的制作站配方数据时发生错误: " + "配方 '" + recipe.getId() + "' 不是一个制作配方");
+                    MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred while trying to load crafting station recipe data of '"
+                            + name + "': " + "recipe '" + recipe.getId() + "' is not a CRAFTING recipe.");
                     continue;
                 }
 

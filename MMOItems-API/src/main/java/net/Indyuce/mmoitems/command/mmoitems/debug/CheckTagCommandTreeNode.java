@@ -19,7 +19,7 @@ public class CheckTagCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
+			sender.sendMessage(ChatColor.RED + "This command is only for players.");
 			return CommandResult.FAILURE;
 		}
 

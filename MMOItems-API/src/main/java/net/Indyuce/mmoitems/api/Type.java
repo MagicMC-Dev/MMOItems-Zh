@@ -115,7 +115,7 @@ public class Type {
     }
 
     public void load(ConfigurationSection config) {
-        Validate.notNull(config, "找不到配置" + getId());
+        Validate.notNull(config, "Could not find config for " + getId());
 
         name = config.getString("name", name);
         item = read(config.getString("display", item == null ? Material.STONE.toString() : item.getType().toString()));
@@ -250,7 +250,7 @@ public class Type {
     }
 
     private ItemStack read(String str) {
-        Validate.notNull(str, "输入不能为空");
+        Validate.notNull(str, "Input must not be null");
 
         String[] split = str.split(":");
         Material material = Material.valueOf(split[0]);

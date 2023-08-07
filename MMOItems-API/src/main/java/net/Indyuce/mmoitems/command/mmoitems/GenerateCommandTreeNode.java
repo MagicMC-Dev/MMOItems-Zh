@@ -40,13 +40,13 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
         try {
             if (args.length < 2) return CommandResult.THROW_USAGE;
             final Player target = Bukkit.getPlayer(args[1]);
-            Validate.notNull(target, "找不到名为 " + args[1] + " 的玩家");
+            Validate.notNull(target, "Could not find player called " + args[1] + ".");
 
             GenerateCommandHandler handler = new GenerateCommandHandler(args);
 
             final Player give = handler.hasArgument("gimme") || handler.hasArgument("giveme") ? (sender instanceof Player ? (Player) sender : null)
                     : target;
-            Validate.notNull(give, "不能使用 -gimme 参数");
+            Validate.notNull(give, "You cannot use -gimme");
 
             final RPGPlayer rpgPlayer = PlayerData.get(target).getRPG();
             final int itemLevel = handler.hasArgument("level:") ? Integer.parseInt(handler.getValue("level"))
@@ -63,24 +63,24 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
             String type = null;
             if (handler.hasArgument("tierset:")) {
                 String format = UtilityMethods.enumName(handler.getValue("tierset"));
-                Validate.isTrue(MMOItems.plugin.getTiers().has(format), "找不到 ID 为 '" + format + "' 的层");
+                Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Could not find tier with ID '" + format + "'");
                 builder.applyFilter(new TierFilter(format));
             }
             if (handler.hasArgument("type:")) {
                 type = handler.getValue("type");
-                Validate.isTrue(Type.isValid(type), "找不到 ID为 '" + type + "' 的类型");
+                Validate.isTrue(Type.isValid(type), "Could not find type with ID '" + type + "'");
                 builder.applyFilter(new TypeFilter(Type.get(type)));
             }
             if (handler.hasArgument("id:")) {
-                Validate.isTrue(type != null, "如果使用 id 选项, 您必须指定类型!");
+                Validate.isTrue(type != null, "You have to specify a type if using the id option!");
                 builder.applyFilter(new IDFilter(handler.getValue("id")));
             }
 
             Optional<MMOItemTemplate> optional = builder.rollLoot();
-            Validate.isTrue(optional.isPresent(), "没有符合您条件的物品");
+            Validate.isTrue(optional.isPresent(), "No item matched your criterias.");
 
             ItemStack item = optional.get().newBuilder(itemLevel, itemTier).build().newBuilder().build();
-            Validate.isTrue(item != null && item.getType() != Material.AIR, "无法生成 ID 为 '" + optional.get().getId() + "' 的物品");
+            Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate item with ID '" + optional.get().getId() + "'");
             new SmartGive(give).give(item);
             return CommandResult.SUCCESS;
 

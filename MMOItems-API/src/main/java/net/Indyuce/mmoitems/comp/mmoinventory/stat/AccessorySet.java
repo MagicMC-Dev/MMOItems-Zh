@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AccessorySet extends StringStat implements GemStoneStat {
     public AccessorySet() {
-        super("ACCESSORY_SET", VersionMaterial.OAK_SIGN.toMaterial(), "配件套装 (MMOInventory)", new String[] { "使用 MMOInventory 的独特限制", "即每套装备只允许装备一个配件" }, new String[] { "!block", "all" });
+        super("ACCESSORY_SET", VersionMaterial.OAK_SIGN.toMaterial(), "Accessory Set (MMOInventory)", new String[] { "Used with MMOInventory's unique", "restriction to only allow one", "accessory to be equipped per set." }, new String[] { "!block", "all" });
     }
 
     @Override
@@ -29,6 +29,6 @@ public class AccessorySet extends StringStat implements GemStoneStat {
         inv.getEditedSection().set(getPath(), message);
         inv.registerTemplateEdition();
         inv.getPlayer().sendMessage(
-                MMOItems.plugin.getPrefix() + getName() + "成功更改为" + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + "");
+                MMOItems.plugin.getPrefix() + getName() + " successfully changed to " + MythicLib.plugin.parseColors(message) + ChatColor.GRAY + ".");
     }
 }

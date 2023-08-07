@@ -24,13 +24,13 @@ public class OpenCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		if (!MMOItems.plugin.getCrafting().hasStation(args[2])) {
-			sender.sendMessage(ChatColor.RED + "没有一个名为 " + args[2] + " 的制作站");
+			sender.sendMessage(ChatColor.RED + "There is no station called " + args[2] + ".");
 			return CommandResult.FAILURE;
 		}
 
 		Player target = args.length > 3 ? Bukkit.getPlayer(args[3]) : (sender instanceof Player ? (Player) sender : null);
 		if (target == null) {
-			sender.sendMessage(ChatColor.RED + "请指定有效的玩家");
+			sender.sendMessage(ChatColor.RED + "Please specify a valid player.");
 			return CommandResult.FAILURE;
 		}
 

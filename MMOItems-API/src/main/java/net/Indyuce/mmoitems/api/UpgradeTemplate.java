@@ -35,14 +35,14 @@ public class UpgradeTemplate {
 	 *  Loads an Upgrade Template directly from the YML file. Neat!
 	 */
 	public UpgradeTemplate(@NotNull ConfigurationSection config) {
-		Validate.notNull(config, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "您必须指定一个配置部分。"));
+		Validate.notNull(config, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "You must specify a config section."));
 
 		// Build ID
 		id = config.getName().toLowerCase().replace("_", "-").replace(" ", "-");
 
 		// Feedback
 		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-		ffp.activatePrefix(true, "升级模板 $i&o" + config.getName());
+		ffp.activatePrefix(true, "Upgrade Template $i&o" + config.getName());
 
 		// For ever stat
 		for (String key : config.getKeys(false)) {
@@ -53,9 +53,9 @@ public class UpgradeTemplate {
 
 			// Attempt to find stat
 			ItemStat stat = MMOItems.plugin.getStats().get(statFormat);
-			if (stat == null) { ffp.log(FriendlyFeedbackCategory.ERROR, "统计 '$r{0}$b' $f未找到$b。", statFormat); continue; }
-			if (!(stat instanceof Upgradable)) { ffp.log(FriendlyFeedbackCategory.ERROR, "统计$r{0}$b $f不可升级$b。", stat.getId()); continue; }
-			if (!(stat.getClearStatData() instanceof Mergeable)) { ffp.log(FriendlyFeedbackCategory.ERROR, "$r{0}$b 使用的统计数据是 $f不可合并的$b, 因此无法升级。请联系此 ItemStat 的开发人员。", stat.getId()); continue; }
+			if (stat == null) { ffp.log(FriendlyFeedbackCategory.ERROR, "Stat '$r{0}$b' $fnot found$b.", statFormat); continue; }
+			if (!(stat instanceof Upgradable)) { ffp.log(FriendlyFeedbackCategory.ERROR, "Stat $r{0}$b is $fnot upgradeable$b.", stat.getId()); continue; }
+			if (!(stat.getClearStatData() instanceof Mergeable)) { ffp.log(FriendlyFeedbackCategory.ERROR, "Stat Data used by $r{0}$b is $fnot mergeable$b, and thus it cannot be upgradeable. Contact the dev of this ItemStat.", stat.getId()); continue; }
 
 			// Attempt to parse Upgrade Info
 			try {

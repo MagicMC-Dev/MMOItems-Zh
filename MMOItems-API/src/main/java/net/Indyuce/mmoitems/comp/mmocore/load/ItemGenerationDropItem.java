@@ -28,7 +28,7 @@ public abstract class ItemGenerationDropItem extends DropItem {
 
 		if (config.contains("tier")) {
 			String format = config.getString("tier").toUpperCase().replace("-", "_").replace(" ", "_");
-			Validate.isTrue(MMOItems.plugin.getTiers().has(format), "找不到ID为 '" + format + "' 的物品层");
+			Validate.isTrue(MMOItems.plugin.getTiers().has(format), "Could not find item tier with ID '" + format + "'");
 			tier = MMOItems.plugin.getTiers().get(format);
 		} else
 			tier = null;

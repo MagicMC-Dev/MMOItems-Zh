@@ -21,7 +21,7 @@ public class DropTable {
 	private static final Random random = new Random();
 
 	public DropTable(ConfigurationSection config) {
-		Validate.notNull(config, "无法读取掉落物配置");
+		Validate.notNull(config, "Could not read the drop table config");
 		for (String key : config.getKeys(false))
 			try {
 
@@ -33,10 +33,10 @@ public class DropTable {
 				subtables.put(key, new Subtable(config.getConfigurationSection(key)));
 
 			} catch (IllegalArgumentException exception) {
-				MMOItems.plugin.getLogger().log(Level.WARNING, "无法读取子表 '" + key + "' 来自掉落物表 '" + config.getName() + "': " + exception.getMessage());
+				MMOItems.plugin.getLogger().log(Level.WARNING, "Could not read subtable '" + key + "' from drop table '" + config.getName() + "': " + exception.getMessage());
 			}
 
-		Validate.notEmpty(subtablesList, "您的 droptable 必须至少包含一个子表");
+		Validate.notEmpty(subtablesList, "Your droptable must contain at least one subtable");
 	}
 
 	public String getRandomSubtable() {
@@ -51,7 +51,7 @@ public class DropTable {
 			if (dropItem.rollDrop()) {
 				ItemStack drop = dropItem.getItem(player);
 				if (drop == null)
-					MMOItems.plugin.getLogger().log(Level.WARNING, "无法读取子表项 " + dropItem.getKey());
+					MMOItems.plugin.getLogger().log(Level.WARNING, "Couldn't read the subtable item " + dropItem.getKey());
 				else
 					dropped.add(drop);
 			}
@@ -76,10 +76,10 @@ public class DropTable {
 		private final boolean disableSilkTouch;
 
 		public Subtable(ConfigurationSection subtable) {
-			Validate.notNull(subtable, "无法读取子表配置");
+			Validate.notNull(subtable, "Could not read subtable config");
 
-			Validate.isTrue(subtable.contains("coef"), "无法读取子表系数。");
-			Validate.isTrue(subtable.contains("items") || subtable.contains("blocks"), "找不到 物品/方块 列表");
+			Validate.isTrue(subtable.contains("coef"), "Could not read subtable coefficient.");
+			Validate.isTrue(subtable.contains("items") || subtable.contains("blocks"), "Could not find item/block list");
 
 			if (subtable.contains("items"))
 				for (String typeFormat : subtable.getConfigurationSection("items").getKeys(false)) {
@@ -91,7 +91,7 @@ public class DropTable {
 			if (subtable.contains("blocks"))
 				for (String idFormat : subtable.getConfigurationSection("blocks").getKeys(false)) {
 					int id = Integer.parseInt(idFormat);
-					Validate.isTrue(id > 0 && id != 54 && id <= 160, id + " 不是有效的块 ID");
+					Validate.isTrue(id > 0 && id != 54 && id <= 160, id + " is not a valid block ID");
 					items.add(new BlockDropItem(id, subtable.getString("blocks." + idFormat)));
 				}
 

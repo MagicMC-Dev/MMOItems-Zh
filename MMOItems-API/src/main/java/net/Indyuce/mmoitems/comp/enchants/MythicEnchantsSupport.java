@@ -22,7 +22,7 @@ public class MythicEnchantsSupport implements EnchantPlugin<MythicEnchant> {
     }
 
     public void handleEnchant(ItemStackBuilder builder, MythicEnchant enchant, int level) {
-        Validate.isTrue(level > 0, "等级必须为正");
+        Validate.isTrue(level > 0, "Level must be strictly positive");
 
         // Type cannot be changed. Must make sure that item is an enchanted book
 

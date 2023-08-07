@@ -49,8 +49,8 @@ public class VolatileMMOItem extends ReadMMOItem {
 
                 // Log a warning
                 MMOItems.plugin.getLogger().log(Level.WARNING,
-                        ChatColor.GRAY + "无法加载统计数据 '"
-                                + ChatColor.GOLD + stat.getId() + ChatColor.GRAY + "' 物品数据来自 '"
+                        ChatColor.GRAY + "Could not load stat '"
+                                + ChatColor.GOLD + stat.getId() + ChatColor.GRAY + "'item data from '"
                                 + ChatColor.RED + getId() + ChatColor.GRAY + "': "
                                 + ChatColor.YELLOW + exception.getMessage());
             }
@@ -61,6 +61,6 @@ public class VolatileMMOItem extends ReadMMOItem {
     @NotNull
     @Override
     public ItemStackBuilder newBuilder() {
-        throw new UnsupportedOperationException("无法构建 VolatileMMOItem");
+        throw new UnsupportedOperationException("Cannot build a VolatileMMOItem");
     }
 }

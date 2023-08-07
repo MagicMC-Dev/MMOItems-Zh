@@ -67,8 +67,8 @@ public class DurabilityItem {
      * @param nbtItem Item with durability
      */
     public DurabilityItem(@NotNull Player player, @NotNull NBTItem nbtItem) {
-        this.player = Objects.requireNonNull(player, "玩家不能为空");
-        this.nbtItem = Objects.requireNonNull(nbtItem, "物品不能为空");
+        this.player = Objects.requireNonNull(player, "Player cannot be null");
+        this.nbtItem = Objects.requireNonNull(nbtItem, "Item cannot be null");
 
         maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");
         initialDurability = durability = nbtItem.hasTag("MMOITEMS_DURABILITY") ? nbtItem.getInteger("MMOITEMS_DURABILITY") : maxDurability;
@@ -128,7 +128,7 @@ public class DurabilityItem {
 
     @NotNull
     public DurabilityItem addDurability(int gain) {
-        Validate.isTrue(gain > 0, "耐久性增益必须大于 0");
+        Validate.isTrue(gain > 0, "Durability gain must be greater than 0");
 
         ItemCustomRepairEvent event = new ItemCustomRepairEvent(this, gain);
         Bukkit.getPluginManager().callEvent(event);

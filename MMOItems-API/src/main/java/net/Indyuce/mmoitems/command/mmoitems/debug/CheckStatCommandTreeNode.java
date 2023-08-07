@@ -20,18 +20,18 @@ public class CheckStatCommandTreeNode extends CommandTreeNode {
 			return CommandResult.THROW_USAGE;
 
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "该命令仅适用于玩家");
+			sender.sendMessage(ChatColor.RED + "This command is only for players.");
 			return CommandResult.FAILURE;
 		}
 
 		ItemStat stat = MMOItems.plugin.getStats().get(args[2].toUpperCase().replace("-", "_"));
 		if (stat == null) {
-			sender.sendMessage(ChatColor.RED + "统计:找不到统名为" + args[2].toUpperCase().replace("-", "_") + "。");
+			sender.sendMessage(ChatColor.RED + "Couldn't find the stat called " + args[2].toUpperCase().replace("-", "_") + ".");
 			return CommandResult.FAILURE;
 		}
 
 		Player player = (Player) sender;
-		player.sendMessage("统计:找到ID为 " + stat.getId() + " = " + PlayerData.get((Player) sender).getStats().getStat(stat));
+		player.sendMessage("Found stat with ID " + stat.getId() + " = " + PlayerData.get((Player) sender).getStats().getStat(stat));
 		return CommandResult.SUCCESS;
 	}
 }

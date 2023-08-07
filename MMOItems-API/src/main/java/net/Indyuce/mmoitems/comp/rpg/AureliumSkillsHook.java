@@ -39,7 +39,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
             final String statName = UtilityMethods.caseOnWords(stat.name().toLowerCase());
             final ItemStat miStat = new DoubleStat("ADDITIONAL_" + stat.name(), Material.BOOK,
                     "Additional " + statName,
-                    new String[]{"额外的 " + statName + " (AureliumSkills)"},
+                    new String[]{"Additional " + statName + " (AureliumSkills)"},
                     new String[]{"!miscellaneous", "!block", "all"});
 
             statExtra.put(stat, miStat);
@@ -140,7 +140,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
 
         public RequiredProfessionStat(Skills skill) {
             super(skill.name(), VersionMaterial.EXPERIENCE_BOTTLE.toMaterial(), skill.getDisplayName(Locale.getDefault()),
-                    new String[]{"" + skill.getDisplayName(Locale.getDefault()) + "玩家需要使用该物品的等级。", "(AureliumSkills)"});
+                    new String[]{"Amount of " + skill.getDisplayName(Locale.getDefault()) + " levels the", "player needs to use the item.", "(AureliumSkills)"});
 
             this.skill = aSkills.getSkillRegistry().getSkill(skill.name());
         }

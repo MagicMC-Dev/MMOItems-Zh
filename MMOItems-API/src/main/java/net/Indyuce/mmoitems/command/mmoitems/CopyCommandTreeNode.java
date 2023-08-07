@@ -29,9 +29,9 @@ public class CopyCommandTreeNode extends CommandTreeNode {
 
 		if (!Type.isValid(args[1])) {
 			sender.sendMessage(
-					MMOItems.plugin.getPrefix() + ChatColor.RED + "没有名为的" + args[1].toUpperCase().replace("-", "_") + " 的物品");
-			sender.sendMessage(MMOItems.plugin.getPrefix() + "输入" + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY
-					+ " 查看所有可用的物品类型");
+					MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + args[1].toUpperCase().replace("-", "_") + ".");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY
+					+ "to see all the available item types.");
 			return CommandResult.FAILURE;
 		}
 
@@ -39,13 +39,13 @@ public class CopyCommandTreeNode extends CommandTreeNode {
 		ConfigFile config = type.getConfigFile();
 		String id1 = args[2].toUpperCase().replace("-", "_");
 		if (!config.getConfig().contains(id1)) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "没有名为 " + id1 + " 的物品");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + id1 + ".");
 			return CommandResult.FAILURE;
 		}
 
 		String id2 = args[3].toUpperCase();
 		if (config.getConfig().contains(id2)) {
-			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "已经有一个物品叫做 " + id2 + "!");
+			sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is already an item called " + id2 + "!");
 			return CommandResult.FAILURE;
 		}
 
@@ -55,7 +55,7 @@ public class CopyCommandTreeNode extends CommandTreeNode {
 
 		if (sender instanceof Player)
 			new ItemEdition((Player) sender, MMOItems.plugin.getTemplates().getTemplate(type, id2)).open();
-		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "已成功复制" + id1 + " 至  " + id2 + "!");
+		sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + id1 + " to " + id2 + "!");
 		return CommandResult.SUCCESS;
 	}
 }

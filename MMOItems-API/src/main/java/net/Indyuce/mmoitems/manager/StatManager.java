@@ -77,7 +77,7 @@ public class StatManager {
         ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
         ConfigFile config = new ConfigFile("custom-stats");
         ConfigurationSection section = config.getConfig().getConfigurationSection("custom-stats");
-        Validate.notNull(section, "自定义统计部分为空");
+        Validate.notNull(section, "Custom stats section is null");
         section.getKeys(true).stream().filter(section::isConfigurationSection).map(section::getConfigurationSection).filter(Objects::nonNull).forEach(this::registerCustomStat);
     }
 
@@ -201,9 +201,9 @@ public class StatManager {
         final String name = section.getString("name");
         final String type = section.getString("type");
 
-        Validate.notNull(section, "无法从空部分注册自定义统计信息");
-        Validate.notNull(name, "无法注册没有名称的自定义统计信息");
-        Validate.notNull(type, "无法注册没有类型的自定义统计信息");
+        Validate.notNull(section, "Cannot register a custom stat from a null section");
+        Validate.notNull(name, "Cannot register a custom stat without a name");
+        Validate.notNull(type, "Cannot register a custom stat without a type");
 
         Class<? extends ItemStat<?, ?>> statClass;
         switch (type.toLowerCase()) {

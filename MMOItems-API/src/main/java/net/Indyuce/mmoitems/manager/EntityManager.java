@@ -82,11 +82,11 @@ public class EntityManager implements Listener {
     }
 
     public ProjectileData getProjectileData(Projectile projectile) {
-        return Objects.requireNonNull(projectiles.get(projectile.getEntityId()), "提供的实体不是自定义投射物");
+        return Objects.requireNonNull(projectiles.get(projectile.getEntityId()), "Provided entity is not a custom projectile");
     }
 
     public EntityData getEntityData(Entity entity) {
-        return Objects.requireNonNull(entities.get(entity.getEntityId()), "提供的实体不是自定义实体");
+        return Objects.requireNonNull(entities.get(entity.getEntityId()), "Provided entity is not a custom entity");
     }
 
     public void unregisterCustomProjectile(Projectile projectile) {

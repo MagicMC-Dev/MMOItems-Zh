@@ -147,39 +147,39 @@ public class CraftingManager implements Reloadable {
 			if (ingredient.getId().equals(key))
 				return ingredient.load(config);
 
-				throw new IllegalArgumentException("Could not match ingredient");
-			}
-		
-			/**
-			 * Finds the corresponding condition type, and from there
-			 * load the corresponding condition from the line config
-			 *
-			 * @throws NullPointerException If not found
-			 */
-			@NotNull
-			public Condition getCondition(MMOLineConfig config) {
-				return getConditionInfo(config.getKey()).load(config);
-			}
-		
-			@NotNull
-			public LoadedCraftingObject<Condition> getConditionInfo(String key) {
-				return Objects.requireNonNull(conditions.get(key), "Could not match condition");
-			}
-		
-			/**
-			 * Finds the corresponding trigger type, and from there
-			 * load the corresponding trigger from the line config
-			 *
-			 * @throws NullPointerException If not found
-			 */
-			@NotNull
-			public Trigger getTrigger(MMOLineConfig config) {
-				return getTriggerInfo(config.getKey()).load(config);
-			}
-		
-			@NotNull
-			public LoadedCraftingObject<Trigger> getTriggerInfo(String key) {
-				return Objects.requireNonNull(triggers.get(key), "Could not match trigger");
+		throw new IllegalArgumentException("Could not match ingredient");
+	}
+
+    /**
+     * Finds the corresponding condition type, and from there
+     * load the corresponding condition from the line config
+     *
+     * @throws NullPointerException If not found
+     */
+    @NotNull
+    public Condition getCondition(MMOLineConfig config) {
+        return getConditionInfo(config.getKey()).load(config);
+    }
+
+    @NotNull
+    public LoadedCraftingObject<Condition> getConditionInfo(String key) {
+        return Objects.requireNonNull(conditions.get(key), "Could not match condition");
+    }
+
+    /**
+     * Finds the corresponding trigger type, and from there
+     * load the corresponding trigger from the line config
+     *
+     * @throws NullPointerException If not found
+     */
+    @NotNull
+    public Trigger getTrigger(MMOLineConfig config) {
+        return getTriggerInfo(config.getKey()).load(config);
+    }
+
+    @NotNull
+    public LoadedCraftingObject<Trigger> getTriggerInfo(String key) {
+        return Objects.requireNonNull(triggers.get(key), "Could not match trigger");
     }
 
 	public List<IngredientType> getIngredients() {

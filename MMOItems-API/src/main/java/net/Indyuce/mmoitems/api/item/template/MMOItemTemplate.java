@@ -83,7 +83,7 @@ public class MMOItemTemplate extends PostLoadObject implements ItemReference {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "C无法加载修改器 '$f{0}$b': {1}", key, exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "无法加载修改器 '$f{0}$b': {1}", key, exception.getMessage());
 				}
 
 		Validate.notNull(config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(),"找不到基础物品数据"));

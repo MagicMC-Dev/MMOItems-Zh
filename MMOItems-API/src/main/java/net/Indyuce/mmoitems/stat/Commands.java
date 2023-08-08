@@ -110,7 +110,7 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 		lore.add(ChatColor.GRAY + "当前命令: " + ChatColor.RED
 				+ (statData.isPresent() ? ((CommandListData) statData.get()).getCommands().size() : "0"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可编辑物品命令");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击可编辑物品命令");
 	}
 
 	@Override

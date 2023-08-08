@@ -185,7 +185,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "无插槽");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加宝石插槽");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加宝石插槽");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除插槽");
 	}
 

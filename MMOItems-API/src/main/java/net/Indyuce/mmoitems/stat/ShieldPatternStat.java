@@ -153,7 +153,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改盾牌颜色");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左移单击可重置盾牌颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► Shift + 左键可重置盾牌颜色");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以添加图案");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 放下以删除最后一个图案");
 	}

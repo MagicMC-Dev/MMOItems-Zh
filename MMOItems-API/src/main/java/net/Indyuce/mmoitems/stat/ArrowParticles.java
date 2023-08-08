@@ -196,7 +196,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 点击编辑");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "点击编辑");
 	}
 
 	@NotNull

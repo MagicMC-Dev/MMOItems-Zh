@@ -43,7 +43,7 @@ public class AbilityEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "技能编辑器");
+		Inventory inv = Bukkit.createInventory(this, 54, "技能编辑");
 		int n = 0;
 
 		String configString = getEditedSection().getString("ability." + configKey + ".type");
@@ -54,7 +54,7 @@ public class AbilityEdition extends EditionInventory {
 		ItemMeta abilityItemMeta = abilityItem.getItemMeta();
 		abilityItemMeta.setDisplayName(ChatColor.GREEN + "技能");
 		List<String> abilityItemLore = new ArrayList<>();
-		abilityItemLore.add(ChatColor.GRAY + "选择你的武器将施展的技能");
+		abilityItemLore.add(ChatColor.GRAY + "选择你的武器将绑定的技能");
 		abilityItemLore.add("");
 		abilityItemLore.add(
 				ChatColor.GRAY + "当前值: " + (ability == null ? ChatColor.RED + "没有选择技能" : ChatColor.GOLD + ability.getName()));

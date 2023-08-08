@@ -68,7 +68,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 
 		ItemStack offset = VersionMaterial.GRAY_DYE.toItem();
 		ItemMeta offsetMeta = offset.getItemMeta();
-		offsetMeta.setDisplayName(ChatColor.GREEN + "抵消");
+		offsetMeta.setDisplayName(ChatColor.GREEN + "偏移");
 		List<String> offsetLore = new ArrayList<>();
 		offsetLore.add("");
 		offsetLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + getEditedSection().getDouble("arrow-particles.offset"));

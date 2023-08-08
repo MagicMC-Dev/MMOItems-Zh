@@ -29,9 +29,9 @@ import java.util.ArrayList;
 public class RMGRR_MegaShaped implements RecipeRegistry {
     @NotNull
     @Override public String getRecipeConfigPath() { return "megashaped"; }
-    @NotNull @Override public String getRecipeTypeName() { return "巨型形状"; }
+    @NotNull @Override public String getRecipeTypeName() { return "Mega Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.JUKEBOX), FFPMMOItems.get().getExampleFormat() + "巨型配方");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.JUKEBOX), FFPMMOItems.get().getExampleFormat() + "巨型合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
@@ -50,7 +50,7 @@ public class RMGRR_MegaShaped implements RecipeRegistry {
 
         // Identify the input
         ShapedRecipe input = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含 AIR 的成型配方, $fignored$b")); }
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含 AIR 的巨型配方, $fignored$b")); }
 
         // Read the options and output
         ShapedRecipe output = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);

@@ -59,7 +59,7 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
         // Done
         return true; }
 
-    @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.KNOWLEDGE_BOOK).name("\u00a7c隐藏配方").lore(SilentNumbers.chop(
+    @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.KNOWLEDGE_BOOK).name("\u00a7c隐藏制作书").lore(SilentNumbers.chop(
             "即使启用了制作书, 该配方也不会被玩家自动解锁"
             , 65, "\u00a77")).build(), SilentNumbers.toArrayList(""));
 

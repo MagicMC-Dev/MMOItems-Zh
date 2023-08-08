@@ -90,8 +90,13 @@ public class ItemBrowser extends PluginInventory {
                 AdventureUtils.setDisplayName(meta, "&a%s&8 (点击浏览) ".formatted(currentType.getName()));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                lore.add("&7当前有%s %s &7%s 个物品.".formatted(items == 1 ? "该类型有" : "此类型有", items < 1 ? "&c没" : "&6%d".formatted(items), items == 1 ? " " : " "));
+                Object[] objArr = new Object[3];
+                objArr[0] = items == 1 ? "该类型有" : "这类型有";
+                objArr[1] = items < 1 ? "&c&o没" : "&6&o%d".formatted(new Object[]{Integer.valueOf(items)});
+                objArr[2] = items == 1 ? "" : " ";
+                lore.add("&7当前%s %s &7%s 个物品.".formatted(objArr));
                 AdventureUtils.setLore(meta, lore);
+
                 item.setItemMeta(meta);
 
                 // Set item

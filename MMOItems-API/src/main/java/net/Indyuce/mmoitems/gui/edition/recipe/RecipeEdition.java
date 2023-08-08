@@ -37,7 +37,7 @@ public class RecipeEdition extends EditionInventory {
 	}
 
 	private Inventory setupShapedInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "配方编辑: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "配方编辑器: " + template.getId());
 
 		if (!getEditedSection().contains("crafting.shaped.1")) {
 			getEditedSection().set("crafting.shaped.1", new String[] { "AIR AIR AIR", "AIR AIR AIR", "AIR AIR AIR" });
@@ -68,7 +68,7 @@ public class RecipeEdition extends EditionInventory {
 			}
 			ItemMeta elementMeta = element.getItemMeta();
 			if (element.getType() == Material.BARRIER)
-				elementMeta.setDisplayName(ChatColor.RED + "空");
+				elementMeta.setDisplayName(ChatColor.RED + "Empty");
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
 			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以更改此成分");
@@ -105,7 +105,7 @@ public class RecipeEdition extends EditionInventory {
 				}
 				ItemMeta elementMeta = element.getItemMeta();
 				if (element.getType() == Material.BARRIER)
-					elementMeta.setDisplayName(ChatColor.RED + "空");
+					elementMeta.setDisplayName(ChatColor.RED + "Empty");
 				List<String> elementLore = new ArrayList<>();
 				elementLore.add("");
 				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以更改此成分");

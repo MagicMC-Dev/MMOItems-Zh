@@ -28,6 +28,6 @@ public class PluginUtils {
         if (Bukkit.getPluginManager().getPlugin(name) == null)
             return;
         callback.accept(null);
-        MMOItems.plugin.getLogger().log(Level.INFO, "挂勾到 %s".formatted(name));
+        MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto %s".formatted(name));
     }
 }

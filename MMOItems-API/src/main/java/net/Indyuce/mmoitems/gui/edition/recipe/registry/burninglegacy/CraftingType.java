@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public enum CraftingType {
-	SHAPED(21, "该物品的 C. 表配方 (形状) ", VersionMaterial.CRAFTING_TABLE, null),
-	SHAPELESS(22, "该物品的 C. Table 配方 (无形) ", VersionMaterial.CRAFTING_TABLE, null),
+	SHAPED(21, "该物品的 C. 表配方 (有序) ", VersionMaterial.CRAFTING_TABLE, null),
+	SHAPELESS(22, "该物品的 C. 表配方 (无序) ", VersionMaterial.CRAFTING_TABLE, null),
 	FURNACE(23, "该物品的熔炉配方", Material.FURNACE, RecipeManager.BurningRecipeType.FURNACE),
 	BLAST(29, "该物品的高炉配方", VersionMaterial.BLAST_FURNACE, RecipeManager.BurningRecipeType.BLAST, 1, 14),
 	SMOKER(30, "该物品的烟熏炉配方", VersionMaterial.SMOKER, RecipeManager.BurningRecipeType.SMOKER, 1, 14),

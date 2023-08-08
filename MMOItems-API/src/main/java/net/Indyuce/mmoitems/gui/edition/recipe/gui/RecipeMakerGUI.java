@@ -92,9 +92,9 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
     // Button Bar Buttons
     @NotNull
-    final ItemStack nextButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7e更多选项 \u00a7c»").build();
+    final ItemStack nextButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7e更多设置 \u00a7c»").build();
     @NotNull
-    final ItemStack prevButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7c« \u00a7e更多选项").build();
+    final ItemStack prevButtonPage = ItemFactory.of(Material.SPECTRAL_ARROW).name("\u00a7c« \u00a7e更多设置").build();
     @NotNull
     public final ItemStack noButton = ItemFactory.of(Material.IRON_BARS).name("\u00a78---").build();
 

@@ -3,7 +3,7 @@ package net.Indyuce.mmoitems.util;
 import io.lumine.mythic.lib.element.Element;
 
 public enum ElementStatType {
-    DAMAGE("Flat Damage"),
+    DAMAGE("元素伤害"),
     DAMAGE_PERCENT("额外伤害 (%)"),
     WEAKNESS("虚弱  (% ) "),
     DEFENSE("防御"),

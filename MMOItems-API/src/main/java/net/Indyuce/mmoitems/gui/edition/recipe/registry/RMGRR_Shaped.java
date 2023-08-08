@@ -35,7 +35,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
     @NotNull @Override public String getRecipeConfigPath() { return "shaped"; }
     @NotNull @Override public String getRecipeTypeName() { return "Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.CRAFTING_TABLE), FFPMMOItems.get().getExampleFormat() + "形状配方");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.CRAFTING_TABLE), FFPMMOItems.get().getExampleFormat() + "有序合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
@@ -150,7 +150,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
             }
 
             // Size not 3? BRUH
-            if (positions.length != 3) { throw new IllegalArgumentException("工作表行 $u 无效" + updatedRow + "$b ($f不完全是3种成分$b) "); }
+            if (positions.length != 3) { throw new IllegalArgumentException("工作表行 $u 无效" + updatedRow + "$b ($f不完全是 3 个格子的长宽度$b) "); }
 
             // Identify
             ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);

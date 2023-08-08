@@ -73,7 +73,7 @@ public class RBA_InputOutput extends RecipeButtonAction {
     public ItemStack getButton() {
 
         // Dictate the correct one
-        String input = getInv().isShowingInput() ? "\u00a76输入" : "\u00a73输出";
+        String input = getInv().isShowingInput() ? "\u00a76INPUT" : "\u00a73OUTPUT";
 
         // Copy and send
         return RecipeMakerGUI.addLore(button.clone(), SilentNumbers.toArrayList("\u00a77目前正在展示: " + input, "",

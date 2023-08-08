@@ -31,7 +31,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class MMOUtils {
     public MMOUtils() {
-        throw new IllegalArgumentException("无法实例化此类");
+        throw new IllegalArgumentException("This class cannot be instantiated.");
     }
 
     public static boolean isColorable(@NotNull Particle particle) {
@@ -251,7 +251,7 @@ public class MMOUtils {
         try {
             return Double.parseDouble(format);
         } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("无法从 '" + format + "' 读取数字");
+            throw new IllegalArgumentException("Could not read number from '" + format + "'");
         }
     }
 

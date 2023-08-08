@@ -33,9 +33,9 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
 
     @NotNull
     @Override public String getRecipeConfigPath() { return "supershaped"; }
-    @NotNull @Override public String getRecipeTypeName() { return "超级塑形"; }
+    @NotNull @Override public String getRecipeTypeName() { return "Super Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.NOTE_BLOCK), FFPMMOItems.get().getExampleFormat() + "超级形状配方");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.NOTE_BLOCK), FFPMMOItems.get().getExampleFormat() + "超级有序合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {

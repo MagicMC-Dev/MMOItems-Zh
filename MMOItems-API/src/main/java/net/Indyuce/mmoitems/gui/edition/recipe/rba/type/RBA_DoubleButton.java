@@ -84,7 +84,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
             // Out of range?
             if (!getRange().inRange(number)) {
 
-                throw new IllegalArgumentException("数字 $r" + number + "$b 超出范围, 预计 " + getRange().toStringColored());
+                throw new IllegalArgumentException("数字 $r" + number + "$b 超出预期范围 " + getRange().toStringColored());
             } }
 
         // Set value

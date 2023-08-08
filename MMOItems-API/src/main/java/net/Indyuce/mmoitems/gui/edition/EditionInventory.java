@@ -157,8 +157,8 @@ public abstract class EditionInventory extends PluginInventory {
         getLore.add(ChatColor.GRAY + "");
         getLore.add(ChatColor.GRAY + "您也可以使用 /mi give" + template.getType().getId() + " " + template.getId());
         getLore.add(ChatColor.GRAY + "");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "左键点击获取物品");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "右键单击以重新滚动其统计数据");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 左键点击获取物品");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 右键单击以重新滚动其统计数据");
         getMeta.setLore(getLore);
         get.setItemMeta(getMeta);
 

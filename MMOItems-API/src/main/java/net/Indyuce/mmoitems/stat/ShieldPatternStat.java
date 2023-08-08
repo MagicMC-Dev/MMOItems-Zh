@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPatternData> {
 	public ShieldPatternStat() {
-		super("SHIELD_PATTERN", Material.SHIELD, "盾牌图案", new String[] { "盾牌的颜色和图案" },
+		super("SHIELD_PATTERN", Material.SHIELD, "盾牌图案", new String[] { "修改盾牌的颜色和图案" },
 				new String[] { "all" }, Material.SHIELD);
 	}
 
@@ -152,10 +152,10 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改盾牌颜色");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左移单击可重置盾牌颜色");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以添加图案");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "放下以删除最后一个图案");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改盾牌颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左移单击可重置盾牌颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以添加图案");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 放下以删除最后一个图案");
 	}
 
 	@Override

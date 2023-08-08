@@ -142,8 +142,8 @@ public class RBA_AmountOutput extends RecipeButtonAction {
 
         // That's it
         return RecipeMakerGUI.addLore(ret, SilentNumbers.toArrayList( "",
-                ChatColor.YELLOW + AltChar.listDash + "右键单击重置为 1",
-                ChatColor.YELLOW + AltChar.listDash + "左键单击可编辑金额" ));
+                ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置为 1",
+                ChatColor.YELLOW + AltChar.listDash + "► 左键单击可编辑金额" ));
     }
 
     public static final String AMOUNT_INGREDIENTS = "amount";

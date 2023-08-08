@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public class Lore extends StringListStat implements GemStoneStat {
     public Lore() {
-        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"物品标注"}, new String[]{"all"});
+        super("LORE", VersionMaterial.WRITABLE_BOOK.toMaterial(), "Lore", new String[]{"物品 Lore 标注"}, new String[]{"all"});
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Lore extends StringListStat implements GemStoneStat {
     @Override
     public void whenDisplayed(List<String> lore, Optional<StringListData> statData) {
         statData.ifPresentOrElse(stringListData -> {
-            lore.add(ChatColor.GRAY + "当前值:");
+            lore.add(ChatColor.GRAY + "当前值: ");
             lore.addAll(MythicLib.plugin.parseColors(stringListData.getList()
                     .stream()
                     .map(s -> ChatColor.GRAY + s)
@@ -79,8 +79,8 @@ public class Lore extends StringListStat implements GemStoneStat {
         }, () -> lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None"));
 
         lore.add("");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加一条线");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一行");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以添加一条线");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击删除最后一行");
     }
 
     /*

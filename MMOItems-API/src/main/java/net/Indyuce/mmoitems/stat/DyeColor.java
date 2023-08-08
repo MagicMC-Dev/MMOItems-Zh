@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public class DyeColor extends ItemStat<ColorData, ColorData> {
 	public DyeColor() {
 		super("DYE_COLOR", VersionMaterial.RED_DYE.toMaterial(), "染料颜色",
-				new String[] { "您物品的颜色 (对于可染色物品 ) ,在RGB 中" }, new String[] { "all" }, Material.LEATHER_HELMET,
+				new String[] { "您物品的颜色 (对于可染色物品 ) ,RGB 模式" }, new String[] { "all" }, Material.LEATHER_HELMET,
 				Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, VersionMaterial.LEATHER_HORSE_ARMOR.toMaterial());
 	}
 
@@ -73,8 +73,8 @@ public class DyeColor extends ItemStat<ColorData, ColorData> {
 	public void whenDisplayed(List<String> lore, Optional<ColorData> statData) {
 		lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "None"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除染料颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除染料颜色");
 	}
 
 	@NotNull

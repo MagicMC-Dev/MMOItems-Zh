@@ -60,8 +60,8 @@ public class SoundsEdition extends EditionInventory {
 			} else
 				eventLore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "无");
 			eventLore.add("");
-			eventLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-			eventLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
+			eventLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+			eventLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
 			soundEventMeta.setLore(eventLore);
 			soundEvent.setItemMeta(soundEventMeta);
 

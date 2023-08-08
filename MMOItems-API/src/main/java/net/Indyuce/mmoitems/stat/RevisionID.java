@@ -35,7 +35,7 @@ import scala.math.Numeric;
  */
 public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> implements GemStoneStat {
 	public RevisionID() {
-		super("REVISION_ID", Material.ITEM_FRAME, "修改 ID", new String[] { "修改 ID 用于确定物品是否过时每当你对物品进行修改时, 都应该增加这个编号！", "\n \u00a76 更新器很聪明, 它会将更改应用到物品的基本属性上, 保持宝石不变 (例如) ."},
+		super("REVISION_ID", Material.ITEM_FRAME, "修改 ID", new String[] { "修改版 ID 用于确定项目是否是旧版", "每当对物品进行更改时", "都应该增加此值！", "(同装备高ID会自动更新低ID的属性效果等等)!", "", "§6更新程序很智能", "§6会对物品的基本属性进行更改,", "§6(例如)保持宝石完好无损 ."},
 				new String[] { "all" });
 	}
 
@@ -94,8 +94,8 @@ public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> impleme
 			lore.add(ChatColor.GRAY + "当前修改 ID: " + ChatColor.GREEN + "1");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可增加该值");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可减小该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可增加该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可减小该值");
 	}
 
 	@NotNull

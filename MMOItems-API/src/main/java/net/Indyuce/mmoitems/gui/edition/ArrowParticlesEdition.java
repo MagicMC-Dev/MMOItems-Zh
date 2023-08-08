@@ -49,8 +49,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 		particleItemLore.add(ChatColor.GRAY + "当前值: " + (particle == null ? ChatColor.RED + "未选择任何粒子"
 				: ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
 		particleItemLore.add("");
-		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+		particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 		particleItemMeta.setLore(particleItemLore);
 		particleItem.setItemMeta(particleItemMeta);
 
@@ -61,8 +61,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 		amountLore.add("");
 		amountLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + getEditedSection().getInt("arrow-particles.amount"));
 		amountLore.add("");
-		amountLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		amountLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+		amountLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+		amountLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 		amountMeta.setLore(amountLore);
 		amount.setItemMeta(amountMeta);
 
@@ -73,8 +73,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 		offsetLore.add("");
 		offsetLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + getEditedSection().getDouble("arrow-particles.offset"));
 		offsetLore.add("");
-		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+		offsetLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 		offsetMeta.setLore(offsetLore);
 		offset.setItemMeta(offsetMeta);
 
@@ -94,8 +94,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 				speedLore.add("" + ChatColor.RED + ChatColor.BOLD + red + ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green
 						+ ChatColor.GRAY + " - " + ChatColor.BLUE + ChatColor.BOLD + blue);
 				speedLore.add("");
-				speedLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-				speedLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+				speedLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+				speedLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 				speedMeta.setLore(speedLore);
 				speed.setItemMeta(speedMeta);
 
@@ -110,8 +110,8 @@ public class ArrowParticlesEdition extends EditionInventory {
 				colorItemLore.add("");
 				colorItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + section.getDouble("speed"));
 				colorItemLore.add("");
-				colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-				colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+				colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+				colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 				colorItemMeta.setLore(colorItemLore);
 				colorItem.setItemMeta(colorItemMeta);
 

@@ -29,8 +29,8 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 	private static final Random random = new Random();
 
 	public SoulbindingChance() {
-		super("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "灵魂绑定机会",
-				new String[] { "定义你的物品将另一个物品链接到你的灵魂的机会, 以防止其他玩家使用它" },
+		super("SOULBINDING_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "灵魂绑定机率",
+				new String[] { "设置你的消耗物品将另一个物品绑定到", "你的灵魂以防止其他玩家使用(与死亡不掉落)使用它的机会,", "(一个把消耗类型物品添加灵魂绑定作用的设置)" },
 				new String[] { "consumable" });
 	}
 

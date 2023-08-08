@@ -57,8 +57,8 @@ public class ParticlesEdition extends EditionInventory {
             particleTypeItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + particleType.getDescription());
         }
         particleTypeItemLore.add("");
-        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可更改此值");
+        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+        particleTypeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可更改此值");
         particleTypeItemMeta.setLore(particleTypeItemLore);
         particleTypeItem.setItemMeta(particleTypeItemMeta);
 
@@ -100,8 +100,8 @@ public class ParticlesEdition extends EditionInventory {
         particleItemLore.add(ChatColor.GRAY + "当前值: " + (particle == null ? ChatColor.RED + "未选择粒子"
                 : ChatColor.GOLD + MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " "))));
         particleItemLore.add("");
-        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可更改此值");
+        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+        particleItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可更改此值");
         particleItemMeta.setLore(particleItemLore);
         particleItem.setItemMeta(particleItemMeta);
 
@@ -120,8 +120,8 @@ public class ParticlesEdition extends EditionInventory {
             colorItemLore.add("" + ChatColor.RED + ChatColor.BOLD + red + ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green
                     + ChatColor.GRAY + " - " + ChatColor.BLUE + ChatColor.BOLD + blue);
             colorItemLore.add("");
-            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可更改此值");
+            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+            colorItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可更改此值");
             colorItemMeta.setLore(colorItemLore);
             colorItem.setItemMeta(colorItemMeta);
 

@@ -46,7 +46,7 @@ public class UpgradingEdition extends EditionInventory {
 			workbenchItemLore.add("");
 			workbenchItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + workbench);
 			workbenchItemLore.add("");
-			workbenchItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+			workbenchItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
 			workbenchItemMeta.setLore(workbenchItemLore);
 			workbenchItem.setItemMeta(workbenchItemMeta);
 			inv.setItem(20, workbenchItem);
@@ -62,8 +62,8 @@ public class UpgradingEdition extends EditionInventory {
 			templateItemLore.add(ChatColor.GRAY + "当前值: "
 					+ (upgradeTemplate == null ? ChatColor.RED + "无模板" : ChatColor.GOLD + upgradeTemplate));
 			templateItemLore.add("");
-			templateItemLore.add(ChatColor.YELLOW + AltChar.listDash + "点击输入模板");
-			templateItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+			templateItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 点击输入模板");
+			templateItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			templateItemMeta.setLore(templateItemLore);
 			templateItem.setItemMeta(templateItemMeta);
 			inv.setItem(22, templateItem);
@@ -78,8 +78,8 @@ public class UpgradingEdition extends EditionInventory {
 			maxItemLore.add("");
 			maxItemLore.add(ChatColor.GRAY + "当前值: " + (max == 0 ? ChatColor.RED + "无限制" : ChatColor.GOLD + "" + max));
 			maxItemLore.add("");
-			maxItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击以尝试该值");
-			maxItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+			maxItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以尝试该值");
+			maxItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			maxItemMeta.setLore(maxItemLore);
 			maxItem.setItemMeta(maxItemMeta);
 			inv.setItem(40, maxItem);
@@ -94,8 +94,8 @@ public class UpgradingEdition extends EditionInventory {
 			minItemLore.add("");
 			minItemLore.add(ChatColor.GRAY + "当前值: " + (min == 0 ? ChatColor.RED + "0" : ChatColor.GOLD + String.valueOf(min)));
 			minItemLore.add("");
-			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击以尝试该值");
-			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以尝试该值");
+			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			minItemMeta.setLore(minItemLore);
 			minItem.setItemMeta(minItemMeta);
 			inv.setItem(41, minItem);
@@ -120,8 +120,8 @@ public class UpgradingEdition extends EditionInventory {
 			referenceItemLore
 					.add(ChatColor.GRAY + "当前值: " + (reference == null ? ChatColor.RED + "无参考" : ChatColor.GOLD + reference));
 			referenceItemLore.add("");
-			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键点击输入参考");
-			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键点击输入参考");
+			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			referenceItemMeta.setLore(referenceItemLore);
 			referenceItem.setItemMeta(referenceItemMeta);
 			inv.setItem(38, referenceItem);
@@ -138,8 +138,8 @@ public class UpgradingEdition extends EditionInventory {
 		successItemLore.add("");
 		successItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + (success == 0 ? "100" : "" + success) + "%");
 		successItemLore.add("");
-		successItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
-		successItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+		successItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
+		successItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 		successItemMeta.setLore(successItemLore);
 		successItem.setItemMeta(successItemMeta);
 		inv.setItem(24, successItem);
@@ -155,7 +155,7 @@ public class UpgradingEdition extends EditionInventory {
 			destroyOnFailLore.add("");
 			destroyOnFailLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + getEditedSection().getBoolean("upgrade.destroy"));
 			destroyOnFailLore.add("");
-			destroyOnFailLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
+			destroyOnFailLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
 			destroyOnFailMeta.setLore(destroyOnFailLore);
 			destroyOnFail.setItemMeta(destroyOnFailMeta);
 			inv.setItem(42, destroyOnFail);

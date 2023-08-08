@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GemColor extends StringStat implements GemStoneStat {
 	public GemColor() {
-		super("GEM_COLOR", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Gem Color", new String[] { "定义可以应用宝石的插槽的颜色" }, new String[] { "gem_stone" });
+		super("GEM_COLOR", VersionMaterial.LIGHT_BLUE_DYE.toMaterial(), "Gem Color", new String[] { "定义可以镶嵌宝石", "的插槽颜色(定义宝石颜色)" }, new String[] { "gem_stone" });
 	}
 
 	@Override

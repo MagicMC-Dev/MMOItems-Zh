@@ -286,8 +286,8 @@ public class ItemBrowser extends PluginInventory {
 
                 // Editing lore?
             } else {
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + "左键单击即可获得该物品");
-                lore.add(ChatColor.YELLOW + AltChar.smallListDash + "右键单击可编辑此物品");
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 左键单击即可获得该物品");
+                lore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 右键单击可编辑此物品");
             }
 
             meta.setLore(lore);

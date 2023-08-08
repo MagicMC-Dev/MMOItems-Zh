@@ -51,7 +51,7 @@ public class CommandListEdition extends EditionInventory {
 				itemLore.add(ChatColor.GRAY + "由控制台发送: " + ChatColor.RED + console);
 				itemLore.add(ChatColor.GRAY + "发送时带有 OP 权限: " + ChatColor.RED + op);
 				itemLore.add("");
-				itemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击即可删除");
+				itemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击即可删除");
 				itemMeta.setLore(itemLore);
 				item.setItemMeta(itemMeta);
 

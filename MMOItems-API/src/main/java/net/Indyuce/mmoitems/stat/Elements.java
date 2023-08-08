@@ -93,7 +93,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可访问元素编辑菜单");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除所有元素");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击删除所有元素");
     }
 
     @NotNull

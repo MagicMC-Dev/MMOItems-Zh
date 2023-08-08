@@ -21,7 +21,7 @@ public class LoreFormatManager implements Reloadable {
         for (File file : dir.listFiles())
             try {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-                Validate.isTrue(config.isList("lore-format"), "无效的标注格式! (" + file.getName() + ")");
+                Validate.isTrue(config.isList("lore-format"), "无效的 Lore 标注格式! (" + file.getName() + ")");
                 formats.put(file.getName().substring(0, file.getName().length() - 4), config.getStringList("lore-format"));
             } catch (IllegalArgumentException exception) {
                 MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载布局 '" + file.getName() + "': " + exception.getMessage());

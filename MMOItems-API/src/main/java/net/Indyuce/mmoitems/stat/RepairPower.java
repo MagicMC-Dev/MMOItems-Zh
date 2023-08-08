@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RepairPower extends DoubleStat implements ConsumableItemInteraction {
     public RepairPower() {
-        super("REPAIR", Material.ANVIL, "修复技能", new String[]{"设置物品时, 物品可以修复的固定耐久度"},
+        super("REPAIR", Material.ANVIL, "修复能力", new String[]{"设置物品修复物品", "可以修复的固定耐久度"},
                 new String[]{"consumable"});
     }
 

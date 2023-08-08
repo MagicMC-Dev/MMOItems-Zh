@@ -62,7 +62,7 @@ public class DropTableManager implements Listener, Reloadable {
 					blocks.put(material, new DropTable(config.getConfigurationSection("blocks." + key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING,
-							"无法读取包含材质的掉落物表'" + key + "': " + exception.getMessage());
+							"无法读取包含材料的掉落物表'" + key + "': " + exception.getMessage());
 				}
 
 		if (config.contains("customblocks"))

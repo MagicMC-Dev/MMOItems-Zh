@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class ItemSetStat extends StringStat implements GemStoneStat {
     public ItemSetStat() {
         super("SET", Material.LEATHER_CHESTPLATE, "物品套装",
-                new String[]{"物品套装可以为玩家提供额外的奖励", "具体取决于你佩戴的同一套装中的物品数量"},
+                new String[]{"物品套装可以为玩家提供额外的属性效果技能", "这些属性效果技能取决于你穿戴", "了多少同一套的物品"},
                 new String[]{"!gem_stone", "!consumable", "!material", "!block", "!miscellaneous", "all"});
     }
 

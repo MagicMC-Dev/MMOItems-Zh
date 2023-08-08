@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RepairPowerPercent extends DoubleStat implements ConsumableItemInteraction {
     public RepairPowerPercent() {
-        super("REPAIR_PERCENT", Material.DAMAGED_ANVIL, "修复百分比",
+        super("REPAIR_PERCENT", Material.DAMAGED_ANVIL, "修复耐久百分比",
                 new String[]{"物品可修复耐久度占总耐久度的百分比"},
                 new String[]{"consumable"});
     }

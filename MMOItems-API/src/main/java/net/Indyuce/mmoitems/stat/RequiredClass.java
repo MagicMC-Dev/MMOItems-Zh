@@ -37,8 +37,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class RequiredClass extends StringListStat implements ItemRestriction, GemStoneStat {
 	public RequiredClass() {
-		super("REQUIRED_CLASS", VersionMaterial.WRITABLE_BOOK.toMaterial(), "所需 Class",
-				new String[] { "需要太职业才能使用物品" }, new String[] { "!block", "all" });
+		super("REQUIRED_CLASS", VersionMaterial.WRITABLE_BOOK.toMaterial(), "所需职业",
+				new String[] { "需要特定职业才能使用物品" }, new String[] { "!block", "all" });
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, this).enable("在聊天中写下您希望物品支持的类别");
+			new StatEdition(inv, this).enable("在聊天栏中输入您希望使用物品的职业");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().getKeys(false).contains("required-class")) {
@@ -63,7 +63,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 				supportedClasses.remove(last);
 				inv.getEditedSection().set(getPath(), supportedClasses.size() == 0 ? null : supportedClasses);
 				inv.registerTemplateEdition();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last + ".");
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除 " + last + ".");
 			}
 		}
 	}
@@ -124,7 +124,7 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加班级");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一类");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一类");
 	}
 
 	@NotNull

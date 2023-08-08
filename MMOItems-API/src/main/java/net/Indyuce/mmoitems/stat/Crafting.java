@@ -54,7 +54,7 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<RandomStatData<StatData>> statData) {
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击可访问制作菜单");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除所有制作配方");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除所有制作配方");
 	}
 
 	/**

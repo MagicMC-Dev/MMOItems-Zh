@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class CanDeconstruct extends BooleanStat implements ConsumableItemInteraction {
 	public CanDeconstruct() {
 		super("CAN_DECONSTRUCT", Material.PAPER, "能否分解",
-				new String[] { "玩家可以使用这个消耗品分解他们的物品, 创建另一个随机物品" },
+				new String[] { "玩家可以使用该消耗品", "分解自己的物品", "获得对应稀有度分解获得的物品" },
 				new String[] { "consumable" });
 	}
 

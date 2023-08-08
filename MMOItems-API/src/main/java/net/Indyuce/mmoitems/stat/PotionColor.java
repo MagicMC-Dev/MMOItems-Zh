@@ -63,7 +63,7 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
 
 		inv.getEditedSection().set("potion-color", message);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "药水颜色成功更改为" + message + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "药水颜色成功更改为 " + message + ".");
 	}
 
 	@Override
@@ -88,8 +88,8 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
 		lore.add(statData.isPresent() ? ChatColor.GREEN + statData.get().toString() : ChatColor.RED + "Uncolored");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除药水颜色");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除药水颜色");
 	}
 
 	@NotNull

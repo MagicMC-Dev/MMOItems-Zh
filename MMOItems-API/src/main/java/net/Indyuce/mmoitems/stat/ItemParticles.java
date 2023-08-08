@@ -39,7 +39,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set(getPath(), null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + getName() + ChatColor.GRAY + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除 " + getName() + ChatColor.GRAY + ".");
 			return;
 		}
 
@@ -48,7 +48,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 	@Override
 	public ParticleData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof ConfigurationSection, "Must specify a config section");
+		Validate.isTrue(object instanceof ConfigurationSection, "必须指定配置部分");
 		if (((ConfigurationSection) object).getKeys(false).size() < 1) { throw new IllegalArgumentException(""); }
 		return new ParticleData((ConfigurationSection) object);
 	}
@@ -73,8 +73,8 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<ParticleData> statData) {
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Left click to setup the item particles.");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + " Right click to clear.");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以设置项目粒子");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击清除");
 	}
 
 	@NotNull
@@ -91,7 +91,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 			inv.getEditedSection().set("item-particles.type", particleType.name());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子类型成功设置为 " + ChatColor.GOLD
 					+ particleType.getDefaultName() + ChatColor.GRAY + ".");
 			return;
 		}
@@ -105,7 +105,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 			inv.getEditedSection().set("item-particles.color.blue", blue);
 			inv.registerTemplateEdition();
 			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + "Particle color successfully set to " + ChatColor.RED + ChatColor.BOLD + red
+					.sendMessage(MMOItems.plugin.getPrefix() + "粒子颜色成功设置为 " + ChatColor.RED + ChatColor.BOLD + red
 							+ ChatColor.GRAY + " - " + ChatColor.GREEN + ChatColor.BOLD + green + ChatColor.GRAY + " - " + ChatColor.BLUE
 							+ ChatColor.BOLD + blue + ChatColor.GRAY + ".");
 			return;
@@ -116,7 +116,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
 			inv.getEditedSection().set("item-particles.particle", particle.name());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Particle successfully set to " + ChatColor.GOLD
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子成功设置为 " + ChatColor.GOLD
 					+ MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
 			return;
 		}
@@ -126,7 +126,7 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 		inv.getEditedSection().set("item-particles." + edited, value);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
-				+ " set to " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
+				+ " 设置为 " + ChatColor.GOLD + value + ChatColor.GRAY + ".");
 	}
 
 	@Override

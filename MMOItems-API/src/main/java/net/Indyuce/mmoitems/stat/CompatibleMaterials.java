@@ -76,7 +76,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
         lore.add(message.toUpperCase());
         inv.getEditedSection().set("compatible-materials", lore);
         inv.registerTemplateEdition();
-        player.sendMessage(MMOItems.plugin.getPrefix() + "已成功添加兼容材质");
+        player.sendMessage(MMOItems.plugin.getPrefix() + "已成功添加兼容材料");
     }
 
     @Override
@@ -89,7 +89,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加新材料");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个材料");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个材料");
     }
 
     @NotNull

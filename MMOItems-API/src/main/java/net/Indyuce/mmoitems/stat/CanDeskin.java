@@ -34,7 +34,7 @@ import java.lang.reflect.Field;
 public class CanDeskin extends BooleanStat implements ConsumableItemInteraction {
 	public CanDeskin() {
 		super("CAN_DESKIN", Material.LEATHER, "能否提取皮肤",
-				new String[] { "玩家可以将他们的物品放入桌面并从该物品中取回皮肤" }, new String[] { "consumable" });
+				new String[] { "玩家可以去掉物品的皮肤", "并从物品上取回皮肤", "(没试过卸下皮肤)" }, new String[] { "consumable" });
 	}
 
 	@Override

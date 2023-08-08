@@ -59,8 +59,8 @@ public class AbilityEdition extends EditionInventory {
 		abilityItemLore.add(
 				ChatColor.GRAY + "当前值: " + (ability == null ? ChatColor.RED + "没有选择技能" : ChatColor.GOLD + ability.getName()));
 		abilityItemLore.add("");
-		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以重置");
+		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以重置");
 		abilityItemMeta.setLore(abilityItemLore);
 		abilityItem.setItemMeta(abilityItemMeta);
 
@@ -85,8 +85,8 @@ public class AbilityEdition extends EditionInventory {
 			castModeItemLore.add(ChatColor.GRAY + "当前值:"
 					+ (castMode == null ? ChatColor.RED + "未选择触发器" : ChatColor.GOLD + castMode.getName()));
 			castModeItemLore.add("");
-			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			castModeItemMeta.setLore(castModeItemLore);
 			castModeItem.setItemMeta(castModeItemMeta);
 
@@ -114,8 +114,8 @@ public class AbilityEdition extends EditionInventory {
 
 				modifierItemLore.add(ChatColor.GRAY + "默认值: " + ChatColor.GOLD + MODIFIER_FORMAT.format(ability.getDefaultModifier(modifier)));
 				modifierItemLore.add("");
-				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 				modifierItemMeta.setLore(modifierItemLore);
 				modifierItem.setItemMeta(modifierItemMeta);
 

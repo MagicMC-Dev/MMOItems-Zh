@@ -48,7 +48,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
 			new StatEdition(inv, ItemStats.ARROW_POTION_EFFECTS).enable("在聊天中写下您要添加的药水效果",
-					ChatColor.AQUA + "格式: [POTION_EFFECT] [DURATION] [AMPLIFIER]");
+					ChatColor.AQUA + "格式: [药水效果] [持续时间] [效果级别]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("arrow-potion-effects")) {
@@ -68,7 +68,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		String[] split = message.split(" ");
 		Validate.isTrue(split.length == 3,
-				message + " 不是有效的 [POTION_EFFECT] [DURATION] [AMPLIFIER]. 例: 'FAST_DIGGING 30 3' 代表 Haste 3  30 秒.");
+				message + " 不是有效的 [药剂效果] [持续时间] [效果级别].例如：'FAST_DIGGING 30 3' 表示 急速 3,持续 30 秒");
 
 		PotionEffectType effect = null;
 		for (PotionEffectType effect1 : PotionEffectType.values())
@@ -104,7 +104,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个效果");
 	}
 
 	@NotNull

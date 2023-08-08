@@ -32,7 +32,7 @@ import java.util.UUID;
 public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureData> {
 	public SkullTextureStat() {
 		super("SKULL_TEXTURE", VersionMaterial.PLAYER_HEAD.toMaterial(), "头颅纹理",
-				new String[] { "头部纹理&nvalue&7", "可以在头颅数据库中找到" }, new String[] { "all" },
+				new String[] { "头部纹理 &n参数&7 ", "可以在头颅数据库中找到" }, new String[] { "all" },
 				VersionMaterial.PLAYER_HEAD.toMaterial());
 	}
 
@@ -54,10 +54,10 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<SkullTextureData> statData) {
-		lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + "提供纹理值" : ChatColor.RED + "None"));
+		lore.add(ChatColor.GRAY + "当前值: " + (statData.isPresent() ? ChatColor.GREEN + "提供纹理值 " : ChatColor.RED + "None"));
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 		inv.getEditedSection().set("skull-texture.value", message);
 		inv.getEditedSection().set("skull-texture.uuid", UUID.randomUUID().toString());
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功更改为" + message + ".");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + getName() + "成功更改为 " + message + ".");
 	}
 
 	@Override

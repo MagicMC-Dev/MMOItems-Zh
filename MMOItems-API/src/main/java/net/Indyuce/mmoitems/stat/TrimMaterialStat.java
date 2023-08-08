@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TrimMaterialStat extends ChooseStat implements GemStoneStat {
     public TrimMaterialStat() {
-        super("TRIM_MATERIAL", Material.LEATHER_CHESTPLATE, "装饰材质", new String[]{"用来装饰你的盔甲的材质"}, new String[]{"armor"});
+        super("TRIM_MATERIAL", Material.LEATHER_CHESTPLATE, "纹饰材料", new String[]{"用来装饰你的盔甲的材料"}, new String[]{"armor"});
 
         if (MythicLib.plugin.getVersion().isBelowOrEqual(1, 19)) {
             disable();

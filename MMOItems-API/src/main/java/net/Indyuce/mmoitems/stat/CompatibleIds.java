@@ -30,7 +30,7 @@ import java.util.Optional;
 public class CompatibleIds extends ItemStat<StringListData, StringListData> {
     public CompatibleIds() {
         super("COMPATIBLE_IDS", VersionMaterial.COMMAND_BLOCK.toMaterial(), "兼容ID",
-                new String[]{"该皮肤兼容的物品 ID"}, new String[]{"skin"});
+                new String[]{"该皮肤兼容", "的物品 ID(指定单一物品可以使用)"}, new String[]{"skin"});
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加新 ID");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个 ID");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个 ID");
     }
 
     @NotNull

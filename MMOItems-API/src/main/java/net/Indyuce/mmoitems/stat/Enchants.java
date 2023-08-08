@@ -106,7 +106,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
 
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加附魔");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个附魔");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击删除最后一个附魔");
     }
 
     @NotNull

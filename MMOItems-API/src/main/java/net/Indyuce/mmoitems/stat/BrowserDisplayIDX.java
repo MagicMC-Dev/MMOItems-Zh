@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class BrowserDisplayIDX extends DoubleStat {
 
-    public BrowserDisplayIDX() { super("BROWSER_IDX", Material.GHAST_TEAR, "浏览索引", new String[] {"用于一起显示相似的物品, ", "整齐地在图形用户界面中 \u00a7a/mmoitems browse", "具有相同索引的物品将分组"}, new String[]{"all"}); }
+    public BrowserDisplayIDX() { super("BROWSER_IDX", Material.GHAST_TEAR, "浏览索引", new String[] {"用于在GUI界面,", "mmoitems 浏览器中整齐地 §a/ 将类似的物品显示在一起", "", "将具有相同索引的物品分组"}, new String[]{"all"}); }
 
     @Override
     public void whenApplied(@NotNull ItemStackBuilder item, @NotNull DoubleData data) {

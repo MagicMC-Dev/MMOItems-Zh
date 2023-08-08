@@ -62,7 +62,7 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
                 if (set.size() <= 1)
                     inv.getEditedSection().set("effects", null);
                 inv.registerTemplateEdition();
-                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + last.substring(0, 1).toUpperCase()
+                inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + " 已成功删除 " + last.substring(0, 1).toUpperCase()
                         + last.substring(1).toLowerCase() + ChatColor.GRAY);
             }
         }
@@ -96,7 +96,7 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
         }, () -> lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None"));
         lore.add("");
         lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加效果");
-        lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除最后一个效果");
+        lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除最后一个效果");
     }
 
     @NotNull

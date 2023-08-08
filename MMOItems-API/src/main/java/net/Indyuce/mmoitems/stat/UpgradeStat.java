@@ -47,7 +47,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 
 	public UpgradeStat() {
 		super("UPGRADE", Material.FLINT, "物品升级",
-				new String[] { "升级您的物品可以提高其当前的统计数据,\n ", "它需要消耗品或特定的制作站, \n", "升级有时可能会&c失败&7..." },
+				new String[] { "升级物品可以", "提高其当前属性.", "升级需要消耗品或特定的制作站 ", "升级有时可能会&c失败&7..." },
 				new String[] { "piercing", "slashing", "blunt", "catalyst", "range", "tool", "armor", "consumable", "accessory" });
 	}
 
@@ -97,7 +97,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 			inv.getEditedSection().set("upgrade.reference", message);
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
-					MMOItems.plugin.getPrefix() + "升级参考成功更改为" + ChatColor.GOLD + message + ChatColor.GRAY + ".");
+					MMOItems.plugin.getPrefix() + "升级参考成功更改为 " + ChatColor.GOLD + message + ChatColor.GRAY + ".");
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 			inv.getEditedSection().set("upgrade.max", i);
 			inv.registerTemplateEdition();
 			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + "最大升级成功设置为" + ChatColor.GOLD + i + ChatColor.GRAY + ".");
+					.sendMessage(MMOItems.plugin.getPrefix() + "最大升级成功设置为 " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 			inv.getEditedSection().set("upgrade.min", i);
 			inv.registerTemplateEdition();
 			inv.getPlayer()
-					.sendMessage(MMOItems.plugin.getPrefix() + "最低级别成功设置为" + ChatColor.GOLD + i + ChatColor.GRAY + ".");
+					.sendMessage(MMOItems.plugin.getPrefix() + "最低级别成功设置为 " + ChatColor.GOLD + i + ChatColor.GRAY + ".");
 			return;
 		}
 
@@ -124,7 +124,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 			inv.getEditedSection().set("upgrade.success", d);
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(
-					MMOItems.plugin.getPrefix() + "升级速率成功设置为" + ChatColor.GOLD + d + "%" + ChatColor.GRAY + ".");
+					MMOItems.plugin.getPrefix() + "升级速率成功设置为 " + ChatColor.GOLD + d + "%" + ChatColor.GRAY + ".");
 			return;
 		}
 
@@ -173,8 +173,8 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 
 	@Override
 	public void whenDisplayed(List<String> lore, Optional<UpgradeData> statData) {
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击设置升级");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击重置");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击设置升级");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 	}
 
 	@NotNull

@@ -30,7 +30,7 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 
 	public Commands() {
 		super("COMMANDS", VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial(), "命令",
-				new String[] { "右键单击物品时执行的命令" }, new String[] { "!armor", "!block", "!gem_stone", "all" });
+				new String[] { "► 右键单击物品时", "执行的命令" }, new String[] { "!armor", "!block", "!gem_stone", "all" });
 	}
 
 	@Override

@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesData> {
 	public ArrowParticles() {
 		super("ARROW_PARTICLES", VersionMaterial.LIME_STAINED_GLASS.toMaterial(), "箭头粒子",
-				new String[] { "弓箭发射的箭头周围显示的粒子" }, new String[] { "bow", "crossbow" });
+				new String[] { "弓箭发射的箭头", "周围显示的粒子" }, new String[] { "bow", "crossbow" });
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 			inv.getEditedSection().set("arrow-particles.color.green", green);
 			inv.getEditedSection().set("arrow-particles.color.blue", blue);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子颜色已成功设置为"
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子颜色已成功设置为 "
 					+ ChatColor.translateAlternateColorCodes('&', "&c&l" + red + "&7 - &a&l" + green + "&7 - &9&l" + blue));
 			return;
 		}
@@ -153,7 +153,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 			Particle particle = Particle.valueOf(message.toUpperCase().replace("-", "_").replace(" ", "_"));
 			inv.getEditedSection().set("arrow-particles.particle", particle.name());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子已成功设置为" + ChatColor.GOLD
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "粒子已成功设置为 " + ChatColor.GOLD
 					+ MMOUtils.caseOnWords(particle.name().toLowerCase().replace("_", " ")) + ChatColor.GRAY + ".");
 			return;
 		}
@@ -162,7 +162,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 			int value = Integer.parseInt(message);
 			inv.getEditedSection().set("arrow-particles.amount", value);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "数量" + ChatColor.GRAY + "设置为" + ChatColor.GOLD + value
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "数量" + ChatColor.GRAY + "设置为 " + ChatColor.GOLD + value
 					+ ChatColor.GRAY + "");
 			return;
 		}
@@ -172,7 +172,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 		inv.getEditedSection().set("arrow-particles." + edited, value);
 		inv.registerTemplateEdition();
 		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + MMOUtils.caseOnWords(edited.replace("-", " ")) + ChatColor.GRAY
-				+ "设置为" + ChatColor.GOLD + value + ChatColor.GRAY + "");
+				+ "设置为 " + ChatColor.GOLD + value + ChatColor.GRAY + "");
 	}
 
 	@Override
@@ -183,8 +183,8 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 
 			lore.add(ChatColor.GRAY + "* 粒子: " + ChatColor.GOLD
 					+ MMOUtils.caseOnWords(cast.getParticle().name().replace("_", " ").toLowerCase()));
-			lore.add(ChatColor.GRAY + "* 量: " + ChatColor.WHITE + cast.getAmount());
-			lore.add(ChatColor.GRAY + "* 抵消: " + ChatColor.WHITE + cast.getOffset());
+			lore.add(ChatColor.GRAY + "* 数量: " + ChatColor.WHITE + cast.getAmount());
+			lore.add(ChatColor.GRAY + "* 偏移: " + ChatColor.WHITE + cast.getOffset());
 			lore.add("");
 
 			if (MMOUtils.isColorable(cast.getParticle()))
@@ -196,7 +196,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 			lore.add(ChatColor.GRAY + "当前值: " + ChatColor.RED + "None");
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "点击编辑");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 点击编辑");
 	}
 
 	@NotNull

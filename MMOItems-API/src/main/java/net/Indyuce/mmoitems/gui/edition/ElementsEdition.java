@@ -78,8 +78,8 @@ public class ElementsEdition extends EditionInventory {
                                 ? statData.get().getStat(element, statType)
                                 : "---"));
                 statLore.add("");
-                statLore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击进行选择");
-                statLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
                 statMeta.setLore(statLore);
                 statItem.setItemMeta(statMeta);
 

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	public GrantedPermissions() {
 		super("GRANTED_PERMISSIONS", Material.NAME_TAG, "授予的权限",
-				new String[] { "物品将授予的权限列表" }, new String[] { "all" });
+				new String[] { "持有物品将授予的权限列表" }, new String[] { "all" });
 	}
 
 	@Override
@@ -83,6 +83,6 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 
 		lore.add("");
 		lore.add(ChatColor.YELLOW + AltChar.listDash + "单击以添加权限");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击删除最后一个权限");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击删除最后一个权限");
 	}
 }

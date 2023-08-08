@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @Deprecated
 public class HideTrim extends BooleanStat {
     public HideTrim() {
-        super("HIDE_ARMOR_TRIM", Material.LEATHER_CHESTPLATE, "隐藏装甲装饰", new String[]{"隐藏物品标注中的盔甲装饰"}, new String[]{"armor"});
+        super("HIDE_ARMOR_TRIM", Material.LEATHER_CHESTPLATE, "隐藏装甲装饰", new String[]{"隐藏物品 Lore 标注中的盔甲装饰"}, new String[]{"armor"});
 
         try {
             ItemFlag.valueOf("HIDE_ARMOR_TRIM");

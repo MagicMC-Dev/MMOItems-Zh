@@ -29,18 +29,18 @@ import java.util.Optional;
 
 public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 	public MaterialStat() {
-		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "材质", new String[] { "你的物品材质" }, new String[] { "all" });
+		super("MATERIAL", VersionMaterial.GRASS_BLOCK.toMaterial(), "材料", new String[] { "你的物品材料(原版)" }, new String[] { "all" });
 	}
 
 	@Override
 	public MaterialData whenInitialized(Object object) {
-		Validate.isTrue(object instanceof String, "必须将材质名称指定为字符串");
+		Validate.isTrue(object instanceof String, "必须将材料名称指定为字符串");
 		return new MaterialData(Material.valueOf(((String) object).toUpperCase().replace("-", "_").replace(" ", "_")));
 	}
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中写下您想要的材质");
+		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中写下您想要的材料");
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 		if (material.isPresent()) {
 			inv.getEditedSection().set("material", material.get().name());
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "材质成功更改为 " + material.get().name() + ".");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "材料成功更改为 " + material.get().name() + ".");
 		} else
-			inv.getPlayer().spigot().sendMessage(new ComponentBuilder("无效材质！  (点击查看有效材质清单) ").color(ChatColor.RED)
+			inv.getPlayer().spigot().sendMessage(new ComponentBuilder("无效材料！  (点击查看有效材料清单) ").color(ChatColor.RED)
 					.event(new ClickEvent(Action.OPEN_URL, "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html")).create());
 	}
 
@@ -76,8 +76,8 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 						: ChatColor.RED + "None"));
 
 		lore.add("");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "左键单击可更改此值");
-		lore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击可删除该值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击可更改此值");
+		lore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
 	}
 
 	@NotNull

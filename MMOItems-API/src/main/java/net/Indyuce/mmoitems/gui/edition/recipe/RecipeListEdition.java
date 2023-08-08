@@ -44,7 +44,7 @@ public class RecipeListEdition extends EditionInventory {
 						: ChatColor.RED + "没有找到配方");
 				eventLore.add("");
 				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此配方");
-				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除配方");
+				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除配方");
 				craftingEventItem.setLore(eventLore);
 				craftingEvent.setItemMeta(craftingEventItem);
 

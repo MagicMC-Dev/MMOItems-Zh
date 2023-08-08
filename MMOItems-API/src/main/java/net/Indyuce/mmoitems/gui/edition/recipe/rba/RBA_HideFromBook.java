@@ -74,7 +74,7 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
         return RecipeMakerGUI.addLore(getBooleanButton().clone(),
                 SilentNumbers.toArrayList(
                 "", "\u00a77在合成表中? " + input, "",
-                        ChatColor.YELLOW + AltChar.listDash + "右键生成配方解锁书",
-                        ChatColor.YELLOW + AltChar.listDash + "左键单击可切换此选项" ));
+                        ChatColor.YELLOW + AltChar.listDash + "► 右键生成配方解锁书",
+                        ChatColor.YELLOW + AltChar.listDash + "► 左键单击可切换此选项" ));
     }
 }

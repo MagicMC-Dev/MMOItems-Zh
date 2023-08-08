@@ -16,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class StaffSpiritStat extends StringStat {
     public StaffSpiritStat() {
-        super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toMaterial(), "灵魂权杖",
-                new String[]{"灵魂改变魔法攻击的材质", "&9Tip: /mi list spirit"}, new String[]{"staff", "wand"});
+        super("STAFF_SPIRIT", VersionMaterial.BONE_MEAL.toMaterial(), "魔法类武器",
+                new String[]{"改变魔法攻击的效果", "&9Tip: /mi list spirit"}, new String[]{"staff", "wand"});
     }
 
     @Override
@@ -26,9 +26,9 @@ public class StaffSpiritStat extends StringStat {
             StaffSpirit spirit = StaffSpirit.valueOf(message.toUpperCase().replace(" ", "_").replace("-", "_"));
             inv.getEditedSection().set("staff-spirit", spirit.name());
             inv.registerTemplateEdition();
-            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "灵魂权杖成功变更为" + spirit.getName() + ".");
+            inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "魔法类武器攻击效果成功变更为" + spirit.getName() + ".");
         } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(exception.getMessage() + " (在这里查看灵魂权杖: /mi list spirit).");
+            throw new IllegalArgumentException(exception.getMessage() + " (在这里查看魔法类武器: /mi list spirit).");
         }
     }
 

@@ -72,7 +72,7 @@ public class RecipeEdition extends EditionInventory {
 			List<String> elementLore = new ArrayList<>();
 			elementLore.add("");
 			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分");
-			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分");
+			elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除该成分");
 			elementMeta.setLore(elementLore);
 			element.setItemMeta(elementMeta);
 
@@ -109,7 +109,7 @@ public class RecipeEdition extends EditionInventory {
 				List<String> elementLore = new ArrayList<>();
 				elementLore.add("");
 				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "单击以更改此成分");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "右键单击以删除该成分");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除该成分");
 				elementMeta.setLore(elementLore);
 				element.setItemMeta(elementMeta);
 

@@ -28,8 +28,8 @@ public class SoulbindingBreakChance extends DoubleStat implements ConsumableItem
 	private static final Random random = new Random();
 
 	public SoulbindingBreakChance() {
-		super("SOULBOUND_BREAK_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "灵魂绑定突破机会",
-				new String[] { "拖放物品时打破其灵魂绑定的几率", "这个几率会根据灵魂绑定的等级而降低" },
+		super("SOULBOUND_BREAK_CHANCE", VersionMaterial.ENDER_EYE.toMaterial(), "解除灵魂绑定机率",
+				new String[] { "拖放使用消耗物时打破其", "作用物品上灵魂绑定的几率,", "此几率会根据灵魂绑定", "的等级而降低概率" },
 				new String[] { "consumable" });
 	}
 

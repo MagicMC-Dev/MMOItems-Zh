@@ -31,9 +31,9 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			inv.getEditedSection().set("lute-attack-effect", null);
 			inv.registerTemplateEdition();
-			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功解除了琴攻击效果");
+			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除了琴攻击效果");
 		} else
-			new StatEdition(inv, this).enable("在聊天中写下您想要的文字");
+			new StatEdition(inv, this).enable("在聊天中写下您想要的文名称");
 	}
 
 	@Override

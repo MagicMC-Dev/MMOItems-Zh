@@ -53,8 +53,8 @@ public class RevisionInventory extends EditionInventory {
                     "旧物品的显示名称将转移到新物品"
                     , 40, "\u00a77")).build();
 
-            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7d标注").lore(SilentNumbers.chop(
-                    "特别保留以 \u00a7n&7 颜色代码开头的标注行"
+            lore = ItemFactory.of(VersionMaterial.WRITABLE_BOOK.toMaterial()).name("\u00a7dLore 标注").lore(SilentNumbers.chop(
+                    "特别保留以 \u00a7n&7 颜色代码开头的 Lore 标注行"
                     , 40, "\u00a77")).build();
 
             enchantments = ItemFactory.of(Material.EXPERIENCE_BOTTLE).name("\u00a7b附魔").lore(SilentNumbers.chop(

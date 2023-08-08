@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class CanIdentify extends BooleanStat implements ConsumableItemInteraction {
 	public CanIdentify() {
 		super("CAN_IDENTIFY", Material.PAPER, "能否识别",
-				new String[] { "玩家可以使用这种消耗品来识别并使用他们的物品" }, new String[] { "consumable" });
+				new String[] { "玩家可以使用这个消耗品鉴定", "并使自己未鉴定的物品可用" }, new String[] { "consumable" });
 	}
 
 	@Override

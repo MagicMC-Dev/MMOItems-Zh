@@ -16,24 +16,24 @@ import org.jetbrains.annotations.NotNull;
 
 public class LoreFormat extends StringStat implements GemStoneStat {
 	public LoreFormat() {
-		super("LORE_FORMAT", Material.MAP, "标注格式", new String[] { "标注格式决定了每个统计数据的去向", "&9格式可以在", "&9lore-formats文件夹中配置" },
+		super("LORE_FORMAT", Material.MAP, "Lore 标注格式", new String[] { "Lore格式决定", "每个属性数据排版显示效果.", "&9在 language/lore-formats ", "&9中" },
 				new String[] { "all" });
 	}
 
 	@Override
 	public void whenApplied(@NotNull ItemStackBuilder item, @NotNull StringData data) {
 		String path = data.toString();
-		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(path), "找不到 ID 为 '" + path + "' 的标注格式");
+		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(path), "找不到 ID 为 '" + path + "' 的 Lore 标注格式");
 
 		item.addItemTag(new ItemTag(getNBTPath(), path));
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
-		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(message), "找不到 ID 为 '" + message + "'的标注格式");
+		Validate.isTrue(MMOItems.plugin.getFormats().hasFormat(message), "找不到 ID 为 '" + message + "' 的 Lore 标注格式");
 
 		inv.getEditedSection().set(getPath(), message);
 		inv.registerTemplateEdition();
-		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "标注格式成功更改为" + message + "");
+		inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore 标注格式成功更改为 " + message + "");
 	}
 }

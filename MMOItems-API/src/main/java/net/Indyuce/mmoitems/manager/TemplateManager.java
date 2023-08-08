@@ -90,7 +90,7 @@ public class TemplateManager implements Reloadable {
 	 * @return      MMOItem template if it exists, or throws an IAE otherwise
 	 */
 	@NotNull public MMOItemTemplate getTemplateOrThrow(@Nullable Type type, @Nullable String id) {
-		Validate.isTrue(type != null && hasTemplate(type, id), "Could not find a template with ID '" + id + "'");
+		Validate.isTrue(type != null && hasTemplate(type, id), "找不到 ID 为 '" + id + "' 的模板");
 		return templates.getValue(type, id);
 	}
 
@@ -109,7 +109,7 @@ public class TemplateManager implements Reloadable {
 	 * @param template Template to register
 	 */
 	public void registerTemplate(@NotNull MMOItemTemplate template) {
-		Validate.notNull(template, "MMOItem template cannot be null");
+		Validate.notNull(template, "MMOItem 模板不能为空");
 
 		templates.setValue(template.getType(), template.getId(), template);
 	}
@@ -237,11 +237,11 @@ public class TemplateManager implements Reloadable {
 	public void postloadTemplates() {
 
 		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-		ffp.activatePrefix(true, "物品模板");
+		ffp.activatePrefix(true, "Item Templates");
 		ffp.log(FriendlyFeedbackCategory.INFORMATION, "正在加载模板修改器, 请稍候..");
 		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-			ffp.activatePrefix(true, "物品模板 \u00a78($r" + file.getPath() + "\u00a78)");
+			ffp.activatePrefix(true, "Item Templates \u00a78($r" + file.getPath() + "\u00a78)");
 			for (String key : config.getKeys(false))
 				try {
 					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));

@@ -128,7 +128,7 @@ public class RecipeManager implements Reloadable {
                                     if (!error.getMessage().isEmpty()) {
 
                                         // Log error
-                                        MMOItems.print(null, "Cannot register custom recipe '$u{2}$b' for $e{0} {1}$b;$f {3}", "Custom Crafting", type.getId(), template.getId(), recipeName, error.getMessage());
+                                        MMOItems.print(null, "无法为 $e{0} {1}$b;$f {3} 注册自定义配方 '$u{2}$b'", "自定义配方", type.getId(), template.getId(), recipeName, error.getMessage());
 
                                         // Include failures in the report
                                         ffpMinor.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
@@ -216,7 +216,7 @@ public class RecipeManager implements Reloadable {
                 try {
                     Bukkit.removeRecipe(recipe);
                 } catch (Throwable e) {
-                    MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
+                    MMOItems.print(null, "无法注册 $r{0}$b:$f {1} 的制作书配方", "MMOItems 自定义配方", recipe.getKey(), e.getMessage());
                 }
             }
 
@@ -300,7 +300,7 @@ public class RecipeManager implements Reloadable {
                         player.discoverRecipe(recipe);
                     }
                 } catch (Throwable e) {
-                    MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
+                    MMOItems.print(null, "无法注册 $r{0}$b:$f {1} 的制作书配方", "MMOItems 自定义配方", recipe.getKey(), e.getMessage());
                 }
             }
 
@@ -330,7 +330,7 @@ public class RecipeManager implements Reloadable {
             try {
                 player.discoverRecipe(recipe);
             } catch (Throwable e) {
-                MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
+                MMOItems.print(null, "无法注册 $r{0}$b:$f {1} 的制作书配方", "MMOItems 自定义配方", recipe.getKey(), e.getMessage());
             }
         }
     }

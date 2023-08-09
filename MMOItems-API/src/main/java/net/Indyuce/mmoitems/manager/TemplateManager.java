@@ -90,7 +90,7 @@ public class TemplateManager implements Reloadable {
 	 * @return      MMOItem template if it exists, or throws an IAE otherwise
 	 */
 	@NotNull public MMOItemTemplate getTemplateOrThrow(@Nullable Type type, @Nullable String id) {
-		Validate.isTrue(type != null && hasTemplate(type, id), "找不到 ID 为 '" + id + "' 的模板");
+		Validate.isTrue(type != null && hasTemplate(type, id), "Could not find a template with ID '" + id + "'");
 		return templates.getValue(type, id);
 	}
 
@@ -109,7 +109,7 @@ public class TemplateManager implements Reloadable {
 	 * @param template Template to register
 	 */
 	public void registerTemplate(@NotNull MMOItemTemplate template) {
-		Validate.notNull(template, "MMOItem 模板不能为空");
+		Validate.notNull(template, "MMOItem template cannot be null");
 
 		templates.setValue(template.getType(), template.getId(), template);
 	}
@@ -164,7 +164,7 @@ public class TemplateManager implements Reloadable {
 
 		} catch (IllegalArgumentException exception) {
 			MMOItems.plugin.getLogger().log(Level.INFO,
-					"尝试重新加载物品生成模板时发生错误 '" + id + "': " + exception.getMessage());
+					"An error occurred while trying to reload item gen template '" + id + "': " + exception.getMessage());
 			return null;
 		}
 	}
@@ -226,7 +226,7 @@ public class TemplateManager implements Reloadable {
 				try {
 					registerTemplate(new MMOItemTemplate(type, config.getConfigurationSection(key)));
 				} catch (IllegalArgumentException exception) {
-					MMOItems.plugin.getLogger().log(Level.INFO, "无法预加载物品模板 '" + key + "': " + exception.getMessage());
+					MMOItems.plugin.getLogger().log(Level.INFO, "Could not preload item template '" + key + "': " + exception.getMessage());
 				}
 		}
 	}
@@ -238,7 +238,7 @@ public class TemplateManager implements Reloadable {
 
 		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
 		ffp.activatePrefix(true, "Item Templates");
-		ffp.log(FriendlyFeedbackCategory.INFORMATION, "正在加载模板修改器, 请稍候..");
+		ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading template modifiers, please wait..");
 		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 			ffp.activatePrefix(true, "Item Templates \u00a78($r" + file.getPath() + "\u00a78)");
@@ -247,18 +247,18 @@ public class TemplateManager implements Reloadable {
 					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
 					modifiers.put(modifier.getId(), modifier);
 				} catch (IllegalArgumentException exception) {
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "无法加载模板修改器 '" + key + "': " + exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load template modifier '" + key + "': " + exception.getMessage());
 				}
 		}
 
-		ffp.activatePrefix(true, "物品模板");
-		ffp.log(FriendlyFeedbackCategory.INFORMATION, "正在加载物品模板, 请稍候...");
+		ffp.activatePrefix(true, "Item Templates");
+		ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...");
 		templates.forEach(template -> {
 			try {
 				template.postLoad();
 			} catch (IllegalArgumentException exception) {
-				ffp.activatePrefix(true, "物品模板 \u00a78($r" + template.getType().getId() + "\u00a78)");
-				ffp.log(FriendlyFeedbackCategory.INFORMATION, "无法加载物品模板 '" + template.getId() + "': " + exception.getMessage());
+				ffp.activatePrefix(true, "Item Templates \u00a78($r" + template.getType().getId() + "\u00a78)");
+				ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load item template '" + template.getId() + "': " + exception.getMessage());
 			}
 		});
 
@@ -277,12 +277,12 @@ public class TemplateManager implements Reloadable {
 		modifiers.clear();
 
 		FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-		ffp.activatePrefix(true, "物品模板");
-		ffp.log(FriendlyFeedbackCategory.INFORMATION, "正在加载模板修改器, 请稍候..");
+		ffp.activatePrefix(true, "Item Templates");
+		ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading template modifiers, please wait..");
 
 		for (File file : new File(MMOItems.plugin.getDataFolder() + "/modifiers").listFiles()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-			ffp.activatePrefix(true, "物品模板 \u00a78($r" + file.getPath() + "\u00a78)");
+			ffp.activatePrefix(true, "Item Templates \u00a78($r" + file.getPath() + "\u00a78)");
 			for (String key : config.getKeys(false))
 				try {
 					TemplateModifier modifier = new TemplateModifier(config.getConfigurationSection(key));
@@ -290,15 +290,15 @@ public class TemplateManager implements Reloadable {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "无法加载模板修改器'" + key + "': " + exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load template modifier '" + key + "': " + exception.getMessage());
 				}
 		}
 
-		ffp.activatePrefix(true, "物品模板");
-		ffp.log(FriendlyFeedbackCategory.INFORMATION, "正在加载物品模板, 请稍候...");
+		ffp.activatePrefix(true, "Item Templates");
+		ffp.log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...");
 		for (Type type : MMOItems.plugin.getTypes().getAll()) {
 			FileConfiguration config = type.getConfigFile().getConfig();
-			ffp.activatePrefix(true, "物品模板 \u00a78($r" + type.getId() + "\u00a78)");
+			ffp.activatePrefix(true, "Item Templates \u00a78($r" + type.getId() + "\u00a78)");
 			for (String key : config.getKeys(false))
 				try {
 					MMOItemTemplate template = new MMOItemTemplate(type, config.getConfigurationSection(key));
@@ -308,7 +308,7 @@ public class TemplateManager implements Reloadable {
 				} catch (IllegalArgumentException exception) {
 
 					// Log
-					ffp.log(FriendlyFeedbackCategory.INFORMATION, "无法加载物品模板 '" + key + "': " + exception.getMessage());
+					ffp.log(FriendlyFeedbackCategory.INFORMATION, "Could not load item template '" + key + "': " + exception.getMessage());
 				}
 		}
 

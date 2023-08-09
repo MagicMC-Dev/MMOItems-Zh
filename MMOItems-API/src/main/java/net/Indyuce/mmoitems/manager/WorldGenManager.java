@@ -39,7 +39,7 @@ public class WorldGenManager implements Reloadable {
     }
 
     public WorldGenTemplate getOrThrow(String id) {
-        Validate.isTrue(templates.containsKey(id), "找不到 ID 为 '" + id + "' 的生成模板");
+        Validate.isTrue(templates.containsKey(id), "Could not find gen template with ID '" + id + "'");
 
         return templates.get(id);
     }
@@ -49,7 +49,7 @@ public class WorldGenManager implements Reloadable {
      * if you want the custom block to be spawning in the worlds
      */
     public void assign(CustomBlock block, WorldGenTemplate template) {
-        Validate.notNull(template, "无法将空模板分配给自定义方块");
+        Validate.notNull(template, "Cannot assign a null template to a custom block");
 
         assigned.put(block, template);
     }
@@ -68,7 +68,7 @@ public class WorldGenManager implements Reloadable {
                 WorldGenTemplate template = new WorldGenTemplate(config.getConfigurationSection(key));
                 templates.put(template.getId(), template);
             } catch (IllegalArgumentException exception) {
-                MMOItems.plugin.getLogger().log(Level.WARNING, "加载生成模板时发生错误 '" + key + "': " + exception.getMessage());
+                MMOItems.plugin.getLogger().log(Level.WARNING, "An error occurred when loading gen template '" + key + "': " + exception.getMessage());
             }
         }
 

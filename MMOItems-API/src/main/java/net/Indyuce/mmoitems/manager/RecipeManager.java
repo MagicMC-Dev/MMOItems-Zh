@@ -72,7 +72,7 @@ public class RecipeManager implements Reloadable {
 
         // For logging
         FriendlyFeedbackProvider ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
-        ffp.activatePrefix(true, "自定义合成");
+        ffp.activatePrefix(true, "Custom Crafting");
 
         // Every single type yes
         for (Type type : MMOItems.plugin.getTypes().getAll()) {
@@ -112,7 +112,7 @@ public class RecipeManager implements Reloadable {
 
                                 // Error yes
                                 FriendlyFeedbackProvider ffpMinor = new FriendlyFeedbackProvider(FFPMMOItems.get());
-                                ffpMinor.activatePrefix(true, "配方: $u" + template.getType() + " " + template.getId());
+                                ffpMinor.activatePrefix(true, "Recipe of $u" + template.getType() + " " + template.getId());
 
                                 // Send to mythiclib
                                 try {
@@ -128,7 +128,7 @@ public class RecipeManager implements Reloadable {
                                     if (!error.getMessage().isEmpty()) {
 
                                         // Log error
-                                        MMOItems.print(null, "无法为 $e{0} {1}$b;$f {3} 注册自定义配方 '$u{2}$b'", "自定义配方", type.getId(), template.getId(), recipeName, error.getMessage());
+                                        MMOItems.print(null, "Cannot register custom recipe '$u{2}$b' for $e{0} {1}$b;$f {3}", "Custom Crafting", type.getId(), template.getId(), recipeName, error.getMessage());
 
                                         // Include failures in the report
                                         ffpMinor.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
@@ -216,7 +216,7 @@ public class RecipeManager implements Reloadable {
                 try {
                     Bukkit.removeRecipe(recipe);
                 } catch (Throwable e) {
-                    MMOItems.print(null, "无法注册 $r{0}$b:$f {1} 的制作书配方", "MMOItems 自定义配方", recipe.getKey(), e.getMessage());
+                    MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
                 }
             }
 
@@ -230,7 +230,7 @@ public class RecipeManager implements Reloadable {
                     blueprint.disable();
                     Bukkit.removeRecipe(blueprint.getNk());
                 } catch (Throwable throwable) {
-                    MMOItems.plugin.getLogger().log(Level.INFO, "无法取消注册知识书配方 '" + blueprint.getNk() + "': " + throwable.getMessage());
+                    MMOItems.plugin.getLogger().log(Level.INFO, "Could not unregister knowledge book recipe '" + blueprint.getNk() + "': " + throwable.getMessage());
                 }
             });
             customRecipes.clear();
@@ -300,7 +300,7 @@ public class RecipeManager implements Reloadable {
                         player.discoverRecipe(recipe);
                     }
                 } catch (Throwable e) {
-                    MMOItems.print(null, "无法注册 $r{0}$b:$f {1} 的制作书配方", "MMOItems 自定义配方", recipe.getKey(), e.getMessage());
+                    MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
                 }
             }
 
@@ -330,7 +330,7 @@ public class RecipeManager implements Reloadable {
             try {
                 player.discoverRecipe(recipe);
             } catch (Throwable e) {
-                MMOItems.print(null, "无法注册 $r{0}$b:$f {1} 的制作书配方", "MMOItems 自定义配方", recipe.getKey(), e.getMessage());
+                MMOItems.print(null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", recipe.getKey(), e.getMessage());
             }
         }
     }
@@ -378,7 +378,7 @@ public class RecipeManager implements Reloadable {
             return new VanillaIngredient(Material.valueOf(poof.getArgument().toUpperCase().replace("-", "_").replace(" ", "_")), amount);
         }
 
-        throw new IllegalArgumentException("不受支持的材料, 您只能指定原版或 mmoites");
+        throw new IllegalArgumentException("Unsupported ingredient, you may only specify vanilla or mmoitems.");
     }
 
     /**

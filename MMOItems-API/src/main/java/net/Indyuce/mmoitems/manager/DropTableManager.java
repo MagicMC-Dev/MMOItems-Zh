@@ -52,7 +52,7 @@ public class DropTableManager implements Listener, Reloadable {
 					monsters.put(type, new DropTable(config.getConfigurationSection("monsters." + key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING,
-							"无法读取生物类型的掉落物表'" + key + "': " + exception.getMessage());
+							"Could not read drop table with mob type '" + key + "': " + exception.getMessage());
 				}
 
 		if (config.contains("blocks"))
@@ -62,7 +62,7 @@ public class DropTableManager implements Listener, Reloadable {
 					blocks.put(material, new DropTable(config.getConfigurationSection("blocks." + key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING,
-							"无法读取包含材料的掉落物表'" + key + "': " + exception.getMessage());
+							"Could not read drop table with material '" + key + "': " + exception.getMessage());
 				}
 
 		if (config.contains("customblocks"))
@@ -72,7 +72,7 @@ public class DropTableManager implements Listener, Reloadable {
 					customBlocks.put(id, new DropTable(config.getConfigurationSection("customblocks." + key)));
 				} catch (IllegalArgumentException exception) {
 					MMOItems.plugin.getLogger().log(Level.WARNING,
-							"无法使用自定义块读取掉落物表'" + key + "': " + exception.getMessage());
+							"Could not read drop table with custom block '" + key + "': " + exception.getMessage());
 				}
 	}
 

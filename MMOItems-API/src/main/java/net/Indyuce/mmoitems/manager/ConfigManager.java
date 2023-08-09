@@ -69,9 +69,9 @@ public class ConfigManager implements Reloadable {
                     }
                     jarFile.close();
                 } catch (IOException exception) {
-                    MMOItems.plugin.getLogger().log(Level.WARNING, "无法加载默认制作站");
+                    MMOItems.plugin.getLogger().log(Level.WARNING, "Could not load default crafting stations.");
                 }
-            } else MMOItems.plugin.getLogger().log(Level.WARNING, "无法创建目录!");
+            } else MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
         }
 
         // Load files with default configuration
@@ -198,7 +198,7 @@ public class ConfigManager implements Reloadable {
         } catch (IllegalArgumentException exception) {
             defaultItemCapacity = new NumericStatFormula(5, .05, .1, .3);
             MMOItems.plugin.getLogger().log(Level.INFO,
-                    "尝试使用默认值加载物品生成器的默认容量公式时发生错误: "
+                    "An error occurred while trying to load default capacity formula for the item generator, using default: "
                             + exception.getMessage());
         }
 
@@ -228,7 +228,7 @@ public class ConfigManager implements Reloadable {
 
     @NotNull
     public String getCastingModeName(@NotNull TriggerType triggerType) {
-        return Objects.requireNonNull(triggerTypeNames.get(triggerType), "找不到触发器类型 '" + triggerType.name() + "'");
+        return Objects.requireNonNull(triggerTypeNames.get(triggerType), "Trigger type name for '" + triggerType.name() + "' not found");
     }
 
     @Deprecated
@@ -243,7 +243,7 @@ public class ConfigManager implements Reloadable {
 
     @NotNull
     public String getPotionEffectName(PotionEffectType type) {
-        return Objects.requireNonNull(potionNames.get(type), "找不到药水效果名称 '" + type.getName() + "'");
+        return Objects.requireNonNull(potionNames.get(type), "Potion effect name for '" + type.getName() + "' not found");
     }
 
     @Deprecated
@@ -274,7 +274,7 @@ public class ConfigManager implements Reloadable {
         File folder = new File(MMOItems.plugin.getDataFolder() + "/" + path);
         if (!folder.exists())
             if (!folder.mkdir())
-                MMOItems.plugin.getLogger().log(Level.WARNING, "无法创建目录!");
+                MMOItems.plugin.getLogger().log(Level.WARNING, "Could not create directory!");
     }
 
     /**
@@ -424,7 +424,7 @@ public class ConfigManager implements Reloadable {
                             }
                         }
                         config.save(file);
-                        MMOItems.plugin.getLogger().log(Level.CONFIG, "成功转换 custom-blocks.yml");
+                        MMOItems.plugin.getLogger().log(Level.CONFIG, "Successfully converted custom-blocks.yml");
                         return true;
                     }
                 }

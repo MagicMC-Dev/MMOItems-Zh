@@ -21,7 +21,7 @@ jobs:
   build:
 #	配置权限
     permissions: write-all
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
 # 下载代码
     - uses: actions/checkout@v3

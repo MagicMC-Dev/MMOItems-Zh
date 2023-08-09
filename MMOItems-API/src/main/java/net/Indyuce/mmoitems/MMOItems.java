@@ -105,8 +105,16 @@ public class MMOItems extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        getLogger().log(Level.INFO, "插件文件名为 '" + getFile().getName() + "'");
-
+        // getLogger().log(Level.INFO, "插件文件名为 '" + getFile().getName());
+        getLogger().log(Level.INFO, "  __    __     __    __     ______     __     ______   ______     __    __     ______    ");
+        getLogger().log(Level.INFO, " /\\ '-./  \\   /\\ '-./  \\   /\\  __ \\   /\\ \\   /\\__  _\\ /\\  ___\\   /\\ '-./  \\   /\\  ___\\   ");
+        getLogger().log(Level.INFO, " \\ \\ \\-./\\ \\  \\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\ \\  \\/_/\\ \\/ \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\___  \\  ");
+        getLogger().log(Level.INFO, "  \\ \\_\\ \\ \\_\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\/\\_____\\ ");
+        getLogger().log(Level.INFO, "   \\/_/  \\/_/   \\/_/  \\/_/   \\/_____/   \\/_/     \\/_/   \\/_____/   \\/_/  \\/_/   \\/_____/ ");
+        getLogger().log(Level.INFO, "INFO   汉化: INSide_734    VERSION: 6.9.5");
+        getLogger().log(Level.INFO, "       QQ:  3217962725    文件名: " + getFile().getName());
+        getLogger().log(Level.INFO, "       (禁止倒卖)");
+        
         PluginUtils.isDependencyPresent("WorldEdit", u -> {
             try {
                 new WorldEditSupport();

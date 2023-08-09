@@ -26,7 +26,7 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
     public RBA_SmithingEnchantments(@NotNull RecipeMakerGUI inv) { super(inv); }
 
     @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ENCHANTING_TABLE).name("\u00a7a附魔转移").lore(SilentNumbers.chop(
-            "材料的附魔会发生什么变化？附魔材料会产生附魔输出物品吗？"
+            "原物品的附魔效果会怎样？附魔的原物品会产生附魔的产出物品吗？"
             , 65, "\u00a77")).build();
 
     @NotNull @Override public ItemStack getChooseableButton() { return chooseableButton; }
@@ -41,15 +41,15 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
 
         switch (sct) {
             case EVEN:
-                return "对于每个附魔, 将取该附魔在配方中的平均等级";
+                return "对于每个附魔,将取该附魔在所有物品中的平均等级";
             case NONE:
-                return "会无视任何材料的附魔";
+                return "将忽略任何物品的附魔效果..";
             case MAXIMUM:
-                return "输出将具有每种材料的最佳附魔";
+                return "输出将具有每种物品的最佳附魔";
             case MINIMUM:
-                return "具有该附魔的每种材料的输出将具有最差的附魔";
+                return "输出的每种物品的最差附魔效果";
             case ADDITIVE:
-                return "所有材料的附魔都会叠加在一起";
+                return "所有物品的附魔将叠加在一起";
 
             default: return "未知行为. 在 net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_SmithingEnchantments 中添加行为";
         }

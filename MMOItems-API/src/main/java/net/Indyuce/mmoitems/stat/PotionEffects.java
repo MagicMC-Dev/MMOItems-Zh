@@ -48,7 +48,7 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.POTION_EFFECTS).enable("在聊天中写下你想要添加的药水效果",
+			new StatEdition(inv, ItemStats.POTION_EFFECTS).enable("在聊天中输入你想要添加的药水效果",
 					ChatColor.AQUA + "格式: {效果名称} {持续时间} {等级}",
 					ChatColor.AQUA + "其他格式: {效果名称}|{持续时间数值公式}|{增幅数值公式}");
 

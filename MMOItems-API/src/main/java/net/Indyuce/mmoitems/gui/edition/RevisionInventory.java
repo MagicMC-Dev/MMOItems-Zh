@@ -73,20 +73,20 @@ public class RevisionInventory extends EditionInventory {
                     "如果旧物品是灵魂绑定的, 更新会将灵魂绑定转移到新物品上"
                     , 40, "\u00a77")).build();
 
-            external = ItemFactory.of(Material.SPRUCE_SIGN).name("\u00a79外部SH").lore(SilentNumbers.chop(
-                    "通过外部插件 (如 GemStones 但不可删除 ) 注册到物品的 StatHistory 上的数据"
+            external = ItemFactory.of(Material.SPRUCE_SIGN).name("\u00a79外部 SH(其他插件的兼容)").lore(SilentNumbers.chop(
+                    "通过外部插件（如 GemStones 但不可删除）注册到项目的 StatHistory 上的数据"
                     , 40, "\u00a77")).build();
 
 
             // Fill stack
             revisionID = ItemFactory.of(Material.ITEM_FRAME).name(REVISION).lore(SilentNumbers.chop(
-                    "更新程序始终处于活动状态, 增加此数字将更新此 MMOItem 的所有实例, 而无需采取进一步操作"
+                    "更新器始终处于激活状态，增加该数字将更新该 MMOItem 的物品所有属性，无需进一步操作."
                     , 40, "\u00a77")).build();
         }
     }
 
     @NotNull @Override public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "修改管理器");
+        Inventory inv = Bukkit.createInventory(this, 54, "修订管理器");
 
         // Place corresponding item stacks in there
         for (int i = 0; i < inv.getSize(); i++) {
@@ -139,7 +139,7 @@ public class RevisionInventory extends EditionInventory {
                 if (enable != null) {
 
                     // Add mentioning if enabled
-                    inv.setItem(i, addLore(which, "", "\u00a78已启用 (在配置中 ) ? \u00a76" + enable.toString()));
+                    inv.setItem(i, addLore(which, "", "\u00a78启用 (在配置中)? \u00a76" + enable.toString()));
 
                 // If ID is enabled
                 } else if (id != null) {
@@ -196,7 +196,7 @@ public class RevisionInventory extends EditionInventory {
             registerTemplateEdition();
 
             // Update ig
-            event.setCurrentItem(addLore(revisionID.clone(), "", "\u00a78当前值: \u00a76" + id));
+            event.setCurrentItem(addLore(revisionID.clone(), "", "\u00a78当前物品ID值: \u00a76" + id));
         }
     }
 

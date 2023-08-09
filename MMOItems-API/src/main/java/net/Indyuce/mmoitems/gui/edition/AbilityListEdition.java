@@ -54,11 +54,11 @@ public class AbilityListEdition extends EditionInventory {
 
 				ItemStack abilityItem = new ItemStack(Material.BLAZE_POWDER);
 				ItemMeta abilityItemMeta = abilityItem.getItemMeta();
-				abilityItemMeta.setDisplayName(ability != null ? ChatColor.GREEN + ability.getName() : ChatColor.RED + "! 未选择任何技能 !");
+				abilityItemMeta.setDisplayName(ability != null ? ChatColor.GREEN + ability.getName() : ChatColor.RED + "! 没有选择技能 !");
 				List<String> abilityItemLore = new ArrayList<>();
 				abilityItemLore.add("");
 				abilityItemLore.add(
-						ChatColor.GRAY + "施法模式: " + (castMode != null ? ChatColor.GOLD + castMode.getName() : ChatColor.RED + "未选择"));
+						ChatColor.GRAY + "投射模式: " + (castMode != null ? ChatColor.GOLD + castMode.getName() : ChatColor.RED + "未选择"));
 				abilityItemLore.add("");
 
 				boolean check = false;
@@ -72,7 +72,7 @@ public class AbilityListEdition extends EditionInventory {
 								check = true;
 							} catch (IllegalArgumentException exception) {
 								abilityItemLore.add(ChatColor.GRAY + "* " + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")) + ": "
-										+ ChatColor.GOLD + "无法读取");
+										+ ChatColor.GOLD + "无法读取技能");
 							}
 				if (check)
 					abilityItemLore.add("");
@@ -144,8 +144,8 @@ public class AbilityListEdition extends EditionInventory {
 			if (getEditedSection().contains("ability") && getEditedSection().getConfigurationSection("ability").contains(tag)) {
 				getEditedSection().set("ability." + tag, null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
-						+ " (Internal ID)" + ChatColor.GRAY + ".");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功移除 " + ChatColor.GOLD + tag + ChatColor.DARK_GRAY
+						+ " (内部 ID)" + ChatColor.GRAY + ".");
 			}
 		}
 	}

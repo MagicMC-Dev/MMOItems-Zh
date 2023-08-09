@@ -42,7 +42,7 @@ public class ElementsEdition extends EditionInventory {
 
     @Override
     public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "要素: " + template.getId());
+        Inventory inv = Bukkit.createInventory(this, 54, "元素: " + template.getId());
 
         final Optional<RandomElementListData> statData = getEventualStatData(ItemStats.ELEMENTS);
 
@@ -78,7 +78,7 @@ public class ElementsEdition extends EditionInventory {
                                 ? statData.get().getStat(element, statType)
                                 : "---"));
                 statLore.add("");
-                statLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+                statLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击更改此值");
                 statLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击可删除该值");
                 statMeta.setLore(statLore);
                 statItem.setItemMeta(statMeta);
@@ -122,7 +122,7 @@ public class ElementsEdition extends EditionInventory {
         final String elementPath = edited.getValue().getConcatenatedConfigPath(edited.getKey());
 
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("写上你想要的值");
+            new StatEdition(this, ItemStats.ELEMENTS, elementPath).enable("输入您想要的值.");
 
         else if (event.getAction() == InventoryAction.PICKUP_HALF) {
             getEditedSection().set("element." + elementPath, null);

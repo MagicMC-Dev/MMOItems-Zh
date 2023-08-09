@@ -38,10 +38,10 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
     @NotNull public abstract String getDoubleConfigPath();
 
     @NotNull public final String[] amountLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下一个整数,例如 $e2.5$b")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中输入一个整数, 例如 $e2.5$b")};
 
     @NotNull public final String[] integerLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下一个整数,例如 $e8$b")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中输入一个整数, 例如 $e8$b")};
 
     @Override public boolean runPrimary() {
 
@@ -67,7 +67,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
 
             // Parse Integer
             Integer asInteger = SilentNumbers.IntegerParse(message);
-            if (asInteger == null) { throw new IllegalArgumentException("输入的的整数而不是 $u" + message); }
+            if (asInteger == null) { throw new IllegalArgumentException("需要的是整数而不是 $u" + message); }
 
             // ...
             number = Double.valueOf(asInteger);
@@ -75,7 +75,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
 
             // Parse Double
             number = SilentNumbers.DoubleParse(message);
-            if (number == null) { throw new IllegalArgumentException("输入的是一个数字而不是 $u" + message); }
+            if (number == null) { throw new IllegalArgumentException("需要一个数字而不是 $u" + message); }
         }
 
         // Out of range?
@@ -84,7 +84,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
             // Out of range?
             if (!getRange().inRange(number)) {
 
-                throw new IllegalArgumentException("数字 $r" + number + "$b 超出预期范围 " + getRange().toStringColored());
+                throw new IllegalArgumentException("数字 $r" + number + "$b 预期超出范围 " + getRange().toStringColored());
             } }
 
         // Set value

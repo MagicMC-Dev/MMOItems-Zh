@@ -82,7 +82,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("在聊天中写下你盾牌的颜色");
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 0).enable("在聊天中输入你盾牌的颜色");
 
 		if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
 			inv.getEditedSection().set("shield-pattern.color", null);
@@ -92,7 +92,7 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("在聊天中写下您要添加的模式",
+			new StatEdition(inv, ItemStats.SHIELD_PATTERN, 1).enable("在聊天中输入您要添加的模式",
 					ChatColor.AQUA + "格式: [PATTERN_TYPE] [DYE_COLOR]");
 
 		if (event.getAction() == InventoryAction.DROP_ONE_SLOT && inv.getEditedSection().contains("shield-pattern")) {

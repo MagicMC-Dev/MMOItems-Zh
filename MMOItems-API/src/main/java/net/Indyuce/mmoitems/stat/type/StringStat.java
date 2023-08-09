@@ -62,7 +62,7 @@ public class StringStat extends ItemStat<StringData, StringData> {
             inv.registerTemplateEdition();
             inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + getName() + "");
         } else
-            new StatEdition(inv, this).enable("在聊天中写下您想要的文字");
+            new StatEdition(inv, this).enable("在聊天中输入您想要的文字");
     }
 
     @Override

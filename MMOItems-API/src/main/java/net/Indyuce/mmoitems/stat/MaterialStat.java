@@ -40,7 +40,7 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中写下您想要的材料");
+		new StatEdition(inv, ItemStats.MATERIAL).enable("在聊天中输入您想要的材料");
 	}
 
 	@Override

@@ -108,15 +108,15 @@ public class RecipeEdition extends EditionInventory {
 					elementMeta.setDisplayName(ChatColor.RED + "Empty");
 				List<String> elementLore = new ArrayList<>();
 				elementLore.add("");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以更改此成分");
-				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除该成分");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键点击更改此配方材料.");
+				elementLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键点击删除此配方材料.");
 				elementMeta.setLore(elementLore);
 				element.setItemMeta(elementMeta);
 
 				inv.setItem(slot, element);
 			}
 		else
-			MMOItems.plugin.getLogger().warning("无法加载 '" + template.getId() + "'的无形配方!");
+			MMOItems.plugin.getLogger().warning("无法加载无序配方 '" + template.getId() + "'!");
 
 		addEditionInventoryItems(inv, true);
 		return inv;
@@ -140,7 +140,7 @@ public class RecipeEdition extends EditionInventory {
 		if (event.getAction() == InventoryAction.PICKUP_ALL) {
 			if (slotToInt(event.getRawSlot()) >= 0)
 				new StatEdition(this, ItemStats.CRAFTING, "recipe", (shapeless ? "shapeless" : "shaped"), slotToInt(event.getRawSlot()))
-						.enable("在聊天中写下您想要的物品", "格式:  '[材料]' 或 '[类型].[ID]' ");
+						.enable("在聊天栏中输入您想要的物品.", "格式 '[MATERIAL]' or '[TYPE].[ID]'");
 
 		} else if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (shapeless)

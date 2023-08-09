@@ -45,7 +45,7 @@ public class DyeColor extends ItemStat<ColorData, ColorData> {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.DYE_COLOR).enable("在聊天中写下您想要的 RGB 颜色",
+			new StatEdition(inv, ItemStats.DYE_COLOR).enable("在聊天中输入您想要的 RGB 颜色",
 					ChatColor.AQUA + "格式: {Red} {Green} {Blue}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {

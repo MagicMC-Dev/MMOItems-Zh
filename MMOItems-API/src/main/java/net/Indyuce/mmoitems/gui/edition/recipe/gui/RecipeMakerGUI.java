@@ -406,7 +406,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
     @NotNull
     public final String[] recipeLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下您想要的物品, 遵循任何格式:"),
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中输入您想要的物品, 遵循任何格式:"),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "原版: $e[MATERIAL] [AMOUNT] $bex $eDIAMOND 2.."),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "MMOItem: $e[TYPE].[ID] [AMOUNT] $bex $eSWORD.CUTLASS 1.."),
             FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "其他: $e[KEY] [ARG] [DAT] [AMOUNT]$b (查看wiki)"),
@@ -685,7 +685,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
             }
 
             ConfigurationSection asSection = getSection(section, key);
-            MMOItems.print(null, "\u00a78--\u00a7d-\u00a77 部分\u00a75" + asSection.getCurrentPath(), null);
+            MMOItems.print(null, "\u00a78--\u00a7d-\u00a77 部分 \u00a75" + asSection.getCurrentPath(), null);
             for (String asKey : asSection.getKeys(false)) {
                 MMOItems.print(null, "\u00a78--\u00a7d +\u00a77 " + asKey, null);
 
@@ -859,7 +859,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
             // We snooze if its AIR or such
             if (!asMaterial.isItem()) {
-                throw new IllegalArgumentException("无效材料 $u" + str + "$b ($f非物品$b)");
+                throw new IllegalArgumentException("无效材料 $u" + str + "$b ($f不是一个物品$b).");
             }
 
             // All right create filter and go
@@ -936,7 +936,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
             ffp.sendAllTo(MMOItems.getConsole());
 
             // Ew
-            throw new IllegalArgumentException("无效材料t $u" + str);
+            throw new IllegalArgumentException("无效材料 $u" + str);
         }
     }
     //endregion

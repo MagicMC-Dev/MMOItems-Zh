@@ -54,7 +54,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
 
         // Identify the input
         ShapedRecipe input = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含 AIR 的成型配方, $fignored$b")); }
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的成型配方, $fignored$b")); }
 
         // Read the options and output
         ShapedRecipe output = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
@@ -150,7 +150,7 @@ public class RMGRR_Shaped implements RecipeRegistry {
             }
 
             // Size not 3? BRUH
-            if (positions.length != 3) { throw new IllegalArgumentException("工作表行 $u 无效" + updatedRow + "$b ($f不完全是 3 个格子的长宽度$b) "); }
+            if (positions.length != 3) { throw new IllegalArgumentException("无效的制作表 $u" + updatedRow + "$b ($f不完全是 3 个格子的长宽度$b)."); }
 
             // Identify
             ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);

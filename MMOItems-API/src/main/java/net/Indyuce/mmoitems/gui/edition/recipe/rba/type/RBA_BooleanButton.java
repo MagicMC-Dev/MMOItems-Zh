@@ -94,7 +94,7 @@ public abstract class RBA_BooleanButton extends RecipeButtonAction {
      */
     @NotNull @Override public ItemStack getButton() {
         // Dictate the correct one
-        String input = isEnabled() ? "\u00a7a是" : "\u00a7c否";
+        String input = isEnabled() ? "\u00a7aTRUE" : "\u00a7cFALSE";
 
         // Copy and send
         return RecipeMakerGUI.addLore(getBooleanButton().clone(),

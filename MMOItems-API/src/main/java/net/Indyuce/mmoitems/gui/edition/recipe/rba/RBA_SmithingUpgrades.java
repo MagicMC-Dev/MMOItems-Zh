@@ -25,7 +25,7 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
     public RBA_SmithingUpgrades(@NotNull RecipeMakerGUI inv) { super(inv); }
 
     @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ANVIL).name("\u00a7a升级转移").lore(SilentNumbers.chop(
-            "材料升级后会发生什么变化？升级后的材料会产生升级后的输出物品吗？"
+            "物品升级后会发生什么变化?升级后的原物品(没升级的物品)会产生升级后的输出物品吗?"
             , 65, "\u00a77")).build();
 
     @NotNull @Override public ItemStack getChooseableButton() { return chooseableButton; }
@@ -40,15 +40,15 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
 
         switch (sct) {
             case EVEN:
-                return "将取组合物品升级级别的平均值";
+                return "将取合并物品升级等级的平均值";
             case NONE:
-                return "将忽略任何材料的升级级别";
+                return "将忽略任何材料的升级等级";
             case MAXIMUM:
-                return "输出将具有最高升级材料的升级等级";
+                return "输出物品将具有最高升级材料的升级等级";
             case MINIMUM:
-                return "输出将具有升级最少的可升级材料的升级级别";
+                return "输出物品将具有最低升级的物品升级等级";
             case ADDITIVE:
-                return "材料的升级等级将被添加, 结果将是制作物品的等级";
+                return "将添加原物品的升级等级, 结果将是制作物品的等级";
 
             default: return "未知的行为,在 net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_SmithingUpgrades 中添加";
         }

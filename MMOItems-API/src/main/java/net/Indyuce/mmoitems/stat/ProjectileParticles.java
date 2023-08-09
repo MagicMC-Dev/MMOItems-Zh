@@ -60,7 +60,7 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
             inv.registerTemplateEdition();
             inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除粒子");
         } else
-            new StatEdition(inv, this).enable("在聊天中写下您想要的粒子以及颜色 (如果适用) ",
+            new StatEdition(inv, this).enable("在聊天中输入您想要的粒子以及颜色 (如果适用) ",
                     ChatColor.AQUA + "格式: {粒子} {颜色}",
                     "所有粒子都可以在这里找到: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html");
     }

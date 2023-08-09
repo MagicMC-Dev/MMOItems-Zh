@@ -87,16 +87,11 @@ public class ItemBrowser extends PluginInventory {
                 ItemStack item = currentType.getItem();
                 item.setAmount(Math.max(1, Math.min(64, items)));
                 ItemMeta meta = item.getItemMeta();
-                AdventureUtils.setDisplayName(meta, "&a%s&8 (点击浏览) ".formatted(currentType.getName()));
+                AdventureUtils.setDisplayName(meta, "&a%s&8 (点击浏览)".formatted(currentType.getName()));
                 meta.addItemFlags(ItemFlag.values());
                 List<String> lore = new ArrayList<>();
-                Object[] objArr = new Object[3];
-                objArr[0] = items == 1 ? "该类型有" : "这类型有";
-                objArr[1] = items < 1 ? "&c&o没" : "&6&o%d".formatted(new Object[]{Integer.valueOf(items)});
-                objArr[2] = items == 1 ? "" : " ";
-                lore.add("&7当前%s %s &7%s 个物品.".formatted(objArr));
+                lore.add("&7当前%s %s &7%s 个物品.".formatted(items == 1 ? "该类型有" : "这类型有", items < 1 ? "&c&o没" : "&6&o%d".formatted(items), items == 1 ? "" : " "));
                 AdventureUtils.setLore(meta, lore);
-
                 item.setItemMeta(meta);
 
                 // Set item
@@ -106,7 +101,7 @@ public class ItemBrowser extends PluginInventory {
             // Fill remainder slots with 'No Type' notice
             ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
             ItemMeta glassMeta = glass.getItemMeta();
-            glassMeta.setDisplayName(ChatColor.RED + "- 无类型 -");
+            glassMeta.setDisplayName(ChatColor.RED + "- 没有类型 -");
             glass.setItemMeta(glassMeta);
 
             // Next Page
@@ -139,7 +134,7 @@ public class ItemBrowser extends PluginInventory {
          *          Displays all the items of the chosen Type
          *  ------------------------------
          */
-        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? "删除模式: " : "物品浏览器: ") + MythicLib.plugin.getAdventureParser().stripColors(type.getName()));
+        Inventory inv = Bukkit.createInventory(this, 54, (deleteMode ? "删除模式: " : "物品类型浏览: ") + MythicLib.plugin.getAdventureParser().stripColors(type.getName()));
 
         /*
          * Build cool Item Stacks for buttons and sh
@@ -148,8 +143,8 @@ public class ItemBrowser extends PluginInventory {
         ItemMeta errorMeta = error.getItemMeta();
         errorMeta.setDisplayName(ChatColor.RED + "- 错误 -");
         List<String> errorLore = new ArrayList<>();
-        errorLore.add("\u00a7\u00a7o发生错误");
-        errorLore.add("\u00a7\u00a7o尝试生成该物品");
+        errorLore.add("\u00a7\u00a7o 发生错误");
+        errorLore.add("\u00a7\u00a7o 尝试生成该物品");
         errorMeta.setLore(errorLore);
         error.setItemMeta(errorMeta);
 
@@ -358,14 +353,14 @@ public class ItemBrowser extends PluginInventory {
                 deleteMode = false;
                 open();
             } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "创建"))
-                new NewItemEdition(this).enable("在聊天中写下您想要的文字");
+                new NewItemEdition(this).enable("在聊天中输入您想要的文字");
 
             else if (type != null && item.getItemMeta().getDisplayName().equals(ChatColor.RED + "删除物品")) {
                 deleteMode = true;
                 open();
             } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "下载默认资源包")) {
                 MythicLib.plugin.getVersion().getWrapper().sendJson(getPlayer(),
-                        "[{\"text\":\"点击下载!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + CUSTOM_RP_DOWNLOAD_LINK + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"点击通过 Dropbox 下载\",\"italic\":true,\"color\":\"white\"}]}}]");
+                        "[{\"text\":\"点击下载!\",\"color\":\"green\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + CUSTOM_RP_DOWNLOAD_LINK + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":[\"\",{\"text\":\"Click to download via Dropbox\",\"italic\":true,\"color\":\"white\"}]}}]");
                 getPlayer().closeInventory();
             } else if (type == null && !item.getItemMeta().getDisplayName().equals(ChatColor.RED + "- 无类型 -"))
                 new ItemBrowser(getPlayer(), MMOItems.plugin.getTypes().get(NBTItem.get(item).getString("typeId"))).open();

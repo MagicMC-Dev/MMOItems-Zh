@@ -84,8 +84,8 @@ public abstract class EditionInventory extends PluginInventory {
      */
     public ConfigurationSection getEditedSection() {
         ConfigurationSection config = configFile.getConfig().getConfigurationSection(template.getId());
-        Validate.notNull(config, "找不到与模板关联的配置部分'" + template.getType().getId() + "." + template.getId()
-                + "': 确保配置节名称为大写字母");
+        Validate.notNull(config, "找不到与模板关联的配置部分 '" + template.getType().getId() + "." + template.getId()
+                + "': 确保配置部分的名称为大写字母");
         return config.getConfigurationSection(editedModifier == null ? "base" : "modifiers." + editedModifier.getId() + ".stats");
     }
 
@@ -158,7 +158,7 @@ public abstract class EditionInventory extends PluginInventory {
         getLore.add(ChatColor.GRAY + "您也可以使用 /mi give" + template.getType().getId() + " " + template.getId());
         getLore.add(ChatColor.GRAY + "");
         getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 左键点击获取物品");
-        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 右键单击以重新滚动其统计数据");
+        getLore.add(ChatColor.YELLOW + AltChar.smallListDash + "► 右键点击可重新调整其属性状态");
         getMeta.setLore(getLore);
         get.setItemMeta(getMeta);
 

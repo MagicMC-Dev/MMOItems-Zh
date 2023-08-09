@@ -84,7 +84,7 @@ public class SoundsEdition extends EditionInventory {
 
 		if (CORRESPONDING_SLOT.containsKey(event.getSlot())) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.CUSTOM_SOUNDS, CORRESPONDING_SLOT.get(event.getSlot())).enable("在聊天中写下您要添加的自定义声音",
+				new StatEdition(this, ItemStats.CUSTOM_SOUNDS, CORRESPONDING_SLOT.get(event.getSlot())).enable("在聊天中输入您要添加的自定义声音名称",
 						ChatColor.AQUA + "格式: [SOUND NAME] [VOLUME] [PITCH]",
 						ChatColor.AQUA + "示例: entity.generic.drink 1 1");
 
@@ -101,7 +101,7 @@ public class SoundsEdition extends EditionInventory {
 				}
 
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundPath.replace("-", " ")) + " Sound"
+				player.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + MMOUtils.caseOnWords(soundPath.replace("-", " ")) + " 声音"
 						+ ChatColor.GRAY + "成功删除");
 			}
 		}

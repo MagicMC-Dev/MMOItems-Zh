@@ -47,7 +47,7 @@ public class CompatibleMaterials extends ItemStat<StringListData, StringListData
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.COMPATIBLE_MATERIALS).enable("在聊天中写下您要添加的材料的名称");
+            new StatEdition(inv, ItemStats.COMPATIBLE_MATERIALS).enable("在聊天中输入您要添加的材料的名称");
 
         if (event.getAction() != InventoryAction.PICKUP_HALF || !inv.getEditedSection().contains("compatible-materials"))
             return;

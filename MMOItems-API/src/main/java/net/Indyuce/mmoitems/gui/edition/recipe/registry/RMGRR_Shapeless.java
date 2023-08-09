@@ -34,7 +34,7 @@ public class RMGRR_Shapeless implements RecipeRegistry {
     @NotNull @Override public String getRecipeTypeName() { return "Shapeless"; }
     @NotNull @Override public String getRecipeConfigPath() { return "shapeless"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.OAK_LOG), FFPMMOItems.get().getExampleFormat() + "无形配方");
+    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.OAK_LOG), FFPMMOItems.get().getExampleFormat() + "无序合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
@@ -74,7 +74,7 @@ public class RMGRR_Shapeless implements RecipeRegistry {
             nonAirFound = true;
             poofs.add(new MythicRecipeIngredient(p));
         }
-        if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含 AIR 的无序配方, $fignored$b")); }
+        if (!nonAirFound) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有空气的无序配方, $fignored$b.")); }
         ShapelessRecipe input = new ShapelessRecipe(nk.getKey(), poofs);
         //endregion
 

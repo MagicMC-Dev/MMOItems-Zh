@@ -67,7 +67,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中写下你想要添加的永久药水效果",
+			new StatEdition(inv, ItemStats.PERM_EFFECTS).enable("在聊天中输入你想要添加的永久药水效果",
 					ChatColor.AQUA + "格式: {效果名称} {放大器数值公式}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {

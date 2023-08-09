@@ -81,7 +81,7 @@ public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
 		}
 
 		else if (event.getAction() == InventoryAction.PICKUP_HALF)
-			new StatEdition(inv, this).enable("在聊天中写下您想要的概率 (百分比) ");
+			new StatEdition(inv, this).enable("在聊天中输入您想要的概率 (百分比) ");
 	}
 
 	@Override

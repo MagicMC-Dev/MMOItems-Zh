@@ -147,7 +147,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.GEM_SOCKETS).enable("在聊天中写下您要添加的宝石插槽的颜色");
+			new StatEdition(inv, ItemStats.GEM_SOCKETS).enable("在聊天中输入您要添加的宝石插槽的颜色");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains(getPath())) {

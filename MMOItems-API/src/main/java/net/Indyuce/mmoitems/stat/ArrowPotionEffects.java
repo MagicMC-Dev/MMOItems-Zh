@@ -47,7 +47,7 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.ARROW_POTION_EFFECTS).enable("在聊天中写下您要添加的药水效果",
+			new StatEdition(inv, ItemStats.ARROW_POTION_EFFECTS).enable("在聊天中输入您要添加的药水效果",
 					ChatColor.AQUA + "格式: [药水效果] [持续时间] [效果级别]");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {

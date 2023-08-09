@@ -54,8 +54,8 @@ public class RBA_AmountOutput extends RecipeButtonAction {
     }
 
     @NotNull public final String[] amountLog = {
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天中写下这个配方的产量"),
-            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "它必须是整数, 例如 $e4$b.")};
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "在聊天栏中输入该配方的输出量"),
+            FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "必须是整数，例如 $e4$b")};
 
     /**
      * When the player clicks the display item, it means they want to change
@@ -87,8 +87,8 @@ public class RBA_AmountOutput extends RecipeButtonAction {
         // Parse
         Integer val = SilentNumbers.IntegerParse(message);
         if (val == null) { throw new IllegalArgumentException("需要一个整数而不是 $u" + message); }
-        if (val > 64) { throw new IllegalArgumentException("最大堆栈大小为 $e64$b, Minecraft 不支持 $u" + message); }
-        if (val <= 0) { throw new IllegalArgumentException("最小输出堆栈大小为 $e0$b, 您指定了 $u" + message); }
+        if (val > 64) { throw new IllegalArgumentException("最大堆叠大小为 $e64$b, Minecraft 不支持 $u" + message); }
+        if (val <= 0) { throw new IllegalArgumentException("最小输出堆叠大小为 $e0$b, 你指定 $u" + message); }
 
         // Set value
         getInv().getNameSection().set(AMOUNT_INGREDIENTS, val);

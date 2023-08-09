@@ -276,7 +276,7 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + getName() + ChatColor.GRAY + "");
 			return;
 		}
-		new StatEdition(inv, this).enable("在聊天中写下您想要的数值",
+		new StatEdition(inv, this).enable("在聊天中输入您想要的数值",
 				"第二种格式: {基础} {缩放值} {点差} {最大点差}", "第三种格式: {最小值} -> {最大值}");
 	}
 

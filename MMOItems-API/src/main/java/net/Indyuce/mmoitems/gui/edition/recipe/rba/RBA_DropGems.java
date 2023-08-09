@@ -27,7 +27,7 @@ public class RBA_DropGems extends RBA_BooleanButton {
     @NotNull @Override public String getBooleanConfigPath() { return SMITH_GEMS; }
 
     @NotNull final ItemStack booleanButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.EMERALD).name("\u00a7a掉落宝石").lore(SilentNumbers.chop(
-            "通常, 不适合新物品的宝石会丢失, 启用此选项可以使它们掉落 (并被恢复) "
+            "通常，新物品无法镶嵌的宝石会消失.启用此功能可使宝石掉落而不是消失（并被找回）."
             , 65, "\u00a77")).build(), SilentNumbers.toArrayList(""));
     @NotNull @Override public ItemStack getBooleanButton() { return booleanButton; }
 }

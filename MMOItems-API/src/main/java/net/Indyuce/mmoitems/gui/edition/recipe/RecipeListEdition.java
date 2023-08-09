@@ -29,7 +29,7 @@ public class RecipeListEdition extends EditionInventory {
 
 	@Override
 	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "制作配方: " + template.getId());
+		Inventory inv = Bukkit.createInventory(this, 54, "配方列表: " + template.getId());
 
 		for (CraftingType ctype : CraftingType.values())
 			if (ctype.shouldAdd()) {
@@ -40,10 +40,10 @@ public class RecipeListEdition extends EditionInventory {
 				List<String> eventLore = new ArrayList<>();
 				eventLore.add(ChatColor.GRAY + ctype.getLore());
 				eventLore.add("");
-				eventLore.add(getEditedSection().contains("crafting." + ctype.name().toLowerCase()) ? ChatColor.GREEN + "找到一个或多个配方"
+				eventLore.add(getEditedSection().contains("crafting." + ctype.name().toLowerCase()) ? ChatColor.GREEN + "找到一个或多个合成配方."
 						: ChatColor.RED + "没有找到配方");
 				eventLore.add("");
-				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "► 单击以更改此配方");
+				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以更改此配方");
 				eventLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以删除配方");
 				craftingEventItem.setLore(eventLore);
 				craftingEvent.setItemMeta(craftingEventItem);
@@ -72,17 +72,17 @@ public class RecipeListEdition extends EditionInventory {
 			if (corresponding == CraftingType.SHAPELESS || corresponding == CraftingType.SHAPED)
 				new RecipeEdition(player, template, corresponding == CraftingType.SHAPELESS).open(getPreviousPage());
 			else if (corresponding == CraftingType.SMITHING)
-				new StatEdition(this, ItemStats.CRAFTING, "smithing").enable("在聊天中写下制作此物品所需的物品",
-						"格式: '[物品][物品]'", "'[物品] = [材料]' 或 '[材料]:[耐久]' 或 '[类型].[ID]'");
+				new StatEdition(this, ItemStats.CRAFTING, "smithing").enable("在聊天中输入制作此物品所需的物品.",
+						"格式: '[ITEM] [ITEM]'", "[ITEM] = '[MATERIAL]' 或 '[MATERIAL]:[DURABILITY]' 或 '[TYPE].[ID]'");
 			else
 				new StatEdition(this, ItemStats.CRAFTING, "item", corresponding.name().toLowerCase()).enable(
-						"在聊天中写下您想要的物品、Ticl速度和经验值", "格式: '[物品] [TICKS] [EXP]'",
-						"'[物品] = [材料]' 或 '[材料]:[耐用久]' 或 '[类型].[ID]'");
+						"在聊天中输入你想要合成的物品、合成速度和经验值.", "格式: '[ITEM] [TICKS] [EXP]'",
+						"[ITEM] = '[MATERIAL]' 或 '[MATERIAL]:[DURABILITY]' 或 '[TYPE].[ID]'");
 		}
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("crafting." + corresponding.name().toLowerCase())) {
 			getEditedSection().set("crafting." + corresponding.name().toLowerCase(), null);
-			player.sendMessage(MMOItems.plugin.getPrefix() + "已成功删除" + corresponding.getName() + " recipe.");
+			player.sendMessage(MMOItems.plugin.getPrefix() + "成功移除 " + corresponding.getName() + " 配方.");
 
 			if (getEditedSection().getConfigurationSection("crafting").getKeys(false).size() == 0)
 				getEditedSection().set("crafting", null);

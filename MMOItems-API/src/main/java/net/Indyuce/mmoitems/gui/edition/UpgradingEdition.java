@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpgradingEdition extends EditionInventory {
-	private static final ItemStack notAvailable = new NamedItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toMaterial(), "&cNot Available");
+	private static final ItemStack notAvailable = new NamedItemStack(VersionMaterial.RED_STAINED_GLASS_PANE.toMaterial(), "&c不可用");
 
 	public UpgradingEdition(Player player, MMOItemTemplate template) {
 		super(player, template);
@@ -39,7 +39,7 @@ public class UpgradingEdition extends EditionInventory {
 
 			ItemStack workbenchItem = new ItemStack(VersionMaterial.CRAFTING_TABLE.toMaterial());
 			ItemMeta workbenchItemMeta = workbenchItem.getItemMeta();
-			workbenchItemMeta.setDisplayName(ChatColor.GREEN + "仅工作台升级?");
+			workbenchItemMeta.setDisplayName(ChatColor.GREEN + "仅在工作台升级?");
 			List<String> workbenchItemLore = new ArrayList<>();
 			workbenchItemLore.add(ChatColor.GRAY + "开启后, 玩家必须使用制作");
 			workbenchItemLore.add(ChatColor.GRAY + "站配方才能升级他们的武器");
@@ -56,7 +56,7 @@ public class UpgradingEdition extends EditionInventory {
 			ItemMeta templateItemMeta = templateItem.getItemMeta();
 			templateItemMeta.setDisplayName(ChatColor.GREEN + "升级模板");
 			List<String> templateItemLore = new ArrayList<>();
-			templateItemLore.add(ChatColor.GRAY + "此选项规定了哪些统计数据需要改进");
+			templateItemLore.add(ChatColor.GRAY + "该设置决定了物品升级时会提升哪些属性");
 			templateItemLore.add(ChatColor.GRAY + "当您的物品升级时,更多信息请参见维基百科");
 			templateItemLore.add("");
 			templateItemLore.add(ChatColor.GRAY + "当前值: "
@@ -73,8 +73,8 @@ public class UpgradingEdition extends EditionInventory {
 			ItemMeta maxItemMeta = maxItem.getItemMeta();
 			maxItemMeta.setDisplayName(ChatColor.GREEN + "最大升级数");
 			List<String> maxItemLore = new ArrayList<>();
-			maxItemLore.add(ChatColor.GRAY + "您的物品可能获得的最大");
-			maxItemLore.add(ChatColor.GRAY + "升级量 (配方或消耗品 ) ");
+			maxItemLore.add(ChatColor.GRAY + "你的物品可获得的最大升级次数");
+			maxItemLore.add(ChatColor.GRAY + "（配方或消耗品）");
 			maxItemLore.add("");
 			maxItemLore.add(ChatColor.GRAY + "当前值: " + (max == 0 ? ChatColor.RED + "无限制" : ChatColor.GOLD + "" + max));
 			maxItemLore.add("");
@@ -89,12 +89,12 @@ public class UpgradingEdition extends EditionInventory {
 			ItemMeta minItemMeta = minItem.getItemMeta();
 			minItemMeta.setDisplayName(ChatColor.GREEN + "最小升级次数");
 			List<String> minItemLore = new ArrayList<>();
-			minItemLore.add(ChatColor.GRAY + "您的物品可以降级到的最低");
-			minItemLore.add(ChatColor.GRAY + "级别 (通过死亡或损坏 ) ");
+			minItemLore.add(ChatColor.GRAY + "你的物品可获得的最小升级次数");
+			minItemLore.add(ChatColor.GRAY + "（配方或消耗品）.");
 			minItemLore.add("");
 			minItemLore.add(ChatColor.GRAY + "当前值: " + (min == 0 ? ChatColor.RED + "0" : ChatColor.GOLD + String.valueOf(min)));
 			minItemLore.add("");
-			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以尝试该值");
+			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击以尝试修改该值");
 			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			minItemMeta.setLore(minItemLore);
 			minItem.setItemMeta(minItemMeta);
@@ -111,14 +111,14 @@ public class UpgradingEdition extends EditionInventory {
 			ItemMeta referenceItemMeta = referenceItem.getItemMeta();
 			referenceItemMeta.setDisplayName(ChatColor.GREEN + "升级参考");
 			List<String> referenceItemLore = new ArrayList<>();
-			referenceItemLore.add(ChatColor.GRAY + "该选项规定了消耗品可以");
-			referenceItemLore.add(ChatColor.GRAY + "升级你的物品" + ChatColor.AQUA + "消耗品升级参考");
-			referenceItemLore.add(ChatColor.AQUA + "必须与您的商品参考相匹配" + ChatColor.GRAY + ",");
-			referenceItemLore.add(ChatColor.GRAY + "否则无法升级,将此留空");
-			referenceItemLore.add(ChatColor.GRAY + "任何消耗品都可以升级这个物品");
+			referenceItemLore.add(ChatColor.GRAY + "该设置决定了哪些消耗品");
+			referenceItemLore.add(ChatColor.GRAY + "可以升级物品. " + ChatColor.AQUA + "消耗品的升级参照");
+			referenceItemLore.add(ChatColor.AQUA + "必须与物品的参照一致" + ChatColor.GRAY + ",");
+			referenceItemLore.add(ChatColor.GRAY + "否则无法升级");
+			referenceItemLore.add(ChatColor.GRAY + "留空，以便任何消耗品都能升级此物品.");
 			referenceItemLore.add("");
 			referenceItemLore
-					.add(ChatColor.GRAY + "当前值: " + (reference == null ? ChatColor.RED + "无参考" : ChatColor.GOLD + reference));
+					.add(ChatColor.GRAY + "当前值: " + (reference == null ? ChatColor.RED + "没有参考" : ChatColor.GOLD + reference));
 			referenceItemLore.add("");
 			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键点击输入参考");
 			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
@@ -131,10 +131,11 @@ public class UpgradingEdition extends EditionInventory {
 		double success = getEditedSection().getDouble("upgrade.success");
 		ItemStack successItem = new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial());
 		ItemMeta successItemMeta = successItem.getItemMeta();
-		successItemMeta.setDisplayName(ChatColor.GREEN + "成功机率");
+		successItemMeta.setDisplayName(ChatColor.GREEN + "升级成功机率");
 		List<String> successItemLore = new ArrayList<>();
-		successItemLore.add(ChatColor.GRAY + "使用消耗品或使用站升级");
-		successItemLore.add(ChatColor.GRAY + "配方时成功升级的几率");
+		successItemLore.add(ChatColor.GRAY + "使用消耗品或使用工作站");
+		successItemLore.add(ChatColor.GRAY + "工作站(合成台)升级配方时");
+		successItemLore.add(ChatColor.GRAY + "成功升级的几率.");
 		successItemLore.add("");
 		successItemLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + (success == 0 ? "100" : "" + success) + "%");
 		successItemLore.add("");
@@ -148,14 +149,14 @@ public class UpgradingEdition extends EditionInventory {
 			ItemStack destroyOnFail = new ItemStack(Material.FISHING_ROD);
 			ItemMeta destroyOnFailMeta = destroyOnFail.getItemMeta();
 			((Damageable) destroyOnFailMeta).setDamage(30);
-			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "失败时销毁?");
+			destroyOnFailMeta.setDisplayName(ChatColor.GREEN + "升级失败时销毁物品?");
 			List<String> destroyOnFailLore = new ArrayList<>();
-			destroyOnFailLore.add(ChatColor.GRAY + "开启后, 升级失败");
-			destroyOnFailLore.add(ChatColor.GRAY + "时该物品将被销毁");
+			destroyOnFailLore.add(ChatColor.GRAY + "开启后，升级失败时");
+			destroyOnFailLore.add(ChatColor.GRAY + "该物品将被销毁.");
 			destroyOnFailLore.add("");
 			destroyOnFailLore.add(ChatColor.GRAY + "当前值: " + ChatColor.GOLD + getEditedSection().getBoolean("upgrade.destroy"));
 			destroyOnFailLore.add("");
-			destroyOnFailLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+			destroyOnFailLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击更改此值");
 			destroyOnFailMeta.setLore(destroyOnFailLore);
 			destroyOnFail.setItemMeta(destroyOnFailMeta);
 			inv.setItem(42, destroyOnFail);
@@ -176,73 +177,73 @@ public class UpgradingEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "成功机率")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.UPGRADE, "rate").enable("在聊天中写下您想要的成功率");
+				new StatEdition(this, ItemStats.UPGRADE, "rate").enable("在聊天栏中输入您想要的成功率.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.success")) {
 				getEditedSection().set("upgrade.success", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置成功几率");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置成功几率.");
 			}
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "最大升级数")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.UPGRADE, "max").enable("在聊天中写下您想要的次数");
+				new StatEdition(this, ItemStats.UPGRADE, "max").enable("在聊天栏中输入您想要的次数(整数).");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.max")) {
 				getEditedSection().set("upgrade.max", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置最大升级次数");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置最大升级次数.");
 			}
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "最小升级次数")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.UPGRADE, "min").enable("在聊天中写下您想要的次数");
+				new StatEdition(this, ItemStats.UPGRADE, "min").enable("在聊天栏中输入您想要的次数(整数).");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.min")) {
 				getEditedSection().set("upgrade.min", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置最小升级次数");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置最小升级次数.");
 			}
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "升级模板")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.UPGRADE, "template").enable("在聊天中写下您想要的升级模板ID");
+				new StatEdition(this, ItemStats.UPGRADE, "template").enable("在聊天栏中输入您想要的升级模板 ID.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.template")) {
 				getEditedSection().set("upgrade.template", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置升级模板");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置升级模板.");
 			}
 		}
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "升级参考")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.UPGRADE, "ref").enable("在聊天中写下您想要的升级参考 (文本 ) ");
+				new StatEdition(this, ItemStats.UPGRADE, "ref").enable("在聊天栏中输入您想要的升级参考（文本）.");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("upgrade.reference")) {
 				getEditedSection().set("upgrade.reference", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置升级参考");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置升级参考.");
 			}
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "仅工作台升级?")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "仅通过工作台升级?")) {
 			boolean bool = !getEditedSection().getBoolean("upgrade.workbench");
 			getEditedSection().set("upgrade.workbench", bool);
 			registerTemplateEdition();
 			player.sendMessage(MMOItems.plugin.getPrefix()
-					+ (bool ? "您的物品现在必须通过合成表升级" : "您的物品现在可以使用消耗品进行升级"));
+					+ (bool ? "您的物品现在必须通过工作台配方升级." : "您的物品现在可以使用消耗品升级."));
 		}
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "失败时销毁?")) {
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "升级失败时销毁?")) {
 			boolean bool = !getEditedSection().getBoolean("upgrade.destroy");
 			getEditedSection().set("upgrade.destroy", bool);
 			registerTemplateEdition();
 			player.sendMessage(MMOItems.plugin.getPrefix()
-					+ (bool ? "升级失败后您的物品将被销毁" : "升级失败时您的物品不会被破坏"));
+					+ (bool ? "升级失败后，您的物品将被销毁." : "升级失败后，您的物品不会被销毁."));
 		}
 	}
 }

@@ -55,7 +55,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.ENCHANTS).enable("在聊天中写下您要添加的附魔",
+            new StatEdition(inv, ItemStats.ENCHANTS).enable("在聊天中输入您要添加的附魔",
                     ChatColor.AQUA + "格式: {附魔名称} {附魔等级数值公式}");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF) {

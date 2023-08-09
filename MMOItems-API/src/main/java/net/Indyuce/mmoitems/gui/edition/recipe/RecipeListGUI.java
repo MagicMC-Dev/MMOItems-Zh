@@ -36,7 +36,7 @@ public class RecipeListGUI extends EditionInventory {
 
     @NotNull final ItemStack nextPage = ItemFactory.of(Material.ARROW).name("\u00a77下一页").build();
     @NotNull final ItemStack prevPage = ItemFactory.of(Material.ARROW).name("\u00a77上一页").build();
-    @NotNull final ItemStack noRecipe = ItemFactory.of(Material.BLACK_STAINED_GLASS_PANE).name("\u00a77没有配方").build();
+    @NotNull final ItemStack noRecipe = ItemFactory.of(Material.BLACK_STAINED_GLASS_PANE).name("\u00a77没有合成配方").build();
 
     @NotNull final RecipeRegistry recipeType;
     @NotNull public RecipeRegistry getRecipeRegistry() { return recipeType; }
@@ -131,7 +131,7 @@ public class RecipeListGUI extends EditionInventory {
             if (p == recipeNames.size()) {
 
                 // Rename list item...
-                inv.setItem(absolute, RecipeMakerGUI.rename(new ItemStack(Material.NETHER_STAR),   FFPMMOItems.get().getBodyFormat() + "创建新的 " + SilentNumbers.getItemName(getListedItem(), false)));
+                inv.setItem(absolute, RecipeMakerGUI.rename(new ItemStack(Material.NETHER_STAR),   FFPMMOItems.get().getBodyFormat() + "创建新合成配方 " + SilentNumbers.getItemName(getListedItem(), false)));
 
                 // If this slot is clicked, a new recipe will be created.
                 createSlot = absolute;

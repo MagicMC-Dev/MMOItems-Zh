@@ -46,11 +46,11 @@ public class RMGRR_MegaShaped implements RecipeRegistry {
         ConfigurationSection recipeSection = RecipeMakerGUI.moveInput(recipeTypeSection, recipeName);
 
         NamespacedKey nk = namespace.getValue();
-        if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法 (空) 命名空间")); }
+        if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法（空）命名空间")); }
 
         // Identify the input
         ShapedRecipe input = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含 AIR 的巨型配方, $fignored$b")); }
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的巨型配方, $fignored$b")); }
 
         // Read the options and output
         ShapedRecipe output = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
@@ -139,7 +139,7 @@ public class RMGRR_MegaShaped implements RecipeRegistry {
             }
 
             // Size not 3? BRUH
-            if (positions.length != 6) { throw new IllegalArgumentException("大型工作台行 $u 无效" + updatedRow + "$b ($f不完全是6种成分$b) "); }
+            if (positions.length != 6) { throw new IllegalArgumentException("大型工作台第 $u 行无效" + updatedRow + "$b ($f不完全是 6 个格子的长宽度$b)."); }
 
             // Identify
             ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);

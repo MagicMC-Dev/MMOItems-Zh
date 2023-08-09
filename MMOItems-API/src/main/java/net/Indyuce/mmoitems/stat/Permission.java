@@ -47,7 +47,7 @@ public class Permission extends StringListStat implements ItemRestriction {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.PERMISSION).enable("在聊天中写下您希望您的物品需要的权限");
+			new StatEdition(inv, ItemStats.PERMISSION).enable("在聊天中输入您希望您的物品需要的权限");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (inv.getEditedSection().contains("permission")) {

@@ -33,7 +33,7 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
 			inv.registerTemplateEdition();
 			inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "成功删除了琴攻击效果");
 		} else
-			new StatEdition(inv, this).enable("在聊天中写下您想要的文名称");
+			new StatEdition(inv, this).enable("在聊天中输入您想要的文名称");
 	}
 
 	@Override

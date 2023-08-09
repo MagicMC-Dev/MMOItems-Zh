@@ -29,8 +29,8 @@ public class RBA_CookingTime extends RBA_DoubleButton {
     public static final double DEFAULT = 200;
     @Override public double getDefaultValue() { return DEFAULT; }
 
-    @NotNull final ItemStack doubleButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.CLOCK).name("\u00a7c期间").lore(SilentNumbers.chop(
-            "这个配方需要多长时间才能完成 '烹饪 ' X)"
+    @NotNull final ItemStack doubleButton = RecipeMakerGUI.addLore(ItemFactory.of(Material.CLOCK).name("\u00a7c合成持续时间").lore(SilentNumbers.chop(
+            "这份食谱需要多长时间才能完成 '烹饪' x)"
             , 65, "\u00a77")).build(), SilentNumbers.toArrayList(""));
     @NotNull @Override public ItemStack getDoubleButton() { return doubleButton; }
 }

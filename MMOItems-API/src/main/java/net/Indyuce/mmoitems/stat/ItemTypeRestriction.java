@@ -48,7 +48,7 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.ITEM_TYPE_RESTRICTION).enable("在聊天中写下您希望宝石支持的物品类型",
+			new StatEdition(inv, ItemStats.ITEM_TYPE_RESTRICTION).enable("在聊天中输入您希望宝石支持的物品类型",
 					"支持的格式: WEAPON(武器) 或 BLUNT(钝器), PIERCING(穿刺), SLASHING(切割), OFFHAND(副手), EXTRA(额外)");
 
 		// if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {

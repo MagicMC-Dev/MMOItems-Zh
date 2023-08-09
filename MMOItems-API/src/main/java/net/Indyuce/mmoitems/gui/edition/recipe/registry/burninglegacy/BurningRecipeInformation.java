@@ -20,7 +20,7 @@ public class BurningRecipeInformation {
 
         // Get item
         String itemIngredient = config.getString("item");
-        if (itemIngredient == null) { throw new IllegalArgumentException("输入成分无效"); }
+        if (itemIngredient == null) { throw new IllegalArgumentException("输入材料无效"); }
 
         // Get
         choice = RecipeManager.getWorkbenchIngredient(itemIngredient);

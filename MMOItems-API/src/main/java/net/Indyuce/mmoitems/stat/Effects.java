@@ -51,7 +51,7 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.EFFECTS).enable("在聊天中写下你想要添加的永久药水效果",
+            new StatEdition(inv, ItemStats.EFFECTS).enable("在聊天中输入你想要添加的永久药水效果",
                     ChatColor.AQUA + "格式: {药水效果名称}|{持续时间数值公式}|{增幅数值公式}", ChatColor.DARK_RED + "Note: " + ChatColor.RED + " '|' 行是字面意思");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF) {

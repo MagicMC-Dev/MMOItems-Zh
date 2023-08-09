@@ -45,7 +45,7 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.GRANTED_PERMISSIONS).enable("在聊天中写下您要添加的权限");
+			new StatEdition(inv, ItemStats.GRANTED_PERMISSIONS).enable("在聊天中输入您要添加的权限");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains(getPath())) {
 			List<String> permissions = inv.getEditedSection().getStringList(getPath());

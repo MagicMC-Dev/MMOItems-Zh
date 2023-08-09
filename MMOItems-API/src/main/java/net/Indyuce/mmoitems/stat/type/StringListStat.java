@@ -159,7 +159,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, this).enable("在聊天中写下您要添加的行");
+            new StatEdition(inv, this).enable("在聊天中输入您要添加的行");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains(getPath())) {
             List<String> list = inv.getEditedSection().getStringList(getPath());

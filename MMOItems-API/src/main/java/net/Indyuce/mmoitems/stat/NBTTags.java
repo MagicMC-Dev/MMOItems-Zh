@@ -38,7 +38,7 @@ public class NBTTags extends StringListStat {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(inv, ItemStats.NBT_TAGS).enable("在聊天中写下您要添加的NBT标签",
+			new StatEdition(inv, ItemStats.NBT_TAGS).enable("在聊天中输入您要添加的NBT标签",
 					ChatColor.AQUA + "格式: {标签名称} {标签值}");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {

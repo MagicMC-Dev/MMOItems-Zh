@@ -43,7 +43,7 @@ public class ItemEdition extends EditionInventory {
         List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
                 .filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).toList();
 
-        Inventory inv = Bukkit.createInventory(this, 54, "物品版本:" + getEdited().getId());
+        Inventory inv = Bukkit.createInventory(this, 54, "物品编辑:" + getEdited().getId());
         for (int j = min; j < Math.min(appliable.size(), max); j++) {
             ItemStat stat = appliable.get(j);
             ItemStack item = new ItemStack(stat.getDisplayMaterial());
@@ -62,7 +62,7 @@ public class ItemEdition extends EditionInventory {
 
         ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
         ItemMeta glassMeta = glass.getItemMeta();
-        glassMeta.setDisplayName(ChatColor.RED + "- 无物品统计 -");
+        glassMeta.setDisplayName(ChatColor.RED + "- 没有项目编号 -");
         glass.setItemMeta(glassMeta);
 
         ItemStack next = new ItemStack(Material.ARROW);
@@ -114,7 +114,7 @@ public class ItemEdition extends EditionInventory {
         if (MMOItems.plugin.hasPermissions() && MMOItems.plugin.getLanguage().opStatsEnabled
                 && MMOItems.plugin.getLanguage().opStats.contains(edited.getId())
                 && !MMOItems.plugin.getVault().getPermissions().has((Player) event.getWhoClicked(), "mmoitems.edit.op")) {
-            event.getWhoClicked().sendMessage(ChatColor.RED + "您没有编辑此统计数据的权限");
+            event.getWhoClicked().sendMessage(ChatColor.RED + "您没有编辑此属性数据的权限.");
             return;
         }
 

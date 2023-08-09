@@ -43,7 +43,7 @@ public class Lore extends StringListStat implements GemStoneStat {
     @Override
     public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
         if (event.getAction() == InventoryAction.PICKUP_ALL)
-            new StatEdition(inv, ItemStats.LORE).enable("在聊天中写下您要添加的标注行");
+            new StatEdition(inv, ItemStats.LORE).enable("在聊天中输入您要添加的标注行");
 
         if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("lore")) {
             List<String> lore = inv.getEditedSection().getStringList("lore");

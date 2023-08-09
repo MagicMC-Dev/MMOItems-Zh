@@ -59,8 +59,8 @@ public class AbilityEdition extends EditionInventory {
 		abilityItemLore.add(
 				ChatColor.GRAY + "当前值: " + (ability == null ? ChatColor.RED + "没有选择技能" : ChatColor.GOLD + ability.getName()));
 		abilityItemLore.add("");
-		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
-		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击以重置");
+		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击选择");
+		abilityItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 		abilityItemMeta.setLore(abilityItemLore);
 		abilityItem.setItemMeta(abilityItemMeta);
 
@@ -77,15 +77,15 @@ public class AbilityEdition extends EditionInventory {
 
 			ItemStack castModeItem = new ItemStack(Material.ARMOR_STAND);
 			ItemMeta castModeItemMeta = castModeItem.getItemMeta();
-			castModeItemMeta.setDisplayName(ChatColor.GREEN + "触发器");
+			castModeItemMeta.setDisplayName(ChatColor.GREEN + "触发器(具体看wiki)");
 			List<String> castModeItemLore = new ArrayList<>();
-			castModeItemLore.add(ChatColor.GRAY + "选择玩家需要采取的行动");
-			castModeItemLore.add(ChatColor.GRAY + "执行以施展的技能");
+			castModeItemLore.add(ChatColor.GRAY + "选择玩家需要执行什么操作");
+			castModeItemLore.add(ChatColor.GRAY + "才能释放物品上的技能 (触发技能)");
 			castModeItemLore.add("");
-			castModeItemLore.add(ChatColor.GRAY + "当前值:"
+			castModeItemLore.add(ChatColor.GRAY + "当前值: "
 					+ (castMode == null ? ChatColor.RED + "未选择触发器" : ChatColor.GOLD + castMode.getName()));
 			castModeItemLore.add("");
-			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击选择");
 			castModeItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			castModeItemMeta.setLore(castModeItemLore);
 			castModeItem.setItemMeta(castModeItemMeta);
@@ -100,8 +100,8 @@ public class AbilityEdition extends EditionInventory {
 				ItemMeta modifierItemMeta = modifierItem.getItemMeta();
 				modifierItemMeta.setDisplayName(ChatColor.GREEN + MMOUtils.caseOnWords(modifier.toLowerCase().replace("-", " ")));
 				List<String> modifierItemLore = new ArrayList<>();
-				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个技能修正,改变这个");
-				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "值会稍微改变自定义技能");
+				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "这是一个技能修改器更改此值");
+				modifierItemLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "可自定义技能的伤害冷却等等.");
 				modifierItemLore.add("");
 
 				try {
@@ -109,12 +109,12 @@ public class AbilityEdition extends EditionInventory {
 							+ (section.contains(modifier) ? new NumericStatFormula(section.get(modifier)).toString()
 									: MODIFIER_FORMAT.format(ability.getDefaultModifier(modifier))));
 				} catch (IllegalArgumentException exception) {
-					modifierItemLore.add(ChatColor.GRAY + "无法读取,使用默认值");
+					modifierItemLore.add(ChatColor.GRAY + "无法读取, 使用默认值");
 				}
 
 				modifierItemLore.add(ChatColor.GRAY + "默认值: " + ChatColor.GOLD + MODIFIER_FORMAT.format(ability.getDefaultModifier(modifier)));
 				modifierItemLore.add("");
-				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
+				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击选择");
 				modifierItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 				modifierItemMeta.setLore(modifierItemLore);
 				modifierItem.setItemMeta(modifierItemMeta);
@@ -128,7 +128,7 @@ public class AbilityEdition extends EditionInventory {
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
 		ItemMeta glassMeta = glass.getItemMeta();
-		glassMeta.setDisplayName(ChatColor.RED + "- 无修改 -");
+		glassMeta.setDisplayName(ChatColor.RED + "- 没有修改器 -");
 		glass.setItemMeta(glassMeta);
 
 		ItemStack back = new ItemStack(Material.BARRIER);
@@ -161,8 +161,8 @@ public class AbilityEdition extends EditionInventory {
 
 		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "技能")) {
 			if (event.getAction() == InventoryAction.PICKUP_ALL)
-				new StatEdition(this, ItemStats.ABILITIES, configKey, "ability").enable("在聊天中写下你想要的技能",
-						"您可以通过命令访问技能列表" + ChatColor.AQUA + "/mi list ability");
+				new StatEdition(this, ItemStats.ABILITIES, configKey, "ability").enable("在聊天栏中输入您想要的技能名称.",
+						"您可以通过输入该指令插件技能列表 " + ChatColor.AQUA + "/mi list ability");
 
 			if (event.getAction() == InventoryAction.PICKUP_HALF) {
 				if (getEditedSection().contains("ability." + configKey + ".type")) {
@@ -172,7 +172,7 @@ public class AbilityEdition extends EditionInventory {
 						getEditedSection().set("ability", null);
 
 					registerTemplateEdition();
-					player.sendMessage(MMOItems.plugin.getPrefix() + "技能重置成功");
+					player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置技能.");
 				}
 			}
 			return;
@@ -183,7 +183,7 @@ public class AbilityEdition extends EditionInventory {
 				new StatEdition(this, ItemStats.ABILITIES, configKey, "mode").enable();
 
 				player.sendMessage("");
-				player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "可用的触发器");
+				player.sendMessage("" + ChatColor.GREEN + ChatColor.BOLD + "可用触发器");
 				for (TriggerType castMode : TriggerType.values())
 					player.sendMessage("* " + ChatColor.GREEN + castMode.name());
 			}
@@ -191,7 +191,7 @@ public class AbilityEdition extends EditionInventory {
 			if (event.getAction() == InventoryAction.PICKUP_HALF && getEditedSection().contains("ability." + configKey + ".mode")) {
 				getEditedSection().set("ability." + configKey + ".mode", null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置技能触发器");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "成功重置技能触发器.");
 			}
 			return;
 		}
@@ -201,14 +201,14 @@ public class AbilityEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new StatEdition(this, ItemStats.ABILITIES, configKey, tag).enable("在聊天中写下您想要的值");
+			new StatEdition(this, ItemStats.ABILITIES, configKey, tag).enable("在聊天栏中输入您想要的值.");
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (getEditedSection().contains("ability." + configKey + "." + tag)) {
 				getEditedSection().set("ability." + configKey + "." + tag, null);
 				registerTemplateEdition();
-				player.sendMessage(MMOItems.plugin.getPrefix() + "重置成功" + ChatColor.GOLD + MMOUtils.caseOnWords(tag.replace("-", " "))
-						+ ChatColor.GRAY + "");
+				player.sendMessage(MMOItems.plugin.getPrefix() + "重置成功 " + ChatColor.GOLD + MMOUtils.caseOnWords(tag.replace("-", " "))
+						+ ChatColor.GRAY + ".");
 			}
 		}
 	}

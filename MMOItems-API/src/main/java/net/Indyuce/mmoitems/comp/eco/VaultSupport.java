@@ -34,7 +34,7 @@ public class VaultSupport {
 		}
 
 		if(economy != null || permissions != null)
-			MMOItems.plugin.getLogger().log(Level.INFO, "Hooked onto Vault");
+			MMOItems.plugin.getLogger().log(Level.INFO, "挂钩至 Vault");
 	}
 	
 	public Permission getPermissions() {

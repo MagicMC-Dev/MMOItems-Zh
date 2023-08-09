@@ -110,7 +110,7 @@ public class MMOItems extends JavaPlugin {
         PluginUtils.isDependencyPresent("WorldEdit", u -> {
             try {
                 new WorldEditSupport();
-                getLogger().log(Level.INFO, "Hooked onto WorldEdit");
+                getLogger().log(Level.INFO, "挂钩至 WorldEdit");
             } catch (Exception exception) {
                 getLogger().log(Level.WARNING, "无法初始化 WorldEdit 7 支持: ", exception);
             }
@@ -223,7 +223,7 @@ public class MMOItems extends JavaPlugin {
         PluginUtils.hookDependencyIfPresent("PlaceholderAPI", unused -> new MMOItemsPlaceholders().register());
 
         if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
-            getLogger().log(Level.INFO, "Hooked onto BossShopPro");
+            getLogger().log(Level.INFO, "挂钩至 BossShopPro");
             (new BukkitRunnable() {
                 public void run() {
                     //noinspection ProhibitedExceptionCaught
@@ -238,7 +238,7 @@ public class MMOItems extends JavaPlugin {
 
 		/*if (Bukkit.getPluginManager().getPlugin("Denizen") != null) {
 			new DenizenHook();
-			getLogger().log(Level.INFO, "Hooked onto Denizen");
+			getLogger().log(Level.INFO, "挂钩至 Denizen");
 		}*/
 
         // Compatibility with /reload
@@ -338,7 +338,7 @@ public class MMOItems extends JavaPlugin {
                 try {
                     final RPGHandler handler = enumPlugin.load();
                     rpgPlugins.add(handler);
-                    getLogger().log(Level.INFO, "Hooked onto " + enumPlugin.getName());
+                    getLogger().log(Level.INFO, "挂钩至 " + enumPlugin.getName());
 
                     // Register as main RPG plugin
                     if (preferredName.equalsIgnoreCase(enumPlugin.name())) {

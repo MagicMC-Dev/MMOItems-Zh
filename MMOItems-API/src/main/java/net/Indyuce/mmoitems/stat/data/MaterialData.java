@@ -15,12 +15,12 @@ public class MaterialData implements StatData, RandomStatData<MaterialData> {
 	 * MMOBuilder constructor.
 	 */
 	public MaterialData(Material material) {
-		Validate.notNull(material, "材质不能为空");
+		Validate.notNull(material, "Material must not be null");
 		this.material = material;
 	}
 
 	public void setMaterial(Material material) {
-		Validate.notNull(material, "材质不能为空");
+		Validate.notNull(material, "Material must not be null");
 		this.material = material;
 	}
 

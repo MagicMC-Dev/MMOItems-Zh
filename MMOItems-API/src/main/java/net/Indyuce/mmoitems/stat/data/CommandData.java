@@ -8,7 +8,7 @@ public class CommandData {
 	private final boolean console, op;
 
 	public CommandData(String command, double delay, boolean console, boolean op) {
-		Validate.notNull(command, "命令不能为空");
+		Validate.notNull(command, "Command cannot be null");
 
 		this.command = command;
 		this.delay = delay;

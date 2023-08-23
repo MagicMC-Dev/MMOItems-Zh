@@ -48,7 +48,7 @@ public class EnchantListData implements StatData, Mergeable {
 
 	@Override
 	public void merge(StatData data) {
-		Validate.isTrue(data instanceof EnchantListData, "无法合并两种不同的统计数据类型");
+		Validate.isTrue(data instanceof EnchantListData, "Cannot merge two different stat data types");
 
 		final EnchantListData enchantList = (EnchantListData) data;
 		for (Enchantment enchant : enchantList.getEnchants())

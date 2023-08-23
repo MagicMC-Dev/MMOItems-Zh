@@ -44,7 +44,7 @@ public class CommandListData implements StatData, Mergeable, RandomStatData<Comm
 
     @Override
     public void merge(StatData data) {
-        Validate.isTrue(data instanceof CommandListData, "无法合并两种不同的统计数据类型");
+        Validate.isTrue(data instanceof CommandListData, "Cannot merge two different stat data types");
         commands.addAll(((CommandListData) data).commands);
     }
 

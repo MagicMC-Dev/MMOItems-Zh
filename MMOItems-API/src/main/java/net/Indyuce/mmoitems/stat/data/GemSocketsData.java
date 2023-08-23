@@ -158,7 +158,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
 
     @Override
     public String toString() {
-        return "空:\u00a7b " + getEmptySlots().size() + "\u00a77, Gems:\u00a7b " + getGemstones().size();
+        return "Empty:\u00a7b " + getEmptySlots().size() + "\u00a77, Gems:\u00a7b " + getGemstones().size();
     }
 
     @Override

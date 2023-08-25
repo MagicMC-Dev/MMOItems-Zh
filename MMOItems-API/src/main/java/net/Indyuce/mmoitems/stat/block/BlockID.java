@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockID extends DoubleStat {
 
     public BlockID() {
-        super("BLOCK_ID", Material.STONE, "方块 ID", new String[] { "该值决定将放置哪个自定义方块" }, new String[] { "block" });
+        super("BLOCK_ID", Material.STONE, "方块 ID", new String[] { "该值决定将放置", "哪个自定义方块" }, new String[] { "block" });
     }
 
     @Override

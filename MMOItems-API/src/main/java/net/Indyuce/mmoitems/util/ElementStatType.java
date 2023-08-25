@@ -4,10 +4,10 @@ import io.lumine.mythic.lib.element.Element;
 
 public enum ElementStatType {
     DAMAGE("元素伤害"),
-    DAMAGE_PERCENT("额外伤害 (%)"),
-    WEAKNESS("虚弱  (% ) "),
-    DEFENSE("防御"),
-    DEFENSE_PERCENT("额外防御  (% ) ");
+    DAMAGE_PERCENT("元素额外伤害 (%)"),
+    WEAKNESS("元素虚弱  (%) "),
+    DEFENSE("元素防御"),
+    DEFENSE_PERCENT("元素额外防御  (%) ");
 
     private final String name;
 

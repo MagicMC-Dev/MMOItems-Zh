@@ -19,7 +19,7 @@ public class RegisteredSkill {
     public RegisteredSkill(@NotNull SkillHandler<?> handler, @NotNull ConfigurationSection config) {
         this.handler = handler;
 
-        this.name = Objects.requireNonNull(config.getString("name"), "无法填写技能名称");
+        this.name = Objects.requireNonNull(config.getString("name"), "Could not fill skill name");
         for (String mod : handler.getModifiers()) {
             parameterNames.put(mod, config.getString("modifier." + mod + ".name", UtilityMethods.caseOnWords(mod.replace("_", " ").replace("-", " ").toLowerCase())));
             defaultParameterValues.put(mod, config.getDouble("modifier." + mod + ".default-value"));

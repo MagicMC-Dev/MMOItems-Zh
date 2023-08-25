@@ -31,7 +31,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class MMOUtils {
     public MMOUtils() {
-        throw new IllegalArgumentException("This class cannot be instantiated.");
+        throw new IllegalArgumentException("该类无法实例化");
     }
 
     public static boolean isColorable(@NotNull Particle particle) {

@@ -17,11 +17,11 @@ public class RandomEnchantListData implements RandomStatData<EnchantListData> {
 	private final Map<Enchantment, NumericStatFormula> enchants = new HashMap<>();
 
 	public RandomEnchantListData(ConfigurationSection config) {
-		Validate.notNull(config, "Config cannot be null");
+		Validate.notNull(config, "配置不能为空");
 
 		for (String key : config.getKeys(false)) {
 			Enchantment enchant = Enchants.getEnchant(key);
-			Validate.notNull(enchant, "Could not find enchant with key '" + key + "'");
+			Validate.notNull(enchant, "找不到附魔: '" + key + "'");
 			addEnchant(enchant, new NumericStatFormula(config.get(key)));
 		}
 	}

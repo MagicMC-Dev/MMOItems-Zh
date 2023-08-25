@@ -14,10 +14,10 @@ public class RandomPotionEffectData {
 	private final NumericStatFormula duration, amplifier;
 
 	public RandomPotionEffectData(ConfigurationSection config) {
-		Validate.notNull(config, "Potion effect config cannot be null");
+		Validate.notNull(config, "药水效果配置不能为空");
 
 		type = PotionEffectType.getByName(config.getName().toUpperCase().replace("-", "_").replace(" ", "_"));
-		Validate.notNull(type, "Could not find potion effect with name '" + config.getName() + "'");
+		Validate.notNull(type, "找不到名为 '" + config.getName() + "' 的药水效果");
 
 		duration = new NumericStatFormula(config.get("duration"));
 		amplifier = new NumericStatFormula(config.get("amplifier"));

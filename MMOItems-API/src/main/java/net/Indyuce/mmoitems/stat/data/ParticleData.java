@@ -41,7 +41,7 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
 	}
 
 	public ParticleData(ConfigurationSection config) {
-		Validate.isTrue(config.contains("type") && config.contains("particle"), "Particle is missing type or selected particle.");
+		Validate.isTrue(config.contains("type") && config.contains("particle"), "粒子缺少类型或选定的粒子");
 
 		String format = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
 		type = ParticleType.valueOf(format);

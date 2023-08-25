@@ -12,7 +12,7 @@ public class RandomRestoreData implements RandomStatData<RestoreData> {
 	private final NumericStatFormula health, food, saturation;
 
 	public RandomRestoreData(ConfigurationSection config) {
-		Validate.notNull(config, "Could not load restore config");
+		Validate.notNull(config, "无法加载恢复配置");
 
 		health = config.contains("health") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;
 		food = config.contains("food") ? new NumericStatFormula(config) : NumericStatFormula.ZERO;

@@ -19,7 +19,7 @@ public class RandomPotionEffectListData implements RandomStatData<PotionEffectLi
 	private final List<RandomPotionEffectData> effects = new ArrayList<>();
 
 	public RandomPotionEffectListData(ConfigurationSection config) {
-		Validate.notNull(config, "Config cannot be null");
+		Validate.notNull(config, "配置不能为空");
 
 		// For every config section
 		for (String key : config.getKeys(false)) {
@@ -52,17 +52,17 @@ public class RandomPotionEffectListData implements RandomStatData<PotionEffectLi
 
 						// L
 						} else {
-							throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", key, spl));
+							throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "格式不正确, 应为 $e{Effect}: {Duration},{Amplifier}$b 代替 $i{0} {1}$b.", key, spl));
 						}
 
 					// L
 					} else {
-						throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", key, spl));
+						throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "格式不正确, 应为 $e{Effect}: {Duration},{Amplifier}$b 代替 $i{0} {1}$b.", key, spl));
 					}
 
 				} else {
 
-					throw new IllegalArgumentException("Config cannot be null");
+					throw new IllegalArgumentException("配置不能为空");
 				}
 			}
 		}

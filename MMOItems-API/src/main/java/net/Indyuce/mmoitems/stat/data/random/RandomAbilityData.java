@@ -21,10 +21,10 @@ public class RandomAbilityData {
 	private final Map<String, NumericStatFormula> modifiers = new HashMap<>();
 
 	public RandomAbilityData(ConfigurationSection config) {
-		Validate.isTrue(config.contains("type") && config.contains("mode"), "技能缺少类型或模式");
+		Validate.isTrue(config.contains("type") && config.contains("mode"), "Ability is missing type or mode");
 
 		String abilityFormat = config.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-		Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "找不到名为 '" + abilityFormat + "' 的技能");
+		Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(abilityFormat), "Could not find ability called '" + abilityFormat + "'");
 		ability = MMOItems.plugin.getSkills().getSkill(abilityFormat);
 
 		String modeFormat = config.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");

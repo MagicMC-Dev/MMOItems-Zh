@@ -40,7 +40,7 @@ public class SoundData {
 		}
 
 		else
-			throw new IllegalArgumentException("您必须提供字符串或配置部分");
+			throw new IllegalArgumentException("You must provide a string or config section");
 	}
 
 	public String getSound() {

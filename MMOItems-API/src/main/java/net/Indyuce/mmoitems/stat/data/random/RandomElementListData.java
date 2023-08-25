@@ -21,7 +21,7 @@ public class RandomElementListData implements RandomStatData<ElementListData>, U
     private final Map<Pair<Element, ElementStatType>, NumericStatFormula> stats = new LinkedHashMap<>();
 
     public RandomElementListData(ConfigurationSection config) {
-        Validate.notNull(config, "配置不能为空");
+        Validate.notNull(config, "Config cannot be null");
 
         for (Element element : Element.values())
             for (ElementStatType statType : ElementStatType.values()) {

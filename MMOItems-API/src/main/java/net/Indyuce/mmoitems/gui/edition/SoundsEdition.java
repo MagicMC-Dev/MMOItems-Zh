@@ -1,13 +1,12 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.api.util.AltChar;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.CustomSound;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import io.lumine.mythic.lib.api.util.AltChar;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -35,10 +34,12 @@ public class SoundsEdition extends EditionInventory {
 	}
 
 	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "自定义声音: " + template.getId());
-		int n = 0;
+	public String getName() {
+		return "自定义声音: " + template.getId();
+	}
 
+	@Override
+	public void arrangeInventory() {
 		for (CustomSound sound : CustomSound.values()) {
 			ItemStack soundEvent = sound.getItem().clone();
 			ItemMeta soundEventMeta = soundEvent.getItemMeta();
@@ -65,13 +66,8 @@ public class SoundsEdition extends EditionInventory {
 			soundEventMeta.setLore(eventLore);
 			soundEvent.setItemMeta(soundEventMeta);
 
-			inv.setItem(sound.getSlot(), soundEvent);
-			n += 1;
+			inventory.setItem(sound.getSlot(), soundEvent);
 		}
-
-		addEditionInventoryItems(inv, true);
-
-		return inv;
 	}
 
 	@Override

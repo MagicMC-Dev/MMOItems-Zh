@@ -19,8 +19,8 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.MMOItemIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.VanillaIngredient;
 import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeTypeListGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.BurningRecipeInformation;
 import org.bukkit.Bukkit;
@@ -87,19 +87,19 @@ public class RecipeManager implements Reloadable {
                 if (config.contains(template.getId() + ".base.crafting")) {
 
                     // Get section containing the crafting recipes
-                    ConfigurationSection section = RecipeMakerGUI.getSection(config, template.getId() + ".base.crafting");
+                    ConfigurationSection section = RecipeEditorGUI.getSection(config, template.getId() + ".base.crafting");
 
                     // All loaded recipes
-                    for (String recipeType : RecipeBrowserGUI.getRegisteredRecipes()) {
+                    for (String recipeType : RecipeTypeListGUI.getRegisteredRecipes()) {
 
                         // Is it in-yo?
                         if (section.contains(recipeType)) {
 
                             // Get Registry
-                            RecipeRegistry rr = RecipeBrowserGUI.getRegisteredRecipe(recipeType);
+                            RecipeRegistry rr = RecipeTypeListGUI.getRegisteredRecipe(recipeType);
 
                             // Get recipe type section
-                            ConfigurationSection typeSection = RecipeMakerGUI.getSection(section, recipeType);
+                            ConfigurationSection typeSection = RecipeEditorGUI.getSection(section, recipeType);
 
                             // Register dem
                             for (String recipeName : typeSection.getKeys(false)) {
@@ -150,6 +150,7 @@ public class RecipeManager implements Reloadable {
         Bukkit.getScheduler().runTask(MMOItems.plugin, () -> getBukkitRecipes().forEach(Bukkit::addRecipe));
     }
 
+    @Deprecated
     public void registerBurningRecipe(@NotNull BurningRecipeType recipeType, @NotNull MMOItem mmo, @NotNull BurningRecipeInformation info, int amount, @NotNull NamespacedKey key, boolean hidden) {
 
         // Build its item stacc
@@ -339,7 +340,7 @@ public class RecipeManager implements Reloadable {
     public static WorkbenchIngredient getWorkbenchIngredient(@NotNull String input) throws IllegalArgumentException {
 
         // Read it this other way ~
-        ProvidedUIFilter poof = ProvidedUIFilter.getFromString(RecipeMakerGUI.poofFromLegacy(input), null);
+        ProvidedUIFilter poof = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(input), null);
 
         // Air is AIR
         if (poof == null) {
@@ -387,6 +388,7 @@ public class RecipeManager implements Reloadable {
      *
      * @author cympe
      */
+    @Deprecated
     public enum BurningRecipeType {
         FURNACE(FurnaceRecipe::new),
         SMOKER(SmokingRecipe::new),

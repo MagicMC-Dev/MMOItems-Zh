@@ -100,7 +100,7 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new AbilityListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+		new AbilityListEdition(inv.getPlayer(), inv.getEdited()).open(inv);
 	}
 
 	@Override

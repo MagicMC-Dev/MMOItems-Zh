@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.interpreter;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,11 +49,11 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
             String row = config.size() > r ? config.get(r) : null;
 
             // Update it ig
-            String poof = RecipeMakerGUI.poofFromLegacy(row);
+            String poof = RecipeEditorGUI.poofFromLegacy(row);
 
             // Parse
             ProvidedUIFilter parsed = ProvidedUIFilter.getFromString(poof, null);
-            if (parsed == null) { parsed = RecipeMakerGUI.AIR.clone(); }
+            if (parsed == null) { parsed = RecipeEditorGUI.AIR.clone(); }
 
             // Add
             ret[r] = parsed;
@@ -93,7 +93,7 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
         for (int r = 0; r < 9; r++) {
 
             // Get row
-            ProvidedUIFilter poof = ingredients.length > r ? ingredients[r] : RecipeMakerGUI.AIR.clone();
+            ProvidedUIFilter poof = ingredients.length > r ? ingredients[r] : RecipeEditorGUI.AIR.clone();
 
             // Add poof
             ret.add(poof.toString());
@@ -148,7 +148,7 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
     /**
      * Generate an interpreter from this <i>updated</i> configuration section.
      * <br><br>
-     * By 'updated' I mean that, for now, we <b>should call {@link RecipeMakerGUI#moveInput(ConfigurationSection, String)}
+     * By 'updated' I mean that, for now, we <b>should call {@link RecipeEditorGUI#moveInput(ConfigurationSection, String)}
      * on this configuration before passing it here</b>, to move the input list from being the recipe name
      * section itself to the 'input' section within.
      *
@@ -160,8 +160,8 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
         section = recipeNameSection;
 
         // Build Input list
-        inputRecipe = buildIngredientsFromList(section.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS));
-        outputRecipe = buildIngredientsFromList(section.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS));
+        inputRecipe = buildIngredientsFromList(section.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS));
+        outputRecipe = buildIngredientsFromList(section.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS));
     }
 
     @Override
@@ -171,7 +171,7 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
         setInput(slot, input);
 
         // Save
-        section.set(RecipeMakerGUI.INPUT_INGREDIENTS, toYML(inputRecipe));
+        section.set(RecipeEditorGUI.INPUT_INGREDIENTS, toYML(inputRecipe));
     }
 
     @Override
@@ -181,10 +181,10 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
         setOutput(slot, input);
 
         // Save
-        section.set(RecipeMakerGUI.OUTPUT_INGREDIENTS, toYML(outputRecipe));
+        section.set(RecipeEditorGUI.OUTPUT_INGREDIENTS, toYML(outputRecipe));
     }
 
-    @Override public void deleteInput(int slot) { editInput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteInput(int slot) { editInput(RecipeEditorGUI.AIR.clone(), slot); }
 
-    @Override public void deleteOutput(int slot) { editOutput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteOutput(int slot) { editOutput(RecipeEditorGUI.AIR.clone(), slot); }
 }

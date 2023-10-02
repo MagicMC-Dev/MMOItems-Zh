@@ -1,14 +1,12 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.stat.data.ParticleData;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -16,7 +14,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,11 +26,12 @@ public class ArrowParticlesEdition extends EditionInventory {
 	}
 
 	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "箭头粒子: " + template.getId());
-		// FileConfiguration config =
-		// template.getType().getConfigFile().getConfig();
+	public String getName() {
+		return "箭头粒子: " + template.getId();
+	}
 
+	@Override
+	public void arrangeInventory() {
 		Particle particle = null;
 		try {
 			particle = Particle.valueOf(getEditedSection().getString("arrow-particles.particle"));
@@ -99,7 +97,7 @@ public class ArrowParticlesEdition extends EditionInventory {
 				speedMeta.setLore(speedLore);
 				speed.setItemMeta(speedMeta);
 
-				inv.setItem(41, speed);
+				inventory.setItem(41, speed);
 			} else {
 				ItemStack colorItem = VersionMaterial.GRAY_DYE.toItem();
 				ItemMeta colorItemMeta = colorItem.getItemMeta();
@@ -115,16 +113,13 @@ public class ArrowParticlesEdition extends EditionInventory {
 				colorItemMeta.setLore(colorItemLore);
 				colorItem.setItemMeta(colorItemMeta);
 
-				inv.setItem(41, colorItem);
+				inventory.setItem(41, colorItem);
 			}
 		}
 
-		addEditionInventoryItems(inv, true);
-		inv.setItem(30, particleItem);
-		inv.setItem(23, amount);
-		inv.setItem(32, offset);
-
-		return inv;
+		inventory.setItem(30, particleItem);
+		inventory.setItem(23, amount);
+		inventory.setItem(32, offset);
 	}
 
 	@Override

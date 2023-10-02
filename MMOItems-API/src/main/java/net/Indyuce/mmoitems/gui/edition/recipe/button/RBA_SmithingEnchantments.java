@@ -1,10 +1,10 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.rba;
+package net.Indyuce.mmoitems.gui.edition.recipe.button;
 
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.api.crafting.recipe.SmithingCombinationType;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.type.RBA_ChooseableButton;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.type.RBA_ChooseableButton;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
      *
      * @param inv The edition inventory this is a button of
      */
-    public RBA_SmithingEnchantments(@NotNull RecipeMakerGUI inv) { super(inv); }
+    public RBA_SmithingEnchantments(@NotNull RecipeEditorGUI inv) { super(inv); }
 
     @NotNull final ItemStack chooseableButton = ItemFactory.of(Material.ENCHANTING_TABLE).name("\u00a7a附魔转移").lore(SilentNumbers.chop(
             "原物品的附魔效果会怎样？附魔的原物品会产生附魔的产出物品吗？"

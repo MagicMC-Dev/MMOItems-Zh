@@ -1,6 +1,8 @@
 package net.Indyuce.mmoitems.manager;
 
+import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,21 @@ public class LoreFormatManager implements Reloadable {
         return formats.values();
     }
 
+    @NotNull
+    public List<String> getFormat(@NotNull MMOItem mmoitem) {
+        if (mmoitem.hasData(ItemStats.LORE_FORMAT)) {
+            final List<String> format = formats.get(mmoitem.getData(ItemStats.LORE_FORMAT).toString());
+            if (format != null) return format;
+        }
+
+        if (mmoitem.getType().getLoreFormat() != null) {
+            final List<String> format = formats.get(mmoitem.getType().getLoreFormat());
+            if (format != null) return format;
+        }
+
+        return MMOItems.plugin.getLanguage().getDefaultLoreFormat();
+    }
+
     /**
      * Find a lore format file by specifying its name
      *
@@ -43,6 +60,7 @@ public class LoreFormatManager implements Reloadable {
      * @return The lore format first found from the ones specified, or the default one.
      */
     @NotNull
+    @Deprecated
     public List<String> getFormat(@NotNull String... prioritizedFormatNames) {
 
         /*
@@ -51,8 +69,7 @@ public class LoreFormatManager implements Reloadable {
          */
         for (String format : prioritizedFormatNames) {
             List<String> found = formats.get(format);
-            if (found != null)
-                return found;
+            if (found != null) return found;
         }
 
         // No lore format found / specified. Go with default.

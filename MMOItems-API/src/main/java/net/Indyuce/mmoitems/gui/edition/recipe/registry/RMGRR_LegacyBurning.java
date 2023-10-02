@@ -11,11 +11,11 @@ import net.Indyuce.mmoitems.api.recipe.workbench.ingredients.WorkbenchIngredient
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_BurningLegacy;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_CookingTime;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_Experience;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_CookingTime;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_Experience;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.BurningRecipeInformation;
 import net.Indyuce.mmoitems.manager.RecipeManager;
 import org.apache.commons.lang.Validate;
@@ -33,19 +33,28 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Gunging
  */
-public abstract class RMGRR_LegacyBurning implements RecipeRegistry {
+@Deprecated
+public class RMGRR_LegacyBurning implements RecipeRegistry {
+    private final CraftingType craftingType;
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NotNull
+    private final ItemStack displayListItem;
 
-    @NotNull public abstract CraftingType getLegacyBurningType();
+    public RMGRR_LegacyBurning(CraftingType craftingType) {
+        this.craftingType = craftingType;
+        displayListItem = RecipeEditorGUI.rename(craftingType.getItem(), FFPMMOItems.get().getExampleFormat() + capitalizeFirst(getRecipeConfigPath()) + " Recipe");
+    }
+
+    @NotNull
+    public CraftingType getLegacyBurningType() {
+        return craftingType;
+    }
 
     @NotNull public static String capitalizeFirst(@NotNull String str) { return str.substring(0, 1).toUpperCase() + str.substring(1); }
 
-    @NotNull @Override public String getRecipeConfigPath() { return getLegacyBurningType().name().toLowerCase(); }
+    @NotNull @Override public String getRecipeConfigPath() { return craftingType.name().toLowerCase(); }
 
     @NotNull @Override public String getRecipeTypeName() { return "§8{§4§oL§8} " + capitalizeFirst(getRecipeConfigPath()); }
-
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NotNull
-    private final ItemStack displayListItem = RecipeMakerGUI.rename(getLegacyBurningType().getItem(), FFPMMOItems.get().getExampleFormat() + capitalizeFirst(getRecipeConfigPath()) + " Recipe");
 
     @NotNull
     @Override
@@ -53,7 +62,7 @@ public abstract class RMGRR_LegacyBurning implements RecipeRegistry {
         return displayListItem;
     }
 
-    @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) { new RMG_BurningLegacy(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage()); }
+    @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) { new RMG_BurningLegacy(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv); }
 
     /**
      * Actually doesnt really send this thing to MythicLib
@@ -66,7 +75,7 @@ public abstract class RMGRR_LegacyBurning implements RecipeRegistry {
         Validate.isTrue(namespace.getValue() != null);
 
         // Get correct section
-        ConfigurationSection recipeSection = RecipeMakerGUI.getSection(recipeTypeSection, recipeName);
+        ConfigurationSection recipeSection = RecipeEditorGUI.getSection(recipeTypeSection, recipeName);
 
         // Get ingredient
         String itemIngredient = recipeSection.getString("item");
@@ -84,7 +93,7 @@ public abstract class RMGRR_LegacyBurning implements RecipeRegistry {
 
         // Yes
         MMOItems.plugin.getRecipes().registerBurningRecipe(
-                getLegacyBurningType().getBurningType(),
+                craftingType.getBurningType(),
                 template.newBuilder(0, null).build(),
                 info, outputAmount, namespace.getValue(), hideBook);
 

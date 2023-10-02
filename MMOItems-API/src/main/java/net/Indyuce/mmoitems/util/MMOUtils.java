@@ -57,9 +57,15 @@ public class MMOUtils {
         return str != null && !str.isEmpty();
     }
 
+    @NotNull
+    public static String requireNonEmptyElse(@Nullable String str, @NotNull String fallback) {
+        return isNonEmpty(str) ? str : Objects.requireNonNull(fallback);
+    }
+
     /**
      * @return The skull texture URL from a given player head
      */
+    @Deprecated
     public static String getSkullTextureURL(ItemStack item) {
         try {
             ItemMeta meta = item.getItemMeta();
@@ -87,8 +93,8 @@ public class MMOUtils {
      * - for item upgrading TODO
      * - item repairing
      *
-     * @param ref1      First reference
-     * @param ref2      Second reference
+     * @param ref1 First reference
+     * @param ref2 Second reference
      * @return If items can interact
      */
     public static boolean checkReference(@Nullable String ref1, @Nullable String ref2) {

@@ -32,7 +32,7 @@ public class MMOItemTrigger extends Trigger {
 
 	@Override
 	public void apply(PlayerData player) {
-		ItemStack item = template.newBuilder(net.Indyuce.mmoitems.api.player.PlayerData.get(player.getUniqueId()).getRPG()).build().newBuilder().build();
+		ItemStack item = template.newBuilder(net.Indyuce.mmoitems.api.player.PlayerData.get(player.getPlayer()).getRPG()).build().newBuilder().build();
 		item.setAmount(amount);
 		new SmartGive(player.getPlayer()).give(item);
 	}

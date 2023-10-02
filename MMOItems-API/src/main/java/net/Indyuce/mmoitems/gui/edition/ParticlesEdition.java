@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.particle.api.ParticleType;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.particle.api.ParticleType;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -32,8 +31,12 @@ public class ParticlesEdition extends EditionInventory {
     }
 
     @Override
-    public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "粒子效果 E.: " + template.getId());
+    public String getName() {
+        return "粒子效果: " + template.getId();
+    }
+
+    @Override
+    public void arrangeInventory() {
         int[] slots = {37, 38, 39, 40, 41, 42, 43};
         int n = 0;
 
@@ -80,7 +83,7 @@ public class ParticlesEdition extends EditionInventory {
 
                 modifierItem = NBTItem.get(modifierItem).addTag(new ItemTag("patternModifierId", modifier)).toItem();
 
-                inv.setItem(slots[n++], modifierItem);
+                inventory.setItem(slots[n++], modifierItem);
             }
         }
 
@@ -125,7 +128,7 @@ public class ParticlesEdition extends EditionInventory {
             colorItemMeta.setLore(colorItemLore);
             colorItem.setItemMeta(colorItemMeta);
 
-            inv.setItem(25, colorItem);
+            inventory.setItem(25, colorItem);
         }
 
         ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
@@ -134,13 +137,10 @@ public class ParticlesEdition extends EditionInventory {
         glass.setItemMeta(glassMeta);
 
         while (n < slots.length)
-            inv.setItem(slots[n++], glass);
+            inventory.setItem(slots[n++], glass);
 
-        addEditionInventoryItems(inv, true);
-        inv.setItem(21, particleTypeItem);
-        inv.setItem(23, particleItem);
-
-        return inv;
+        inventory.setItem(21, particleTypeItem);
+        inventory.setItem(23, particleItem);
     }
 
     @Override

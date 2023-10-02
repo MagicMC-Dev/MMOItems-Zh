@@ -1,9 +1,9 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.rba.type;
+package net.Indyuce.mmoitems.gui.edition.recipe.button.type;
 
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public abstract class RBA_ChooseableButton extends RecipeButtonAction {
      *
      * @param inv The edition inventory this is a button of
      */
-    public RBA_ChooseableButton(@NotNull RecipeMakerGUI inv) { super(inv); }
+    public RBA_ChooseableButton(@NotNull RecipeEditorGUI inv) { super(inv); }
 
     /**
      * Cycles to the next value
@@ -91,7 +91,6 @@ public abstract class RBA_ChooseableButton extends RecipeButtonAction {
 
         // Build lore to add: Current value and definition
         ArrayList<String> addedDefinitions = new ArrayList<>();
-        addedDefinitions.add("");
         addedDefinitions.add("\u00a77当前值:\u00a73 " + current);
         addedDefinitions.addAll(SilentNumbers.chop(getChooseableDefinition(current), 50, "  \u00a7b\u00a7o"));
         addedDefinitions.add("");
@@ -106,7 +105,7 @@ public abstract class RBA_ChooseableButton extends RecipeButtonAction {
             addedDefinitions.add(pick + "  " + AltChar.smallListDash + " \u00a77" + str); }
 
         // Clone button and add the lore
-        return RecipeMakerGUI.addLore(getChooseableButton().clone(), addedDefinitions);
+        return RecipeEditorGUI.addLore(getChooseableButton().clone(), addedDefinitions);
     }
 
     /**

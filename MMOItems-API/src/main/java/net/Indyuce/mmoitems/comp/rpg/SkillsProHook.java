@@ -35,19 +35,19 @@ public class SkillsProHook implements RPGHandler, Listener {
 
         @Override
         public int getLevel() {
-            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getUniqueId());
+            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getPlayer().getUniqueId());
             return info.getLevel();
         }
 
         @Override
         public String getClassName() {
-            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getUniqueId());
+            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getPlayer().getUniqueId());
             return ChatColor.stripColor(info.getSkill().getDisplayName());
         }
 
         @Override
         public double getMana() {
-            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getUniqueId());
+            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getPlayer().getUniqueId());
             return info.getEnergy();
         }
 
@@ -58,7 +58,7 @@ public class SkillsProHook implements RPGHandler, Listener {
 
         @Override
         public void setMana(double value) {
-            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getUniqueId());
+            SkilledPlayer info = SkillsPro.get().getPlayerDataManager().getData(getPlayerData().getPlayer().getUniqueId());
             info.setEnergy(value);
         }
 

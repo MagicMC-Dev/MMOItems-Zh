@@ -16,7 +16,7 @@ public class StelliumCondition extends Condition {
 
 	@Override
 	public boolean isMet(PlayerData data) {
-		return net.Indyuce.mmocore.api.player.PlayerData.get(data.getUniqueId()).getStellium() >= amount;
+		return net.Indyuce.mmocore.api.player.PlayerData.get(data.getPlayer()).getStellium() >= amount;
 	}
 
 	@Override
@@ -26,6 +26,6 @@ public class StelliumCondition extends Condition {
 
 	@Override
 	public void whenCrafting(PlayerData data) {
-		net.Indyuce.mmocore.api.player.PlayerData.get(data.getUniqueId()).giveStellium(-amount);
+		net.Indyuce.mmocore.api.player.PlayerData.get(data.getPlayer()).giveStellium(-amount);
 	}
 }

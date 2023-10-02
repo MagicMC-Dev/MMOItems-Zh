@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.rba;
+package net.Indyuce.mmoitems.gui.edition.recipe.button;
 
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.util.AltChar;
@@ -8,7 +8,7 @@ import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -33,12 +33,12 @@ public class RBA_AmountOutput extends RecipeButtonAction {
      * @param inv Inventory this button is part of
      * @param resultItem Output item of this recipe
      */
-    public RBA_AmountOutput(@NotNull RecipeMakerGUI inv, @NotNull ItemStack resultItem) {
+    public RBA_AmountOutput(@NotNull RecipeEditorGUI inv, @NotNull ItemStack resultItem) {
         super(inv);
 
         // Get item
-        button = RecipeMakerGUI.rename(ItemFactory.of(resultItem.getType()).lore(SilentNumbers.chop(
-                "玩家每次制作时产生的物品数量"
+        button = RecipeEditorGUI.rename(ItemFactory.of(resultItem.getType()).lore(SilentNumbers.chop(
+                "玩家每次制作时产生的物品数量."
                 , 65, "\u00a77")).build(), "\u00a7c选择输出数量");
 
 
@@ -67,7 +67,7 @@ public class RBA_AmountOutput extends RecipeButtonAction {
     @Override public boolean runPrimary() {
 
         // Query user for input
-        new StatEdition(inv, ItemStats.CRAFTING, RecipeMakerGUI.PRIMARY, this).enable(amountLog);
+        new StatEdition(inv, ItemStats.CRAFTING, RecipeEditorGUI.PRIMARY, this).enable(amountLog);
 
         // Success
         return true;
@@ -141,7 +141,7 @@ public class RBA_AmountOutput extends RecipeButtonAction {
         ret.setAmount(getOutputAmount());
 
         // That's it
-        return RecipeMakerGUI.addLore(ret, SilentNumbers.toArrayList( "",
+        return RecipeEditorGUI.addLore(ret, SilentNumbers.toArrayList( "",
                 ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置为 1",
                 ChatColor.YELLOW + AltChar.listDash + "► 左键单击可编辑金额" ));
     }

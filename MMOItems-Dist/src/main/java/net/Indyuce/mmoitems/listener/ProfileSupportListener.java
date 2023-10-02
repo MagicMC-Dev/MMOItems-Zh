@@ -1,6 +1,6 @@
 package net.Indyuce.mmoitems.listener;
 
-import fr.phoenixdevt.profile.event.ProfileSelectEvent;
+import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

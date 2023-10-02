@@ -96,7 +96,7 @@ public class MMOCoreHook implements RPGHandler, Listener {
         public MMOCoreRPGPlayer(PlayerData playerData) {
             super(playerData);
 
-            data = net.Indyuce.mmocore.api.player.PlayerData.get(playerData.getUniqueId());
+            data = net.Indyuce.mmocore.api.player.PlayerData.get(playerData.getPlayer());
         }
 
         public net.Indyuce.mmocore.api.player.PlayerData getData() {

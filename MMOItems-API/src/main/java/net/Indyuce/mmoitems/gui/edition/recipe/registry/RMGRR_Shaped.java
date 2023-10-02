@@ -15,10 +15,10 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Shaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_Shaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import org.bukkit.Material;
@@ -35,11 +35,11 @@ public class RMGRR_Shaped implements RecipeRegistry {
     @NotNull @Override public String getRecipeConfigPath() { return "shaped"; }
     @NotNull @Override public String getRecipeTypeName() { return "Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.CRAFTING_TABLE), FFPMMOItems.get().getExampleFormat() + "有序合成配方");
+    @NotNull final ItemStack displayListItem = RecipeEditorGUI.rename(new ItemStack(Material.CRAFTING_TABLE), FFPMMOItems.get().getExampleFormat() + "有序合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
-        new RMG_Shaped(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage());
+        new RMG_Shaped(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv);
     }
 
     @NotNull
@@ -47,17 +47,17 @@ public class RMGRR_Shaped implements RecipeRegistry {
     public MythicRecipeBlueprint sendToMythicLib(@NotNull MMOItemTemplate template, @NotNull ConfigurationSection recipeTypeSection, @NotNull String recipeName, @NotNull Ref<NamespacedKey> namespace, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
         // Read some values
-        ConfigurationSection recipeSection = RecipeMakerGUI.moveInput(recipeTypeSection, recipeName);
+        ConfigurationSection recipeSection = RecipeEditorGUI.moveInput(recipeTypeSection, recipeName);
 
         NamespacedKey nk = namespace.getValue();
         if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法 (空) 命名空间")); }
 
         // Identify the input
-        ShapedRecipe input = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的成型配方, $fignored$b")); }
+        ShapedRecipe input = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS)), ffp);
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的合成配方, $fignored$b.")); }
 
         // Read the options and output
-        ShapedRecipe output = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
+        ShapedRecipe output = shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS)), ffp);
         int outputAmount = recipeSection.getInt(RBA_AmountOutput.AMOUNT_INGREDIENTS, 1);
         boolean hideBook = recipeSection.getBoolean(RBA_HideFromBook.BOOK_HIDDEN, false);
 
@@ -153,9 +153,9 @@ public class RMGRR_Shaped implements RecipeRegistry {
             if (positions.length != 3) { throw new IllegalArgumentException("无效的制作表 $u" + updatedRow + "$b ($f不完全是 3 个格子的长宽度$b)."); }
 
             // Identify
-            ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);
-            ProvidedUIFilter center = RecipeMakerGUI.readIngredientFrom(positions[1], ffp);
-            ProvidedUIFilter right = RecipeMakerGUI.readIngredientFrom(positions[2], ffp);
+            ProvidedUIFilter left = RecipeEditorGUI.readIngredientFrom(positions[0], ffp);
+            ProvidedUIFilter center = RecipeEditorGUI.readIngredientFrom(positions[1], ffp);
+            ProvidedUIFilter right = RecipeEditorGUI.readIngredientFrom(positions[2], ffp);
             if (!left.isAir()) { nonAirFound = true; }
             if (!center.isAir()) { nonAirFound = true; }
             if (!right.isAir()) { nonAirFound = true; }

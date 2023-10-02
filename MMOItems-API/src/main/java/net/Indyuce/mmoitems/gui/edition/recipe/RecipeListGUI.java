@@ -5,15 +5,13 @@ import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,56 +55,39 @@ public class RecipeListGUI extends EditionInventory {
         listedItem = getRecipeRegistry().getDisplayListItem();
 
         // Obtain the crafting section
-        ConfigurationSection section = RecipeMakerGUI.getSection(getEditedSection(), "crafting");
-        ConfigurationSection type = RecipeMakerGUI.getSection(section, kind.getRecipeConfigPath());
+        ConfigurationSection section = RecipeEditorGUI.getSection(getEditedSection(), "crafting");
+        ConfigurationSection type = RecipeEditorGUI.getSection(section, kind.getRecipeConfigPath());
 
         // What is all the recipes within this kind?
-        for (String recipeName : type.getValues(false).keySet()) {
-            if (recipeName == null || recipeName.isEmpty()) { continue; }
+        recipeNames.addAll(type.getKeys(false));
 
-            /*
-             * This is now a for loop going through all the recipes
-             * written onto this item's config.
-             */
-            recipeNames.add(recipeName);
-        }
+        page = 0;
     }
 
-    int currentPage;
     int createSlot = -1;
     @NotNull final HashMap<Integer, String> recipeMap = new HashMap<>();
 
-    @NotNull @Override public Inventory getInventory() {
-
-        // Create and prepare
-        Inventory inv = Bukkit.createInventory(this, 54, "选择 " + getRecipeRegistry().getRecipeTypeName() + " 配方");
-
-        // Put buttons
-        addEditionInventoryItems(inv, true);
-
-        // Arrange yes
-        arrangeInventory(inv);
-
-        // That's it lets GOOOO
-        return inv;
+    @Override
+    public String getName() {
+        return "选择 " + getRecipeRegistry().getRecipeTypeName() + " 配方";
     }
+
     /**
      * Updates the inventory, refreshes the page number whatever.
-     *
-     * @param inv Inventory object to edit
      */
-    void arrangeInventory(@NotNull Inventory inv) {
+    @Override
+    public void arrangeInventory() {
 
         // Start fresh
         recipeMap.clear();
         createSlot = -1;
 
         // Include page buttons
-        if (currentPage > 0) { inv.setItem(27, prevPage); }
-        if (recipeNames.size() >= ((currentPage + 1) * 21)) { inv.setItem(36, nextPage); }
+        if (page > 0) { inventory.setItem(27, prevPage); }
+        if (recipeNames.size() >= ((page + 1) * 21)) { inventory.setItem(36, nextPage); }
 
         // Fill the space I guess
-        for (int p = 21 * currentPage; p < 21 * (currentPage + 1); p++) {
+        for (int p = 21 * page; p < 21 * (page + 1); p++) {
 
             /*
              * The job of this is to identify which slots of this
@@ -131,7 +112,7 @@ public class RecipeListGUI extends EditionInventory {
             if (p == recipeNames.size()) {
 
                 // Rename list item...
-                inv.setItem(absolute, RecipeMakerGUI.rename(new ItemStack(Material.NETHER_STAR),   FFPMMOItems.get().getBodyFormat() + "创建新合成配方 " + SilentNumbers.getItemName(getListedItem(), false)));
+                inventory.setItem(absolute, RecipeEditorGUI.rename(new ItemStack(Material.NETHER_STAR),   FFPMMOItems.get().getBodyFormat() + "新建配方 " + SilentNumbers.getItemName(getListedItem(), false)));
 
                 // If this slot is clicked, a new recipe will be created.
                 createSlot = absolute;
@@ -140,19 +121,20 @@ public class RecipeListGUI extends EditionInventory {
             } else if (p > recipeNames.size()) {
 
                 // Just snooze
-                inv.setItem(absolute, noRecipe);
+                inventory.setItem(absolute, noRecipe);
 
             // There exists a recipe for this slot
             } else {
 
                 // Display name
-                inv.setItem(absolute, RecipeMakerGUI.rename(getListedItem().clone(),  FFPMMOItems.get().getBodyFormat() + "编辑 " + FFPMMOItems.get().getInputFormat() + recipeNames.get(p)));
+                inventory.setItem(absolute, RecipeEditorGUI.rename(getListedItem().clone(),  FFPMMOItems.get().getBodyFormat() + "编辑 " + FFPMMOItems.get().getInputFormat() + recipeNames.get(p)));
 
                 // Store
                 recipeMap.put(absolute, recipeNames.get(p));
             }
         }
     }
+
     public static int page(int p) {
 
         // Remove multiples of 21
@@ -195,15 +177,15 @@ public class RecipeListGUI extends EditionInventory {
             if (event.getSlot() == 27) {
 
                 // Retreat page
-                currentPage--;
-                arrangeInventory(event.getView().getTopInventory());
+                page--;
+                refreshInventory();
 
             // Next Page
             } else if (event.getSlot() == 36) {
 
                 // Advance page
-                currentPage++;
-                arrangeInventory(event.getView().getTopInventory());
+                page++;
+                refreshInventory();
 
             // Create a new recipe
             } else if (event.getSlot() == createSlot) {
@@ -239,13 +221,10 @@ public class RecipeListGUI extends EditionInventory {
             if (recipeName != null) {
 
                 // Delete that
-                ConfigurationSection section = RecipeMakerGUI.getSection(getEditedSection(), "crafting");
-                ConfigurationSection type = RecipeMakerGUI.getSection(section, getRecipeRegistry().getRecipeConfigPath());
+                ConfigurationSection section = RecipeEditorGUI.getSection(getEditedSection(), "crafting");
+                ConfigurationSection type = RecipeEditorGUI.getSection(section, getRecipeRegistry().getRecipeConfigPath());
                 recipeNames.remove(recipeName);
                 type.set(recipeName, null);
-
-                // Refresh
-                arrangeInventory(event.getView().getTopInventory());
 
                 // Register edition
                 registerTemplateEdition();

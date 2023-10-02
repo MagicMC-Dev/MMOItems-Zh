@@ -35,7 +35,7 @@ public class CustomSkull extends ConfigItem {
         AdventureUtils.setDisplayName(meta, getName());
         meta.addItemFlags(ItemFlag.values());
 
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "SkullTexture");
         gameProfile.getProperties().put("textures", new Property("textures", textureValue));
         try {
             Field profileField = meta.getClass().getDeclaredField("profile");

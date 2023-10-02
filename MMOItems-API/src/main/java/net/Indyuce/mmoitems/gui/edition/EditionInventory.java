@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public abstract class EditionInventory extends PluginInventory {
+
+    @Nullable
+    protected Inventory inventory;
 
     /**
      * Item template currently being edited. This field is not final as it is
@@ -44,6 +48,8 @@ public abstract class EditionInventory extends PluginInventory {
      */
     private final ConfigFile configFile;
 
+    private final boolean displaysBack;
+
     /**
      * Template modifier being edited, if it is null then the player is directly
      * base item data
@@ -55,10 +61,16 @@ public abstract class EditionInventory extends PluginInventory {
     private TemplateModifier editedModifier;
 
     private ItemStack cachedItem;
-    int previousPage;
+    private int previousPage;
 
     public EditionInventory(@NotNull Player player, @NotNull MMOItemTemplate template) {
+        this(player, template, true);
+    }
+
+    public EditionInventory(@NotNull Player player, @NotNull MMOItemTemplate template, boolean displaysBack) {
         super(player);
+
+        this.displaysBack = displaysBack;
 
         // For logging back to the player
         ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
@@ -71,6 +83,53 @@ public abstract class EditionInventory extends PluginInventory {
         if (player.getOpenInventory().getTopInventory().getHolder() instanceof EditionInventory)
             this.cachedItem = ((EditionInventory) player.getOpenInventory().getTopInventory().getHolder()).cachedItem;
     }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public abstract void arrangeInventory();
+
+    /**
+     * Refreshes the inventory but does not open it again for the player.
+     * Has the same clientside effect as {@link #open()} but does not
+     * create & open the inventory again.
+     */
+    public void refreshInventory() {
+        Validate.notNull(inventory, "Inventory has never been opened");
+        inventory.clear();
+        // updateCachedItem();
+        addEditionItems();
+        arrangeInventory();
+    }
+
+    /**
+     * Updates and open up the inventory to the player.
+     */
+    public void open(@Nullable EditionInventory previousInventory) {
+        previousPage = previousInventory == null ? 0 : previousInventory.previousPage;
+        open();
+    }
+
+    @Deprecated
+    public void open(int previousPage) {
+        this.previousPage = previousPage;
+        open();
+    }
+
+    /**
+     * Updates and open up the inventory to the player.
+     */
+    @Override
+    public void open() {
+        if (inventory == null) inventory = Bukkit.createInventory(this, 54, getName());
+        addEditionItems();
+        arrangeInventory();
+        super.open();
+    }
+
+    public abstract String getName();
 
     public MMOItemTemplate getEdited() {
         return template;
@@ -128,7 +187,8 @@ public abstract class EditionInventory extends PluginInventory {
          */
         Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
             updateCachedItem();
-            open();
+            refreshInventory();
+            //open();
         });
     }
 
@@ -148,7 +208,7 @@ public abstract class EditionInventory extends PluginInventory {
         return cachedItem;
     }
 
-    public void addEditionInventoryItems(Inventory inv, boolean displayBack) {
+    public void addEditionItems() {
         ItemStack get = new ItemStack(Material.CHEST);
         ItemMeta getMeta = get.getItemMeta();
         getMeta.addItemFlags(ItemFlag.values());
@@ -162,22 +222,17 @@ public abstract class EditionInventory extends PluginInventory {
         getMeta.setLore(getLore);
         get.setItemMeta(getMeta);
 
-        if (displayBack) {
+        if (displaysBack) {
             ItemStack back = new ItemStack(Material.BARRIER);
             ItemMeta backMeta = back.getItemMeta();
             backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " 返回");
             back.setItemMeta(backMeta);
 
-            inv.setItem(6, back);
+            inventory.setItem(6, back);
         }
 
-        inv.setItem(2, get);
-        inv.setItem(4, getCachedItem());
-    }
-
-    public void open(int page) {
-        previousPage = page;
-        open();
+        inventory.setItem(2, get);
+        inventory.setItem(4, getCachedItem());
     }
 
     public int getPreviousPage() {

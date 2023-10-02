@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.version.VersionMaterial;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.item.util.NamedItemStack;
-import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,9 +30,12 @@ public class UpgradingEdition extends EditionInventory {
 	}
 
 	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "升级设置: " + template.getId());
+	public String getName() {
+		return "升级设置: " + template.getId();
+	}
 
+	@Override
+	public void arrangeInventory() {
 		boolean workbench = getEditedSection().getBoolean("upgrade.workbench");
 		if (!template.getType().corresponds(Type.CONSUMABLE)) {
 
@@ -49,7 +51,7 @@ public class UpgradingEdition extends EditionInventory {
 			workbenchItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击进行选择");
 			workbenchItemMeta.setLore(workbenchItemLore);
 			workbenchItem.setItemMeta(workbenchItemMeta);
-			inv.setItem(20, workbenchItem);
+			inventory.setItem(20, workbenchItem);
 
 			String upgradeTemplate = getEditedSection().getString("upgrade.template");
 			ItemStack templateItem = new ItemStack(VersionMaterial.OAK_SIGN.toMaterial());
@@ -66,7 +68,7 @@ public class UpgradingEdition extends EditionInventory {
 			templateItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			templateItemMeta.setLore(templateItemLore);
 			templateItem.setItemMeta(templateItemMeta);
-			inv.setItem(22, templateItem);
+			inventory.setItem(22, templateItem);
 
 			int max = getEditedSection().getInt("upgrade.max");
 			ItemStack maxItem = new ItemStack(Material.BARRIER);
@@ -82,7 +84,7 @@ public class UpgradingEdition extends EditionInventory {
 			maxItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			maxItemMeta.setLore(maxItemLore);
 			maxItem.setItemMeta(maxItemMeta);
-			inv.setItem(40, maxItem);
+			inventory.setItem(40, maxItem);
 
 			int min = getEditedSection().getInt("upgrade.min", 0);
 			ItemStack minItem = new ItemStack(Material.BARRIER);
@@ -98,10 +100,10 @@ public class UpgradingEdition extends EditionInventory {
 			minItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			minItemMeta.setLore(minItemLore);
 			minItem.setItemMeta(minItemMeta);
-			inv.setItem(41, minItem);
+			inventory.setItem(41, minItem);
 		} else {
-			inv.setItem(20, notAvailable);
-			inv.setItem(22, notAvailable);
+			inventory.setItem(20, notAvailable);
+			inventory.setItem(22, notAvailable);
 		}
 
 		if (!workbench || template.getType().corresponds(Type.CONSUMABLE)) {
@@ -124,9 +126,9 @@ public class UpgradingEdition extends EditionInventory {
 			referenceItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 			referenceItemMeta.setLore(referenceItemLore);
 			referenceItem.setItemMeta(referenceItemMeta);
-			inv.setItem(38, referenceItem);
+			inventory.setItem(38, referenceItem);
 		} else
-			inv.setItem(38, notAvailable);
+			inventory.setItem(38, notAvailable);
 
 		double success = getEditedSection().getDouble("upgrade.success");
 		ItemStack successItem = new ItemStack(VersionMaterial.EXPERIENCE_BOTTLE.toMaterial());
@@ -143,7 +145,7 @@ public class UpgradingEdition extends EditionInventory {
 		successItemLore.add(ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置");
 		successItemMeta.setLore(successItemLore);
 		successItem.setItemMeta(successItemMeta);
-		inv.setItem(24, successItem);
+		inventory.setItem(24, successItem);
 
 		if (success > 0 && !template.getType().corresponds(Type.CONSUMABLE)) {
 			ItemStack destroyOnFail = new ItemStack(Material.FISHING_ROD);
@@ -159,12 +161,8 @@ public class UpgradingEdition extends EditionInventory {
 			destroyOnFailLore.add(ChatColor.YELLOW + AltChar.listDash + "► 左键单击更改此值");
 			destroyOnFailMeta.setLore(destroyOnFailLore);
 			destroyOnFail.setItemMeta(destroyOnFailMeta);
-			inv.setItem(42, destroyOnFail);
+			inventory.setItem(42, destroyOnFail);
 		}
-
-		addEditionInventoryItems(inv, true);
-
-		return inv;
 	}
 
 	@Override

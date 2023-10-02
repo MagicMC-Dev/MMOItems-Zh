@@ -99,12 +99,6 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
 
-        <!-- AdvancedEnchants -->
-        <repository>
-            <id>egg82-ninja</id>
-            <url>https://www.myget.org/F/egg82-java/maven/</url>
-        </repository>
-
         <!-- HolographicDisplays -->
         <repository>
             <id>codemc-repo</id>
@@ -124,6 +118,7 @@
             <artifactId>spigot-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
         <dependency>
@@ -131,6 +126,7 @@
             <artifactId>maven-clean-plugin</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- AuthLib -->
         <dependency>
@@ -138,6 +134,7 @@
             <artifactId>authlib</artifactId>
             <version>1.5.21</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- MMOCore Api -->
         <dependency>
@@ -145,13 +142,15 @@
             <artifactId>MMOCore-API</artifactId>
             <version>1.12-SNAPSHOT</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- MythicEnchants -->
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>MythicEnchants</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.1-REUPLOAD</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- PhatLoots -->
         <dependency>
@@ -159,6 +158,7 @@
             <artifactId>PhatLoots</artifactId>
             <version>4.2.3</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- placeholderapi -->
         <dependency>
@@ -166,6 +166,7 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.9.2</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Mythic -->
         <dependency>
@@ -173,6 +174,7 @@
             <artifactId>Mythic-Dist</artifactId>
             <version>5.1.2-SNAPSHOT</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- WordGuard -->
         <dependency>
@@ -180,6 +182,7 @@
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.2-SNAPSHOT</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Vault -->
         <dependency>
@@ -187,6 +190,7 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- SkillAPI -->
         <dependency>
@@ -194,6 +198,7 @@
             <artifactId>SkillAPI</artifactId>
             <version>master</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- AE Api -->
         <dependency>
@@ -201,6 +206,7 @@
             <artifactId>ae.api</artifactId>
             <version>5.7.6</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- BossShop -->
         <dependency>
@@ -208,6 +214,7 @@
             <artifactId>BossShop</artifactId>
             <version>2.0.9</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Residence -->
         <dependency>
@@ -215,6 +222,7 @@
             <artifactId>Residence</artifactId>
             <version>4.8.7.2</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Heroes -->
         <dependency>
@@ -222,6 +230,7 @@
             <artifactId>Heroes</artifactId>
             <version>1.9.22</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- ProtocolLib -->
         <dependency>
@@ -237,6 +246,7 @@
             <artifactId>mcMMO</artifactId>
             <version>2.1.104</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- McRPG -->
         <dependency>
@@ -244,6 +254,7 @@
             <artifactId>McRPG</artifactId>
             <version>1.1.2</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Rpl -->
         <dependency>
@@ -251,6 +262,7 @@
             <artifactId>rpl</artifactId>
             <version>3.9.30</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Skills -->
         <dependency>
@@ -258,6 +270,7 @@
             <artifactId>skills</artifactId>
             <version>12.3.5</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- SkillsPro -->
         <dependency>
@@ -265,6 +278,7 @@
             <artifactId>SkillsPro</artifactId>
             <version>18.9.0.1</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- BattleLevels -->
         <dependency>
@@ -272,6 +286,7 @@
             <artifactId>BattleLevels</artifactId>
             <version>6.9.1</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- TrHologram -->
         <dependency>
@@ -279,6 +294,7 @@
             <artifactId>TrHologram</artifactId>
             <version>1.11</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- HolographicDisplays API -->
         <dependency>
@@ -286,6 +302,7 @@
             <artifactId>holographicdisplays-api</artifactId>
             <version>2.4.0</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- RacesAndClasses -->
         <dependency>
@@ -293,6 +310,7 @@
             <artifactId>RacesAndClasses</artifactId>
             <version>1.2.6</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Rpg Inventory -->
         <dependency>
@@ -300,6 +318,7 @@
             <artifactId>rpginventory</artifactId>
             <version>2.3.0</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Holograms -->
         <dependency>
@@ -307,6 +326,7 @@
             <artifactId>Holograms</artifactId>
             <version>2.9.1</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Aurelium Skills -->
         <dependency>
@@ -314,6 +334,7 @@
             <artifactId>AureliumSkills</artifactId>
             <version>1.2.8</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Crazy Enchantments -->
         <dependency>
@@ -321,6 +342,7 @@
             <artifactId>crazyenchantments</artifactId>
             <version>1.8-db9</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Citizens -->
         <dependency>
@@ -328,6 +350,7 @@
             <artifactId>Citizens</artifactId>
             <version>2.0.30</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Denizen -->
         <dependency>
@@ -335,6 +358,7 @@
             <artifactId>denizen</artifactId>
             <version>1.2.1-b1744-REL</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- Denizen -->
         <dependency>
@@ -342,6 +366,7 @@
             <artifactId>depenizen</artifactId>
             <version>2.0.0-b709</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

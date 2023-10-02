@@ -17,16 +17,14 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +49,7 @@ import java.util.UUID;
  * @author Gunging
  */
 @SuppressWarnings("unused")
-public abstract class RecipeMakerGUI extends EditionInventory {
+public abstract class RecipeEditorGUI extends EditionInventory {
 
     /**
      * An editor for a recipe of this crafting system.
@@ -67,15 +65,12 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * @param recipeName     Name of this particular Recipe
      * @param recipeRegistry Load/Save Information of this Recipe Type
      */
-    public RecipeMakerGUI(@NotNull Player player, @NotNull MMOItemTemplate template, @NotNull String recipeName, @NotNull RecipeRegistry recipeRegistry) {
+    public RecipeEditorGUI(@NotNull Player player, @NotNull MMOItemTemplate template, @NotNull String recipeName, @NotNull RecipeRegistry recipeRegistry) {
         super(player, template);
 
         // Store name
         this.recipeName = recipeName;
         this.recipeRegistry = recipeRegistry;
-
-        // Create Inventory
-        myInventory = Bukkit.createInventory(this, 54, "编辑 " + getRecipeRegistry().getRecipeTypeName() + " 配方");
 
         // Update old formats
         moveInput();
@@ -88,6 +83,11 @@ public abstract class RecipeMakerGUI extends EditionInventory {
         // In general, they all have the amount output button
         //noinspection NestedAssignment
         addButton(amountButton = new RBA_AmountOutput(this, getCachedItem().clone()));
+    }
+
+    @Override
+    public String getName() {
+        return "Edit " + getRecipeRegistry().getRecipeTypeName() + " Recipe";
     }
 
     // Button Bar Buttons
@@ -103,17 +103,6 @@ public abstract class RecipeMakerGUI extends EditionInventory {
     public final ItemStack emptySlot = ItemFactory.of(Material.BARRIER).name("\u00a77无物品").build();
     @NotNull
     public final ItemStack airSlot = ItemFactory.of(Material.STRUCTURE_VOID).name("\u00a77无物品").build();
-
-    @NotNull
-    final Inventory myInventory;
-
-    /**
-     * @return The inventory displayed to the player.
-     */
-    @NotNull
-    public Inventory getMyInventory() {
-        return myInventory;
-    }
 
     /**
      * [ID].base.crafting
@@ -168,7 +157,6 @@ public abstract class RecipeMakerGUI extends EditionInventory {
         return recipeRegistry;
     }
 
-
     /**
      * The reference to the Amount Button, for ease of access
      * of the ItemStack displayed for the output of this recipe.
@@ -222,7 +210,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * <code>K K K = K K K K r </code><br>
      * <code>K K K = K K K K K </code>
      * <br><br>
-     * This is further edited, then, in {@link #putRecipe(Inventory)}, where
+     * This is further edited, then, in {@link #putRecipe()}, where
      * for example, the crafting recipe, will show the items and empty slots
      * in the correct places:
      * <br>
@@ -230,10 +218,8 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      * <code>g g g = - - - K K </code><br>
      * <code>- s - = - - - K r </code><br>
      * <code>- s - = - - - K K </code>
-     *
-     * @param target Inventory being edited
      */
-    public void putButtons(@NotNull Inventory target) {
+    public void putButtons() {
 
         // Ignore negative rows
         if (getButtonsRow() < 0) {
@@ -245,10 +231,10 @@ public abstract class RecipeMakerGUI extends EditionInventory {
 
         // Include page buttons
         if (buttonsPage > 0) {
-            myInventory.setItem((getButtonsRow() * 9) + 8, prevButtonPage);
+            inventory.setItem((getButtonsRow() * 9) + 8, prevButtonPage);
         }
         if (buttonsMap.size() >= ((buttonsPage + 1) * 7)) {
-            myInventory.setItem((getButtonsRow() * 9), nextButtonPage);
+            inventory.setItem((getButtonsRow() * 9), nextButtonPage);
         }
 
         // Fill the space I guess
@@ -277,7 +263,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
             if (p >= buttons.size()) {
 
                 // Just snooze
-                target.setItem(absolute, noButton);
+                inventory.setItem(absolute, noButton);
 
                 // There exists a recipe for this slot
             } else {
@@ -286,7 +272,7 @@ public abstract class RecipeMakerGUI extends EditionInventory {
                 RecipeButtonAction rmg = buttons.get(p);
 
                 // Display
-                target.setItem(absolute, rmg.getButton());
+                inventory.setItem(absolute, rmg.getButton());
 
                 // Store
                 buttonsMap.put(absolute, rmg);
@@ -347,23 +333,19 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      */
     abstract int getInputSlot(int absolute);
 
-    /**
-     * Puts all the buttons onto this inventory.
-     */
-    public void refreshInventory() {
-        addEditionInventoryItems(getMyInventory(), true);
-        putButtons(getMyInventory());
-        putRecipe(getMyInventory());
+    @Override
+    public void arrangeInventory() {
+        putButtons();
+        putRecipe();
     }
 
     /**
      * Puts the buttons specific for this kind of recipe, display
      * in the correct places the input and output items.
      *
-     * @param target The inventory being edited
-     * @see #putButtons(Inventory) for a better, more lengthy description.
+     * @see #putButtons() for a better, more lengthy description.
      */
-    public abstract void putRecipe(@NotNull Inventory target);
+    public abstract void putRecipe();
 
     /**
      * Get the item stack associated with this slot, depending
@@ -417,18 +399,6 @@ public abstract class RecipeMakerGUI extends EditionInventory {
      */
     @NotNull
     public abstract RMG_RecipeInterpreter getInterpreter();
-
-
-    @NotNull
-    @Override
-    public Inventory getInventory() {
-
-        // Put buttons
-        refreshInventory();
-
-        // That's it lets GOOOO
-        return myInventory;
-    }
 
     @Override
     public void whenClicked(InventoryClickEvent event) {

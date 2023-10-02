@@ -5,6 +5,7 @@ import io.lumine.mythic.lib.api.util.Ref;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -50,7 +51,7 @@ public interface RecipeRegistry {
      *
      * @param inv Edition Inventory by which the player is opening this
      * @param recipeName Name of the recipe
-     * @param otherParams Whatever else required by the constructor of the {@link net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI}
+     * @param otherParams Whatever else required by the constructor of the {@link RecipeEditorGUI}
      */
     void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams);
 

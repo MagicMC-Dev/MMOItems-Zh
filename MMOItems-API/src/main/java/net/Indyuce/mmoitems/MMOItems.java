@@ -35,7 +35,7 @@ import net.Indyuce.mmoitems.comp.rpg.HeroesHook;
 import net.Indyuce.mmoitems.comp.rpg.McMMOHook;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
 import net.Indyuce.mmoitems.gui.PluginInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeTypeListGUI;
 import net.Indyuce.mmoitems.manager.*;
 import net.Indyuce.mmoitems.manager.data.PlayerDataManager;
 import net.Indyuce.mmoitems.util.PluginUtils;
@@ -148,7 +148,7 @@ public class MMOItems extends JavaPlugin {
         new MMOItemsMetrics();
         MMOItemUIFilter.register();
 
-        RecipeBrowserGUI.registerNativeRecipes();
+        RecipeTypeListGUI.registerNativeRecipes();
         skillManager.initialize(false);
 
         final int configVersion = getConfig().contains("config-version", true) ? getConfig().getInt("config-version") : -1;

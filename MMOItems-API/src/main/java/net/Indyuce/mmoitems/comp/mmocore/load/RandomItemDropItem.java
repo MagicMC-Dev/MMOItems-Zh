@@ -52,7 +52,7 @@ public class RandomItemDropItem extends ItemGenerationDropItem {
 
 	@Override
 	public void collect(LootBuilder builder) {
-		RPGPlayer rpgPlayer = PlayerData.get(builder.getEntity().getUniqueId()).getRPG();
+		RPGPlayer rpgPlayer = PlayerData.get(builder.getEntity().getPlayer()).getRPG();
 
 		TemplateExplorer explorer = new TemplateExplorer();
 		if (matchClass)

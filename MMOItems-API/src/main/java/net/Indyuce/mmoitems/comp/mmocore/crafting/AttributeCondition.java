@@ -30,7 +30,7 @@ public class AttributeCondition extends Condition {
 
     @Override
     public boolean isMet(net.Indyuce.mmoitems.api.player.PlayerData data) {
-        return PlayerData.get(data.getUniqueId()).getAttributes().getAttribute(attribute) >= points;
+        return PlayerData.get(data.getPlayer()).getAttributes().getAttribute(attribute) >= points;
     }
 
     @Override

@@ -3,10 +3,9 @@ package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_SuperShaped;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_InputOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_InputOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +16,7 @@ import java.util.HashMap;
  *
  * @author Gunging
  */
-public class RMG_SuperShaped extends RecipeMakerGUI {
+public class RMG_SuperShaped extends RecipeEditorGUI {
 
     @NotNull HashMap<Integer, Integer> inputLinks = new HashMap<>();
 
@@ -71,10 +70,10 @@ public class RMG_SuperShaped extends RecipeMakerGUI {
     @Override public int getButtonsRow() { return 0; }
 
     @Override
-    public void putRecipe(@NotNull Inventory target) {
+    public void putRecipe() {
 
         // Fill inputs
-        for (Integer s : inputLinks.keySet()) { target.setItem(s, getDisplay(isShowingInput(), inputLinks.get(s))); }
+        for (Integer s : inputLinks.keySet()) { inventory.setItem(s, getDisplay(isShowingInput(), inputLinks.get(s))); }
     }
 
     @Override

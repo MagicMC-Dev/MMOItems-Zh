@@ -1,10 +1,10 @@
 # 禁止倒卖 汉化作者 INSide_734
 # QQ: 3217962725
 name: MMOItems
-version: 6.9.5-SNAPSHOT
+version: ${project.version}
 main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce
-description: A great item solution for your RPG server!!
+description: ${project.description}
 depend: [MythicLib]
 softdepend: [WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MMOProfiles,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen,AureliumSkills]
 api-version: 1.13
@@ -14,7 +14,7 @@ commands:
         aliases: [mi]
     updateitem:
         description: 更新手持物品。
-        aliases: [upitem, itemup]
+        aliases: [upitem,itemup]
         permission: mmoitems.update
 
 permissions:

@@ -9,10 +9,10 @@ import io.lumine.mythic.lib.api.crafting.uimanager.UIFilterManager;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.ui.QuickNumberRange;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.gui.edition.recipe.RecipeBrowserGUI;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.RecipeTypeListGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,7 +40,7 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new RecipeBrowserGUI(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+			new RecipeTypeListGUI(inv.getPlayer(), inv.getEdited()).open(inv);
 
 		else if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("crafting")) {
 			inv.getEditedSection().set("crafting", null);
@@ -76,8 +76,8 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 		int type = (int) info[0];
 
 		switch (type) {
-			case RecipeMakerGUI.INPUT:
-			case RecipeMakerGUI.OUTPUT:
+			case RecipeEditorGUI.INPUT:
+			case RecipeEditorGUI.OUTPUT:
 
 				//region Transcribe from old format to new
 				int spc = message.indexOf(' ');
@@ -163,12 +163,12 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 				if (!read.isValid(inv.getFFP())) { throw new IllegalArgumentException(""); }
 
 				// Find section
-				ConfigurationSection section = RecipeMakerGUI.getSection(inv.getEditedSection(), "crafting");
-				section = RecipeMakerGUI.getSection(section, ((RecipeMakerGUI) inv).getRecipeRegistry().getRecipeConfigPath());
-				section = RecipeMakerGUI.getSection(section, ((RecipeMakerGUI) inv).getRecipeName());
+				ConfigurationSection section = RecipeEditorGUI.getSection(inv.getEditedSection(), "crafting");
+				section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI) inv).getRecipeRegistry().getRecipeConfigPath());
+				section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI) inv).getRecipeName());
 
 				// Redirect
-				if (type == RecipeMakerGUI.INPUT)  {
+				if (type == RecipeEditorGUI.INPUT)  {
 					interpreter.editInput(read, slot);
 
 				// It must be output
@@ -179,8 +179,8 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 				inv.registerTemplateEdition();
 
 				break;
-			case RecipeMakerGUI.PRIMARY:
-			case RecipeMakerGUI.SECONDARY:
+			case RecipeEditorGUI.PRIMARY:
+			case RecipeEditorGUI.SECONDARY:
 
 				/*
 				 * No Button Action? That's the end, and is not necessarily
@@ -192,7 +192,7 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 
 				// Delegate
 
-				if (type == RecipeMakerGUI.PRIMARY)  {
+				if (type == RecipeEditorGUI.PRIMARY)  {
 					((RecipeButtonAction) info[1]).primaryProcessInput(message, info);
 
 				} else {
@@ -204,26 +204,6 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
 
 			default: inv.registerTemplateEdition(); break;
 		}
-
-		/*
-		 * Handles burning recipes ie furnace, campfire, smoker and blast
-		 * furnace recipes
-		 *
-			case "item": {
-				String[] args = message.split(" ");
-				Validate.isTrue(args.length == 3, "Invalid format");
-				Validate.notNull(MMOItems.plugin.getRecipes().getWorkbenchIngredient(args[0]), "Invalid ingredient");
-				int time = Integer.parseInt(args[1]);
-				double exp = MMOUtils.parseDouble(args[2]);
-
-				inv.getEditedSection().set("crafting." + info[1] + ".1.item", args[0]);
-				inv.getEditedSection().set("crafting." + info[1] + ".1.time", time);
-				inv.getEditedSection().set("crafting." + info[1] + ".1.experience", exp);
-				inv.registerTemplateEdition();
-				break;
-			}
-
-		*/
 	}
 
 	@Nullable

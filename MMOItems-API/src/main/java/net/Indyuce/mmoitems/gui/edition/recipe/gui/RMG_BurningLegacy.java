@@ -1,14 +1,13 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_BurningLegacy;
+import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_LegacyBurning;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_CookingTime;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_Experience;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_CookingTime;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_Experience;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +20,7 @@ import java.util.HashMap;
  *
  * @author Gunging
  */
-public class RMG_BurningLegacy extends RecipeMakerGUI {
+public class RMG_BurningLegacy extends RecipeEditorGUI {
 
     @NotNull
     HashMap<Integer, Integer> inputLinks = new HashMap<>();
@@ -44,7 +43,7 @@ public class RMG_BurningLegacy extends RecipeMakerGUI {
         if (!isShowingInput()) { switchInput(); }
 
         // Get section and build interpreter
-        interpreter = new RMGRI_BurningLegacy(getNameSection());
+        interpreter = new RMGRI_LegacyBurning(getNameSection());
 
         // Bind inputs - Furnace only has which item to smelt
         inputLinks.put(40, 0);
@@ -53,10 +52,10 @@ public class RMG_BurningLegacy extends RecipeMakerGUI {
     @Override public int getButtonsRow() { return 2; }
 
     @Override
-    public void putRecipe(@NotNull Inventory target) {
+    public void putRecipe() {
 
         // Fill inputs
-        for (Integer s : inputLinks.keySet()) { target.setItem(s, getDisplay(isShowingInput(), inputLinks.get(s))); }
+        for (Integer s : inputLinks.keySet()) { inventory.setItem(s, getDisplay(isShowingInput(), inputLinks.get(s))); }
     }
 
     @Override
@@ -69,6 +68,6 @@ public class RMG_BurningLegacy extends RecipeMakerGUI {
         return found != null ? found : -1;
     }
 
-    @NotNull final RMGRI_BurningLegacy interpreter;
+    @NotNull final RMGRI_LegacyBurning interpreter;
     @NotNull @Override public RMG_RecipeInterpreter getInterpreter() { return interpreter; }
 }

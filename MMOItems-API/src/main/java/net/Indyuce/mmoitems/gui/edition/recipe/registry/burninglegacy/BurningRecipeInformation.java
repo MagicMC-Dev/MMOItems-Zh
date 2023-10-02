@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author ASangarin
  */
+@Deprecated
 public class BurningRecipeInformation {
     private final WorkbenchIngredient choice;
     private final float exp;

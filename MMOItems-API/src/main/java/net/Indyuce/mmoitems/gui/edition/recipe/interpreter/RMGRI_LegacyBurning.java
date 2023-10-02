@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.interpreter;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Gunging
  */
-public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
+@Deprecated
+public class RMGRI_LegacyBurning implements RMG_RecipeInterpreter{
 
     /**
      * Interestingly enough, they onl require one input.
@@ -28,7 +29,7 @@ public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
      *
      * @param input The stuff that must be smelted
      */
-    public void setInput(@Nullable ProvidedUIFilter input) { this.input = input == null ? RecipeMakerGUI.AIR : input; }
+    public void setInput(@Nullable ProvidedUIFilter input) { this.input = input == null ? RecipeEditorGUI.AIR : input; }
 
     @NotNull final ConfigurationSection section;
     /**
@@ -43,15 +44,15 @@ public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
      *
      * @param recipeNameSection <b><code>[ID].base.crafting.furnace.[name]</code></b> section
      */
-    public RMGRI_BurningLegacy(@NotNull ConfigurationSection recipeNameSection) {
+    public RMGRI_LegacyBurning(@NotNull ConfigurationSection recipeNameSection) {
 
         // Save
         section = recipeNameSection;
 
         // Furnaces support only input
         //noinspection ConstantConditions
-        input = ProvidedUIFilter.getFromString(RecipeMakerGUI.poofFromLegacy(recipeNameSection.getString(ITEM)), null);
-        if (input == null) { input = RecipeMakerGUI.AIR.clone(); }
+        input = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(recipeNameSection.getString(ITEM)), null);
+        if (input == null) { input = RecipeEditorGUI.AIR.clone(); }
     }
 
     @Override
@@ -68,7 +69,7 @@ public class RMGRI_BurningLegacy implements RMG_RecipeInterpreter{
 
     @Override public void editOutput(@NotNull ProvidedUIFilter input, int slot) { }
 
-    @Override public void deleteInput(int slot) { editInput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteInput(int slot) { editInput(RecipeEditorGUI.AIR.clone(), slot); }
 
     @Override public void deleteOutput(int slot) { }
 

@@ -1,4 +1,4 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.rba.type;
+package net.Indyuce.mmoitems.gui.edition.recipe.button.type;
 
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.api.util.ui.FriendlyFeedbackProvider;
@@ -7,8 +7,8 @@ import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RecipeButtonAction;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RecipeButtonAction;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
      *
      * @param inv The edition inventory this is a button of
      */
-    public RBA_DoubleButton(@NotNull RecipeMakerGUI inv) { super(inv); }
+    public RBA_DoubleButton(@NotNull RecipeEditorGUI inv) { super(inv); }
 
     /**
      * @return Straight from the file, if this option is set to TRUE.
@@ -46,7 +46,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
     @Override public boolean runPrimary() {
 
         // Query user for input
-        new StatEdition(getInv(), ItemStats.CRAFTING, RecipeMakerGUI.PRIMARY, this).enable(requireInteger() ? integerLog : amountLog);
+        new StatEdition(getInv(), ItemStats.CRAFTING, RecipeEditorGUI.PRIMARY, this).enable(requireInteger() ? integerLog : amountLog);
 
         // Success
         return true;
@@ -136,7 +136,7 @@ public abstract class RBA_DoubleButton  extends RecipeButtonAction {
     @NotNull @Override public ItemStack getButton() {
 
         // Copy and send
-        return RecipeMakerGUI.addLore(getDoubleButton().clone(),
+        return RecipeEditorGUI.addLore(getDoubleButton().clone(),
                 SilentNumbers.toArrayList(
                         "", "\u00a77当前值: " + getValue(), "",
                         ChatColor.YELLOW + AltChar.listDash + "► 右键单击重置\u00a78(至\u00a74" + getDefaultValue() + "\u00a78)\u00a7e.",

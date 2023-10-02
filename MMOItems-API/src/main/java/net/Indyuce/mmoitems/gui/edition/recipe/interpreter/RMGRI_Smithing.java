@@ -1,7 +1,7 @@
 package net.Indyuce.mmoitems.gui.edition.recipe.interpreter;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +68,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
     /**
      * Generate an interpreter from this <i>updated</i> configuration section.
      * <br><br>
-     * By 'updated' I mean that, for now, we <b>should call {@link RecipeMakerGUI#moveInput()}
+     * By 'updated' I mean that, for now, we <b>should call {@link RecipeEditorGUI#moveInput()}
      * on this configuration before passing it here</b>, to move the input list from being the recipe name
      * section itself to the 'input' section within.
      *
@@ -82,8 +82,8 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
         /*
          * Read input and output from the file
          */
-        String input = updateIngredients(section.getString(RecipeMakerGUI.INPUT_INGREDIENTS));
-        String output = updateIngredients(section.getString(RecipeMakerGUI.OUTPUT_INGREDIENTS));
+        String input = updateIngredients(section.getString(RecipeEditorGUI.INPUT_INGREDIENTS));
+        String output = updateIngredients(section.getString(RecipeEditorGUI.OUTPUT_INGREDIENTS));
 
         // Split
         String[] inputSplit = input.split("\\|");
@@ -95,10 +95,10 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
         ProvidedUIFilter outputIngotParse = ProvidedUIFilter.getFromString(outputSplit[1], null);
 
         // Build Input list
-        inputItem = inputItemParse != null ? inputItemParse : RecipeMakerGUI.AIR.clone();
-        inputIngot = inputIngotParse != null ? inputIngotParse : RecipeMakerGUI.AIR.clone();
-        outputItem = outputItemParse != null ? outputItemParse : RecipeMakerGUI.AIR.clone();
-        outputIngot = outputIngotParse != null ? outputIngotParse : RecipeMakerGUI.AIR.clone();
+        inputItem = inputItemParse != null ? inputItemParse : RecipeEditorGUI.AIR.clone();
+        inputIngot = inputIngotParse != null ? inputIngotParse : RecipeEditorGUI.AIR.clone();
+        outputItem = outputItemParse != null ? outputItemParse : RecipeEditorGUI.AIR.clone();
+        outputIngot = outputIngotParse != null ? outputIngotParse : RecipeEditorGUI.AIR.clone();
     }
 
     /**
@@ -134,7 +134,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
         setInput(slot, input);
 
         // Save
-        section.set(RecipeMakerGUI.INPUT_INGREDIENTS, toYML(getInputItem(), getInputIngot()));
+        section.set(RecipeEditorGUI.INPUT_INGREDIENTS, toYML(getInputItem(), getInputIngot()));
     }
 
     @Override
@@ -144,12 +144,12 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
         setOutput(slot, input);
 
         // Save
-        section.set(RecipeMakerGUI.OUTPUT_INGREDIENTS, toYML(getOutputItem(), getOutputIngot()));
+        section.set(RecipeEditorGUI.OUTPUT_INGREDIENTS, toYML(getOutputItem(), getOutputIngot()));
     }
 
-    @Override public void deleteInput(int slot) { editInput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteInput(int slot) { editInput(RecipeEditorGUI.AIR.clone(), slot); }
 
-    @Override public void deleteOutput(int slot) { editOutput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteOutput(int slot) { editOutput(RecipeEditorGUI.AIR.clone(), slot); }
 
     //region Updater, to update old recipes
     /**
@@ -188,7 +188,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
                     if (r != 0) { ret.append("|"); }
 
                     // Array has it?
-                    if (r < curSplit.length) { ret.append(RecipeMakerGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR -"); }
+                    if (r < curSplit.length) { ret.append(RecipeEditorGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR -"); }
                 }
 
                 // Build and return
@@ -209,7 +209,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
                 if (r != 0) { ret.append("|"); }
 
                 // Array has it?
-                if (r < curSplit.length) { ret.append(RecipeMakerGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR -"); }
+                if (r < curSplit.length) { ret.append(RecipeEditorGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR -"); }
             }
 
             // Build and return
@@ -219,7 +219,7 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
         } else {
 
             // Just that i guess
-            return RecipeMakerGUI.poofFromLegacy(curr) + "|v AIR 0";
+            return RecipeEditorGUI.poofFromLegacy(curr) + "|v AIR 0";
         }
     }
     public static final String emptyIngredients = "v AIR -|v AIR -";

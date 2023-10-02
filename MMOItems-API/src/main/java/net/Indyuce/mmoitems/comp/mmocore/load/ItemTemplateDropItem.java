@@ -33,7 +33,7 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
 
 	@Override
 	public void collect(LootBuilder builder) {
-		RPGPlayer rpgPlayer = PlayerData.get(builder.getEntity().getUniqueId()).getRPG();
+		RPGPlayer rpgPlayer = PlayerData.get(builder.getEntity().getPlayer()).getRPG();
 		MMOItem mmoitem = rollMMOItem(template, rpgPlayer);
 
 		if (rollSoulbound())

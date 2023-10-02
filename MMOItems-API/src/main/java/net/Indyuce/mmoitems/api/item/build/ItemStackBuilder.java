@@ -43,7 +43,7 @@ public class ItemStackBuilder {
     private final LoreBuilder lore;
     private final List<ItemTag> tags = new ArrayList<>();
 
-    private static final AttributeModifier fakeModifier = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
+    private static final AttributeModifier FAKE_MODIFIER = new AttributeModifier(UUID.fromString("87851e28-af12-43f6-898e-c62bde6bd0ec"),
             "mmoitemsDecoy", 0, Operation.ADD_NUMBER);
 
     /**
@@ -57,17 +57,13 @@ public class ItemStackBuilder {
         this.mmoitem = mmoitem;
 
         // Generates a new ItemStack of the specified material (Specified in the Material stat, or a DIAMOND_SWORD if missing).
-        item = new ItemStack(
-                mmoitem.hasData(ItemStats.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStats.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
+        item = new ItemStack(mmoitem.hasData(ItemStats.MATERIAL) ? ((MaterialData) mmoitem.getData(ItemStats.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
 
         // Gets a lore builder, which will be used to apply the chosen lore format (Choose with the lore format stat, or the default one if unspecified)
-        lore = new LoreBuilder(mmoitem.hasData(ItemStats.LORE_FORMAT) ? MMOItems.plugin.getFormats()
-                .getFormat(mmoitem.getData(ItemStats.LORE_FORMAT).toString(), mmoitem.getType().getLoreFormat()) : MMOItems.plugin.getFormats()
-                .getFormat(mmoitem.getType().getLoreFormat()));
+        lore = new LoreBuilder(mmoitem);
 
         // Gets the meta, and hides attributes
         meta = item.getItemMeta();
-        //noinspection ConstantConditions
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // Store the internal TYPE-ID Information (not stats, so it must be done manually here)
@@ -86,10 +82,10 @@ public class ItemStackBuilder {
 
     /**
      * @return Does NOT return the built item stack. It returns only returns the
-     * default item stack with material applied. Built item stack is given
-     * by build(). This method should only be used to check if the item is
-     * of a specific material (like the Shield Pattern stat which checks if
-     * the item is a shield)
+     *         default item stack with material applied. Built item stack is given
+     *         by build(). This method should only be used to check if the item is
+     *         of a specific material (like the Shield Pattern stat which checks if
+     *         the item is a shield)
      */
     @NotNull
     public ItemStack getItemStack() {
@@ -135,7 +131,8 @@ public class ItemStackBuilder {
          * the basis for when an item is 'old'
          */
         if (!builtMMOItem.hasData(ItemStats.ENCHANTS)) {
-            builtMMOItem.setData(ItemStats.ENCHANTS, ItemStats.ENCHANTS.getClearStatData()); }
+            builtMMOItem.setData(ItemStats.ENCHANTS, ItemStats.ENCHANTS.getClearStatData());
+        }
         //GEM// else {MMOItems.log("\u00a73 -?- \u00a77Apparently found enchantment data \u00a7b" + (mmoitem.getData(ItemStats.ENCHANTS) == null ? "null" : ((EnchantListData) mmoitem.getData(ItemStats.ENCHANTS)).getEnchants().size())); }
 
         /*
@@ -144,9 +141,11 @@ public class ItemStackBuilder {
          * an anvil, so the very original name must be saved.
          */
         if (!builtMMOItem.hasData(ItemStats.NAME)) {
-            builtMMOItem.setData(ItemStats.NAME, ItemStats.NAME.getClearStatData()); }
+            builtMMOItem.setData(ItemStats.NAME, ItemStats.NAME.getClearStatData());
+        }
         if (builtMMOItem.getStatHistory(ItemStats.NAME) == null) {
-            StatHistory.from(builtMMOItem, ItemStats.NAME); }
+            StatHistory.from(builtMMOItem, ItemStats.NAME);
+        }
 
         // For every stat within this item
         for (ItemStat stat : builtMMOItem.getStats())
@@ -222,13 +221,16 @@ public class ItemStackBuilder {
         List<String> unparsedLore = lore.getLore();
         List<String> parsedLore = lore.build();
 
-        GenerateLoreEvent event = new GenerateLoreEvent(builtMMOItem, lore, parsedLore, unparsedLore);
+        final GenerateLoreEvent event = new GenerateLoreEvent(builtMMOItem, lore, parsedLore, unparsedLore);
         Bukkit.getPluginManager().callEvent(event);
-        AdventureUtils.setLore(meta, event.getParsedLore().stream()
-                .map(s -> ChatColor.WHITE + s)
-                .toList());
-        if (meta.hasDisplayName())
-            AdventureUtils.setDisplayName(meta, ChatColor.WHITE + meta.getDisplayName());
+        AdventureUtils.setLore(meta, event.getParsedLore().stream().map(s -> ChatColor.WHITE + s).toList());
+        if (meta.hasDisplayName()) {
+
+            // Apply tooltip top
+            String displayName = meta.getDisplayName();
+            if (lore.hasTooltip()) displayName = lore.getTooltip().getTop() + displayName;
+            AdventureUtils.setDisplayName(meta, ChatColor.WHITE + displayName);
+        }
 
         /*
          * Save dynamic lore for later calculations. Not used anymore, but
@@ -243,7 +245,7 @@ public class ItemStackBuilder {
          * modifiers, this way armor gives no ARMOR or ARMOR TOUGHNESS to the holder.
          * Since 4.7 attributes are handled via custom calculations
          */
-        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, fakeModifier);
+        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, FAKE_MODIFIER);
 
         item.setItemMeta(meta);
 

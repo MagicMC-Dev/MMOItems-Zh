@@ -1,16 +1,15 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -30,8 +29,12 @@ public class CommandListEdition extends EditionInventory {
 	}
 
 	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "命令列表");
+	public String getName() {
+		return "命令列表";
+	}
+
+	@Override
+	public void arrangeInventory() {
 		int n = 0;
 
 		if (getEditedSection().contains("commands"))
@@ -55,7 +58,7 @@ public class CommandListEdition extends EditionInventory {
 				itemMeta.setLore(itemLore);
 				item.setItemMeta(itemMeta);
 
-				inv.setItem(slots[n++], NBTItem.get(item).addTag(new ItemTag("configKey", key)).toItem());
+				inventory.setItem(slots[n++], NBTItem.get(item).addTag(new ItemTag("configKey", key)).toItem());
 			}
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
@@ -68,12 +71,9 @@ public class CommandListEdition extends EditionInventory {
 		addMeta.setDisplayName(ChatColor.GREEN + "创建一个命令...");
 		add.setItemMeta(addMeta);
 
-		inv.setItem(40, add);
+		inventory.setItem(40, add);
 		while (n < slots.length)
-			inv.setItem(slots[n++], glass);
-		addEditionInventoryItems(inv, true);
-
-		return inv;
+			inventory.setItem(slots[n++], glass);
 	}
 
 	@Override

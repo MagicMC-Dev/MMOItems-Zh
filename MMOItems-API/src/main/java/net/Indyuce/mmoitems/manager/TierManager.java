@@ -7,7 +7,7 @@ import net.Indyuce.mmoitems.api.ConfigFile;
 import net.Indyuce.mmoitems.api.ItemTier;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ public class TierManager implements Reloadable{
 		for (String tierName : config.getConfig().getKeys(false)) {
 
 			// Get section (Using RecipeMakerGUI for @NotNull attribute)
-			ConfigurationSection tierSection = RecipeMakerGUI.getSection(config.getConfig(), tierName);
+			ConfigurationSection tierSection = RecipeEditorGUI.getSection(config.getConfig(), tierName);
 
 			// Attempt to register
 			try {

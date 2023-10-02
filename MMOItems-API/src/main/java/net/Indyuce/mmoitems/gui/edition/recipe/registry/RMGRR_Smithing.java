@@ -14,9 +14,9 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Smithing;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.*;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.*;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_Smithing;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,11 +29,11 @@ public class RMGRR_Smithing implements RecipeRegistry {
     @NotNull @Override public String getRecipeTypeName() { return "Smithing"; }
     @NotNull @Override public String getRecipeConfigPath() { return "smithing"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.SMITHING_TABLE), FFPMMOItems.get().getExampleFormat() + "锻造合成配方");
+    @NotNull final ItemStack displayListItem = RecipeEditorGUI.rename(new ItemStack(Material.SMITHING_TABLE), FFPMMOItems.get().getExampleFormat() + "锻造合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
-        new RMG_Smithing(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage());
+        new RMG_Smithing(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv);
     }
 
     @NotNull
@@ -41,22 +41,22 @@ public class RMGRR_Smithing implements RecipeRegistry {
     public MythicRecipeBlueprint sendToMythicLib(@NotNull MMOItemTemplate template, @NotNull ConfigurationSection recipeTypeSection, @NotNull String recipeName, @NotNull Ref<NamespacedKey> namespace, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
         // Prior Preparations (update old formats)
-        RecipeMakerGUI.moveInput(recipeTypeSection, recipeName);
+        RecipeEditorGUI.moveInput(recipeTypeSection, recipeName);
 
         // Read some values
-        ConfigurationSection recipeSection = RecipeMakerGUI.getSection(recipeTypeSection, recipeName);
+        ConfigurationSection recipeSection = RecipeEditorGUI.getSection(recipeTypeSection, recipeName);
         NamespacedKey nk = namespace.getValue();
         if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法 (空) 命名空间")); }
 
         //region Identify the input
 
         // Find value in files
-        String input = RMGRI_Smithing.updateIngredients(recipeSection.getString(RecipeMakerGUI.INPUT_INGREDIENTS));
+        String input = RMGRI_Smithing.updateIngredients(recipeSection.getString(RecipeEditorGUI.INPUT_INGREDIENTS));
         String[] inputSplit = input.split("\\|");
 
         // All right lets read them
-        ProvidedUIFilter itemPoof = RecipeMakerGUI.readIngredientFrom(inputSplit[0], ffp);
-        ProvidedUIFilter ingotPoof = RecipeMakerGUI.readIngredientFrom(inputSplit[1], ffp);
+        ProvidedUIFilter itemPoof = RecipeEditorGUI.readIngredientFrom(inputSplit[0], ffp);
+        ProvidedUIFilter ingotPoof = RecipeEditorGUI.readIngredientFrom(inputSplit[1], ffp);
         if (itemPoof.isAir() || ingotPoof.isAir()) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "含有空气的锻造配方, $fignored$b.")); }
 
         // Make ingredients
@@ -70,12 +70,12 @@ public class RMGRR_Smithing implements RecipeRegistry {
 
         //region Identify the output of ingredients
         // Find value in files
-        String output = RMGRI_Smithing.updateIngredients(recipeSection.getString(RecipeMakerGUI.OUTPUT_INGREDIENTS));
+        String output = RMGRI_Smithing.updateIngredients(recipeSection.getString(RecipeEditorGUI.OUTPUT_INGREDIENTS));
         String[] outputSplit = output.split("\\|");
 
         // All right lets read them
-        ProvidedUIFilter itemOPoof = RecipeMakerGUI.readIngredientFrom(outputSplit[0], ffp);
-        ProvidedUIFilter ingotOPoof = RecipeMakerGUI.readIngredientFrom(outputSplit[1], ffp);
+        ProvidedUIFilter itemOPoof = RecipeEditorGUI.readIngredientFrom(outputSplit[0], ffp);
+        ProvidedUIFilter ingotOPoof = RecipeEditorGUI.readIngredientFrom(outputSplit[1], ffp);
 
         // Make output recipes
         ShapedRecipe outputItem = itemOPoof.isAir() ? null : ShapedRecipe.single(nk.getKey(), itemOPoof);

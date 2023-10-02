@@ -85,7 +85,7 @@ public class AbilityData extends Skill {
     @Override
     public boolean getResult(SkillMetadata meta) {
 
-        PlayerData playerData = PlayerData.get(meta.getCaster().getData().getUniqueId());
+        PlayerData playerData = PlayerData.get(meta.getCaster().getPlayer());
         RPGPlayer rpgPlayer = playerData.getRPG();
         Player player = meta.getCaster().getPlayer();
 
@@ -124,7 +124,7 @@ public class AbilityData extends Skill {
 
     @Override
     public void whenCast(SkillMetadata meta) {
-        PlayerData playerData = PlayerData.get(meta.getCaster().getData().getUniqueId());
+        PlayerData playerData = PlayerData.get(meta.getCaster().getPlayer());
         RPGPlayer rpgPlayer = playerData.getRPG();
 
         // Apply mana cost

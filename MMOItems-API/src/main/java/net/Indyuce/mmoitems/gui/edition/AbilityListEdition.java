@@ -1,29 +1,26 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.UtilityMethods;
+import io.lumine.mythic.lib.api.item.ItemTag;
+import io.lumine.mythic.lib.api.util.AltChar;
 import io.lumine.mythic.lib.skill.trigger.TriggerType;
+import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
-import io.lumine.mythic.lib.MythicLib;
-import io.lumine.mythic.lib.api.item.ItemTag;
-import io.lumine.mythic.lib.api.util.AltChar;
-import io.lumine.mythic.lib.version.VersionMaterial;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AbilityListEdition extends EditionInventory {
 	private static final int[] slots = { 19, 20, 21, 22, 23, 24, 25 };
@@ -33,8 +30,12 @@ public class AbilityListEdition extends EditionInventory {
 	}
 
 	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "技能列表");
+	public String getName() {
+		return "技能列表";
+	}
+
+	@Override
+	public void arrangeInventory() {
 		int n = 0;
 
 		if (getEditedSection().contains("ability"))
@@ -84,7 +85,7 @@ public class AbilityListEdition extends EditionInventory {
 
 				abilityItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(abilityItem).addTag(new ItemTag("configKey", key)).toItem();
 
-				inv.setItem(slots[n++], abilityItem);
+				inventory.setItem(slots[n++], abilityItem);
 			}
 
 		ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
@@ -97,12 +98,9 @@ public class AbilityListEdition extends EditionInventory {
 		addMeta.setDisplayName(ChatColor.GREEN + "添加技能...");
 		add.setItemMeta(addMeta);
 
-		inv.setItem(40, add);
+		inventory.setItem(40, add);
 		while (n < slots.length)
-			inv.setItem(slots[n++], glass);
-		addEditionInventoryItems(inv, true);
-
-		return inv;
+			inventory.setItem(slots[n++], glass);
 	}
 
 	@Override
@@ -138,7 +136,7 @@ public class AbilityListEdition extends EditionInventory {
 			return;
 
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new AbilityEdition(player, template, tag).open(getPreviousPage());
+			new AbilityEdition(player, template, tag).open(this);
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF) {
 			if (getEditedSection().contains("ability") && getEditedSection().getConfigurationSection("ability").contains(tag)) {

@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 
+@Deprecated
 public class AirIngredient extends WorkbenchIngredient {
 	public AirIngredient() {
 		super(0);

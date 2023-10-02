@@ -6,6 +6,7 @@ import org.bukkit.inventory.RecipeChoice;
 
 import io.lumine.mythic.lib.api.item.NBTItem;
 
+@Deprecated
 public class VanillaIngredient extends WorkbenchIngredient {
 	private final Material material;
 

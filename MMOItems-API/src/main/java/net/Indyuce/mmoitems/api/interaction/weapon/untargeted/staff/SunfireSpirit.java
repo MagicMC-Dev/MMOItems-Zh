@@ -25,16 +25,22 @@ public class SunfireSpirit implements StaffAttackHandler {
         new BukkitRunnable() {
             final Location target = getGround(caster.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
             final double a = RANDOM.nextDouble() * Math.PI * 2;
+            final double dt = .02;
             final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
-            final Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
+            final Vector vec = target.toVector().subtract(loc.toVector()).multiply(dt);
             double ti = 0;
+            int counter;
 
             public void run() {
-                loc.getWorld().playSound(loc, Sound.BLOCK_FIRE_AMBIENT, 2, 2);
-                for (int j = 0; j < 4; j++) {
-                    ti += .015;
+                if (counter++ % 2 == 0)
+                    loc.getWorld().playSound(loc, Sound.BLOCK_FIRE_AMBIENT, 2, 2);
+
+                for (int j = 0; j < 3; j++) {
+                    ti += dt;
                     loc.add(vec);
                     loc.getWorld().spawnParticle(Particle.FLAME, loc, 0, .03, 0, .03, 0);
+
+                    // Projectile explode
                     if (ti >= 1) {
                         loc.getWorld().spawnParticle(Particle.FLAME, loc, 24, 0, 0, 0, .12);
                         loc.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 24, 0, 0, 0, .12);
@@ -44,7 +50,7 @@ public class SunfireSpirit implements StaffAttackHandler {
                             if (UtilityMethods.canTarget(caster.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
                                 caster.attack((LivingEntity) target, damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
                         cancel();
-                        break;
+                        return;
                     }
                 }
             }

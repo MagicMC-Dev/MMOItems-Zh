@@ -16,8 +16,7 @@ public interface RMG_RecipeInterpreter {
      * Edits the configuration section's INPUT list.
      *
      * @param input The user's input, item that will be required
-     *
-     * @param slot Slot that the item is going into
+     * @param slot  Slot that the item is going into
      */
     void editInput(@NotNull ProvidedUIFilter input, int slot);
 
@@ -25,8 +24,7 @@ public interface RMG_RecipeInterpreter {
      * Edits the configuration section's OUTPUT list.
      *
      * @param input The user's input, item that will be required
-     *
-     * @param slot Slot that the item is going into
+     * @param slot  Slot that the item is going into
      */
     void editOutput(@NotNull ProvidedUIFilter input, int slot);
 
@@ -49,18 +47,18 @@ public interface RMG_RecipeInterpreter {
      * that corresponds to this slot of the input.
      *
      * @param slot Slot
-     *
      * @return Identified filter, if found and valid.
      */
-    @Nullable ProvidedUIFilter getInput(int slot);
+    @Nullable
+    ProvidedUIFilter getInput(int slot);
 
     /**
      * Fetch the Provided UI Filter in the YML configuration
      * that corresponds to this slot of the output.
      *
      * @param slot Slot
-     *
      * @return Identified filter, if found and valid.
      */
-    @Nullable ProvidedUIFilter getOutput(int slot);
+    @Nullable
+    ProvidedUIFilter getOutput(int slot);
 }

@@ -81,7 +81,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
 		if (event.getAction() == InventoryAction.PICKUP_ALL)
-			new UpgradingEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+			new UpgradingEdition(inv.getPlayer(), inv.getEdited()).open(inv);
 
 		if (event.getAction() == InventoryAction.PICKUP_HALF && inv.getEditedSection().contains("upgrade")) {
 			inv.getEditedSection().set("upgrade", null);

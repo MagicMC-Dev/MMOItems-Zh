@@ -3,12 +3,11 @@ package net.Indyuce.mmoitems.gui.edition.recipe.gui;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_Shapeless;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMG_RecipeInterpreter;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_InputOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_InputOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.RecipeRegistry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +23,7 @@ import java.util.HashMap;
  *
  * @author Gunging
  */
-public class RMG_Shapeless extends RecipeMakerGUI {
+public class RMG_Shapeless extends RecipeEditorGUI {
 
     @NotNull
     final HashMap<Integer, Integer> inputLinks = new HashMap<>();
@@ -43,9 +42,9 @@ public class RMG_Shapeless extends RecipeMakerGUI {
         addButton(new RBA_HideFromBook(this));
 
         // Get section and build interpreter
-        ConfigurationSection crafting = RecipeMakerGUI.getSection(getEditedSection(), "crafting");
-        ConfigurationSection recipe = RecipeMakerGUI.getSection(crafting, getRecipeRegistry().getRecipeConfigPath());
-        ConfigurationSection name = RecipeMakerGUI.getSection(recipe, getRecipeName());
+        ConfigurationSection crafting = RecipeEditorGUI.getSection(getEditedSection(), "crafting");
+        ConfigurationSection recipe = RecipeEditorGUI.getSection(crafting, getRecipeRegistry().getRecipeConfigPath());
+        ConfigurationSection name = RecipeEditorGUI.getSection(recipe, getRecipeName());
         interpreter = new RMGRI_Shapeless(name);
 
         // Bind inputs
@@ -64,10 +63,10 @@ public class RMG_Shapeless extends RecipeMakerGUI {
     @Override public int getButtonsRow() { return 1; }
 
     @Override
-    public void putRecipe(@NotNull Inventory target) {
+    public void putRecipe() {
 
         // Fill inputs
-        for (Integer s : inputLinks.keySet()) { target.setItem(s, getDisplay(isShowingInput(), inputLinks.get(s))); }
+        for (Integer s : inputLinks.keySet()) { inventory.setItem(s, getDisplay(isShowingInput(), inputLinks.get(s))); }
     }
 
     @Override

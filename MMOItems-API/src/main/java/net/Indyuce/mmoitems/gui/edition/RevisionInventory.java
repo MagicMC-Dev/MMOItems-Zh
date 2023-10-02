@@ -1,15 +1,14 @@
 package net.Indyuce.mmoitems.gui.edition;
 
+import io.lumine.mythic.lib.api.util.ItemFactory;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
 import io.lumine.mythic.lib.version.VersionMaterial;
-import io.lumine.mythic.lib.api.util.ItemFactory;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.MMOItemReforger;
 import net.Indyuce.mmoitems.stat.RevisionID;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -85,11 +84,15 @@ public class RevisionInventory extends EditionInventory {
         }
     }
 
-    @NotNull @Override public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 54, "修订管理器");
+    @Override
+    public String getName() {
+        return "修改管理器";
+    }
 
+    @Override
+    public void arrangeInventory() {
         // Place corresponding item stacks in there
-        for (int i = 0; i < inv.getSize(); i++) {
+        for (int i = 0; i < inventory.getSize(); i++) {
 
             // What item to even put here
             ItemStack which = null;
@@ -139,27 +142,22 @@ public class RevisionInventory extends EditionInventory {
                 if (enable != null) {
 
                     // Add mentioning if enabled
-                    inv.setItem(i, addLore(which, "", "\u00a78启用 (在配置中)? \u00a76" + enable.toString()));
+                    inventory.setItem(i, addLore(which, "", "\u00a78启用 (在配置中? \u00a76" + enable.toString()));
 
                 // If ID is enabled
                 } else if (id != null) {
 
                     // Add mentioning if enabled
-                    inv.setItem(i, addLore(which, "", "\u00a78当前值: \u00a76" + id));
+                    inventory.setItem(i, addLore(which, "", "\u00a78当前值: \u00a76" + id));
 
                 // Neither enable nor ID are defined
                 } else {
 
                     // Add
-                    inv.setItem(i, which);
+                    inventory.setItem(i, which);
                 }
             }
         }
-
-        // Add the top items, including the {Back} button
-        addEditionInventoryItems(inv, true);
-
-        return inv;
     }
 
     @Override

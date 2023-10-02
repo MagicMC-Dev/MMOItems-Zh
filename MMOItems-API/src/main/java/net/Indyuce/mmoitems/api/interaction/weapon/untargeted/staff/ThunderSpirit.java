@@ -25,16 +25,22 @@ public class ThunderSpirit implements StaffAttackHandler {
         new BukkitRunnable() {
             final Location target = getGround(caster.getPlayer().getTargetBlock(null, (int) range * 2).getLocation()).add(0, 1.2, 0);
             final double a = RANDOM.nextDouble() * Math.PI * 2;
-            final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
-            final Vector vec = target.toVector().subtract(loc.toVector()).multiply(.015);
+            final double dt = .02;
             double ti = 0;
+            final Location loc = target.clone().add(Math.cos(a) * 4, 10, Math.sin(a) * 4);
+            final Vector vec = target.toVector().subtract(loc.toVector()).multiply(dt);
+            int counter;
 
             public void run() {
-                loc.getWorld().playSound(loc, VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 2, 2);
-                for (int j = 0; j < 4; j++) {
-                    ti += .015;
+                if (counter++ % 2 == 0)
+                    loc.getWorld().playSound(loc, VersionSound.BLOCK_NOTE_BLOCK_HAT.toSound(), 2, 2);
+
+                for (int j = 0; j < 3; j++) {
+                    ti += dt;
                     loc.add(vec);
                     loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 0, .03, 0, .03, 0);
+
+                    // Projectile explode
                     if (ti >= 1) {
                         loc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc, 24, 0, 0, 0, .12);
                         loc.getWorld().playSound(loc, VersionSound.ENTITY_FIREWORK_ROCKET_BLAST.toSound(), 2, 2);
@@ -42,6 +48,7 @@ public class ThunderSpirit implements StaffAttackHandler {
                             if (UtilityMethods.canTarget(caster.getPlayer(), target, InteractionType.OFFENSE_ACTION) && target.getLocation().distanceSquared(loc) <= 9)
                                 caster.attack((LivingEntity) target, damage, DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE);
                         cancel();
+                        return;
                     }
                 }
             }

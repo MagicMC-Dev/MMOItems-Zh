@@ -7,6 +7,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import io.lumine.mythic.lib.api.item.NBTItem;
 
+@Deprecated
 public class MMOItemIngredient extends WorkbenchIngredient {
 	private final Type type;
 	private final String id;

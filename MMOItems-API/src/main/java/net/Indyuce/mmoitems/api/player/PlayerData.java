@@ -72,20 +72,8 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
         cancelRunnables();
     }
 
-    public MMOPlayerData getMMOPlayerData() {
-        return mmoData;
-    }
-
-    public UUID getUniqueId() {
-        return mmoData.getUniqueId();
-    }
-
     public boolean isOnline() {
         return mmoData.isOnline();
-    }
-
-    public Player getPlayer() {
-        return mmoData.getPlayer();
     }
 
     public RPGPlayer getRPG() {
@@ -379,13 +367,16 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
     }
 
     @NotNull
+    public static PlayerData get(@NotNull MMOPlayerData playerData) {
+        return get(playerData.getPlayer());
+    }
+
+    @NotNull
     public static PlayerData get(@NotNull OfflinePlayer player) {
         return get(player.getUniqueId());
     }
 
     /**
-     * See {@link #has(UUID)}
-     *
      * @return If player data is loaded for a player
      */
     public static boolean has(Player player) {

@@ -59,7 +59,7 @@ public class ConfigFile {
         try {
             config.save(new File(plugin.getDataFolder() + path, name + ".yml"));
         } catch (IOException exception) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "无法保存 " + name + ".yml: " + exception.getMessage());
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save " + name + ".yml: " + exception.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class ConfigFile {
                 new File(plugin.getDataFolder() + path, name + ".yml").createNewFile();
             }
         } catch (IOException exception) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "无法生成 " + name + ".yml: " + exception.getMessage());
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + name + ".yml: " + exception.getMessage());
         }
     }
 

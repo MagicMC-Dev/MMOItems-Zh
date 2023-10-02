@@ -17,7 +17,6 @@ import net.Indyuce.mmoitems.api.interaction.weapon.Gauntlet;
 import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.Staff;
 import net.Indyuce.mmoitems.api.interaction.weapon.untargeted.UntargetedWeapon;
-import net.Indyuce.mmoitems.api.item.mmoitem.VolatileMMOItem;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.util.message.Message;
 import org.bukkit.Bukkit;
@@ -57,8 +56,8 @@ public class ItemUse implements Listener {
          * Some consumables must be fully eaten through the vanilla eating
          * animation and are handled there {@link #handleVanillaEatenConsumables(PlayerItemConsumeEvent)}
          */
-        Player player = event.getPlayer();
-        UseItem useItem = UseItem.getItem(player, item, item.getType());
+        final Player player = event.getPlayer();
+        final UseItem useItem = UseItem.getItem(player, item, item.getType());
         if (useItem instanceof Consumable && ((Consumable) useItem).hasVanillaEating())
             return;
 
@@ -70,9 +69,8 @@ public class ItemUse implements Listener {
 
         // Commands & consummables
         if (event.getAction().name().contains("RIGHT_CLICK")) {
-            final String cooldownReference = getCooldownReference(useItem.getMMOItem());
-            if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
-                final double cd = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference);
+            if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(useItem.getMMOItem())) {
+                final double cd = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(useItem.getMMOItem());
                 Message.ITEM_ON_COOLDOWN
                         .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(cd), "#s#", cd >= 2 ? "s" : "")
                         .send(player);
@@ -90,7 +88,7 @@ public class ItemUse implements Listener {
                     event.getItem().setAmount(event.getItem().getAmount() - 1);
             }
 
-            useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(cooldownReference, useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+            useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
             useItem.executeCommands();
         }
 
@@ -100,11 +98,6 @@ public class ItemUse implements Listener {
             if (weapon.getWeaponType().corresponds(event.getAction()))
                 weapon.handleTargetFreeAttack(EquipmentSlot.fromBukkit(event.getHand()));
         }
-    }
-
-    private String getCooldownReference(VolatileMMOItem mmoitem) {
-        final String ref = mmoitem.getNBT().getString("MMOITEMS_COOLDOWN_REFERENCE");
-        return ref != null && !ref.isEmpty() ? ref : mmoitem.getCooldownPath();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -319,9 +312,8 @@ public class ItemUse implements Listener {
 
         if (useItem instanceof Consumable) {
 
-            final String cooldownReference = getCooldownReference(useItem.getMMOItem());
-            if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownReference)) {
-                final double cd = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(cooldownReference);
+            if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(useItem.getMMOItem())) {
+                final double cd = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(useItem.getMMOItem());
                 Message.ITEM_ON_COOLDOWN
                         .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(cd), "#s#", cd >= 2 ? "s" : "")
                         .send(player);
@@ -341,7 +333,7 @@ public class ItemUse implements Listener {
             if (result == Consumable.ConsumableConsumeResult.NOT_CONSUME)
                 event.setCancelled(true);
 
-            useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(cooldownReference, useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+            useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
             useItem.executeCommands();
         }
     }

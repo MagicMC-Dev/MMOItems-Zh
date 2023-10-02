@@ -47,7 +47,7 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
 		String format = config.getString("uuid");
 		Validate.notNull(format, "找不到头骨纹理 UUID: 重新输入您的头骨纹理值, 系统将随机选择一个");
 
-		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), null));
+		SkullTextureData skullTexture = new SkullTextureData(new GameProfile(UUID.fromString(format), "SkullTexture"));
 		skullTexture.getGameProfile().getProperties().put("textures", new Property("textures", value));
 		return skullTexture;
 	}

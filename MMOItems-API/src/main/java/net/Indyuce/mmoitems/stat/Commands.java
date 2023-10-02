@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Commands extends ItemStat<CommandListData, CommandListData> {
-	private static final int max = 15;
+	private static final int MAXIMUM_COMMANDS = 15;
 
 	public Commands() {
 		super("COMMANDS", VersionMaterial.COMMAND_BLOCK_MINECART.toMaterial(), "命令",
@@ -51,16 +51,14 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 
 	@Override
 	public void whenClicked(@NotNull EditionInventory inv, @NotNull InventoryClickEvent event) {
-		new CommandListEdition(inv.getPlayer(), inv.getEdited()).open(inv.getPage());
+		new CommandListEdition(inv.getPlayer(), inv.getEdited()).open(inv);
 	}
 
 	@Override
 	public void whenInput(@NotNull EditionInventory inv, @NotNull String message, Object... info) {
 		if (inv.getEditedSection().contains("commands"))
-			if (inv.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= max) {
-				// max command number = 8
-				inv.open();
-				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "物品已达到最大 " + max + " 命令限制");
+			if (inv.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= MAXIMUM_COMMANDS) {
+				inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "物品已达到最大 " + MAXIMUM_COMMANDS + " 条命令限制.");
 				return;
 			}
 
@@ -87,11 +85,11 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
 		 * registered before.
 		 */
 		ConfigurationSection commands = inv.getEditedSection().getConfigurationSection("commands");
-		String path = "cmd" + (max + 1);
+		String path = "cmd" + (MAXIMUM_COMMANDS + 1);
 		if (commands == null)
 			path = "cmd0";
 		else
-			for (int j = 0; j < max; j++)
+			for (int j = 0; j < MAXIMUM_COMMANDS; j++)
 				if (!commands.contains("cmd" + j)) {
 					path = "cmd" + j;
 					break;

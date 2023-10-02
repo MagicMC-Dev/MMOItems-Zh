@@ -1,8 +1,8 @@
-package net.Indyuce.mmoitems.gui.edition.recipe.rba;
+package net.Indyuce.mmoitems.gui.edition.recipe.button;
 
 import net.Indyuce.mmoitems.api.edition.StatEdition;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
@@ -21,23 +21,23 @@ public abstract class RecipeButtonAction {
     /**
      * The edition inventory this is a button of
      */
-    @NotNull final RecipeMakerGUI inv;
+    @NotNull final RecipeEditorGUI inv;
     /**
      * @return The edition inventory this is a button of
      */
-    @NotNull public RecipeMakerGUI getInv() { return inv; }
+    @NotNull public RecipeEditorGUI getInv() { return inv; }
 
     /**
      * A button of an Edition Inventory. Nice!
      *
      * @param inv The edition inventory this is a button of
      */
-    public RecipeButtonAction(@NotNull RecipeMakerGUI inv) { this.inv = inv; }
+    public RecipeButtonAction(@NotNull RecipeEditorGUI inv) { this.inv = inv; }
 
     /**
      * Called when the player left-clicks a slot. <br>
      * <b>Important: When initializing a {@link StatEdition#StatEdition(EditionInventory, ItemStat, Object...)} you
-     * must pass {@link RecipeMakerGUI#PRIMARY} as the first <i>info</i> object!</b> Also, make sure to pass {@code this}
+     * must pass {@link RecipeEditorGUI#PRIMARY} as the first <i>info</i> object!</b> Also, make sure to pass {@code this}
      * as the second argument for {@link #primaryProcessInput(String, Object...)} to be called.
      *
      * @return <code>true</code> if and only if this action succeeded. Most importantly,
@@ -62,7 +62,7 @@ public abstract class RecipeButtonAction {
     /**
      * Called when the player right-clicks a slot. <br>
      * <b>Important: When initializing a {@link StatEdition#StatEdition(EditionInventory, ItemStat, Object...)} you
-     * must pass {@link RecipeMakerGUI#SECONDARY} as the first <i>info</i> object!</b> Also, make sure to pass {@code this}
+     * must pass {@link RecipeEditorGUI#SECONDARY} as the first <i>info</i> object!</b> Also, make sure to pass {@code this}
      * as the second argument for {@link #secondaryProcessInput(String, Object...)} to be called.
      *
      * @return <code>true</code> if and only if this action succeeded. Most importantly,

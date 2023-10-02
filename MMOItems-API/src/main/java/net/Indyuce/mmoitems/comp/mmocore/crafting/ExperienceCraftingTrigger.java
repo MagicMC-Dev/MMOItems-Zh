@@ -31,8 +31,8 @@ public class ExperienceCraftingTrigger extends Trigger {
 	@Override
 	public void whenCrafting(net.Indyuce.mmoitems.api.player.PlayerData data) {
 		if (profession == null)
-			PlayerData.get(data.getUniqueId()).giveExperience(amount, EXPSource.SOURCE);
+			PlayerData.get(data.getPlayer()).giveExperience(amount, EXPSource.SOURCE);
 		else
-			PlayerData.get(data.getUniqueId()).getCollectionSkills().giveExperience(profession, amount, EXPSource.SOURCE);
+			PlayerData.get(data.getPlayer()).getCollectionSkills().giveExperience(profession, amount, EXPSource.SOURCE);
 	}
 }

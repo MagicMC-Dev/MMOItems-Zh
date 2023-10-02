@@ -14,9 +14,9 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.interpreter.RMGRI_MegaShaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_MegaShaped;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,11 +31,11 @@ public class RMGRR_MegaShaped implements RecipeRegistry {
     @Override public String getRecipeConfigPath() { return "megashaped"; }
     @NotNull @Override public String getRecipeTypeName() { return "Mega Shaped"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.JUKEBOX), FFPMMOItems.get().getExampleFormat() + "巨型合成配方");
+    @NotNull final ItemStack displayListItem = RecipeEditorGUI.rename(new ItemStack(Material.JUKEBOX), FFPMMOItems.get().getExampleFormat() + "巨型合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
-        new RMG_MegaShaped(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage());
+        new RMG_MegaShaped(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv);
     }
 
     @NotNull
@@ -43,17 +43,17 @@ public class RMGRR_MegaShaped implements RecipeRegistry {
     public MythicRecipeBlueprint sendToMythicLib(@NotNull MMOItemTemplate template, @NotNull ConfigurationSection recipeTypeSection, @NotNull String recipeName, @NotNull Ref<NamespacedKey> namespace, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
         // Read some values
-        ConfigurationSection recipeSection = RecipeMakerGUI.moveInput(recipeTypeSection, recipeName);
+        ConfigurationSection recipeSection = RecipeEditorGUI.moveInput(recipeTypeSection, recipeName);
 
         NamespacedKey nk = namespace.getValue();
         if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法（空）命名空间")); }
 
         // Identify the input
-        ShapedRecipe input = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS)), ffp);
-        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的巨型配方, $fignored$b")); }
+        ShapedRecipe input = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS)), ffp);
+        if (input == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "仅包含空气的巨型配方, $fignored$b.")); }
 
         // Read the options and output
-        ShapedRecipe output = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
+        ShapedRecipe output = megaShapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS)), ffp);
         int outputAmount = recipeSection.getInt(RBA_AmountOutput.AMOUNT_INGREDIENTS, 1);
 
         // Build Output
@@ -142,12 +142,12 @@ public class RMGRR_MegaShaped implements RecipeRegistry {
             if (positions.length != 6) { throw new IllegalArgumentException("大型工作台第 $u 行无效" + updatedRow + "$b ($f不完全是 6 个格子的长宽度$b)."); }
 
             // Identify
-            ProvidedUIFilter left = RecipeMakerGUI.readIngredientFrom(positions[0], ffp);
-            ProvidedUIFilter midLeft = RecipeMakerGUI.readIngredientFrom(positions[1], ffp);
-            ProvidedUIFilter center = RecipeMakerGUI.readIngredientFrom(positions[2], ffp);
-            ProvidedUIFilter midRight = RecipeMakerGUI.readIngredientFrom(positions[3], ffp);
-            ProvidedUIFilter right = RecipeMakerGUI.readIngredientFrom(positions[4], ffp);
-            ProvidedUIFilter extra = RecipeMakerGUI.readIngredientFrom(positions[5], ffp);
+            ProvidedUIFilter left = RecipeEditorGUI.readIngredientFrom(positions[0], ffp);
+            ProvidedUIFilter midLeft = RecipeEditorGUI.readIngredientFrom(positions[1], ffp);
+            ProvidedUIFilter center = RecipeEditorGUI.readIngredientFrom(positions[2], ffp);
+            ProvidedUIFilter midRight = RecipeEditorGUI.readIngredientFrom(positions[3], ffp);
+            ProvidedUIFilter right = RecipeEditorGUI.readIngredientFrom(positions[4], ffp);
+            ProvidedUIFilter extra = RecipeEditorGUI.readIngredientFrom(positions[5], ffp);
             if (!left.isAir()) { nonAirFound = true; }
             if (!midLeft.isAir()) { nonAirFound = true; }
             if (!center.isAir()) { nonAirFound = true; }

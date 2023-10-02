@@ -9,7 +9,6 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.stat.type.InternalStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import net.Indyuce.mmoitems.util.MMOUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,7 +30,12 @@ public class ItemEdition extends EditionInventory {
     }
 
     @Override
-    public Inventory getInventory() {
+    public String getName() {
+        return "Item Edition: " + getEdited().getId();
+    }
+
+    @Override
+    public void arrangeInventory() {
         int min = (page - 1) * slots.length;
         int max = page * slots.length;
         int n = 0;
@@ -43,7 +47,6 @@ public class ItemEdition extends EditionInventory {
         List<ItemStat> appliable = new ArrayList<>(getEdited().getType().getAvailableStats()).stream()
                 .filter(stat -> stat.hasValidMaterial(getCachedItem()) && !(stat instanceof InternalStat)).toList();
 
-        Inventory inv = Bukkit.createInventory(this, 54, "物品编辑:" + getEdited().getId());
         for (int j = min; j < Math.min(appliable.size(), max); j++) {
             ItemStat stat = appliable.get(j);
             ItemStack item = new ItemStack(stat.getDisplayMaterial());
@@ -57,7 +60,7 @@ public class ItemEdition extends EditionInventory {
 
             meta.setLore(lore);
             item.setItemMeta(meta);
-            inv.setItem(slots[n++], MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
+            inventory.setItem(slots[n++], MythicLib.plugin.getVersion().getWrapper().getNBTItem(item).addTag(new ItemTag("guiStat", stat.getId())).toItem());
         }
 
         ItemStack glass = VersionMaterial.GRAY_STAINED_GLASS_PANE.toItem();
@@ -75,14 +78,10 @@ public class ItemEdition extends EditionInventory {
         previousMeta.setDisplayName(ChatColor.GREEN + "上一页");
         previous.setItemMeta(previousMeta);
 
-        addEditionInventoryItems(inv, true);
-
         while (n < slots.length)
-            inv.setItem(slots[n++], glass);
-        inv.setItem(27, page > 1 ? previous : null);
-        inv.setItem(35, appliable.size() > max ? next : null);
-
-        return inv;
+            inventory.setItem(slots[n++], glass);
+        inventory.setItem(27, page > 1 ? previous : null);
+        inventory.setItem(35, appliable.size() > max ? next : null);
     }
 
     @Override
@@ -97,12 +96,12 @@ public class ItemEdition extends EditionInventory {
 
         if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "下一页")) {
             page++;
-            open();
+            refreshInventory();
         }
 
         if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "上一页")) {
             page--;
-            open();
+            refreshInventory();
         }
 
         final String tag = NBTItem.get(item).getString("guiStat");
@@ -121,6 +120,7 @@ public class ItemEdition extends EditionInventory {
         edited.whenClicked(this, event);
     }
 
+    @Deprecated
     public ItemEdition onPage(int value) {
         page = value;
         return this;

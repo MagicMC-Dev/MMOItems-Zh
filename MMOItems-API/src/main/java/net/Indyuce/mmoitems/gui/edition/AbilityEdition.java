@@ -1,25 +1,23 @@
 package net.Indyuce.mmoitems.gui.edition;
 
-import io.lumine.mythic.lib.skill.trigger.TriggerType;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.util.MMOUtils;
-import net.Indyuce.mmoitems.api.edition.StatEdition;
-import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.item.ItemTag;
 import io.lumine.mythic.lib.api.util.AltChar;
+import io.lumine.mythic.lib.skill.trigger.TriggerType;
 import io.lumine.mythic.lib.version.VersionMaterial;
+import net.Indyuce.mmoitems.ItemStats;
+import net.Indyuce.mmoitems.MMOItems;
+import net.Indyuce.mmoitems.api.edition.StatEdition;
+import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
+import net.Indyuce.mmoitems.api.util.NumericStatFormula;
 import net.Indyuce.mmoitems.skill.RegisteredSkill;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.util.MMOUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -42,8 +40,12 @@ public class AbilityEdition extends EditionInventory {
 	}
 
 	@Override
-	public Inventory getInventory() {
-		Inventory inv = Bukkit.createInventory(this, 54, "技能编辑");
+	public String getName() {
+		return "技能编辑";
+	}
+
+	@Override
+	public void arrangeInventory() {
 		int n = 0;
 
 		String configString = getEditedSection().getString("ability." + configKey + ".type");
@@ -90,7 +92,7 @@ public class AbilityEdition extends EditionInventory {
 			castModeItemMeta.setLore(castModeItemLore);
 			castModeItem.setItemMeta(castModeItemMeta);
 
-			inv.setItem(30, castModeItem);
+			inventory.setItem(30, castModeItem);
 		}
 
 		if (ability != null) {
@@ -122,7 +124,7 @@ public class AbilityEdition extends EditionInventory {
 				modifierItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(modifierItem).addTag(new ItemTag("abilityModifier", modifier))
 						.toItem();
 
-				inv.setItem(slots[n++], modifierItem);
+				inventory.setItem(slots[n++], modifierItem);
 			}
 		}
 
@@ -131,19 +133,11 @@ public class AbilityEdition extends EditionInventory {
 		glassMeta.setDisplayName(ChatColor.RED + "- 没有修改器 -");
 		glass.setItemMeta(glassMeta);
 
-		ItemStack back = new ItemStack(Material.BARRIER);
-		ItemMeta backMeta = back.getItemMeta();
-		backMeta.setDisplayName(ChatColor.GREEN + AltChar.rightArrow + " 技能列表");
-		back.setItemMeta(backMeta);
-
 		while (n < slots.length)
-			inv.setItem(slots[n++], glass);
+			inventory.setItem(slots[n++], glass);
 
-		addEditionInventoryItems(inv, false);
-		inv.setItem(28, abilityItem);
-		inv.setItem(6, back);
-
-		return inv;
+		addEditionItems();
+		inventory.setItem(28, abilityItem);
 	}
 
 	@Override
@@ -154,8 +148,8 @@ public class AbilityEdition extends EditionInventory {
 		if (event.getInventory() != event.getClickedInventory() || !MMOUtils.isMetaItem(item, false))
 			return;
 
-		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " 技能列表")) {
-			new AbilityListEdition(player, template).open(getPreviousPage());
+		if (item.getItemMeta().getDisplayName().equals(ChatColor.GREEN + AltChar.rightArrow + " 返回")) {
+			new AbilityListEdition(player, template).open(this);
 			return;
 		}
 

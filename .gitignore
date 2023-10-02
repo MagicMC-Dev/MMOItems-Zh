@@ -17,5 +17,3 @@ MMOItems-Dist.iml
 
 .flattened-pom.xml
 dependency-reduced-pom.xml
-BUILD.bat
-.vscode/settings.json

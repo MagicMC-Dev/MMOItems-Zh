@@ -3,6 +3,7 @@ package net.Indyuce.mmoitems.api.recipe.workbench.ingredients;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 
+@Deprecated
 public abstract class WorkbenchIngredient {
 	private final int amount;
 

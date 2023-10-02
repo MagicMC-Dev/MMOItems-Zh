@@ -15,10 +15,10 @@ import net.Indyuce.mmoitems.api.crafting.MMOItemUIFilter;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_AmountOutput;
-import net.Indyuce.mmoitems.gui.edition.recipe.rba.RBA_HideFromBook;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_AmountOutput;
+import net.Indyuce.mmoitems.gui.edition.recipe.button.RBA_HideFromBook;
 import net.Indyuce.mmoitems.gui.edition.recipe.gui.RMG_Shapeless;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import net.Indyuce.mmoitems.stat.data.StringData;
 import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 import org.bukkit.Material;
@@ -34,11 +34,11 @@ public class RMGRR_Shapeless implements RecipeRegistry {
     @NotNull @Override public String getRecipeTypeName() { return "Shapeless"; }
     @NotNull @Override public String getRecipeConfigPath() { return "shapeless"; }
 
-    @NotNull final ItemStack displayListItem = RecipeMakerGUI.rename(new ItemStack(Material.OAK_LOG), FFPMMOItems.get().getExampleFormat() + "无序合成配方");
+    @NotNull final ItemStack displayListItem = RecipeEditorGUI.rename(new ItemStack(Material.OAK_LOG), FFPMMOItems.get().getExampleFormat() + "无序合成配方");
     @NotNull @Override public ItemStack getDisplayListItem() { return displayListItem; }
 
     @Override public void openForPlayer(@NotNull EditionInventory inv, @NotNull String recipeName, Object... otherParams) {
-        new RMG_Shapeless(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv.getPreviousPage());
+        new RMG_Shapeless(inv.getPlayer(), inv.getEdited(), recipeName, this).open(inv);
     }
 
     @NotNull
@@ -46,16 +46,16 @@ public class RMGRR_Shapeless implements RecipeRegistry {
     public MythicRecipeBlueprint sendToMythicLib(@NotNull MMOItemTemplate template, @NotNull ConfigurationSection recipeTypeSection, @NotNull String recipeName, @NotNull Ref<NamespacedKey> namespace, @NotNull FriendlyFeedbackProvider ffp) throws IllegalArgumentException {
 
         // Prior Preparations (update old formats)
-        RecipeMakerGUI.moveInput(recipeTypeSection, recipeName);
+        RecipeEditorGUI.moveInput(recipeTypeSection, recipeName);
 
         // Read some values
-        ConfigurationSection recipeSection = RecipeMakerGUI.getSection(recipeTypeSection, recipeName);
+        ConfigurationSection recipeSection = RecipeEditorGUI.getSection(recipeTypeSection, recipeName);
         NamespacedKey nk = namespace.getValue();
         if (nk == null) { throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "非法 (空) 命名空间")); }
 
         //region Identify the input
         ArrayList<MythicRecipeIngredient> poofs = new ArrayList<>();
-        ArrayList<String> recipe = new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS));
+        ArrayList<String> recipe = new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS));
 
         // Read from the recipe
         boolean nonAirFound = false;
@@ -65,7 +65,7 @@ public class RMGRR_Shapeless implements RecipeRegistry {
             if (str == null || "AIR".equals(str)) { continue; }
 
             // Add
-            ProvidedUIFilter p = RecipeMakerGUI.readIngredientFrom(str, ffp);
+            ProvidedUIFilter p = RecipeEditorGUI.readIngredientFrom(str, ffp);
 
             // Not air right
             if (p.isAir()) { continue; }
@@ -79,7 +79,7 @@ public class RMGRR_Shapeless implements RecipeRegistry {
         //endregion
 
         // Read the options and output
-        ShapedRecipe output = RMGRR_Shaped.shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS)), ffp);
+        ShapedRecipe output = RMGRR_Shaped.shapedRecipeFromList(nk.getKey(), new ArrayList<>(recipeSection.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS)), ffp);
         int outputAmount = recipeSection.getInt(RBA_AmountOutput.AMOUNT_INGREDIENTS, 1);
         boolean hideBook = recipeSection.getBoolean(RBA_HideFromBook.BOOK_HIDDEN, false);
 

@@ -31,7 +31,7 @@ public class ProfessionCondition extends Condition {
 
     @Override
     public boolean isMet(net.Indyuce.mmoitems.api.player.PlayerData data) {
-        return PlayerData.get(data.getUniqueId()).getCollectionSkills().getLevel(profession) >= level;
+        return PlayerData.get(data.getPlayer()).getCollectionSkills().getLevel(profession) >= level;
     }
 
     @Override

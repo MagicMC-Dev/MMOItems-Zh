@@ -106,7 +106,9 @@ public class ItemSkin extends UseItem {
      * in the target item so that if deskined, it can be retrieved
      * and given back to the player.
      */
-    public static final String SKIN_ID_TAG = "MMOITEMS_SKIN_ID";
+    public static final String
+            SKIN_ID_TAG = "MMOITEMS_SKIN_ID",
+            SKIN_TYPE_TAG = "MMOITEMS_SKIN_TYPE";
 
     /**
      * Applies the skin information from a skin consumable onto any item.
@@ -126,9 +128,10 @@ public class ItemSkin extends UseItem {
         final NBTItem nbtSkin = volSkin.getNBT();
 
         // Apply skin ID to new item
-        @Nullable String appliedSkinId = volSkin.getNBT().getString(SKIN_ID_TAG);
-        appliedSkinId = MMOUtils.isNonEmpty(appliedSkinId) ? appliedSkinId : nbtSkin.getString("MMOITEMS_ITEM_ID");
+        final String appliedSkinId = MMOUtils.requireNonEmptyElse(volSkin.getNBT().getString(SKIN_ID_TAG), nbtSkin.getString("MMOITEMS_ITEM_ID"));
+        final String appliedTypeId = MMOUtils.requireNonEmptyElse(volSkin.getNBT().getString(SKIN_TYPE_TAG), nbtSkin.getString("MMOITEMS_ITEM_TYPE"));
         target.addTag(new ItemTag(SKIN_ID_TAG, appliedSkinId));
+        target.addTag(new ItemTag(SKIN_TYPE_TAG, appliedTypeId));
 
         // Custom model data
         if (nbtSkin.getInteger("CustomModelData") != 0)

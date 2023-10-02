@@ -2,7 +2,7 @@ package net.Indyuce.mmoitems.gui.edition.recipe.interpreter;
 
 import io.lumine.mythic.lib.api.crafting.uimanager.ProvidedUIFilter;
 import io.lumine.mythic.lib.api.util.ui.SilentNumbers;
-import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeMakerGUI;
+import net.Indyuce.mmoitems.gui.edition.recipe.gui.RecipeEditorGUI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
 
                 // Parse
                 ProvidedUIFilter parsed = ProvidedUIFilter.getFromString(poof, null);
-                if (parsed == null) { parsed = RecipeMakerGUI.AIR.clone(); }
+                if (parsed == null) { parsed = RecipeEditorGUI.AIR.clone(); }
 
                 // Add
                 ret[r][p] = parsed; } }
@@ -114,7 +114,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
             // Build
             for (ProvidedUIFilter poof : poofs) {
                 ProvidedUIFilter providedUIFilter = poof;
-                if (providedUIFilter == null) { providedUIFilter = RecipeMakerGUI.AIR.clone(); }
+                if (providedUIFilter == null) { providedUIFilter = RecipeEditorGUI.AIR.clone(); }
 
                 // Add bar
                 if (sb.length() != 0) { sb.append("|"); }
@@ -182,8 +182,8 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
         section = recipeNameSection;
 
         // Build Input list
-        inputRecipe = buildIngredientsFromList(section.getStringList(RecipeMakerGUI.INPUT_INGREDIENTS));
-        outputRecipe = buildIngredientsFromList(section.getStringList(RecipeMakerGUI.OUTPUT_INGREDIENTS));
+        inputRecipe = buildIngredientsFromList(section.getStringList(RecipeEditorGUI.INPUT_INGREDIENTS));
+        outputRecipe = buildIngredientsFromList(section.getStringList(RecipeEditorGUI.OUTPUT_INGREDIENTS));
     }
 
     @Override
@@ -193,7 +193,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
         setInput(slot, input);
 
         // Save
-        section.set(RecipeMakerGUI.INPUT_INGREDIENTS, toYML(inputRecipe));
+        section.set(RecipeEditorGUI.INPUT_INGREDIENTS, toYML(inputRecipe));
     }
 
     @Override
@@ -203,12 +203,12 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
         setOutput(slot, input);
 
         // Save
-        section.set(RecipeMakerGUI.OUTPUT_INGREDIENTS, toYML(outputRecipe));
+        section.set(RecipeEditorGUI.OUTPUT_INGREDIENTS, toYML(outputRecipe));
     }
 
-    @Override public void deleteInput(int slot) { editInput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteInput(int slot) { editInput(RecipeEditorGUI.AIR.clone(), slot); }
 
-    @Override public void deleteOutput(int slot) { editOutput(RecipeMakerGUI.AIR.clone(), slot); }
+    @Override public void deleteOutput(int slot) { editOutput(RecipeEditorGUI.AIR.clone(), slot); }
 
     //region Updater, to update old recipes
     /**
@@ -247,7 +247,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
                     if (r != 0) { ret.append("|"); }
 
                     // Array has it?
-                    if (r < curSplit.length) { ret.append(RecipeMakerGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR 0"); }
+                    if (r < curSplit.length) { ret.append(RecipeEditorGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR 0"); }
                 }
 
                 // Build and return
@@ -268,7 +268,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
                 if (r != 0) { ret.append("|"); }
 
                 // Array has it?
-                if (r < curSplit.length) { ret.append(RecipeMakerGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR 0"); }
+                if (r < curSplit.length) { ret.append(RecipeEditorGUI.poofFromLegacy(curSplit[r])); } else { ret.append("v AIR 0"); }
             }
 
             // Build and return
@@ -278,7 +278,7 @@ public class RMGRI_MegaShaped implements RMG_RecipeInterpreter {
         } else {
 
             // Just that i guess
-            return RecipeMakerGUI.poofFromLegacy(curr) + "|v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
+            return RecipeEditorGUI.poofFromLegacy(curr) + "|v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";
         }
     }
     public static final String emptyRow = "v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0|v AIR 0";

@@ -13,7 +13,7 @@ import net.Indyuce.mmoitems.api.Type;
 public interface ItemReference extends CooldownObject {
 
     /**
-     * MMOItem templates have to identifiers: <b>TYPE</b> and ID
+     * MMOItem templates have two identifiers: <b>TYPE</b> and ID
      * <p>
      * This method returns their TYPE.
      * <p>
@@ -22,9 +22,9 @@ public interface ItemReference extends CooldownObject {
     Type getType();
 
     /**
-     * MMOItem templates have to identifiers: TYPE and <b>ID</b>
+     * MMOItem templates have two identifiers: TYPE and <b>ID</b>
      * <p>
-     * This method returns their TYPE.
+     * This method returns their ID.
      * <p>
      * Example: GREATSWORD <b>STEEL_CLAYMORE</b>
      */

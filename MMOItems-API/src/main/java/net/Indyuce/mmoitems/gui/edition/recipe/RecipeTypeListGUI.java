@@ -6,16 +6,11 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 import net.Indyuce.mmoitems.api.util.message.FFPMMOItems;
 import net.Indyuce.mmoitems.gui.edition.EditionInventory;
 import net.Indyuce.mmoitems.gui.edition.recipe.registry.*;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBBlast;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBCampfire;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBFurnace;
-import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.RMGRR_LBSmoker;
-import org.bukkit.Bukkit;
+import net.Indyuce.mmoitems.gui.edition.recipe.registry.burninglegacy.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,16 +29,12 @@ import java.util.Set;
  *
  * @author Gunging
  */
-public class RecipeBrowserGUI extends EditionInventory {
+public class RecipeTypeListGUI extends EditionInventory {
 
-    /*
-     * Item Stacks used in this inven
-     */
-    @NotNull final ItemStack nextPage = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "下一页").build();
-    @NotNull final ItemStack prevPage = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "上一页").build();
-    @NotNull final ItemStack noRecipe = ItemFactory.of(Material.LIGHT_GRAY_STAINED_GLASS_PANE).name("").build();
-
-    int currentPage;
+    // Item Stacks used in this inventory
+    @NotNull private static final ItemStack NEXT_PAGE = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "下一页").build();
+    @NotNull private static final ItemStack PREVIOUS_PAGE = ItemFactory.of(Material.ARROW).name(FFPMMOItems.get().getExampleFormat() + "上一页").build();
+    @NotNull private static final ItemStack NO_RECIPE = ItemFactory.of(Material.LIGHT_GRAY_STAINED_GLASS_PANE).name("").build();
 
     /**
      * Not gonna lie, I think this class doesnt support concurrent edition of
@@ -53,27 +44,16 @@ public class RecipeBrowserGUI extends EditionInventory {
      * @param player Player that is editing recipes
      * @param template Template being edited
      */
-    public RecipeBrowserGUI(@NotNull Player player, @NotNull MMOItemTemplate template) {
+    public RecipeTypeListGUI(@NotNull Player player, @NotNull MMOItemTemplate template) {
         super(player, template);
 
         // Start with defaults
-        currentPage = 0;
+        page = 0;
     }
 
-    @NotNull
     @Override
-    public Inventory getInventory() {
-        // Create and prepare
-        Inventory inv = Bukkit.createInventory(this, 54, "选择配方类型");
-
-        // Put buttons
-        addEditionInventoryItems(inv, true);
-
-        // Arrange yes
-        arrangeInventory(inv);
-
-        // That's it lets GOOOO
-        return inv;
+    public String getName() {
+        return "选择配方类型";
     }
 
     /**
@@ -85,24 +65,23 @@ public class RecipeBrowserGUI extends EditionInventory {
 
     /**
      * Updates the inventory, refreshes the page number whatever.
-     *
-     * @param inv Inventory object to edit
      */
-    void arrangeInventory(@NotNull Inventory inv) {
+    @Override
+    public void arrangeInventory() {
 
         // Start fresh
         recipeTypeMap.clear();
 
         // Include page buttons
-        if (currentPage > 0) { inv.setItem(27, prevPage); }
-        if (registeredRecipes.size() >= ((currentPage + 1) * 21)) { inv.setItem(36, nextPage); }
+        if (page > 0) { inventory.setItem(27, PREVIOUS_PAGE); }
+        if (registeredRecipes.size() >= ((page + 1) * 21)) { inventory.setItem(36, NEXT_PAGE); }
 
         // Well order them I guess
         HashMap<Integer, RecipeRegistry> reg = new HashMap<>(); int op = 0;
         for (RecipeRegistry r : registeredRecipes.values()) { reg.put(op, r); op++; }
 
         // Fill the space I guess
-        for (int p = 21 * currentPage; p < (21 * (currentPage + 1)); p++) {
+        for (int p = 21 * page; p < (21 * (page + 1)); p++) {
 
             //CNT//MMOItems.log("\u00a77Running \u00a73" + p);
 
@@ -129,7 +108,7 @@ public class RecipeBrowserGUI extends EditionInventory {
             if (p >= registeredRecipes.size()) {
 
                 // Just snooze
-                inv.setItem(absolute, noRecipe);
+                inventory.setItem(absolute, NO_RECIPE);
 
                 // There exists a recipe for this slot
             } else {
@@ -138,13 +117,14 @@ public class RecipeBrowserGUI extends EditionInventory {
                 RecipeRegistry rr = reg.get(p);
 
                 // Display name
-                inv.setItem(absolute, rr.getDisplayListItem());
+                inventory.setItem(absolute, rr.getDisplayListItem());
 
                 // Store
                 recipeTypeMap.put(absolute, rr);
             }
         }
     }
+
     public static int page(int p) {
 
         // Remove multiples of 21
@@ -191,15 +171,15 @@ public class RecipeBrowserGUI extends EditionInventory {
             if (event.getSlot() == 27) {
 
                 // Retreat page
-                currentPage--;
-                arrangeInventory(event.getView().getTopInventory());
+                page--;
+                refreshInventory();
 
                 // Next Page
             } else if (event.getSlot() == 36) {
 
                 // Advance page
-                currentPage++;
-                arrangeInventory(event.getView().getTopInventory());
+                page++;
+                refreshInventory();
 
                 // Create a new recipe
             } else if (event.getSlot() > 18) {
@@ -211,7 +191,7 @@ public class RecipeBrowserGUI extends EditionInventory {
                 if (recipeType != null) {
 
                     // Open that menu for the player
-                    new RecipeListGUI(player, template, recipeType).open(getPreviousPage());
+                    new RecipeListGUI(player, template, recipeType).open(this);
                 }
             }
         }
@@ -242,14 +222,15 @@ public class RecipeBrowserGUI extends EditionInventory {
          * sends the recipes back to RecipeManager.registerBurningRecipe)
          * I have no clue what happens; barely even read that far.
          */
-        registerRecipe(new RMGRR_LBFurnace());
-        registerRecipe(new RMGRR_LBBlast());
-        registerRecipe(new RMGRR_LBSmoker());
-        registerRecipe(new RMGRR_LBCampfire());
+        registerRecipe(new RMGRR_LegacyBurning(CraftingType.FURNACE));
+        registerRecipe(new RMGRR_LegacyBurning(CraftingType.BLAST));
+        registerRecipe(new RMGRR_LegacyBurning(CraftingType.SMOKER));
+        registerRecipe(new RMGRR_LegacyBurning(CraftingType.CAMPFIRE));
     }
 
     @NotNull
     static final HashMap<String, RecipeRegistry> registeredRecipes = new HashMap<>();
+
     public static void registerRecipe(@NotNull RecipeRegistry recipe) {
 
         // Register that yes
